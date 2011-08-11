@@ -307,12 +307,11 @@
 	</gft:validatorlabel>
 
 	<gft:group property="op1d2d:observation"  style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
-			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
 		<gft:gridLayout numColumns="2" />
 		<gft:subcomposite property="op1d2d:observation" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
-				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+			
 		</gft:subcomposite>
 	</gft:group>
 </gft:featureview>
