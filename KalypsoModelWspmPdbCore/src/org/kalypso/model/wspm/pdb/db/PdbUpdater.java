@@ -295,9 +295,29 @@ public class PdbUpdater
     if( domainOfValidity != null )
     {
       properties.setProperty( "srsMinX", String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
-      properties.setProperty( "srsMinY", String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
       properties.setProperty( "srsMaxX", String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
+
+      properties.setProperty( "srsMinY", String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
       properties.setProperty( "srsMaxY", String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
+
+      properties.setProperty( "srsXName", "X" );
+      properties.setProperty( "srsYName", "Y" );
+
+// CRS.decode(srid).getCoordinateSystem().getAxis( 0 ).getUnit()
+
+      // for geographic crs use the following
+      // properties.setProperty( "srsXName", "Longitude" ); // X is longitude!
+      // properties.setProperty( "srsYName", "Latitude" ); // Y is latitude!
+
+      properties.setProperty( "srsZName", "Z" ); // equal for all coordinate systems
+
+      properties.setProperty( "srsMinZ", String.format( Locale.US, "%f", -1000.0 ) );
+      properties.setProperty( "srsMaxZ", String.format( Locale.US, "%f", 10000.0 ) );
+
+      // maybe change (enlarge) x and y tolerance for geographic crs
+      properties.setProperty( "srsTolX", String.format( Locale.US, "%f", 0.0005 ) );
+      properties.setProperty( "srsTolY", String.format( Locale.US, "%f", 0.0005 ) );
+      properties.setProperty( "srsTolZ", String.format( Locale.US, "%f", 0.0005 ) );
     }
 
     final PdbInfo info = m_connection.getInfo();
@@ -317,8 +337,6 @@ public class PdbUpdater
       if( new WizardDialog( m_shell, wizard ).open() != Window.OK )
         throw new CoreException( Status.CANCEL_STATUS );
     }
-
-
 
     return properties;
   }

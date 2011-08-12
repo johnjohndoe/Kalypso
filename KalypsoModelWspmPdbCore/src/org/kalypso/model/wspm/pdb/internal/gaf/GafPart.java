@@ -108,6 +108,9 @@ public class GafPart
 
     final LineString line = m_geometryFactory.createLineString( cs );
 
+    // TODO: Oracle is more restrictive: two consecutive vertices may not be equal
+    // Should be prohibited this here?
+
     final IsValidOp isValidOp = new IsValidOp( line );
     if( isValidOp.isValid() )
       return line;

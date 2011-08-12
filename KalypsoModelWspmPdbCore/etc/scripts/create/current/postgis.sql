@@ -936,6 +936,22 @@ GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.waterlevel_fixation TO GROUP p
 
 GRANT SELECT ON TABLE pdb.seq_pdb TO GROUP pdb_admin;
 
+
+INSERT INTO INFO("key", "value") VALUES ('srsXName', '${srsXName}');
+INSERT INTO INFO("key", "value") VALUES ('srsMinX', '${srsMinX}');
+INSERT INTO INFO("key", "value") VALUES ('srsMaxX', '${srsMaxX}');
+INSERT INTO INFO("key", "value") VALUES ('srsTolX', '${srsTolX}');
+
+INSERT INTO INFO("key", "value") VALUES ('srsYName', '${srsYName}');
+INSERT INTO INFO("key", "value") VALUES ('srsMinY', '${srsMinY}');
+INSERT INTO INFO("key", "value") VALUES ('srsMaxY', '${srsMaxY}');
+INSERT INTO INFO("key", "value") VALUES ('srsTolY', '${srsTolY}');
+
+INSERT INTO INFO("key", "value") VALUES ('srsZName', '${srsZName}');
+INSERT INTO INFO("key", "value") VALUES ('srsMinZ', '${srsMinZ}');
+INSERT INTO INFO("key", "value") VALUES ('srsMaxZ', '${srsMaxZ}');
+INSERT INTO INFO("key", "value") VALUES ('srsTolZ', '${srsTolZ}');
+
 -- Version endgültig setzen
 UPDATE INFO set value='0.0.3' where key ='Version';
 commit;

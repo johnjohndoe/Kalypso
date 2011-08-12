@@ -107,7 +107,7 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
   public Envelope getCrsEnvelope( final Integer srid )
   {
     // FIXME: implement SQL query
-    final Envelope env = new Envelope( 4300000, 4600000, 5600000, 5800000 );
+    final Envelope env = new Envelope( 4300000, 4600000, 5500000, 5800000 );
 
     return env;
   }
