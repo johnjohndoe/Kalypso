@@ -143,10 +143,10 @@ public class CheckoutWaterlevelWorker
     switch( event.getType() )
     {
       case Measurement:
-        return insertFixation( event, wspmWater );
-
       case Simulation:
-        return insertCalculation( event, wspmWater );
+        return insertFixation( event, wspmWater );
+        // FIXME: simulation should create simulation results
+        // return insertCalculation( event, wspmWater );
     }
 
     throw new IllegalStateException();
