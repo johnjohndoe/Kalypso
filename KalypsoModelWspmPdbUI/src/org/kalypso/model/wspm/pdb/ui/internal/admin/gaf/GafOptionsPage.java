@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -247,6 +248,7 @@ public class GafOptionsPage extends WizardPage
   {
     final ComboViewer viewer = new ComboViewer( group, SWT.DROP_DOWN | SWT.READ_ONLY );
     viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    viewer.getControl().setFont( JFaceResources.getTextFont() );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider() );
     viewer.setInput( availableCodes );

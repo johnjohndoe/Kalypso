@@ -89,7 +89,7 @@ public class GafCode implements Comparable<GafCode>
     if( StringUtils.isBlank( m_description ) )
       return m_key;
 
-    return String.format( "%s - %s", m_key, m_description );
+    return String.format( "%-4s - %s", m_key, m_description );
   }
 
   public String getDbCode( )
