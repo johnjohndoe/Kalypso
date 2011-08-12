@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.kalypso.core.catalog.FeatureTypeFeatureviewCatalog;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
@@ -56,7 +57,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.ui.catalogs.FeatureTypeFeatureviewCatalog;
 
 /**
  * @author Gernot Belger
