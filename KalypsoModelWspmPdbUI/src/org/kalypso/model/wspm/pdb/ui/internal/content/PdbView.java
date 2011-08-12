@@ -188,7 +188,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final Composite body = m_form.getBody();
     body.setLayout( new FillLayout() );
 
-    updateControl();
+    m_updateControlJob.schedule( 250 );
   }
 
   private Image getFormImage( )
