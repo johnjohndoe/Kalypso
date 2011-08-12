@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultContentProvider;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 
 /**
  * Shows the currently available WSPM results in a tree view and let the user check them.
@@ -101,6 +102,8 @@ public class ProfileExportResultChooser
           return true;
       }
     } );
+
+    treeViewer.addFilter( new WaterLevelFilter() );
     treeViewer.setInput( m_rootNode );
 
     treeViewer.addCheckStateListener( new ICheckStateListener()
