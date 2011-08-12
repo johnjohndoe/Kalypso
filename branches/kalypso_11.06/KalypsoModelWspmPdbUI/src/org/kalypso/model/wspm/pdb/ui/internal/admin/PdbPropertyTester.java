@@ -43,10 +43,8 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
@@ -61,14 +59,10 @@ public class PdbPropertyTester extends PropertyTester
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( workbench == null || workbench.isStarting() || workbench.isClosing() )
+    if( !(receiver instanceof IWorkbenchWindow) )
       return false;
 
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    if( window == null )
-      return false;
-
+    final IWorkbenchWindow window = (IWorkbenchWindow) receiver;
     final IWorkbenchPage page = window.getActivePage();
     if( page == null )
       return false;

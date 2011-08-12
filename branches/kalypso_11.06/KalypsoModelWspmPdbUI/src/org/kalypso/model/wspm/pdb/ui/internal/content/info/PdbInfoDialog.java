@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content.info;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -70,6 +71,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
@@ -125,7 +127,7 @@ public class PdbInfoDialog extends TitleAreaDialog
     m_binding = new DataBindingContext();
 
     createConnectionGroup( area );
-    m_toolkit.createLabel( area, StringUtils.EMPTY );
+    createRoleInfo( area );
     createInfoGroup( area );
 
     final String name = m_connection.getLabel();
@@ -160,6 +162,24 @@ public class PdbInfoDialog extends TitleAreaDialog
         titleImage.dispose();
       }
     } );
+  }
+
+  private void createRoleInfo( final Composite parent )
+  {
+    final Section group = m_toolkit.createSection( parent, Section.TITLE_BAR );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    group.setText( "Database Rights" );
+
+    final Composite panel = m_toolkit.createComposite( group );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
+    group.setClient( panel );
+
+    m_toolkit.createLabel( panel, "Role" );
+
+    final PDBRole role = m_connection.getRole();
+    final Text field = m_toolkit.createText( panel, role.toString(), SWT.SINGLE );
+    field.setEditable( false );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
   private void createInfoGroup( final Composite area )
