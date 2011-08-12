@@ -47,6 +47,8 @@ import java.util.Set;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -154,8 +156,9 @@ public class CheckoutCrossSectionsWorker
       try
       {
         final String documentPath = document.getFilename();
+        final String encodedPath = URIUtil.encodePath( documentPath );
 
-        final URL documentURL = new URL( m_documentBase, documentPath );
+        final URL documentURL = new URL( m_documentBase, encodedPath );
         final Image newImage = profile.addImage( documentURL );
 
         // TODO: convert other data as well
@@ -184,6 +187,11 @@ public class CheckoutCrossSectionsWorker
         // TODO: error handling?!
         e.printStackTrace();
       }
+      catch( final URIException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
   }
 
@@ -204,6 +212,9 @@ public class CheckoutCrossSectionsWorker
   {
     try
     {
+      if( location == null )
+        return null;
+
       final String srs = JTSAdapter.toSrs( location.getSRID() );
       return JTSAdapter.wrap( location, srs );
     }

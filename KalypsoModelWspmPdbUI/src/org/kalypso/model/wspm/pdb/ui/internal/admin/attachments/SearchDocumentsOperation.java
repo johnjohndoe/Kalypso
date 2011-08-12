@@ -60,9 +60,8 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
 {
   final AttachmentStationContext[] m_searchContexts = new AttachmentStationContext[] {
       //
-      // new AttachmentStationContext( '+', '-' ), //
       new AttachmentStationContext( '+', null ), //
-      // new AttachmentStationContext( '.', ',' ), //
+      new AttachmentStationContext( '-', null ), //
       new AttachmentStationContext( null, '.' ), //
       new AttachmentStationContext( null, ',' ) //
   };
@@ -162,7 +161,6 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
       {
         appendEscaped( builder, pattern.substring( i ) );
         i = pattern.length();
-        builder.append( false );
       }
       else
       {
