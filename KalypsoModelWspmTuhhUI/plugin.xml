@@ -798,11 +798,11 @@
             </command>
          </menuContribution>
 
-<!--
         <menuContribution locationURI="popup:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart">
            <command commandId="org.kalypso.model.wspm.light.showDocuments" style="push">
               <visibleWhen checkEnabled="true"/>
            </command>
+<!--
            <separator name="wizards" visible="true"/>
            <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
               <visibleWhen checkEnabled="true"/>
@@ -813,8 +813,8 @@
            <command commandId="org.kalypso.ui.command.export" style="push">
               <visibleWhen checkEnabled="true"/>
            </command>
-         </menuContribution>
 -->         
+         </menuContribution>
          
          <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
             <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
