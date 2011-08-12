@@ -287,7 +287,18 @@ public class PdbUpdater
     final Properties properties = new Properties();
     /* some defaults */
     properties.setProperty( PdbInfo.PROPERTY_DOCUMENT_SERVER, "http://example.com/document/path" ); //$NON-NLS-1$
-    properties.setProperty( PdbInfo.PROPERTY_SRID, "31467" ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_SRID, "31468" ); //$NON-NLS-1$
+    /* Add depending variables */
+    final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
+    final Envelope domainOfValidity = m_connection.getCrsEnvelope( Integer.valueOf( srid ) );
+
+    if( domainOfValidity != null )
+    {
+      properties.setProperty( "srsMinX", String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
+      properties.setProperty( "srsMinY", String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
+      properties.setProperty( "srsMaxX", String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
+      properties.setProperty( "srsMaxY", String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
+    }
 
     final PdbInfo info = m_connection.getInfo();
     if( info != null )
@@ -307,17 +318,7 @@ public class PdbUpdater
         throw new CoreException( Status.CANCEL_STATUS );
     }
 
-    /* Add depending variables */
-    final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
-    final Envelope domainOfValidity = m_connection.getCrsEnvelope( Integer.valueOf( srid ) );
 
-    if( domainOfValidity != null )
-    {
-      properties.setProperty( "srsMinX", String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
-      properties.setProperty( "srsMinY", String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
-      properties.setProperty( "srsMaxX", String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
-      properties.setProperty( "srsMaxY", String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
-    }
 
     return properties;
   }
