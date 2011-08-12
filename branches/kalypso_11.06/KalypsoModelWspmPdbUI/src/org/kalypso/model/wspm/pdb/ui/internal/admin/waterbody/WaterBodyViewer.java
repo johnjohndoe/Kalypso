@@ -119,7 +119,7 @@ public class WaterBodyViewer
     final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
 
-    column.setText( "GKN" );
+    column.setText( "GKZ" );
     column.setToolTipText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
