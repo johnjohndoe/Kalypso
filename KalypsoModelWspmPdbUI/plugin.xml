@@ -112,12 +112,20 @@
      <image commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" icon="icons/checkinState.gif"/>
   </extension>
   <extension point="org.eclipse.ui.handlers">
-     <handler commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinStateHandler"/>
+     <handler commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinStateHandler">
+        <enabledWhen>
+            <reference definitionId="isPdbAdmin"/>
+        </enabledWhen>
+     </handler>
   </extension>
 
   <extension point="org.eclipse.ui.menus">
     <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart?after=data">
-       <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" style="push"/>
+       <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" style="push">
+         <visibleWhen checkEnabled="false">
+            <reference definitionId="isPdbAdmin"/>
+         </visibleWhen>
+       </command>
     </menuContribution>
   </extension>
   <extension point="org.kalypso.ui.exportWizards">
@@ -170,18 +178,17 @@
              <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
           </with>
      </definition>
-     <definition id="isPdbViewVisibleAndAdmin">
-          <and>
-            <reference definitionId="isPdbViewVisible"/>
-            <or>
-                <test property="pdbTester.hasRole" value="superuser"/>
-                <test property="pdbTester.hasRole" value="fadmin"/>
-            </or>
-          </and>
+     <definition id="isPdbAdmin">
+          <with variable="activeWorkbenchWindow">
+              <or>
+                  <test property="pdbTester.hasRole" value="superuser"/>
+                  <test property="pdbTester.hasRole" value="fadmin"/>
+              </or>
+          </with>
      </definition>
      <definition id="onePdbElementSelected">
            <and>
-              <reference definitionId="isPdbViewVisibleAndAdmin"/>
+              <reference definitionId="isPdbAdmin"/>
               <with variable="selection">
                  <and> 
                     <count value="1"/>
@@ -228,17 +235,17 @@
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisibleAndAdmin"/>
+              <reference definitionId="isPdbAdmin"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisibleAndAdmin"/>
+              <reference definitionId="isPdbAdmin"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisibleAndAdmin"/>
+              <reference definitionId="isPdbAdmin"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement
@@ -246,7 +253,7 @@
        <enablement>
           <and>
              <reference
-                   definitionId="isPdbViewVisibleAndAdmin">
+                   definitionId="isPdbAdmin">
              </reference>
              <with variable="selection">
                 <and>
@@ -306,7 +313,7 @@
            commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody">
         <enabledWhen>
            <reference
-                 definitionId="isPdbViewVisibleAndAdmin">
+                 definitionId="isPdbAdmin">
            </reference>
         </enabledWhen>
      </handler>
@@ -353,14 +360,13 @@
         </command>
      </menuContribution>
   </extension>
-  <extension
-        point="org.eclipse.core.expressions.propertyTesters">
+  <extension point="org.eclipse.core.expressions.propertyTesters">
      <propertyTester
            class="org.kalypso.model.wspm.pdb.ui.internal.admin.PdbPropertyTester"
            id="org.kalypso.model.wspm.pdb.ui.internal.admin.PdbPropertyTester"
            namespace="pdbTester"
            properties="hasRole"
-           type="java.lang.Object">
+           type="org.eclipse.ui.IWorkbenchWindow">
      </propertyTester>
   </extension>   
 </plugin>

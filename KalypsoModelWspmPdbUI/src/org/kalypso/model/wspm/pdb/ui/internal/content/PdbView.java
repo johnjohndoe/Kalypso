@@ -65,6 +65,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
@@ -344,6 +345,12 @@ public class PdbView extends ViewPart implements IConnectionViewer
     // 1) the outline will show the map legend
     // 2) the context men uon the pdb works correctly (evaluation context was not correctly set)
     activateMapView();
+
+    final IEvaluationService es = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
+    es.requestEvaluation( "pdbTester.hasRole" );
+
+// final ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+// cs.refreshElements( "org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState", null );
   }
 
   private void activateMapView( )
