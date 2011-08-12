@@ -30,7 +30,7 @@
       </script>
       <script
             comment="Oracle - Create DB"
-            location="etc/scripts/create/current/oracle.sql"
+            location="etc/scripts/create/V0.0.3/oracle.sql"
             targetVersion="0.0.0"
             type="oracle">
          <page
@@ -39,7 +39,7 @@
       </script>
       <script
             comment="Postgis - Create DB"
-            location="etc/scripts/create/current/postgis.sql"
+            location="etc/scripts/create/V0.0.3/postgis.sql"
             targetVersion="0.0.0"
             type="postgis">
          <page

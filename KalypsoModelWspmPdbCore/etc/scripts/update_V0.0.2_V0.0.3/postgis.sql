@@ -27,6 +27,8 @@ GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.vegetation TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.water_body TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.waterlevel_fixation TO GROUP pdb_admin;
 
+GRANT SELECT ON TABLE pdb.seq_pdb TO GROUP pdb_admin;
+
 -- Version endgültig setzen
 UPDATE INFO set value='0.0.3' where key ='Version';
 commit;
