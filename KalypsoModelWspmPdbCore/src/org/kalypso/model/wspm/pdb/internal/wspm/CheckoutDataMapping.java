@@ -276,14 +276,14 @@ public class CheckoutDataMapping
     return parents.toArray( new Feature[parents.size()] );
   }
 
-  void addChangedFeatures( final Feature[] changedFeatures )
+  void addChangedFeatures( final Feature changedFeature )
   {
-    m_changedFeatures.addAll( Arrays.asList( changedFeatures ) );
+    m_changedFeatures.add( changedFeature );
   }
 
-  void addRemovedFeatures( final Feature[] features )
+  void addRemovedFeatures( final Feature feature )
   {
-    m_removedFeatures.addAll( Arrays.asList( features ) );
+    m_removedFeatures.add( feature );
   }
 
   public Feature[] getNewElements( )
