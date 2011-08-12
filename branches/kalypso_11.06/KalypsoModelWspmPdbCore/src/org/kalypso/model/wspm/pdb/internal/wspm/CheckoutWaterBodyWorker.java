@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -80,7 +79,7 @@ public class CheckoutWaterBodyWorker
         final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
         final WspmWaterBody newWspmWater = updateOrCreateWspmWaterBody( waterBody, wspmWater );
         m_mapping.set( waterBody, newWspmWater );
-        m_mapping.addChangedFeatures( new Feature[] { newWspmWater } );
+        m_mapping.addChangedFeatures( newWspmWater );
 
         monitor.worked( 1 );
       }

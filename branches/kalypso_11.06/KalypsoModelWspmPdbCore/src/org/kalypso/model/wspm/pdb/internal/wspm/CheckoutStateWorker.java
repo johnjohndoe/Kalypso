@@ -46,14 +46,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -83,7 +84,7 @@ public class CheckoutStateWorker
 
         m_mapping.set( state, newReach );
 
-        m_mapping.addChangedFeatures( new Feature[] { newReach } );
+        m_mapping.addChangedFeatures( newReach );
 
         monitor.worked( 1 );
       }
@@ -118,7 +119,29 @@ public class CheckoutStateWorker
     final IFeatureBindingCollection<WspmReach> reaches = wspmWater.getReaches();
     reaches.remove( reach );
 
-    m_mapping.addRemovedFeatures( new Feature[] { reach } );
+    cleanupReachProfiles( reach );
+
+    m_mapping.addRemovedFeatures( reach );
+  }
+
+  /**
+   * Cleanup profiles from this reach (which will be deleted), that are not referenced elsewhere.
+   */
+  private void cleanupReachProfiles( final TuhhReach reach )
+  {
+    final WspmWaterBody waterBody = reach.getWaterBody();
+    final ReachProfileReferencer referencer = new ReachProfileReferencer( waterBody );
+
+    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+    for( final TuhhReachProfileSegment segment : reachProfileSegments )
+    {
+      final IProfileFeature profileMember = segment.getProfileMember();
+      if( !referencer.isReferenced( profileMember ) )
+      {
+        waterBody.getProfiles().remove( profileMember );
+        m_mapping.addRemovedFeatures( profileMember );
+      }
+    }
   }
 
   private TuhhReach insertReach( final State state, final WspmWaterBody waterBody ) throws GMLSchemaException

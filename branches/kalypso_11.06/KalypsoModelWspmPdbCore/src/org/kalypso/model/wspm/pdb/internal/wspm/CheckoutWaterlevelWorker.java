@@ -90,7 +90,7 @@ public class CheckoutWaterlevelWorker
 
         final Object wspmObject = m_mapping.getWaterlevel( event );
         final Feature newWspmObject = createOrReplaceEvent( event, wspmObject );
-        m_mapping.addChangedFeatures( new Feature[] { newWspmObject } );
+        m_mapping.addChangedFeatures( newWspmObject );
 
         ProgressUtilities.worked( monitor, 1 );
       }
@@ -114,7 +114,7 @@ public class CheckoutWaterlevelWorker
 
     final Feature removed = removeEvent( wspmObject, wspmWater );
     if( removed != null )
-      m_mapping.addRemovedFeatures( new Feature[] { removed } );
+      m_mapping.addRemovedFeatures( removed );
 
     return insertEvent( event, wspmWater );
   }
