@@ -186,6 +186,12 @@
               </or>
           </with>
      </definition>
+     <definition id="isPdbAdminAndPdbViewVisible">
+          <and>
+            <reference definitionId="isPdbViewVisible"/>
+            <reference definitionId="isPdbAdmin"/>
+          </and>
+     </definition>
      <definition id="onePdbElementSelected">
            <and>
               <reference definitionId="isPdbAdmin"/>
@@ -235,26 +241,24 @@
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
        <enablement>
-              <reference definitionId="isPdbAdmin"/>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
-              <reference definitionId="isPdbAdmin"/>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard">
        <enablement>
-              <reference definitionId="isPdbAdmin"/>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement
           wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard">
        <enablement>
           <and>
-             <reference
-                   definitionId="isPdbAdmin">
-             </reference>
+             <reference definitionId="isPdbAdminAndPdbViewVisible"/>
              <with variable="selection">
                 <and>
                    <count value="1"/>
@@ -313,7 +317,7 @@
            commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody">
         <enabledWhen>
            <reference
-                 definitionId="isPdbAdmin">
+                 definitionId="isPdbAdminAndPdbViewVisible">
            </reference>
         </enabledWhen>
      </handler>
