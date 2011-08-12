@@ -91,7 +91,9 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
   public Envelope getCrsEnvelope( final Integer srid )
   {
     // FIXME: implement SQL query
-    return null;
+    final Envelope env = new Envelope( 4300000, 4600000, 5500000, 5800000 );
+
+    return env;
   }
 
   @Override
