@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -116,11 +118,18 @@ public class CheckoutPdbHandler extends AbstractHandler
     {
       final PdbInfo info = connection.getInfo();
       final String documentServer = info.getDocumentServer();
-      return new URL( documentServer );
+      final URI uri = new URI( documentServer );
+      return uri.toURL();
     }
     catch( final MalformedURLException e )
     {
       // TODO: error handling?
+      e.printStackTrace();
+      return null;
+    }
+    catch( final URISyntaxException e )
+    {
+      // TODO Auto-generated catch block
       e.printStackTrace();
       return null;
     }
