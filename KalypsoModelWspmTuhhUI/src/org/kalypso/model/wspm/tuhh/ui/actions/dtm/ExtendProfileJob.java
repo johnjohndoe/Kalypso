@@ -185,7 +185,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   private IProfileFeature grabProfile( final GM_Point pos, final double snapRadius )
   {
-    final IFeatureType targetFeatureType = m_profileFeatures.getParentFeatureTypeProperty().getTargetFeatureType();
+    final IFeatureType targetFeatureType = m_profileFeatures.getPropertyType().getTargetFeatureType();
     if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QN_PROFILE ) )
       return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, snapRadius, m_profileFeatures, IProfileFeature.QN_PROPERTY_LINE );
     else

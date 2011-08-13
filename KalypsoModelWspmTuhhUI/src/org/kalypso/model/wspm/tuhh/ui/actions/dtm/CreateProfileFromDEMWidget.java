@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -20,6 +21,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
@@ -137,13 +139,13 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   private ICreateProfileStrategy initStrategy( final IMapModell model, final ICoverageCollection coverages, final IMapPanel mapPanel )
   {
-    final IKalypsoTheme activeTheme = model.getActiveTheme();
-    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
+    final IKalypsoFeatureTheme profileTheme = findProfileTheme( model );
+    if( profileTheme == null )
       return null;
 
-    final CommandableWorkspace commandableWorkspace = ((IKalypsoFeatureTheme) activeTheme).getWorkspace();
+    final CommandableWorkspace commandableWorkspace = profileTheme.getWorkspace();
 
-    final FeatureList profileFeatures = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
+    final FeatureList profileFeatures = profileTheme.getFeatureList();
     if( profileFeatures == null )
       return null;
 
@@ -159,6 +161,24 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
       return new ExtendProfileJob( this, commandableWorkspace, mapPanel, coverages, profileFeatures, reach, simplifyDistance );
     else
       return new CreateNewProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages, simplifyDistance );
+  }
+
+  private IKalypsoFeatureTheme findProfileTheme( final IMapModell model )
+  {
+    final IKalypsoThemePredicate profilePredicate = new ProfileThemePredicate();
+    final IKalypsoTheme activeTheme = model.getActiveTheme();
+    if( profilePredicate.decide( activeTheme ) )
+      return (IKalypsoFeatureTheme) activeTheme;
+
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( profilePredicate );
+    model.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    final IKalypsoTheme[] themes = visitor.getFoundThemes();
+    final IKalypsoFeatureTheme[] profileThemes = Arrays.castArray( themes, new IKalypsoFeatureTheme[themes.length] );
+    if( profileThemes.length == 0 )
+      return null;
+
+    // FIXME: let user decide which theme to use; at the moment no problem, we seldom have more than one theme
+    return profileThemes[0];
   }
 
   private ICoverageCollection initCoverages( final IMapModell model )
