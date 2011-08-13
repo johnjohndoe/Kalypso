@@ -615,6 +615,7 @@
               icon="icons/elcl16/export_prf.gif"
               id="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
               name="%org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard.name">
+              <description>Exports the selected elements as WspWin project.</description>
         </wizard>
      </extension>
      <extension
