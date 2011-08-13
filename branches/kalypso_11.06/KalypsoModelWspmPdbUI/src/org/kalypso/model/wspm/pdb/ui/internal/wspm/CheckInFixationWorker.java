@@ -38,79 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import java.net.URI;
-
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbData extends AbstractModelObject
+public class CheckInFixationWorker implements ICheckInWorker
 {
-  public static final String PROPERTY_CONFIRM_EXISTING = "confirmExisting"; //$NON-NLS-1$
-
-  private CheckoutDataMapping m_mapping;
-
-  private boolean m_confirmExisting = false;
-
-  private final URI m_documentBase;
-
-  public CheckoutPdbData( final URI documentBase )
+  public CheckInFixationWorker( final WspmFixation fixation )
   {
-    m_documentBase = documentBase;
+    // TODO Auto-generated constructor stub
   }
 
-  public void init( final IDialogSettings settings )
+  @Override
+  public IStatus checkPreconditions( )
   {
-    if( settings == null )
-      return;
     // TODO Auto-generated method stub
+    return null;
   }
 
-  public void store( final IDialogSettings settings )
+  @Override
+  public void preInit( final IPdbConnection connection ) throws PdbConnectException
   {
-    if( settings == null )
-      return;
     // TODO Auto-generated method stub
 
   }
 
-  public void setMapping( final CheckoutDataMapping mapping )
+  @Override
+  public Wizard createWizard( final IPdbConnection connection )
   {
-    m_mapping = mapping;
+    // TODO Auto-generated method stub
+    return null;
   }
 
-  public CheckoutDataMapping getMapping( )
+  @Override
+  public void configureSelector( final ElementSelector selector )
   {
-    return m_mapping;
-  }
+    // TODO Auto-generated method stub
 
-  public Feature[] getNewWspmElements( )
-  {
-    return m_mapping.getNewElements();
-  }
-
-  public boolean getConfirmExisting( )
-  {
-    return m_confirmExisting;
-  }
-
-  public void setConfirmExisting( final boolean confirmExisting )
-  {
-    final Object oldValue = m_confirmExisting;
-
-    m_confirmExisting = confirmExisting;
-
-    firePropertyChange( PROPERTY_CONFIRM_EXISTING, oldValue, confirmExisting );
-  }
-
-  public URI getDocumentBase( )
-  {
-    return m_documentBase;
   }
 }

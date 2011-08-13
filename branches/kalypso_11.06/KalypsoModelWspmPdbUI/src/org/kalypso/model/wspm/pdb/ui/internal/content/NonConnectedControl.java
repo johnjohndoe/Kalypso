@@ -172,7 +172,7 @@ public class NonConnectedControl extends Composite
       for( final IPdbSettings setting : settings )
       {
         final ConnectPdbAction action = new ConnectPdbAction( m_view, setting );
-        final ImageHyperlink hyperlink = ActionHyperlink.createHyperlink( m_toolkit, m_connectionPanel, SWT.PUSH | SWT.WRAP | SWT.TOP, action );
+        final ImageHyperlink hyperlink = ActionHyperlink.createHyperlink( m_toolkit, m_connectionPanel, SWT.PUSH | SWT.WRAP | SWT.CENTER, action );
         hyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       }
     }

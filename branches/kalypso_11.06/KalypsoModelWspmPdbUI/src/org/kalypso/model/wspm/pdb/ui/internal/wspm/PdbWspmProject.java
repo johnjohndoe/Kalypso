@@ -99,6 +99,8 @@ public class PdbWspmProject implements IPdbWspmProject
 
   static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
 
+  static final String STR_SAVE_LOCAL_DATA_TITLE = "Save Local Data";
+
   private final IFeaturesProviderListener m_modelListener = new IFeaturesProviderListener()
   {
     @Override
@@ -311,13 +313,14 @@ public class PdbWspmProject implements IPdbWspmProject
   }
 
   /**
-   * checks if the data should be save, and asks the user what to do.<br/>
+   * Checks if the data should be save, and asks the user what to do.<br/>
+   * Show a 'Yes', 'No', 'Cancel' dialog.
    * 
    * @param If
    *          set to <code>true</code>, the data will be reloaded if the user chooses 'NO'.
    * @return <code>false</code>, if the user cancels the operation.
    */
-  public boolean saveProject( final boolean reloadOnNo )
+  public boolean askForProjectSave( )
   {
     if( m_provider == null )
       return true;
@@ -327,10 +330,9 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    final String title = "Save Local Data";
     final String message = "Local WSPM data has been modified. Save changes?";
     final String[] buttonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
-    final MessageDialog dialog = new MessageDialog( shell, title, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
+    final MessageDialog dialog = new MessageDialog( shell, STR_SAVE_LOCAL_DATA_TITLE, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
     final int result = dialog.open();
 
     if( result == 0 )
@@ -345,29 +347,48 @@ public class PdbWspmProject implements IPdbWspmProject
         }
       };
 
-      return busyCursorWhile( operation, title, "Failed to save local data" );
+      return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, "Failed to save local data" );
     }
     else if( result == 1 )
-    {
-      if( !reloadOnNo )
-        return true;
-
-      final PoolFeaturesProvider provider = m_provider;
-      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-      {
-        @Override
-        public IStatus execute( final IProgressMonitor monitor )
-        {
-          provider.reload( true );
-          return Status.OK_STATUS;
-        }
-      };
-      return busyCursorWhile( operation, title, "Failed to reload local data" );
-    }
+      return true;
     else if( result == 2 || result == -1 )
       return false;
 
     throw new IllegalStateException();
+  }
+
+  /**
+   * Checks if the data should be save, and asks the user what to do.<br/>
+   * Shows a 'OK', 'Cancel' dialog.
+   * 
+   * @return <code>false</code>, if the user cancels the operation.
+   */
+  public boolean confirmProjectSave( )
+  {
+    if( m_provider == null )
+      return true;
+
+    final boolean dirty = m_provider.isDirty();
+    if( !dirty )
+      return true;
+
+    final Shell shell = m_window.getShell();
+    final String message = "Local WSPM data must be saved before this operation. Continue?";
+    final boolean result = MessageDialog.openConfirm( shell, STR_SAVE_LOCAL_DATA_TITLE, message );
+    if( !result )
+      return false;
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        doSave( monitor );
+        return Status.OK_STATUS;
+      }
+    };
+
+    return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, "Failed to save local data" );
   }
 
   private boolean busyCursorWhile( final ICoreRunnableWithProgress operation, final String title, final String errorMessage )

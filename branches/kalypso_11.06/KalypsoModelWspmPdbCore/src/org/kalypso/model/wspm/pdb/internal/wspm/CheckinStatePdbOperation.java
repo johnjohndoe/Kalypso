@@ -41,12 +41,17 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.activation.MimeType;
+
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -57,6 +62,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -68,8 +74,12 @@ import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -102,16 +112,19 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final GeometryFactory m_geometryFactory;
 
+  private final URI m_documentBase;
+
   /**
    * @param dbSrs
    *          The coordinate system of the database
    */
-  public CheckinStatePdbOperation( final GafCodes gafCodes, final Coefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final IProgressMonitor monitor )
+  public CheckinStatePdbOperation( final GafCodes gafCodes, final Coefficients coefficients, final WaterBody[] waterBodies, final State state, final IProfileFeature[] profiles, final String dbSrs, final URI documentBase, final IProgressMonitor monitor )
   {
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
     m_state = state;
     m_profiles = profiles;
+    m_documentBase = documentBase;
 
     for( final WaterBody waterBody : waterBodies )
       m_waterBodies.put( waterBody.getName(), waterBody );
@@ -164,7 +177,6 @@ public class CheckinStatePdbOperation implements IPdbOperation
     section.setCreationDate( m_state.getCreationDate() );
     section.setEditingDate( m_state.getEditingDate() );
     section.setEditingUser( m_state.getEditingUser() );
-    // TODO: should we set measurement date?
     section.setMeasurementDate( m_state.getMeasurementDate() );
 
     /* Data from profile */
@@ -173,7 +185,6 @@ public class CheckinStatePdbOperation implements IPdbOperation
     final String name = profil.getName();
 
     /* Check for uniqueness of profile name */
-    // TODO: handle case, where profile come from different states (and have hence potentially the same profile names)
     if( !m_sectionNames.addUniqueName( name ) )
     {
       final String message = String.format( "Name of profile (station %s) is not unique within the state: %s", station, name );
@@ -187,6 +198,9 @@ public class CheckinStatePdbOperation implements IPdbOperation
     createParts( section, profil, srsName );
 
     saveSection( session, section );
+
+    // FIXME: cannot work at the moment, as filename is unique, but we do not upload new files?
+    // createDocuments( session, section, feature );
   }
 
   private void saveSection( final Session session, final CrossSection section )
@@ -316,5 +330,76 @@ public class CheckinStatePdbOperation implements IPdbOperation
   IGeoTransformer getTransformer( )
   {
     return m_transformer;
+  }
+
+  private void createDocuments( final Session session, final CrossSection section, final IProfileFeature profile )
+  {
+    final IFeatureBindingCollection<Image> images = profile.getImages();
+    for( final Image image : images )
+    {
+      final MimeType mimeType = image.getMimeType();
+      final URI uri = image.getUri();
+
+      final Document document = new Document();
+
+      document.setCreationDate( section.getCreationDate() );
+      document.setCrossSection( section );
+      document.setDescription( image.getDescription() );
+      document.setEditingDate( section.getEditingDate() );
+      document.setEditingUser( section.getEditingUser() );
+      document.setFilename( asFilename( uri ) );
+      document.setLocation( asPoint( image.getLocation() ) );
+      document.setMeasurementDate( section.getMeasurementDate() ); // bad, should come from image
+      document.setMimetype( mimeType == null ? null : mimeType.toString() );
+      document.setName( asName( uri ) );
+      // document.setShotdirection( null );
+      document.setState( m_state );
+      // document.setViewangle( null );
+      document.setWaterBody( section.getWaterBody() );
+
+      session.save( document );
+    }
+  }
+
+  private String asName( final URI uri )
+  {
+    // FIXME: not perfect... but probably unique enough for now
+    final String unencoded = URIUtil.toUnencodedString( uri );
+    final String filename = FilenameUtils.getName( unencoded );
+    return m_state.getName() + "/" + filename;
+  }
+
+  /**
+   * Makes the absolute local uri relative to the document server
+   */
+  private String asFilename( final URI uri )
+  {
+    if( uri == null )
+      return null;
+
+    final String fullLocation = uri.toString();
+    if( m_documentBase == null )
+      return fullLocation;
+
+    final URI relative = URIUtil.makeRelative( uri, m_documentBase );
+    return URIUtil.toUnencodedString( relative );
+  }
+
+  private com.vividsolutions.jts.geom.Point asPoint( final GM_Object location )
+  {
+    if( location == null )
+      return null;
+
+    try
+    {
+      final GM_Point centroid = location.getCentroid();
+      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( centroid );
+    }
+    catch( final GM_Exception e )
+    {
+      // will never happen
+      e.printStackTrace();
+      return null;
+    }
   }
 }
