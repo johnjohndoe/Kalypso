@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -61,9 +60,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.tree.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -93,7 +93,7 @@ public class CheckoutPdbHandler extends AbstractHandler
     if( !project.saveProject( true ) )
       return null;
 
-    final URL documentBase = findDocumentBase( viewer.getConnection() );
+    final URL documentBase = findDocumentBase( shell, commandName, viewer.getConnection() );
     final CheckoutPdbData data = new CheckoutPdbData( documentBase );
 
     final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
@@ -112,25 +112,31 @@ public class CheckoutPdbHandler extends AbstractHandler
     return null;
   }
 
-  private URL findDocumentBase( final IPdbConnection connection )
+  private URL findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
   {
+    final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
+
+    final PdbInfo info = connection.getInfo();
+    final String documentServer = info.getDocumentServer();
+    if( StringUtils.isBlank( documentServer ) )
+    {
+      final String message = String.format( "Base url the document server is empty.%n%s", STR_ATTACHMENTS_DISABLED );
+      MessageDialog.openWarning( shell, commandName, message );
+      return null;
+    }
+
     try
     {
-      final PdbInfo info = connection.getInfo();
-      final String documentServer = info.getDocumentServer();
       final URI uri = new URI( documentServer );
       return uri.toURL();
     }
-    catch( final MalformedURLException e )
+    catch( final Exception e )
     {
-      // TODO: error handling?
       e.printStackTrace();
-      return null;
-    }
-    catch( final URISyntaxException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+
+      final String message = String.format( "Illegal base url of the document server: '%s'.%n%s", documentServer, STR_ATTACHMENTS_DISABLED );
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message, e );
+      new StatusDialog2( shell, status, commandName ).open();
       return null;
     }
   }
@@ -148,6 +154,6 @@ public class CheckoutPdbHandler extends AbstractHandler
     } );
 
     if( !saveStatus.isOK() )
-      new StatusDialog( shell, windowTitle, saveStatus ).open();
+      new StatusDialog2( shell, saveStatus, windowTitle ).open();
   }
 }
