@@ -42,46 +42,55 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.core.gml.WspmFixation;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
+import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
+import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
 
 /**
+ * Uploads local WSPM data into the cross section database.
+ * 
  * @author Gernot Belger
  */
-public class CheckInFixationWorker implements ICheckInWorker
+public class CheckInEventWizard extends Wizard
 {
-  public CheckInFixationWorker( final WspmFixation fixation )
+  private final CheckInEventData m_data;
+
+  private final IPdbConnection m_connection;
+
+  public CheckInEventWizard( final CheckInEventData data, final IPdbConnection connection )
   {
-    // TODO Auto-generated constructor stub
+    m_data = data;
+    m_connection = connection;
+
+    setNeedsProgressMonitor( true );
   }
 
   @Override
-  public IStatus checkPreconditions( )
+  public void addPages( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final Event[] existingEvents = m_data.getExistingEvents();
+
+    final EditEventPage editStatePage = new EditEventPage( "editEvent", m_data.getEvent(), existingEvents, false );
+    editStatePage.setDescription( "Edit the properties of the new waterlevel event." );
+
+    addPage( editStatePage );
   }
 
   @Override
-  public void preInit( final IPdbConnection connection ) throws PdbConnectException
+  public boolean performFinish( )
   {
-    // TODO Auto-generated method stub
+    final CheckInEventOperation operation = new CheckInEventOperation( m_data, m_connection );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    if( !status.isOK() )
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
-  }
+    // FIXME: if wizard is not closed due to error, we need to reinitialize the state, as it is still attached to the
+    // old session
 
-  @Override
-  public Wizard createWizard( final IPdbConnection connection )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void configureSelector( final ElementSelector selector )
-  {
-    // TODO Auto-generated method stub
-
+    return !status.matches( IStatus.ERROR );
   }
 }

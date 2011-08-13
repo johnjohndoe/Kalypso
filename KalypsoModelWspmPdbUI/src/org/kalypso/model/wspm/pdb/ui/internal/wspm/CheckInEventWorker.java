@@ -40,93 +40,56 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
-import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public class CheckinStateWorker implements ICheckInWorker
+public class CheckInEventWorker implements ICheckInWorker
 {
-  private final CheckinStateData m_data;
+  private final CheckInEventData m_data;
 
-  public CheckinStateWorker( final CommandableWorkspace workspace, final TuhhReach reach )
+  public CheckInEventWorker( final CommandableWorkspace workspace, final WspmFixation fixation )
   {
-    m_data = new CheckinStateData( workspace, reach );
+    m_data = new CheckInEventData( workspace, fixation );
   }
 
   @Override
   public IStatus checkPreconditions( )
   {
-    final Map<String, BigDecimal> profileNames = new HashMap<String, BigDecimal>();
+    final Set<String> existingWaterCodes = CheckinStateWorker.hashWaterCodes( m_data.getExistingWaterBodies() );
 
-    final Set<String> existingWaterCodes = hashWaterCodes( m_data.getExistingWaterBodies() );
+    final WspmFixation fixation = m_data.getWspmFixation();
 
-    final TuhhReach reach = m_data.getReach();
-
-    final WspmWaterBody wspmWaterBody = reach.getWaterBody();
+    final WspmWaterBody wspmWaterBody = fixation.getParent();
     final String waterCode = wspmWaterBody.getRefNr();
     /* Water Body must exist */
     if( !existingWaterCodes.contains( waterCode ) )
     {
       final String waterName = wspmWaterBody.getName();
-      final String message = CheckInEventWorker.formatMissingWaterBody( waterCode, waterName );
+      final String message = formatMissingWaterBody( waterCode, waterName );
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
-    }
-
-    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    for( final TuhhReachProfileSegment segment : reachProfileSegments )
-    {
-      final String name = segment.getProfileMember().getName();
-      final BigDecimal station = segment.getStation();
-
-      if( StringUtils.isEmpty( name ) )
-      {
-        final String message = String.format( "Cross section at km %s has no name.%nOnly cross sections with a name can be uploaded into the database.", station );
-        return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
-      }
-
-      if( profileNames.containsKey( name ) )
-      {
-        final BigDecimal otherStation = profileNames.get( name );
-        final String message = String.format( "Cross sections at km %s and %s have the same name: '%s'%nNames must be unique in the database.", station, otherStation, name );
-        return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
-      }
-
-      profileNames.put( name, station );
     }
 
     return Status.OK_STATUS;
   }
 
-  static Set<String> hashWaterCodes( final WaterBody[] waterBodies )
+  static String formatMissingWaterBody( final String waterCode, final String waterName )
   {
-    final Set<String> codes = new HashSet<String>();
-
-    for( final WaterBody waterBody : waterBodies )
-      codes.add( waterBody.getName() );
-
-    return Collections.unmodifiableSet( codes );
+    return String.format( "Water body '%s' with code '%s' does not exist in the database.%nPlease change the code to an existing river code.", waterName, waterCode );
   }
 
   @Override
@@ -138,13 +101,12 @@ public class CheckinStateWorker implements ICheckInWorker
   @Override
   public Wizard createWizard( final IPdbConnection connection )
   {
-    return new CheckinStateWizard( m_data, connection );
+    return new CheckInEventWizard( m_data, connection );
   }
 
   @Override
   public void configureSelector( final ElementSelector selector )
   {
-    final String newStateName = m_data.getState().getName();
-    selector.addStateName( newStateName );
+    selector.addEventName( m_data.getEvent().getName() );
   }
 }

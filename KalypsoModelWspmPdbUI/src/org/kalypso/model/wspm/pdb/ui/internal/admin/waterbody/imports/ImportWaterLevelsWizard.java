@@ -137,7 +137,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     addPage( waterPage );
 
     /* Edit event properties */
-    m_eventPage = new EditEventPage( "eventPage", event, null );
+    m_eventPage = new EditEventPage( "eventPage", event, null, true );
     addPage( m_eventPage );
   }
 
