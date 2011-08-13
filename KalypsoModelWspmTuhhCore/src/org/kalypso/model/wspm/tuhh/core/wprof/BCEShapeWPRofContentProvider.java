@@ -45,6 +45,7 @@ import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
@@ -258,32 +259,21 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   }
 
   @Override
-  public URL[] getPhotos( )
+  public URI[] getPhotos( )
   {
-    try
+    final File photoDir = getContextDir( m_photoContext );
+    if( photoDir == null || !photoDir.exists() || !photoDir.isDirectory() )
+      return new URI[] {};
+
+    final String[] photoNames = getPhotoNames( photoDir );
+
+    final URI[] pathes = new URI[photoNames.length];
+    for( int i = 0; i < pathes.length; i++ )
     {
-      final File photoDir = getContextDir( m_photoContext );
-      if( photoDir == null || !photoDir.exists() || !photoDir.isDirectory() )
-        return new URL[] {};
-
-      final String[] photoNames = getPhotoNames( photoDir );
-
-      final URL[] pathes = new URL[photoNames.length];
-      for( int i = 0; i < pathes.length; i++ )
-      {
-        pathes[i] = new File( photoDir, photoNames[i] ).toURI().toURL();
-      }
-
-      return pathes;
+      pathes[i] = new File( photoDir, photoNames[i] ).toURI();
     }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-//      final String message = String.format( "Unable to create profile at %s", getStation() ); //$NON-NLS-1$
-// final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
-// throw new CoreException( status );
-      return new URL[] {};
-    }
+
+    return pathes;
   }
 
   private String[] getPhotoNames( final File photoDir )

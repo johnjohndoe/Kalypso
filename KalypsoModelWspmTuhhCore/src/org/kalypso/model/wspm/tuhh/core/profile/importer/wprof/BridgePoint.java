@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import java.math.BigDecimal;
-import java.net.URL;
+import java.net.URI;
 
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfProfileType;
@@ -141,7 +141,7 @@ public class BridgePoint implements IWProfPoint
    * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#getPhotos()
    */
   @Override
-  public URL[] getPhotos( )
+  public URI[] getPhotos( )
   {
     return m_wprofPoint.getPhotos();
   }
