@@ -75,18 +75,4 @@
 
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WaterlevelParameter:featureview:default"
 		uri="org.kalypso.model.wspm.tuhh.WaterlevelParameter.gft" />
-
-
-	<!-- Documents / Attachemtns for WSPM light -->
-	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:featureview:documents"
-		uri="org.kalypso.model.wspm.WaterBody_documents.gft" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ReachWspmTuhhSteadyState:featureview:documents"
-		uri="org.kalypso.model.wspm.tuhh.ReachWspmTuhhSteadyState_documents.gft" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:featureview:documents"
-		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState_documents.gft" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:WaterlevelFixation:featureview:documents"
-		uri="org.kalypso.model.wspmrunoff.WaterlevelFixation_documents.gft" />
-	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmprofile:Profile:featureview:documents"
-		uri="org.kalypso.model.wspmprofile.Profile_documents.gft" />
 </catalog:catalog>
-
