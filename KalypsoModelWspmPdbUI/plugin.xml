@@ -135,6 +135,7 @@
            icon="icons/exportLocalAsWspm.gif"
            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            name="KalypsoWSPM">
+           <description>Exports the local project data as KalypsoWSPM project.</description>
      </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
