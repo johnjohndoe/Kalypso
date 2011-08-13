@@ -31,6 +31,9 @@
    <extension point="org.eclipse.ui.menus">
         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart?before=widgets" >
              <command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
+                <visibleWhen checkEnabled="true"/>
+             </command>
              <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
           </menuContribution>
     </extension>

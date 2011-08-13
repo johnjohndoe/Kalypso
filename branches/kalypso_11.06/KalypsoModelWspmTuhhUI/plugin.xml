@@ -246,6 +246,14 @@
 				</or>
 			</with>
 		</definition>
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+			<with variable="activeMapPanel">
+				<or>
+					<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+					<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState" />
+				</or>
+			</with>
+		</definition>
 	</extension>
 
 <!-- Profile From DEM  -->
@@ -258,7 +266,7 @@
 				<with variable="activeEditorId">
 					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
 				</with>
-				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 			</and>
 		</visibleWhen>
      </command>
@@ -270,7 +278,7 @@
 				<with variable="activeEditorId">
 					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
 				</with>
-				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 			</and>
 		</visibleWhen>
      </command>
@@ -303,7 +311,7 @@
         	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.actions.dtm.CreateProfileFromDEMWidget" />
       	  </class>
   	  	<enabledWhen>
-			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 		</enabledWhen>
    </handler>
    <handler class="org.kalypso.model.wspm.ui.action.ShowProfileHandler" commandId="org.kalypso.model.wspm.ui.commands.ShowProfile">
