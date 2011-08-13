@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import java.net.URL;
+import java.net.URI;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -57,9 +57,9 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
   private final CheckoutDataMapping m_mapping;
 
-  private final URL m_documentBase;
+  private final URI m_documentBase;
 
-  public CheckoutPdbOperation( final CheckoutDataMapping mapping, final URL documentBase )
+  public CheckoutPdbOperation( final CheckoutDataMapping mapping, final URI documentBase )
   {
     m_mapping = mapping;
     m_documentBase = documentBase;
@@ -88,6 +88,4 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 
     return Status.OK_STATUS;
   }
-
-
 }

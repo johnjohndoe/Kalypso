@@ -41,10 +41,8 @@
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import java.net.URI;
-import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -63,7 +61,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -90,10 +87,10 @@ public class CheckoutPdbHandler extends AbstractHandler
 
     /* Ask user to save project and do nothing on cancel */
     final PdbWspmProject project = viewer.getProject();
-    if( !project.saveProject( true ) )
+    if( !project.confirmProjectSave() )
       return null;
 
-    final URL documentBase = findDocumentBase( shell, commandName, viewer.getConnection() );
+    final URI documentBase = findDocumentBase( shell, commandName, viewer.getConnection() );
     final CheckoutPdbData data = new CheckoutPdbData( documentBase );
 
     final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
@@ -112,31 +109,21 @@ public class CheckoutPdbHandler extends AbstractHandler
     return null;
   }
 
-  private URL findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
+  private URI findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
   {
-    final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
-
     final PdbInfo info = connection.getInfo();
-    final String documentServer = info.getDocumentServer();
-    if( StringUtils.isBlank( documentServer ) )
-    {
-      final String message = String.format( "Base url the document server is empty.%n%s", STR_ATTACHMENTS_DISABLED );
-      MessageDialog.openWarning( shell, commandName, message );
-      return null;
-    }
 
     try
     {
-      final URI uri = new URI( documentServer );
-      return uri.toURL();
+      return info.getDocumentBase();
     }
-    catch( final Exception e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
 
-      final String message = String.format( "Illegal base url of the document server: '%s'.%n%s", documentServer, STR_ATTACHMENTS_DISABLED );
-      final IStatus status = new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message, e );
-      new StatusDialog2( shell, status, commandName ).open();
+      final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
+      new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
+
       return null;
     }
   }

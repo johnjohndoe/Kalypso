@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Set;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -80,9 +77,9 @@ public class CheckoutCrossSectionsWorker
 {
   private final CheckoutDataMapping m_mapping;
 
-  private final URL m_documentBase;
+  private final URI m_documentBase;
 
-  public CheckoutCrossSectionsWorker( final CheckoutDataMapping mapping, final URL documentBase )
+  public CheckoutCrossSectionsWorker( final CheckoutDataMapping mapping, final URI documentBase )
   {
     m_mapping = mapping;
     m_documentBase = documentBase;
@@ -153,45 +150,30 @@ public class CheckoutCrossSectionsWorker
     final Set<Document> documents = section.getDocuments();
     for( final Document document : documents )
     {
-      try
-      {
-        final String documentPath = document.getFilename();
-        final String encodedPath = URIUtil.encodePath( documentPath );
+      final String documentPath = document.getFilename();
+      final URI documentURL = org.eclipse.core.runtime.URIUtil.append( m_documentBase, documentPath );
+      final Image newImage = profile.addImage( documentURL );
 
-        final URL documentURL = new URL( m_documentBase, encodedPath );
-        final Image newImage = profile.addImage( documentURL );
+      // TODO: convert other data as well
+      // document.getCreationDate();
+      // document.getCrossSection();
+      // document.getMeasurementDate();
+      // document.getEditingDate();
+      // document.getEditingUser();
 
-        // TODO: convert other data as well
-        // document.getCreationDate();
-        // document.getCrossSection();
-        // document.getMeasurementDate();
-        // document.getEditingDate();
-        // document.getEditingUser();
+      final GM_Object location = convertGeometry( document.getLocation() );
+      final String description = document.getDescription();
+      final MimeType mimeType = convertMimeType( document.getMimetype() );
+      final String name = document.getName();
+      // document.getShotdirection();
+      // document.getState();
+      // document.getViewangle();
+      // document.getWaterBody();
 
-        final GM_Object location = convertGeometry( document.getLocation() );
-        final String description = document.getDescription();
-        final MimeType mimeType = convertMimeType( document.getMimetype() );
-        final String name = document.getName();
-        // document.getShotdirection();
-        // document.getState();
-        // document.getViewangle();
-        // document.getWaterBody();
-
-        newImage.setLocation( location );
-        newImage.setName( name );
-        newImage.setDescription( description );
-        newImage.setMimeType( mimeType );
-      }
-      catch( final MalformedURLException e )
-      {
-        // TODO: error handling?!
-        e.printStackTrace();
-      }
-      catch( final URIException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      newImage.setLocation( location );
+      newImage.setName( name );
+      newImage.setDescription( description );
+      newImage.setMimeType( mimeType );
     }
   }
 

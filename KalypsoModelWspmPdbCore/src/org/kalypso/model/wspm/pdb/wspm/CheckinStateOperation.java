@@ -41,8 +41,10 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,8 +55,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.WspmReach;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -66,22 +66,23 @@ import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinStatePdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class CheckinStateWorker implements ICoreRunnableWithProgress
+public class CheckinStateOperation implements ICoreRunnableWithProgress
 {
   private static final String STR_FAILED_TO_WRITE_TO_DATABASE = "Failed to write to database";
-
-  private final Set<TuhhReach> m_reaches = new LinkedHashSet<TuhhReach>();
 
   private final CheckinStateData m_data;
 
   private final IPdbConnection m_connection;
 
-  public CheckinStateWorker( final CheckinStateData data, final IPdbConnection connection )
+  public CheckinStateOperation( final CheckinStateData data, final IPdbConnection connection )
   {
     m_data = data;
     m_connection = connection;
@@ -106,12 +107,15 @@ public class CheckinStateWorker implements ICoreRunnableWithProgress
       final String dbSrs = m_data.getDatabaseSrs();
       final Coefficients coefficients = m_data.getCoefficients();
       state.setEditingUser( m_connection.getSettings().getUsername() );
-      state.setIsstatezero( State.ZERO_STATE_OFF );
+      final URI documentBase = m_data.getDocumentBase();
+      m_connection.getInfo().getDocumentServer();
 
-      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, new SubProgressMonitor( monitor, 90 ) );
+      final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
 
       session.close();
+
+      updateReach( state );
     }
     catch( final HibernateException e )
     {
@@ -131,6 +135,12 @@ public class CheckinStateWorker implements ICoreRunnableWithProgress
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to initialize GAF codes", e );
       throw new CoreException( status );
     }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Operation failed", e );
+      throw new CoreException( status );
+    }
     finally
     {
       monitor.done();
@@ -139,35 +149,36 @@ public class CheckinStateWorker implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
+  /**
+   * Some properties of the state may have changed in the wizard. We update the local reach with these properties.
+   */
+  private void updateReach( final State state ) throws Exception
+  {
+    final String name = state.getName();
+    final String description = state.getDescription();
+
+    final TuhhReach reach = m_data.getReach();
+
+    final FeatureChange nameChange = new FeatureChange( reach, Feature.QN_NAME, new ArrayList<String>( Collections.singletonList( name ) ) );
+    final FeatureChange descChange = new FeatureChange( reach, Feature.QN_DESCRIPTION, description );
+
+    final CommandableWorkspace workspace = m_data.getWorkspace();
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { nameChange, descChange } );
+    workspace.postCommand( command );
+  }
+
   private IProfileFeature[] findProfiles( )
   {
-    for( final Object object : m_data.getCheckedElements() )
-      addAsReach( object );
+    final TuhhReach reach = m_data.getReach();
 
     final LinkedHashSet<IProfileFeature> profiles = new LinkedHashSet<IProfileFeature>();
-    for( final TuhhReach reach : m_reaches )
+    final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
+    for( final TuhhReachProfileSegment segment : segments )
     {
-      final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
-      for( final TuhhReachProfileSegment segment : segments )
-      {
-        final IProfileFeature profile = segment.getProfileMember();
-        profiles.add( profile );
-      }
+      final IProfileFeature profile = segment.getProfileMember();
+      profiles.add( profile );
     }
 
     return profiles.toArray( new IProfileFeature[profiles.size()] );
-  }
-
-  private void addAsReach( final Object object )
-  {
-    if( object instanceof TuhhReach )
-      m_reaches.add( (TuhhReach) object );
-    else if( object instanceof WspmWaterBody )
-    {
-      final WspmWaterBody waterBody = (WspmWaterBody) object;
-      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
-      for( final WspmReach wspmReach : reaches )
-        addAsReach( wspmReach );
-    }
   }
 }

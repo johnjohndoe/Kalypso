@@ -163,7 +163,8 @@ public class ImportAttachmentsDocumentsData
     if( cs != null )
       document.setWaterBody( cs.getWaterBody() );
 
-    document.setName( filename );
+    // FIXME: better name; what is unique? -> probably filename should be unique!
+    document.setName( filePath );
     document.setDescription( StringUtils.EMPTY );
     document.setFilename( filePath );
     if( mimeType != null )

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.db;
 
 import java.lang.reflect.Array;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,6 +51,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.hibernate.Session;
@@ -136,6 +138,30 @@ public class PdbInfo
   public String getDocumentServer( )
   {
     return m_properties.getProperty( PROPERTY_DOCUMENT_SERVER );
+  }
+
+  public URI getDocumentBase( ) throws CoreException
+  {
+    final String documentServer = getDocumentServer();
+    if( StringUtils.isBlank( documentServer ) )
+    {
+      final String message = String.format( "Base url the document server is empty" );
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
+    }
+
+    try
+    {
+      return new URI( documentServer );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      final String message = String.format( "Illegal base url of the document server: '%s'", documentServer );
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      throw new CoreException( status );
+    }
   }
 
   @SuppressWarnings("unchecked")

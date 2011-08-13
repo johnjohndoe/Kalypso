@@ -393,6 +393,14 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
   public static void reloadViewAndBringtoTop( final IWorkbenchWindow window, final String stateToSelect )
   {
+    final ElementSelector elementSelector = new ElementSelector();
+    elementSelector.addStateName( stateToSelect );
+
+    reloadViewAndBringtoTop( window, elementSelector );
+  }
+
+  public static void reloadViewAndBringtoTop( final IWorkbenchWindow window, final ElementSelector selector )
+  {
     /* Do not restore, do not update if not created yet */
     final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window, false );
     final PdbView view = runnable.execute();
@@ -402,9 +410,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final IWorkbenchPage page = window.getActivePage();
     page.activate( view );
 
-    final ElementSelector elementSelector = new ElementSelector();
-    elementSelector.addStateName( stateToSelect );
-    view.reload( elementSelector );
+    view.reload( selector );
   }
 
   @Override
