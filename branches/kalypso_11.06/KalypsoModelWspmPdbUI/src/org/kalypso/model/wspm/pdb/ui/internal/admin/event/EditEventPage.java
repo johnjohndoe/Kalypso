@@ -61,13 +61,17 @@ public class EditEventPage extends WizardPage
 
   private final String m_ignoreName;
 
-  public EditEventPage( final String pageName, final Event event, final Event[] existingEvents )
+  public EditEventPage( final String pageName, final Event event, final Event[] existingEvents, final boolean ignoreOwnName )
   {
     super( pageName );
 
     m_event = event;
     m_existingEvents = existingEvents;
-    m_ignoreName = m_event.getName();
+
+    if( ignoreOwnName )
+      m_ignoreName = m_event.getName();
+    else
+      m_ignoreName = null;
 
     setTitle( "Edit Event Properties" );
     setDescription( "Change the properties of the edited event." );

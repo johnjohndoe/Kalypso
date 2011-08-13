@@ -56,7 +56,7 @@ public class EditEventWizard extends Wizard
 
     setWindowTitle( "Edit State" );
 
-    addPage( new EditEventPage( "editEvent", m_event, existingEvents ) ); //$NON-NLS-1$
+    addPage( new EditEventPage( "editEvent", m_event, existingEvents, true ) ); //$NON-NLS-1$
   }
 
   @Override

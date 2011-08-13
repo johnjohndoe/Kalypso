@@ -138,7 +138,7 @@ public class CheckinPdbHandler extends AbstractHandler
       return new CheckinStateWorker( workspace, (TuhhReach) firstElement );
 
     if( firstElement instanceof WspmFixation )
-      return new CheckInFixationWorker( (WspmFixation) firstElement );
+      return new CheckInEventWorker( workspace, (WspmFixation) firstElement );
 
     throw new ExecutionException( "This handler only works on TuhhReach'es or WspmFixation's" ); //$NON-NLS-1$
   }
