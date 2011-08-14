@@ -81,6 +81,9 @@ public class WspmTuhhProjectSelection
 
     final IFeatureSelection featureSelection = (IFeatureSelection) selection;
     final Object firstElement = featureSelection.getFirstElement();
+    if( firstElement instanceof Feature )
+      return (Feature) firstElement;
+
     if( !(firstElement instanceof FeatureAssociationTypeElement) )
       return null;
 
@@ -95,6 +98,9 @@ public class WspmTuhhProjectSelection
 
   private TuhhWspmProject findProject( final Feature parentFeature )
   {
+    if( parentFeature == null )
+      return null;
+
     if( parentFeature instanceof TuhhWspmProject )
       return (TuhhWspmProject) parentFeature;
 
@@ -105,7 +111,7 @@ public class WspmTuhhProjectSelection
         return (TuhhWspmProject) grandDad;
     }
 
-    return null;
+    return findProject( parentFeature.getOwner() );
   }
 
   public CommandableWorkspace getWorkspace( )
