@@ -44,33 +44,29 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.net.URL;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.grid.RichCoverageCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter2;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -82,10 +78,6 @@ public class ExtendProfileJob extends AbstractDemProfileJob
   /** Snapping radius in screen-pixels. */
   public static final int SNAPPING_RADIUS = 20;
 
-  private final FeatureList m_profileFeatures;
-
-  private IProfileFeature m_profile;
-
   private int m_insertSign = 0;
 
   private final SLDPainter2 m_profileLinePainter;
@@ -94,40 +86,36 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
   private GM_Point m_startPoint;
 
-  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final ICoverageCollection coverages, final FeatureList profileFeatures, final TuhhReach reach, final double simplifyDistance )
-  {
-    super( Messages.getString( "ExtendProfileJob_0" ), widget, commandableWorkspace, mapPanel, reach, coverages, simplifyDistance ); //$NON-NLS-1$
+  private ExtendProfileGrabber m_info;
 
-    m_profileFeatures = profileFeatures;
+  public ExtendProfileJob( final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final double simplifyDistance, final IKalypsoFeatureTheme[] profileThemes )
+  {
+    super( Messages.getString( "ExtendProfileJob_0" ), widget, mapPanel, coverages, simplifyDistance, profileThemes ); //$NON-NLS-1$
 
     m_profileLinePainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.profile.sld" ) } ); //$NON-NLS-1$
     m_grabPointPainter = new SLDPainter2( new URL[] { getClass().getResource( "resources/selected.point.sld" ) } ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.AbstractDemProfileJob#runJob(org.kalypsodeegree.model.geometry.GM_Curve,
-   *      org.kalypso.grid.RichCoverageCollection)
-   */
   @Override
   protected IStatus runJob( final GM_Curve curve, final RichCoverageCollection richCoverages ) throws Exception
   {
-    if( m_profile == null )
+    if( m_info == null )
       return Status.OK_STATUS;
 
     // fetch points from DTM
     final Coordinate[] newPoints = richCoverages.extractPoints( curve );
     richCoverages.dispose();
-    if( newPoints == null )
-      // TODO: better message
-      return Status.OK_STATUS;
+    if( ArrayUtils.isEmpty( newPoints ) )
+      return openNoPointsWarning();
 
     // add line into profile
-    final IProfil profil = m_profile.getProfil();
+    final IProfileFeature profile = m_info.getProfile();
+    final IProfil profil = profile.getProfil();
     CoverageProfile.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance() );
 
-    ProfileUiUtils.changeProfileAndFireEvent( profil, m_profile );
+    ProfileUiUtils.changeProfileAndFireEvent( profil, profile );
 
-    final TuhhReach reach = getReach();
+    final TuhhReach reach = m_info.getReach();
     if( reach != null )
     {
       /*
@@ -138,7 +126,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
 
-    getWorkspace().postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
+    m_info.getWorkspace().postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -157,11 +145,12 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     /* Try to grab a feature. */
     final double snapRadius = MapUtilities.calculateWorldDistance( getMapPanel(), pos, SNAPPING_RADIUS );
     m_insertSign = 0;
-    m_profile = grabProfile( pos, snapRadius );
-    if( m_profile == null )
+    m_info = grabProfile( pos, snapRadius );
+    if( m_info == null )
       return null;
 
-    final GM_Curve line = m_profile.getLine();
+    final IProfileFeature profile = m_info.getProfile();
+    final GM_Curve line = profile.getLine();
     if( line == null )
       return null;
 
@@ -183,25 +172,19 @@ public class ExtendProfileJob extends AbstractDemProfileJob
       return null;
   }
 
-  private IProfileFeature grabProfile( final GM_Point pos, final double snapRadius )
+  private ExtendProfileGrabber grabProfile( final GM_Point pos, final double snapRadius )
   {
-    final IFeatureType targetFeatureType = m_profileFeatures.getPropertyType().getTargetFeatureType();
-    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QN_PROFILE ) )
-      return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, snapRadius, m_profileFeatures, IProfileFeature.QN_PROPERTY_LINE );
-    else
+    final IKalypsoFeatureTheme[] profileThemes = getProfileThemes();
+    for( final IKalypsoFeatureTheme theme : profileThemes )
     {
-      final TuhhReachProfileSegment nearest = (TuhhReachProfileSegment) GeometryUtilities.findNearestFeature( pos, snapRadius, m_profileFeatures, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );
-      if( nearest == null )
-        return null;
-
-      return nearest.getProfileMember();
+      final ExtendProfileGrabber info = new ExtendProfileGrabber( theme, snapRadius );
+      if( info.doGrab( pos ) )
+        return info;
     }
+
+    return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#paint(java.awt.Graphics,
-   *      org.kalypso.ogc.gml.map.IMapPanel, java.awt.Point)
-   */
   @Override
   public void paint( final Graphics g, final IMapPanel mapPanel, final Point currentPoint )
   {
@@ -209,9 +192,10 @@ public class ExtendProfileJob extends AbstractDemProfileJob
 
     final GeoTransform projection = mapPanel.getProjection();
 
-    if( m_profile != null )
+    if( m_info != null )
     {
-      final GM_Curve line = m_profile.getLine();
+      final IProfileFeature profile = m_info.getProfile();
+      final GM_Curve line = profile.getLine();
       m_profileLinePainter.paint( g, projection, line );
     }
 
@@ -238,9 +222,6 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#addPoint(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public void addPoint( final GM_Point pos ) throws Exception
   {
@@ -260,9 +241,6 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#removeLastPoint()
-   */
   @Override
   public void removeLastPoint( )
   {
@@ -270,7 +248,7 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     geoBuilder.removeLastPoint();
     if( geoBuilder.getPointCount() == 0 )
     {
-      m_profile = null;
+      m_info = null;
       m_startPoint = null;
     }
   }
