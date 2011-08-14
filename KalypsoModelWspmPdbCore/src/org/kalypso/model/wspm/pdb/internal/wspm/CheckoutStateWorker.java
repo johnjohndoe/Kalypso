@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -130,6 +131,9 @@ public class CheckoutStateWorker
   private void cleanupReachProfiles( final TuhhReach reach )
   {
     final WspmWaterBody waterBody = reach.getWaterBody();
+    if( waterBody == null )
+      return;
+
     final ReachProfileReferencer referencer = new ReachProfileReferencer( waterBody );
 
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();

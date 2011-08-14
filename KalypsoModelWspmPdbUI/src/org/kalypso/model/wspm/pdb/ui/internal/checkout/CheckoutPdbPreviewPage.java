@@ -50,8 +50,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -59,6 +64,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
@@ -66,10 +72,12 @@ import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.WaterBodyStructure;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData.RemoveStrategy;
 
 /**
  * @author Gernot Belger
@@ -100,7 +108,8 @@ public class CheckoutPdbPreviewPage extends WizardPage
     m_binding = new DatabindingWizardPage( this, null, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
 
     createTreePreview( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    createWarningElements( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createWarningElements( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    createOptionsGroup( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
   private Control createTreePreview( final Composite parent )
@@ -160,7 +169,6 @@ public class CheckoutPdbPreviewPage extends WizardPage
     final Label text = new Label( panel, SWT.WRAP );
     text.setText( message );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
   }
 
   private IStatus validateSelection( )
@@ -186,5 +194,25 @@ public class CheckoutPdbPreviewPage extends WizardPage
 
     final String msg = "The marked elements already exist in the local workspace.\nExisting elements will be overwritten and local changes are lost.";
     return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, msg );
+  }
+
+  private Control createOptionsGroup( final Composite panel )
+  {
+    final Group group = new Group( panel, SWT.NONE );
+    group.setText( "Options" );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( group );
+
+    new Label( group, SWT.NONE ).setText( "Delete local data" );
+
+    final ComboViewer combo = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
+    combo.setContentProvider( new ArrayContentProvider() );
+    combo.setLabelProvider( new LabelProvider() );
+    combo.setInput( RemoveStrategy.values() );
+
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( combo );
+    final IObservableValue model = BeansObservables.observeValue( m_data, CheckoutPdbData.PROPERTY_REMOVE_STRATEGY );
+    m_binding.bindValue( target, model );
+
+    return group;
   }
 }
