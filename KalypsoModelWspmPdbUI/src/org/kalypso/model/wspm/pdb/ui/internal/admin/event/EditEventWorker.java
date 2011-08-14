@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
+import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
  * @author Gernot Belger
@@ -61,7 +62,7 @@ public class EditEventWorker implements IEditWorker
 
   private String m_nameToSelect;
 
-  private Event m_clone;
+  Event m_clone;
 
   private Event m_eventToEdit;
 
@@ -87,7 +88,23 @@ public class EditEventWorker implements IEditWorker
     final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
     m_eventToEdit = EventUtils.findEventByName( existingEvents, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );
-    return new EditEventWizard( existingEvents, m_clone );
+
+    final IEditEventPageData data = new IEditEventPageData()
+    {
+      @Override
+      public Event[] getExistingEvents( )
+      {
+        return existingEvents;
+      }
+
+      @Override
+      public Event getEvent( )
+      {
+        return m_clone;
+      }
+    };
+
+    return new EditEventWizard( data );
   }
 
   @Override

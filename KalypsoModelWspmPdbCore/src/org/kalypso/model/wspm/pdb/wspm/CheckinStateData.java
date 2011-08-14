@@ -80,6 +80,8 @@ public class CheckinStateData
 
   private URI m_documentBase;
 
+  private IPdbConnection m_connection;
+
   public CheckinStateData( final CommandableWorkspace wspmWorkspace, final TuhhReach reach )
   {
     m_wspmWorkspace = wspmWorkspace;
@@ -95,6 +97,10 @@ public class CheckinStateData
 
   public void init( final IPdbConnection connection ) throws PdbConnectException, CoreException
   {
+    closeConnection();
+
+    m_connection = connection;
+
     Session session = null;
     try
     {
@@ -163,5 +169,15 @@ public class CheckinStateData
   public URI getDocumentBase( )
   {
     return m_documentBase;
+  }
+
+  public IPdbConnection getConnection( )
+  {
+    return m_connection;
+  }
+
+  public void closeConnection( )
+  {
+    PdbUtils.closeQuietly( m_connection );
   }
 }

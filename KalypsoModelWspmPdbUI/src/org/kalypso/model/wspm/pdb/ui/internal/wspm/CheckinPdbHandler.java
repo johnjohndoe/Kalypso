@@ -106,7 +106,7 @@ public class CheckinPdbHandler extends AbstractHandler
     if( !checkPreconditions( shell, commandName, worker ) )
       return null;
 
-    if( !showWizard( shell, commandName, worker, connection ) )
+    if( !showWizard( shell, commandName, worker ) )
       return null;
 
     final ElementSelector selector = new ElementSelector();
@@ -123,7 +123,6 @@ public class CheckinPdbHandler extends AbstractHandler
     final IStatus status = worker.checkPreconditions();
     if( !status.isOK() )
     {
-
       new StatusDialog2( shell, status, windowTitle ).open();
       return false;
     }
@@ -171,9 +170,9 @@ public class CheckinPdbHandler extends AbstractHandler
     return false;
   }
 
-  private boolean showWizard( final Shell shell, final String commandName, final ICheckInWorker worker, final IPdbConnection connection )
+  private boolean showWizard( final Shell shell, final String commandName, final ICheckInWorker worker )
   {
-    final Wizard wizard = worker.createWizard( connection );
+    final Wizard wizard = worker.createWizard();
     wizard.setWindowTitle( commandName );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     return dialog.open() == Window.OK;

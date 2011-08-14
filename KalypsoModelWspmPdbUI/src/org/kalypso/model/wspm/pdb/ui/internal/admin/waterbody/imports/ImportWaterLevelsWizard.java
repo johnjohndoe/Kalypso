@@ -137,7 +137,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     addPage( waterPage );
 
     /* Edit event properties */
-    m_eventPage = new EditEventPage( "eventPage", event, null, true );
+    m_eventPage = new EditEventPage( "eventPage", m_data, true );
     addPage( m_eventPage );
   }
 
@@ -148,7 +148,6 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     {
       monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
       m_data.init( getDialogSettings() );
-      m_eventPage.setExistingEvents( m_data.getExistingEvents() );
 
       return Status.OK_STATUS;
     }

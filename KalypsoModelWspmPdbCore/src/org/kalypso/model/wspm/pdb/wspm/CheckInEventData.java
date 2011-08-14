@@ -58,8 +58,8 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * @author Gernot Belger
- */ 
-public class CheckInEventData
+ */
+public class CheckInEventData implements IEditEventPageData
 {
   private final Event m_event = new Event();
 
@@ -72,6 +72,8 @@ public class CheckInEventData
   private String m_dbSrs;
 
   private final WspmFixation m_wspmFixation;
+
+  private IPdbConnection m_connection;
 
   public CheckInEventData( final CommandableWorkspace wspmWorkspace, final WspmFixation wspmFixation )
   {
@@ -90,6 +92,10 @@ public class CheckInEventData
 
   public void init( final IPdbConnection connection ) throws PdbConnectException
   {
+    closeConnection();
+
+    m_connection = connection;
+
     Session session = null;
     try
     {
@@ -111,11 +117,13 @@ public class CheckInEventData
     }
   }
 
+  @Override
   public Event getEvent( )
   {
     return m_event;
   }
 
+  @Override
   public Event[] getExistingEvents( )
   {
     return m_existingEvents;
@@ -144,5 +152,15 @@ public class CheckInEventData
   public CommandableWorkspace getWorkspace( )
   {
     return m_wspmWorkspace;
+  }
+
+  public IPdbConnection getConnection( )
+  {
+    return m_connection;
+  }
+
+  public void closeConnection( )
+  {
+    PdbUtils.closeQuietly( m_connection );
   }
 }

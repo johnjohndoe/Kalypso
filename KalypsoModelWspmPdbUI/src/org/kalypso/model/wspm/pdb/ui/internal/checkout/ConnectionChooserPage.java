@@ -62,19 +62,20 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConfigureConnectionsAction;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbSettingsViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
 
 /**
  * @author Gernot Belger
  */
 public class ConnectionChooserPage extends WizardPage
 {
-  private final CheckoutWspmData m_data;
+  private final ConnectionChooserData m_data;
 
   private DatabindingWizardPage m_binding;
 
   private PdbSettingsViewer m_settingsViewer;
 
-  public ConnectionChooserPage( final String pageName, final CheckoutWspmData data )
+  public ConnectionChooserPage( final String pageName, final ConnectionChooserData data )
   {
     super( pageName );
 
@@ -107,7 +108,7 @@ public class ConnectionChooserPage extends WizardPage
       m_data.setSettings( input.get( 0 ) );
 
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
-    final IObservableValue model = BeansObservables.observeValue( m_data, CheckoutWspmData.PROPERTY_SETTINGS );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ConnectionChooserData.PROPERTY_SETTINGS );
     final DataBinder dataBinder = new DataBinder( target, model );
     dataBinder.addTargetAfterGetValidator( new NotNullValidator<IPdbSettings>( IPdbSettings.class, IStatus.ERROR, "A connection must be selected." ) );
     m_binding.bindValue( dataBinder );

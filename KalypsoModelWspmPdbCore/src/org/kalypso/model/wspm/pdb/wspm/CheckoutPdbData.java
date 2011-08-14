@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -66,7 +67,7 @@ public class CheckoutPdbData extends AbstractModelObject
   /** Choice what shall be removed from the local data. */
   public enum RemoveStrategy
   {
-    keepAll("Keep all"),
+    keepAll("Keep everything"),
     keepWaterBodies("Only keep water bodies"),
     removeAll("Remove everything");
 
@@ -96,8 +97,13 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private URI m_documentBase;
 
+  private IPdbConnection m_connection;
+
   public void init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
   {
+    closeConnection();
+
+    m_connection = connection;
     m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
     if( settings == null )
@@ -185,5 +191,11 @@ public class CheckoutPdbData extends AbstractModelObject
     final Event[] events = searcher.getEvents();
 
     m_mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
+  }
+
+  public void closeConnection( )
+  {
+    if( m_connection != null )
+      PdbUtils.closeQuietly( m_connection );
   }
 }

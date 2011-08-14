@@ -44,8 +44,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
@@ -59,12 +57,12 @@ public class CheckInEventWizard extends Wizard
 {
   private final CheckInEventData m_data;
 
-  private final IPdbConnection m_connection;
+  private final CheckInEventOperation m_operation;
 
-  public CheckInEventWizard( final CheckInEventData data, final IPdbConnection connection )
+  public CheckInEventWizard( final CheckInEventData data, final CheckInEventOperation operation )
   {
     m_data = data;
-    m_connection = connection;
+    m_operation = operation;
 
     setNeedsProgressMonitor( true );
   }
@@ -72,9 +70,7 @@ public class CheckInEventWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final Event[] existingEvents = m_data.getExistingEvents();
-
-    final EditEventPage editStatePage = new EditEventPage( "editEvent", m_data.getEvent(), existingEvents, false );
+    final EditEventPage editStatePage = new EditEventPage( "editEvent", m_data, false );
     editStatePage.setDescription( "Edit the properties of the new waterlevel event." );
 
     addPage( editStatePage );
@@ -83,8 +79,7 @@ public class CheckInEventWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final CheckInEventOperation operation = new CheckInEventOperation( m_data, m_connection );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 

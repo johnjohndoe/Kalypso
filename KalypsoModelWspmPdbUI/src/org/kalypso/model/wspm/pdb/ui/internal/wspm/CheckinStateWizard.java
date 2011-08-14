@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
@@ -61,32 +60,31 @@ public class CheckinStateWizard extends Wizard implements IStatesProvider
 {
   private final CheckinStateData m_data;
 
-  private final IPdbConnection m_connection;
+  private final CheckinStateOperation m_operation;
 
-  public CheckinStateWizard( final CheckinStateData data, final IPdbConnection connection )
+  public CheckinStateWizard( final CheckinStateData data, final CheckinStateOperation operation )
   {
     m_data = data;
-    m_connection = connection;
+    m_operation = operation;
 
     setNeedsProgressMonitor( true );
-
   }
 
   @Override
   public void addPages( )
   {
     final EditStatePage editStatePage = new EditStatePage( "editState", m_data.getState(), this, Mode.NEW );
+
     editStatePage.setTitle( EditStatePage.STR_ENTER_STATE_PROPERTIES );
     editStatePage.setDescription( EditStatePage.STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE );
+
     addPage( editStatePage );
   }
-
 
   @Override
   public boolean performFinish( )
   {
-    final CheckinStateOperation operation = new CheckinStateOperation( m_data, m_connection );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 

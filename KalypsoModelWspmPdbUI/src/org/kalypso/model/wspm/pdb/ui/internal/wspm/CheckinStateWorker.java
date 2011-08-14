@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -59,6 +60,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -70,9 +72,12 @@ public class CheckinStateWorker implements ICheckInWorker
 {
   private final CheckinStateData m_data;
 
+  private final CheckinStateOperation m_operation;
+
   public CheckinStateWorker( final CommandableWorkspace workspace, final TuhhReach reach )
   {
     m_data = new CheckinStateData( workspace, reach );
+    m_operation = new CheckinStateOperation( m_data );
   }
 
   @Override
@@ -136,9 +141,9 @@ public class CheckinStateWorker implements ICheckInWorker
   }
 
   @Override
-  public Wizard createWizard( final IPdbConnection connection )
+  public Wizard createWizard( )
   {
-    return new CheckinStateWizard( m_data, connection );
+    return new CheckinStateWizard( m_data, m_operation );
   }
 
   @Override
@@ -146,5 +151,17 @@ public class CheckinStateWorker implements ICheckInWorker
   {
     final String newStateName = m_data.getState().getName();
     selector.addStateName( newStateName );
+  }
+
+  @Override
+  public ICoreRunnableWithProgress getOperation( )
+  {
+    return m_operation;
+  }
+
+  @Override
+  public void closeConnection( )
+  {
+    m_data.closeConnection();
   }
 }

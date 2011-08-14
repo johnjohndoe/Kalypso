@@ -60,6 +60,8 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.imports.WspmTuhhProjectSelection;
@@ -79,7 +81,9 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
     }
   };
 
-  private final CheckoutWspmData m_data = new CheckoutWspmData();
+  private final ConnectionChooserData m_settingsData = new ConnectionChooserData();
+
+  private final CheckoutPdbData m_checkoutData = new CheckoutPdbData();
 
   private CommandableWorkspace m_workspace;
 
@@ -139,23 +143,29 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    addPage( new ConnectionChooserPage( "connectionChooser", m_data ) ); //$NON-NLS-1$
+    addPage( new ConnectionChooserPage( "connectionChooser", m_settingsData ) ); //$NON-NLS-1$
 
     m_contentPage = new PdbContentPage( "elementChooser" ); //$NON-NLS-1$
     addPage( m_contentPage ); //$NON-NLS-1$
 
-    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    addPage( new CheckoutPdbPreviewPage( "previewPage", m_checkoutData ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean performFinish( )
   {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
+    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_checkoutData );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_checkoutData.closeConnection();
   }
 
   protected void pageChanging( final PageChangingEvent event )
@@ -169,14 +179,14 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
 
   private void doConnect( final PageChangingEvent event )
   {
-    final IPdbSettings settings = m_data.getSettings();
+    final IPdbSettings settings = m_settingsData.getSettings();
 
     final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( result.isOK() )
     {
       final IPdbConnection connection = operation.getConnection();
-      m_data.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
+      m_checkoutData.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
       m_contentPage.setConnection( connection );
     }
     else
@@ -196,6 +206,6 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
       return;
     }
 
-    m_data.initMapping( selection, m_workspace, m_project );
+    m_checkoutData.initMapping( selection, m_workspace, m_project );
   }
 }

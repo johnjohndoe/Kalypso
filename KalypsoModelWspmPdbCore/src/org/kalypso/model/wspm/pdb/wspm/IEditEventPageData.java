@@ -38,26 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
+package org.kalypso.model.wspm.pdb.wspm;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 
 /**
  * @author Gernot Belger
+ *
  */
-public class EditEventWizard extends Wizard
+public interface IEditEventPageData
 {
-  public EditEventWizard( final IEditEventPageData data )
-  {
-    setWindowTitle( "Edit State" );
+  Event getEvent( );
 
-    addPage( new EditEventPage( "editEvent", data, true ) ); //$NON-NLS-1$
-  }
-
-  @Override
-  public boolean performFinish( )
-  {
-    return true;
-  }
+  Event[] getExistingEvents( );
 }
