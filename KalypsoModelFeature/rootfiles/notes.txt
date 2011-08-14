@@ -2,7 +2,7 @@ Notes:
 kalypso_11.6.1.20110729
 =======================
 
-This is Version 11.6.1.20110729 of Kalypso
+This is Version 11.6.1.20110814 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 
@@ -18,7 +18,7 @@ Changes
 Please find here a list of new and noteworthy changes:
 http://sourceforge.net/apps/mediawiki/kalypso/index.php?title=Change_Log_Kalypso_11.6.0
 
-Please visit http://sourceforge.net/apps/trac/kalypso/report/29 for a detailed list of changes since Kalypso 10.10.3.
+Please visit http://sourceforge.net/apps/trac/kalypso/report/29 for a detailed list of changes since Kalypso 11.6.0.
 
 Known-Issues
 ------------
