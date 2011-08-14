@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 
 /**
  * @author Gernot Belger

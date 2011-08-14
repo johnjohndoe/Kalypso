@@ -63,7 +63,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.IPdbWspmProject;
+import org.kalypso.model.wspm.pdb.wspm.IPdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -236,7 +236,7 @@ public class PdbWspmProject implements IPdbWspmProject
     final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
 
     final TuhhWspmProject project = getWspmProject();
-    final WspmWaterBody[] waterBodies = project.getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = project.getWaterBodies();
 
     /* Remove obsolete themes */
     final ObsoleteReachThemesVisitor obsoleteReachesVisitor = new ObsoleteReachThemesVisitor( project );

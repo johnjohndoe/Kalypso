@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.wspm;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

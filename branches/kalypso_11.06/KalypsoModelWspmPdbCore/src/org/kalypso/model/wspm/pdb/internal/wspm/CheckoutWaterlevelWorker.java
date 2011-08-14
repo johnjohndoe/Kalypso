@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;

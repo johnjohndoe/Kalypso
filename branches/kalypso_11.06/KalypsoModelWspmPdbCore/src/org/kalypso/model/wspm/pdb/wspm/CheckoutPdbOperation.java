@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.wspm;
 
 import java.net.URI;
 
@@ -49,20 +49,23 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutCrossSectionsWorker;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutRemoveWorker;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutStateWorker;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutWaterBodyWorker;
+import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutWaterlevelWorker;
 
 /**
  * @author Gernot Belger
  */
 public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
-  private final CheckoutDataMapping m_mapping;
+  private final CheckoutPdbData m_data;
 
-  private final URI m_documentBase;
 
-  public CheckoutPdbOperation( final CheckoutDataMapping mapping, final URI documentBase )
+  public CheckoutPdbOperation( final CheckoutPdbData data )
   {
-    m_mapping = mapping;
-    m_documentBase = documentBase;
+    m_data = data;
   }
 
   @Override
@@ -70,19 +73,26 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Loading data from cross section database", 100 );
 
-    final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( m_mapping );
-    waterBodyWorker.execute( new SubProgressMonitor( monitor, 10 ) );
+    final URI documentBase = m_data.getDocumentBase();
+    final CheckoutDataMapping mapping = m_data.getMapping();
 
-    final CheckoutStateWorker stateWorker = new CheckoutStateWorker( m_mapping );
-    stateWorker.execute( new SubProgressMonitor( monitor, 10 ) );
+    final CheckoutRemoveWorker removeWorker = new CheckoutRemoveWorker( m_data );
+    removeWorker.execute();
+    monitor.worked( 5 );
 
-    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( m_mapping, m_documentBase );
-    crossSectionsWorker.execute( new SubProgressMonitor( monitor, 45 ) );
+    final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( mapping );
+    waterBodyWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
-    final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( m_mapping );
-    waterlevelWorker.execute( new SubProgressMonitor( monitor, 45 ) );
+    final CheckoutStateWorker stateWorker = new CheckoutStateWorker( mapping );
+    stateWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
-    m_mapping.fireEvents( new SubProgressMonitor( monitor, 5 ) );
+    final CheckoutCrossSectionsWorker crossSectionsWorker = new CheckoutCrossSectionsWorker( mapping, documentBase );
+    crossSectionsWorker.execute( new SubProgressMonitor( monitor, 40 ) );
+
+    final CheckoutWaterlevelWorker waterlevelWorker = new CheckoutWaterlevelWorker( mapping );
+    waterlevelWorker.execute( new SubProgressMonitor( monitor, 40 ) );
+
+    mapping.fireEvents( new SubProgressMonitor( monitor, 5 ) );
 
     ProgressUtilities.done( monitor );
 

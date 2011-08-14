@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
-import java.net.URI;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -52,9 +50,9 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutPdbOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -85,23 +83,19 @@ public class CheckoutPdbWizard extends Wizard
     final CrossSection[] crossSections = searcher.getCrossSections();
     final Event[] events = searcher.getEvents();
 
-    final CheckoutDataMapping mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
-    m_data.setMapping( mapping );
+    m_data.initMapping( waterBodies, states, crossSections, events, workspace, project );
   }
 
   @Override
   public void addPages( )
   {
     addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
-
-    // TODO: ask, if all local data should be replaced (or at least an existing copy of the reach should be replaced)
   }
 
   @Override
   public boolean performFinish( )
   {
-    final URI documentBase = m_data.getDocumentBase();
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data.getMapping(), documentBase );
+    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
       new StatusDialog2( getShell(), status, getWindowTitle() ).open();

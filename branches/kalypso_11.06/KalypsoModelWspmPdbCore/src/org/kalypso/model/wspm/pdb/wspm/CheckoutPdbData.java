@@ -38,13 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.wspm;
 
 import java.net.URI;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutDataMapping;
+import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -52,7 +57,32 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckoutPdbData extends AbstractModelObject
 {
+  /** Choice what shall be removed from the local data. */
+  public enum RemoveStrategy
+  {
+    keepAll("Keep all"),
+    keepWaterBodies("Only keep water bodies"),
+    removeAll("Remove everything");
+
+    private final String m_label;
+
+    private RemoveStrategy( final String label )
+    {
+      m_label = label;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
+  }
+
   public static final String PROPERTY_CONFIRM_EXISTING = "confirmExisting"; //$NON-NLS-1$
+
+  public static final String PROPERTY_REMOVE_STRATEGY = "removeStrategy"; //$NON-NLS-1$
+
+  private RemoveStrategy m_removeStrategy = RemoveStrategy.keepAll;
 
   private CheckoutDataMapping m_mapping;
 
@@ -78,11 +108,6 @@ public class CheckoutPdbData extends AbstractModelObject
       return;
     // TODO Auto-generated method stub
 
-  }
-
-  public void setMapping( final CheckoutDataMapping mapping )
-  {
-    m_mapping = mapping;
   }
 
   public CheckoutDataMapping getMapping( )
@@ -112,5 +137,24 @@ public class CheckoutPdbData extends AbstractModelObject
   public URI getDocumentBase( )
   {
     return m_documentBase;
+  }
+
+  public RemoveStrategy getRemoveStrategy( )
+  {
+    return m_removeStrategy;
+  }
+
+  public void setRemoveStrategy( final RemoveStrategy removeStrategy )
+  {
+    final RemoveStrategy oldValue = m_removeStrategy;
+
+    m_removeStrategy = removeStrategy;
+
+    firePropertyChange( PROPERTY_REMOVE_STRATEGY, oldValue, removeStrategy );
+  }
+
+  public void initMapping( final WaterBody[] waterBodies, final State[] states, final CrossSection[] crossSections, final Event[] events, final CommandableWorkspace workspace, final TuhhWspmProject project )
+  {
+    m_mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
   }
 }

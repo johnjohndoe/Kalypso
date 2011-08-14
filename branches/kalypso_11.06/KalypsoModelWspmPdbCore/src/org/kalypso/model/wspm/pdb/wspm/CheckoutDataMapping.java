@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.internal.wspm;
+package org.kalypso.model.wspm.pdb.wspm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -64,6 +65,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.wspm.AddKeysWithMappingClosure;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -239,11 +241,21 @@ public class CheckoutDataMapping
       final Feature[] removedFeatures = m_removedFeatures.toArray( new Feature[m_removedFeatures.size()] );
       final Feature[] changedFeatures = m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
 
+      // REMARK: we do fire an event for each parent, else we get refresh problems
       final Feature[] removedParents = findParents( m_removedFeatures );
-      final Feature[] changedParents = findParents( m_changedFeatures );
+      for( final Feature removedParent : removedParents )
+      {
+        final Feature[] children = findChildren( removedParent, removedFeatures );
+        m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, removedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+      }
 
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, removedParents, removedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
-      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, changedParents, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final Feature[] changedParents = findParents( m_changedFeatures );
+      for( final Feature changedParent : changedParents )
+      {
+        final Feature[] children = findChildren( changedParent, changedFeatures );
+        m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, changedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      }
+
       m_workspace.postCommand( new EmptyCommand( null, false ) );
     }
     catch( final CoreException e )
@@ -262,6 +274,20 @@ public class CheckoutDataMapping
     }
   }
 
+  private Feature[] findChildren( final Feature parent, final Feature[] removedFeatures )
+  {
+    final Collection<Feature> children = new ArrayList<Feature>();
+
+    for( final Feature feature : removedFeatures )
+    {
+      final Feature owner = feature.getOwner();
+      if( owner == parent )
+        children.add( feature );
+    }
+
+    return children.toArray( new Feature[children.size()] );
+  }
+
   private Feature[] findParents( final List<Feature> features )
   {
     final Collection<Feature> parents = new ArrayList<Feature>();
@@ -276,12 +302,12 @@ public class CheckoutDataMapping
     return parents.toArray( new Feature[parents.size()] );
   }
 
-  void addChangedFeatures( final Feature changedFeature )
+  public void addChangedFeatures( final Feature changedFeature )
   {
     m_changedFeatures.add( changedFeature );
   }
 
-  void addRemovedFeatures( final Feature feature )
+  public void addRemovedFeatures( final Feature feature )
   {
     m_removedFeatures.add( feature );
   }
@@ -316,5 +342,26 @@ public class CheckoutDataMapping
     CollectionUtils.forAllDo( m_stateMapping.keySet(), new AddKeysWithMappingClosure( m_stateMapping, all ) );
 
     return Collections.unmodifiableSet( all );
+  }
+
+  public void featureRemoved( final Feature element )
+  {
+    addRemovedFeatures( element );
+
+    removeFromMapping( m_eventMapping, element );
+    removeFromMapping( m_stateMapping, element );
+    removeFromMapping( m_waterMapping, element );
+  }
+
+  private void removeFromMapping( final Map<?, ?> mapping, final Feature element )
+  {
+    if( !mapping.containsValue( element ) )
+      return;
+
+    for( final Entry< ? , ? > entry : mapping.entrySet() )
+    {
+      if( element.equals( entry.getValue() ) )
+        entry.setValue( null );
+    }
   }
 }
