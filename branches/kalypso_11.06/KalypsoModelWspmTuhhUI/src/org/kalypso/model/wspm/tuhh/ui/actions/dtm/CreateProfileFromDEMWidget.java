@@ -6,21 +6,18 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -124,9 +121,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     mapPanel.setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -139,46 +133,30 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
 
   private ICreateProfileStrategy initStrategy( final IMapModell model, final ICoverageCollection coverages, final IMapPanel mapPanel )
   {
-    final IKalypsoFeatureTheme profileTheme = findProfileTheme( model );
-    if( profileTheme == null )
+    final IKalypsoFeatureTheme[] profileThemes = findProfileThemes( model );
+    if( ArrayUtils.isEmpty( profileThemes ) )
       return null;
 
-    final CommandableWorkspace commandableWorkspace = profileTheme.getWorkspace();
-
-    final FeatureList profileFeatures = profileTheme.getFeatureList();
-    if( profileFeatures == null )
-      return null;
-
-    final Feature parentFeature = profileFeatures.getParentFeature();
-
-    final WspmWaterBody water = ProfileUiUtils.findWaterbody( parentFeature );
-    final TuhhReach reach = ProfileUiUtils.findReach( parentFeature );
-
-    // FIXME: magic number.... get from user
+    // TODO: magic number.... get from user
     final double simplifyDistance = 0.01;
 
     if( m_strategyExtendProfile )
-      return new ExtendProfileJob( this, commandableWorkspace, mapPanel, coverages, profileFeatures, reach, simplifyDistance );
+      return new ExtendProfileJob( this, mapPanel, coverages, simplifyDistance, profileThemes );
     else
-      return new CreateNewProfileJob( this, commandableWorkspace, mapPanel, water, reach, coverages, simplifyDistance );
+      return new CreateNewProfileJob( this, mapPanel, coverages, simplifyDistance, profileThemes );
   }
 
-  private IKalypsoFeatureTheme findProfileTheme( final IMapModell model )
+  private IKalypsoFeatureTheme[] findProfileThemes( final IMapModell model )
   {
     final IKalypsoThemePredicate profilePredicate = new ProfileThemePredicate();
     final IKalypsoTheme activeTheme = model.getActiveTheme();
     if( profilePredicate.decide( activeTheme ) )
-      return (IKalypsoFeatureTheme) activeTheme;
+      return new IKalypsoFeatureTheme[] { (IKalypsoFeatureTheme) activeTheme };
 
     final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( profilePredicate );
     model.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
     final IKalypsoTheme[] themes = visitor.getFoundThemes();
-    final IKalypsoFeatureTheme[] profileThemes = Arrays.castArray( themes, new IKalypsoFeatureTheme[themes.length] );
-    if( profileThemes.length == 0 )
-      return null;
-
-    // FIXME: let user decide which theme to use; at the moment no problem, we seldom have more than one theme
-    return profileThemes[0];
+    return Arrays.castArray( themes, new IKalypsoFeatureTheme[themes.length] );
   }
 
   private ICoverageCollection initCoverages( final IMapModell model )
@@ -254,9 +232,6 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {

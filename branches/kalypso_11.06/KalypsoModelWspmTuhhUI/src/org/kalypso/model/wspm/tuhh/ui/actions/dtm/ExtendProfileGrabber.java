@@ -42,50 +42,75 @@ package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * The currently grabbed profile and associated information.
+ * 
  * @author Gernot Belger
  */
-public class ProfileThemePredicate implements IKalypsoThemePredicate
+public class ExtendProfileGrabber
 {
-  @Override
-  public boolean decide( final IKalypsoTheme theme )
+  private final IKalypsoFeatureTheme m_theme;
+
+  private final double m_snapRadius;
+
+  private IProfileFeature m_grabbedProfile;
+
+  private TuhhReach m_reach;
+
+  public ExtendProfileGrabber( final IKalypsoFeatureTheme theme, final double snapRadius )
   {
-    if( !(theme instanceof IKalypsoFeatureTheme) )
-      return false;
+    m_theme = theme;
+    m_snapRadius = snapRadius;
+  }
 
-    /* Ignore invisible themes, so the user is able to tweak, which themes will be used */
-    if( !theme.isVisible() )
-      return false;
+  private FeatureList getProfileFeatures( )
+  {
+    return m_theme.getFeatureList();
+  }
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-    final IFeatureProperty fp = featureTheme.getFeatureList();
-    if( fp == null )
-      return false;
+  public boolean doGrab( final GM_Point pos )
+  {
+    m_grabbedProfile = findProfile( pos );
+    return m_grabbedProfile != null;
+  }
 
-    final Feature parentFeature = fp.getParentFeature();
-    if( parentFeature == null )
-      return false;
-
-    final IRelationType targetType = fp.getPropertyType();
-    if( targetType == null )
-      return false;
-
-    final IFeatureType targetFeatureType = targetType.getTargetFeatureType();
+  private IProfileFeature findProfile( final GM_Point pos )
+  {
+    final FeatureList profileFeatures = getProfileFeatures();
+    final IFeatureType targetFeatureType = profileFeatures.getPropertyType().getTargetFeatureType();
     if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QN_PROFILE ) )
-      return true;
+      return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, m_snapRadius, profileFeatures, IProfileFeature.QN_PROPERTY_LINE );
 
-    if( GMLSchemaUtilities.substitutes( targetFeatureType, TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT ) )
-      return true;
+    final TuhhReachProfileSegment nearest = (TuhhReachProfileSegment) GeometryUtilities.findNearestFeature( pos, m_snapRadius, profileFeatures, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );
+    if( nearest == null )
+      return null;
 
-    return false;
+    m_reach = (TuhhReach) nearest.getOwner();
+
+    return nearest.getProfileMember();
+  }
+
+  public IProfileFeature getProfile( )
+  {
+    return m_grabbedProfile;
+  }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_theme.getWorkspace();
+  }
+
+  public TuhhReach getReach( )
+  {
+    return m_reach;
   }
 }
