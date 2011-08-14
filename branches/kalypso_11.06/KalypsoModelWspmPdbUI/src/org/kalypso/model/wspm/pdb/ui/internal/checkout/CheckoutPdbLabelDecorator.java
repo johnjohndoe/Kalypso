@@ -58,14 +58,9 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
  */
 public class CheckoutPdbLabelDecorator extends BaseLabelProvider implements ILabelDecorator
 {
-  private final Set<Object> m_allPdbElementsWithWspm;
+  private Set<Object> m_allPdbElementsWithWspm;
 
   private final Map<String, Image> m_images = new HashMap<String, Image>();
-
-  public CheckoutPdbLabelDecorator( final Set<Object> allPdbElementsWithWspm )
-  {
-    m_allPdbElementsWithWspm = allPdbElementsWithWspm;
-  }
 
   @Override
   public void dispose( )
@@ -109,5 +104,10 @@ public class CheckoutPdbLabelDecorator extends BaseLabelProvider implements ILab
 
     final DecorationOverlayIcon decorated = new DecorationOverlayIcon( image, warningImage, IDecoration.BOTTOM_RIGHT );
     return decorated.createImage();
+  }
+
+  public void setElements( final Set<Object> allPdbElementsWithWspm )
+  {
+    m_allPdbElementsWithWspm = allPdbElementsWithWspm;
   }
 }

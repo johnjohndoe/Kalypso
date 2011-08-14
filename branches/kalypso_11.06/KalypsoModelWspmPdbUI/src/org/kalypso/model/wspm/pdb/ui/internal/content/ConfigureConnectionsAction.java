@@ -38,46 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
+import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.internal.dialogs.WorkbenchPreferenceDialog;
+import org.kalypso.model.wspm.pdb.ui.internal.preferences.WspmPdbPreferencePage;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbWizard extends Wizard
+@SuppressWarnings("restriction")
+public abstract class ConfigureConnectionsAction extends Action
 {
-  private final CheckoutPdbData m_data;
-
-  public CheckoutPdbWizard( final CheckoutPdbData data )
+  public ConfigureConnectionsAction( )
   {
-    m_data = data;
-
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
+    setText( "Configure Connections..." );
   }
 
   @Override
-  public void addPages( )
+  public void runWithEvent( final Event event )
   {
-    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final WorkbenchPreferenceDialog dialog = WorkbenchPreferenceDialog.createDialogOn( shell, WspmPdbPreferencePage.ID );
+    dialog.open();
+    updateViewer();
   }
 
-  @Override
-  public boolean performFinish( )
-  {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
-
-    return !status.matches( IStatus.ERROR );
-  }
+  protected abstract void updateViewer( );
 }

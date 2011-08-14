@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -49,13 +47,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -64,7 +60,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
@@ -96,10 +91,6 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   @Override
   public void init( final IWorkbench workbench )
   {
-    m_tableInput = getTableInput();
-
-    if( m_tableInput.size() > 0 )
-      m_selectedItem = m_tableInput.get( 0 );
   }
 
   @Override
@@ -118,13 +109,6 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to store connections", e );
       return new StatusDialog2( getShell(), status, "Save Connections" ).open() == Window.OK;
     }
-  }
-
-  private List<IPdbSettings> getTableInput( )
-  {
-    // Get connections and clone into list; we are going to change the list
-    final IPdbSettings[] connections = PdbSettings.getSettingsOrError();
-    return new ArrayList<IPdbSettings>( Arrays.asList( connections ) );
   }
 
   @Override
@@ -163,14 +147,12 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
 
   private Control createConnectionList( final Composite parent )
   {
-    m_viewer = new TableViewer( parent, SWT.SINGLE | SWT.BORDER );
-    final Table table = m_viewer.getTable();
-    table.setHeaderVisible( false );
+    final PdbSettingsViewer settingsViewer = new PdbSettingsViewer();
+    m_viewer = settingsViewer.createViewer( parent );
+    m_tableInput = settingsViewer.getInput();
 
-    m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new SettingsLabelProvider( "%s - %s" ) );
-    m_viewer.setSorter( new ViewerSorter() );
-    m_viewer.setInput( m_tableInput );
+    if( m_tableInput.size() > 0 )
+      m_selectedItem = m_tableInput.get( 0 );
 
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

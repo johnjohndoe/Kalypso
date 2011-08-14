@@ -40,44 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbWizard extends Wizard
+public class CheckoutWspmData extends CheckoutPdbData
 {
-  private final CheckoutPdbData m_data;
+  public static final String PROPERTY_SETTINGS = "settings"; //$NON-NLS-1$
 
-  public CheckoutPdbWizard( final CheckoutPdbData data )
+  private IPdbSettings m_settings = null;
+
+  public IPdbSettings getSettings( )
   {
-    m_data = data;
-
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
+    return m_settings;
   }
 
-  @Override
-  public void addPages( )
+  public void setSettings( final IPdbSettings settings )
   {
-    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
-  }
+    final IPdbSettings oldValue = settings;
 
-  @Override
-  public boolean performFinish( )
-  {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+    m_settings = settings;
 
-    return !status.matches( IStatus.ERROR );
+    firePropertyChange( PROPERTY_SETTINGS, oldValue, settings );
   }
 }

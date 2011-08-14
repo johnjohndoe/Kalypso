@@ -38,46 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbWizard extends Wizard
+public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
 {
-  private final CheckoutPdbData m_data;
-
-  public CheckoutPdbWizard( final CheckoutPdbData data )
-  {
-    m_data = data;
-
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-  }
-
   @Override
-  public void addPages( )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    // TODO Auto-generated method stub
+
   }
 
   @Override
   public boolean performFinish( )
   {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
-
-    return !status.matches( IStatus.ERROR );
+    // TODO Auto-generated method stub
+    return false;
   }
 }

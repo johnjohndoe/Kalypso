@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
-import java.net.URI;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -50,6 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -60,11 +59,12 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
@@ -91,12 +91,17 @@ public class CheckoutPdbHandler extends AbstractHandler
     if( !project.confirmProjectSave() )
       return null;
 
-    final URI documentBase = findDocumentBase( shell, commandName, viewer.getConnection() );
-    final CheckoutPdbData data = new CheckoutPdbData( documentBase );
+    final CheckoutPdbData data = new CheckoutPdbData();
+    initMapping( data, selection, project );
+
+    final IPdbConnection connection = viewer.getConnection();
 
     final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
     wizard.setWindowTitle( commandName );
-    wizard.init( selection, project.getWorkspace(), project.getWspmProject() );
+
+    final IDialogSettings settings = wizard.getDialogSettings();
+    data.init( shell, commandName, settings, connection );
+
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
 
@@ -110,23 +115,11 @@ public class CheckoutPdbHandler extends AbstractHandler
     return null;
   }
 
-  private URI findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
+  private void initMapping( final CheckoutPdbData data, final IStructuredSelection selection, final PdbWspmProject project )
   {
-    final PdbInfo info = connection.getInfo();
-
-    try
-    {
-      return info.getDocumentBase();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-
-      final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
-      new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
-
-      return null;
-    }
+    final CommandableWorkspace workspace = project.getWorkspace();
+    final TuhhWspmProject wspmProject = project.getWspmProject();
+    data.initMapping( selection, workspace, wspmProject );
   }
 
   private void doSaveProject( final Shell shell, final PdbWspmProject project, final String windowTitle )
