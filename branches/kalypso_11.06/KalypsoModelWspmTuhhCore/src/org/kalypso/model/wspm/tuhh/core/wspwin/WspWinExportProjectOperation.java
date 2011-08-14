@@ -135,7 +135,7 @@ public class WspWinExportProjectOperation implements ICoreRunnableWithProgress
     monitor.subTask( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6" ) ); //$NON-NLS-1$
 
     // We write one wspwin-project per water body
-    final WspmWaterBody[] waterBodies = wspmProject.getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = wspmProject.getWaterBodies();
     for( final WspmWaterBody waterBody : waterBodies )
     {
       /* We always export all reaches of this water body */
