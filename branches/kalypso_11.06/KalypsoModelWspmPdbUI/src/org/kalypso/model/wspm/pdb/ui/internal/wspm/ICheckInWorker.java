@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
@@ -52,11 +53,17 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
  */
 public interface ICheckInWorker
 {
-  IStatus checkPreconditions( );
+  // REMARK: call methods in this order:
 
   void preInit( IPdbConnection connection ) throws PdbConnectException, CoreException;
 
-  Wizard createWizard( IPdbConnection connection );
+  IStatus checkPreconditions( );
+
+  Wizard createWizard( );
 
   void configureSelector( ElementSelector selector );
+
+  ICoreRunnableWithProgress getOperation( );
+
+  void closeConnection( );
 }

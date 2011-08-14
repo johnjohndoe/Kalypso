@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
@@ -62,7 +63,7 @@ import org.kalypso.shape.dbf.DBaseException;
 /**
  * @author Gernot Belger
  */
-public class ImportWaterLevelsData extends AbstractModelObject
+public class ImportWaterLevelsData extends AbstractModelObject implements IEditEventPageData
 {
   private final Event m_event = new Event();
 
@@ -134,11 +135,13 @@ public class ImportWaterLevelsData extends AbstractModelObject
     return m_connection;
   }
 
+  @Override
   public Event[] getExistingEvents( )
   {
     return m_existingEvents;
   }
 
+  @Override
   public Event getEvent( )
   {
     return m_event;

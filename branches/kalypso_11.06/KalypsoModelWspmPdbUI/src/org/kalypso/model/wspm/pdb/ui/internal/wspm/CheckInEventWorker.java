@@ -42,10 +42,10 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
+import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -62,9 +63,12 @@ public class CheckInEventWorker implements ICheckInWorker
 {
   private final CheckInEventData m_data;
 
+  private final CheckInEventOperation m_operation;
+
   public CheckInEventWorker( final CommandableWorkspace workspace, final WspmFixation fixation )
   {
     m_data = new CheckInEventData( workspace, fixation );
+    m_operation = new CheckInEventOperation( m_data );
   }
 
   @Override
@@ -93,20 +97,32 @@ public class CheckInEventWorker implements ICheckInWorker
   }
 
   @Override
-  public void preInit( final IPdbConnection connection ) throws PdbConnectException, CoreException
+  public void preInit( final IPdbConnection connection ) throws PdbConnectException
   {
     m_data.init( connection );
   }
 
   @Override
-  public Wizard createWizard( final IPdbConnection connection )
+  public Wizard createWizard( )
   {
-    return new CheckInEventWizard( m_data, connection );
+    return new CheckInEventWizard( m_data, m_operation );
   }
 
   @Override
   public void configureSelector( final ElementSelector selector )
   {
     selector.addEventName( m_data.getEvent().getName() );
+  }
+
+  @Override
+  public ICoreRunnableWithProgress getOperation( )
+  {
+    return m_operation;
+  }
+
+  @Override
+  public void closeConnection( )
+  {
+    m_data.closeConnection();
   }
 }

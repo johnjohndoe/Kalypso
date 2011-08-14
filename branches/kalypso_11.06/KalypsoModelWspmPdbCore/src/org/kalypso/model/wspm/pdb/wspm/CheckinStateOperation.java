@@ -80,12 +80,9 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
 
   private final CheckinStateData m_data;
 
-  private final IPdbConnection m_connection;
-
-  public CheckinStateOperation( final CheckinStateData data, final IPdbConnection connection )
+  public CheckinStateOperation( final CheckinStateData data )
   {
     m_data = data;
-    m_connection = connection;
   }
 
   @Override
@@ -99,14 +96,15 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
 
     try
     {
-      session = m_connection.openSession();
+      final IPdbConnection connection = m_data.getConnection();
+      session = connection.openSession();
 
       final GafCodes gafCodes = new GafCodes();
       final WaterBody[] waterBodies = m_data.getExistingWaterBodies();
       final State state = m_data.getState();
       final String dbSrs = m_data.getDatabaseSrs();
       final Coefficients coefficients = m_data.getCoefficients();
-      state.setEditingUser( m_connection.getSettings().getUsername() );
+      state.setEditingUser( connection.getSettings().getUsername() );
       final URI documentBase = m_data.getDocumentBase();
 
       final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, new SubProgressMonitor( monitor, 90 ) );

@@ -47,39 +47,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.WaterlevelComposite;
+import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
  * @author Gernot Belger
  */
 public class EditEventPage extends WizardPage
 {
-  private final Event m_event;
-
-  private Event[] m_existingEvents;
-
   private DatabindingWizardPage m_binding;
 
-  private final String m_ignoreName;
+  private final boolean m_ignoreOwnName;
 
-  public EditEventPage( final String pageName, final Event event, final Event[] existingEvents, final boolean ignoreOwnName )
+  private final IEditEventPageData m_data;
+
+  public EditEventPage( final String pageName, final IEditEventPageData data, final boolean ignoreOwnName )
   {
     super( pageName );
 
-    m_event = event;
-    m_existingEvents = existingEvents;
-
-    if( ignoreOwnName )
-      m_ignoreName = m_event.getName();
-    else
-      m_ignoreName = null;
+    m_data = data;
+    m_ignoreOwnName = ignoreOwnName;
 
     setTitle( "Edit Event Properties" );
     setDescription( "Change the properties of the edited event." );
-  }
-
-  public void setExistingEvents( final Event[] existingEvents )
-  {
-    m_existingEvents = existingEvents;
   }
 
   @Override
@@ -91,8 +80,17 @@ public class EditEventPage extends WizardPage
 
     m_binding = new DatabindingWizardPage( this, null );
 
+    final Event event = m_data.getEvent();
+    final Event[] existingEvents = m_data.getExistingEvents();
+
+    String ignoreName;
+    if( m_ignoreOwnName )
+      ignoreName = event.getName();
+    else
+      ignoreName = null;
+
     final int style = WaterlevelComposite.SHOW_MEASUREMENT_DATE;
-    final WaterlevelComposite eventEditor = new WaterlevelComposite( panel, style, m_event, m_binding, m_ignoreName );
-    eventEditor.setExistingEvents( m_existingEvents );
+    final WaterlevelComposite eventEditor = new WaterlevelComposite( panel, style, event, m_binding, ignoreName );
+    eventEditor.setExistingEvents( existingEvents );
   }
 }

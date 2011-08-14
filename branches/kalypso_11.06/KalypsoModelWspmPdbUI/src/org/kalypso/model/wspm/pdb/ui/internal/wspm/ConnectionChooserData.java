@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutWspmData extends CheckoutPdbData
+public class ConnectionChooserData extends AbstractModelObject
 {
   public static final String PROPERTY_SETTINGS = "settings"; //$NON-NLS-1$
 

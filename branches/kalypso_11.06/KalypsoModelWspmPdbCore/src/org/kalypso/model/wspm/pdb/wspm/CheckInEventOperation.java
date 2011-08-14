@@ -73,12 +73,9 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
 
   private final CheckInEventData m_data;
 
-  private final IPdbConnection m_connection;
-
-  public CheckInEventOperation( final CheckInEventData data, final IPdbConnection connection )
+  public CheckInEventOperation( final CheckInEventData data )
   {
     m_data = data;
-    m_connection = connection;
   }
 
   @Override
@@ -90,11 +87,12 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
 
     try
     {
-      session = m_connection.openSession();
+      final IPdbConnection connection = m_data.getConnection();
+      session = connection.openSession();
 
       final WaterBody[] waterBodies = m_data.getExistingWaterBodies();
       final Event event = m_data.getEvent();
-      event.setEditingUser( m_connection.getSettings().getUsername() );
+      event.setEditingUser( connection.getSettings().getUsername() );
 
       final WspmFixation fixation = m_data.getWspmFixation();
 

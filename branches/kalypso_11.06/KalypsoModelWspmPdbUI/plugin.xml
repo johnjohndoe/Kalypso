@@ -140,6 +140,7 @@
     </menuContribution>
   </extension>
   <extension point="org.kalypso.ui.exportWizards">
+      <category id="pdbWizardsCategory" name="Cross Section Database"/>
      <wizard
            category="exportWizards/profileExportWizards"
            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
@@ -342,9 +343,15 @@
                 </not>
             </with>
             <with variable="selection">
-                <iterate operator="and" ifEmpty="false">
-                    <test property="org.kalypso.gml.rootQName" value="{org.kalypso.model.wspmproj}WspmProject" />
-                </iterate>
+                <and>>
+                    <count value="1"/>
+                    <iterate operator="and" ifEmpty="false">
+                        <or>
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState" />
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmrunoff}WaterlevelFixation" />
+                        </or>
+                    </iterate>
+                </and>
             </with>
           </and>
        </enablement>
