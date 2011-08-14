@@ -55,9 +55,10 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -88,6 +89,10 @@ public class CheckoutPdbPreviewPage extends WizardPage
 
   private DatabindingWizardPage m_binding;
 
+  private CheckoutPdbLabelDecorator m_nameDecorator;
+
+  private TreeViewer m_viewer;
+
   protected CheckoutPdbPreviewPage( final String pageName, final CheckoutPdbData data )
   {
     super( pageName );
@@ -96,6 +101,13 @@ public class CheckoutPdbPreviewPage extends WizardPage
 
     setTitle( "Preview" );
     setDescription( "All shown elements will be downloaded into your local workspace." );
+  }
+
+  @Override
+  public IWizardPage getPreviousPage( )
+  {
+    // not allowed to go back
+    return null;
   }
 
   @Override
@@ -114,20 +126,28 @@ public class CheckoutPdbPreviewPage extends WizardPage
 
   private Control createTreePreview( final Composite parent )
   {
+    m_nameDecorator = new CheckoutPdbLabelDecorator();
+    m_viewer = ConnectionContentControl.createContentTree( null, parent, m_nameDecorator );
+
+    updateTreePreview();
+
+    return m_viewer.getControl();
+  }
+
+  public void updateTreePreview( )
+  {
     final CheckoutDataMapping mapping = m_data.getMapping();
+    if( mapping == null )
+      return;
+
     final WaterBody[] rootItems = mapping.getWaterBodies();
     final Set<Object> allItems = mapping.getAllPdbElements();
     final Set<Object> allPdbElementsWithWspm = mapping.getAllPdbElementsWithWspm();
+    m_nameDecorator.setElements( allPdbElementsWithWspm );
 
-    final ILabelDecorator nameDecorator = new CheckoutPdbLabelDecorator( allPdbElementsWithWspm );
-    final TreeViewer viewer = ConnectionContentControl.createContentTree( null, parent, nameDecorator );
-
-    viewer.setInput( new WaterBodyStructure( Arrays.asList( rootItems ) ) );
-    viewer.addFilter( new CheckoutPdbFilter( allItems ) );
-
-    viewer.expandAll();
-
-    return viewer.getControl();
+    m_viewer.setInput( new WaterBodyStructure( Arrays.asList( rootItems ) ) );
+    m_viewer.setFilters( new ViewerFilter[] { new CheckoutPdbFilter( allItems ) } );
+    m_viewer.expandAll();
   }
 
   private Control createWarningElements( final Composite parent )
@@ -174,6 +194,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
   private IStatus validateSelection( )
   {
     final CheckoutDataMapping mapping = m_data.getMapping();
+
     final CrossSection[] crossSections = mapping.getCrossSections();
     final Event[] events = mapping.getEvents();
     if( ArrayUtils.isEmpty( crossSections ) && ArrayUtils.isEmpty( events ) )

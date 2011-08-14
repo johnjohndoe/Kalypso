@@ -65,7 +65,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -76,7 +75,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -100,29 +98,25 @@ public class ConnectionContentControl extends Composite
 
   private final ToolBarManager m_manager;
 
-  private final PdbWspmProject m_project;
-
   private final IServiceLocator m_serviceLocator;
 
-  public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
+  public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
   {
     super( parent, SWT.NONE );
 
     m_serviceLocator = serviceLocator;
-
-    m_project = project;
 
     m_refreshJob = new RefreshContentJob( connection );
     m_refreshJob.setSystem( true );
     m_refreshJob.addJobChangeListener( m_refreshJobListener );
 
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
-    toolkit.adapt( this );
+    if( toolkit != null )
+      toolkit.adapt( this );
 
     ControlUtils.addDisposeListener( this );
 
     m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_OUT );
-
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createTreeViewer( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createActions();
@@ -135,8 +129,12 @@ public class ConnectionContentControl extends Composite
   {
     setInput( null );
 
-    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
-    service.releaseContributions( m_manager );
+    if( m_serviceLocator != null )
+    {
+      final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+      service.releaseContributions( m_manager );
+    }
+
     m_manager.dispose();
 
     super.dispose();
@@ -145,7 +143,8 @@ public class ConnectionContentControl extends Composite
   private Control createToolbar( final FormToolkit toolkit, final Composite parent )
   {
     final ToolBar toolBar = m_manager.createControl( parent );
-    toolkit.adapt( toolBar );
+    if( toolkit != null )
+      toolkit.adapt( toolBar );
     return toolBar;
   }
 
@@ -219,8 +218,11 @@ public class ConnectionContentControl extends Composite
     m_manager.add( new CollapseAllAction( this ) );
     m_manager.add( new Separator() );
 
-    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
-    service.populateContributionManager( m_manager, TOOLBAR_URI );
+    if( m_serviceLocator != null )
+    {
+      final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+      service.populateContributionManager( m_manager, TOOLBAR_URI );
+    }
 
     m_manager.update( true );
   }
@@ -289,11 +291,6 @@ public class ConnectionContentControl extends Composite
   public IStructuredSelection getSelection( )
   {
     return (IStructuredSelection) m_viewer.getSelection();
-  }
-
-  public PdbWspmProject getProject( )
-  {
-    return m_project;
   }
 
   protected void refreshColumnSizes( )

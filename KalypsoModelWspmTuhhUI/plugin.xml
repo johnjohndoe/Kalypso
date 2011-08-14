@@ -626,8 +626,7 @@
               <description>Exports the selected elements as WspWin project.</description>
         </wizard>
      </extension>
-     <extension
-           point="org.kalypso.ui.importWizards">
+     <extension point="org.kalypso.ui.importWizards">
         <wizard
               class="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
               id="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
@@ -635,7 +634,7 @@
               name="%command.name.4">
               <description>%command.description.3</description>
         </wizard>
-        
+
        <wizard
              category="importWizards"
              class="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
@@ -644,8 +643,8 @@
              name="SOBEK">
           <description>Imports profiles from a SOBEK project</description>
        </wizard>
-               
      </extension>
+
      <extension point="org.kalypso.gml.ui.toolWizards">
         <wizard
               class="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard"

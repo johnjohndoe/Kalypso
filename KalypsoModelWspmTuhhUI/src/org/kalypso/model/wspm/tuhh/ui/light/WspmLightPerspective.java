@@ -59,6 +59,8 @@ import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
  */
 public class WspmLightPerspective implements IPerspectiveFactory
 {
+  public static final String ID = "WspmLightPerspective"; //$NON-NLS-1$
+
   private static final String MAIN_RIGHT_FOLDER = "wspmLightMainRightFolder"; //$NON-NLS-1$
 
   private static final String MAIN_FOLDER = "wspmLightMainFolder"; //$NON-NLS-1$
@@ -70,8 +72,6 @@ public class WspmLightPerspective implements IPerspectiveFactory
   private static final String SCND_BOTTOM_RIGHT = "wspmLightScndBottomRightFolder"; //$NON-NLS-1$
 
   private static final String BOTTOM_MAIN_FOLDER = "wspmLightBottomMainFolder"; //$NON-NLS-1$
-
-  public static final String ID = "WspmLightPerspective"; //$NON-NLS-1$
 
   @Override
   public void createInitialLayout( final IPageLayout layout )

@@ -45,7 +45,6 @@ import java.util.Arrays;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -58,7 +57,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.dialogs.WorkbenchPreferenceDialog;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
@@ -67,7 +65,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
-import org.kalypso.model.wspm.pdb.ui.internal.preferences.WspmPdbPreferencePage;
 
 /**
  * @author Gernot Belger
@@ -144,13 +141,11 @@ public class NonConnectedControl extends Composite
 
   private void createSettingsConfigHyperlink( final Composite parent )
   {
-    final Action action = new Action( "Configure Connections..." )
+    final ConfigureConnectionsAction action = new ConfigureConnectionsAction()
     {
       @Override
-      public void run( )
+      protected void updateViewer( )
       {
-        final WorkbenchPreferenceDialog dialog = WorkbenchPreferenceDialog.createDialogOn( getShell(), WspmPdbPreferencePage.ID );
-        dialog.open();
         updateControl();
       }
     };

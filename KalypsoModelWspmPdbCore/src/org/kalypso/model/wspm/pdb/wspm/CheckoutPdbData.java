@@ -42,8 +42,14 @@ package org.kalypso.model.wspm.pdb.wspm;
 
 import java.net.URI;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -88,18 +94,14 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private boolean m_confirmExisting = false;
 
-  private final URI m_documentBase;
+  private URI m_documentBase;
 
-  public CheckoutPdbData( final URI documentBase )
+  public void init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
   {
-    m_documentBase = documentBase;
-  }
+    m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
-  public void init( final IDialogSettings settings )
-  {
     if( settings == null )
       return;
-    // TODO Auto-generated method stub
   }
 
   public void store( final IDialogSettings settings )
@@ -108,6 +110,25 @@ public class CheckoutPdbData extends AbstractModelObject
       return;
     // TODO Auto-generated method stub
 
+  }
+
+  private URI findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
+  {
+    final PdbInfo info = connection.getInfo();
+
+    try
+    {
+      return info.getDocumentBase();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+
+      final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
+      new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
+
+      return null;
+    }
   }
 
   public CheckoutDataMapping getMapping( )
@@ -153,8 +174,16 @@ public class CheckoutPdbData extends AbstractModelObject
     firePropertyChange( PROPERTY_REMOVE_STRATEGY, oldValue, removeStrategy );
   }
 
-  public void initMapping( final WaterBody[] waterBodies, final State[] states, final CrossSection[] crossSections, final Event[] events, final CommandableWorkspace workspace, final TuhhWspmProject project )
+  public void initMapping( final IStructuredSelection selection, final CommandableWorkspace workspace, final TuhhWspmProject project )
   {
+    final CheckoutDataSearcher searcher = new CheckoutDataSearcher();
+    searcher.search( selection );
+
+    final WaterBody[] waterBodies = searcher.getWaterBodies();
+    final State[] states = searcher.getStates();
+    final CrossSection[] crossSections = searcher.getCrossSections();
+    final Event[] events = searcher.getEvents();
+
     m_mapping = new CheckoutDataMapping( waterBodies, states, crossSections, events, workspace, project );
   }
 }

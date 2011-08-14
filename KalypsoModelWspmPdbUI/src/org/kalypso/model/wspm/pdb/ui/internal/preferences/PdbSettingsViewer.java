@@ -38,46 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbWizard extends Wizard
+public class PdbSettingsViewer
 {
-  private final CheckoutPdbData m_data;
+  private TableViewer m_viewer;
 
-  public CheckoutPdbWizard( final CheckoutPdbData data )
+  public TableViewer createViewer( final Composite parent )
   {
-    m_data = data;
+    m_viewer = new TableViewer( parent, SWT.SINGLE | SWT.BORDER );
+    final Table table = m_viewer.getTable();
+    table.setHeaderVisible( false );
 
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
+    m_viewer.setContentProvider( new ArrayContentProvider() );
+    m_viewer.setLabelProvider( new SettingsLabelProvider( "%s - %s" ) );
+    m_viewer.setSorter( new ViewerSorter() );
+
+    reset();
+
+    return m_viewer;
   }
 
-  @Override
-  public void addPages( )
+  @SuppressWarnings("unchecked")
+  public List<IPdbSettings> getInput( )
   {
-    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    return (List<IPdbSettings>) m_viewer.getInput();
   }
 
-  @Override
-  public boolean performFinish( )
+  public void reset( )
   {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
-
-    return !status.matches( IStatus.ERROR );
+    // Get connections and clone into list; we are going to change the list
+    final IPdbSettings[] connections = PdbSettings.getSettingsOrError();
+    final List<IPdbSettings> input = new ArrayList<IPdbSettings>( Arrays.asList( connections ) );
+    m_viewer.setInput( input );
   }
 }

@@ -148,6 +148,14 @@
            name="KalypsoWSPM">
            <description>Exports the local project data as KalypsoWSPM project.</description>
      </wizard>
+      <wizard
+          id="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
+          class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
+          icon="icons/wspmLight.gif"
+          category="pdbWizardsCategory"
+          name="Cross Section Database">
+          <description>Export data into a Kalypso cross section database.</description>
+      </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
         <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport">
@@ -268,6 +276,15 @@
             Attaches external documents (images, drawings, ...) to cross sections.
          </description>
       </wizard>
+      
+      <wizard
+          id="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard"
+          class="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard"
+          icon="icons/wspmLight.gif"
+          category="pdbWizardsCategory"
+          name="Cross Section Database">
+          <description>Import data from a Kalypso cross section database.</description>
+      </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
@@ -299,6 +316,38 @@
                 </and>
              </with>
           </and></enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard">
+       <enablement>
+          <and>
+            <with variable="activeWorkbenchWindow.activePerspective">
+                <not>
+                    <equals value="WspmLightPerspective"/>
+                </not>
+            </with>
+            <with variable="selection">
+                <iterate operator="and" ifEmpty="false">
+                    <test property="org.kalypso.gml.rootQName" value="{org.kalypso.model.wspmproj}WspmProject" />
+                </iterate>
+            </with>
+          </and>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard">
+       <enablement>
+          <and>
+            <with variable="activeWorkbenchWindow.activePerspective">
+                <not>
+                    <equals value="WspmLightPerspective"/>
+                </not>
+            </with>
+            <with variable="selection">
+                <iterate operator="and" ifEmpty="false">
+                    <test property="org.kalypso.gml.rootQName" value="{org.kalypso.model.wspmproj}WspmProject" />
+                </iterate>
+            </with>
+          </and>
+       </enablement>
     </wizardEnablement>
   </extension>
   
