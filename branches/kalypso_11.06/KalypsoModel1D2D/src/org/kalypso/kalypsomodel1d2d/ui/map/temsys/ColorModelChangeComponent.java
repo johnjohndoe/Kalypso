@@ -803,7 +803,7 @@ public class ColorModelChangeComponent extends Composite implements IColorModelP
       {
         System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
-      if( m_legendCanvas != null & !m_legendCanvas.isDisposed() )
+      if( m_legendCanvas != null && !m_legendCanvas.isDisposed() )
         m_legendCanvas.redraw();
     }
     catch( final Throwable th )
