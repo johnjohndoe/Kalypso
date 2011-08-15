@@ -61,5 +61,25 @@ public interface IRainfallGenerator extends Feature
    */
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, ILog log, final IProgressMonitor monitor ) throws CoreException;
 
+  /**
+   * This function returns the period. This will be the unmodified period from the feature, containing strings, which
+   * may be variables, which needs to be resolved.
+   * 
+   * @return The period.
+   */
+  public org.kalypso.model.rcm.internal.binding.DateRange getPeriod( );
+
+  /**
+   * This function returns the period. This will be a modified period, containing already resolved dates.
+   * 
+   * @return The period.
+   */
   public DateRange getPeriod( IStringResolver variables );
+
+  /**
+   * This function returns the models this generator handles.
+   * 
+   * @return The models.
+   */
+  public String[] getModels( );
 }

@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
@@ -486,5 +487,13 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   public String getPartName( )
   {
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setParameter(java.util.Map)
+   */
+  @Override
+  public void setParameter( Map<String, String> parameter )
+  {
   }
 }

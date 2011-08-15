@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
@@ -78,10 +79,10 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- *
+ * 
  * @author Patrice Congo
  * @author Madanagopal
- *
+ * 
  */
 public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidgetWithStrategy
 {
@@ -111,18 +112,18 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   /**
    * Used to prevent the swt popup to show
    */
-  //fixed by Dmitrijs
-  //commented for fix of bug #262 @link https://sourceforge.net/apps/trac/kalypso/ticket/262
-  //the following elements are not needed actually and the use of PopupBlocker rises NullPointerException,
-  //that was blocking the correct work of this widget.
+  // fixed by Dmitrijs
+  // commented for fix of bug #262 @link https://sourceforge.net/apps/trac/kalypso/ticket/262
+  // the following elements are not needed actually and the use of PopupBlocker rises NullPointerException,
+  // that was blocking the correct work of this widget.
 
-//  final PopupBlocker popupBlocker = new PopupBlocker();
-//
-//  private MapActionDisabler mapActionDisabler;
+  // final PopupBlocker popupBlocker = new PopupBlocker();
+  //
+  // private MapActionDisabler mapActionDisabler;
 
   public CalculationUnitWidget( )
   {
-    this( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public CalculationUnitWidget( final String name, final String toolTip )
@@ -170,7 +171,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapPanel, IBoundaryCondition.QNAME );
     if( bcTheme == null )
     {
-      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.3") ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.3" ) ); //$NON-NLS-1$
     }
     final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
     m_dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, bcWorkspace );
@@ -181,10 +182,10 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IFlowRelationshipModel bcModel = (IFlowRelationshipModel) bcHolderModelFeature.getAdapter( IFlowRelationshipModel.class );
     m_calcUnitTheme.setModelBoundaryConditions( bcModel );
 
-    //bug fix #262
-//    popupBlocker.registerPopupBlockerToActiveMapView();
-//    mapActionDisabler = new MapActionDisabler();
-//    mapActionDisabler.disableActions();
+    // bug fix #262
+    // popupBlocker.registerPopupBlockerToActiveMapView();
+    // mapActionDisabler = new MapActionDisabler();
+    // mapActionDisabler.disableActions();
   }
 
   /**
@@ -281,11 +282,11 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   {
     try
     {
-      //bug fix #262
-//      if( mapActionDisabler != null )
-//      {
-//        mapActionDisabler.enableActions();
-//      }
+      // bug fix #262
+      // if( mapActionDisabler != null )
+      // {
+      // mapActionDisabler.enableActions();
+      // }
     }
     catch( final Exception e )
     {
@@ -317,7 +318,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
       e.printStackTrace();
     }
 
-//    popupBlocker.unRegisterPopupBlocker();
+    // popupBlocker.unRegisterPopupBlocker();
   }
 
   /**
@@ -489,7 +490,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   /**
    * Sets a new strategy for this widget
-   *
+   * 
    * @param strategy
    *          the new strategy to set or null if the actual strategy is to be removed
    */
@@ -517,5 +518,13 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   public String getPartName( )
   {
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setParameter(java.util.Map)
+   */
+  @Override
+  public void setParameter( Map<String, String> parameter )
+  {
   }
 }
