@@ -38,22 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.binding;
+package org.kalypso.model.rcm.util;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.tokenreplace.IStringResolver;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * GML-binding for {org.kalypso.model.rcm.v2}DateRange
+ * Provides functions for preparing a rainfall generation operation.
  * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public interface IDateRange extends Feature
+public interface IRainfallConfigurator
 {
-  String getFrom( );
-
-  String getTo( );
-
-  DateRange asDateRange( IStringResolver variableResolver );
+  /**
+   * This function updates the rcm gml.
+   * 
+   * @param rcmUrl
+   *          The url of the rcm gml.
+   * @param variables
+   *          The variables.
+   */
+  public void updateRcmGml( URL rcmUrl, IStringResolver variables ) throws CoreException;
 }

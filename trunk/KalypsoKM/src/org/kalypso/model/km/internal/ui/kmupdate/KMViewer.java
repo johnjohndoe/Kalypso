@@ -444,8 +444,6 @@ public class KMViewer
     updateControls();
   }
 
-
-
   public void setInput( final String label, final KMChannelElement element, final boolean force )
   {
     m_labelText.setText( label );
