@@ -92,7 +92,7 @@ public class ImportGafData extends AbstractModelObject
 
   public static final String PROPERTY_IMPORT_WATERLEVELS = "importWaterlevels"; //$NON-NLS-1$
 
-  private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+  private String m_srs = null;
 
   private File m_gafFile;
 
@@ -173,6 +173,8 @@ public class ImportGafData extends AbstractModelObject
     final String srs = settings.get( PROPERTY_SRS );
     if( srs != null )
       setSrs( srs );
+    else
+      setSrs( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
   public void store( final IDialogSettings settings )
@@ -362,6 +364,9 @@ public class ImportGafData extends AbstractModelObject
     m_hasWaterlevels = hasWaterlevels;
 
     firePropertyChange( PROPERTY_HAS_WATERLEVELS, oldValue, m_hasWaterlevels );
+
+    if( !m_hasWaterlevels )
+      setImportWaterlevels( false );
   }
 
   public boolean getImportWaterlevels( )
