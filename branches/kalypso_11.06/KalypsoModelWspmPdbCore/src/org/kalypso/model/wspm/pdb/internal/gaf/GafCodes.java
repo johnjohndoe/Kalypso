@@ -87,7 +87,7 @@ public class GafCodes
 
   public GafCode getHykCode( final String hyk )
   {
-    return m_codes.get( hyk );
+    return m_hykCodes.get( hyk );
   }
 
   public GafCode[] getAllCodes( )
