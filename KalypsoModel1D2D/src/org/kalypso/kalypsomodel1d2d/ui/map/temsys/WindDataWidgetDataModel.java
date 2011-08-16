@@ -71,7 +71,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class WindDataWidgetDataModel extends KeyBasedDataModel
 {
-  public static final String STR_WIND_STEP_PROP_NAME = "windStepActual";
+  public static final String STR_WIND_STEP_PROP_NAME = "windStepActual"; //$NON-NLS-1$
 
   public static final String WIND_THEME = "_WINDDATA_THEME_"; //$NON-NLS-1$
 

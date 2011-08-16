@@ -323,7 +323,7 @@ public class RMA10S2GmlConv
       }
     }
     else
-      System.out.println( "Line will be not interpreted: " + line );
+      System.out.println( "Line will be not interpreted: " + line ); //$NON-NLS-1$
     // m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 

@@ -159,7 +159,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   private GM_TriangulatedSurface m_tin;
 
   @SuppressWarnings("rawtypes")
-  private Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
+  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
 
   private IFEDiscretisationModel1d2d m_discModel;
 
@@ -199,7 +199,9 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_featureList = theme == null ? null : theme.getFeatureList();
 
-    final String modeTooltip = "\n    '<Space>': Change mode " + (m_modePolygon ? "(Polygon)" : "(Line)");
+    final String mode = m_modePolygon ? Messages.getString( "RefineFEGeometryWidget.0" ) : Messages.getString( "RefineFEGeometryWidget.1" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String modeTooltip = String.format( Messages.getString( "RefineFEGeometryWidget.2" ), mode ); //$NON-NLS-1$
+
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
@@ -260,7 +262,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
           if( GeometryUtilities.isSelfIntersecting( finish.get( 0 ).getExteriorRing() ) )
           {
             m_warning = true;
-            m_warningRenderer.setTooltip( "Boundary is self-intersecting." );
+            m_warningRenderer.setTooltip( Messages.getString("TriangulateGeometryWidget.0") ); //$NON-NLS-1$
             return;
           }
 
@@ -274,7 +276,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
               if( intersection instanceof GM_Surface )
               {
                 m_warning = true;
-                m_warningRenderer.setTooltip( "Boundary intersects existing elements." );
+                m_warningRenderer.setTooltip( Messages.getString("TriangulateGeometryWidget.1") ); //$NON-NLS-1$
                 return;
               }
             }
@@ -421,7 +423,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
     try
     {
-      List<Feature> lListAdded = new ArrayList<Feature>();
+      final List<Feature> lListAdded = new ArrayList<Feature>();
       /* create new elements */
       for( final GM_SurfacePatch surfacePatch : m_tin )
       {
@@ -432,7 +434,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       {
         final Feature feature = m_discModel;
         final GMLWorkspace workspace = feature.getWorkspace();
-        FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, feature, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, feature, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         workspace.fireModellEvent( changeEvent );
       }
       reinit();
@@ -568,15 +570,15 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final List<String> args = new ArrayList<String>();
     if( m_maxArea > 0 )
     {
-      args.add( "-a" + m_maxArea );
+      args.add( "-a" + m_maxArea ); //$NON-NLS-1$
     }
     if( m_minAngle > 0 )
     {
-      args.add( "-q" + m_minAngle );
+      args.add( "-q" + m_minAngle ); //$NON-NLS-1$
     }
     if( m_noSteiner )
     {
-      args.add( "-Y" );
+      args.add( "-Y" ); //$NON-NLS-1$
     }
 
     final GM_Triangle[] triangles = ConstraintDelaunayHelper.createGM_Triangles( m_boundaryGeom.get( 0 ).getExteriorRing(), m_breaklines == null ? null : m_breaklines.getAllCurves(), m_boundaryGeom.getCoordinateSystem(), args.toArray( new String[args.size()] ) );
@@ -626,15 +628,15 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final Section section = toolkit.createSection( m_composite, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     final Composite sectionComposite = toolkit.createComposite( section, SWT.NONE );
     section.setClient( sectionComposite );
-    section.setText( "Triangulierungsoptionen" );
-    section.setDescription( "Diese Optionen haben nur einen Effekt, wenn triangle.exe im \"bin\"-Verzeichnis von Kalypso liegt." );
+    section.setText( Messages.getString("TriangulateGeometryWidget.5") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("TriangulateGeometryWidget.6") ); //$NON-NLS-1$
     section.setExpanded( true );
     sectionComposite.setLayout( gridLayout );
 
     final FocusListener focusListener = new FocusListener()
     {
       @Override
-      public void focusLost( FocusEvent arg0 )
+      public void focusLost( final FocusEvent arg0 )
       {
         try
         {
@@ -647,12 +649,12 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
       }
 
       @Override
-      public void focusGained( FocusEvent arg0 )
+      public void focusGained( final FocusEvent arg0 )
       {
       }
     };
 
-    toolkit.createLabel( sectionComposite, "Maximale Fläche" );
+    toolkit.createLabel( sectionComposite, Messages.getString("TriangulateGeometryWidget.7") ); //$NON-NLS-1$
     final Text maxArea = toolkit.createText( sectionComposite, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     final DefaultToolTip toolTip = new DefaultToolTip( maxArea );
     maxArea.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
@@ -676,13 +678,13 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
           m_maxArea = Double.parseDouble( string );
           if( m_maxArea < 0 )
           {
-            message = "Fläche muss positiv sein";
+            message = Messages.getString("TriangulateGeometryWidget.8"); //$NON-NLS-1$
           }
         }
-        catch( Exception ex )
+        catch( final Exception ex )
         {
           m_maxArea = -1;
-          message = "Eingabe ist keine Zahl";
+          message = Messages.getString("TriangulateGeometryWidget.9"); //$NON-NLS-1$
         }
         if( message != null )
         {
@@ -693,7 +695,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     } );
     maxArea.addFocusListener( focusListener );
 
-    toolkit.createLabel( sectionComposite, "Minimaler Winkel" );
+    toolkit.createLabel( sectionComposite, Messages.getString("TriangulateGeometryWidget.10") ); //$NON-NLS-1$
     final Text minAngle = toolkit.createText( sectionComposite, "22", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     final DefaultToolTip toolTip2 = new DefaultToolTip( minAngle );
     minAngle.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
@@ -717,17 +719,17 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
           m_minAngle = Double.parseDouble( string );
           if( m_minAngle < 0 )
           {
-            message = "Winkel muss positiv sein";
+            message = Messages.getString("TriangulateGeometryWidget.11"); //$NON-NLS-1$
           }
           else if( m_minAngle > 32 )
           {
-            message = "Winkel sollte höchstens 32° betragen";
+            message = Messages.getString("TriangulateGeometryWidget.12"); //$NON-NLS-1$
           }
         }
-        catch( Exception ex )
+        catch( final Exception ex )
         {
           m_minAngle = -1;
-          message = "Eingabe ist keine Zahl";
+          message = Messages.getString("TriangulateGeometryWidget.13"); //$NON-NLS-1$
         }
         if( message != null )
         {
@@ -738,19 +740,19 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     } );
     minAngle.addFocusListener( focusListener );
 
-    final Button noSteinerButton = toolkit.createButton( sectionComposite, "Einfügen von Knoten auf dem Rand verbieten", SWT.CHECK );
+    final Button noSteinerButton = toolkit.createButton( sectionComposite, Messages.getString("TriangulateGeometryWidget.14"), SWT.CHECK ); //$NON-NLS-1$
     noSteinerButton.setSelection( true );
     noSteinerButton.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false, 2, 1 ) );
     noSteinerButton.addSelectionListener( new SelectionListener()
     {
       @Override
-      public void widgetSelected( SelectionEvent arg0 )
+      public void widgetSelected( final SelectionEvent arg0 )
       {
         widgetDefaultSelected( arg0 );
       }
 
       @Override
-      public void widgetDefaultSelected( SelectionEvent arg0 )
+      public void widgetDefaultSelected( final SelectionEvent arg0 )
       {
         m_noSteiner = noSteinerButton.getSelection();
         try
@@ -785,7 +787,7 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   @Override
   public String getPartName( )
   {
-    return "Refine Elements";
+    return Messages.getString("TriangulateGeometryWidget.15"); //$NON-NLS-1$
   }
 
 }

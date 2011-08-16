@@ -218,7 +218,7 @@ public class PreSWANKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Problem running PreRMAKalypso", e );
+      throw new SimulationException( Messages.getString("PreSWANKalypso.0"), e ); //$NON-NLS-1$
     }
     finally
     {

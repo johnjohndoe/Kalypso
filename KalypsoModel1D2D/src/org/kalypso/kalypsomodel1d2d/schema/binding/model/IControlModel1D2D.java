@@ -126,16 +126,28 @@ public interface IControlModel1D2D extends IControlModel
 
   public boolean getVegeta( );
 
+  public boolean getHasWindDrag( );
+
+  public Double getChi( );
+
   public boolean getBeient( );
 
+  public boolean getFixedMarshBottom();
+  
   public Double getAC1( );
 
   public Double getAC2( );
 
   public Double getAC3( );
 
-  public Double get_P_BOTTOM( );
+  public Double getAC4( );
 
+  public Double getMarshFrictionFactor ();
+  
+  public Integer getMarshFrictionDistr( );
+  
+  public Double get_P_BOTTOM( );
+  
   // changed to string to allow more flexible expansion of "Relaxation Factor"
   public String get_RelaxationsFactor( );
 

@@ -364,6 +364,6 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
   @Override
   public String getCalculationTypeName( )
   {
-    return "SWAN Simulation";
+    return "SWAN Simulation"; //$NON-NLS-1$
   }
 }

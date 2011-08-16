@@ -351,6 +351,6 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
   @Override
   public String getCalculationTypeName( )
   {
-    return "RMA Simulation";
+    return "RMA Simulation"; //$NON-NLS-1$
   }
 }

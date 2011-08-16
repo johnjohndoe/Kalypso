@@ -101,7 +101,7 @@ public class WindDataGenericGridConverter implements IWindDataWrapper// IWindDat
     // TODO: what to do? replace descriptor?
     if( m_gridDescriptor != null && m_gridDescriptor.getCoordinateSystem().equals( coordinateSystem ) )
     {
-      throw new NotImplementedException( "cannot reset actual coordinate system..." );
+      throw new NotImplementedException( "cannot reset actual coordinate system..." ); //$NON-NLS-1$
     }
   }
 

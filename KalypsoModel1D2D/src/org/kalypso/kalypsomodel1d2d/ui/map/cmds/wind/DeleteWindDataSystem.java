@@ -58,9 +58,10 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
 
   private final IWindDataModelSystem m_windDataModelSystem;
 
-  private boolean m_deleteFiles;
+  private final boolean m_deleteFiles;
 
-  private boolean m_done = false;
+  // FIXME: never used
+  private final boolean m_done = false;
 
   public DeleteWindDataSystem( final IWindModel pWindModel, final IWindDataModelSystem pWindModelSystem, final boolean deleteFiles )
   {
@@ -72,6 +73,7 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
+  @Override
   public Feature[] getChangedFeature( )
   {
     if( m_done )
@@ -84,14 +86,16 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
-    return Messages.getString("Delete wind data system") + m_windDataModelSystem.getName(); 
+    return String.format( Messages.getString("DeleteWindDataSystem_0"), m_windDataModelSystem.getName() ); //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return !m_deleteFiles;
@@ -100,6 +104,7 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   public void process( ) throws Exception
   {
     if( m_done )
@@ -112,6 +117,7 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     process();
@@ -120,6 +126,7 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
     if( !m_done || m_deleteFiles )
@@ -132,7 +139,4 @@ public class DeleteWindDataSystem implements IFeatureChangeCommand
   {
     return m_windDataModelSystem;
   }
-  
-  
-
 }

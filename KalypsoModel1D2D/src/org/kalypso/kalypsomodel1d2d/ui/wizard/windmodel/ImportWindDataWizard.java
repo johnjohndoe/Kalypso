@@ -157,7 +157,7 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
             boolean lBoolConvertResult = convertAndCopy( lWindDataConverter );
             if( !lBoolConvertResult )
             {
-              throw new Exception( "Bad input data or source file format!" );
+              throw new Exception( Messages.getString("ImportWindDataWizard.0") ); //$NON-NLS-1$
             }
 
             final IWindDataModelSystem lWindDataModelSystem = WindDataModelSystem.createWindSystemForWindModel( ImportWindDataWizard.this.m_windModel, lWindDataConverter.getGridDescriptor(), strFileName, strFileDescription );

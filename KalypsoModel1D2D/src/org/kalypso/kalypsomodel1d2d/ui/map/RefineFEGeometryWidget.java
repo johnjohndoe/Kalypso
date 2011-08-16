@@ -148,7 +148,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
   private boolean m_warning;
 
   @SuppressWarnings("rawtypes")
-  private Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
+  private final Map<GM_Position, IFE1D2DNode> m_nodesNameConversionMap = new HashMap<GM_Position, IFE1D2DNode>();
 
   private GM_Object m_geom;
 
@@ -177,7 +177,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
     m_theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
-    final String modeTooltip = "\n    '<Space>': Change mode " + (m_modePolygon ? "(Polygon)" : "(Line)");
+    final String mode = m_modePolygon ? Messages.getString("RefineFEGeometryWidget.0") : Messages.getString("RefineFEGeometryWidget.1"); //$NON-NLS-1$ //$NON-NLS-2$
+    final String modeTooltip = String.format( Messages.getString("RefineFEGeometryWidget.2"), mode ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
 
@@ -388,7 +389,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
       // add remove element command
       final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
-      List<Feature> elementsToRemove = new ArrayList<Feature>();
+      final List<Feature> elementsToRemove = new ArrayList<Feature>();
       for( final Feature feature : refineList )
       {
         if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
@@ -403,7 +404,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       {
         deleteCmdPolyElement.process();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -414,7 +415,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
       m_nodesNameConversionMap.clear();
 
-      List<Feature> lListAdded = new ArrayList<Feature>();
+      final List<Feature> lListAdded = new ArrayList<Feature>();
       /* create new elements */
       for( final GM_Object object : m_objects )
       {
@@ -444,18 +445,18 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @SuppressWarnings("rawtypes")
   private List<Feature> createPolyElement( final GM_Surface<GM_SurfacePatch> surface, final IFEDiscretisationModel1d2d discModel )
   {
-    List<Feature> lListRes = new ArrayList<Feature>();
-    List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
+    final List<Feature> lListRes = new ArrayList<Feature>();
+    final List<IFE1D2DEdge> lListEdges = new ArrayList<IFE1D2DEdge>();
     for( final GM_SurfacePatch surfacePatch : surface )
     {
       final GM_Position[] poses = surfacePatch.getExteriorRing();
-      List<GM_Point> lListPoints = new ArrayList<GM_Point>();
+      final List<GM_Point> lListPoints = new ArrayList<GM_Point>();
       for( int i = 0; i < poses.length - 1; i++ )
         lListPoints.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], surface.getCoordinateSystem() ) );
 
       lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
 
-      IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
+      final IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
       lListRes.add( element2d );
       for( final IFE1D2DEdge lEdge : lListEdges )
       {
@@ -472,7 +473,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @SuppressWarnings("rawtypes")
   private List<Feature> createNodesAndEdges( final IFEDiscretisationModel1d2d discModel, final List<IFE1D2DEdge> lListEdges, final List<GM_Point> lListPoses )
   {
-    List<Feature> lListRes = new ArrayList<Feature>();
+    final List<Feature> lListRes = new ArrayList<Feature>();
     IFE1D2DNode lastNode = null;
     int iCountNodes = 0;
     if( lListPoses.size() > 0 && !lListPoses.get( lListPoses.size() - 1 ).equals( lListPoses.get( 0 ) ) )

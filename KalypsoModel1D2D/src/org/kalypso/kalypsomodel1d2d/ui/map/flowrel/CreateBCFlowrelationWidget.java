@@ -108,7 +108,7 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
     final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.4"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ); //$NON-NLS-1$
     final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.5"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ); //$NON-NLS-1$
     final WQStepDescriptor wqDescriptor = new WQStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.6") ); //$NON-NLS-1$
-    final WaveStepDescriptor waveDescriptor = new WaveStepDescriptor( "Wave Boundary Condition" ); 
+    final WaveStepDescriptor waveDescriptor = new WaveStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.WaveBC0") );  //$NON-NLS-1$
 
     final IFolder importFolder = KalypsoModel1D2DHelper.getTimeeseriesFolder( scenarioFolder );
     final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.7"), importFolder ); //$NON-NLS-1$

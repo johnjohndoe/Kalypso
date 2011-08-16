@@ -226,7 +226,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleError( final String lineString, final EReadError errorHints )
   {
-    System.out.println( "Error: " + lineString + ", " + errorHints );
+    System.out.println( "Error: " + lineString + ", " + errorHints ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
