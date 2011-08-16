@@ -40,7 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -49,43 +56,57 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.ISobekProfileDefData;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDefYZTable;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.Feature;
 
 
 /**
  * @author Gernot Belger
- *
  */
 public class Sobek2Wspm
 {
+  private final Collection<Feature> m_newFeatures = new ArrayList<Feature>();
+
+  private final IStatusCollector m_stati = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
+
   private final WspmWaterBody m_water;
+
 
   public Sobek2Wspm( final WspmWaterBody water )
   {
     m_water = water;
   }
 
-  public void convert( final SobekModel model ) throws CoreException
+  public void convert( final SobekModel model )
   {
-    // FIXME: collect stati instead?
     final SobekProfile[] profiles = model.getProfiles();
     for( final SobekProfile sobekProfile : profiles )
       convert( sobekProfile );
   }
 
-  public void convert( final SobekProfile sobekProfile ) throws CoreException
+  public void convert( final SobekProfile sobekProfile )
   {
     final SobekProfileDef profileDef = sobekProfile.getProfileDef();
-    // FIXME: error?
-    if( profileDef == null )
+    final SobekProfileDat profileDat = sobekProfile.getProfileDat();
+
+    if( profileDef == null && profileDat == null )
       return;
+
+    if( profileDef == null )
+    {
+      final String id = profileDat.getId();
+      m_stati.add( IStatus.ERROR, "Missing definition for cross section with id '%s'", null, id );
+      return;
+    }
 
     final IProfileFeature newProfile = m_water.createNewProfile();
     newProfile.setName( profileDef.getId() );
@@ -96,9 +117,19 @@ public class Sobek2Wspm
 
     final ISobekProfileDefData data = profileDef.getData();
     final IProfil profil = newProfile.getProfil();
-    convertData( profil, data );
 
-    ProfileFeatureFactory.toFeature( profil, newProfile );
+    try
+    {
+      convertData( profil, data );
+      ProfileFeatureFactory.toFeature( profil, newProfile );
+      m_newFeatures.add( newProfile );
+    }
+    catch( final CoreException e )
+    {
+      m_water.getProfiles().remove( newProfile );
+      m_stati.add( e.getStatus() );
+      return;
+    }
   }
 
   private void convertData( final IProfil profil, final ISobekProfileDefData data ) throws CoreException
@@ -111,11 +142,9 @@ public class Sobek2Wspm
         break;
 
       default:
-        // FIXME: error handling or collect warning
-        return;
-// final String message = String.format( "Unknown SOBEK cross section type: %d", type );
-// final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), message );
-// throw new CoreException( status );
+        final String message = String.format( "Cross section '%s' has unknown type: %d", profil.getName(), type );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+        throw new CoreException( status );
     }
   }
 
@@ -138,5 +167,15 @@ public class Sobek2Wspm
 
       result.add( record );
     }
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_stati.asMultiStatusOrOK( "Problems during SOBEK conversion", "Conversion sucessfully terminated" );
+  }
+
+  public Feature[] getNewFeatures( )
+  {
+    return m_newFeatures.toArray( new Feature[m_newFeatures.size()] );
   }
 }
