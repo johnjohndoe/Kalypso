@@ -134,7 +134,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
         final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
 
-        if( leftForelandHasValues && !ax1.isNaN() && leftForelandHasValues && ax1 == 0.0 )
+        if( leftForelandHasValues && !ax1.isNaN() && ax1 == 0.0 )
         {
           collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );// , //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -160,7 +160,7 @@ public class BewuchsRule extends AbstractValidatorRule
       final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
       final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
       final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
-      if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
+      if( ax.isNaN() || ay.isNaN() || dp.isNaN() || ax < 0 || ay < 0 || dp < 0 )
       {
         // displays only first error
         if( hasErrors )
