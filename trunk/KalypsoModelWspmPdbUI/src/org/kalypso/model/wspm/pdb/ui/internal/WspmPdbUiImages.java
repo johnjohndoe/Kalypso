@@ -57,6 +57,7 @@ public class WspmPdbUiImages
   {
     CONNECT_TO_PDB("icons/led24/connect.png"), //$NON-NLS-1$
     DISCONNECT_FROM_PDB("icons/led24/disconnect.png"), //$NON-NLS-1$
+    SHOW_INFO("icons/showInfo.gif"), //$NON-NLS-1$
 
     PDB_CONNECTED("icons/led24/connect.png"), //$NON-NLS-1$
     PDB_DISCONNECTED("icons/led24/disconnect.png"), //$NON-NLS-1$
@@ -70,7 +71,9 @@ public class WspmPdbUiImages
     PENDING("icons/pending.gif"), //$NON-NLS-1$ 
 
     IMPORT("icons/import.gif"), //$NON-NLS-1$
-    EXPORT("icons/export.gif"); //$NON-NLS-1$
+    EXPORT("icons/export.gif"), //$NON-NLS-1$
+
+    WARNING_DECORATION("icons/warning_small.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

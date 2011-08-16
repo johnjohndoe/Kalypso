@@ -40,28 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
-import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator;
 
 /**
  * @author Gernot Belger
@@ -75,7 +57,8 @@ public class EditStatePage extends WizardPage
   public enum Mode
   {
     NEW,
-    EDIT;
+    EDIT,
+    VIEW;
   }
 
   private final State m_state;
@@ -98,101 +81,9 @@ public class EditStatePage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    setControl( panel );
-    GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( panel );
-
     m_binding = new DatabindingWizardPage( this, null );
 
-    createNameControls( panel );
-    createCommentControls( panel );
-
-    createSourceControls( panel );
-    createMeasureDateControls( panel );
-  }
-
-  private void createNameControls( final Composite parent )
-  {
-    new Label( parent, SWT.NONE ).setText( "Name" );
-
-    final Text field = new Text( parent, SWT.BORDER );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    field.setMessage( "<Eindeutiger Name des Zustands>" );
-    field.setTextLimit( State.NAME_LIMIT );
-
-    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_NAME );
-
-    final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
-
-    /* Ignore own name in edit mode */
-    final String ignoreName = m_mode == Mode.EDIT ? m_state.getName() : null;
-
-    final State[] existingStates = m_statesProvider.getStates();
-
-    final UniqueStateNameValidator uniqueStateNameValidator = new UniqueStateNameValidator( existingStates, ignoreName );
-    binder.addTargetAfterGetValidator( uniqueStateNameValidator );
-    binder.addTargetBeforeSetValidator( uniqueStateNameValidator );
-    // FIXME: does not work correctly: if file is changed on file page, we will not get a correct validation here
-    // using a warning here at least shows the correct
-    binder.addModelAfterGetValidator( new UniqueStateNameValidator( existingStates, IStatus.WARNING, ignoreName ) );
-
-    m_binding.bindValue( binder );
-  }
-
-  private void createCommentControls( final Composite parent )
-  {
-    final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Description" );
-    label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
-
-    final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
-    field.setTextLimit( State.COMMENT_LIMIT );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-    field.setMessage( "<Beschreibung des Zustands>" );
-
-    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_DESCRIPTION );
-
-    m_binding.bindValue( target, model );
-  }
-
-  private void createSourceControls( final Composite parent )
-  {
-    new Label( parent, SWT.NONE ).setText( "Source" );
-
-    final Text field = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-
-    final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_SOURCE );
-
-    m_binding.bindValue( target, model );
-  }
-
-  private void createMeasureDateControls( final Composite parent )
-  {
-    new Label( parent, SWT.NONE ).setText( "Measurement Date" );
-
-    final DateTime dateField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
-    dateField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-// final DateTime timeField = new DateTime( parent, SWT.TIME | SWT.SHORT );
-// timeField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
-    final Date measurementDate = m_state.getMeasurementDate();
-    if( measurementDate != null )
-      cal.setTime( measurementDate );
-    final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( cal );
-
-    final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_MEASUREMENTDATE );
-
-    final IObservableValue dateTarget = selectionProperty.observe( dateField );
-    m_binding.bindValue( dateTarget, model );
-
-    // final IObservableValue timeTarget = selectionProperty.observe( timeField );
-    // m_binding.bindValue( timeTarget, model );
+    final StateViewer panel = new StateViewer( parent, m_binding, m_state, m_mode, m_statesProvider );
+    setControl( panel );
   }
 }

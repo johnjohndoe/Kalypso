@@ -38,71 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal;
+package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.hibernate.Session;
+import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 
 /**
  * @author Gernot Belger
  */
-public class ExecutorRunnable implements ICoreRunnableWithProgress
+public interface ICheckInWorker
 {
-  private IStatus m_okStatus = Status.OK_STATUS;
+  // REMARK: call methods in this order:
 
-  private final IPdbConnection m_connection;
+  void preInit( IPdbConnection connection ) throws PdbConnectException, CoreException;
 
-  private final IPdbOperation m_operation;
+  IStatus checkPreconditions( );
 
-  public ExecutorRunnable( final IPdbConnection connection, final IPdbOperation operation )
-  {
-    m_connection = connection;
-    m_operation = operation;
-  }
+  Wizard createWizard( );
 
-  /**
-   * Sets an OK status that will be returned in case of success.
-   */
-  public void setOKStatus( final Status status )
-  {
-    m_okStatus = status;
-  }
+  void configureSelector( ElementSelector selector );
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
-  {
-    Session session = null;
+  ICoreRunnableWithProgress getOperation( );
 
-    try
-    {
-      monitor.beginTask( m_operation.getLabel(), IProgressMonitor.UNKNOWN );
-
-      session = m_connection.openSession();
-
-      final Executor m_executor = new Executor( session, m_operation );
-      m_executor.execute();
-
-      session.close();
-
-      return m_okStatus;
-    }
-    catch( final PdbConnectException e )
-    {
-      throw new InvocationTargetException( e );
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
-  }
+  void closeConnection( );
 }

@@ -58,14 +58,14 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof ConnectionInput )
+    if( inputElement instanceof WaterBodyStructure || inputElement instanceof ConnectionInput )
     {
       final WaterBody rootNode = m_input.getRoot();
       final Object[] allChildren = m_input.getChildren( rootNode );
-      if( ArrayUtils.isEmpty( allChildren ) )
-        return new Object[] { PdbLabelProvider.EMPTY_WATER_BODY };
-
-      return allChildren;
+      if( !ArrayUtils.isEmpty( allChildren ) )
+        return allChildren;
+      else
+        return new String[] { "<Empty Database>" };
     }
 
     if( inputElement instanceof Object[] )
@@ -123,6 +123,8 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
   {
     if( newInput instanceof ConnectionInput )
       m_input = ((ConnectionInput) newInput).getStructure();
+    else if( newInput instanceof WaterBodyStructure )
+      m_input = (WaterBodyStructure) newInput;
     else
       m_input = null;
   }

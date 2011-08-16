@@ -101,7 +101,6 @@ public class PdbStartup implements IStartup
       {
         final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 
-
         final IPerspectiveDescriptor perspective = window.getActivePage().getPerspective();
         final String id = perspective.getId();
         if( WspmLightPerspective.ID.equals( id ) )
@@ -118,7 +117,7 @@ public class PdbStartup implements IStartup
     if( wspmProject == null )
       return true;
 
-    return wspmProject.saveProject( false );
+    return wspmProject.askForProjectSave();
   }
 
   protected void handlePerspectiveActivated( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )

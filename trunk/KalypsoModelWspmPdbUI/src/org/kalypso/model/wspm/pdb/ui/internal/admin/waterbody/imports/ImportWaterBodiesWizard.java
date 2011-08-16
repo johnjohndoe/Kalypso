@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -51,15 +53,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
@@ -72,7 +73,7 @@ import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 /**
  * @author Gernot Belger
  */
-public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard
+public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard, IGenericWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
@@ -114,16 +115,24 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard
     addPage( new ImportWaterbodiesPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
   }
 
-  /**
-   * Overridden, in order NOT to pre-create the pages. We else get problems later, because the data might not yet have
-   * been initialized.
-   * 
-   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
-   */
   @Override
-  public void createPageControls( final Composite pageContainer )
+  public IStatus postInit( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    // do nothing
+    try
+    {
+      monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
+      m_data.init( getDialogSettings() );
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   @Override
@@ -151,38 +160,12 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard
 
   protected void handlePageChange( final IWizardPage page )
   {
-    createData();
-
     final String shapeFile = m_shapeFilePage.getShapeFile();
     final String srs = m_shapeFilePage.getSoureCRS();
     m_data.setShapeInput( shapeFile, srs );
 
     if( page instanceof IUpdateable )
       ((IUpdateable) page).update();
-  }
-
-  private void createData( )
-  {
-    if( m_data.isInit() )
-      return;
-
-    final ImportWaterBodiesData data = m_data;
-    // REMARK: postpone initializing data, else we might have a clash with creation of the page
-    // Is there a better tmie to init?
-    final UIJob job = new UIJob( "Start init data" ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        final InitImportWaterBodiesDataOperation operation = new InitImportWaterBodiesDataOperation( data, getDialogSettings() );
-        final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-        if( !result.isOK() )
-          new StatusDialog2( getShell(), result, getWindowTitle() );
-        return Status.OK_STATUS;
-      }
-    };
-    job.setSystem( true );
-    job.schedule( 100 );
   }
 
   @Override
@@ -194,7 +177,7 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard
     final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, m_data );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() );
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();
