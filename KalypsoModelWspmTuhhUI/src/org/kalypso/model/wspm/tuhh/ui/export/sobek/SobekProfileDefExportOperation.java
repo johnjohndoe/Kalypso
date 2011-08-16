@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.utils.hw.BridgeResult;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -68,20 +69,15 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class SobekProfileDefExportOperation extends AbstractSobekFileExportOperation
 {
-  public static final String PROFILE_DEF = "profile.def"; //$NON-NLS-1$
-
   public SobekProfileDefExportOperation( final SobekExportInfo info )
   {
-    super( info, PROFILE_DEF );
+    super( info, ISobekConstants.PROFILE_DEF );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
-    return PROFILE_DEF;
+    return ISobekConstants.PROFILE_DEF;
   }
 
   @Override

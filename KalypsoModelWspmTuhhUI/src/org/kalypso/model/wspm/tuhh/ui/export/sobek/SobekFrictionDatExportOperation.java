@@ -41,10 +41,12 @@
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.util.Formatter;
+import java.util.Locale;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.SobekFrictionZone.FrictionType;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.FlowZone;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
@@ -56,20 +58,15 @@ import org.kalypso.observation.result.IRecord;
  */
 public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOperation
 {
-  public static final String FRICTION_DAT = "friction.dat"; //$NON-NLS-1$
-
   public SobekFrictionDatExportOperation( final SobekExportInfo info )
   {
-    super( info, FRICTION_DAT );
+    super( info, ISobekConstants.FRICTION_DAT );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
-    return FRICTION_DAT;
+    return ISobekConstants.FRICTION_DAT;
   }
 
   @Override
@@ -106,7 +103,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
 
     for( final SobekFrictionZone zone : frictionZones )
     {
-      formatter.format( "%.4f %.4f <%n", zone.getFrom(), zone.getTo() ); //$NON-NLS-1$
+      formatter.format( Locale.PRC, "%.4f %.4f <%n", zone.getFrom(), zone.getTo() ); //$NON-NLS-1$
     }
 
     formatter.format( "tble%n" ); //$NON-NLS-1$

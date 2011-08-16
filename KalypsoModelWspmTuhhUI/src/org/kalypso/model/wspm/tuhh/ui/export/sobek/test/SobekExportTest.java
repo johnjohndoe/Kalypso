@@ -57,6 +57,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation;
@@ -141,14 +142,14 @@ public class SobekExportTest extends Assert
   public void exportProfileDef( ) throws IOException, CoreException
   {
     final ISobekProfileExportOperation exportOperation = new SobekProfileDefExportOperation( m_info );
-    testOperation( exportOperation, SobekProfileDefExportOperation.PROFILE_DEF );
+    testOperation( exportOperation, ISobekConstants.PROFILE_DEF );
   }
 
   @Test
   public void exportProfileDat( ) throws IOException, CoreException
   {
     final ISobekProfileExportOperation exportOperation = new SobekProfileDatExportOperation( m_info );
-    testOperation( exportOperation, SobekProfileDatExportOperation.PROFILE_DAT );
+    testOperation( exportOperation, ISobekConstants.PROFILE_DAT );
   }
 
   @Test
@@ -169,7 +170,6 @@ public class SobekExportTest extends Assert
   public void exportFrictionDef( ) throws IOException, CoreException
   {
     final ISobekProfileExportOperation exportOperation = new SobekFrictionDatExportOperation( m_info );
-    testOperation( exportOperation, SobekFrictionDatExportOperation.FRICTION_DAT );
+    testOperation( exportOperation, ISobekConstants.FRICTION_DAT );
   }
-
 }
