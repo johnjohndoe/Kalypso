@@ -48,6 +48,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -64,7 +65,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -75,7 +75,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
  * @author Gernot Belger
@@ -99,33 +98,27 @@ public class ConnectionContentControl extends Composite
 
   private final ToolBarManager m_manager;
 
-  private final PdbWspmProject m_project;
-
-  private ColumnsResizeControlListener m_treeListener;
-
   private final IServiceLocator m_serviceLocator;
 
-  public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Section parent, final IPdbConnection connection, final PdbWspmProject project )
+  public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
   {
     super( parent, SWT.NONE );
 
     m_serviceLocator = serviceLocator;
-
-    m_project = project;
 
     m_refreshJob = new RefreshContentJob( connection );
     m_refreshJob.setSystem( true );
     m_refreshJob.addJobChangeListener( m_refreshJobListener );
 
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
-    toolkit.adapt( this );
+    if( toolkit != null )
+      toolkit.adapt( this );
 
     ControlUtils.addDisposeListener( this );
 
     m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_OUT );
-
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    createTree( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createTreeViewer( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createActions();
 
     refresh( null );
@@ -136,8 +129,12 @@ public class ConnectionContentControl extends Composite
   {
     setInput( null );
 
-    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
-    service.releaseContributions( m_manager );
+    if( m_serviceLocator != null )
+    {
+      final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+      service.releaseContributions( m_manager );
+    }
+
     m_manager.dispose();
 
     super.dispose();
@@ -146,27 +143,15 @@ public class ConnectionContentControl extends Composite
   private Control createToolbar( final FormToolkit toolkit, final Composite parent )
   {
     final ToolBar toolBar = m_manager.createControl( parent );
-    toolkit.adapt( toolBar );
+    if( toolkit != null )
+      toolkit.adapt( toolBar );
     return toolBar;
   }
 
-  private Control createTree( final FormToolkit toolkit, final Composite parent )
+  private Control createTreeViewer( final FormToolkit toolkit, final Composite parent )
   {
-    final Tree tree = toolkit.createTree( parent, SWT.FULL_SELECTION | SWT.MULTI );
-    tree.setHeaderVisible( true );
-    m_viewer = new TreeViewer( tree );
-    m_viewer.setUseHashlookup( true );
-    m_viewer.setContentProvider( new ByWaterBodyContentProvider() );
+    m_viewer = createContentTree( toolkit, parent, null );
     m_viewer.setInput( PdbLabelProvider.PENDING );
-
-    final ViewerColumn nameColumn = StatesViewer.createNameColumn( m_viewer );
-    WaterBodyViewer.createNameColumn( m_viewer );
-    StatesViewer.createMeasurementDateColumn( m_viewer );
-
-    ColumnViewerSorter.setSortState( nameColumn, false );
-
-    m_treeListener = new ColumnsResizeControlListener();
-    tree.addControlListener( m_treeListener );
 
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -176,23 +161,46 @@ public class ConnectionContentControl extends Composite
         handleSelectionChanged( (IStructuredSelection) event.getSelection() );
       }
     } );
+    return m_viewer.getControl();
+  }
+
+  public static TreeViewer createContentTree( final FormToolkit toolkit, final Composite parent, final ILabelDecorator nameDecorator )
+  {
+    final Tree tree;
+    tree = new Tree( parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.BORDER );
+    if( toolkit != null )
+      toolkit.adapt( tree, false, false );
+
+    tree.setHeaderVisible( true );
+    final TreeViewer viewer = new TreeViewer( tree );
+    viewer.setUseHashlookup( true );
+    viewer.setContentProvider( new ByWaterBodyContentProvider() );
+
+    final ViewerColumn nameColumn = StatesViewer.createNameColumn( viewer, nameDecorator );
+    WaterBodyViewer.createNameColumn( viewer );
+    StatesViewer.createMeasurementDateColumn( viewer );
+
+    ColumnViewerSorter.setSortState( nameColumn, false );
+
+    final ColumnsResizeControlListener treeListener = new ColumnsResizeControlListener();
+    tree.addControlListener( treeListener );
 
     tree.addTreeListener( new TreeListener()
     {
       @Override
       public void treeExpanded( final TreeEvent e )
       {
-        refreshColumnSizes();
+        treeListener.updateColumnSizes();
       }
 
       @Override
       public void treeCollapsed( final TreeEvent e )
       {
-        refreshColumnSizes();
+        treeListener.updateColumnSizes();
       }
     } );
 
-    return tree;
+    return viewer;
   }
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
@@ -210,8 +218,11 @@ public class ConnectionContentControl extends Composite
     m_manager.add( new CollapseAllAction( this ) );
     m_manager.add( new Separator() );
 
-    final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
-    service.populateContributionManager( m_manager, TOOLBAR_URI );
+    if( m_serviceLocator != null )
+    {
+      final IMenuService service = (IMenuService) m_serviceLocator.getService( IMenuService.class );
+      service.populateContributionManager( m_manager, TOOLBAR_URI );
+    }
 
     m_manager.update( true );
   }
@@ -282,14 +293,9 @@ public class ConnectionContentControl extends Composite
     return (IStructuredSelection) m_viewer.getSelection();
   }
 
-  public PdbWspmProject getProject( )
-  {
-    return m_project;
-  }
-
   protected void refreshColumnSizes( )
   {
-    m_treeListener.updateColumnSizes();
+    ColumnsResizeControlListener.refreshColumnsWidth( m_viewer.getTree() );
   }
 
   public TreeViewer getTreeViewer( )

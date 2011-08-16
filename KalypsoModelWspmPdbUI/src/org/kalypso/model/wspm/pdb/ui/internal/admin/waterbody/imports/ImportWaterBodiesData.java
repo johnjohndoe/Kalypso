@@ -42,16 +42,11 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.PdbUtils;
@@ -91,8 +86,6 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   public static final String PROPERTY_INSERTION_MODE = "insertionMode"; //$NON-NLS-1$
 
-  private final Map<String, ImportAttributeInfo< ? >> m_infos = new HashMap<String, ImportAttributeInfo< ? >>();
-
   private String m_srs;
 
   private String m_shapeFile;
@@ -107,7 +100,7 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   private final IPdbConnection m_connection;
 
-  private boolean m_isInitialized = false;
+  private ImportAttributeInfo< ? >[] m_infos;
 
   public ImportWaterBodiesData( final IPdbConnection connection )
   {
@@ -116,10 +109,6 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
   {
-    Assert.isTrue( !m_isInitialized );
-
-    m_isInitialized = true;
-
     Session session = null;
     try
     {
@@ -162,13 +151,6 @@ public class ImportWaterBodiesData extends AbstractModelObject
     m_srs = srs;
   }
 
-  public <T> ImportAttributeInfo<T> addAttributeInfo( final String property, final ComboViewer viewer, final boolean optional )
-  {
-    final ImportAttributeInfo<T> info = new ImportAttributeInfo<T>( property, viewer, optional );
-    m_infos.put( property, info );
-    return info;
-  }
-
   public String getShapeFile( )
   {
     return m_shapeFile;
@@ -176,8 +158,7 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   public ImportAttributeInfo< ? >[] getAttributeInfos( )
   {
-    final Collection<ImportAttributeInfo< ? >> values = m_infos.values();
-    return values.toArray( new ImportAttributeInfo[values.size()] );
+    return m_infos;
   }
 
   public void setWaterBodies( final WaterBody[] waterBodies )
@@ -229,8 +210,8 @@ public class ImportWaterBodiesData extends AbstractModelObject
     return m_existingWaterbodies;
   }
 
-  public boolean isInit( )
+  public void setAttributeInfos( final ImportAttributeInfo< ? >[] infos )
   {
-    return m_isInitialized;
+    m_infos = infos;
   }
 }

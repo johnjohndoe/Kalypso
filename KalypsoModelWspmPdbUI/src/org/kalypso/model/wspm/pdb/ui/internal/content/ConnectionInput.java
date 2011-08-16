@@ -135,7 +135,7 @@ public class ConnectionInput
   {
     if( eventName == null )
       return null;
-
+    // FIXME: not unique, so we may find the wrong one here!
     return m_waters.findEventName( eventName );
   }
 

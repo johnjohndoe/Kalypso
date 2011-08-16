@@ -44,13 +44,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
-import org.kalypso.model.wspm.pdb.wspm.CheckinStateWorker;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 
 /**
  * Uploads local WSPM data into the cross section database.
@@ -61,41 +60,38 @@ public class CheckinStateWizard extends Wizard implements IStatesProvider
 {
   private final CheckinStateData m_data;
 
-  private final IPdbConnection m_connection;
+  private final CheckinStateOperation m_operation;
 
-  private IStatus m_status;
-
-  public CheckinStateWizard( final CheckinStateData data, final IPdbConnection connection )
+  public CheckinStateWizard( final CheckinStateData data, final CheckinStateOperation operation )
   {
     m_data = data;
-    m_connection = connection;
+    m_operation = operation;
 
     setNeedsProgressMonitor( true );
+  }
 
-    addPage( new CheckinStateChooseElementsPage( "chooseElements", m_data ) ); //$NON-NLS-1$
-
+  @Override
+  public void addPages( )
+  {
     final EditStatePage editStatePage = new EditStatePage( "editState", m_data.getState(), this, Mode.NEW );
+
     editStatePage.setTitle( EditStatePage.STR_ENTER_STATE_PROPERTIES );
     editStatePage.setDescription( EditStatePage.STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE );
+
     addPage( editStatePage );
   }
 
   @Override
   public boolean performFinish( )
   {
-    m_data.commitCheckedElements();
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
+    if( !status.isOK() )
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
-    final CheckinStateWorker operation = new CheckinStateWorker( m_data, m_connection );
-    m_status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !m_status.isOK() )
-      new StatusDialog2( getShell(), m_status, getWindowTitle() ).open();
+    // FIXME: if wizard is not closed due to error, we need to reinitialize the state, as it is still attached to the
+    // old session
 
-    return m_status.isOK();
-  }
-
-  IStatus getStatus( )
-  {
-    return m_status;
+    return !status.matches( IStatus.ERROR );
   }
 
   @Override

@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -62,7 +63,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.pdb.internal.wspm.IPdbWspmProject;
+import org.kalypso.model.wspm.pdb.wspm.IPdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -82,6 +83,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.mapmodel.visitor.ThemeUsedForMaxExtentPredicate;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -96,6 +98,8 @@ public class PdbWspmProject implements IPdbWspmProject
   public static final String PROPERTY_THEME_REACH = "pdbReach"; //$NON-NLS-1$
 
   static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
+
+  static final String STR_SAVE_LOCAL_DATA_TITLE = "Save Local Data";
 
   private final IFeaturesProviderListener m_modelListener = new IFeaturesProviderListener()
   {
@@ -180,7 +184,11 @@ public class PdbWspmProject implements IPdbWspmProject
         final IWorkbenchPage page = m_window.getActivePage();
         page.showView( WspmGmvViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
         if( toSelect != null )
-          gmvView.getSite().getSelectionProvider().setSelection( new StructuredSelection( toSelect ) );
+        {
+          final TreeViewer treeViewer = gmvView.getTreeView().getTreeViewer();
+          treeViewer.setSelection( new StructuredSelection( toSelect ) );
+          treeViewer.setExpandedElements( toSelect );
+        }
       }
       catch( final PartInitException e )
       {
@@ -228,7 +236,7 @@ public class PdbWspmProject implements IPdbWspmProject
     final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
 
     final TuhhWspmProject project = getWspmProject();
-    final WspmWaterBody[] waterBodies = project.getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = project.getWaterBodies();
 
     /* Remove obsolete themes */
     final ObsoleteReachThemesVisitor obsoleteReachesVisitor = new ObsoleteReachThemesVisitor( project );
@@ -240,7 +248,7 @@ public class PdbWspmProject implements IPdbWspmProject
     /* Add necessary themes */
     for( final WspmWaterBody waterBody : waterBodies )
     {
-      final WspmReach[] reaches = waterBody.getReaches();
+      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
       for( final WspmReach reach : reaches )
       {
         final String reachGmlID = reach.getId();
@@ -252,6 +260,9 @@ public class PdbWspmProject implements IPdbWspmProject
         }
       }
     }
+
+    if( compositeCommand.getCommands().length == 0 )
+      return;
 
     mapView.postCommand( compositeCommand, null );
 
@@ -302,13 +313,14 @@ public class PdbWspmProject implements IPdbWspmProject
   }
 
   /**
-   * checks if the data should be save, and asks the user what to do.<br/>
+   * Checks if the data should be save, and asks the user what to do.<br/>
+   * Show a 'Yes', 'No', 'Cancel' dialog.
    * 
    * @param If
    *          set to <code>true</code>, the data will be reloaded if the user chooses 'NO'.
    * @return <code>false</code>, if the user cancels the operation.
    */
-  public boolean saveProject( final boolean reloadOnNo )
+  public boolean askForProjectSave( )
   {
     if( m_provider == null )
       return true;
@@ -318,10 +330,9 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    final String title = "Save Local Data";
     final String message = "Local WSPM data has been modified. Save changes?";
     final String[] buttonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
-    final MessageDialog dialog = new MessageDialog( shell, title, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
+    final MessageDialog dialog = new MessageDialog( shell, STR_SAVE_LOCAL_DATA_TITLE, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
     final int result = dialog.open();
 
     if( result == 0 )
@@ -336,29 +347,48 @@ public class PdbWspmProject implements IPdbWspmProject
         }
       };
 
-      return busyCursorWhile( operation, title, "Failed to save local data" );
+      return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, "Failed to save local data" );
     }
     else if( result == 1 )
-    {
-      if( !reloadOnNo )
-        return true;
-
-      final PoolFeaturesProvider provider = m_provider;
-      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-      {
-        @Override
-        public IStatus execute( final IProgressMonitor monitor )
-        {
-          provider.reload( true );
-          return Status.OK_STATUS;
-        }
-      };
-      return busyCursorWhile( operation, title, "Failed to reload local data" );
-    }
-    else if( result == 2 )
+      return true;
+    else if( result == 2 || result == -1 )
       return false;
 
     throw new IllegalStateException();
+  }
+
+  /**
+   * Checks if the data should be save, and asks the user what to do.<br/>
+   * Shows a 'OK', 'Cancel' dialog.
+   * 
+   * @return <code>false</code>, if the user cancels the operation.
+   */
+  public boolean confirmProjectSave( )
+  {
+    if( m_provider == null )
+      return true;
+
+    final boolean dirty = m_provider.isDirty();
+    if( !dirty )
+      return true;
+
+    final Shell shell = m_window.getShell();
+    final String message = "Local WSPM data must be saved before this operation. Continue?";
+    final boolean result = MessageDialog.openConfirm( shell, STR_SAVE_LOCAL_DATA_TITLE, message );
+    if( !result )
+      return false;
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        doSave( monitor );
+        return Status.OK_STATUS;
+      }
+    };
+
+    return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, "Failed to save local data" );
   }
 
   private boolean busyCursorWhile( final ICoreRunnableWithProgress operation, final String title, final String errorMessage )

@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,14 +56,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafOperation;
@@ -67,10 +73,11 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
-public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStatesProvider
+public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStatesProvider, IGenericWizard
 {
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
@@ -89,7 +96,6 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
 
   private AddWaterLevelPage m_waterLevelPage;
 
-  private IWorkbench m_workbench;
 
   private IConnectionViewer m_viewer;
 
@@ -104,31 +110,43 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    m_workbench = workbench;
+    final IWorkbenchPart activePart = workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
+    m_viewer = (IConnectionViewer) activePart;
+    m_data = new ImportGafData( m_viewer.getConnection() );
   }
 
-  /**
-   * Overridden, in order NOT to pre-create the pages. We else get problems later, because the data might not yet have
-   * been initialized.
-   * 
-   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
-   */
   @Override
-  public void createPageControls( final Composite pageContainer )
+  public IStatus postInit( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    // do nothing
+    try
+    {
+      monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
+      m_data.initFromDb();
+      m_data.init( getDialogSettings() );
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   @Override
   public void addPages( )
   {
-    final IWorkbenchPart activePart = m_workbench.getActiveWorkbenchWindow().getActivePage().getActivePart();
-    m_viewer = (IConnectionViewer) activePart;
-
-    m_data = new ImportGafData( m_viewer.getConnection() );
-
     addPage( new ImportGafPage( "gaf", m_data ) ); //$NON-NLS-1$
-    addPage( new ChooseWaterPage( "waterBody", m_data ) ); //$NON-NLS-1$
+
+    final IPdbConnection connection = m_data.getConnection();
+    final IObservableValue waterValue = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_WATER_BODY );
+
+    final ChooseWaterPage waterPage = new ChooseWaterPage( "waterBody", connection, waterValue ); //$NON-NLS-1$
+    waterPage.setDescription( "Choose the water body into which the profiles will be imported" );
+    addPage( waterPage );
 
     m_optionsPage = new GafOptionsPage( "options", m_data ); //$NON-NLS-1$
     addPage( m_optionsPage );
@@ -143,30 +161,6 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
 
     m_waterLevelPage = new AddWaterLevelPage( "addWaterlevel", m_data ); //$NON-NLS-1$
     addPage( m_waterLevelPage );
-  }
-
-  private void createData( )
-  {
-    if( m_data.isInit() )
-      return;
-
-    final ImportGafData data = m_data;
-    // REMARK: postpone initializing data, else we might have a clash with creation of the page
-    // Is there a better tmie to init?
-    final UIJob job = new UIJob( "Start init data" ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        final InitImportGafDataOperation operation = new InitImportGafDataOperation( data, getDialogSettings() );
-        final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-        if( !result.isOK() )
-          new StatusDialog2( getShell(), result, getWindowTitle() );
-        return Status.OK_STATUS;
-      }
-    };
-    job.setSystem( true );
-    job.schedule( 100 );
   }
 
   @Override
@@ -214,8 +208,6 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
 
   protected void handlePageChanged( final Object selectedPage )
   {
-    createData();
-
     if( selectedPage == m_optionsPage )
     {
       final ReadGafOperation operation = new ReadGafOperation( m_data );
@@ -231,6 +223,14 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
       m_data.createProfiles();
 
       m_gafProfilesPage.updateControl();
+    }
+
+    if( selectedPage == m_waterLevelPage )
+    {
+      final Event event = m_data.getWaterlevelEvent();
+      if( StringUtils.isBlank( event.getName() ) )
+        event.setName( m_data.getState().getName() );
+
       m_waterLevelPage.updateControl();
     }
   }

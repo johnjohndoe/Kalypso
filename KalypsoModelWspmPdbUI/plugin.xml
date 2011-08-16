@@ -28,11 +28,12 @@
       </view>
    </extension>
 
-   <extension
-         point="org.eclipse.ui.menus">
-        <menuContribution
-              allPopups="false"
-              locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart?before=widgets" >
+   <extension point="org.eclipse.ui.menus">
+        <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart?before=widgets" >
+             <command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
+                <visibleWhen checkEnabled="true"/>
+             </command>
              <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
           </menuContribution>
     </extension>
@@ -105,29 +106,57 @@
      <command
            categoryId="org.kalypso.ogc.gml.gmltree.category"
            description="Uploads WSPM data into the cross section database as a new state"
-           id="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState"
+           id="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb"
            name="Upload Data into Cross Section Database"/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
-     <image commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" icon="icons/checkinState.gif"/>
+     <image commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb" icon="icons/checkinState.gif"/>
   </extension>
   <extension point="org.eclipse.ui.handlers">
-     <handler commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinStateHandler"/>
+     <handler commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb" class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinPdbHandler">
+        <enabledWhen>
+            <reference definitionId="checkinPdbDefinition"/>
+        </enabledWhen>
+     </handler>
   </extension>
 
   <extension point="org.eclipse.ui.menus">
     <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart?after=data">
-       <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState" style="push"/>
+       <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb" style="push">
+         <visibleWhen checkEnabled="false">
+            <reference definitionId="checkinPdbDefinition"/>
+         </visibleWhen>
+       </command>
+    </menuContribution>
+
+    <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
+       <command commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb" style="push">
+         <visibleWhen checkEnabled="true">
+         <!--
+            <reference definitionId="isPdbAdmin"/>
+            -->
+         </visibleWhen>
+       </command>
     </menuContribution>
   </extension>
   <extension point="org.kalypso.ui.exportWizards">
+      <category id="pdbWizardsCategory" name="Cross Section Database"/>
      <wizard
            category="exportWizards/profileExportWizards"
            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            icon="icons/exportLocalAsWspm.gif"
            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            name="KalypsoWSPM">
+           <description>Exports the local project data as KalypsoWSPM project.</description>
      </wizard>
+      <wizard
+          id="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
+          class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
+          icon="icons/wspmLight.gif"
+          category="pdbWizardsCategory"
+          name="Cross Section Database">
+          <description>Export data into a Kalypso cross section database.</description>
+      </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
         <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport">
@@ -169,10 +198,24 @@
           <with variable="activeWorkbenchWindow">
              <test property="org.kalypso.ui.window.isViewVisible" value="PdbView"/>
           </with>
- </definition>
+     </definition>
+     <definition id="isPdbAdmin">
+          <with variable="activeWorkbenchWindow">
+              <or>
+                  <test property="pdbTester.hasRole" value="superuser"/>
+                  <test property="pdbTester.hasRole" value="fadmin"/>
+              </or>
+          </with>
+     </definition>
+     <definition id="isPdbAdminAndPdbViewVisible">
+          <and>
+            <reference definitionId="isPdbViewVisible"/>
+            <reference definitionId="isPdbAdmin"/>
+          </and>
+     </definition>
      <definition id="onePdbElementSelected">
            <and>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbAdmin"/>
               <with variable="selection">
                  <and> 
                     <count value="1"/>
@@ -187,6 +230,25 @@
               </with>
            </and>
      </definition>
+     <definition
+           id="checkinPdbDefinition">
+            <and>
+                <reference definitionId="isPdbAdmin"/>
+                <with variable="selection">
+                    <and>
+                        <count value="1"/>
+                        <or>
+                            <iterate operator="and">
+                                <instanceof value="org.kalypso.model.wspm.tuhh.core.gml.TuhhReach"/>
+                            </iterate>
+                            <iterate operator="and">
+                                <instanceof value="org.kalypso.model.wspm.core.gml.WspmFixation"/>
+                            </iterate>
+                        </or>
+                    </and>
+                </with>
+            </and>
+     </definition>
   </extension>
   
   <extension point="org.kalypso.ui.importWizards">
@@ -196,22 +258,102 @@
             class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
             icon="icons/state.gif"
             id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
-            name="Import GAF">
+            name="Gewässerkundliches Austauschformat (GAF)">
         <description>Imports a new state from a GAF file</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Import Water Bodies" icon="icons/waterBody.gif">
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Water Bodies (Shape)" icon="icons/waterBody.gif">
         <description>Imports or updates water bodies from a shape file</description>
+      </wizard>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="Water Levels (Shape)" icon="icons/event.gif">
+        <description>Imports or updates water bodies from a shape file</description>
+      </wizard>
+      <wizard
+            category="pdbWizardsCategory"
+            class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard"
+            icon="icons/attachment.png"
+            id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard"
+            name="Attachments">
+         <description>
+            Attaches external documents (images, drawings, ...) to cross sections.
+         </description>
+      </wizard>
+      
+      <wizard
+          id="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard"
+          class="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard"
+          icon="icons/wspmLight.gif"
+          category="pdbWizardsCategory"
+          name="Cross Section Database">
+          <description>Import data from a Kalypso cross section database.</description>
       </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
-              <reference definitionId="isPdbViewVisible"/>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard">
+       <enablement>
+              <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement
+          wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard">
+       <enablement>
+          <and>
+             <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+             <with variable="selection">
+                <and>
+                   <count value="1"/>
+                   <iterate>
+                      <instanceof value="org.kalypso.model.wspm.pdb.db.mapping.State"/>
+                   </iterate>
+                </and>
+             </with>
+          </and></enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard">
+       <enablement>
+          <and>
+            <with variable="activeWorkbenchWindow.activePerspective">
+                <not>
+                    <equals value="WspmLightPerspective"/>
+                </not>
+            </with>
+            <with variable="selection">
+                <iterate operator="and" ifEmpty="false">
+                    <test property="org.kalypso.gml.rootQName" value="{org.kalypso.model.wspmproj}WspmProject" />
+                </iterate>
+            </with>
+          </and>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard">
+       <enablement>
+          <and>
+            <with variable="activeWorkbenchWindow.activePerspective">
+                <not>
+                    <equals value="WspmLightPerspective"/>
+                </not>
+            </with>
+            <with variable="selection">
+                <and>>
+                    <count value="1"/>
+                    <iterate operator="and" ifEmpty="false">
+                        <or>
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState" />
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmrunoff}WaterlevelFixation" />
+                        </or>
+                    </iterate>
+                </and>
+            </with>
+          </and>
        </enablement>
     </wizardEnablement>
   </extension>
@@ -262,11 +404,11 @@
            commandId="org.kalypso.model.wspm.pdb.ui.command.addWaterBody">
         <enabledWhen>
            <reference
-                 definitionId="isPdbViewVisible">
+                 definitionId="isPdbAdminAndPdbViewVisible">
            </reference>
         </enabledWhen>
      </handler>
-     <handler class="org.kalypso.model.wspm.pdb.ui.internal.content.CheckoutPdbHandler"
+     <handler class="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutPdbHandler"
            commandId="org.kalypso.model.wspm.pdb.ui.command.download">
         <enabledWhen>
            <reference definitionId="isPdbViewVisible"/>
@@ -308,5 +450,14 @@
            <visibleWhen checkEnabled="true"/>
         </command>
      </menuContribution>
+  </extension>
+  <extension point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester
+           class="org.kalypso.model.wspm.pdb.ui.internal.admin.PdbPropertyTester"
+           id="org.kalypso.model.wspm.pdb.ui.internal.admin.PdbPropertyTester"
+           namespace="pdbTester"
+           properties="hasRole"
+           type="org.eclipse.ui.IWorkbenchWindow">
+     </propertyTester>
   </extension>   
 </plugin>

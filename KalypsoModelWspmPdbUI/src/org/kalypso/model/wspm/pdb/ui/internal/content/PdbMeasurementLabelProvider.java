@@ -67,8 +67,8 @@ public class PdbMeasurementLabelProvider extends ColumnLabelProvider
     {
       final IElementWithDates state = (IElementWithDates) element;
       final Date measurementDate = state.getMeasurementDate();
-
-      return m_dateFormat.format( measurementDate );
+      if( measurementDate != null )
+        return m_dateFormat.format( measurementDate );
     }
 
     return StringUtils.EMPTY;

@@ -38,37 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.content;
+package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutOperation;
+import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
+import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
  */
 public class CheckoutPdbHandler extends AbstractHandler
 {
-// public CheckoutPdbHandler( final ConnectionContentControl control )
-// {
-// m_control = control;
-
-// setText( "Download selected items" );
-// setToolTipText( "Download the selected items into the local workspace." );
-// setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.IMPORT ) );
-// }
-
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -84,21 +86,55 @@ public class CheckoutPdbHandler extends AbstractHandler
       return null;
     }
 
-    // TODO: ask, if all local data should be replaced (or at least an existing copy of the reach should be replaced)
-
-    final PdbWspmProject project = viewer.getProject();
-
     /* Ask user to save project and do nothing on cancel */
-    if( !project.saveProject( true ) )
+    final PdbWspmProject project = viewer.getProject();
+    if( !project.confirmProjectSave() )
       return null;
 
-    final CheckoutOperation operation = new CheckoutOperation( project, selection );
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    if( !status.isOK() )
-      new StatusDialog2( shell, status, commandName ).open();
+    final CheckoutPdbData data = new CheckoutPdbData();
+    initMapping( data, selection, project );
 
-    final Object[] toSelect = operation.getNewElements();
-    project.updateViews( toSelect );
+    final IPdbConnection connection = viewer.getConnection();
+
+    final CheckoutPdbWizard wizard = new CheckoutPdbWizard( data );
+    wizard.setWindowTitle( commandName );
+
+    final IDialogSettings settings = wizard.getDialogSettings();
+    data.init( shell, commandName, settings, connection );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
+
+    /* Always save project data now */
+    doSaveProject( shell, project, commandName );
+
+    final Object[] toSelect = data.getNewWspmElements();
+    if( !ArrayUtils.isEmpty( toSelect ) )
+      project.updateViews( toSelect );
+
     return null;
+  }
+
+  private void initMapping( final CheckoutPdbData data, final IStructuredSelection selection, final PdbWspmProject project )
+  {
+    final CommandableWorkspace workspace = project.getWorkspace();
+    final TuhhWspmProject wspmProject = project.getWspmProject();
+    data.initMapping( selection, workspace, wspmProject );
+  }
+
+  private void doSaveProject( final Shell shell, final PdbWspmProject project, final String windowTitle )
+  {
+    final IStatus saveStatus = ProgressUtilities.busyCursorWhile( new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+      {
+        project.doSave( monitor );
+        return Status.OK_STATUS;
+      }
+    } );
+
+    if( !saveStatus.isOK() )
+      new StatusDialog2( shell, saveStatus, windowTitle ).open();
   }
 }

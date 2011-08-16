@@ -38,67 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.preferences;
+package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
+import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
 
 /**
  * @author Gernot Belger
  */
-public class OpenConnectWizard extends Wizard
+public class CheckoutPdbWizard extends Wizard
 {
-  private final OpenConnectionData m_openConnectionData;
+  private final CheckoutPdbData m_data;
 
-  private IPdbConnection m_connection;
-
-  public OpenConnectWizard( final OpenConnectionData data )
+  public CheckoutPdbWizard( final CheckoutPdbData data )
   {
-    m_openConnectionData = data;
+    m_data = data;
 
-    addPage( new OpenConnectionPage( "connectPage", m_openConnectionData ) ); //$NON-NLS-1$
-
-    setWindowTitle( "Connect to PDB" );
     setNeedsProgressMonitor( true );
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
   }
 
-  public String getAutoConnectName( )
+  @Override
+  public void addPages( )
   {
-    if( m_openConnectionData.getAutoConnect() )
-    {
-      final IPdbSettings settings = m_openConnectionData.getSettings();
-      if( settings != null )
-        return settings.getName();
-    }
-
-    return null;
-  }
-
-  public IPdbConnection getConnection( )
-  {
-    return m_connection;
+    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
   }
 
   @Override
   public boolean performFinish( )
   {
-    final IPdbSettings settings = m_openConnectionData.getSettings();
-    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
+    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    if( !status.isOK() )
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
-    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !result.isOK() )
-    {
-      new StatusDialog2( getShell(), result, getWindowTitle() ).open();
-      return false;
-    }
-
-    m_connection = operation.getConnection();
-
-    return true;
+    return !status.matches( IStatus.ERROR );
   }
 }

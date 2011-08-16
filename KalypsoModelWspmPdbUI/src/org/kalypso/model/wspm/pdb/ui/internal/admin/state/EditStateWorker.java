@@ -106,7 +106,7 @@ public class EditStateWorker implements IEditWorker
 
   private State cloneForEdit( final State other )
   {
-    return new State( other.getId(), other.getName(), other.getIsstatezero(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getDescription(), null );
+    return new State( other.getId(), other.getName(), other.getIsstatezero(), other.getCreationDate(), other.getEditingDate(), other.getEditingUser(), other.getMeasurementDate(), other.getSource(), other.getDescription(), null, null );
   }
 
   /**

@@ -82,13 +82,7 @@ public class WaterBodiesFilter extends ViewerFilter
   {
     if( element instanceof WaterBody )
     {
-      final WaterBody waterBody = (WaterBody) element;
-      final String gkn = waterBody.getName().toLowerCase();
-
-      if( !StringUtils.isBlank( m_gkn ) && !gkn.contains( m_gkn ) )
-        return false;
-
-      if( StringUtils.isBlank( m_name ) )
+      if( StringUtils.isBlank( m_gkn ) && StringUtils.isBlank( m_name ) )
         return true;
 
       return containsChildWithName( (WaterBody) element );
@@ -126,7 +120,11 @@ public class WaterBodiesFilter extends ViewerFilter
   public boolean containsChildWithName( final WaterBody element )
   {
     final String myName = element.getLabel().toLowerCase();
-    if( myName.contains( m_name ) )
+    final String myGkn = element.getName();
+
+    if( !StringUtils.isBlank( m_name ) && myName.contains( m_name ) )
+      return true;
+    if( !StringUtils.isBlank( m_gkn ) && myGkn.startsWith( m_gkn ) )
       return true;
 
     if( m_connectionViewer == null )

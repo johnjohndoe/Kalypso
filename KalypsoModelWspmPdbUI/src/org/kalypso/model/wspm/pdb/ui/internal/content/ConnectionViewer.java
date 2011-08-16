@@ -54,9 +54,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -66,8 +64,6 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
-import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
-import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -103,7 +99,7 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
     section.setDescription( "Contents of the cross section database." );
     section.setLayout( new FillLayout() );
 
-    m_contentViewer = new ConnectionContentControl( serviceLocator, toolkit, section, m_connection, m_project );
+    m_contentViewer = new ConnectionContentControl( serviceLocator, toolkit, section, m_connection );
 
     section.setClient( m_contentViewer );
 
@@ -117,28 +113,9 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
     section.setDescription( "Edit search fields to filter visible items." );
     section.setLayout( new FillLayout() );
 
-    final Composite panel = toolkit.createComposite( section );
-    GridLayoutFactory.fillDefaults().extendedMargins( 0, 0, 0, 5 ).applyTo( panel );
-
-    section.setClient( panel );
-
-    final Group waterGroup = new Group( panel, SWT.NONE );
-    toolkit.adapt( waterGroup );
-    waterGroup.setLayout( new FillLayout() );
-    waterGroup.setText( "Water Bodies" );
-    waterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, waterGroup, this );
-    waterFilterControl.setViewer( viewer );
-
-    final Group stateGroup = new Group( panel, SWT.NONE );
-    toolkit.adapt( stateGroup );
-    stateGroup.setLayout( new FillLayout() );
-    stateGroup.setText( "States" );
-    stateGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, stateGroup );
-    stateFilterControl.setViewer( viewer );
+    final ContentSearchViewer searchPanel = new ContentSearchViewer( toolkit, section, viewer, this );
+    toolkit.adapt( searchPanel );
+    section.setClient( searchPanel );
 
     return section;
   }
@@ -172,12 +149,12 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
 
     final Menu menu = menuManager.createContextMenu( viewer.getControl() );
 
-    site.registerContextMenu( "pdbContentTreePopupMenu", menuManager, viewer ); //$NON-NLS-N$
+    site.registerContextMenu( menuManager, viewer ); //$NON-NLS-N$
 
     viewer.getControl().setMenu( menu );
 
     final IEvaluationService service = (IEvaluationService) site.getService( IEvaluationService.class );
-    service.requestEvaluation( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    service.requestEvaluation( IEvaluationService.PROP_NOTIFYING /* ISources.ACTIVE_CURRENT_SELECTION_NAME */);
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {

@@ -41,22 +41,18 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
  * @author Gernot Belger
  */
 public class EditEventWizard extends Wizard
 {
-  private final Event m_event;
-
-  public EditEventWizard( final Event[] existingEvents, final Event event )
+  public EditEventWizard( final IEditEventPageData data )
   {
-    m_event = event;
-
     setWindowTitle( "Edit State" );
 
-    addPage( new EditEventPage( "editEvent", m_event, existingEvents ) ); //$NON-NLS-1$
+    addPage( new EditEventPage( "editEvent", data, true ) ); //$NON-NLS-1$
   }
 
   @Override

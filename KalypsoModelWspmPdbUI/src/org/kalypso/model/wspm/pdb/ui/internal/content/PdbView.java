@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
@@ -57,20 +58,27 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
+import org.kalypso.model.wspm.pdb.db.PdbUpdater;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
@@ -78,6 +86,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
+import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 
 /**
  * @author Gernot Belger
@@ -90,6 +99,8 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
   private final Action m_disconnectAction = new DisconnectPdbAction( this );
 
+  private final IAction m_infoAction = new InfoPdbAction( this );
+
   private final UIJob m_updateControlJob = new UIJob( "Update pdb view" )
   {
     @Override
@@ -100,19 +111,30 @@ public class PdbView extends ViewPart implements IConnectionViewer
     }
   };
 
+  private final IHyperlinkListener m_statusListener = new HyperlinkAdapter()
+  {
+    @Override
+    public void linkActivated( final HyperlinkEvent e )
+    {
+      openConnectionStatus();
+    }
+  };
+
+  private final OpenConnectionData m_autoConnectData = new OpenConnectionData();
+
   private Form m_form;
 
   private FormToolkit m_toolkit;
 
   private IPdbConnection m_pdbConnection;
 
-  private final OpenConnectionData m_autoConnectData = new OpenConnectionData();
-
   private PdbWspmProject m_wspmProject;
 
   private boolean m_autoConnectWasDone = false;
 
   private ConnectionViewer m_connectionViewer;
+
+  private IStatus m_connectionStatus;
 
   public PdbView( )
   {
@@ -156,14 +178,17 @@ public class PdbView extends ViewPart implements IConnectionViewer
     m_form.setImage( getFormImage() );
     m_form.setText( getFormTitel() );
 
+    m_form.addMessageHyperlinkListener( m_statusListener );
+
     final IToolBarManager formToolbar = m_form.getToolBarManager();
+    formToolbar.add( m_infoAction );
     formToolbar.add( m_disconnectAction );
     formToolbar.update( true );
 
     final Composite body = m_form.getBody();
     body.setLayout( new FillLayout() );
 
-    updateControl();
+    m_updateControlJob.schedule( 250 );
   }
 
   private Image getFormImage( )
@@ -252,15 +277,30 @@ public class PdbView extends ViewPart implements IConnectionViewer
       e.printStackTrace();
     }
 
-    m_pdbConnection = connection;
+    m_pdbConnection = validateConnection( connection );
     final String settingsName = m_pdbConnection == null ? null : m_pdbConnection.getSettings().getName();
     m_autoConnectData.setAutoConnectName( settingsName );
 
     m_updateControlJob.schedule();
   }
 
+  private IPdbConnection validateConnection( final IPdbConnection connection )
+  {
+    if( connection == null )
+      return null;
+
+    final PdbUpdater checker = new PdbUpdater( connection, getSite().getShell() );
+    final IStatus checkResult = checker.execute();
+    if( checkResult.isOK() )
+      return connection;
+
+    PdbUtils.closeQuietly( connection );
+    return null;
+  }
+
   private void setStatus( final IStatus status )
   {
+    m_connectionStatus = status;
     MessageUtilitites.setMessage( m_form, status );
   }
 
@@ -280,6 +320,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final boolean isConnected = m_pdbConnection != null;
 
     m_disconnectAction.setEnabled( isConnected );
+    m_infoAction.setEnabled( isConnected );
 
     final IWorkbenchPartSite site = getSite();
 
@@ -298,6 +339,34 @@ public class PdbView extends ViewPart implements IConnectionViewer
       startAutoConnect();
 
     m_form.layout();
+
+    /* activate map view */
+    // REMARK: this actually fixes two bugs:
+    // 1) the outline will show the map legend
+    // 2) the context men uon the pdb works correctly (evaluation context was not correctly set)
+    activateMapView();
+
+    final IEvaluationService es = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
+    es.requestEvaluation( "pdbTester.hasRole" );
+
+// final ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+// cs.refreshElements( "org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState", null );
+  }
+
+  private void activateMapView( )
+  {
+    try
+    {
+      final IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
+      if( page == null )
+        return;
+
+      page.showView( WspmMapViewPart.ID, null, IWorkbenchPage.VIEW_ACTIVATE );
+    }
+    catch( final PartInitException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   private void createNoWspmProjectControl( final FormToolkit toolkit, final Composite parent )
@@ -324,6 +393,14 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
   public static void reloadViewAndBringtoTop( final IWorkbenchWindow window, final String stateToSelect )
   {
+    final ElementSelector elementSelector = new ElementSelector();
+    elementSelector.addStateName( stateToSelect );
+
+    reloadViewAndBringtoTop( window, elementSelector );
+  }
+
+  public static void reloadViewAndBringtoTop( final IWorkbenchWindow window, final ElementSelector selector )
+  {
     /* Do not restore, do not update if not created yet */
     final FindViewRunnable<PdbView> runnable = new FindViewRunnable<PdbView>( PdbView.ID, window, false );
     final PdbView view = runnable.execute();
@@ -333,9 +410,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final IWorkbenchPage page = window.getActivePage();
     page.activate( view );
 
-    final ElementSelector elementSelector = new ElementSelector();
-    elementSelector.addStateName( stateToSelect );
-    view.reload( elementSelector );
+    view.reload( selector );
   }
 
   @Override
@@ -367,5 +442,21 @@ public class PdbView extends ViewPart implements IConnectionViewer
       return null;
 
     return m_connectionViewer.getProject();
+  }
+
+  protected void openConnectionStatus( )
+  {
+    if( m_connectionStatus == null )
+      return;
+
+    new StatusDialog2( getSite().getShell(), m_connectionStatus, "Connection Status" ).open();
+  }
+
+  public PdbInfo getInfo( )
+  {
+    if( m_pdbConnection == null )
+      return null;
+
+    return m_pdbConnection.getInfo();
   }
 }
