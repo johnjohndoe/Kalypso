@@ -49,6 +49,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author kimwerner
  */
+@Deprecated
 public class AddBewuchsResolution extends AbstractProfilMarkerResolution
 {
   Integer m_pointIndex;

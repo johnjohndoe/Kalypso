@@ -99,6 +99,7 @@ public class WehrRule extends AbstractValidatorRule
     }
   }
 
+  //TODO: in die Bewuchsregel verschieben -> doppelter Code
   private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
 
@@ -205,26 +206,16 @@ public class WehrRule extends AbstractValidatorRule
   {
     final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    final IComponent okWeir = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     if( iOKWehr < 0 || iHoehe < 0 )
       return;
 
-    final double deltaOkW = okWeir.getPrecision() / 10;
+    final IComponent okWeir = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final double deltaOkW = okWeir.getPrecision();
 
-    final Object groundValue = point.getValue( iHoehe );
-    final Object weirValue = point.getValue( iOKWehr );
+    final Double groundValue = ProfilUtil.getDoubleValueFor( iHoehe, point );
+    final Double weirValue = ProfilUtil.getDoubleValueFor( iOKWehr, point );
 
-    if( !(groundValue instanceof Number) || !(weirValue instanceof Number) )
-      return;
-
-    final double ground = ((Number) groundValue).doubleValue();
-    final double weir = ((Number) weirValue).doubleValue();
-
-    // FIXME: Fehlermeldung und Test passen nicht zusammen: es wird nicht getestet, ob Werte ausserhalb der TF
-    // exisiterien und/oder auf dem Gelände liegen.
-    // TODO: noch mal prüfen, was der Test eigentlich bewirken soll.
-    // FIXME: >= is not a good double test; we should use BigDecimals with the correct precision instead
-    if( Math.abs( ground - weir ) > deltaOkW )
+    if( !weirValue.isNaN() && !groundValue.isNaN() && Math.abs( groundValue - weirValue ) > deltaOkW )
     {
       final String location = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
       final int indexOfPoint = profil.indexOfPoint( point );
