@@ -40,41 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import junit.framework.Assert;
+
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Test;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.core.profil.sobek.parser.SobekModelParser;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 
 /**
  * @author Gernot Belger
  */
-public class SobekImportOperation implements ICoreRunnableWithProgress
+public class SobekImportTest extends Assert
 {
-  private final SobekImportData m_data;
-
-  public SobekImportOperation( final SobekImportData data )
+  @Test
+  public void testSobek2Wspm( ) throws IOException, CoreException
   {
-    m_data = data;
-  }
+    final File inputDir = FileUtilities.createNewTempDir( "testSobekImport" ); //$NON-NLS-1$
+    final URL inputResource = getClass().getResource( "resources/testInputData.zip" ); //$NON-NLS-1$
+    ZipUtilities.unzip( inputResource, inputDir );
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
-  {
-    monitor.beginTask( "Converting SOBEK data to WSPM", 100 );
+    final SobekImportData data = new SobekImportData();
+    final FileAndHistoryData inputData = data.getInputDir();
+    inputData.setFile( inputDir );
 
-    // find files for parsing
-    final FileAndHistoryData inputDir = m_data.getInputDir();
-    final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
-    modelParser.read( new SubProgressMonitor( monitor, 30 ) );
+    final SobekImportOperation operation = new SobekImportOperation( data );
+    final IStatus result = operation.execute( new NullProgressMonitor() );
+    if( !result.isOK() )
+      fail( result.getMessage() );
 
-    // TODO: convert sobek data to wspm data
-
-
-    return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), "Sorry, this function is not yet implemented." );
+    FileUtils.forceDelete( inputDir );
   }
 }
