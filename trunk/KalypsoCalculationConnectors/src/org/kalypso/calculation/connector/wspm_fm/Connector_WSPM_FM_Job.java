@@ -18,7 +18,7 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
+import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;

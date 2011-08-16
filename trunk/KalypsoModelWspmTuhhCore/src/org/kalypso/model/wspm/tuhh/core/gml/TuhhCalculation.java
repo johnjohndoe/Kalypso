@@ -51,8 +51,8 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -376,10 +376,5 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
   {
     final String calcCaseName = getName();
     return new Path( IWspmTuhhConstants.FOLDER_RESULTS ).append( calcCaseName );
-  }
-
-  public Feature getLinkedWaterLevelFixation( )
-  {
-    return FeatureHelper.resolveLinkedFeature( getWorkspace(), getProperty( QN_PROPERTY_WATER_LEVEL_FIXATION_MEMBER ) );
   }
 }

@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
 {
-  public RoughnessLayer( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RoughnessLayer( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -71,7 +71,7 @@ public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#setEditable(boolean)
    */
   @Override
-  public void setEditable( boolean status )
+  public void setEditable( final boolean status )
   {
     setProperty( IRoughnessLayer.PROP_EDITABLE, status );
   }

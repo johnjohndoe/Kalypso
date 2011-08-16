@@ -46,6 +46,7 @@ import java.util.Collection;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -69,13 +70,13 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
   {
     final Collection<IWspmResultNode> results = new ArrayList<IWspmResultNode>();
 
-    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_project.getWaterBodies();
     for( final WspmWaterBody waterBody : waterBodies )
     {
       results.add( new WspmResultWaterNode( this, waterBody ) );
     }
 
-    final TuhhCalculation[] calculations = m_project.getCalculations();
+    final IFeatureBindingCollection<TuhhCalculation> calculations = m_project.getCalculations();
     for( final TuhhCalculation calculation : calculations )
     {
       final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );

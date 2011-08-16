@@ -96,7 +96,7 @@ public class ExportPrfFileChooserPage extends ExportFileChooserPage
     label.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
     label.setText( Messages.getString( "ExportPrfFileChooserPage_1" ) ); //$NON-NLS-1$
 
-    final Text text = new Text( group, SWT.NONE );
+    final Text text = new Text( group, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     text.setText( m_filenamePattern );
 

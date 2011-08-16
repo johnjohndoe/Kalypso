@@ -112,26 +112,32 @@ public class SimpleWindDataGridWalkingStrategy implements IGeoWalkingStrategy
         e1.printStackTrace();
       }
       final double xmin = env.getMin().getX();
-      final int col = (int) Math.floor( (xmin - lGmPointOrigin.getX()) / lDoubleCellSizeX );
+      int colStart = (int) Math.round( (xmin - lGmPointOrigin.getX()) / lDoubleCellSizeX );
+      if( colStart < 0 )
+        colStart= 0;
       final double ymin = env.getMin().getY();
-      int row = (int) Math.floor( (ymin - lGmPointOrigin.getY()) / lDoubleCellSizeY );
-      if( row < 0 )
-        row = 0;
+      int rowStart = (int) Math.round( (ymin - lGmPointOrigin.getY()) / lDoubleCellSizeY );
+      if( rowStart < 0 )
+        rowStart = 0;
       int lIntScale = 1;
       
 
-      if( col < lGridDescriptor.getNumColumns() && row < lGridDescriptor.getNumRows() && col >= 0 && row >= 0 )
+      if( colStart < lGridDescriptor.getNumColumns() && rowStart < lGridDescriptor.getNumRows() /*&& col >= 0 && row >= 0 */)
       {
 
-        final int N_COL_ENV = (int) Math.floor( env.getWidth() / lDoubleCellSizeX ) + col;
-        final int N_ROW_ENV = (int) Math.floor( env.getHeight() / lDoubleCellSizeY ) + row;
+        int N_COL_ENV = (int) Math.round( env.getWidth() / lDoubleCellSizeX ) + colStart + 2;
+        int N_ROW_ENV = (int) Math.round( env.getHeight() / lDoubleCellSizeY ) + rowStart + 2;
+        if( N_COL_ENV >= lGridDescriptor.getNumColumns() )
+          N_COL_ENV = lGridDescriptor.getNumColumns() - 1;
+        if( N_ROW_ENV >= lGridDescriptor.getNumRows() )
+          N_ROW_ENV = lGridDescriptor.getNumRows() - 1;
 
         /* Monitor. */
         monitor.beginTask( "Walking wind data", N_COL_ENV * N_ROW_ENV );
 
-        for( int i = row; i < N_ROW_ENV; i += lIntScale )
+        for( int i = rowStart; i < N_ROW_ENV; i += lIntScale )
         {
-          for( int j = col; j < N_COL_ENV; j += lIntScale )
+          for( int j = colStart; j < N_COL_ENV; j += lIntScale )
           {
             try
             {
@@ -146,8 +152,8 @@ public class SimpleWindDataGridWalkingStrategy implements IGeoWalkingStrategy
             }
           }
         }
-        lGmPointOrigin = GeometryFactory.createGM_Position( lGmPointOrigin.getX() + ( col + 1 ) * lDoubleCellSizeX, lGmPointOrigin.getY() + ( row + 1 )* ( lDoubleCellSizeY ) );
-        RectifiedGridDomain lWrittenGridDesc = NativeWindDataModelHelper.createGridDescriptor( GeometryFactory.createGM_Point( lGmPointOrigin, lStrCRS ), ( N_COL_ENV - col ) / lIntScale, ( N_ROW_ENV - row ) / lIntScale, lDoubleCellSizeX, lDoubleCellSizeY );
+        lGmPointOrigin = GeometryFactory.createGM_Position( lGmPointOrigin.getX() + ( colStart ) * lDoubleCellSizeX, lGmPointOrigin.getY() + ( rowStart )* ( lDoubleCellSizeY ) );
+        RectifiedGridDomain lWrittenGridDesc = NativeWindDataModelHelper.createGridDescriptor( GeometryFactory.createGM_Point( lGmPointOrigin, lStrCRS ), ( N_COL_ENV - colStart ) / lIntScale, ( N_ROW_ENV - rowStart ) / lIntScale, lDoubleCellSizeX, lDoubleCellSizeY );
         lWalker.setGridDescriptorVisited( lWrittenGridDesc );
       }
 

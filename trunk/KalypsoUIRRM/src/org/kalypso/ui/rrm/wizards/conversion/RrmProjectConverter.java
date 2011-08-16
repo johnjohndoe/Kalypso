@@ -64,7 +64,7 @@ import org.osgi.framework.Version;
  */
 public class RrmProjectConverter implements IProjectConverter
 {
-  private final static Version V_10_10 = new Version( 10, 10, 0 );
+  private final static Version V_10_10 = new Version( 11, 6, 0 );
 
   private final File m_sourceDir;
 

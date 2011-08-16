@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -115,9 +116,10 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler
 
   private void fireChangeEvents( )
   {
-    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_project.getWaterBodies();
+    final WspmWaterBody[] wbs = waterBodies.toArray( new WspmWaterBody[waterBodies.size()] );
 
-    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project, waterBodies, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_project, wbs, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     try
     {
       m_workspace.postCommand( new EmptyCommand( "", false ) ); //$NON-NLS-1$

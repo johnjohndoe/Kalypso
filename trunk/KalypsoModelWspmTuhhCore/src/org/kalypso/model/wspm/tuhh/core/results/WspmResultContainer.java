@@ -66,6 +66,11 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
     m_label = label;
   }
 
+  public IFile getLengthSectionFile( )
+  {
+    return m_file;
+  }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode#getChildResults()
    */

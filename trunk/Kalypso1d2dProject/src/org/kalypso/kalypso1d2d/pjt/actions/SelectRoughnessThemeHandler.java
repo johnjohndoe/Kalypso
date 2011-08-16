@@ -50,16 +50,16 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     {
       while( orgMapModell == null )
         try
-        {
+      {
           this.wait( 500 );
           orgMapModell = mapPanel.getMapModell();
           // TODO: could not be right, throws NPE and leaves the while loop
           // orgMapModell.getAllThemes();
-        }
-        catch( final InterruptedException e )
-        {
-          e.printStackTrace();
-        }
+      }
+      catch( final InterruptedException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     if( !(orgMapModell instanceof GisTemplateMapModell) )
@@ -81,11 +81,30 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
 
     final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.2" ) ); //$NON-NLS-1$
     compositeCommand.addCommand( new EnableThemeCommand( choosenTheme, true ) );
+    makeParentVisible( compositeCommand, choosenTheme );
     compositeCommand.addCommand( new ActivateThemeCommand( mapModell, choosenTheme ) );
     final ICommand command = compositeCommand;
     mapView.postCommand( command, null );
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * Recursive helper that also makes all parent themes visible.
+   */
+  private void makeParentVisible( final CompositeCommand compositeCommand, final IKalypsoTheme theme )
+  {
+    final IMapModell parent = theme.getMapModell();
+    if( parent != null )
+    {
+      final Object themeParent = parent.getThemeParent( theme );
+      if( themeParent instanceof IKalypsoTheme )
+      {
+        final IKalypsoTheme parentTheme = (IKalypsoTheme) themeParent;
+        compositeCommand.addCommand( new EnableThemeCommand( parentTheme, true ) );
+        makeParentVisible( compositeCommand, parentTheme );
+      }
+    }
   }
 
   private IKalypsoTheme showNetworksDialog( final Shell shell, final IKalypsoTheme[] roughnessThemes )
@@ -136,7 +155,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
         final IFeatureType featureType = ((IKalypsoFeatureTheme) theme).getFeatureType();
         if( featureType == null )
           return false;
-        boolean equals = featureType.getQName().equals( RoughnessPolygon.SIM_BASE_F_ROUGHNESS_POLYGON );
+        final boolean equals = featureType.getQName().equals( RoughnessPolygon.SIM_BASE_F_ROUGHNESS_POLYGON );
         return equals;
       }
     };

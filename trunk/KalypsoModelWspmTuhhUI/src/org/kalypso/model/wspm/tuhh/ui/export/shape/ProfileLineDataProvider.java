@@ -44,6 +44,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.kalypso.jts.CollectCoordinatesWithZFilter;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
@@ -52,6 +53,11 @@ import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Gernot Belger
@@ -102,15 +108,33 @@ public class ProfileLineDataProvider implements IShapeData
     return m_fields;
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#getGeometry(java.lang.Object)
-   */
   @Override
   public ISHPGeometry getGeometry( final Object element ) throws ShapeDataException
   {
     final IProfileFeature profile = (IProfileFeature) element;
     final GM_Curve line = profile.getLine();
-    return m_shapeConverter.convert( line );
+
+    final GM_Curve cleanLine = filterPointWithoutZ( line );
+
+    return m_shapeConverter.convert( cleanLine );
+  }
+
+  private GM_Curve filterPointWithoutZ( final GM_Curve line ) throws ShapeDataException
+  {
+    try
+    {
+      final LineString jtsLine = (LineString) JTSAdapter.export( line );
+      final CollectCoordinatesWithZFilter zFilter = new CollectCoordinatesWithZFilter();
+      jtsLine.apply( zFilter );
+      final Coordinate[] coordinates = zFilter.getCoordinatesWithZ();
+      final LineString cleanLine = jtsLine.getFactory().createLineString( coordinates );
+      return (GM_Curve) JTSAdapter.wrap( cleanLine, line.getCoordinateSystem() );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      throw new ShapeDataException( "Failed to filter z values from line", e ); //$NON-NLS-1$ 
+    }
   }
 
   /**

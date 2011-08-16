@@ -105,7 +105,7 @@ public class PrfSource implements IProfilSource
       p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_WASSERSPIEGEL, pr.getKeyValue( 6 )[1] );
       p.setProperty( IWspmTuhhConstants.PROFIL_PROPERTY_MEHRFELDBRUECKE, pr.getKeyValue( 7 )[1] );
       final String stat = pr.getKeyValue( 9 )[0];
-      if( stat.startsWith( "STATION " ) )
+      if( stat.startsWith( "STATION " ) ) //$NON-NLS-1$
       {
         p.setStation( new Double( stat.substring( 10 ) ) );
       }
@@ -198,7 +198,7 @@ public class PrfSource implements IProfilSource
     final int index = p.indexOfProperty( property );
     if( index < 0 )
     {
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.7" ) + property.getName(), null ) ); //$NON-NLS-1$
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.7", property.getName() ), null ) ); //$NON-NLS-1$
       return;
     }
 
@@ -447,11 +447,11 @@ public class PrfSource implements IProfilSource
     final String rks = db.getSecondLine().toUpperCase();
 
     IComponent rTyp = null;
-    if( rks.startsWith( "KST" ) )
+    if( rks.startsWith( "KST" ) ) //$NON-NLS-1$
     {
       rTyp = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
     }
-    else if( rks.startsWith( "KS" ) || rks.startsWith( "K-S " ) )
+    else if( rks.startsWith( "KS" ) || rks.startsWith( "K-S " ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       rTyp = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
     }
@@ -501,7 +501,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 2 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
     }
 
     if( p1 != null )
@@ -541,7 +541,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 2 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.32", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
     }
 
     if( p1 != null )
@@ -679,7 +679,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 2 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.43", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
     }
 
     if( p1 != null )

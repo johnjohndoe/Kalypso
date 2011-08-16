@@ -18,15 +18,12 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class LengthSectionCulvertLayer extends TupleResultLineLayer
 {
-  /**
-   * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
-   */
-
   public LengthSectionCulvertLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, data, lineStyle, pointStyle );
@@ -72,6 +69,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     if( m_data == null )
       return;
     m_data.open();
+
+    // FIXME: painting an ellipse here makes no sense!
+
     for( int i = 0; i < m_data.getObservation().getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
@@ -108,9 +108,12 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
     final Double uK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND, record );
     if( uK.isNaN() || dN.isNaN() || sT.isNaN() )
       return null;
-    final Point pOK = getCoordinateMapper().numericToScreen( sT, uK );
-    final Point pBase = getCoordinateMapper().numericToScreen( 0, 0 );
-    final Point pDN = getCoordinateMapper().numericToScreen( dN / 1000, dN );
+
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+
+    final Point pOK = coordinateMapper.numericToScreen( sT, uK );
+    final Point pBase = coordinateMapper.numericToScreen( 0, 0 );
+    final Point pDN = coordinateMapper.numericToScreen( dN / 1000, dN );
     final int dx = pBase.x - pDN.x;
     final int dy = pBase.y - pDN.y;
     return new Rectangle( pOK.x - dx / 2, pOK.y - dy, dx, dy );

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
@@ -65,6 +66,8 @@ import org.kalypso.wspwin.core.Plotter;
 
 public class PlotterExportProfilesWizard extends ExportProfilesWizard
 {
+  private final PlotterExportData m_data = new PlotterExportData();
+
   private PlotterExportPage m_profileFileChooserPage;
 
   private ProfileResultExportPage m_resultPage;
@@ -79,8 +82,11 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
   {
     super.init( workbench, selection );
 
+    final IDialogSettings settings = getDialogSettings();
+    m_data.init( settings );
+
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
-    m_profileFileChooserPage = new PlotterExportPage( dirDelegate );
+    m_profileFileChooserPage = new PlotterExportPage( dirDelegate, m_data );
     m_profileFileChooserPage.setTitle( Messages.getString( "PlotterExportProfilesWizard_0" ) ); //$NON-NLS-1$
     m_profileFileChooserPage.setDescription( Messages.getString( "PlotterExportProfilesWizard_1" ) ); //$NON-NLS-1$
     m_profileFileChooserPage.setFileGroupText( Messages.getString( "PlotterExportProfilesWizard_2" ) ); //$NON-NLS-1$
@@ -103,7 +109,7 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
       {
         if( !Plotter.checkPlotterExe( getShell() ) )
         {
-          MessageDialog.openWarning( getShell(), getWindowTitle(), "Unable to find plotter.exe, export cancelled." );
+          MessageDialog.openWarning( getShell(), getWindowTitle(), Messages.getString("PlotterExportProfilesWizard.0") ); //$NON-NLS-1$
           getShell().close();
         }
 
@@ -113,20 +119,14 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     job.schedule();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard#exportProfiles(org.kalypso.model.wspm.core.gml.IProfileFeature[],
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File tempDir = m_profileFileChooserPage.getFile();
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
-    final boolean doPrint = m_profileFileChooserPage.getDoPrint();
-
     final WspmResultLengthSection[] results = m_resultPage.getSelectedLengthSections();
 
-    final IPrfExporterCallback callback = new PlotterExportWizardCallback( tempDir, filenamePattern, doPrint, results );
+    final IPrfExporterCallback callback = new PlotterExportWizardCallback( tempDir, filenamePattern, m_data, results );
 
     final PrfExporter prfExporter = new PrfExporter( callback );
     final IStatus export = prfExporter.export( profiles, monitor );

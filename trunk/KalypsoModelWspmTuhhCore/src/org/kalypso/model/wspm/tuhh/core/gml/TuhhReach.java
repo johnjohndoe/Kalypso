@@ -73,6 +73,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -258,7 +259,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
       if( project instanceof TuhhWspmProject )
       {
         final TuhhWspmProject tuhhProject = (TuhhWspmProject) project;
-        final TuhhCalculation[] calculations = tuhhProject.getCalculations();
+        final IFeatureBindingCollection<TuhhCalculation> calculations = tuhhProject.getCalculations();
         for( final TuhhCalculation tuhhCalculation : calculations )
         {
           final TuhhReach reach = tuhhCalculation.getReach();
@@ -288,5 +289,14 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   public boolean isDirectionUpstreams( )
   {
     return getWaterBody().isDirectionUpstreams();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s\n%s", super.toString(), getName() );
   }
 }

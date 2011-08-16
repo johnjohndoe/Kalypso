@@ -53,7 +53,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -346,7 +345,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( izMax.getDateMaximumFormatted() );
         dataList.add( calcMax.getValueMaximum() );
         dataList.add( calcMax.getDateMaximumFormatted() );
-        dataList.add( (int) Math.abs( izMax.getValueMaximum() - calcMax.getValueMaximum() ) );
+        dataList.add( Double.compare( izMax.getValueMaximum(), calcMax.getValueMaximum() ) );
         dataList.add( calcMax.getDateMaximum().compareTo( izMax.getDateMaximum() ) );
         dataList.add( izMax.getVolume() );
         dataList.add( calcMax.getVolume() );
@@ -357,12 +356,12 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       // FIXME: check if this workspace is empty and give a better error message
       final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
+      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), targetCRS );
     }
     catch( final Exception e )
     {
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
-      throw new SimulationException( Messages.getString("NA_PostprocessingJob_0"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NA_PostprocessingJob_0" ), e ); //$NON-NLS-1$
     }
     resultEater.addResult( "OutputFolder", tmpdir ); //$NON-NLS-1$
     setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$

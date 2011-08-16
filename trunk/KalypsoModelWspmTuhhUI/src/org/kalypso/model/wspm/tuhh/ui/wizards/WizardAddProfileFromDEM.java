@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
@@ -49,33 +48,16 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class WizardAddProfileFromDEM extends Wizard
 {
-  private final ProfileFromDEMWizardPage m_page;
-
-  private final IProfil m_profile;
-
-  public WizardAddProfileFromDEM( final IProfil profile )
+  public WizardAddProfileFromDEM( final ProfileFromDEMData data )
   {
-    m_profile = profile;
-
     setWindowTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.3" ) ); //$NON-NLS-1$
 
-    m_page = new ProfileFromDEMWizardPage( m_profile );
-    addPage( m_page );
+    addPage( new ProfileFromDEMWizardPage( data ) );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
-    m_profile.setName( m_page.getProfileName() );
-    final double profileStation = m_page.getProfileStation();
-    if( !Double.isNaN( profileStation ) )
-    {
-      m_profile.setStation( profileStation );
-    }
-
     return true;
   }
 }

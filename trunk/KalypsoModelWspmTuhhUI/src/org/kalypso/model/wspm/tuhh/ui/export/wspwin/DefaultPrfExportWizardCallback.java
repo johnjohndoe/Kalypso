@@ -54,9 +54,6 @@ public class DefaultPrfExportWizardCallback extends PrfExportWizardCallback
     super( exportDir, filenamePattern, results );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.wspwin.IPrfExporterCallback#profileWritten(java.io.File)
-   */
   @Override
   public void profileWritten( final File file )
   {

@@ -91,9 +91,21 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
     final Feature[] selectedProfiles = m_profileSelection.getSelectedProfiles();
 
     final String pageMessage = Messages.getString( "ExportProfilesWizard_4" ); //$NON-NLS-1$
-    m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, 1, false );
+    final int numToSelect = getMinimumSelectionCount();
+    m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, numToSelect, false );
 
     addPage( m_profileChooserPage );
+  }
+
+  /**
+   * The minimal number of profiles that the user needs to select. <code>1</code> by default.<br/>
+   * Overwrite to change.
+   * 
+   * @return <code>1</code>.
+   */
+  protected int getMinimumSelectionCount( )
+  {
+    return 1;
   }
 
   protected ProfileSelection getProfileSelection( )
