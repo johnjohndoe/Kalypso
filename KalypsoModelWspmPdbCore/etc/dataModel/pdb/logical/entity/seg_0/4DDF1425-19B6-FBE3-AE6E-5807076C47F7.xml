@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-17 15:17:49 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-06-07 11:05:33 UTC</changedTime>
+   <changedTime>2011-07-13 13:26:35 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>States PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -77,7 +77,8 @@
          <createdTime>2011-05-18 08:00:06 UTC</createdTime>
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 14:19:42 UTC</changedTime>
-         <comment>Ur-Zustand?</comment>
+         <comment>Handelt es sich bei diesem Zustand um einen Ur-Zustand (d.h. einen Erstimport)?</comment>
+         <commentInRDBMS>Handelt es sich bei diesem Zustand um einen Ur-Zustand (d.h. einen Erstimport)?</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <defaultValue>F</defaultValue>
          <use>1</use>
@@ -129,6 +130,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-18 11:51:58 UTC</changedTime>
          <comment>data source (e.g. file name)</comment>
+         <commentInRDBMS>data source (e.g. file name)</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>1</use>

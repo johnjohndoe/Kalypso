@@ -41,18 +41,21 @@
 package org.kalypso.model.wspm.pdb.gaf;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPart;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Represent point of a gaf file with the same station.
@@ -61,6 +64,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class GafProfile implements IGafConstants
 {
+  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
   /** Linked in order to preserve original order from graf file */
   private final Map<String, GafPart> m_parts = new LinkedHashMap<String, GafPart>();
 
@@ -68,14 +73,13 @@ public class GafProfile implements IGafConstants
 
   private String m_lastKind = null;
 
-  private final GafLogger m_logger;
-
   private final GeometryFactory m_geometryFactory;
 
-  public GafProfile( final BigDecimal station, final GafLogger logger, final GeometryFactory geometryFactory )
+  private IStatus m_status;
+
+  public GafProfile( final BigDecimal station, final GeometryFactory geometryFactory )
   {
     m_station = station;
-    m_logger = logger;
     m_geometryFactory = geometryFactory;
   }
 
@@ -112,8 +116,8 @@ public class GafProfile implements IGafConstants
         if( KZ_CATEGORY_WATERLEVEL.equals( m_lastKind ) || kind.equals( KZ_CATEGORY_WATERLEVEL ) )
           return;
 
-        final String message = String.format( "discontinuos part of kind '%s'", kind );
-        m_logger.log( IStatus.WARNING, message );
+        final String message = String.format( "Part '%s': gaps between points of this part", kind );
+        m_stati.add( IStatus.WARNING, message );
       }
     }
   }
@@ -145,5 +149,75 @@ public class GafProfile implements IGafConstants
   public GafPart[] getParts( )
   {
     return m_parts.values().toArray( new GafPart[m_parts.size()] );
+  }
+
+  public void addStatus( final int severity, final String message )
+  {
+    m_stati.add( severity, message );
+  }
+
+  public IStatus getStatus( )
+  {
+    if( m_status == null )
+    {
+      final Collection<GafPart> values = m_parts.values();
+      for( final GafPart part : values )
+        m_stati.add( part.getStatus() );
+
+      final String okMessage = String.format( "Cross Section '%s': OK", getStation() );
+      final String message = String.format( "Cross Section '%s': Warnings/Errors", getStation() );
+      return m_stati.asMultiStatusOrOK( message, okMessage );
+    }
+
+    return m_status;
+  }
+
+  /**
+   * Check the profile if everything is legal. Check, if the profile intersects with the riverline
+   */
+  public void check( final LineString riverline )
+  {
+    /* Find PP part */
+    if( m_parts.size() == 0 )
+    {
+      m_stati.add( IStatus.ERROR, "Cross sections does not contain any parts" );
+      return;
+    }
+
+    /* Check if PP part intersects with riverline */
+    final GafPart ppPart = m_parts.get( IGafConstants.KZ_CATEGORY_PROFILE );
+    if( ppPart == null )
+    {
+      m_stati.add( IStatus.ERROR, "No profile points (PP) in this cross section." );
+      return;
+    }
+
+    try
+    {
+      final Geometry line = ppPart.getLine( null );
+      if( line == null )
+      {
+        m_stati.add( IStatus.WARNING, "Cross section has no line geometry" );
+      }
+      else if( riverline != null && !line.intersects( riverline ) )
+      {
+        final double distance = line.distance( riverline );
+        final String msg = String.format( "Cross section does not intersect with riverline. Distance is %.1f [km]", distance / 1000.0 );
+        m_stati.add( IStatus.WARNING, msg );
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      m_stati.add( IStatus.ERROR, "Inalid geometry for part 'PP'" );
+    }
+
+    // TODO More checks?
+  }
+
+  public boolean hasWaterlevel( )
+  {
+    final GafPart gafPart = m_parts.get( IGafConstants.KZ_CATEGORY_WATERLEVEL );
+    return gafPart != null && gafPart.getPoints().length > 0;
   }
 }

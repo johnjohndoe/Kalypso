@@ -40,21 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 
 /**
@@ -76,6 +83,22 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Import GAF", 100 );
 
+    final IStatusCollector stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
+    /* Upload gaf data into db */
+    final IStatus gaf2dbStatus = doGaf2DB( new SubProgressMonitor( monitor, 90 ) );
+    if( gaf2dbStatus.matches( IStatus.ERROR ) )
+      return gaf2dbStatus;
+
+    /* Write log with status messages */
+    final IStatus logStatus = doWriteLog( new SubProgressMonitor( monitor, 10 ) );
+    stati.add( logStatus );
+
+    return stati.asMultiStatusOrOK( "Problems during GAF Import", "GAF Import successfully terminated" );
+  }
+
+  private IStatus doGaf2DB( final IProgressMonitor monitor ) throws CoreException
+  {
     Session session = null;
     try
     {
@@ -84,16 +107,17 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
       session = connection.openSession();
       final State state = m_data.getState();
       final WaterBody waterBody = m_data.getWaterBody();
-      final Coefficients coefficients = m_data.getCoefficients();
 
-      final GafProfiles profiles = m_data.getProfiles();
+      final GafProfiles profiles = m_data.getGafProfiles();
 
-      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, coefficients, monitor );
+      final Event waterlevelEvent = getWaterlevelEvent();
+
+      final Gaf2Db gaf2db = new Gaf2Db( dbType, waterBody, state, profiles, waterlevelEvent, monitor );
       new Executor( session, gaf2db ).execute();
 
       session.close();
 
-      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "Successfully imported GAF file" );
+      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "GAF data written successfully into database" );
     }
     catch( final PdbConnectException e )
     {
@@ -105,6 +129,48 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     {
       ProgressUtilities.done( monitor );
       PdbUtils.closeSessionQuietly( session );
+    }
+  }
+
+  protected Event getWaterlevelEvent( )
+  {
+    if( !m_data.getHasWaterlevels() )
+      return null;
+
+    final boolean importWaterlevels = m_data.getImportWaterlevels();
+    if( !importWaterlevels )
+      return null;
+
+    return m_data.getWaterlevelEvent();
+  }
+
+  private IStatus doWriteLog( final IProgressMonitor monitor )
+  {
+    StatusWriter writer = null;
+    try
+    {
+      monitor.beginTask( "Writing log file", 100 );
+
+      final File logFile = m_data.getLogFile();
+      if( logFile == null )
+        return Status.OK_STATUS;
+
+      final IStatus status = m_data.getGafProfiles().getStatus();
+      writer = new StatusWriter( logFile );
+      writer.write( status );
+      writer.close();
+
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "Failed to write log file", e );
+    }
+    finally
+    {
+      monitor.done();
+      IOUtils.closeQuietly( writer );
     }
   }
 }

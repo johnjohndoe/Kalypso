@@ -49,13 +49,17 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -77,17 +81,17 @@ public class Gaf2Db implements IPdbOperation
 
   private final String m_dbType;
 
-  private final Coefficients m_coefficients;
-
   private final PDBNameGenerator m_sectionNameGenerator = new PDBNameGenerator();
 
-  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Coefficients coefficients, final IProgressMonitor monitor )
+  private final Event m_waterlevelEvent;
+
+  public Gaf2Db( final String dbType, final WaterBody waterBody, final State state, final GafProfiles profiles, final Event waterlevelEvent, final IProgressMonitor monitor )
   {
     m_dbType = dbType;
     m_waterBody = waterBody;
     m_state = state;
     m_profiles = profiles;
-    m_coefficients = coefficients;
+    m_waterlevelEvent = waterlevelEvent;
     m_monitor = monitor;
   }
 
@@ -106,6 +110,7 @@ public class Gaf2Db implements IPdbOperation
       m_monitor.beginTask( "Importing cross sections into database", profiles.length );
 
       addState( session, m_state );
+      commitWaterLevel( session );
 
       for( final GafProfile profile : profiles )
       {
@@ -151,6 +156,8 @@ public class Gaf2Db implements IPdbOperation
         final GafPoint gafPoint = points[j];
         commitPoint( session, csPart, gafPoint, j, pointNameGenerator );
       }
+
+      addWaterlevels( session, profile, gafPart );
     }
   }
 
@@ -212,11 +219,8 @@ public class Gaf2Db implements IPdbOperation
 
     point.setCrossSectionPart( csPart );
 
-    final String readCode = gafPoint.getCode();
-    final String realCode = m_profiles.translateCode( readCode );
-
-    final String readHyk = gafPoint.getHyk();
-    final String realHyk = m_profiles.translateHyk( readHyk );
+    final GafCode code = gafPoint.getCode();
+    final GafCode hyk = gafPoint.getHyk();
 
     /* Using pointID from gaf, but force it to be unique within each part */
     final String name = nameGenerator.createUniqueName( gafPoint.getPointId() );
@@ -227,22 +231,70 @@ public class Gaf2Db implements IPdbOperation
     point.setConsecutiveNum( index );
     point.setHeight( gafPoint.getHeight() );
     point.setWidth( gafPoint.getWidth() );
-    point.setHyk( realHyk );
-    point.setCode( realCode );
+    point.setHyk( hyk.getHyk() );
+    point.setCode( code.getCode() );
 
     point.setLocation( gafPoint.getPoint() );
 
-    final Roughness roughness = m_coefficients.getRoughnessOrUnknown( gafPoint.getRoughnessClass() );
+    final Roughness roughness = gafPoint.getRoughnessClass();
     point.setRoughness( roughness );
     point.setRoughnessKstValue( roughness.getKstValue() );
     point.setRoughnessKValue( roughness.getKValue() );
 
-    final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( gafPoint.getVegetationClass() );
+    final Vegetation vegetation = gafPoint.getVegetationClass();
     point.setVegetation( vegetation );
     point.setVegetationAx( vegetation.getAx() );
     point.setVegetationAy( vegetation.getAy() );
     point.setVegetationDp( vegetation.getDp() );
 
     session.save( point );
+  }
+
+  private void addWaterlevels( final Session session, final GafProfile profile, final GafPart part ) throws Exception
+  {
+    if( m_waterlevelEvent == null )
+      return;
+
+    final String kind = part.getKind();
+    if( !IGafConstants.KZ_CATEGORY_WATERLEVEL.equals( kind ) )
+      return;
+
+    final GafPoint[] points = part.getPoints();
+    for( final GafPoint point : points )
+    {
+      final WaterlevelFixation fixation = new WaterlevelFixation();
+
+      fixation.setEvent( m_waterlevelEvent );
+      fixation.setDescription( StringUtils.EMPTY );
+
+      fixation.setCreationDate( m_waterlevelEvent.getCreationDate() );
+      fixation.setEditingDate( m_waterlevelEvent.getEditingDate() );
+      fixation.setEditingUser( m_waterlevelEvent.getEditingUser() );
+      fixation.setMeasurementDate( m_waterlevelEvent.getMeasurementDate() );
+
+      fixation.setLocation( point.getPoint() );
+      fixation.setStation( profile.getStation() );
+
+      fixation.setWaterlevel( point.getHeight() );
+
+      m_waterlevelEvent.getWaterlevelFixations().add( fixation );
+
+      session.save( fixation );
+    }
+  }
+
+  private void commitWaterLevel( final Session session )
+  {
+    if( m_waterlevelEvent != null )
+    {
+      m_waterlevelEvent.setCreationDate( m_state.getCreationDate() );
+      m_waterlevelEvent.setEditingDate( m_state.getEditingDate() );
+      m_waterlevelEvent.setEditingUser( m_state.getEditingUser() );
+      m_waterlevelEvent.setMeasurementDate( m_state.getMeasurementDate() );
+
+      m_waterlevelEvent.setWaterBody( m_waterBody );
+
+      session.save( m_waterlevelEvent );
+    }
   }
 }

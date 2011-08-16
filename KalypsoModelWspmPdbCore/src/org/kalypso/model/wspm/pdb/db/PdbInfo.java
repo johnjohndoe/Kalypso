@@ -40,14 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
+import java.lang.reflect.Array;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.osgi.framework.Version;
 
 /**
  * @author Gernot Belger
@@ -56,24 +70,60 @@ public class PdbInfo
 {
   public static final int UNKNOWN_SRID = -1;
 
-  private static final Object CURRENT_VERSION = "0.0.1"; //$NON-NLS-1$
+  public static final Version CURRENT_VERSION = new Version( "0.0.3" ); //$NON-NLS-1$
 
-  private final String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
+  public final static String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
-  private final String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
+  public final static String PROPERTY_SRID = "SRID"; //$NON-NLS-1$
+
+  public final static String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
 
   private final Properties m_properties = new Properties();
 
-  public PdbInfo( final Session session ) throws PdbConnectException
+  private IStatus m_status;
+
+  public PdbInfo( final Session session )
   {
-    final List<Info> list = GetPdbList.getList( session, Info.class );
-    for( final Info property : list )
-      m_properties.put( property.getKey(), property.getValue() );
+    // REAMRK: need to put this into a transaction, else, if an error occurs
+    // later changes on the db do not work any more
+    Transaction transaction = null;
+
+    try
+    {
+      transaction = session.beginTransaction();
+
+      final List<Info> list = GetPdbList.getList( session, Info.class );
+      for( final Info property : list )
+      {
+        final String value = property.getValue();
+        m_properties.put( property.getKey(), StringUtils.defaultString( value ) );
+        m_status = Status.OK_STATUS;
+      }
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "Failed to load 'Info' table from database. Database might not exist yet.", e );
+    }
+    finally
+    {
+      if( transaction != null )
+        transaction.commit();
+    }
   }
 
-  public String getVersion( )
+  public IStatus getStatus( )
   {
-    return m_properties.getProperty( PROPERTY_VERSION );
+    return m_status;
+  }
+
+  public Version getVersion( )
+  {
+    final String version = m_properties.getProperty( PROPERTY_VERSION );
+    if( StringUtils.isBlank( version ) )
+      return null;
+
+    return new Version( version );
   }
 
   public int getSRID( )
@@ -82,21 +132,52 @@ public class PdbInfo
     return NumberUtils.parseQuietInt( property, UNKNOWN_SRID );
   }
 
-  public void validate( ) throws PdbConnectException
+  /**
+   * @return base part of document server's URL; Will be used to resolve document URLs.
+   */
+  public String getDocumentServer( )
   {
-    final String version = getVersion();
-    if( !CURRENT_VERSION.equals( version ) )
+    return m_properties.getProperty( PROPERTY_DOCUMENT_SERVER );
+  }
+
+  public URI getDocumentBase( ) throws CoreException
+  {
+    final String documentServer = getDocumentServer();
+    if( StringUtils.isBlank( documentServer ) )
     {
-      final String message = String.format( "Unknown Version of PDB: %s (should be %s)", version, CURRENT_VERSION );
-      throw new PdbConnectException( message );
+      final String message = String.format( "Base url the document server is empty" );
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
     }
 
-
-    final int srid = getSRID();
-    if( UNKNOWN_SRID == srid )
+    try
     {
-      final String message = String.format( "Failed to determine SRID: %s", m_properties.get( PROPERTY_SRID ) );
-      throw new PdbConnectException( message );
+      return new URI( documentServer );
     }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      final String message = String.format( "Illegal base url of the document server: '%s'", documentServer );
+      final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message, e );
+      throw new CoreException( status );
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public Entry<String, String>[] getEntries( )
+  {
+    final Collection<Entry<String, String>> entries = new ArrayList<Entry<String, String>>();
+
+    final Set<String> names = m_properties.stringPropertyNames();
+    for( final String name : names )
+    {
+      final String value = m_properties.getProperty( name );
+
+      final Entry<String, String> entry = Collections.singletonMap( name, value ).entrySet().iterator().next();
+      entries.add( entry );
+    }
+
+    return entries.toArray( (Entry<String, String>[]) Array.newInstance( Entry.class, entries.size() ) );
   }
 }

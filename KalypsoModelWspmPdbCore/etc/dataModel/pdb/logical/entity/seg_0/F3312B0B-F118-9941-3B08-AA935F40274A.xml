@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-17 15:19:20 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-06-07 11:12:11 UTC</changedTime>
+   <changedTime>2011-07-13 13:25:47 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Cross_Sections PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -66,7 +66,6 @@
          <createdTime>2011-05-17 15:33:05 UTC</createdTime>
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-23 13:05:21 UTC</changedTime>
-         <comment>Cross Section ID</comment>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>BEE5B220-1F69-A797-77BD-83EC8F92761B</distinctType>
@@ -90,6 +89,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-19 13:06:00 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>72F78EA1-BFF2-06C3-B23C-A9FCA41237A5</distinctType>

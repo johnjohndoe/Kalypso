@@ -41,25 +41,27 @@
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
 
 /**
- * Represents the 'Kennziffer' (KZ) of a gaf file.
+ * Represents the 'Kennziffer' (KZ) of a GAF file.
  * 
  * @author Gernot Belger
  */
 public class GafCodes
 {
-  public static final GafCode NULL_HYK = new GafCode( StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
+  public static final GafCode NULL_HYK = new GafCode( -1, "<no HYK code>", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
 
-  private final Map<String, GafCode> m_codes = new HashMap<String, GafCode>();
+  private final Map<String, GafCode> m_codes = new LinkedHashMap<String, GafCode>();
 
-  private final Map<String, GafCode> m_hykCodes = new HashMap<String, GafCode>();
+  private final Map<String, GafCode> m_hykCodes = new LinkedHashMap<String, GafCode>();
 
   public GafCodes( ) throws IOException
   {
@@ -67,30 +69,36 @@ public class GafCodes
     for( final String key : properties.stringPropertyNames() )
     {
       final String value = properties.getProperty( key );
+
       final GafCode gafCode = new GafCode( key, value );
 
       m_codes.put( gafCode.getCode(), gafCode );
       m_hykCodes.put( gafCode.getHyk(), gafCode );
 
+      // m_codes.put( StringUtils.EMPTY, NULL_CODE );
       m_hykCodes.put( StringUtils.EMPTY, NULL_HYK );
     }
   }
 
   public GafCode getCode( final String kz )
   {
-    if( "x".equalsIgnoreCase( kz ) ) //$NON-NLS-1$
-      return m_codes.get( "PP" ); //$NON-NLS-1$
-    if( "PWSP".equalsIgnoreCase( kz ) ) //$NON-NLS-1$
-      return m_codes.get( "PP" ); //$NON-NLS-1$
-
     return m_codes.get( kz );
   }
 
   public GafCode getHykCode( final String hyk )
   {
-    if( "x".equalsIgnoreCase( hyk ) ) //$NON-NLS-1$
-      return NULL_HYK;
+    return m_hykCodes.get( hyk );
+  }
 
-    return m_codes.get( hyk );
+  public GafCode[] getAllCodes( )
+  {
+    final Collection<GafCode> values = m_codes.values();
+    return values.toArray( new GafCode[values.size()] );
+  }
+
+  public GafCode[] getAllHyks( )
+  {
+    final Collection<GafCode> values = m_hykCodes.values();
+    return values.toArray( new GafCode[values.size()] );
   }
 }

@@ -1,42 +1,48 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 07.06.2011 13:51:03 by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="WaterlevelFixation" table="waterlevel_fixation">
+    <class name="WaterlevelFixation" table="WATERLEVEL_FIXATION">
         <id name="id" type="big_decimal">
-            <column name="id" precision="20" scale="0" />
+            <column name="ID" precision="20" scale="0" />
             <generator class="assigned" />
         </id>
         <many-to-one name="event" class="Event" fetch="select">
-            <column name="event" precision="20" scale="0" not-null="true" />
+            <column name="EVENT" precision="20" scale="0" not-null="true" />
         </many-to-one>
         <property name="station" type="big_decimal">
-            <column name="station" precision="8" scale="1" not-null="true" />
+            <column name="STATION" precision="8" scale="1" not-null="true">
+                <comment>[m]</comment>
+            </column>
         </property>
         <property name="location" type="serializable">
-            <column name="location" />
+            <column name="LOCATION" />
         </property>
-        <property name="creationDate" type="timestamp">
-            <column name="creation_date" length="22" not-null="true" />
+        <property name="creationDate" type="serializable">
+            <column name="CREATION_DATE" not-null="true" />
         </property>
-        <property name="editingDate" type="timestamp">
-            <column name="editing_date" length="22" not-null="true" />
+        <property name="editingDate" type="serializable">
+            <column name="EDITING_DATE" not-null="true" />
         </property>
         <property name="editingUser" type="string">
-            <column name="editing_user" length="50" not-null="true" />
+            <column name="EDITING_USER" length="50" not-null="true" />
         </property>
-        <property name="measurementDate" type="timestamp">
-            <column name="measurement_date" length="22" />
+        <property name="measurementDate" type="serializable">
+            <column name="MEASUREMENT_DATE" />
         </property>
         <property name="waterlevel" type="big_decimal">
-            <column name="waterlevel" precision="8" scale="3" />
+            <column name="WATERLEVEL" precision="8" scale="3">
+                <comment>[m NN]</comment>
+            </column>
         </property>
         <property name="discharge" type="big_decimal">
-            <column name="discharge" precision="8" scale="3" />
+            <column name="DISCHARGE" precision="8" scale="3">
+                <comment>[m&#179;/s]</comment>
+            </column>
         </property>
         <property name="description" type="string">
-            <column name="description" />
+            <column name="DESCRIPTION" />
         </property>
     </class>
 </hibernate-mapping>

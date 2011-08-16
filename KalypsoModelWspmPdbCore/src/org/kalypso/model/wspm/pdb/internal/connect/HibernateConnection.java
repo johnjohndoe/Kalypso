@@ -48,12 +48,15 @@ import org.hibernate.cfg.Environment;
 import org.hibernatespatial.GeometryUserType2;
 import org.hibernatespatial.HBSpatialExtension;
 import org.hibernatespatial.SpatialDialect;
-import org.hibernatespatial.postgis.PostgisDialect;
 import org.kalypso.contribs.eclipse.core.runtime.ThreadContextClassLoaderRunnable;
+import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
+import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -73,11 +76,15 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 {
   protected static final String SPATIAL_DIALECT = "hibernate.spatial.dialect"; //$NON-NLS-1$
 
+  private PdbInfo m_info = null;
+
   private final SETTINGS m_settings;
 
   private Configuration m_config;
 
   private SessionFactory m_sessionFactory;
+
+  private PDBRole m_role;
 
   public HibernateConnection( final SETTINGS connectInfo )
   {
@@ -149,6 +156,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
 
     // FIXME: why does this not work???
     // configuration.setProperty( "hibernate.hbm2dll.auto", "create" );
+    // cfg.setProperty( org.hibernate.cfg.Environment.HBM2DDL_AUTO, "create" );
     // configuration.setProperty( "org.hibernate.tool.hbm2ddl", "debug" );
 
     configuration.setProperty( Environment.POOL_SIZE, "1" ); //$NON-NLS-1$
@@ -182,6 +190,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     configuration.addAnnotatedClass( Vegetation.class );
     configuration.addAnnotatedClass( VegetationId.class );
     configuration.addAnnotatedClass( WaterlevelFixation.class );
+    configuration.addAnnotatedClass( Document.class );
   }
 
   @Override
@@ -198,10 +207,10 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
       {
         final Configuration configuration = getConfiguration();
 
-        final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
-        final String[] creationScript = configuration.generateSchemaCreationScript( dialect );
-        for( final String sql : creationScript )
-          System.out.println( sql );
+        // final org.hibernate.dialect.PostgreSQLDialect dialect = new PostgisDialect();
+        // final String[] creationScript = configuration.generateSchemaCreationScript( dialect );
+        // for( final String sql : creationScript )
+        // System.out.println( sql );
 
         final SessionFactory sessionFactory = configuration.buildSessionFactory();
         setSessionFactory( sessionFactory );
@@ -270,4 +279,49 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
       throw new PdbConnectException( "Failed to open db session", e );
     }
   }
+
+  @Override
+  public PdbInfo getInfo( )
+  {
+    if( m_info == null )
+      loadInfo();
+
+    return m_info;
+  }
+
+  @Override
+  public PDBRole getRole( )
+  {
+    if( m_role == null )
+      loadInfo();
+
+    return m_role;
+  }
+
+  @Override
+  public void updateInfo( )
+  {
+    loadInfo();
+  }
+
+  private void loadInfo( )
+  {
+    Session session = null;
+    try
+    {
+      session = openSession();
+      m_info = new PdbInfo( session );
+      m_role = readRole( session );
+    }
+    catch( final PdbConnectException e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      PdbUtils.closeSessionQuietly( session );
+    }
+  }
+
+  protected abstract PDBRole readRole( final Session session );
 }

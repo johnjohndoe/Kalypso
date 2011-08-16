@@ -67,13 +67,13 @@ public class PdbTest extends Assert
     final OracleSettings connectInfo = new OracleSettings();
     connectInfo.setHost( "lfulg-kv-02" );
     connectInfo.setDbName( "XE" );
-    connectInfo.setUsername( "pdb_admin" );
-    connectInfo.setPassword( "pdb_admin" );
+    connectInfo.setUsername( "pdb" );
+    connectInfo.setPassword( "pdb" );
 // final PostgisSettings connectInfo = new PostgisSettings();
 // connectInfo.setHost( "map.bjoernsen.de" );
 // connectInfo.setDbName( "moni" );
-// connectInfo.setUsername( "pdb_admin" );
-// connectInfo.setPassword( "pdb_admin" );
+// connectInfo.setUsername( "pdb" );
+// connectInfo.setPassword( "pdb" );
 
     final IPdbConnection connection = connectInfo.createConnection();
     connection.connect();

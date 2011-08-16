@@ -90,13 +90,17 @@ public class OpenConnectionJob extends Job
       }
 
       connection = operation.getConnection();
+      final PdbInfo info = connection.getInfo();
 
       if( m_closeConnection )
         connection.close();
       else
         m_connection = connection;
 
-      m_connectionStatus = Status.OK_STATUS;
+      if( info == null )
+        m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to access database" );
+      else
+        m_connectionStatus = info.getStatus();
     }
     catch( final Exception e )
     {

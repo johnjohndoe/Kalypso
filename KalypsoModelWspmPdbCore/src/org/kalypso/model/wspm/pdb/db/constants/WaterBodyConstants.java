@@ -45,6 +45,8 @@ package org.kalypso.model.wspm.pdb.db.constants;
  */
 public interface WaterBodyConstants
 {
+  Integer DEFAULT_RANK = -1;
+
   String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
 
   String PROPERTY_ID = "id"; //$NON-NLS-1$

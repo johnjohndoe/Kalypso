@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-17 15:19:11 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-06-07 11:04:18 UTC</changedTime>
+   <changedTime>2011-07-13 13:25:04 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Water_Bodies PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -110,6 +110,8 @@
          <createdTime>2011-06-07 10:03:17 UTC</createdTime>
          <changedBy>thuel</changedBy>
          <changedTime>2011-06-07 11:04:18 UTC</changedTime>
+         <comment>Gewässerordnung (ggf. zur Darstellung)</comment>
+         <commentInRDBMS>Gewässerordnung (ggf. zur Darstellung)</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <defaultValue>-1</defaultValue>

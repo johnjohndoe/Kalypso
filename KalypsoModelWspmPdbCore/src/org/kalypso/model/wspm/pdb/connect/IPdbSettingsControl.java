@@ -51,4 +51,6 @@ public interface IPdbSettingsControl
   Control getControl( );
 
   ImageDescriptor getPageImage( );
+
+  void setEditable( boolean b );
 }

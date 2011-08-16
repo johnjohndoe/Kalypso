@@ -42,18 +42,29 @@ package org.kalypso.model.wspm.pdb.internal.gaf;
 
 import java.math.BigDecimal;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.transformation.transformer.JTSTransformer;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
 /**
- * represents one line of a gaf file
+ * Represents a parsed profile point of a gaf file
  * 
  * @author Gernot Belger
  */
 public class GafPoint
 {
+  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
   private final BigDecimal m_station;
 
   private final String m_pointId;
@@ -62,36 +73,79 @@ public class GafPoint
 
   private final BigDecimal m_height;
 
-  private final String m_code;
+  private final GafCode m_code;
 
-  private final String m_roughnessClass;
+  private final Roughness m_roughnessClass;
 
-  private final String m_vegetationClass;
+  private final Vegetation m_vegetationClass;
 
-  private final BigDecimal m_rw;
+  private final GafCode m_hyk;
 
-  private final BigDecimal m_hw;
+  private final Point m_point;
 
-  private final String m_hyk;
+  private final GafPointCheck m_checker;
 
-  private final JTSTransformer m_transformer;
-
-  private final GeometryFactory m_geometryFactory;
-
-  public GafPoint( final BigDecimal station, final String pointId, final BigDecimal width, final BigDecimal height, final String code, final String roughnessClass, final String vegetationClass, final BigDecimal rw, final BigDecimal hw, final String hyk, final JTSTransformer transformer, final GeometryFactory geometryFactory )
+  public GafPoint( final GafLine line, final GafPointCheck checker, final GeometryFactory geometryFactory, final JTSTransformer transformer )
   {
-    m_station = station;
-    m_pointId = pointId;
-    m_width = width;
-    m_height = height;
-    m_code = code;
-    m_roughnessClass = roughnessClass;
-    m_vegetationClass = vegetationClass;
-    m_rw = rw;
-    m_hw = hw;
-    m_hyk = hyk;
-    m_transformer = transformer;
-    m_geometryFactory = geometryFactory;
+    m_checker = checker;
+    m_station = line.getStation();
+    m_pointId = line.getPointId();
+    m_width = line.getWidth();
+    m_height = line.getHeight();
+
+    final Coordinate position = createPosition( line );
+    m_point = createPoint( position, geometryFactory, transformer );
+
+    m_code = m_checker.translateCode( line.getCode() );
+
+    m_roughnessClass = m_checker.translateRoughness( line.getRoughnessClass() );
+    m_vegetationClass = m_checker.translateVegetation( line.getVegetationClass() );
+    m_hyk = m_checker.translateHyk( line.getHyk() );
+  }
+
+  private Coordinate createPosition( final GafLine line )
+  {
+    final BigDecimal rw = line.getRw();
+    final BigDecimal hw = line.getHw();
+    final BigDecimal height = line.getHeight();
+
+    final double x = rw == null ? Coordinate.NULL_ORDINATE : rw.doubleValue();
+    final double y = hw == null ? Coordinate.NULL_ORDINATE : hw.doubleValue();
+    final double z = height == null ? Coordinate.NULL_ORDINATE : height.doubleValue();
+
+    return new Coordinate( x, y, z );
+  }
+
+  private Point createPoint( final Coordinate position, final GeometryFactory geometryFactory, final JTSTransformer transformer )
+  {
+    if( !checkPosition( position ) )
+      return null;
+
+    try
+    {
+      final Coordinate transformedCrd = transformer.transform( position );
+      return geometryFactory.createPoint( transformedCrd );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      m_stati.add( IStatus.ERROR, "Failed to parse geometry", e );
+      return null;
+    }
+  }
+
+  private boolean checkPosition( final Coordinate position )
+  {
+    if( Double.isNaN( position.x ) || Double.isNaN( position.y ) )
+    {
+      m_stati.add( IStatus.WARNING, "Geometry is missing" );
+      return false;
+    }
+
+    if( Double.isNaN( position.z ) || Double.isNaN( position.y ) )
+      m_stati.add( IStatus.WARNING, "Height is missing" );
+
+    return true;
   }
 
   public String getPointId( )
@@ -104,7 +158,7 @@ public class GafPoint
     return m_station;
   }
 
-  public String getCode( )
+  public GafCode getCode( )
   {
     return m_code;
   }
@@ -119,38 +173,23 @@ public class GafPoint
     return m_height;
   }
 
-  public String getHyk( )
+  public GafCode getHyk( )
   {
     return m_hyk;
   }
 
-  public Coordinate getCoordinate( ) throws Exception
-  {
-    if( m_rw == null || m_hw == null )
-      return null;
-
-    final double z = m_height == null ? Coordinate.NULL_ORDINATE : m_height.doubleValue();
-
-    final Coordinate coordinate = new Coordinate( m_rw.doubleValue(), m_hw.doubleValue(), z );
-    return m_transformer.transform( coordinate );
-  }
-
-  public String getRoughnessClass( )
+  public Roughness getRoughnessClass( )
   {
     return m_roughnessClass;
   }
 
-  public String getVegetationClass( )
+  public Vegetation getVegetationClass( )
   {
     return m_vegetationClass;
   }
 
-  public com.vividsolutions.jts.geom.Point getPoint( ) throws Exception
+  public Point getPoint( ) throws Exception
   {
-    final Coordinate coordinate = getCoordinate();
-    if( coordinate == null )
-      return null;
-
-    return m_geometryFactory.createPoint( coordinate );
+    return m_point;
   }
 }
