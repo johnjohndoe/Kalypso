@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -49,6 +48,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -94,7 +94,7 @@ public class SobekImportWizard extends Wizard implements IWorkbenchWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to import SOBEK data", status ); //$NON-NLS-1$
+    new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     return !status.matches( IStatus.ERROR );
   }

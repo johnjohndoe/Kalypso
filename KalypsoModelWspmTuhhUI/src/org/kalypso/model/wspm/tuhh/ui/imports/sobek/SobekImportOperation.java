@@ -47,7 +47,6 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
@@ -56,6 +55,8 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.parser.SobekModelParser;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Gernot Belger
@@ -87,9 +88,12 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
       final Sobek2Wspm sobek2Wspm = new Sobek2Wspm( water );
       sobek2Wspm.convert( model );
 
+      final Feature[] newFeatures = sobek2Wspm.getNewFeatures();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, water, newFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
       workspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );
 
-      return Status.OK_STATUS;
+      return sobek2Wspm.getStatus();
     }
     catch( final IOException e )
     {
