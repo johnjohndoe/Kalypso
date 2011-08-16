@@ -43,15 +43,19 @@ package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.parser.SobekModelParser;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
@@ -75,16 +79,31 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
       // find files for parsing
       final FileAndHistoryData inputDir = m_data.getInputDir();
       final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
-      modelParser.read( new SubProgressMonitor( monitor, 30 ) );
+      final SobekModel model = modelParser.read( new SubProgressMonitor( monitor, 30 ) );
 
-      // TODO: convert sobek data to wspm data
+      final CommandableWorkspace workspace = m_data.getWorkspace();
+      final WspmWaterBody water = m_data.getWater();
+
+      final Sobek2Wspm sobek2Wspm = new Sobek2Wspm( water );
+      sobek2Wspm.convert( model );
+
+      workspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );
+
+      return Status.OK_STATUS;
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       throw new InvocationTargetException( e );
     }
-
-    return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), "Sorry, this function is not yet implemented." );
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
   }
 }
