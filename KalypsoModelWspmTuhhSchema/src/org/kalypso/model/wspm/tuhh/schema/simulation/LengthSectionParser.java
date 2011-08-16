@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -145,7 +146,7 @@ public class LengthSectionParser
         /* Introduce space around 'NaN' and '***' values to make it parseable */
 
         if( nextLine.contains( "NaN" ) ) //$NON-NLS-1$
-          log.log( false, Messages.getString("LengthSectionParser.0") ); //$NON-NLS-1$
+          log.log( false, Messages.getString( "LengthSectionParser.0" ) ); //$NON-NLS-1$
 
         // TODO: handle NaN-values to keep information alive (unfortunally BigDecimal throws a NumberFormatException)
         final String cleanLine1 = nextLine.replaceAll( "-NaN", " null " ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -156,7 +157,7 @@ public class LengthSectionParser
         final BigDecimal runoff = NumberUtils.parseQuietDecimal( cleanLine3, 17, 27, 3 );
 
         /* Any lines where station or runoff cannot be parsed are filtered out */
-        if( station == null || runoff == null )
+        if( Objects.isNull( station, runoff ) )
           continue;
 
         /* A new section begins, if the new station is lower than the next station */
@@ -202,7 +203,7 @@ public class LengthSectionParser
       return Status.OK_STATUS;
 
     final IStatus[] children = result.toArray( new IStatus[result.size()] );
-    final String msg = String.format( Messages.getString("LengthSectionParser.1") ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "LengthSectionParser.1" ) ); //$NON-NLS-1$
     return new MultiStatus( KalypsoModelWspmTuhhSchemaPlugin.getID(), 0, children, msg, null );
   }
 

@@ -294,6 +294,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private Date tweakStartDate( final Date oldDate )
   {
+    if( oldDate == null )
+    {
+      getLog().add( IStatus.WARNING, "Starting date is not set. Check calculation case." );
+      return null;
+    }
+
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     final Calendar cal = Calendar.getInstance( timeZone );
     cal.setTime( oldDate );

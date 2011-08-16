@@ -52,25 +52,28 @@ import org.kalypso.wspwin.core.Plotter;
 
 public final class PlotterExportWizardCallback extends PrfExportWizardCallback
 {
-  private final boolean m_doPrint;
+  private final PlotterExportData m_data;
 
-  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final boolean doPrint, final WspmResultLengthSection[] waterlevel )
+  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final PlotterExportData data, final WspmResultLengthSection[] waterlevel )
   {
     super( exportDir, filenamePattern, waterlevel );
-    m_doPrint = doPrint;
+
+    m_data = data;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.PrfExportWizardCallback#profileWritten(java.io.File)
-   */
   @Override
   public void profileWritten( final File file ) throws CoreException
   {
     try
     {
-      Plotter.openPrf( file, m_doPrint );
+      final boolean doPrint = m_data.getDoPrint();
+      Plotter.openPrf( file, doPrint );
 
-      Thread.sleep( 500 );
+      if( doPrint )
+      {
+        final long sleep = m_data.getSleepTime();
+        Thread.sleep( sleep );
+      }
     }
     catch( final Exception e )
     {

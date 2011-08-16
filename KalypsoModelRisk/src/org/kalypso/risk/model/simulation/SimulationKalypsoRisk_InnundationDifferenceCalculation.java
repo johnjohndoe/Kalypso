@@ -148,16 +148,25 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
       if( inputCoverageCollection1.size() != inputCoverageCollection2.size() )
         return;
 
-      // select representative HQ collection (HQ100)
+      int highestReturnPeriod = 1;
+      for( int i = 0; i < inputCoverageCollection1.size(); i++ )
+      {
+        final IAnnualCoverageCollection collection = inputCoverageCollection1.get( i );
+        final int returnPeriod = collection.getReturnPeriod();
+        if( highestReturnPeriod < returnPeriod )
+          highestReturnPeriod = returnPeriod;
+      }
+      
+      // select representative HQ collection (highest HQ)
       IAnnualCoverageCollection collection1_HQ100 = null;
       IAnnualCoverageCollection collection2_HQ100 = null;
       for( int i = 0; i < inputCoverageCollection1.size(); i++ )
       {
         final IAnnualCoverageCollection collection1 = inputCoverageCollection1.get( i );
         final IAnnualCoverageCollection collection2 = inputCoverageCollection2.get( i );
-        if( collection1.getReturnPeriod() == 100 )
+        if( collection1.getReturnPeriod() == highestReturnPeriod )
           collection1_HQ100 = collection1;
-        if( collection2.getReturnPeriod() == 100 )
+        if( collection2.getReturnPeriod() == highestReturnPeriod )
           collection2_HQ100 = collection2;
       }
 
@@ -165,9 +174,9 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         return;
 
       final IAnnualCoverageCollection resultCoverageCollection = resultCollection.addNew( IAnnualCoverageCollection.QNAME );
-      resultCoverageCollection.setReturnPeriod( 100 );
+      resultCoverageCollection.setReturnPeriod( highestReturnPeriod );
       resultCoverageCollection.setName( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.1" ) ); //$NON-NLS-1$
-      resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), 100 ) ); //$NON-NLS-1$
+      resultCoverageCollection.setDescription( String.format( Messages.getString( "org.kalypso.risk.model.simulation.InnundationDifferenceCalculation.2" ), highestReturnPeriod ) ); //$NON-NLS-1$
 
       // calculate actual difference
       final IFeatureBindingCollection<ICoverage> coverages1_HG100 = collection1_HQ100.getCoverages();
@@ -193,7 +202,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         {
           final IGeoGrid inputGrid1 = GeoGridUtilities.toGrid( inputCoverage1 );
           final IGeoGrid inputGrid2 = GeoGridUtilities.toGrid( inputCoverage2 );
-          final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid1, inputGrid2 );
+          final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid2, inputGrid1 );
           outputGrid.usePositiveValuesOnly( true );
 
           final String outputCoverageFileName = String.format( "%s_%02d.bin", resultCoverageCollection.getId(), i ); //$NON-NLS-1$

@@ -69,24 +69,31 @@ public class WspmResultLengthSection
 
   public static WspmResultLengthSection create( final IFile observationFile, final GMLXPath gmlxPath )
   {
+    GMLWorkspace workspace = null;
     try
     {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( observationFile );
-      final Feature obsFeature = (Feature) GMLXPathUtilities.query( gmlxPath, workspace );
-      final WspmResultLengthSection obs = create( obsFeature );
-      workspace.dispose();
-      return obs;
+      workspace = GmlSerializer.createGMLWorkspace( observationFile );
+      final Object object = GMLXPathUtilities.query( gmlxPath, workspace );
+      if( object instanceof Feature )
+        return create( (Feature) object );
+
+      return null;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return null;
     }
+    finally
+    {
+      if( workspace != null )
+        workspace.dispose();
+    }
   }
 
-  public static WspmResultLengthSection create( final Feature fixation )
+  public static WspmResultLengthSection create( final Feature object )
   {
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( fixation );
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( object );
     return new WspmResultLengthSection( observation );
   }
 

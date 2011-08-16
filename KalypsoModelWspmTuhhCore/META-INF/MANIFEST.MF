@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelWspmTuhhCore Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
-Bundle-Version: 11.6.0.qualifier
+Bundle-Version: 11.6.1.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
 Bundle-Vendor: kalypso.sourceforge.net
@@ -13,7 +13,8 @@ Require-Bundle: org.kalypso.model.wspm.core;visibility:=reexport,
  de.openali.odysseus.chart.factory,
  org.kalypso.model.wspm.tuhh.project.template,
  org.kalypso.model.wspm.tuhh.project.demo;resolution:=optional,
- org.junit4;resolution:=optional
+ org.junit4;resolution:=optional,
+ org.kalypso.module;bundle-version="11.6.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.gml,

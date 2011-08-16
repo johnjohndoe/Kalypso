@@ -40,78 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
-import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.commons.databinding.validation.DoubleNaNValidator;
+import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.util.themes.legend.provider.ThemeNameLabelProvider;
 
 /**
  * @author barbarins
  */
 public class ProfileFromDEMWizardPage extends WizardPage
 {
-  private String m_name;
+  private DatabindingWizardPage m_binding;
 
-  private double m_station;
+  private final ProfileFromDEMData m_data;
 
-  private final IProfil m_profile;
-
-  public ProfileFromDEMWizardPage( final IProfil profile )
+  public ProfileFromDEMWizardPage( final ProfileFromDEMData data )
   {
     super( "profilefromdemwizardpage" ); //$NON-NLS-1$
 
-    m_profile = profile;
-
-    m_name = ""; //$NON-NLS-1$
-    m_station = Double.NaN;
+    m_data = data;
 
     setTitle( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.4" ) ); //$NON-NLS-1$
   }
 
-  public String getProfileName( )
-  {
-    return m_name;
-  }
-
-  public double getProfileStation( )
-  {
-    return m_station;
-  }
-
-  protected void checkPageCompleted( )
-  {
-    setMessage( null );
-    setPageComplete( true );
-
-    if( Double.isNaN( m_station ) )
-    {
-      setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7" ), ERROR ); //$NON-NLS-1$
-      setPageComplete( false );
-    }
-
-    if( StringUtils.isEmpty( m_name ) )
-    {
-      setMessage( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" ), ERROR ); //$NON-NLS-1$
-      setPageComplete( false );
-    }
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -121,54 +96,87 @@ public class ProfileFromDEMWizardPage extends WizardPage
     container.setLayout( new GridLayout( 2, false ) );
     setControl( container );
 
-    /* name */
-    final Label lName = new Label( container, SWT.NONE );
+    m_binding = new DatabindingWizardPage( this, null );
+
+    createThemeControl( container );
+    createNameControl( container );
+    createStationControls( container );
+    createProfileViewer( container );
+  }
+
+  private void createThemeControl( final Composite parent )
+  {
+    final IKalypsoFeatureTheme[] themes = m_data.getThemes();
+    /* Make things simple if we have only one theme */
+    if( themes.length < 2 )
+      return;
+
+    final Label lName = new Label( parent, SWT.NONE );
+    lName.setText( "Theme" );
+    lName.setToolTipText( "The new profile will be added to this container." );
+
+    final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+    viewer.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new ThemeNameLabelProvider() );
+    viewer.setInput( themes );
+
+    /* Binding */
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ProfileFromDEMData.PROPERTY_THEME );
+
+    final DataBinder binder = new DataBinder( target, model );
+    m_binding.bindValue( binder );
+  }
+
+  private void createNameControl( final Composite parent )
+  {
+    final Label lName = new Label( parent, SWT.NONE );
     lName.setText( Messages.getString( "ProfileFromDEMWizardPage.0" ) ); //$NON-NLS-1$
 
-    final Text tName = new Text( container, SWT.BORDER );
+    final Text tName = new Text( parent, SWT.BORDER );
     tName.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    tName.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        setName( tName.getText() );
-      }
-    } );
+    /* Binding */
+    final ISWTObservableValue target = SWTObservables.observeText( tName, SWT.Modify );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ProfileFromDEMData.PROPERTY_NAME );
 
-    /* station */
-    final Label lStation = new Label( container, SWT.NONE );
+    final DataBinder binder = new DataBinder( target, model );
+
+    final String warning = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, warning ) );
+
+    m_binding.bindValue( binder );
+  }
+
+  private void createStationControls( final Composite parent )
+  {
+    final Label lStation = new Label( parent, SWT.NONE );
     lStation.setText( Messages.getString( "ProfileFromDEMWizardPage.1" ) ); //$NON-NLS-1$
 
-    final Text tStation = new Text( container, SWT.BORDER );
+    final Text tStation = new Text( parent, SWT.BORDER );
     tStation.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    tStation.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        setStation( tStation.getText() );
-      }
-    } );
+    /* Binding */
+    final ISWTObservableValue target = SWTObservables.observeText( tStation, SWT.Modify );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ProfileFromDEMData.PROPERTY_STATION );
 
-    final IProfilLayerProvider lp = m_profile == null ? null : KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
+    final DataBinder binder = new DataBinder( target, model );
 
-    final ProfileChartComposite profileChart = new ProfileChartComposite( container, SWT.BORDER, lp, m_profile );
+    final String error = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.7" ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, error ) );
+    binder.addTargetAfterConvertValidator( new DoubleNaNValidator( IStatus.WARNING, error ) );
+
+    m_binding.bindValue( binder );
+  }
+
+  private void createProfileViewer( final Composite parent )
+  {
+    final IProfil profile = m_data.getProfile();
+
+    final IProfilLayerProvider lp = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
+
+    final ProfileChartComposite profileChart = new ProfileChartComposite( parent, SWT.BORDER, lp, profile );
     profileChart.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
   }
-
-  protected void setStation( final String text )
-  {
-    m_station = NumberUtils.parseQuietDouble( text );
-    checkPageCompleted();
-  }
-
-  protected void setName( final String text )
-  {
-    m_name = text;
-    checkPageCompleted();
-  }
-
 }

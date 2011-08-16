@@ -64,7 +64,6 @@ import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.simulation.core.SimulationException;
@@ -101,15 +100,15 @@ public class LzsimWriter
 
   public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
   {
-//    try
-//    {
-      doWriteLzsimFiles( lzsimDir );
-//    }
-//    catch( final Exception e )
-//    {
+// try
+// {
+    doWriteLzsimFiles( lzsimDir );
+// }
+// catch( final Exception e )
+// {
 //      final String msg = String.format( Messages.getString("LzsimWriter.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
-//      throw new NAPreprocessorException( msg, e );
-//    }
+// throw new NAPreprocessorException( msg, e );
+// }
   }
 
   private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
@@ -220,7 +219,7 @@ public class LzsimWriter
       if( iniCatchment == null )
       {
         // FIXME: better? only log...
-        final String msg = Messages.getString("LzsimWriter.5", catchment.getName() ); //$NON-NLS-1$
+        final String msg = Messages.getString( "LzsimWriter.5", catchment.getName() ); //$NON-NLS-1$
         throw new SimulationException( msg );
       }
       else
@@ -266,9 +265,9 @@ public class LzsimWriter
       }
       writer.close();
     }
-    catch( final IOException e )
+    catch( final Throwable e )
     {
-      final String msg = String.format( Messages.getString("LzsimWriter.7"), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "LzsimWriter.7" ), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
       throw new SimulationException( msg, e );
     }
     finally

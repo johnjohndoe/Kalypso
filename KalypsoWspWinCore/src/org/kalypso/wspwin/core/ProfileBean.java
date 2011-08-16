@@ -44,12 +44,11 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
@@ -62,25 +61,18 @@ public class ProfileBean
   private final String m_stateName;
   private final double m_station;
   private final String m_fileName;
-  private final Map<String, String> m_metadata;
 
-  public ProfileBean( final String waterName, final String stateName, final double station, final String fileName, final Map<String, String> metadata )
+  public ProfileBean( final String waterName, final String stateName, final double station, final String fileName )
   {
     m_waterName = waterName;
     m_stateName = stateName;
     m_station = station;
     m_fileName = fileName;
-    m_metadata = metadata;
   }
 
   public String getFileName( )
   {
     return m_fileName;
-  }
-
-  public Map<String, String> getMetadata( )
-  {
-    return Collections.unmodifiableMap( m_metadata );
   }
 
   public double getStation( )
@@ -97,7 +89,7 @@ public class ProfileBean
   {
     return m_stateName;
   }
-  
+
   public static ProfileBean[] readProfiles( final LineNumberReader reader, final int profilCount ) throws IOException, ParseException
   {
     final List<ProfileBean> beans = new ArrayList<ProfileBean>( 20 );
@@ -118,29 +110,34 @@ public class ProfileBean
       {
         final String waterName = tokenizer.nextToken();
         final double station = Double.parseDouble( tokenizer.nextToken() );
-        final String vzk = tokenizer.nextToken(); // Verzweigungskennung
-        final String mfb = tokenizer.nextToken(); // Mehrfeldbrückenkennung
+        /* final String vzk = */tokenizer.nextToken(); // Verzweigungskennung
+        /* final String mfb = */tokenizer.nextToken(); // Mehrfeldbrückenkennung
         final String zustandName = tokenizer.nextToken();
         final String fileName = tokenizer.nextToken();
 
-        // give unused data in form of metadata entries
-        final Map<String, String> metadata = new HashMap<String, String>( 2 );
-        metadata.put( "VZK", vzk ); //$NON-NLS-1$
-        metadata.put( "MFB", mfb ); //$NON-NLS-1$
-        metadata.put( "ZUSTAND", zustandName ); //$NON-NLS-1$
-
-        final ProfileBean bean = new ProfileBean( waterName, zustandName, station, fileName, metadata );
+        final ProfileBean bean = new ProfileBean( waterName, zustandName, station, fileName );
         beans.add( bean );
       }
       catch( final NumberFormatException e )
       {
         throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ProfileBean.6") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
       }
-
     }
 
     return beans.toArray( new ProfileBean[beans.size()] );
   }
 
-  
+  public String formatLine( )
+  {
+    final String waterName = shortenName( getWaterName() );
+    final String stateName = shortenName( getStateName() );
+
+    return String.format( Locale.US, "%-9s%9.4f 0        0    %-10s %-12s", waterName, m_station, stateName, m_fileName );
+  }
+
+  public static String shortenName( final String name )
+  {
+    final String noSpaces = StringUtils.remove( name, ' ' ); //$NON-NLS-1$
+    return StringUtils.abbreviateMiddle( noSpaces, "_", 10 ); //$NON-NLS-1$
+  }
 }

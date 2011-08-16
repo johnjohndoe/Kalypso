@@ -18,6 +18,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -35,6 +36,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   {
     if( m_data == null )
       return;
+
     m_data.open();
     final IObservation<TupleResult> obs = m_data.getObservation();
     if( obs == null )
@@ -54,9 +56,6 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
   @Override
   protected final String getTooltip( final int index )
   {
@@ -123,8 +122,10 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final double startBridge = sT + bR / 2000;
     final double endBridge = sT - bR / 2000;
 
-    final Point bottomLeft = getCoordinateMapper().numericToScreen( startBridge, uK );
-    final Point topRight = getCoordinateMapper().numericToScreen( endBridge, oK );
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+
+    final Point bottomLeft = coordinateMapper.numericToScreen( startBridge, uK );
+    final Point topRight = coordinateMapper.numericToScreen( endBridge, oK );
     return RectangleUtils.createNormalizedRectangle( bottomLeft, topRight );
   }
 }

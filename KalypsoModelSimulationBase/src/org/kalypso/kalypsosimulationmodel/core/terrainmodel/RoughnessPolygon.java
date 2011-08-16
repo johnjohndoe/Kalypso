@@ -18,6 +18,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * {@link AbstractFeatureBinder} based, default implementation of {@link IRoughnessPolygon}
@@ -31,7 +32,10 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
 
-  public RoughnessPolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  // TODO: not a good place, move to constant in 1d2d
+  public static final String DATA_LOCATION = "/.metadata/roughness.gml"; //$NON-NLS-1$
+
+  public RoughnessPolygon( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -96,7 +100,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
       final IRoughnessCls rCls = FeatureHelper.resolveLink( this, IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, IRoughnessCls.class );
       return rCls;
     }
-    catch( IllegalStateException e )
+    catch( final IllegalStateException e )
     {
       // If this happens, it is because xlink is broken (possible after deleting class from roughness database)
       setProperty( IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, null );
@@ -220,7 +224,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterAxAy(double)
    */
   @Override
-  public void setCorrectionParameterAxAy( double value )
+  public void setCorrectionParameterAxAy( final double value )
   {
     setProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY, value );
   }
@@ -229,7 +233,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterDP(double)
    */
   @Override
-  public void setCorrectionParameterDP( double value )
+  public void setCorrectionParameterDP( final double value )
   {
     setProperty( IRoughnessPolygon.PROP_CORRECTION_DP, value );
   }
@@ -238,7 +242,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterKS(double)
    */
   @Override
-  public void setCorrectionParameterKS( double value )
+  public void setCorrectionParameterKS( final double value )
   {
     setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
   }
@@ -261,5 +265,12 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
     changes[1] = new FeatureChange( feature, featureType.getProperty( PROP_ROUGHNESS_STYLE ), null );
 
     return changes;
+  }
+
+  public static XLinkedFeature_Impl createClassLink( final Feature polygonFeature, final Feature classFeature )
+  {
+    final StringBuffer xlinkBuffer = new StringBuffer( 50 );
+    xlinkBuffer.append( "project:" ).append( DATA_LOCATION ).append( "#" ).append( classFeature.getId() ).trimToSize(); //$NON-NLS-1$ //$NON-NLS-2$
+    return new XLinkedFeature_Impl( polygonFeature, classFeature.getParentRelation(), classFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
   }
 }

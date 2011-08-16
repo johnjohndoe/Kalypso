@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+<catalog:catalog ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
 	<!-- org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState -->
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:sld:default"
@@ -12,6 +12,9 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:swtimage:default"
 		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.gif" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileReachSegmentWspmTuhhSteadyState:uiproperties:default"
+		uri="org.kalypso.model.wspm.tuhh.ProfileReachSegmentWspmTuhhSteadyState.properties" />
 
 	<!-- {org.kalypso.model.wspm.tuhh}ProfileMarker -->
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:ProfileMarker:sld:default"
@@ -72,6 +75,4 @@
 
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:WaterlevelParameter:featureview:default"
 		uri="org.kalypso.model.wspm.tuhh.WaterlevelParameter.gft" />
-
 </catalog:catalog>
-

@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import java.math.BigDecimal;
-import java.net.URL;
+import java.net.URI;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -149,13 +149,13 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     {
       final String riverId = anyPoint.getRiverId();
       final String riverName = anyPoint.getRiverName();
-      final URL[] photoUrls = profilePolygones.getPhotoUrls();
+      final URI[] photoUrls = profilePolygones.getPhotoUrls();
 
       final IProfileFeature profileFeature = project.createNewProfile( riverName, true );
       profileFeature.getWater().setRefNr( riverId );
 
       profileFeature.setSrsName( m_data.getTransformer().getTarget() );
-      for( final URL url : photoUrls )
+      for( final URI url : photoUrls )
       {
         final Image image = profileFeature.addImage( url );
         final String path = url.getPath();

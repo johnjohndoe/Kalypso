@@ -68,6 +68,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
   {
     setHelpAvailable( false );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+
   }
 
   /**

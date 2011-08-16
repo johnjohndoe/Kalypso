@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 import org.kalypso.model.wspm.tuhh.core.wprof.WProfContextPatternReplacer;
@@ -107,10 +108,7 @@ public class WProfImportFilePage extends WizardPage
   public void createControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
-    final GridLayout panelLayout = new GridLayout();
-    panelLayout.marginWidth = 0;
-    panelLayout.marginHeight = 0;
-    panel.setLayout( panelLayout );
+    panel.setLayout( Layouts.createGridLayout() );
 
     final Control fileControl = createFileControl( panel );
     fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

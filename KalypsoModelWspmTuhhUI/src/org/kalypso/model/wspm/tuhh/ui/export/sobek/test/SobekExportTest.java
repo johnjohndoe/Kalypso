@@ -107,8 +107,8 @@ public class SobekExportTest extends Assert
     final GMLWorkspace wspmWorkspace = GmlSerializer.createGMLWorkspace( dataLocation, null );
     m_project = (TuhhWspmProject) wspmWorkspace.getRootFeature();
 
-    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
-    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
+    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_project.getWaterBodies();
+    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies.get( 0 ).getProfiles();
     m_profiles = profiles.toArray( new IProfileFeature[profiles.size()] );
 
     m_info.setProfiles( m_profiles );

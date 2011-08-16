@@ -43,11 +43,15 @@ package org.kalypso.model.wspm.tuhh.ui.light;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.kalypso.chart.ui.view.ChartView;
+import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.model.wspm.ui.view.LayerViewPart;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartViewPart;
 import org.kalypso.model.wspm.ui.view.legend.LegendViewPart;
 import org.kalypso.model.wspm.ui.view.table.TableView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
+import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
+import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
@@ -55,6 +59,8 @@ import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
  */
 public class WspmLightPerspective implements IPerspectiveFactory
 {
+  public static final String ID = "WspmLightPerspective"; //$NON-NLS-1$
+
   private static final String MAIN_RIGHT_FOLDER = "wspmLightMainRightFolder"; //$NON-NLS-1$
 
   private static final String MAIN_FOLDER = "wspmLightMainFolder"; //$NON-NLS-1$
@@ -66,8 +72,6 @@ public class WspmLightPerspective implements IPerspectiveFactory
   private static final String SCND_BOTTOM_RIGHT = "wspmLightScndBottomRightFolder"; //$NON-NLS-1$
 
   private static final String BOTTOM_MAIN_FOLDER = "wspmLightBottomMainFolder"; //$NON-NLS-1$
-
-  public static final String ID = "WspmLightPerspective"; //$NON-NLS-1$
 
   @Override
   public void createInitialLayout( final IPageLayout layout )
@@ -107,11 +111,14 @@ public class WspmLightPerspective implements IPerspectiveFactory
     /** top left folder */
     final IFolderLayout leftFolder = layout.createFolder( TOP_LEFT, IPageLayout.LEFT, 0.15f, editorArea );
     leftFolder.addView( WspmGmvViewPart.ID );
+    leftFolder.addPlaceholder( StyleEditorViewPart.ID );
 
     /** main view */
     final IFolderLayout mainFolder = layout.createFolder( MAIN_FOLDER, IPageLayout.RIGHT, 1.0f, editorArea );
     mainFolder.addView( WspmMapViewPart.ID );
     mainFolder.addView( TableView.ID );
+    mainFolder.addPlaceholder( FeatureView.ID );
+    mainFolder.addPlaceholder( ChartView.ID );
 
     /** bottom main folder */
     final IFolderLayout bottomMainFolder = layout.createFolder( BOTTOM_MAIN_FOLDER, IPageLayout.BOTTOM, 0.7f, MAIN_FOLDER );
@@ -127,6 +134,7 @@ public class WspmLightPerspective implements IPerspectiveFactory
     /** main right */
     final IFolderLayout mainRightFolder = layout.createFolder( MAIN_RIGHT_FOLDER, IPageLayout.RIGHT, 0.7f, MAIN_FOLDER );
     mainRightFolder.addView( ViewContentOutline.ID );
+    mainRightFolder.addPlaceholder( MapWidgetView.ID );
 
     layout.getViewLayout( WspmGmvViewPart.ID ).setCloseable( false );
     layout.getViewLayout( WspmGmvViewPart.ID ).setMoveable( false );

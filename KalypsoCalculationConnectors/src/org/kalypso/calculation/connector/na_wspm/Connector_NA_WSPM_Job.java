@@ -18,7 +18,7 @@ import org.kalypso.model.hydrology.binding.model.visitors.FindNodeByNameVisitor;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.INaStatistics;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
+import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -161,7 +161,7 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
         final Integer returnPeriod = naControl.getReturnPeriod();
         final int returnPeriodToSet = returnPeriod != null && returnPeriod > 0 ? returnPeriod : 1;
 
-        runOffEvent.setProperty( IRunOffEvent.QN_PROP_ANNUALITY, returnPeriodToSet );
+        runOffEvent.setProperty( IRunOffEvent.PROPERTY_ANNUALITY, returnPeriodToSet );
 
         GmlSerializer.serializeWorkspace( outputFile, workspaceWSPM, "UTF-8" );
         setStatus( STATUS.OK, "Success" );

@@ -118,6 +118,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * @param selection
    *          the current object selection
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;
@@ -150,13 +151,15 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
       getContainer().run( true, true, new IRunnableWithProgress()
       {
+        @Override
         public void run( final IProgressMonitor monitor ) throws InvocationTargetException, IllegalArgumentException
         {
           try
           {
             SubMonitor progress = null;
-            if( monitor != null ){
-              progress = SubMonitor.convert( monitor, "Import Elevation", 100 );
+            if( monitor != null )
+            {
+              progress = SubMonitor.convert( monitor, Messages.getString("ImportElevationWizard.0"), 100 ); //$NON-NLS-1$
             }
             ITerrainElevationModelSystem temSys = ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
             if( temSys == null )
@@ -170,8 +173,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
             final File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( m_tempFolder.getLocationURI().toURL() ).getFile() ) );
             final File srcFileTif = getUTF_DecodedFile( sourcePath.toFile() );
-            
-            if( progress != null ){
+
+            if( progress != null )
+            {
               ProgressUtilities.worked( progress, 30 );
             }
             File dstFileTif = null;
@@ -192,7 +196,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
-//            final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+            // final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
             final NativeTerrainElevationModelWrapper tem = (NativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
             tem.setFile( nativeTEMRelPath );
             
@@ -230,8 +234,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddTerrainelevationModelCmd() );
 
             caseDataProvider.saveModel( ITerrainModel.class.getName(), null );
-            
-            if( progress != null ){
+
+            if( progress != null )
+            {
               ProgressUtilities.worked( progress, 100 );
               progress.done();
             }
@@ -306,13 +311,17 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   protected boolean copy( final File src, final File dst, final IProgressMonitor monitor2 )
   {
     SubMonitor progress = null;
-    if( monitor2 != null ){
-      progress = SubMonitor.convert( monitor2, "Copy file: " + src.getName() + "->" + dst.getName(), 100 );
+    if( monitor2 != null )
+    {
+      final String taskName = String.format( Messages.getString("ImportElevationWizard.1"), src.getName(), dst.getName() ); //$NON-NLS-1$
+      progress = SubMonitor.convert( monitor2, taskName, 100 );
     }
+
     try
     {
       FileUtils.copyFile( src, dst );
-      if( progress != null ){
+      if( progress != null )
+      {
         ProgressUtilities.worked( progress, 100 );
       }
       return true;

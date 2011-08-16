@@ -94,12 +94,11 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class ConfigureLengthSectionWizardPage extends WizardPage implements IWizardPage
 {
+  private static final String RIVER_NAME_FIELD = "NAME";  //$NON-NLS-1$
 
-  private static final String RIVER_NAME_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.0"); //$NON-NLS-1$
+  private static final String FROM_STATION_FIELD = "RIVER_A";  //$NON-NLS-1$
 
-  private static final String FROM_STATION_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.1"); //$NON-NLS-1$
-
-  private static final String TO_STATION_FIELD = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.2"); //$NON-NLS-1$
+  private static final String TO_STATION_FIELD = "RIVER_B";  //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_riverLineTheme;
 
@@ -150,6 +149,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     final int comboWidth2 = 50;
 
     final Composite composite = new Composite( parent, SWT.NONE );
+    setControl( composite );
     composite.setLayout( new GridLayout() );
 
     /* river line selection group */
@@ -179,13 +179,6 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
           setRiverLine( (IKalypsoFeatureTheme) selection.getFirstElement() );
       }
     } );
-
-    /* TODO: read the stored preferences */
-    // final IKalypsoFeatureTheme riverTheme = m_preferences.getRiverTheme;
-    m_lineThemes = KalypsoFeatureThemeHelper.getLineThemes( m_mapPanel );
-
-    if( m_lineThemes == null )
-      return;
 
     /*
      * define properties page ( river name field selection combo river name selection combo, delta station spinner,
@@ -327,28 +320,31 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
       }
     } );
 
-    if( m_lineThemes.length == 0 )
+    /* TODO: read the stored preferences */
+    // final IKalypsoFeatureTheme riverTheme = m_preferences.getRiverTheme;
+    m_lineThemes = KalypsoFeatureThemeHelper.getLineThemes( m_mapPanel );
+
+    if( m_lineThemes == null || m_lineThemes.length == 0 )
     {
       comboRiverLine.getControl().setEnabled( false );
       m_comboRiverLineName.getControl().setEnabled( false );
       m_comboRiverLineNameField.getControl().setEnabled( false );
       m_comboStationFromField.getControl().setEnabled( false );
       m_comboStationToField.getControl().setEnabled( false );
+      buttonKmValues.setEnabled( false );
+      stationSpinner.setEnabled( false );
 
       final String msg = Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.13"); //$NON-NLS-1$
       comboRiverLine.setInput( new String[] { msg } );
       comboRiverLine.setSelection( new StructuredSelection( msg ) );
       m_riverLineTheme = null;
 
+      setMessage( msg, WARNING );
+      setPageComplete( false );
+      return;
     }
     else
     {
-      comboRiverLine.getControl().setEnabled( true );
-      m_comboRiverLineName.getControl().setEnabled( true );
-      m_comboRiverLineNameField.getControl().setEnabled( true );
-      m_comboStationFromField.getControl().setEnabled( true );
-      m_comboStationToField.getControl().setEnabled( true );
-
       comboRiverLine.setInput( m_lineThemes );
 
       // if( bankTheme != null )
@@ -359,8 +355,6 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
       comboRiverLine.setSelection( new StructuredSelection( m_riverLineTheme ) );
       setRiverLine( m_riverLineTheme );
     }
-
-    setControl( composite );
   }
 
   protected void setRiverLine( final IKalypsoFeatureTheme theme )
@@ -392,7 +386,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     }
     else
     {
-      final Object elementAt = m_comboRiverLineName.getElementAt( 1 );
+      final Object elementAt = m_comboRiverLineNameField.getElementAt( 1 );
       if( elementAt != null )
       {
         m_comboRiverLineNameField.setSelection( new StructuredSelection( elementAt ) );
@@ -507,5 +501,4 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
   {
     return m_kmValues;
   }
-
 }

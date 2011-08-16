@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.ui; singleton:=true
-Bundle-Version: 11.6.0.qualifier
+Bundle-Version: 11.6.1.qualifier
 Bundle-Activator: org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
@@ -11,6 +11,7 @@ Export-Package: org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.tuhh.ui.chart,
  org.kalypso.model.wspm.tuhh.ui.export,
  org.kalypso.model.wspm.tuhh.ui.extension,
+ org.kalypso.model.wspm.tuhh.ui.imports,
  org.kalypso.model.wspm.tuhh.ui.light,
  org.kalypso.model.wspm.tuhh.ui.resolutions,
  org.kalypso.model.wspm.tuhh.ui.rules
@@ -29,6 +30,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.gml.ui,
  org.kalypso.module,
  org.kalypso.model.wspm.tuhh.schema,
- org.junit;resolution:=optional
+ org.junit;resolution:=optional,
+ org.kalypso.featureview;bundle-version="11.6.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

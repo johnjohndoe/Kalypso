@@ -2,13 +2,11 @@
 <?eclipse version="3.0"?>
 <plugin>
 	<extension point="org.eclipse.ui.handlers">
-          <handler
-                class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler"
-                commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
+          <handler class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportHandler" commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport">
              <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.chart.ui.chartEditorActive">
-                </reference>
+                <with variable="activeChart">
+                    <test property="wspmTuhhChart.isLengthSection"/>
+                </with>
              </enabledWhen>
           </handler>
 	</extension>
@@ -16,7 +14,7 @@
    <extension
          point="org.eclipse.ui.exportWizards">
       <wizard
-            class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard"
+            class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportProjectWizard"
             icon="icons/obj16/wspwin.gif"
             id="org.kalypso.model.wspm.exportwizard.wspwin"
             name="%org.kalypso.model.wspm.exportwizard.wspwin">
@@ -233,7 +231,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+					    <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+						  <test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+					    </adapt>
 					</iterate>
 				</and>
 			</with>
@@ -243,6 +243,14 @@
 				<or>
 					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
 					<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState" />
+				</or>
+			</with>
+		</definition>
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+			<with variable="activeMapPanel">
+				<or>
+					<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+					<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState" />
 				</or>
 			</with>
 		</definition>
@@ -258,7 +266,7 @@
 				<with variable="activeEditorId">
 					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
 				</with>
-				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 			</and>
 		</visibleWhen>
      </command>
@@ -270,19 +278,29 @@
 				<with variable="activeEditorId">
 					<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
 				</with>
-				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 			</and>
 		</visibleWhen>
      </command>
     </menuContribution>
-    <menuContribution
-          locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
-       <command
-             commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-             style="push">
-          <visibleWhen
-                checkEnabled="true">
+    <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
+       <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
+          <visibleWhen checkEnabled="false">
+            <and>
+                <reference
+                      definitionId="org.kalypso.chart.ui.chartEditorActive">
+                </reference>
+                <with variable="activeChart">
+                    <test property="wspmTuhhChart.isLengthSection"/>
+                </with>
+            </and>
           </visibleWhen>
+       </command>
+    </menuContribution>
+
+    <menuContribution locationURI="toolbar:org.kalypso.chart.ui.view.ChartView?after=additions">
+       <command commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" style="push">
+          <visibleWhen checkEnabled="true"/>
        </command>
     </menuContribution>
   </extension>
@@ -293,7 +311,7 @@
         	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.model.wspm.tuhh.ui.actions.dtm.CreateProfileFromDEMWidget" />
       	  </class>
   	  	<enabledWhen>
-			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemeActive"/>
+			<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 		</enabledWhen>
    </handler>
    <handler class="org.kalypso.model.wspm.ui.action.ShowProfileHandler" commandId="org.kalypso.model.wspm.ui.commands.ShowProfile">
@@ -384,11 +402,13 @@
            id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
      </provider>
   </extension>
-  <extension
-        point="org.eclipse.ui.commandImages">
+  
+  <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
      <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
+     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
   </extension>
+  
   <extension
         point="org.eclipse.core.runtime.preferences">
      <initializer
@@ -597,9 +617,16 @@
               name="%command.name.1">
            <description>%command.description.0</description>
         </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
+              icon="icons/elcl16/export_prf.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard.name">
+              <description>Exports the selected elements as WspWin project.</description>
+        </wizard>
      </extension>
-     <extension
-           point="org.kalypso.ui.importWizards">
+     <extension point="org.kalypso.ui.importWizards">
         <wizard
               class="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
               id="org.kalypso.model.wspm.tuhh.ui.imports.WProfImportWizard"
@@ -607,7 +634,17 @@
               name="%command.name.4">
               <description>%command.description.3</description>
         </wizard>
+
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
+             id="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard"
+             icon="icons/elcl16/export_sobek.gif"
+             name="SOBEK">
+          <description>Imports profiles from a SOBEK project</description>
+       </wizard>
      </extension>
+
      <extension point="org.kalypso.gml.ui.toolWizards">
         <wizard
               class="org.kalypso.model.wspm.tuhh.ui.actions.interpolation.InterpolationWizard"
@@ -697,11 +734,35 @@
         </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.actions.simplify.SimplifyProfileWizard">
            <enablement>
-                 <reference
-                       definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                 </reference>
+                 <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
            </enablement>
         </wizardEnablement>
+        <wizardEnablement
+              wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard">
+           <enablement>
+              <with variable="selection">
+                 <iterate ifEmpty="false" operator="or">
+                    <or>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach">
+                       </test>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                    </or>
+                 </iterate>
+              </with>
+           </enablement>
+        </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard">
+          <enablement>
+            <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
      </extension>
      <extension point="org.eclipse.ui.menus">
          <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
@@ -712,6 +773,7 @@
                <visibleWhen checkEnabled="true"/>
             </command>
          </menuContribution>
+
          <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
             <command commandId="org.kalypso.model.wspm.command.calcTuhh" style="push">
                   <visibleWhen checkEnabled="true"/>
@@ -730,4 +792,14 @@
             </command>
         </menuContribution>
      </extension>
+     
+     <extension point="org.eclipse.core.expressions.propertyTesters">
+        <propertyTester class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
+              id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LengthSectionExportTester"
+              namespace="wspmTuhhChart"
+              properties="isLengthSection"
+              type="de.openali.odysseus.chart.framework.view.IChartComposite">
+        </propertyTester>
+     </extension>
+     
 </plugin>
