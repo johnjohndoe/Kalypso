@@ -60,10 +60,10 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
 {
   final AttachmentStationContext[] m_searchContexts = new AttachmentStationContext[] {
       //
-      new AttachmentStationContext( '+', null ), //
-      new AttachmentStationContext( '-', null ), //
-      new AttachmentStationContext( null, '.' ), //
-      new AttachmentStationContext( null, ',' ) //
+      new AttachmentStationContext( null, '+', 3 ), //
+      new AttachmentStationContext( null, '-', 3 ), //
+      new AttachmentStationContext( null, '.', 0 ), //
+      new AttachmentStationContext( null, ',', 0 ) //
   };
 
   private final ImportAttachmentsData m_data;
