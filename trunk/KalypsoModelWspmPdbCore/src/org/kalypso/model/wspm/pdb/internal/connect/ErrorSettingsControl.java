@@ -70,7 +70,11 @@ public class ErrorSettingsControl implements IPdbSettingsControl
   @Override
   public ImageDescriptor getPageImage( )
   {
-    // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void setEditable( final boolean b )
+  {
   }
 }

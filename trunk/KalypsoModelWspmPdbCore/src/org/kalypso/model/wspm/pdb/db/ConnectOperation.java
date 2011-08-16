@@ -44,9 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -74,21 +72,11 @@ public class ConnectOperation implements ICoreRunnableWithProgress
 
     monitor.subTask( "connecting..." );
 
-    Session session = null;
     try
     {
       m_connection = m_settings.createConnection();
       m_connection.connect();
-
-      monitor.subTask( "checking database version..." );
-
-      session = m_connection.openSession();
-
-      // TODO: allow to recover if validation fails: create or update database
-      final PdbInfo info = new PdbInfo( session );
-      info.validate();
-      session.close();
-
+      m_connection.updateInfo();
       return Status.OK_STATUS;
     }
     catch( final PdbConnectException e )
@@ -98,10 +86,6 @@ public class ConnectOperation implements ICoreRunnableWithProgress
       // TODO: make message more human readable
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Connection failed", e );
       throw new CoreException( status );
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
     }
   }
 

@@ -43,10 +43,16 @@ package org.kalypso.model.wspm.pdb.internal.gaf;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.valid.IsValidOp;
 import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
@@ -55,6 +61,8 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
  */
 public class GafPart
 {
+  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
   private final Collection<GafPoint> m_points = new ArrayList<GafPoint>( 20 );
 
   private final String m_kind;
@@ -83,7 +91,8 @@ public class GafPart
 
     for( final GafPoint point : m_points )
     {
-      final Coordinate crd = point.getCoordinate();
+      final Point pt = point.getPoint();
+      final Coordinate crd = pt.getCoordinate();
       if( crd != null )
         crds.add( crd );
     }
@@ -92,9 +101,15 @@ public class GafPart
 
     // TODO: we should provide log messages here...
     if( cs.length < 2 )
+    {
+      m_stati.add( IStatus.WARNING, "Not enough points to create geometry" );
       return createEmptyGeometry( dbType );
+    }
 
     final LineString line = m_geometryFactory.createLineString( cs );
+
+    // TODO: Oracle is more restrictive: two consecutive vertices may not be equal
+    // Should be prohibited this here?
 
     final IsValidOp isValidOp = new IsValidOp( line );
     if( isValidOp.isValid() )
@@ -114,12 +129,18 @@ public class GafPart
     if( dbType.contains( "Oracle" ) ) //$NON-NLS-1$
       return null;
 
-    // return m_geometryFactory.createGeometryCollection( null );
     return m_geometryFactory.createLineString( (Coordinate[]) null );
   }
 
   public GafPoint[] getPoints( )
   {
     return m_points.toArray( new GafPoint[m_points.size()] );
+  }
+
+  public IStatus getStatus( )
+  {
+    final String message = String.format( "Part '%s' has warnings/errors", getKind() );
+    final String okMessage = String.format( "Part '%s': OK", getKind() );
+    return m_stati.asMultiStatusOrOK( message, okMessage );
   }
 }

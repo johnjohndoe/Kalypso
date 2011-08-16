@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
-import java.util.Arrays;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.core.runtime.CoreException;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -57,19 +55,18 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * @author Gernot Belger
- */
+ */ 
 public class CheckinStateData
 {
-  private final IObservableSet m_checkedSet = new WritableSet();
-
   private final State m_state = new State();
 
-  private final GMLWorkspace m_wspmWorkspace;
+  private final CommandableWorkspace m_wspmWorkspace;
 
   private State[] m_existingStates;
 
@@ -77,22 +74,33 @@ public class CheckinStateData
 
   private String m_dbSrs;
 
-  private Object[] m_checkedElements;
-
   private Coefficients m_coefficients;
 
-  public CheckinStateData( final GMLWorkspace wspmWorkspace, final IStructuredSelection selection )
+  private final TuhhReach m_reach;
+
+  private URI m_documentBase;
+
+  private IPdbConnection m_connection;
+
+  public CheckinStateData( final CommandableWorkspace wspmWorkspace, final TuhhReach reach )
   {
     m_wspmWorkspace = wspmWorkspace;
+    m_reach = reach;
 
-    final Object[] checkedElements = selection.toArray();
-    m_checkedSet.addAll( Arrays.asList( checkedElements ) );
-
+    /* Initial state data */
     m_state.setMeasurementDate( new Date() );
+    m_state.setName( reach.getName() );
+    m_state.setDescription( reach.getDescription() );
+    m_state.setIsstatezero( State.ZERO_STATE_OFF );
+    m_state.setSource( "WSPM Local Data" );
   }
 
-  public void init( final IPdbConnection connection ) throws PdbConnectException
+  public void init( final IPdbConnection connection ) throws PdbConnectException, CoreException
   {
+    closeConnection();
+
+    m_connection = connection;
+
     Session session = null;
     try
     {
@@ -109,6 +117,8 @@ public class CheckinStateData
       m_existingStates = states.toArray( new State[states.size()] );
       m_existingWaterBodies = waterbodies.toArray( new WaterBody[waterbodies.size()] );
       m_dbSrs = JTSAdapter.toSrs( info.getSRID() );
+
+      m_documentBase = info.getDocumentBase();
     }
     finally
     {
@@ -136,31 +146,38 @@ public class CheckinStateData
     return m_wspmWorkspace;
   }
 
-  public IObservableSet getCheckedSet( )
-  {
-    return m_checkedSet;
-  }
-
   public String getDatabaseSrs( )
   {
     return m_dbSrs;
   }
 
-  /**
-   * Necessary, because we may access the set only in the ui thread.
-   */
-  public void commitCheckedElements( )
-  {
-    m_checkedElements = m_checkedSet.toArray( new Object[m_checkedSet.size()] );
-  }
-
-  public Object[] getCheckedElements( )
-  {
-    return m_checkedElements;
-  }
-
   public Coefficients getCoefficients( )
   {
     return m_coefficients;
+  }
+
+  public TuhhReach getReach( )
+  {
+    return m_reach;
+  }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_wspmWorkspace;
+  }
+
+  public URI getDocumentBase( )
+  {
+    return m_documentBase;
+  }
+
+  public IPdbConnection getConnection( )
+  {
+    return m_connection;
+  }
+
+  public void closeConnection( )
+  {
+    PdbUtils.closeQuietly( m_connection );
   }
 }

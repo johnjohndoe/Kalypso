@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect;
 
+
 /**
  * @author Gernot Belger
  */
@@ -47,11 +48,18 @@ public abstract class HibernateSettings extends AbstractSettings
 {
   protected static final String DEFAULT_DBNAME = "kalypso_pdb"; //$NON-NLS-1$;
 
+  public static final String PROPERTY_USERNAME = "username";//$NON-NLS-1$
+
   @Override
   public abstract String getUsername( );
 
   public HibernateSettings( final String name )
   {
     super( name );
+  }
+
+  public HibernateSettings( final String name, final HibernateSettings settings )
+  {
+    super( name, settings );
   }
 }

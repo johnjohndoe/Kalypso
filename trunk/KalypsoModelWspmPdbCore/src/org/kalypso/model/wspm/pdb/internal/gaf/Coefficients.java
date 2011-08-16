@@ -91,4 +91,14 @@ public class Coefficients
       return getVegetation( UNKNOWN_VEGETATION );
     return vegetation;
   }
+
+  public Roughness[] getAllRoughness( )
+  {
+    return m_roughnessInfo.getAllCoefficients();
+  }
+
+  public Vegetation[] getAllVegetation( )
+  {
+    return m_vegetationInfo.getAllCoefficients();
+  }
 }

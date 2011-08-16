@@ -40,11 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.oracle;
 
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.oracle.OracleSpatial10gDialect;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.internal.connect.HibernateConnection;
+
+import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Gernot Belger
@@ -92,7 +100,46 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
 // configuration.setProperty( "hibernate.spatial.dialect", dialect.getClass().getName() );
   }
 
-  // ///////////////////
-  // TODO: create DB //
-  // /////////////////
+  /**
+   * @see org.kalypso.model.wspm.pdb.connect.IPdbConnection#getCrsEnvelope(java.lang.Integer)
+   */
+  @Override
+  public Envelope getCrsEnvelope( final Integer srid )
+  {
+    // FIXME: implement SQL query
+    final Envelope env = new Envelope( 4300000, 4600000, 5500000, 5800000 );
+
+    return env;
+  }
+
+  @Override
+  protected PDBRole readRole( final Session session )
+  {
+    final String username = getSettings().getUsername();
+    if( SUPERUSER.compareToIgnoreCase( username ) == 0 )
+      return PDBRole.superuser;
+
+    try
+    {
+      final String statement = String.format( "select count(*) from session_roles where upper(role) = '%s'", PDBRole.fadmin.getName() );
+      final SQLQuery query = session.createSQLQuery( statement );
+      final List< ? > result = query.list();
+      if( result.size() != 1 )
+        return PDBRole.user;
+
+      final Object object = result.get( 0 );
+      if( object instanceof Number )
+      {
+        final int count = ((Number) object).intValue();
+        if( count > 0 )
+          return PDBRole.fadmin;
+      }
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+    }
+
+    return PDBRole.user;
+  }
 }

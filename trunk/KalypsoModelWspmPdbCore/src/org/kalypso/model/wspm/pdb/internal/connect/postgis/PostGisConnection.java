@@ -40,11 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.postgis;
 
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernatespatial.SpatialDialect;
 import org.hibernatespatial.postgis.PostgisDialect;
+import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.internal.connect.HibernateConnection;
+
+import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Gernot Belger
@@ -79,39 +87,45 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
     // configuration.setProperty( Environment.CONNECTION_PREFIX + ".ssl", Boolean.TRUE.toString() );
   }
 
-  // ///////////////////
-  // TODO: create DB //
-  // /////////////////
-// configuration.generateDropSchemaScript( new org.hibernate.dialect.PostgreSQLDialect() );
-// configuration.generateSchemaUpdateScript( new org.hibernate.dialect.PostgreSQLDialect(), null );
-  // FIXME: should not be necessary, but it is...
-// final String[] creationScripts = configuration.generateSchemaCreationScript( dialect );
-// for( final String creationScript : creationScripts )
-// {
-// final SQLQuery sqlQuery = session.createSQLQuery( creationScript );
-// sqlQuery.executeUpdate();
-// }
-  // FIXME: this does not work: but it DOES work if already one point is there and the tables are present
-  // maybe we cannot execute that in one single transaction?
-// final String pdbPointGeomSql = createInsertGeomColumn( "pdbpoint", "point", "POINT", 2, 31467 );
-// final SQLQuery pdPointGeomQuery = session.createSQLQuery( pdbPointGeomSql );
-// pdPointGeomQuery.executeUpdate();
+  @Override
+  public Envelope getCrsEnvelope( final Integer srid )
+  {
+    // FIXME: implement SQL query
+    final Envelope env = new Envelope( 4300000, 4600000, 5500000, 5800000 );
 
-// FIXME: postgis specific
-// private String createInsertGeomColumn( final String table, final String column, final String geometryType, final int
-// coordDim, final int srsId )
-// {
-// final StringWriter sw = new StringWriter();
-// final PrintWriter pw = new PrintWriter( sw );
-//
-// pw.println(
-// "INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, type) "
-// );
-// pw.format( "SELECT '', 'public', '%s', '%s', %d, %d, '%s'%n", table, column, coordDim, srsId, geometryType );
-// pw.format( "FROM public.pdbpoint LIMIT 1;" );
-//
-// pw.flush();
-// sw.flush();
-// return sw.toString();
-// }
+    return env;
+  }
+
+  @Override
+  protected PDBRole readRole( final Session session )
+  {
+    final String username = getSettings().getUsername();
+    if( SUPERUSER.compareToIgnoreCase( username ) == 0 )
+      return PDBRole.superuser;
+
+    try
+    {
+      final String statement = String.format( "select count(*) from information_schema.applicable_roles where upper(role_name)='%s'", PDBRole.fadmin.getName() );
+
+      final SQLQuery query = session.createSQLQuery( statement );
+      final List< ? > result = query.list();
+      if( result.size() != 1 )
+        return PDBRole.user;
+
+      final Object object = result.get( 0 );
+      if( object instanceof Number )
+      {
+        final int count = ((Number) object).intValue();
+        if( count > 0 )
+          return PDBRole.fadmin;
+      }
+    }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+    }
+
+    return PDBRole.user;
+  }
+
 }

@@ -63,8 +63,6 @@ public interface StateConstants
 
   String PROPERTY_MEASUREMENTDATE = "measurementDate"; //$NON-NLS-1$
 
-  String PROPERTY_MEASUREMENTDATE_FORMATTED = "measurementDateFormatted"; //$NON-NLS-1$
-
   int NAME_LIMIT = 100;
 
   int COMMENT_LIMIT = 256;

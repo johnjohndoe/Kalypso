@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 07:19:53 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-06-07 11:09:39 UTC</changedTime>
+   <changedTime>2011-07-13 13:35:48 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Gaf_Vegetation PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -66,6 +66,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:50:26 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>17355645-4E39-1E86-D8AE-F7BFD192BBD6</distinctType>
@@ -79,6 +80,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:50:34 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>CF13DBDC-1F88-61F3-B990-482F4F73709E</distinctType>
@@ -92,6 +94,7 @@
          <changedBy>thuel2</changedBy>
          <changedTime>2011-05-20 11:50:42 UTC</changedTime>
          <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <use>2</use>
          <distinctType>1D89C035-AA71-250C-03D3-7C6ADEF6708F</distinctType>
@@ -117,6 +120,7 @@
          <changedBy>thuel</changedBy>
          <changedTime>2011-06-07 11:08:55 UTC</changedTime>
          <comment>Angabe einer Literaturstelle</comment>
+         <commentInRDBMS>Angabe einer Literaturstelle</commentInRDBMS>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <use>1</use>

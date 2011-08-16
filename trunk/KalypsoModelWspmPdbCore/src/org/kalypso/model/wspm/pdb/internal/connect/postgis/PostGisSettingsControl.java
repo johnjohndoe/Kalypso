@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.postgis;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -57,6 +60,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
+import org.kalypso.model.wspm.pdb.internal.connect.SettingsPropertyValue;
 import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
@@ -64,6 +68,8 @@ import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
  */
 class PostGisSettingsControl extends Composite implements IPdbSettingsControl
 {
+  private final Collection<Text> m_fields = new ArrayList<Text>();
+
   private final PostgisSettings m_settings;
 
   private final DataBindingContext m_binding;
@@ -106,8 +112,10 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
       targetToModel.setAfterConvertValidator( validator );
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
-    final IObservableValue model = new PostGisSettingsPropertyValue( m_settings, property );
+    final IObservableValue model = new SettingsPropertyValue( m_settings, property );
     m_binding.bindValue( target, model, targetToModel, null );
+
+    m_fields.add( field );
   }
 
   @Override
@@ -120,5 +128,12 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
   public ImageDescriptor getPageImage( )
   {
     return WspmPdbCoreImages.IMAGE_POSTGIS_64x64;
+  }
+
+  @Override
+  public void setEditable( final boolean editable )
+  {
+    for( final Text field : m_fields )
+      field.setEditable( editable );
   }
 }

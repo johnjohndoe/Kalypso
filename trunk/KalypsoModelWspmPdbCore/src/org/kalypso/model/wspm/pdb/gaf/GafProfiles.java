@@ -47,14 +47,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCode;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafLogger;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafReader;
+import org.kalypso.transformation.transformer.JTSTransformer;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Assembles all read points into different profiles.
@@ -63,39 +64,39 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  */
 public class GafProfiles
 {
-  private final GafCodes m_gafCodes;
-
   private final Set<BigDecimal> m_committedStations = new HashSet<BigDecimal>();
 
   private final Collection<GafProfile> m_profiles = new ArrayList<GafProfile>();
 
   private GafProfile m_currentProfile;
 
-  private final GafLogger m_logger;
-
   private final GeometryFactory m_geometryFactory;
 
   private final GafPointCheck m_pointChecker;
 
-  public GafProfiles( final GafLogger logger, final GafCodes gafCodes, final Coefficients coefficients, final GeometryFactory geometryFactory )
+  private final JTSTransformer m_transformer;
+
+  private final LineString m_riverline;
+
+  private final IStatus m_readGafStatus;
+
+  private IStatus m_status;
+
+  public GafProfiles( final GafPointCheck checker, final JTSTransformer jtsTransformer, final GeometryFactory geometryFactory, final LineString riverline, final IStatus readGafStatus )
   {
-    m_logger = logger;
-    m_gafCodes = gafCodes;
+    m_readGafStatus = readGafStatus;
+    // REMARK: cannot rely on the factory of riverline, as that may be null
     m_geometryFactory = geometryFactory;
-    m_pointChecker = new GafPointCheck( gafCodes, coefficients, logger );
+    m_transformer = jtsTransformer;
+    m_pointChecker = checker;
+    m_riverline = riverline;
   }
 
   public void addPoint( final GafPoint point )
   {
     final BigDecimal station = point.getStation();
 
-    m_pointChecker.check( point );
-
-    if( m_committedStations.contains( station ) )
-    {
-      final String message = String.format( "duplicate station: %s", station );
-      m_logger.log( IStatus.WARNING, message );
-    }
+    final boolean duplicateStation = m_committedStations.contains( station );
 
     if( m_currentProfile != null && !station.equals( m_currentProfile.getStation() ) )
       commitProfile();
@@ -103,13 +104,13 @@ public class GafProfiles
     if( m_currentProfile == null )
       createProfile( station );
 
-    final String code = point.getCode();
-    // FIXME: we need to real code here in order to put the point into the right part...
-    // i.e. we need to rework this in order to allow the user to define other codes here
-    final GafCode gafCode = m_gafCodes.getCode( code );
-    if( gafCode == null )
-      throw new GafReader.SkipLineException( IStatus.WARNING, "Skipping point with unknwon code" );
-    m_currentProfile.addPoint( point, gafCode );
+    final GafCode code = point.getCode();
+    m_currentProfile.addPoint( point, code );
+    if( duplicateStation )
+    {
+      final String message = String.format( "duplicate station: %s", station );
+      m_currentProfile.addStatus( IStatus.WARNING, message );
+    }
   }
 
   public void stop( )
@@ -119,7 +120,7 @@ public class GafProfiles
 
   private void createProfile( final BigDecimal station )
   {
-    m_currentProfile = new GafProfile( station, m_logger, m_geometryFactory );
+    m_currentProfile = new GafProfile( station, m_geometryFactory );
   }
 
   private void commitProfile( )
@@ -131,6 +132,7 @@ public class GafProfiles
 
     m_committedStations.add( station );
 
+    m_currentProfile.check( m_riverline );
     m_profiles.add( m_currentProfile );
 
     m_currentProfile = null;
@@ -141,18 +143,33 @@ public class GafProfiles
     return m_profiles.toArray( new GafProfile[m_profiles.size()] );
   }
 
-  public String translateCode( final String code )
+  public void addLines( final GafLine[] lines )
   {
-    // TODO Auto-generated method stub
-    return code;
+    for( final GafLine line : lines )
+    {
+      if( line.getStatus().isOK() )
+      {
+        final GafPoint point = new GafPoint( line, m_pointChecker, m_geometryFactory, m_transformer );
+        addPoint( point );
+      }
+    }
+    stop();
   }
 
-  public String translateHyk( final String hyk )
+  public IStatus getStatus( )
   {
-    final GafCode hykCode = m_gafCodes.getHykCode( hyk );
-    if( hykCode != null )
-      return hykCode.getHyk();
+    if( m_status == null )
+    {
+      final IStatusCollector stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
-    return null;
+      stati.add( m_readGafStatus );
+
+      for( final GafProfile profile : m_profiles )
+        stati.add( profile.getStatus() );
+
+      m_status = stati.asMultiStatusOrOK( "Problems occured while reading GAF file" );
+    }
+
+    return m_status;
   }
 }
