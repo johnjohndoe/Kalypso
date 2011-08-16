@@ -14,6 +14,7 @@
   <gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL">
     <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
   </gft:text>
+
   <gft:tabFolder style="SWT.BORDER">
     <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalSpan="4" />
     <gft:tabItem>

@@ -59,13 +59,13 @@ public class DiscretizetionParsingTest extends GmlParsingTester
 {
   private static final double DELTA = 0.01;
   
-  private static final GM_Point point1 = GeometryFactory.createGM_Point( 0.0, 0.0, 0.0, "EPSG:31467" );
-  private static final GM_Point point2 = GeometryFactory.createGM_Point( 0.0, 1.0, 1.0, "EPSG:31467" );
+  private static final GM_Point point1 = GeometryFactory.createGM_Point( 0.0, 0.0, 0.0, "EPSG:31467" ); //$NON-NLS-1$
+  private static final GM_Point point2 = GeometryFactory.createGM_Point( 0.0, 1.0, 1.0, "EPSG:31467" ); //$NON-NLS-1$
   
   @SuppressWarnings("unchecked")
   public void testTinyDiscretization() throws Exception 
   {
-    GMLWorkspace workspace = readGml( "data/tinyDiscretization.gml" );    
+    GMLWorkspace workspace = readGml( "data/tinyDiscretization.gml" );     //$NON-NLS-1$
     assertNotNull( workspace );
     
     Feature rootFeature = workspace.getRootFeature();

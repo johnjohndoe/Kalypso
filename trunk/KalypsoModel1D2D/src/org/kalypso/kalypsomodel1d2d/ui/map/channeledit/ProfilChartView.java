@@ -50,8 +50,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -63,7 +63,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -73,7 +72,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -85,7 +83,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 @Deprecated
 public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
-
   private IChartComposite m_chartComposite = null;
 
   private IProfilLayerProvider m_layerProvider;
@@ -249,19 +246,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     return m_chartComposite.getChartModel().getMapperRegistry().getAxis( id );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-
-  @Override
-  public IChartComposite getChart( )
-  {
-    return m_chartComposite;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
   @Override
   public IChartComposite getChartComposite( )
   {
@@ -279,16 +263,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   public IProfilLayerProvider getLayerProvider( )
   {
     return m_layerProvider;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-   */
-
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_chartComposite.getPlotHandler();
   }
 
   @Override
@@ -399,7 +373,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().getSettings().setTitle( String.format( "Station km %10.4f", m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) );
+        m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString("ProfilChartView_0"), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
         ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = false;
         updateLayer();
       }
@@ -470,35 +444,5 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       // m_chartComposite.getPlot().invalidate( lm.getLayers() );
     }
 
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
-   */
-  @Override
-  public IContentOutlinePage getOutlinePage( )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

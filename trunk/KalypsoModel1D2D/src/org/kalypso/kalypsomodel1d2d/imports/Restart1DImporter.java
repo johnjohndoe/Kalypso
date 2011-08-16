@@ -92,6 +92,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -191,7 +192,7 @@ public class Restart1DImporter
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
     final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
 
-    final TuhhCalculation[] calculations = tuhhWspmProject.getCalculations();
+    final IFeatureBindingCollection<TuhhCalculation> calculations = tuhhWspmProject.getCalculations();
     for( final TuhhCalculation tuhhCalculation : calculations )
     {
       if( tuhhCalculation.getName().equals( calcName ) )

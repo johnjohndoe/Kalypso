@@ -295,14 +295,14 @@ public class ProcessResultsJob extends Job
         {
           lResFile = m_inputResFileSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
         }
-        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "Reading SWAN Result file: " + lResFile ) );
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString("ProcessResultsJob.0") + lResFile ) ); //$NON-NLS-1$
         // only read the *.mat files
         if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
         {
           lSWANResultsReader = new SWANResultsReader( lResFile );
           final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
           m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( "read data for: " + timeStringFormatedForSWANOutput ) );
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString("ProcessResultsJob.1") + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
         }
       }
       catch( final Throwable e )

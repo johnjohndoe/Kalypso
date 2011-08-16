@@ -43,229 +43,51 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ICellEditorValidator;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.afgui.model.Util;
+import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Madanagopal
  * @author Patrice Congo
  */
-public class AssignNodeElevationFaceComponent
+public class AssignNodeElevationFaceComponent extends Composite
 {
-  /**
-   * @author Thomas Jung
-   * 
-   */
-  private final class ICellModifierImplementation implements ICellModifier
-  {
-    @Override
-    public boolean canModify( final Object element, final String property )
-    {
-      // Find the index of the column
-      final Object[] properties = m_nodeElevationViewer.getColumnProperties();
-      return property.equals( properties[0] ) || property.equals( properties[1] );
-    }
-
-    @Override
-    public Object getValue( final Object element, final String property )
-    {
-      if( property.equals( m_nodeElevationViewer.getColumnProperties()[1] ) )
-        return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
-      else if( property.equals( m_nodeElevationViewer.getColumnProperties()[0] ) )
-        return FENodeLabelProvider.getNameOrID( (IFE1D2DNode) element );
-      else
-        return null;
-    }
-
-    @Override
-    public void modify( final Object element, final String property, final Object value )
-    {
-      final IFE1D2DNode node;
-      if( element instanceof TableItem )
-      {
-        final Object data = ((TableItem) element).getData();
-        node = (data instanceof IFE1D2DNode) ? (IFE1D2DNode) data : null;
-      }
-      else
-        return;
-
-      if( property.equals( m_nodeElevationViewer.getColumnProperties()[1] ) )
-      {
-        if( FENodeLabelProvider.getElevationString( node ).equals( value ) )
-          return;
-
-        final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getDiscretisationModel();
-        if( model1d2d == null )
-          return;
-
-        double newElevation;
-
-        try
-        {
-          newElevation = Double.parseDouble( (String) value );
-
-        }
-        catch( final Throwable th )
-        {
-          // TODO Patrice show the user a message
-          th.printStackTrace();
-          return;
-        }
-
-        // return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
-        final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) m_dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
-        if( nodeTheme == null )
-          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.3" ) ); //$NON-NLS-1$
-
-        final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );// nodeTheme.getWorkspace();
-
-        final Runnable updateTable = new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            try
-            {
-              final IMapPanel mapPanel = m_dataModel.getMapPanel();
-              mapPanel.invalidateMap();
-              m_nodeElevationViewer.refresh( node, true );
-
-            }
-            catch( final Throwable th )
-            {
-              th.printStackTrace();
-            }
-
-          }
-        };
-
-        final ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation, false )
-        {
-          /**
-           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand#process()
-           */
-          @Override
-          public void process( ) throws Exception
-          {
-            super.process();
-
-            final Display display = m_table.getDisplay();
-            display.asyncExec( updateTable );
-          }
-        };
-        try
-        {
-          workspace.postCommand( command );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-      else if( property.equals( m_nodeElevationViewer.getColumnProperties()[0] ) )
-      {
-        if( FENodeLabelProvider.getNameOrID( node ).equals( value ) )
-        {
-          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.4" ) ); //$NON-NLS-1$
-          return;
-        }
-        final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
-
-        final Runnable updateTable = new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            try
-            {
-              m_nodeElevationViewer.refresh( node, true );
-
-            }
-            catch( final Throwable th )
-            {
-              th.printStackTrace();
-            }
-
-          }
-        };
-
-        final ChangeIFeatureWrapper2NameCmd cmd = new ChangeIFeatureWrapper2NameCmd( node, (String) value )
-        {
-          /**
-           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeFeatureNameCmd#process()
-           */
-          @Override
-          public void process( ) throws Exception
-          {
-            super.process();
-            final Display display = m_table.getDisplay();
-            display.asyncExec( updateTable );
-          }
-        };
-        try
-        {
-          workspace.postCommand( cmd );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
-      else
-        System.out.println( "BAD property:" + property ); //$NON-NLS-1$
-    }
-  }
-
-  private ApplyElevationWidgetDataModel m_dataModel;
+  private final ApplyElevationWidgetDataModel m_dataModel;
 
   private Text m_inputText;
 
-  private Table m_table;
+  private final List<IFE1D2DNode> m_selectionNodeList = new ArrayList<IFE1D2DNode>();
 
-  protected final List<IFE1D2DNode> m_selectionNodeList = new ArrayList<IFE1D2DNode>();
-
-  protected TableViewer m_nodeElevationViewer;
-
-  private final ICellModifier m_cellModifier = new ICellModifierImplementation();
+  private TableViewer m_nodeElevationViewer;
 
   /**
    * Listen to node selection and fill the selection list
@@ -275,198 +97,106 @@ public class AssignNodeElevationFaceComponent
     @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-      m_selectionNodeList.clear();
-      final List tableSelection = selection.toList();
-      m_selectionNodeList.addAll( tableSelection );
-
-      m_dataModel.setSelectedNodeList( m_selectionNodeList );
-      final IMapPanel mapPanel = m_dataModel.getMapPanel();
-      if( mapPanel != null )
-        mapPanel.repaintMap();
+      handleSelectionChanged( (IStructuredSelection) event.getSelection() );
     }
-
   };
 
-  final KeyBasedDataModelChangeListener modelChangeListener = new KeyBasedDataModelChangeListener()
+  private final KeyBasedDataModelChangeListener m_modelChangeListener = new KeyBasedDataModelChangeListener()
   {
     @Override
     public void dataChanged( final String key, final Object newValue )
     {
-      if( ITerrainElevationModel.class.toString().equals( key ) )
-      {
-        if( newValue == null )
-          m_inputText.setText( " " ); //$NON-NLS-1$
-        else
-        {
-          String name = ((INativeTerrainElevationModelWrapper) newValue).getName();
-          if( name == null )
-            name = ((INativeTerrainElevationModelWrapper) newValue).getId();
-          m_inputText.setText( name );
-        }
-      }
-      else if( ApplyElevationWidgetDataModel.SELECTED_NODE_KEY.equals( key ) )
-      {
-        if( m_nodeElevationViewer == null )
-          return;
-        final Runnable todo = new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-            m_nodeElevationViewer.setInput( newValue );
-          }
-        };
-        final Control control = m_nodeElevationViewer.getControl();
-        if( control != null && !control.isDisposed() )
-          control.getDisplay().syncExec( todo );
-      }
+      handleDataChanged( key, newValue );
     }
   };
 
-  private final ICellEditorValidator doubleValidator = new ICellEditorValidator()
+  public AssignNodeElevationFaceComponent( final FormToolkit toolkit, final Composite parent, final ApplyElevationWidgetDataModel dataModel )
   {
+    super( parent, SWT.NONE );
 
-    @Override
-    public String isValid( final Object value )
-    {
-      try
-      {
-        Double.parseDouble( (String) value );
-        return null;
-      }
-      catch( final Throwable th )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.11" ); //$NON-NLS-1$
-      }
+    Assert.isNotNull( dataModel );
+    Assert.isNotNull( toolkit );
 
-    }
-
-  };
-
-  private Label selectNoElevationLabel;
-
-  private Button selectNoElevationButton;
-
-  private Group nodeViewerGroup;
-
-  private Group noElevationGroup;
-
-  AssignNodeElevationFaceComponent( )
-  {
-
-  }
-
-  public void createControl( final ApplyElevationWidgetDataModel dataModel, final FormToolkit toolKit, final Composite parent )
-  {
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( toolKit, "toolKit" ); //$NON-NLS-1$
     m_dataModel = dataModel;
-    guiCreateSelectRegion( parent );
-    m_dataModel.addKeyBasedDataChangeListener( modelChangeListener );
+
+    GridLayoutFactory.swtDefaults().applyTo( this );
+    toolkit.adapt( this );
+    createControls( toolkit, this );
+
+    m_dataModel.addKeyBasedDataChangeListener( m_modelChangeListener );
   }
 
-  @SuppressWarnings("unchecked")
-  private void guiCreateSelectRegion( final Composite cComposite )
+  private void createControls( final FormToolkit toolkit, final Composite parent )
   {
-    FormData regionFormData;
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( 0, 5 );
-    regionFormData.top = new FormAttachment( 0, 5 );
-    final Label infoLabel = new Label( cComposite, SWT.FLAT );
-    infoLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.14" )/* "Selected Terrain Model" */); //$NON-NLS-1$
-    infoLabel.setLayoutData( regionFormData );
+    createDtmLabel( toolkit, parent ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createNoElevationSelector( toolkit, parent ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createNodeTable( toolkit, parent ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+  }
 
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( infoLabel, 10 );
-    regionFormData.top = new FormAttachment( 0, 5 );
-    this.m_inputText = new Text( cComposite, SWT.FLAT | SWT.BORDER );
+  private Control createDtmLabel( final FormToolkit toolkit, final Composite parent )
+  {
+    final Composite panel = toolkit.createComposite( parent );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
+
+    toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.14" ) ); //$NON-NLS-1$
+
+    m_inputText = toolkit.createText( panel, StringUtils.EMPTY );
+    m_inputText.setMessage( Messages.getString( "AssignNodeElevationFaceComponent.1" ) ); //$NON-NLS-1$
     m_inputText.setEditable( false );
-    m_inputText.setText( "" ); //$NON-NLS-1$
     m_inputText.setTextLimit( 100 );
-    m_inputText.setLayoutData( regionFormData );
+    m_inputText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    // The No Elevation Group
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( 0, 5 );
-    regionFormData.top = new FormAttachment( infoLabel, 10 );
-    // regionFormData.right = new FormAttachment( 100, 0 );
-    noElevationGroup = new Group( cComposite, SWT.NONE );
-    noElevationGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.16" ) );// Modelle Knoten Suchen //$NON-NLS-1$
-    // //$NON-NLS-1$
-    noElevationGroup.setLayoutData( regionFormData );
-    noElevationGroup.setLayout( new GridLayout( 2, false ) );
+    return panel;
+  }
 
-    selectNoElevationLabel = new Label( noElevationGroup, SWT.FLAT );
-    selectNoElevationLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.17" ) ); //$NON-NLS-1$
+  private Control createNoElevationSelector( final FormToolkit toolkit, final Composite parent )
+  {
+    final Composite panel = toolkit.createComposite( parent );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
 
-    selectNoElevationButton = new Button( noElevationGroup, SWT.PUSH );
-    selectNoElevationButton.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.18" ) ); //$NON-NLS-1$
+    toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.17" ) ); //$NON-NLS-1$
+
+    final Button selectNoElevationButton = toolkit.createButton( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.18" ), SWT.PUSH ); //$NON-NLS-1$
+
     selectNoElevationButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        final IFE1D2DNode[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
+        final IFE1D2DNode< ? >[] allNonElevationNodes = ApplyElevationHelper.getAllNonElevationNodes( m_dataModel );
         m_nodeElevationViewer.setInput( allNonElevationNodes );
         m_nodeElevationViewer.refresh();
       }
     } );
 
-    // The Node Viewer Group
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( 0, 5 );
-    regionFormData.top = new FormAttachment( noElevationGroup, 10 );
-    // regionFormData.right = new FormAttachment( 100, 0 );
-    nodeViewerGroup = new Group( cComposite, SWT.NONE );
-    nodeViewerGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.19" ) ); //$NON-NLS-1$
-    nodeViewerGroup.setLayoutData( regionFormData );
-    nodeViewerGroup.setLayout( new FormLayout() );
+    return panel;
+  }
 
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( 0, 10 );
-    regionFormData.top = new FormAttachment( 0, 10 );
-    regionFormData.bottom = new FormAttachment( 100, -10 );
-    regionFormData.height = 70;
+  private Control createNodeTable( final FormToolkit toolkit, final Composite parent )
+  {
+    final Composite panel = toolkit.createComposite( parent );
+    GridLayoutFactory.fillDefaults().numColumns( 1 ).applyTo( panel );
 
-    m_nodeElevationViewer = new TableViewer( nodeViewerGroup, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
+    final Table table = toolkit.createTable( panel, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
+    final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    tableData.minimumHeight = 100;
+    tableData.heightHint = 100;
+    tableData.minimumWidth = 2;
+    tableData.widthHint = 2;
+    table.setLayoutData( tableData );
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+
+    table.addControlListener( new ColumnsResizeControlListener() );
+
+    m_nodeElevationViewer = new TableViewer( table );
     m_nodeElevationViewer.setUseHashlookup( true );
     m_nodeElevationViewer.setColumnProperties( new String[] { "Node", "Elevation" } ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_nodeElevationViewer.setLabelProvider( new FENodeLabelProvider() );
     m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-    // nodeElevationViewer.setSorter( new FENodeViewerSorter() );
 
-    m_table = m_nodeElevationViewer.getTable();
-    m_table.setLayoutData( regionFormData );
-    m_table.setHeaderVisible( true );
-    m_table.setLinesVisible( true );
-
-    final TableColumn lineColumn = new TableColumn( m_table, SWT.LEFT );
-    lineColumn.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.22" )/* "Node" */); //$NON-NLS-1$
-    lineColumn.setWidth( 100 / 1 );
-    lineColumn.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        m_nodeElevationViewer.setSorter( new FENodeViewerSorter( lineColumn ) );
-        m_nodeElevationViewer.refresh();
-      }
-    } );
-
-    final TableColumn actualPointNum = new TableColumn( m_table, SWT.LEFT );
-    actualPointNum.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.23" )/* "Elevation" */); //$NON-NLS-1$
-    actualPointNum.setWidth( 100 / 2 );
-    actualPointNum.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
-      {
-        m_nodeElevationViewer.setSorter( new FENodeViewerSorter( actualPointNum ) );
-        m_nodeElevationViewer.refresh();
-      }
-    } );
+    ColumnViewerUtil.createEmptyColumn( m_nodeElevationViewer );
+    createElevationColumn( m_nodeElevationViewer );
+    createNameColumn( m_nodeElevationViewer );
 
     final List<IFE1D2DNode> selectedNode = m_dataModel.getSelectedNode();
     if( selectedNode == null )
@@ -476,92 +206,103 @@ public class AssignNodeElevationFaceComponent
 
     m_nodeElevationViewer.addSelectionChangedListener( nodeSelectionListener );
 
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( m_table, 5 );
-    regionFormData.top = new FormAttachment( 0, 10 );
-    regionFormData.right = new FormAttachment( 100, -2 );
-    final Button selectAll = new Button( nodeViewerGroup, SWT.PUSH );
-    selectAll.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.24" )/* "Select All" */); //$NON-NLS-1$
-    selectAll.setLayoutData( regionFormData );
+    final Composite buttonPanel = toolkit.createComposite( panel );
+    buttonPanel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    GridLayoutFactory.fillDefaults().numColumns( 3 ).equalWidth( true ).applyTo( buttonPanel );
+
+    final Button selectAll = toolkit.createButton( buttonPanel, WorkbenchMessages.SelectionDialog_selectLabel, SWT.PUSH );
+    selectAll.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     selectAll.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        m_table.selectAll();
+        table.selectAll();
       }
     } );
 
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( m_table, 5 );
-    regionFormData.top = new FormAttachment( selectAll, 5 );
-    regionFormData.right = new FormAttachment( 100, -2 );
-    final Button deSelectAll = new Button( nodeViewerGroup, SWT.PUSH );
-    deSelectAll.setLayoutData( regionFormData );
-    deSelectAll.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.25" )/* "DeSelect All" */); //$NON-NLS-1$
-
+    final Button deSelectAll = toolkit.createButton( buttonPanel, WorkbenchMessages.SelectionDialog_deselectLabel, SWT.PUSH );
+    deSelectAll.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        m_table.deselectAll();
+        table.deselectAll();
       }
-
     } );
 
-    regionFormData = new FormData();
-    regionFormData.left = new FormAttachment( m_table, 5 );
-    regionFormData.top = new FormAttachment( deSelectAll, 5 );
-    regionFormData.right = new FormAttachment( 100, -2 );
-    final Button applySelected = new Button( nodeViewerGroup, SWT.PUSH );
-    applySelected.setLayoutData( regionFormData );
-    applySelected.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.26" )/* "Apply Selected" */); //$NON-NLS-1$
+    final Button applySelected = toolkit.createButton( buttonPanel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.26" ), SWT.PUSH ); //$NON-NLS-1$
+    applySelected.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     applySelected.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
-        try
-        {
-          applyElevation();
-          m_nodeElevationViewer.refresh();
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
+        applyElevation();
       }
-
     } );
 
-    final TextCellEditor textCellEditor = new TextCellEditor( m_table );
-    final TextCellEditor eleCellEditor = new TextCellEditor( m_table );
-    ((Text) eleCellEditor.getControl()).setTextLimit( 15 );
-    eleCellEditor.setValidator( this.doubleValidator );
-
-    final CellEditor[] editors = new CellEditor[] { textCellEditor, eleCellEditor };
-    m_nodeElevationViewer.setCellEditors( editors );
-    m_nodeElevationViewer.setCellModifier( m_cellModifier );
+    return panel;
   }
 
-  @SuppressWarnings("unchecked")
-  private final void applyElevation( ) throws Exception
+  private void createNameColumn( final TableViewer viewer )
   {
-    final ISelection selection = m_nodeElevationViewer.getSelection();
-    if( !(selection instanceof IStructuredSelection) )
-      return;
+    final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
+    final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
 
-    final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
-    for( final Object selected : ((IStructuredSelection) selection).toList() )
+    column.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.22" ) ); //$NON-NLS-1$
+    column.setResizable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    nameColumn.setLabelProvider( new FENodeNameProvider() );
+    ColumnViewerSorter.registerSorter( nameColumn, new FENodeNameComparator() );
+
+    nameColumn.setEditingSupport( new FENodeNameEditingSupport( viewer ) );
+
+    column.setWidth( 100 );
+  }
+
+  private void createElevationColumn( final TableViewer viewer )
+  {
+    final ViewerColumn heightColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.RIGHT );
+    final ViewerColumnItem column = new ViewerColumnItem( heightColumn );
+
+    column.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.23" ) ); //$NON-NLS-1$
+    column.setResizable( false );
+    ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
+    heightColumn.setLabelProvider( new FENodeHeightProvider() );
+    ColumnViewerSorter.registerSorter( heightColumn, new FENodeHeightComparator() );
+
+    heightColumn.setEditingSupport( new FENodeHeightEditingSupport( viewer, m_dataModel ) );
+
+    column.setWidth( 100 );
+  }
+
+  protected final void applyElevation( )
+  {
+    try
     {
-      if( selected instanceof IFE1D2DNode )
+      final ISelection selection = m_nodeElevationViewer.getSelection();
+      if( !(selection instanceof IStructuredSelection) )
+        return;
+
+      final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
+      for( final Object selected : ((IStructuredSelection) selection).toList() )
       {
-        nodeList.add( (IFE1D2DNode) selected );
+        if( selected instanceof IFE1D2DNode )
+        {
+          nodeList.add( (IFE1D2DNode) selected );
+        }
       }
+
+      ApplyElevationHelper.assignElevationToSelectedNodes( m_dataModel, nodeList );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
 
-    ApplyElevationHelper.assignElevationToSelectedNodes( m_dataModel, nodeList );
+    m_nodeElevationViewer.refresh();
   }
 
   public TableViewer getTableViewer( )
@@ -569,4 +310,54 @@ public class AssignNodeElevationFaceComponent
     return m_nodeElevationViewer;
   }
 
+  protected void handleSelectionChanged( final IStructuredSelection selection )
+  {
+    m_selectionNodeList.clear();
+    final List tableSelection = selection.toList();
+    m_selectionNodeList.addAll( tableSelection );
+
+    m_dataModel.setSelectedNodeList( m_selectionNodeList );
+    final IMapPanel mapPanel = m_dataModel.getMapPanel();
+    if( mapPanel != null )
+      mapPanel.repaintMap();
+  }
+
+  protected void handleDataChanged( final String key, final Object newValue )
+  {
+    final Runnable todo = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        updateInput( key, newValue );
+      }
+    };
+    final Control control = m_nodeElevationViewer.getControl();
+    if( control != null && !control.isDisposed() )
+      control.getDisplay().syncExec( todo );
+  }
+
+  protected void updateInput( final String key, final Object newValue )
+  {
+    if( ITerrainElevationModel.class.toString().equals( key ) )
+    {
+      if( newValue == null )
+        m_inputText.setText( StringUtils.EMPTY );
+      else
+      {
+        String name = ((INativeTerrainElevationModelWrapper) newValue).getName();
+        if( name == null )
+          name = ((INativeTerrainElevationModelWrapper) newValue).getId();
+        m_inputText.setText( name );
+      }
+    }
+    else if( ApplyElevationWidgetDataModel.SELECTED_NODE_KEY.equals( key ) )
+    {
+      if( m_nodeElevationViewer == null )
+        return;
+
+      m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+      m_nodeElevationViewer.setInput( newValue );
+    }
+  }
 }

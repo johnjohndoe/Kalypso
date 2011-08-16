@@ -412,7 +412,7 @@ public class TempGrid
             try
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
-              System.out.println( "intersection: " + intersection );
+              System.out.println( "intersection: " + intersection ); //$NON-NLS-1$
               if( intersection instanceof GM_Surface )
                 return new ArrayList<Feature>();
             }

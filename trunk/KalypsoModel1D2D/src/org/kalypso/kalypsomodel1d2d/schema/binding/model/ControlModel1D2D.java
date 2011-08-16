@@ -79,7 +79,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 {
-  public ControlModel1D2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public ControlModel1D2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -96,11 +96,19 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 
   public final static QName WB1D2DCONTROL_PROP_P_BOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_p_bottom" ); //$NON-NLS-1$
 
+  public final static QName WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "FIXEDMARSHBOTTOM" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_AC4 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC4" ); //$NON-NLS-1$
+
   public final static QName WB1D2DCONTROL_PROP_AC3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC3" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_AC2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC2" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_MARSHFRICTIONFACTOR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "MARSHFRICTIONFACTOR" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_MARSHFRICTIONDISTR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "MARSHFRICTIONDISTR" ); //$NON-NLS-1$
 
   public static final QName WB1D2DCONTROL_PROP_BEIENT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BEIENT" ); //$NON-NLS-1$
 
@@ -113,6 +121,10 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   public static final QName WB1D2DCONTROL_PROP_PERCENT_CHECK = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "PERCENT_CHECK" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_CHI = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CHI" ); //$NON-NLS-1$
+
+  public final static QName WB1D2DCONTROL_PROP_HASWINDDRAG = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "HASWINDDRAG" ); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" ); //$NON-NLS-1$
 
@@ -452,6 +464,19 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
   }
 
+  @Override
+  public boolean getHasWindDrag( )
+  {
+    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG );
+  }
+
+  @Override
+  public Double getChi( )
+  {
+    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CHI );
+    return property != null ? property : 0.0;
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getBeient()
    */
@@ -460,6 +485,12 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     final Object property = getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_BEIENT );
     return property != null ? (Boolean) property : false;
+  }
+
+  @Override
+  public boolean getFixedMarshBottom( )
+  {
+    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM );
   }
 
   @Override
@@ -481,6 +512,30 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
     return property != null ? property : 0.0;
+  }
+
+  @Override
+  public Double getAC4( )
+  {
+    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC4 );
+    return property != null ? property : 0.0;
+  }
+
+  @Override
+  public Double getMarshFrictionFactor( )
+  {
+    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONFACTOR );
+    return property != null ? property : 20.0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getMarshFactor()
+   */
+  @Override
+  public Integer getMarshFrictionDistr( )
+  {
+    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONDISTR );
+    return property != null ? property : 2;
   }
 
   /**
@@ -620,9 +675,6 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
     return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#isRestartAfterSWAN()
-   */
   @Override
   public boolean isRestartAfterSWAN( )
   {
@@ -741,4 +793,5 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
   }
+
 }

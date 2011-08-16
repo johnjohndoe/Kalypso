@@ -1442,7 +1442,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         break;
       case LINE_VA:
-        System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" );
+        System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" ); //$NON-NLS-1$
         break;
 
         // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water

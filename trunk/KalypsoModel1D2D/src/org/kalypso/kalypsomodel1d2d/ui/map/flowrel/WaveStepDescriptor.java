@@ -214,10 +214,10 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
     new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
     
-    new Label( container, SWT.NONE ).setText( "hSig [m]" ); 
-    new Label( container, SWT.NONE ).setText( "Per [s]" ); 
-    new Label( container, SWT.NONE ).setText( "Direction" ); 
-    new Label( container, SWT.NONE ).setText( "DD" ); 
+    new Label( container, SWT.NONE ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.0") );  //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.1") );  //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.2") );  //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.3") );  //$NON-NLS-1$
   
     createFromToLineWaveParams( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.4"), 0, new double[]{ 0.0, 0.0, 0.0, DEFAULT_BOUNDARY_DD } ); //$NON-NLS-1$, 0.0, 0.0, m_arrayDoubleHSig
     createFromToLineWaveParams( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.5"), 1, new double[]{ DEFAULT_BOUNDARY_HSIG, DEFAULT_BOUNDARY_PER, DEFAULT_BOUNDARY_DIR, DEFAULT_BOUNDARY_DD } ); //$NON-NLS-1$, 0.0, 3.5, m_arrayDoublePer
@@ -226,10 +226,10 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     
     final Label constBCLabel = new Label( container, SWT.NONE );
     constBCLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    constBCLabel.setText( "Constant boundary condition only" ); 
+    constBCLabel.setText( Messages.getString("WaveStepDescriptor.4") );  //$NON-NLS-1$
 
     Button m_checkbox = new Button( container, SWT.CHECK );
-    m_checkbox.setToolTipText( "" );
+    m_checkbox.setToolTipText( "" ); //$NON-NLS-1$
     m_checkbox.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( final SelectionEvent e )
@@ -380,7 +380,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
    */
   public void activate( )
   {
-    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) );
+    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) ); //$NON-NLS-1$
     m_page.setDescription( MSG_PAGE );
 
     updatePageState( Status.OK_STATUS );
@@ -489,7 +489,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.18") ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, "Cannot parse integer on step change for wave boundary" ); //$NON-NLS-1$
       m_step = null;
     }
 
@@ -505,7 +505,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.18" ) );//"org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.19") ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, "Cannot parse double on step change for wave boundary" ); //$NON-NLS-1$
 
       pArrayDoubleTarget[ index ] = null;//-9999.0;
     }

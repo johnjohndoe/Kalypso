@@ -112,7 +112,7 @@ public class WindDataWizardMainPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationmodel.ElevationMainPage.5" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.ui.wizards.imports.windmodel.WindMainPage.5" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -312,12 +312,12 @@ public class WindDataWizardMainPage extends WizardPage
   {
     // new String[] { "*.dat; *.asc; *.dat.gz" }
     // String[] lArrExts = new String[ 1 ];
-    String lStrExtensions = "";
+    String lStrExtensions = "";  //$NON-NLS-1$
     // int lIntCount = 0;
     for( final String lStrFileExt : m_fileExtensions )
     {
       // lArrExts[ lIntCount++ ]
-      lStrExtensions += "*." + lStrFileExt + "; ";
+      lStrExtensions += "*." + lStrFileExt + "; "; //$NON-NLS-1$ //$NON-NLS-2$
     }
     return new String[] { lStrExtensions };
   }

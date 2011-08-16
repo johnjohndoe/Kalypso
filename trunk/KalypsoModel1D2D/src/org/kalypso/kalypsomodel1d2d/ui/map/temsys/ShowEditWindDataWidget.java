@@ -340,7 +340,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
           tooltipText.append( String.format( "; %.3f U %.3f V ", wind1.first, wind1.second ) ); //$NON-NLS-1$ 
         }
         else
-          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) );
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$
       }
       else
         tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$ 

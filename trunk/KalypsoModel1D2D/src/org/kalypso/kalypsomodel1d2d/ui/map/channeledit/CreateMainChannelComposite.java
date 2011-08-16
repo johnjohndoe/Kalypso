@@ -951,7 +951,7 @@ public class CreateMainChannelComposite extends Composite
       final Control profilControl = profilChartView.createControl( sectionClient );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      final IChartComposite chart = profilChartView.getChart();
+      final IChartComposite chart = profilChartView.getChartComposite();
       final IChartModel chartModel = chart.getChartModel();
       final ILayerManager mngr = chartModel.getLayerManager();
       final IChartLayer overlayLayer = mngr.findLayer( IWspmOverlayConstants.LAYER_OVERLAY );
@@ -973,13 +973,13 @@ public class CreateMainChannelComposite extends Composite
 
       m_sourceManager = new EmbeddedSourceToolbarManager( PlatformUI.getWorkbench(), ChartSourceProvider.ACTIVE_CHART_NAME, chart );
       final Map<String, Integer> commands = new LinkedHashMap<String, Integer>();
-      commands.put( "org.kalypso.chart.ui.commands.zoom_pan_maximize", CommandContributionItem.STYLE_RADIO );
-      commands.put( "org.kalypso.chart.ui.commands.pan", CommandContributionItem.STYLE_RADIO );
-      commands.put( "org.kalypso.chart.ui.commands.edit", CommandContributionItem.STYLE_RADIO );
+      commands.put( "org.kalypso.chart.ui.commands.zoom_pan_maximize", CommandContributionItem.STYLE_RADIO ); //$NON-NLS-1$
+      commands.put( "org.kalypso.chart.ui.commands.pan", CommandContributionItem.STYLE_RADIO ); //$NON-NLS-1$
+      commands.put( "org.kalypso.chart.ui.commands.edit", CommandContributionItem.STYLE_RADIO ); //$NON-NLS-1$
       commands.put( StringUtils.EMPTY, 0 );
-      commands.put( "org.kalypso.chart.ui.commands.maximize", CommandContributionItem.STYLE_PUSH );
-      commands.put( "org.kalypso.chart.ui.commands.ExportClipboardCommand", CommandContributionItem.STYLE_PUSH );
-      commands.put( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler", CommandContributionItem.STYLE_PUSH );
+      commands.put( "org.kalypso.chart.ui.commands.maximize", CommandContributionItem.STYLE_PUSH ); //$NON-NLS-1$
+      commands.put( "org.kalypso.chart.ui.commands.ExportClipboardCommand", CommandContributionItem.STYLE_PUSH ); //$NON-NLS-1$
+      commands.put( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler", CommandContributionItem.STYLE_PUSH ); //$NON-NLS-1$
       m_sourceManager.fillToolbar( manager, commands );
 
       manager.add( new SwitchProfileAction( this ) );

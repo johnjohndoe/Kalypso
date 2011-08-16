@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
@@ -156,7 +157,7 @@ public class ExecutionMonitorJob extends Job
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
-    monitor.beginTask( "Monitoring...", 100 );
+    monitor.beginTask( Messages.getString("ExecutionMonitorJob_0"), 100 ); //$NON-NLS-1$
 
     try
     {
@@ -237,7 +238,7 @@ public class ExecutionMonitorJob extends Job
             final int percentCompleted = percent != null ? percent.intValue() : 0;
             monitor.worked( percentCompleted - m_previousWork );
             m_previousWork = percentCompleted;
-            status = StatusUtilities.createInfoStatus( "%s (%d%% completed)", description, percentCompleted );
+            status = StatusUtilities.createInfoStatus( Messages.getString("ExecutionMonitorJob_1"), description, percentCompleted ); //$NON-NLS-1$
             monitor.subTask( description );
           }
           else if( processSucceeded != null )
@@ -248,7 +249,7 @@ public class ExecutionMonitorJob extends Job
           }
           else
           {
-            status = StatusUtilities.createWarningStatus( "Unknown state" );
+            status = StatusUtilities.createWarningStatus( Messages.getString("ExecutionMonitorJob_2") ); //$NON-NLS-1$
           }
 
           // update status
@@ -286,7 +287,7 @@ public class ExecutionMonitorJob extends Job
   private void updateStatusLocation( final String statusLocation )
   {
     m_statusLocation = statusLocation;
-    setName( "Monitoring execute response at " + statusLocation );
+    setName( Messages.getString("ExecutionMonitorJob_3") + statusLocation ); //$NON-NLS-1$
   }
 
   public ExecuteResponseType getExecuteResponse( )

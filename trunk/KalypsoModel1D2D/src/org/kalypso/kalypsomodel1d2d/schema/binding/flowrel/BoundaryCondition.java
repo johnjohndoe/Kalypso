@@ -179,7 +179,14 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       return "" + ((Double) property).doubleValue(); //$NON-NLS-1$
     }
     else if( property instanceof String ){
-      return "" + NumberUtils.parseQuietDouble( (String) property ); //$NON-NLS-1$
+      double parseQuietDouble = NumberUtils.parseQuietDouble( (String) property );
+      if( !Double.isNaN( parseQuietDouble ) )
+      {
+        return "" + parseQuietDouble; //$NON-NLS-1$
+      } //$NON-NLS-1$
+      else{
+        return (String) property;
+      }
     }
     else
     {

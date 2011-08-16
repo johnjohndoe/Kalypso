@@ -235,7 +235,7 @@ public class ExecutePreRMAKalypso
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, "One or more of the required input files for RMA-Kalypso cannot be found." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("ExecutePreRMAKalypso.0") ); //$NON-NLS-1$
     }
   }
 

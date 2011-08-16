@@ -220,7 +220,7 @@ public class ExecutePreSWANKalypso
     try
     {
       inputs.put( PreSWANKalypso.OUTPUT_PATH_RMA, m_rmaOutputPath.toURL().toExternalForm() );
-      inputs.put( PreSWANKalypso.INPUT_PATH_RESULT_META, "models/scenarioResultMeta.gml" );
+      inputs.put( PreSWANKalypso.INPUT_PATH_RESULT_META, "models/scenarioResultMeta.gml" ); //$NON-NLS-1$
     }
     catch( MalformedURLException e )
     {
@@ -261,7 +261,7 @@ public class ExecutePreSWANKalypso
       {
         try
         {
-          ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( "models/native_tem/" ) );
+          ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( "models/native_tem/" ) ); //$NON-NLS-1$
         }
         catch( IOException e )
         {
@@ -329,7 +329,7 @@ public class ExecutePreSWANKalypso
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, "One or more of the required input files for RMA-Kalypso cannot be found." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("ExecutePreSWANKalypso.2") ); //$NON-NLS-1$
     }
   }
 

@@ -64,7 +64,7 @@ public class PreRMAKalypso implements ISimulation
 
   public static final String INPUT_FLOW_RELATIONSHIPS = "flowRelationships"; //$NON-NLS-1$
 
-  public static final String INPUT_WIND_RELATIONSHIPS = "wind";
+  public static final String INPUT_WIND_RELATIONSHIPS = "wind"; //$NON-NLS-1$
 
   public static final String INPUT_CALCULATION_UNIT_ID = "calculationUnitID"; //$NON-NLS-1$
 
@@ -233,7 +233,7 @@ public class PreRMAKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Problem running PreRMAKalypso", e );
+      throw new SimulationException( Messages.getString("PreRMAKalypso.1"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -276,7 +276,7 @@ public class PreRMAKalypso implements ISimulation
       progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.9" ) ); //$NON-NLS-1$
       final FileObject r10file = workingDir.resolveFile( OUTPUT_CONTROL );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
-      final Control1D2DConverter controlConverter = new Control1D2DConverter( controlModel, calculationUnit, flowRelationshipModel, roughnessModel, converter2D, buildingProvider, m_log );
+      final Control1D2DConverter controlConverter = new Control1D2DConverter( controlModel, calculationUnit, flowRelationshipModel, roughnessModel, converter2D, buildingProvider, m_log, windRelationshipModel.getWindDataModelSystems() );
       controlConverter.writeR10File( r10file.getContent().getOutputStream() );
       r10file.close();
       ProgressUtilities.worked( progress, 10 );
@@ -291,8 +291,8 @@ public class PreRMAKalypso implements ISimulation
       ProgressUtilities.worked( progress, 10 );
 
       /* Wind File */
-      m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.10" ) ); //$NON-NLS-1$
-      progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.11" ) ); //$NON-NLS-1$
+      m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.16" ) ); //$NON-NLS-1$
+      progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.17" ) ); //$NON-NLS-1$
       GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
       final IWindDataWriter lRMA10WindWriter = new RMA10WindDataWriter( workingDir, lGmEnvelope, controlConverter.getListDateSteps(), windRelationshipModel.getWindDataModelSystems() );
       lRMA10WindWriter.setWindDataModel( windRelationshipModel );

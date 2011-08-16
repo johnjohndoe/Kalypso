@@ -43,33 +43,27 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.widgets.ReflowExpansionListener;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -80,288 +74,177 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * 
  * @author Patrice Congo
  * @author Madanagopal
  */
 class ApplyElevationWidgetFace
 {
-  static int index = 0;
-
-  private Composite rootPanel;
-
-  private FormToolkit toolkit;
-
-  private Section elevationSelectStatus;
-
-  private Section areaSelectSection;
+  private TableViewer m_nodeElevationViewer;
 
   static private IPreferenceStore preferenceStore = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
 
-  private final IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
+  private final IPropertyChangeListener storePropertyChangeListener = new IPropertyChangeListener()
+  {
+    @Override
+    public void propertyChange( final PropertyChangeEvent event )
+    {
+      handlePropertyChange( event );
+    }
+  };
 
   final ApplyElevationWidgetDataModel m_dataModel;
-
-  private Section elevationColorSection;
 
   private final IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
     @Override
     public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
-      if( m_nodeElevationViewer == null )
-        return;
-
-      if( m_nodeElevationViewer.getControl().isDisposed() )
-        return;
-
-      final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
-      Feature selecFeature = null;
-      IFE1D2DNode selecNode = null;
-      for( final Object selected : selection.toList() )
-      {
-        if( selected instanceof Feature )
-          selecFeature = (Feature) selected;
-
-        else if( selected instanceof EasyFeatureWrapper )
-          selecFeature = ((EasyFeatureWrapper) selected).getFeature();
-
-        if( selecFeature != null )
-        {
-          selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
-          if( selecNode != null )
-            nodeList.add( selecNode );
-        }
-
-      }
-
-      try
-      {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-
-        m_nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            final IContentProvider cp = m_nodeElevationViewer.getContentProvider();
-            if( cp instanceof ArrayContentProvider )
-              m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-            else
-              m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-
-            m_nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[] {} ) );
-          }
-        } );
-
-        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-        if( activeWorkbenchWindow == null )
-        {
-          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.1" ) ); //$NON-NLS-1$
-          return;
-        }
-
-      }
-      catch( final Throwable th )
-      {
-        th.printStackTrace();
-      }
+      handleSelectionChanged( selection );
     }
-
   };
-
-  private ColorModelChangeComponent colorModelChangeComponent;
-
-  private ElevationModelSystemEditorComponent eleSystemEditorComponent;
 
   public ApplyElevationWidgetFace( final ApplyElevationWidgetDataModel dataModel )
   {
     m_dataModel = dataModel;
   }
 
+  protected void handlePropertyChange( final PropertyChangeEvent event )
+  {
+    final Object source = event.getSource();
+
+    if( source instanceof FieldEditor )
+    {
+      ((FieldEditor) source).store();
+    }
+    else if( source instanceof ColorSelector )
+    {
+    }
+    else
+    {
+      System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+  }
+
   public Control createControl( final Composite parent )
   {
     m_dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
     preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
-    initStoreDefaults();
 
-    parent.setLayout( new FillLayout() );
-    rootPanel = new Composite( parent, SWT.FILL );
+    final Composite rootPanel = new Composite( parent, SWT.FILL );
     rootPanel.setLayout( new FillLayout() );
-    toolkit = new FormToolkit( parent.getDisplay() );
+
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( rootPanel );
+
     final ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
 
-    TableWrapData tableWrapData;
+    final Composite body = scrolledForm.getBody();
+    GridLayoutFactory.fillDefaults().applyTo( body );
 
-    scrolledForm.getBody().setLayout( new TableWrapLayout() );
+    createSelectElevationModel( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    createSelectRegion( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createToolsRegion( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    // Creates Section for "Select Elevation Model"
-    elevationSelectStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationSelectStatus.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.2" ) ); //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    elevationSelectStatus.setLayoutData( tableWrapData );
-    elevationSelectStatus.setExpanded( true );
+    final Section selectControl = createSelectColor( toolkit, body );
+    selectControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    selectControl.addExpansionListener( new ReflowExpansionListener( scrolledForm ) );
 
-    // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
-    areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    areaSelectSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.3" ) ); //$NON-NLS-1$
-    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.align = TableWrapData.FILL_GRAB;
-    areaSelectSection.setLayoutData( tableWrapData );
-    areaSelectSection.setExpanded( true );
-    areaSelectSection.setEnabled( true );
-
-    // TODO: extract strings and translate it
-    final Button dtmButton = toolkit.createButton( scrolledForm.getBody(), "Show/Refresh Model-Isolines", SWT.PUSH ); //$NON-NLS-1$
-    dtmButton.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        final IMapPanel mapPanel = m_dataModel.getMapPanel();
-        PreviewModelDtm.showModelDtm( parent.getShell(), mapPanel );
-      }
-    } );
-
-    // Creates Section to Configure the Color for Different Elevations
-    elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationColorSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.4" ) //$NON-NLS-1$
-        // "Select Colors for MAX Elevation and MIN Elevation "
-    );
-    // elevationColorSection.addPaintListener( drawListener );
-
-    tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    tableWrapData.heightHint = 350;// 168
-    tableWrapData.align = TableWrapData.FILL_GRAB;
-    elevationColorSection.setLayoutData( tableWrapData );
-
-    elevationColorSection.setExpanded( false );
-    elevationColorSection.setEnabled( true );
-
-    createSelectElevationModel( elevationSelectStatus );
-    createSelectRegion( areaSelectSection );
-    createSelectColor( elevationColorSection );
     return rootPanel;
   }
 
-  private void createSelectColor( final Section elevationColorConfig )
+  private Control createToolsRegion( final FormToolkit toolkit, final Composite parent )
   {
-    elevationColorConfig.setLayout( new GridLayout() );
+    final Section region = toolkit.createSection( parent, Section.TITLE_BAR );
+    region.setText( Messages.getString( "ApplyElevationWidgetFace.0" ) ); //$NON-NLS-1$
 
-    final Composite clientComposite = toolkit.createComposite( elevationColorConfig, SWT.FLAT );
-    elevationColorConfig.setClient( clientComposite );
+    final Composite panel = toolkit.createComposite( region );
+    region.setClient( panel );
+    GridLayoutFactory.swtDefaults().applyTo( panel );
 
-    colorModelChangeComponent = new ColorModelChangeComponent();
-    colorModelChangeComponent.createControl( m_dataModel, toolkit, clientComposite );
+    final Action previewAction = new PreviewModelDtm( m_dataModel );
+
+    final Button dtmButton = ActionButton.createButton( toolkit, panel, previewAction );
+    dtmButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
+
+    return region;
   }
 
-  private final void createSelectElevationModel( final Section workStatusSection )
+  // Creates Section to Configure the Color for Different Elevations
+  private Section createSelectColor( final FormToolkit toolkit, final Composite parent )
   {
-    workStatusSection.setLayout( new FillLayout() );
+    final Section elevationColorConfig = toolkit.createSection( parent, Section.TITLE_BAR | Section.TWISTIE );
+    elevationColorConfig.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.4" ) );//$NON-NLS-1$
 
-    final Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
-    workStatusSection.setClient( clientComposite );
-    // clientComposite.setSize( 400, 300 );
-    final FormLayout formLayout = new FormLayout();
-    clientComposite.setLayout( formLayout );
-    final FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 5 );
-    clientComposite.setLayoutData( formData );
-    eleSystemEditorComponent = new ElevationModelSystemEditorComponent();
-    eleSystemEditorComponent.createControl( m_dataModel, clientComposite );
+    final ColorModelChangeComponent colorModelControl = new ColorModelChangeComponent( toolkit, elevationColorConfig, m_dataModel );
+    elevationColorConfig.setClient( colorModelControl );
+
+    return elevationColorConfig;
+  }
+
+  private final Control createSelectElevationModel( final FormToolkit toolkit, final Composite parent )
+  {
+    final Section elevationSection = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR );
+    elevationSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.2" ) ); //$NON-NLS-1$
+    elevationSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.6" ) ); //$NON-NLS-1$
+    elevationSection.setLayout( new FillLayout() );
+
+  final ElevationModelSystemEditorComponent editor = new ElevationModelSystemEditorComponent( toolkit, elevationSection, m_dataModel );
+    elevationSection.setClient( editor );
+
+    return elevationSection;
   }
 
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
-    if( rootPanel == null )
-    {
-      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.5" ) ); //$NON-NLS-1$
-      return;
-    }
-    if( !rootPanel.isDisposed() )
-    {
-      rootPanel.dispose();
-      toolkit.dispose();
-    }
 
     final IMapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
       mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
-
-    if( colorModelChangeComponent != null )
-      colorModelChangeComponent.dispose();
   }
 
-  public static final String HANDLE_WIDTH_NAME = "x.handleWidth";//$NON-NLS-1$
-
-  private AssignNodeElevationFaceComponent m_assignNodeElevationFaceComponent;
-
-  private TableViewer m_nodeElevationViewer;
-
-  private void initStoreDefaults( )
+  // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
+  private Control createSelectRegion( final FormToolkit toolkit, final Composite parent )
   {
-    if( !preferenceStore.contains( HANDLE_WIDTH_NAME ) )
-    {
-      preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
-      preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
-    }
-  }
-
-  private void createSelectRegion( final Section configSection )
-  {
+    final Section configSection = toolkit.createSection( parent, Section.TITLE_BAR );
+    configSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.3" ) ); //$NON-NLS-1$
     configSection.setLayout( new FillLayout() );
 
-    final Composite clientComposite = toolkit.createComposite( configSection, SWT.FLAT );
-    configSection.setClient( clientComposite );
+    final AssignNodeElevationFaceComponent editor = new AssignNodeElevationFaceComponent( toolkit, configSection, m_dataModel );
+    configSection.setClient( editor );
 
-    final FormLayout selectRegionFormLayout = new FormLayout();
-    clientComposite.setLayout( selectRegionFormLayout );
+    // FIXME: the both sections should communicate via the model, what else is it made for?!
+    m_nodeElevationViewer = editor.getTableViewer();
 
-    final FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    clientComposite.setLayoutData( formData );
-    // guiCreateSelectRegion(clientComposite);
-    m_assignNodeElevationFaceComponent = new AssignNodeElevationFaceComponent();
-    m_assignNodeElevationFaceComponent.createControl( m_dataModel, toolkit, clientComposite );
-
-    m_nodeElevationViewer = m_assignNodeElevationFaceComponent.getTableViewer();
+    return configSection;
   }
 
-  private IPropertyChangeListener createPropertyChangeLis( )
+  protected void handleSelectionChanged( final IFeatureSelection selection )
   {
-    return new IPropertyChangeListener()
+    // FIXME: should go via the data model instead
+    final IFE1D2DNode< ? >[] nodeList = findSelectedNodes( selection );
+    ViewerUtilities.setInput( m_nodeElevationViewer, nodeList, false );
+  }
+
+  protected IFE1D2DNode< ? >[] findSelectedNodes( final IFeatureSelection selection )
+  {
+    final List<IFE1D2DNode< ? >> nodeList = new ArrayList<IFE1D2DNode< ? >>();
+
+    for( final Object selected : selection.toList() )
     {
+      Feature selecFeature = null;
+      if( selected instanceof Feature )
+        selecFeature = (Feature) selected;
+      else if( selected instanceof EasyFeatureWrapper )
+        selecFeature = ((EasyFeatureWrapper) selected).getFeature();
 
-      @Override
-      public void propertyChange( final PropertyChangeEvent event )
+      if( selecFeature != null )
       {
-        final Object source = event.getSource();
-        if( source instanceof FieldEditor )
-        {
-          ((FieldEditor) source).store();
-        }
-        else if( source instanceof ColorSelector )
-        {
-        }
-        else
-        {
-          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
+        final IFE1D2DNode< ? > selecNode = (IFE1D2DNode< ? >) selecFeature.getAdapter( IFE1D2DNode.class );
+        if( selecNode != null )
+          nodeList.add( selecNode );
       }
+    }
 
-    };
+    return nodeList.toArray( new IFE1D2DNode< ? >[nodeList.size()] );
   }
 }
