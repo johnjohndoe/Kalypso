@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -49,12 +52,18 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.ISobekProfileDefData;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDatCRFRSection;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
@@ -97,6 +106,7 @@ public class Sobek2Wspm
   {
     final SobekProfileDef profileDef = sobekProfile.getProfileDef();
     final SobekProfileDat profileDat = sobekProfile.getProfileDat();
+    final SobekFrictionDat frictionDat = sobekProfile.getFrictionDat();
 
     if( profileDef == null && profileDat == null )
       return;
@@ -121,6 +131,7 @@ public class Sobek2Wspm
     try
     {
       convertData( profil, data );
+      convertFriction( profil, frictionDat );
       ProfileFeatureFactory.toFeature( profil, newProfile );
       m_newFeatures.add( newProfile );
     }
@@ -151,11 +162,9 @@ public class Sobek2Wspm
   private void convertYZTable( final IProfil profil, final SobekProfileDefYZTable data )
   {
     final TupleResult result = profil.getResult();
-    result.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_BREITE ) );
-    result.addComponent( ProfilUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-    final int yIndex = result.indexOfComponent( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int zIndex = result.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int yIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE ); 
+    final int zIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final SobekYZPoint[] points = data.getPoints();
     for( final SobekYZPoint point : points )
@@ -177,5 +186,99 @@ public class Sobek2Wspm
   public Feature[] getNewFeatures( )
   {
     return m_newFeatures.toArray( new Feature[m_newFeatures.size()] );
+  }
+
+  private void convertFriction( final IProfil profil, final SobekFrictionDat frictionDat )
+  {
+    if( frictionDat == null )
+    {
+      m_stati.add( IStatus.WARNING, "Missing friction for cross section '%s'", null, profil.getName() );
+      return;
+    }
+
+    final SobekFrictionDatCRFRSection[] sections = frictionDat.getSections();
+
+    final Queue<String> markerStack = createMarkerStack( sections );
+
+    for( int s = 0; s < sections.length; s++ )
+    {
+      final SobekFrictionDatCRFRSection section = sections[s];
+
+      // REMARK: only using positive stuff here; check?
+      final FrictionType type = section.getPositiveType();
+      final BigDecimal value = section.getPositiveValue();
+      final String componentID = convertType( type );
+
+      // insert start and end point
+      final BigDecimal start = section.getStart();
+      final BigDecimal end = section.getEnd();
+
+      final IRecord startRecord = ProfilUtil.findOrInsertPointAt( profil, start );
+      final IRecord endRecord = ProfilUtil.findOrInsertPointAt( profil, end );
+
+      final int startIndex = profil.indexOfPoint( startRecord );
+      final int endIndex = profil.indexOfPoint( endRecord );
+
+
+      // We also set value of endIndex (against definition of friction, which is exclusive), in order to avoid holes.
+      // Probably, the next section will overwrite the end with the next start.
+      for( int i = startIndex; i <= endIndex; i++ )
+      {
+        final IRecord record = profil.getPoint( i );
+        final int index = ProfilUtil.getOrCreateComponent( profil, componentID );
+        record.setValue( index, value.doubleValue() );
+      }
+
+      final String markerType = markerStack.poll();
+      setMarker( profil, startRecord, markerType );
+
+      if( s == sections.length - 1 )
+        setMarker( profil, endRecord, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    }
+  }
+
+  private void setMarker( final IProfil profil, final IRecord record, final String markerType )
+  {
+    if( markerType == null )
+      return;
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IProfilPointMarker marker = profil.createPointMarker( markerType, record );
+    marker.setValue( provider.getDefaultValue( markerType ) );
+  }
+
+  private Queue<String> createMarkerStack( final SobekFrictionDatCRFRSection[] sections )
+  {
+    final Queue<String> stack = new LinkedList<String>();
+
+    stack.add( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    if( sections.length > 2 )
+    {
+      if( sections.length > 4 )
+        stack.add( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+
+      stack.add( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+
+      stack.add( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+
+      if( sections.length > 4 )
+        stack.add( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    }
+
+    return stack;
+  }
+
+  // FIXME: check!
+  // FIXME: probably we need to convert the unit of the value according to its type
+  private String convertType( final FrictionType type )
+  {
+    switch( type )
+    {
+      case Manning:
+        return IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST;
+
+      default:
+        return IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
+    }
   }
 }
