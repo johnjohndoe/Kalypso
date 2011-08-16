@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,17 +66,24 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Converting SOBEK data to WSPM", 100 );
 
-    // find files for parsing
-    final FileAndHistoryData inputDir = m_data.getInputDir();
-    final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
-    modelParser.read( new SubProgressMonitor( monitor, 30 ) );
+    try
+    {
+      // find files for parsing
+      final FileAndHistoryData inputDir = m_data.getInputDir();
+      final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
+      modelParser.read( new SubProgressMonitor( monitor, 30 ) );
 
-    // TODO: convert sobek data to wspm data
-
+      // TODO: convert sobek data to wspm data
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
 
     return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), "Sorry, this function is not yet implemented." );
   }
