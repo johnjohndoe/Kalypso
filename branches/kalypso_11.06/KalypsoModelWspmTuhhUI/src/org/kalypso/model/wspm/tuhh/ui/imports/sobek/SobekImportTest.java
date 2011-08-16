@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import junit.framework.Assert;
@@ -61,7 +62,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 public class SobekImportTest extends Assert
 {
   @Test
-  public void testSobek2Wspm( ) throws IOException, CoreException
+  public void testSobek2Wspm( ) throws IOException, CoreException, InvocationTargetException
   {
     final File inputDir = FileUtilities.createNewTempDir( "testSobekImport" ); //$NON-NLS-1$
     final URL inputResource = getClass().getResource( "resources/testInputData.zip" ); //$NON-NLS-1$
