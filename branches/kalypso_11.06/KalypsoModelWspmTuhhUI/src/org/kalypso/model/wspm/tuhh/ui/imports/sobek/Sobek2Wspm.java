@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.ISobekProfileDefData;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDatCRFRSection;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekNetworkD12Point;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
@@ -107,6 +108,7 @@ public class Sobek2Wspm
     final SobekProfileDef profileDef = sobekProfile.getProfileDef();
     final SobekProfileDat profileDat = sobekProfile.getProfileDat();
     final SobekFrictionDat frictionDat = sobekProfile.getFrictionDat();
+    final SobekNetworkD12Point networkPoint = sobekProfile.getNetworkPoint();
 
     if( profileDef == null && profileDat == null )
       return;
@@ -123,7 +125,8 @@ public class Sobek2Wspm
     newProfile.setDescription( profileDef.getNm() );
     newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     // FIXME: ask from user
-    newProfile.setSrsName( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final String srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    newProfile.setSrsName( srs );
 
     final ISobekProfileDefData data = profileDef.getData();
     final IProfil profil = newProfile.getProfil();
@@ -132,6 +135,8 @@ public class Sobek2Wspm
     {
       convertData( profil, data );
       convertFriction( profil, frictionDat );
+      convertNetworkPoint( profil, networkPoint );
+
       ProfileFeatureFactory.toFeature( profil, newProfile );
       m_newFeatures.add( newProfile );
     }
@@ -280,5 +285,34 @@ public class Sobek2Wspm
       default:
         return IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
     }
+  }
+
+  private void convertNetworkPoint( final IProfil profil, final SobekNetworkD12Point networkPoint )
+  {
+    if( networkPoint == null )
+      return;
+
+    final int pointCount = profil.getPoints().length;
+    if( pointCount == 0 )
+      return;
+
+    final BigDecimal px = networkPoint.getPX();
+    final BigDecimal py = networkPoint.getPY();
+
+    // FIXME: would be nice to at least calculate two points with a distant to the centerline (which is defined how...?)
+
+    // for now, we just use the same point for start and end
+
+    final int indexRW = ProfilUtil.getOrCreateComponent( profil, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
+    final int indexHW = ProfilUtil.getOrCreateComponent( profil, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
+
+    final IRecord startPoint = profil.getPoint( 0 );
+    final IRecord endPoint = profil.getPoint( pointCount - 1 );
+
+    startPoint.setValue( indexRW, px.doubleValue() );
+    startPoint.setValue( indexHW, py.doubleValue() );
+
+    endPoint.setValue( indexRW, px.doubleValue() );
+    endPoint.setValue( indexHW, py.doubleValue() );
   }
 }
