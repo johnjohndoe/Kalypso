@@ -43,8 +43,8 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -81,18 +81,19 @@ public class Sms2dmFEModelElementHandler implements IFEModelElementHandler
     }
   }
 
-  final List<IDiscModelImporter> m_importerList = new ArrayList<IDiscModelImporter>();
+  private final List<IDiscModelImporter> m_importerList = new ArrayList<IDiscModelImporter>();
 
   private final List<SmsElementData> m_elementList = new ArrayList<SmsElementData>();
 
-  final HashMap<Integer, GM_Position> m_nodeMap = new HashMap<Integer, GM_Position>();
+  final Map<Integer, GM_Position> m_nodeMap = new HashMap<Integer, GM_Position>();
 
-  // TODO: get from outside!
-  private String m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+  private String m_crs;
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.I2dmModelElementHandler#end()
-   */
+  public Sms2dmFEModelElementHandler( String sourceSRS )
+  {
+    m_crs = sourceSRS;
+  }
+
   @Override
   public void end( )
   {
@@ -189,5 +190,4 @@ public class Sms2dmFEModelElementHandler implements IFEModelElementHandler
   {
     m_importerList.add( importer );
   }
-
 }

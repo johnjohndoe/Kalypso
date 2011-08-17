@@ -40,18 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 
@@ -66,27 +70,24 @@ public class SMS2GmlConv
 
   public static boolean VERBOSE_MODE = false;
 
-  private final IProgressMonitor m_monitor;
-
-  private final int m_monitorStep;
-
   private static final Pattern ELEMENT_LINE_PATTERN_E3T = Pattern.compile( "E3T\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
 
   private static final Pattern ELEMENT_LINE_PATTERN_E4Q = Pattern.compile( "E4Q\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
 
-  public SMS2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
+  public void parse( URL url, IProgressMonitor monitor ) throws IOException
   {
-    m_monitorStep = numberOfLinesToProcess / 100;
-    if( monitor == null )
-      m_monitor = new NullProgressMonitor();
-    else
-      m_monitor = monitor;
-  }
-
-  public SMS2GmlConv( )
-  {
-    m_monitor = new NullProgressMonitor();
-    m_monitorStep = -1;
+    InputStream is = null;
+    try
+    {
+      long contentLength = UrlUtilities.getContentLength( url );
+      is = new ProgressInputStream( new BufferedInputStream( url.openStream() ), contentLength, monitor );
+      parse( is );
+      is.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
   }
 
   public void parse( final InputStream inputStream ) throws IllegalStateException, IOException
@@ -102,22 +103,11 @@ public class SMS2GmlConv
     final Pattern lineE3T = Pattern.compile( "E3T.*" ); //$NON-NLS-1$
     final Pattern lineE4Q = Pattern.compile( "E4Q.*" ); //$NON-NLS-1$
 
-    m_monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.0" ), 100 );//$NON-NLS-1$
-
     m_handler.start();
 
-    int numberOfLinesProcessed = 0;
-    final boolean traceProgress = !(m_monitor instanceof NullProgressMonitor) && (m_monitorStep > 0);
     final LineNumberReader lnReader = new LineNumberReader( reader );
     for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
     {
-      if( m_monitor.isCanceled() )
-        return;
-      if( traceProgress && (++numberOfLinesProcessed == m_monitorStep) )
-      {
-        numberOfLinesProcessed = 0;
-        m_monitor.worked( 1 );
-      }
       if( line.length() < 2 )
         continue;
       if( lineND.matcher( line ).matches() )
