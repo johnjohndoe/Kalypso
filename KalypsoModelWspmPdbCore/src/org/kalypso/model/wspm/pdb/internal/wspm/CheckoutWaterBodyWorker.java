@@ -129,10 +129,12 @@ public class CheckoutWaterBodyWorker
     final boolean isDirectionUpstreams = directionOfStationing == WaterBody.STATIONING_DIRECTION.upstream;
     wspmWater.setDirectionUpstreams( isDirectionUpstreams );
 
-    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
-
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final GM_Curve transformedCenterline = (GM_Curve) centerLine.transform( kalypsoSRS );
-    wspmWater.setCenterLine( transformedCenterline );
+    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
+    if( centerLine != null )
+    {
+      final GM_Curve transformedCenterline = (GM_Curve) centerLine.transform( kalypsoSRS );
+      wspmWater.setCenterLine( transformedCenterline );
+    }
   }
 }

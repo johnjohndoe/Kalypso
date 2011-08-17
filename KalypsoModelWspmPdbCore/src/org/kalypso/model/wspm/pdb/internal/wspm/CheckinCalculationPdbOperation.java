@@ -41,29 +41,30 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Gernot Belger
  */
-public class CheckinEventPdbOperation extends AbstractCheckinEventOperation
+public class CheckinCalculationPdbOperation extends AbstractCheckinEventOperation
 {
-  private final WspmFixation m_fixation;
+  private final WspmResultLengthSection m_lengthSection;
 
-  public CheckinEventPdbOperation( final Event event, final WaterBody[] waterBodies, final WspmFixation fixation, final IProgressMonitor monitor )
+  public CheckinCalculationPdbOperation( final Event event, final WaterBody[] waterBodies, final TuhhCalculation calculation, final WspmResultLengthSection lengthSection, final IProgressMonitor monitor )
   {
-    super( event, waterBodies, monitor, fixation.getParent() );
+    super( event, waterBodies, monitor, calculation.getReach().getWaterBody() );
 
-    m_fixation = fixation;
+    m_lengthSection = lengthSection;
   }
 
   @Override
   protected IObservation<TupleResult> getObservation( )
   {
-    return m_fixation.toObservation();
+    return m_lengthSection.getObservation();
   }
 }

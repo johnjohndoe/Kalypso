@@ -33,27 +33,27 @@ import org.kalypso.model.wspm.pdb.db.constants.EventConstants;
 @Table(name = "event", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "water_body" }))
 public class Event extends AbstractModelObject implements Serializable, EventConstants, IElementWithDates
 {
-  private BigDecimal id;
+  private BigDecimal m_id;
 
-  private WaterBody waterBody;
+  private WaterBody m_waterBody;
 
-  private String name;
+  private String m_name;
 
-  private Date creationDate;
+  private Date m_creationDate;
 
-  private Date editingDate;
+  private Date m_editingDate;
 
-  private String editingUser;
+  private String m_editingUser;
 
-  private Date measurementDate;
+  private Date m_measurementDate;
 
-  private String source;
+  private String m_source;
 
-  private TYPE type = TYPE.Measurement;
+  private TYPE m_type = TYPE.Measurement;
 
-  private String description;
+  private String m_description;
 
-  private Set<WaterlevelFixation> waterlevelFixations = new HashSet<WaterlevelFixation>( 0 );
+  private Set<WaterlevelFixation> m_waterlevelFixations = new HashSet<WaterlevelFixation>( 0 );
 
   public Event( )
   {
@@ -61,27 +61,27 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
 
   public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser )
   {
-    this.id = id;
-    this.waterBody = waterBody;
-    this.name = name;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
+    m_id = id;
+    m_waterBody = waterBody;
+    m_name = name;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
   }
 
   public Event( final BigDecimal id, final WaterBody waterBody, final String name, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final TYPE type, final String description, final Set<WaterlevelFixation> waterlevelFixations )
   {
-    this.id = id;
-    this.waterBody = waterBody;
-    this.name = name;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
-    this.measurementDate = measurementDate;
-    this.source = source;
-    this.type = type;
-    this.description = description;
-    this.waterlevelFixations = waterlevelFixations;
+    m_id = id;
+    m_waterBody = waterBody;
+    m_name = name;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
+    m_measurementDate = measurementDate;
+    m_source = source;
+    m_type = type;
+    m_description = description;
+    m_waterlevelFixations = waterlevelFixations;
   }
 
   @Id
@@ -90,26 +90,26 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @SequenceGenerator(name = "event_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    this.id = id;
+    m_id = id;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "water_body", nullable = false)
   public WaterBody getWaterBody( )
   {
-    return this.waterBody;
+    return m_waterBody;
   }
 
   public void setWaterBody( final WaterBody waterBody )
   {
-    final Object oldValue = this.waterBody;
+    final Object oldValue = m_waterBody;
 
-    this.waterBody = waterBody;
+    m_waterBody = waterBody;
 
     firePropertyChange( PROPERTY_WATER_BODY, oldValue, waterBody );
   }
@@ -117,14 +117,14 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Column(name = "name", nullable = false, length = 100)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    final Object oldValue = this.name;
+    final Object oldValue = m_name;
 
-    this.name = name;
+    m_name = name;
 
     firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
@@ -134,12 +134,12 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Column(name = "creation_date", nullable = false, length = 22)
   public Date getCreationDate( )
   {
-    return this.creationDate;
+    return m_creationDate;
   }
 
   public void setCreationDate( final Date creationDate )
   {
-    this.creationDate = creationDate;
+    m_creationDate = creationDate;
   }
 
   @Override
@@ -147,24 +147,24 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Column(name = "editing_date", nullable = false, length = 22)
   public Date getEditingDate( )
   {
-    return this.editingDate;
+    return m_editingDate;
   }
 
   public void setEditingDate( final Date editingDate )
   {
-    this.editingDate = editingDate;
+    m_editingDate = editingDate;
   }
 
   @Override
   @Column(name = "editing_user", nullable = false, length = 50)
   public String getEditingUser( )
   {
-    return this.editingUser;
+    return m_editingUser;
   }
 
   public void setEditingUser( final String editingUser )
   {
-    this.editingUser = editingUser;
+    m_editingUser = editingUser;
   }
 
   @Override
@@ -172,25 +172,25 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Column(name = "measurement_date", length = 22)
   public Date getMeasurementDate( )
   {
-    return this.measurementDate;
+    return m_measurementDate;
   }
 
   public void setMeasurementDate( final Date measurementDate )
   {
-    this.measurementDate = measurementDate;
+    m_measurementDate = measurementDate;
   }
 
   @Column(name = "source")
   public String getSource( )
   {
-    return this.source;
+    return m_source;
   }
 
   public void setSource( final String source )
   {
-    final Object oldValue = this.source;
+    final Object oldValue = m_source;
 
-    this.source = source;
+    m_source = source;
 
     firePropertyChange( PROPERTY_SOURCE, oldValue, source );
   }
@@ -199,14 +199,14 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Enumerated(EnumType.STRING)
   public TYPE getType( )
   {
-    return this.type;
+    return m_type;
   }
 
   public void setType( final TYPE type )
   {
-    final Object oldValue = this.type;
+    final Object oldValue = m_type;
 
-    this.type = type;
+    m_type = type;
 
     firePropertyChange( PROPERTY_TYPE, oldValue, type );
   }
@@ -214,22 +214,22 @@ public class Event extends AbstractModelObject implements Serializable, EventCon
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    this.description = description;
+    m_description = description;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
   public Set<WaterlevelFixation> getWaterlevelFixations( )
   {
-    return this.waterlevelFixations;
+    return m_waterlevelFixations;
   }
 
   public void setWaterlevelFixations( final Set<WaterlevelFixation> waterlevelFixations )
   {
-    this.waterlevelFixations = waterlevelFixations;
+    m_waterlevelFixations = waterlevelFixations;
   }
 }

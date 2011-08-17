@@ -349,6 +349,7 @@
                         <or>
                             <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState" />
                             <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmrunoff}WaterlevelFixation" />
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}CalculationWspmTuhhSteadyState" />
                         </or>
                     </iterate>
                 </and>

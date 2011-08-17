@@ -34,25 +34,25 @@ import com.vividsolutions.jts.geom.LineString;
 @Table(name = "water_body", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class WaterBody extends AbstractModelObject implements java.io.Serializable, WaterBodyConstants
 {
-  private BigDecimal id;
+  private BigDecimal m_id;
 
-  private String name = StringUtils.EMPTY;
+  private String m_name = StringUtils.EMPTY;
 
-  private Geometry riverline;
+  private Geometry m_riverline;
 
-  private String label = StringUtils.EMPTY;
+  private String m_label = StringUtils.EMPTY;
 
-  private STATIONING_DIRECTION directionOfStationing = STATIONING_DIRECTION.upstream;
+  private STATIONING_DIRECTION m_directionOfStationing = STATIONING_DIRECTION.upstream;
 
-  private String description = StringUtils.EMPTY;
+  private String m_description = StringUtils.EMPTY;
 
-  private Integer rank;
+  private Integer m_rank;
 
-  private Set<Event> events = new HashSet<Event>( 0 );
+  private Set<Event> m_events = new HashSet<Event>( 0 );
 
-  private Set<CrossSection> crossSections = new HashSet<CrossSection>( 0 );
+  private Set<CrossSection> m_crossSections = new HashSet<CrossSection>( 0 );
 
-  private Set<Document> documents = new HashSet<Document>( 0 );
+  private Set<Document> m_documents = new HashSet<Document>( 0 );
 
   public WaterBody( )
   {
@@ -60,24 +60,24 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
 
   public WaterBody( final BigDecimal id, final String name, final String label, final STATIONING_DIRECTION directionOfStationing )
   {
-    this.id = id;
-    this.name = name;
-    this.label = label;
-    this.directionOfStationing = directionOfStationing;
+    m_id = id;
+    m_name = name;
+    m_label = label;
+    m_directionOfStationing = directionOfStationing;
   }
 
   public WaterBody( final BigDecimal id, final String name, final Geometry riverline, final String label, final STATIONING_DIRECTION directionOfStationing, final Integer rank, final String description, final Set<Event> events, final Set<CrossSection> crossSections, final Set<Document> documents )
   {
-    this.id = id;
-    this.name = name;
-    this.riverline = riverline;
-    this.label = label;
-    this.directionOfStationing = directionOfStationing;
-    this.rank = rank;
-    this.description = description;
-    this.events = events;
-    this.crossSections = crossSections;
-    this.documents = documents;
+    m_id = id;
+    m_name = name;
+    m_riverline = riverline;
+    m_label = label;
+    m_directionOfStationing = directionOfStationing;
+    m_rank = rank;
+    m_description = description;
+    m_events = events;
+    m_crossSections = crossSections;
+    m_documents = documents;
   }
 
   @Id
@@ -86,14 +86,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @SequenceGenerator(name = "waterbody_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    final Object oldValue = this.id;
+    final Object oldValue = m_id;
 
-    this.id = id;
+    m_id = id;
 
     firePropertyChange( PROPERTY_ID, oldValue, id );
   }
@@ -101,14 +101,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Column(name = "name", unique = true, nullable = false, length = 100)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    final Object oldValue = this.name;
+    final Object oldValue = m_name;
 
-    this.name = name;
+    m_name = name;
 
     firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
@@ -116,14 +116,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Column(name = "riverline", columnDefinition = "Geometry")
   public Geometry getRiverline( )
   {
-    return this.riverline;
+    return m_riverline;
   }
 
   public void setRiverline( final Geometry riverline )
   {
-    final Object oldValue = this.riverline;
+    final Object oldValue = m_riverline;
 
-    this.riverline = riverline;
+    m_riverline = riverline;
 
     firePropertyChange( PROPERTY_RIVERLINE, oldValue, riverline );
   }
@@ -131,14 +131,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Column(name = "label", nullable = false, length = 100)
   public String getLabel( )
   {
-    return this.label;
+    return m_label;
   }
 
   public void setLabel( final String label )
   {
-    final Object oldValue = this.label;
+    final Object oldValue = m_label;
 
-    this.label = label;
+    m_label = label;
 
     firePropertyChange( PROPERTY_LABEL, oldValue, label );
   }
@@ -147,14 +147,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Enumerated(EnumType.STRING)
   public STATIONING_DIRECTION getDirectionOfStationing( )
   {
-    return this.directionOfStationing;
+    return m_directionOfStationing;
   }
 
   public void setDirectionOfStationing( final STATIONING_DIRECTION directionOfStationing )
   {
-    final Object oldValue = this.directionOfStationing;
+    final Object oldValue = m_directionOfStationing;
 
-    this.directionOfStationing = directionOfStationing;
+    m_directionOfStationing = directionOfStationing;
 
     firePropertyChange( PROPERTY_DIRECTION_OF_STATIONING, oldValue, directionOfStationing );
   }
@@ -162,14 +162,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Column(name = "rank")
   public Integer getRank( )
   {
-    return this.rank;
+    return m_rank;
   }
 
   public void setRank( final Integer rank )
   {
-    final Object oldValue = this.rank;
+    final Object oldValue = m_rank;
 
-    this.rank = rank;
+    m_rank = rank;
 
     firePropertyChange( PROPERTY_RANK, oldValue, rank );
   }
@@ -177,14 +177,14 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    final Object oldValue = this.description;
+    final Object oldValue = m_description;
 
-    this.description = description;
+    m_description = description;
 
     firePropertyChange( PROPERTY_DESCRIPTION, oldValue, description );
   }
@@ -192,48 +192,48 @@ public class WaterBody extends AbstractModelObject implements java.io.Serializab
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "waterBody")
   public Set<Event> getEvents( )
   {
-    return this.events;
+    return m_events;
   }
 
   public void setEvents( final Set<Event> events )
   {
-    this.events = events;
+    m_events = events;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "waterBody")
   public Set<CrossSection> getCrossSections( )
   {
-    return this.crossSections;
+    return m_crossSections;
   }
 
   public void setCrossSections( final Set<CrossSection> crossSections )
   {
-    this.crossSections = crossSections;
+    m_crossSections = crossSections;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "waterBody")
   public Set<Document> getDocuments( )
   {
-    return this.documents;
+    return m_documents;
   }
 
   public void setDocuments( final Set<Document> documents )
   {
-    this.documents = documents;
+    m_documents = documents;
   }
 
   @Transient
   public LineString getRiverlineAsLine( )
   {
-    if( riverline instanceof LineString )
-      return (LineString) riverline;
+    if( m_riverline instanceof LineString )
+      return (LineString) m_riverline;
 
-    if( riverline == null )
+    if( m_riverline == null )
       return null;
 
-    if( riverline instanceof GeometryCollection )
+    if( m_riverline instanceof GeometryCollection )
     {
-      Assert.isTrue( riverline.isEmpty() );
+      Assert.isTrue( m_riverline.isEmpty() );
       return null;
     }
 

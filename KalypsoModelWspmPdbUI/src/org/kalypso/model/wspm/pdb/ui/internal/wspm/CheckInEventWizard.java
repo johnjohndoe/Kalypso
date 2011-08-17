@@ -42,11 +42,11 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
-import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
-import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
+import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
  * Uploads local WSPM data into the cross section database.
@@ -55,11 +55,11 @@ import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
  */
 public class CheckInEventWizard extends Wizard
 {
-  private final CheckInEventData m_data;
+  private final IEditEventPageData m_data;
 
-  private final CheckInEventOperation m_operation;
+  private final ICoreRunnableWithProgress m_operation;
 
-  public CheckInEventWizard( final CheckInEventData data, final CheckInEventOperation operation )
+  public CheckInEventWizard( final IEditEventPageData data, final ICoreRunnableWithProgress operation )
   {
     m_data = data;
     m_operation = operation;
