@@ -23,7 +23,7 @@
 		horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" 
 		/> </gft:text> -->
 
-	<gft:tabFolder style="SWT.BORDER">
+	<gft:tabFolder style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" heightHint="30" grabExcessVerticalSpace="true" horizontalSpan="4" />
 		<gft:tabItem>
 			<gft:tabLabel>Diagramm</gft:tabLabel>
