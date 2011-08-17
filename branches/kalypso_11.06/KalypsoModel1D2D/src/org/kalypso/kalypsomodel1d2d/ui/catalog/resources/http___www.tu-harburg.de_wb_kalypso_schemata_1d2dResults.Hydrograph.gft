@@ -15,7 +15,7 @@
     <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
   </gft:text>
 
-  <gft:tabFolder style="SWT.BORDER">
+  <gft:tabFolder style="SWT.NONE">
     <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalSpan="4" />
     <gft:tabItem>
       <gft:tabLabel>Diagramm</gft:tabLabel>
@@ -42,7 +42,7 @@
     </gft:tabItem>
     <gft:tabItem>
       <gft:tabLabel>Tabelle</gft:tabLabel>
-      <gft:tupleResult property="om:result" tooltip="Ganglinie" style="SWT.NONE | SWT.MULTI | SWT.FULL_SELECTION">
+      <gft:tupleResult property="om:result" tooltip="Ganglinie" style="SWT.MULTI | SWT.FULL_SELECTION">
         <gft:visibleOperation>
           <ogc:Not>
             <ogc:PropertyIsNull>
