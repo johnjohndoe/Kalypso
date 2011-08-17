@@ -1,154 +1,66 @@
 package org.kalypso.kalypsomodel1d2d.conv.test;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Test;
+import org.kalypso.kalypsomodel1d2d.conv.DiscModelImporter;
 import org.kalypso.kalypsomodel1d2d.conv.IFEModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
-import org.kalypso.kalypsomodel1d2d.conv.SHPModelImporter;
 import org.kalypso.kalypsomodel1d2d.conv.SMS2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.Sms2dmFEModelElementHandler;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Thomas Jung
  */
-public class Import2dmTest extends TestCase
+public class Import2dmTest
 {
-
+  @Test
   public void testLoadResults( ) throws Exception
   {
-    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    /* Coordinate system of the 2DM file */
+    final String sourceSRS = "EPSG:31467"; //$NON-NLS-1$
 
-    final List<String> inputFiles = new ArrayList<String>();
+    final List<File> inputFiles = new ArrayList<File>();
 
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw.2dm" ); //$NON-NLS-1$
-    inputFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4.2dm" ); //$NON-NLS-1$
-    final String[] input = inputFiles.toArray( new String[inputFiles.size()] );
+    inputFiles.add( new File( "P:\\hwr0920023\\work\\ruggiero\\Modell\\Hydro_AS\\Vorland_netz_2.2dm" ) ); //$NON-NLS-1$
 
-    final List<String> outputGmlFiles = new ArrayList<String>();
+    final File[] input = inputFiles.toArray( new File[inputFiles.size()] );
 
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw.gml" ); //$NON-NLS-1$
-    outputGmlFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4.gml" ); //$NON-NLS-1$
+    final String[] outgml = new String[input.length];
+    final String[] outshp = new String[input.length];
 
-    final String[] outgml = outputGmlFiles.toArray( new String[outputGmlFiles.size()] );
-    final List<String> outputShpFiles = new ArrayList<String>();
+    for( int i = 0; i < input.length; i++ )
+    {
+      File inputPath = input[i];
+      String baseName = FilenameUtils.removeExtension( inputPath.getAbsolutePath() );
 
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil1" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\erlauf_teil2" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Kraubath" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_Leising" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_seizer" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil1" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil2" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil3-mit_bw" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\fluss_vbb_teil4" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Kraubath_Mur" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\Leising_Mur" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\mitterbach_2406" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer-ALT" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\seizer_2406" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil1" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil2" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil3-mit_bw" ); //$NON-NLS-1$
-    outputShpFiles.add( "P:\\hwa0824123\\modell\\hya\\netze_2206\\vbb_teil4" ); //$NON-NLS-1$
+      outshp[i] = baseName;
+      outgml[i] = baseName + ".gml"; //$NON-NLS-1$
+    }
 
-    final String[] outshp = outputShpFiles.toArray( new String[outputShpFiles.size()] );
     for( int j = 0; j < input.length; j++ )
     {
-
       RMA10S2GmlConv.VERBOSE_MODE = false;
-      final String inputFile = input[j];
-      final File outputGmlFile = new File( outgml[j] );
-      final File outputShpFile = new File( outshp[j] );
+      final File inputFile = input[j];
 
       final NullProgressMonitor monitor = new NullProgressMonitor();
-      final SMS2GmlConv converter = new SMS2GmlConv( monitor, getNumberOfLines( inputFile ) );
-      final IFEModelElementHandler handler2dm = new Sms2dmFEModelElementHandler();
 
-// handler2dm.addImporter( new DiscModelImporter( outputGmlFile ) );
+      final SMS2GmlConv converter = new SMS2GmlConv();
+      final IFEModelElementHandler handler2dm = new Sms2dmFEModelElementHandler(sourceSRS);
 
-      handler2dm.addImporter( new SHPModelImporter( outputShpFile ) );
+      final File outputGmlFile = new File( outgml[j] );
+      handler2dm.addImporter( new DiscModelImporter( outputGmlFile ) );
 
-      converter.setModelElementHandler( handler2dm );
+      //final File outputShpFile = new File( outshp[j] );
+      // handler2dm.addImporter( new SHPModelImporter( outputShpFile ) );
 
-      converter.parse( new URL( "file:" + inputFile ).openStream() ); //$NON-NLS-1$
+      URL url =  inputFile.toURI().toURL();
+      converter.parse( url, monitor );
     }
   }
-
-  public static int getNumberOfLines( final String fileName )
-  {
-    final File file = new File( fileName );
-    if( file == null || !file.exists() )
-    {
-      return -1;
-    }
-    int linesCnt = 0;
-    try
-    {
-      final FileReader file_reader = new FileReader( file );
-      final BufferedReader buf_reader = new BufferedReader( file_reader );
-      do
-      {
-        final String line = buf_reader.readLine();
-        if( line == null )
-          break;
-        linesCnt++;
-      }
-      while( true );
-      buf_reader.close();
-    }
-    catch( final IOException e )
-    {
-      return -1;
-    }
-    return linesCnt;
-  }
-
 }
