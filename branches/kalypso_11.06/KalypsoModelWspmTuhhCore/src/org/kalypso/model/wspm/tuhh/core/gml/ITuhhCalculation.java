@@ -44,11 +44,12 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants
+public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants, Feature
 {
   QName QN_PROPERTY_STEADY_STATE_MEMBER = new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ); //$NON-NLS-1$
 
@@ -69,6 +70,8 @@ public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants
   QName QN_PROP_SPECIAL_OPTIONS_MEMBER = new QName( NS_WSPM_TUHH, "specialOptionsMember" ); //$NON-NLS-1$
 
   QName QN_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS = new QName( NS_WSPM_TUHH, "useExtremeRoughness" ); //$NON-NLS-1$
+
+  QName PROPERTY_MODE = new QName( NS_WSPM_TUHH, "mode" ); //$NON-NLS-1$
 
   public static enum MODE
   {
