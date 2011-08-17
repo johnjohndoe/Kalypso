@@ -29,27 +29,27 @@ import org.kalypso.model.wspm.pdb.db.constants.StateConstants;
 @Table(name = "state", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class State extends AbstractModelObject implements Serializable, StateConstants, IElementWithDates
 {
-  private BigDecimal id;
+  private BigDecimal m_id;
 
-  private String name;
+  private String m_name;
 
-  private char isstatezero;
+  private char m_isstatezero;
 
-  private Date creationDate;
+  private Date m_creationDate;
 
-  private Date editingDate;
+  private Date m_editingDate;
 
-  private String editingUser;
+  private String m_editingUser;
 
-  private Date measurementDate;
+  private Date m_measurementDate;
 
-  private String source;
+  private String m_source;
 
-  private String description;
+  private String m_description;
 
-  private Set<CrossSection> crossSections = new HashSet<CrossSection>( 0 );
+  private Set<CrossSection> m_crossSections = new HashSet<CrossSection>( 0 );
 
-  private Set<Document> documents = new HashSet<Document>( 0 );
+  private Set<Document> m_documents = new HashSet<Document>( 0 );
 
   public State( )
   {
@@ -57,27 +57,27 @@ public class State extends AbstractModelObject implements Serializable, StateCon
 
   public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser )
   {
-    this.id = id;
-    this.name = name;
-    this.isstatezero = isstatezero;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
+    m_id = id;
+    m_name = name;
+    m_isstatezero = isstatezero;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
   }
 
   public State( final BigDecimal id, final String name, final char isstatezero, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String source, final String description, final Set<CrossSection> crossSections, final Set<Document> documents )
   {
-    this.id = id;
-    this.name = name;
-    this.isstatezero = isstatezero;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
-    this.measurementDate = measurementDate;
-    this.source = source;
-    this.description = description;
-    this.crossSections = crossSections;
-    this.documents = documents;
+    m_id = id;
+    m_name = name;
+    m_isstatezero = isstatezero;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
+    m_measurementDate = measurementDate;
+    m_source = source;
+    m_description = description;
+    m_crossSections = crossSections;
+    m_documents = documents;
   }
 
   @Id
@@ -86,14 +86,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @SequenceGenerator(name = "state_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    final Object oldValue = this.id;
+    final Object oldValue = m_id;
 
-    this.id = id;
+    m_id = id;
 
     firePropertyChange( PROPERTY_ID, oldValue, id );
   }
@@ -101,14 +101,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "name", unique = true, nullable = false, length = 100)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    final Object oldValue = this.name;
+    final Object oldValue = m_name;
 
-    this.name = name;
+    m_name = name;
 
     firePropertyChange( PROPERTY_NAME, oldValue, name );
   }
@@ -116,14 +116,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "isstatezero", nullable = false, length = 1)
   public char getIsstatezero( )
   {
-    return this.isstatezero;
+    return m_isstatezero;
   }
 
   public void setIsstatezero( final char isstatezero )
   {
-    final Object oldValue = this.isstatezero;
+    final Object oldValue = m_isstatezero;
 
-    this.isstatezero = isstatezero;
+    m_isstatezero = isstatezero;
 
     firePropertyChange( PROPERTY_ISSTATEZERO, oldValue, isstatezero );
   }
@@ -133,14 +133,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "creation_date", nullable = false, length = 22)
   public Date getCreationDate( )
   {
-    return this.creationDate;
+    return m_creationDate;
   }
 
   public void setCreationDate( final Date creationDate )
   {
-    final Object oldValue = this.creationDate;
+    final Object oldValue = m_creationDate;
 
-    this.creationDate = creationDate;
+    m_creationDate = creationDate;
 
     firePropertyChange( PROPERTY_CREATIONDATE, oldValue, creationDate );
   }
@@ -150,14 +150,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "editing_date", nullable = false, length = 22)
   public Date getEditingDate( )
   {
-    return this.editingDate;
+    return m_editingDate;
   }
 
   public void setEditingDate( final Date editingDate )
   {
-    final Object oldValue = this.editingDate;
+    final Object oldValue = m_editingDate;
 
-    this.editingDate = editingDate;
+    m_editingDate = editingDate;
 
     firePropertyChange( PROPERTY_EDITINGDATE, oldValue, editingDate );
   }
@@ -166,14 +166,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "editing_user", nullable = false, length = 50)
   public String getEditingUser( )
   {
-    return this.editingUser;
+    return m_editingUser;
   }
 
   public void setEditingUser( final String editingUser )
   {
-    final Object oldValue = this.editingUser;
+    final Object oldValue = m_editingUser;
 
-    this.editingUser = editingUser;
+    m_editingUser = editingUser;
 
     firePropertyChange( PROPERTY_EDITINGUSER, oldValue, editingUser );
   }
@@ -183,14 +183,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "measurement_date", length = 22)
   public Date getMeasurementDate( )
   {
-    return this.measurementDate;
+    return m_measurementDate;
   }
 
   public void setMeasurementDate( final Date measurementDate )
   {
-    final Object oldValue = this.measurementDate;
+    final Object oldValue = m_measurementDate;
 
-    this.measurementDate = measurementDate;
+    m_measurementDate = measurementDate;
 
     firePropertyChange( PROPERTY_MEASUREMENTDATE, oldValue, measurementDate );
   }
@@ -198,14 +198,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "source")
   public String getSource( )
   {
-    return this.source;
+    return m_source;
   }
 
   public void setSource( final String source )
   {
-    final Object oldValue = this.source;
+    final Object oldValue = m_source;
 
-    this.source = source;
+    m_source = source;
 
     firePropertyChange( PROPERTY_SOURCE, oldValue, source );
   }
@@ -213,14 +213,14 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    final Object oldValue = this.description;
+    final Object oldValue = m_description;
 
-    this.description = description;
+    m_description = description;
 
     firePropertyChange( PROPERTY_DESCRIPTION, oldValue, description );
   }
@@ -228,23 +228,22 @@ public class State extends AbstractModelObject implements Serializable, StateCon
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "state")
   public Set<CrossSection> getCrossSections( )
   {
-    return this.crossSections;
+    return m_crossSections;
   }
 
   public void setCrossSections( final Set<CrossSection> crossSections )
   {
-    this.crossSections = crossSections;
+    m_crossSections = crossSections;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "state")
   public Set<Document> getDocuments( )
   {
-    return this.documents;
+    return m_documents;
   }
 
   public void setDocuments( final Set<Document> documents )
   {
-    this.documents = documents;
+    m_documents = documents;
   }
-
 }

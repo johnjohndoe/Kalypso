@@ -12,10 +12,9 @@ import javax.persistence.Table;
 @Table(name = "info", schema = "pdb")
 public class Info implements java.io.Serializable
 {
+  private String m_key;
 
-  private String key;
-
-  private String value;
+  private String m_value;
 
   public Info( )
   {
@@ -23,36 +22,35 @@ public class Info implements java.io.Serializable
 
   public Info( final String key )
   {
-    this.key = key;
+    m_key = key;
   }
 
   public Info( final String key, final String value )
   {
-    this.key = key;
-    this.value = value;
+    m_key = key;
+    m_value = value;
   }
 
   @Id
   @Column(name = "key", unique = true, nullable = false, length = 50)
   public String getKey( )
   {
-    return this.key;
+    return m_key;
   }
 
   public void setKey( final String key )
   {
-    this.key = key;
+    m_key = key;
   }
 
   @Column(name = "value")
   public String getValue( )
   {
-    return this.value;
+    return m_value;
   }
 
   public void setValue( final String value )
   {
-    this.value = value;
+    m_value = value;
   }
-
 }

@@ -21,40 +21,39 @@ import javax.persistence.Table;
 @Table(name = "point", schema = "pdb")
 public class Point implements java.io.Serializable
 {
+  private BigDecimal m_id;
 
-  private BigDecimal id;
+  private CrossSectionPart m_crossSectionPart;
 
-  private CrossSectionPart crossSectionPart;
+  private Roughness m_roughness;
 
-  private Roughness roughness;
+  private Vegetation m_vegetation;
 
-  private Vegetation vegetation;
+  private String m_name;
 
-  private String name;
+  private com.vividsolutions.jts.geom.Point m_location;
 
-  private com.vividsolutions.jts.geom.Point location;
+  private long m_consecutiveNum;
 
-  private long consecutiveNum;
+  private String m_code;
 
-  private String code;
+  private String m_hyk;
 
-  private String hyk;
+  private BigDecimal m_width;
 
-  private BigDecimal width;
+  private BigDecimal m_height;
 
-  private BigDecimal height;
+  private BigDecimal m_roughnessKValue;
 
-  private BigDecimal roughnessKValue;
+  private BigDecimal m_roughnessKstValue;
 
-  private BigDecimal roughnessKstValue;
+  private BigDecimal m_vegetationDp;
 
-  private BigDecimal vegetationDp;
+  private BigDecimal m_vegetationAx;
 
-  private BigDecimal vegetationAx;
+  private BigDecimal m_vegetationAy;
 
-  private BigDecimal vegetationAy;
-
-  private String description;
+  private String m_description;
 
   public Point( )
   {
@@ -62,31 +61,31 @@ public class Point implements java.io.Serializable
 
   public Point( final BigDecimal id, final CrossSectionPart crossSectionPart, final String name, final long consecutiveNum )
   {
-    this.id = id;
-    this.crossSectionPart = crossSectionPart;
-    this.name = name;
-    this.consecutiveNum = consecutiveNum;
+    m_id = id;
+    m_crossSectionPart = crossSectionPart;
+    m_name = name;
+    m_consecutiveNum = consecutiveNum;
   }
 
   public Point( final BigDecimal id, final CrossSectionPart crossSectionPart, final Roughness roughness, final Vegetation vegetation, final String name, final com.vividsolutions.jts.geom.Point location, final long consecutiveNum, final String code, final String hyk, final BigDecimal width, final BigDecimal height, final BigDecimal roughnessKValue, final BigDecimal roughnessKstValue, final BigDecimal vegetationDp, final BigDecimal vegetationAx, final BigDecimal vegetationAy, final String description )
   {
-    this.id = id;
-    this.crossSectionPart = crossSectionPart;
-    this.roughness = roughness;
-    this.vegetation = vegetation;
-    this.name = name;
-    this.location = location;
-    this.consecutiveNum = consecutiveNum;
-    this.code = code;
-    this.hyk = hyk;
-    this.width = width;
-    this.height = height;
-    this.roughnessKValue = roughnessKValue;
-    this.roughnessKstValue = roughnessKstValue;
-    this.vegetationDp = vegetationDp;
-    this.vegetationAx = vegetationAx;
-    this.vegetationAy = vegetationAy;
-    this.description = description;
+    m_id = id;
+    m_crossSectionPart = crossSectionPart;
+    m_roughness = roughness;
+    m_vegetation = vegetation;
+    m_name = name;
+    m_location = location;
+    m_consecutiveNum = consecutiveNum;
+    m_code = code;
+    m_hyk = hyk;
+    m_width = width;
+    m_height = height;
+    m_roughnessKValue = roughnessKValue;
+    m_roughnessKstValue = roughnessKstValue;
+    m_vegetationDp = vegetationDp;
+    m_vegetationAx = vegetationAx;
+    m_vegetationAy = vegetationAy;
+    m_description = description;
   }
 
   @Id
@@ -95,191 +94,190 @@ public class Point implements java.io.Serializable
   @SequenceGenerator(name = "point_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    this.id = id;
+    m_id = id;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cross_section_part", nullable = false)
   public CrossSectionPart getCrossSectionPart( )
   {
-    return this.crossSectionPart;
+    return m_crossSectionPart;
   }
 
   public void setCrossSectionPart( final CrossSectionPart crossSectionPart )
   {
-    this.crossSectionPart = crossSectionPart;
+    m_crossSectionPart = crossSectionPart;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumns({ @JoinColumn(name = "roughness_point_kind", referencedColumnName = "point_kind"), @JoinColumn(name = "roughness", referencedColumnName = "name") })
   public Roughness getRoughness( )
   {
-    return this.roughness;
+    return m_roughness;
   }
 
   public void setRoughness( final Roughness roughness )
   {
-    this.roughness = roughness;
+    m_roughness = roughness;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumns({ @JoinColumn(name = "vegetation_point_kind", referencedColumnName = "point_kind"), @JoinColumn(name = "vegetation", referencedColumnName = "name") })
   public Vegetation getVegetation( )
   {
-    return this.vegetation;
+    return m_vegetation;
   }
 
   public void setVegetation( final Vegetation vegetation )
   {
-    this.vegetation = vegetation;
+    m_vegetation = vegetation;
   }
 
   @Column(name = "name", nullable = false, length = 50)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    this.name = name;
+    m_name = name;
   }
 
   @Column(name = "location", columnDefinition = "Geometry")
   public com.vividsolutions.jts.geom.Point getLocation( )
   {
-    return this.location;
+    return m_location;
   }
 
   public void setLocation( final com.vividsolutions.jts.geom.Point location )
   {
-    this.location = location;
+    m_location = location;
   }
 
   @Column(name = "consecutive_num", nullable = false, precision = 11, scale = 0)
   public long getConsecutiveNum( )
   {
-    return this.consecutiveNum;
+    return m_consecutiveNum;
   }
 
   public void setConsecutiveNum( final long consecutiveNum )
   {
-    this.consecutiveNum = consecutiveNum;
+    m_consecutiveNum = consecutiveNum;
   }
 
   @Column(name = "code", length = 50)
   public String getCode( )
   {
-    return this.code;
+    return m_code;
   }
 
   public void setCode( final String code )
   {
-    this.code = code;
+    m_code = code;
   }
 
   @Column(name = "hyk", length = 50)
   public String getHyk( )
   {
-    return this.hyk;
+    return m_hyk;
   }
 
   public void setHyk( final String hyk )
   {
-    this.hyk = hyk;
+    m_hyk = hyk;
   }
 
   @Column(name = "width", precision = 8, scale = 4)
   public BigDecimal getWidth( )
   {
-    return this.width;
+    return m_width;
   }
 
   public void setWidth( final BigDecimal width )
   {
-    this.width = width;
+    m_width = width;
   }
 
   @Column(name = "height", precision = 8, scale = 4)
   public BigDecimal getHeight( )
   {
-    return this.height;
+    return m_height;
   }
 
   public void setHeight( final BigDecimal height )
   {
-    this.height = height;
+    m_height = height;
   }
 
   @Column(name = "roughness_k_value", precision = 8, scale = 1)
   public BigDecimal getRoughnessKValue( )
   {
-    return this.roughnessKValue;
+    return m_roughnessKValue;
   }
 
   public void setRoughnessKValue( final BigDecimal roughnessKValue )
   {
-    this.roughnessKValue = roughnessKValue;
+    m_roughnessKValue = roughnessKValue;
   }
 
   @Column(name = "roughness_kst_value", precision = 8, scale = 1)
   public BigDecimal getRoughnessKstValue( )
   {
-    return this.roughnessKstValue;
+    return m_roughnessKstValue;
   }
 
   public void setRoughnessKstValue( final BigDecimal roughnessKstValue )
   {
-    this.roughnessKstValue = roughnessKstValue;
+    m_roughnessKstValue = roughnessKstValue;
   }
 
   @Column(name = "vegetation_dp", precision = 8, scale = 3)
   public BigDecimal getVegetationDp( )
   {
-    return this.vegetationDp;
+    return m_vegetationDp;
   }
 
   public void setVegetationDp( final BigDecimal vegetationDp )
   {
-    this.vegetationDp = vegetationDp;
+    m_vegetationDp = vegetationDp;
   }
 
   @Column(name = "vegetation_ax", precision = 8, scale = 3)
   public BigDecimal getVegetationAx( )
   {
-    return this.vegetationAx;
+    return m_vegetationAx;
   }
 
   public void setVegetationAx( final BigDecimal vegetationAx )
   {
-    this.vegetationAx = vegetationAx;
+    m_vegetationAx = vegetationAx;
   }
 
   @Column(name = "vegetation_ay", precision = 8, scale = 3)
   public BigDecimal getVegetationAy( )
   {
-    return this.vegetationAy;
+    return m_vegetationAy;
   }
 
   public void setVegetationAy( final BigDecimal vegetationAy )
   {
-    this.vegetationAy = vegetationAy;
+    m_vegetationAy = vegetationAy;
   }
 
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    this.description = description;
+    m_description = description;
   }
-
 }

@@ -69,7 +69,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class NonConnectedControl extends Composite
 {
   private final DataBindingContext m_binding;

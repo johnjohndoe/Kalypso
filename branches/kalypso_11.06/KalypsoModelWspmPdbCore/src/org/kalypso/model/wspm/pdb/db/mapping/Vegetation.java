@@ -24,23 +24,23 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 @Table(name = "vegetation", schema = "pdb")
 public class Vegetation implements java.io.Serializable, Coefficient, Comparable<Vegetation>
 {
-  private VegetationId id;
+  private VegetationId m_id;
 
-  private PointKind pointKind;
+  private PointKind m_pointKind;
 
-  private BigDecimal dp;
+  private BigDecimal m_dp;
 
-  private BigDecimal ax;
+  private BigDecimal m_ax;
 
-  private BigDecimal ay;
+  private BigDecimal m_ay;
 
-  private String label;
+  private String m_label;
 
-  private String source;
+  private String m_source;
 
-  private String description;
+  private String m_description;
 
-  private Set<Point> points = new HashSet<Point>( 0 );
+  private Set<Point> m_points = new HashSet<Point>( 0 );
 
   public Vegetation( )
   {
@@ -48,140 +48,140 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
 
   public Vegetation( final VegetationId id, final PointKind pointKind, final BigDecimal dp, final BigDecimal ax, final BigDecimal ay )
   {
-    this.id = id;
-    this.pointKind = pointKind;
-    this.dp = dp;
-    this.ax = ax;
-    this.ay = ay;
+    m_id = id;
+    m_pointKind = pointKind;
+    m_dp = dp;
+    m_ax = ax;
+    m_ay = ay;
   }
 
   public Vegetation( final VegetationId id, final PointKind pointKind, final BigDecimal dp, final BigDecimal ax, final BigDecimal ay, final String label, final String source, final String description, final Set<Point> points )
   {
-    this.id = id;
-    this.pointKind = pointKind;
-    this.dp = dp;
-    this.ax = ax;
-    this.ay = ay;
-    this.label = label;
-    this.source = source;
-    this.description = description;
-    this.points = points;
+    m_id = id;
+    m_pointKind = pointKind;
+    m_dp = dp;
+    m_ax = ax;
+    m_ay = ay;
+    m_label = label;
+    m_source = source;
+    m_description = description;
+    m_points = points;
   }
 
   @Override
   public String toString( )
   {
-    return String.format( "%s - %s", id.getName(), label );
+    return String.format( "%s - %s", m_id.getName(), m_label );
   }
 
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
-  public VegetationId getId( )
+    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+    public VegetationId getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final VegetationId id )
   {
-    this.id = id;
+    m_id = id;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "point_kind", nullable = false, insertable = false, updatable = false)
   public PointKind getPointKind( )
   {
-    return this.pointKind;
+    return m_pointKind;
   }
 
   public void setPointKind( final PointKind pointKind )
   {
-    this.pointKind = pointKind;
+    m_pointKind = pointKind;
   }
 
   @Column(name = "dp", nullable = false, precision = 8, scale = 3)
   public BigDecimal getDp( )
   {
-    return this.dp;
+    return m_dp;
   }
 
   public void setDp( final BigDecimal dp )
   {
-    this.dp = dp;
+    m_dp = dp;
   }
 
   @Column(name = "ax", nullable = false, precision = 8, scale = 3)
   public BigDecimal getAx( )
   {
-    return this.ax;
+    return m_ax;
   }
 
   public void setAx( final BigDecimal ax )
   {
-    this.ax = ax;
+    m_ax = ax;
   }
 
   @Column(name = "ay", nullable = false, precision = 8, scale = 3)
   public BigDecimal getAy( )
   {
-    return this.ay;
+    return m_ay;
   }
 
   public void setAy( final BigDecimal ay )
   {
-    this.ay = ay;
+    m_ay = ay;
   }
 
   @Column(name = "label", length = 100)
   public String getLabel( )
   {
-    return this.label;
+    return m_label;
   }
 
   public void setLabel( final String label )
   {
-    this.label = label;
+    m_label = label;
   }
 
   @Column(name = "source", length = 255)
   public String getSource( )
   {
-    return this.source;
+    return m_source;
   }
 
   public void setSource( final String source )
   {
-    this.source = source;
+    m_source = source;
   }
 
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    this.description = description;
+    m_description = description;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "vegetation")
   public Set<Point> getPoints( )
   {
-    return this.points;
+    return m_points;
   }
 
   public void setPoints( final Set<Point> points )
   {
-    this.points = points;
+    m_points = points;
   }
 
   @Override
   public int compareTo( final Vegetation o )
   {
-    final String name = id.getName();
-    final String otherName = o.id.getName();
+    final String name = m_id.getName();
+    final String otherName = o.m_id.getName();
 
     final Integer nameValue = NumberUtils.parseQuietInteger( name );
     final Integer otherNameValue = NumberUtils.parseQuietInteger( otherName );
@@ -190,5 +190,4 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
 
     return name.compareToIgnoreCase( otherName );
   }
-
 }

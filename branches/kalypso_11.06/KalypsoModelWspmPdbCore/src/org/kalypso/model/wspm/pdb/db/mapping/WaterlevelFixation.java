@@ -35,27 +35,27 @@ public class WaterlevelFixation implements java.io.Serializable
 
   public static final String PROPERTY_DESCRIPTION = "description"; //$NON-NLS-1$
 
-  private BigDecimal id;
+  private BigDecimal m_id;
 
-  private Event event;
+  private Event m_event;
 
-  private BigDecimal station;
+  private BigDecimal m_station;
 
-  private com.vividsolutions.jts.geom.Point location;
+  private com.vividsolutions.jts.geom.Point m_location;
 
-  private Date creationDate;
+  private Date m_creationDate;
 
-  private Date editingDate;
+  private Date m_editingDate;
 
-  private String editingUser;
+  private String m_editingUser;
 
-  private Date measurementDate;
+  private Date m_measurementDate;
 
-  private BigDecimal waterlevel;
+  private BigDecimal m_waterlevel;
 
-  private BigDecimal discharge;
+  private BigDecimal m_discharge;
 
-  private String description = StringUtils.EMPTY;
+  private String m_description = StringUtils.EMPTY;
 
   public WaterlevelFixation( )
   {
@@ -63,27 +63,27 @@ public class WaterlevelFixation implements java.io.Serializable
 
   public WaterlevelFixation( final BigDecimal id, final Event event, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
   {
-    this.id = id;
-    this.event = event;
-    this.station = station;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
+    m_id = id;
+    m_event = event;
+    m_station = station;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
   }
 
   public WaterlevelFixation( final BigDecimal id, final Event event, final BigDecimal station, final com.vividsolutions.jts.geom.Point location, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final BigDecimal waterlevel, final BigDecimal discharge, final String description )
   {
-    this.id = id;
-    this.event = event;
-    this.station = station;
-    this.location = location;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
-    this.measurementDate = measurementDate;
-    this.waterlevel = waterlevel;
-    this.discharge = discharge;
-    this.description = description;
+    m_id = id;
+    m_event = event;
+    m_station = station;
+    m_location = location;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
+    m_measurementDate = measurementDate;
+    m_waterlevel = waterlevel;
+    m_discharge = discharge;
+    m_description = description;
   }
 
   @Id
@@ -92,126 +92,125 @@ public class WaterlevelFixation implements java.io.Serializable
   @SequenceGenerator(name = "waterlevel_fixation_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    this.id = id;
+    m_id = id;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "event", nullable = false)
   public Event getEvent( )
   {
-    return this.event;
+    return m_event;
   }
 
   public void setEvent( final Event event )
   {
-    this.event = event;
+    m_event = event;
   }
 
   @Column(name = "station", nullable = false, precision = 8, scale = 1)
   public BigDecimal getStation( )
   {
-    return this.station;
+    return m_station;
   }
 
   public void setStation( final BigDecimal station )
   {
-    this.station = station;
+    m_station = station;
   }
 
   @Column(name = "location", columnDefinition = "Geometry")
   public com.vividsolutions.jts.geom.Point getLocation( )
   {
-    return this.location;
+    return m_location;
   }
 
   public void setLocation( final com.vividsolutions.jts.geom.Point location )
   {
-    this.location = location;
+    m_location = location;
   }
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "creation_date", nullable = false, length = 22)
   public Date getCreationDate( )
   {
-    return this.creationDate;
+    return m_creationDate;
   }
 
   public void setCreationDate( final Date creationDate )
   {
-    this.creationDate = creationDate;
+    m_creationDate = creationDate;
   }
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "editing_date", nullable = false, length = 22)
   public Date getEditingDate( )
   {
-    return this.editingDate;
+    return m_editingDate;
   }
 
   public void setEditingDate( final Date editingDate )
   {
-    this.editingDate = editingDate;
+    m_editingDate = editingDate;
   }
 
   @Column(name = "editing_user", nullable = false, length = 50)
   public String getEditingUser( )
   {
-    return this.editingUser;
+    return m_editingUser;
   }
 
   public void setEditingUser( final String editingUser )
   {
-    this.editingUser = editingUser;
+    m_editingUser = editingUser;
   }
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "measurement_date", length = 22)
   public Date getMeasurementDate( )
   {
-    return this.measurementDate;
+    return m_measurementDate;
   }
 
   public void setMeasurementDate( final Date measurementDate )
   {
-    this.measurementDate = measurementDate;
+    m_measurementDate = measurementDate;
   }
 
   @Column(name = "waterlevel", precision = 8, scale = 3)
   public BigDecimal getWaterlevel( )
   {
-    return this.waterlevel;
+    return m_waterlevel;
   }
 
   public void setWaterlevel( final BigDecimal waterlevel )
   {
-    this.waterlevel = waterlevel;
+    m_waterlevel = waterlevel;
   }
 
   @Column(name = "discharge", precision = 8, scale = 3)
   public BigDecimal getDischarge( )
   {
-    return this.discharge;
+    return m_discharge;
   }
 
   public void setDischarge( final BigDecimal discharge )
   {
-    this.discharge = discharge;
+    m_discharge = discharge;
   }
 
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    this.description = description;
+    m_description = description;
   }
-
 }
