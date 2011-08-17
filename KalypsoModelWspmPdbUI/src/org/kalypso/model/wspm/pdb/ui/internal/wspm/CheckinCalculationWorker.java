@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
+import org.kalypso.model.wspm.pdb.db.constants.EventConstants.TYPE;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
@@ -80,6 +81,7 @@ public class CheckinCalculationWorker implements ICheckInWorker
   public CheckinCalculationWorker( final CommandableWorkspace workspace, final CalculationWspmTuhhSteadyState calculation )
   {
     m_data = new CheckInEventData<CalculationWspmTuhhSteadyState>( workspace, calculation );
+    m_data.getEvent().setType( TYPE.Simulation );
     m_operation = new CheckinCalculationOperation( m_data );
   }
 
