@@ -154,10 +154,6 @@
 		</gft:gridData>
 	</gft:validatorlabel>
 
-
-
-
-
 	<gft:label property="op1d2d:direction" visible="true"  style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:Not>
@@ -226,7 +222,6 @@
 		</gft:gridData>
 	</gft:validatorlabel>
 
-
 	<gft:label property="op1d2d:inflowVelocity" visible="true"  style="SWT.NONE">
 		<gft:visibleOperation>
 			<and>
@@ -247,8 +242,21 @@
 				<ogc:Literal>true</ogc:Literal>
 			</ogc:PropertyIsLike>
 		</gft:enabledOperation>
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
-			grabExcessHorizontalSpace="false" />
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+            <gft:excludeOperation>
+              <ogc:or>
+                  <ogc:PropertyIsNull>
+                      <ogc:PropertyName>op1d2d:direction</ogc:PropertyName>
+                  </ogc:PropertyIsNull>
+                  <ogc:Not>
+                    <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                        <ogc:PropertyName>c1d2d:bcType</ogc:PropertyName>
+                        <ogc:Literal>ELEMENT1D2D</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                  </ogc:Not>
+              </ogc:or>
+            </gft:excludeOperation>
+        </gft:gridData>
 	</gft:label>
 	<gft:text editable="true" property="op1d2d:inflowVelocity" style="SWT.BORDER">
 		<gft:visibleOperation>
@@ -270,7 +278,21 @@
 				<ogc:Literal>true</ogc:Literal>
 			</ogc:PropertyIsLike>
 		</gft:enabledOperation>
-		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true">
+            <gft:excludeOperation>
+              <ogc:or>
+                  <ogc:PropertyIsNull>
+                      <ogc:PropertyName>op1d2d:direction</ogc:PropertyName>
+                  </ogc:PropertyIsNull>
+                  <ogc:Not>
+                    <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                        <ogc:PropertyName>c1d2d:bcType</ogc:PropertyName>
+                        <ogc:Literal>ELEMENT1D2D</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                  </ogc:Not>
+              </ogc:or>
+            </gft:excludeOperation>
+        </gft:gridData>
 	</gft:text>
 	<gft:validatorlabel property="op1d2d:inflowVelocity" visible="true" style="SWT.NONE">
 		<gft:visibleOperation>
@@ -292,7 +314,21 @@
 				<ogc:Literal>true</ogc:Literal>
 			</ogc:PropertyIsLike>
 		</gft:enabledOperation>
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
+            <gft:excludeOperation>
+              <ogc:or>
+                  <ogc:PropertyIsNull>
+                      <ogc:PropertyName>op1d2d:direction</ogc:PropertyName>
+                  </ogc:PropertyIsNull>
+                  <ogc:Not>
+                    <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                        <ogc:PropertyName>c1d2d:bcType</ogc:PropertyName>
+                        <ogc:Literal>ELEMENT1D2D</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                  </ogc:Not>
+              </ogc:or>
+            </gft:excludeOperation>
+        </gft:gridData>
 	</gft:validatorlabel>
 
 	<gft:label property="op1d2d:stationaryCondition" visible="true"  style="SWT.NONE">
@@ -306,12 +342,7 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:group property="op1d2d:observation"  style="SWT.NONE">
+	<gft:subcomposite property="op1d2d:observation" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
-		<gft:gridLayout numColumns="2" />
-		<gft:subcomposite property="op1d2d:observation" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
-			
-		</gft:subcomposite>
-	</gft:group>
+	</gft:subcomposite>
 </gft:featureview>
