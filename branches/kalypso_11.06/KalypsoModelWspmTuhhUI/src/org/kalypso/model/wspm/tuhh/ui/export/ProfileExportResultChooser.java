@@ -72,9 +72,16 @@ public class ProfileExportResultChooser
 
   private final IWspmResultNode m_rootNode;
 
-  public ProfileExportResultChooser( final IWspmResultNode rootNode )
+  private final boolean m_singleSelection;
+
+  /**
+   * @param singleSelection
+   *          If <code>true</code>, only one element can be selected.
+   */
+  public ProfileExportResultChooser( final IWspmResultNode rootNode, final boolean singleSelection )
   {
     m_rootNode = rootNode;
+    m_singleSelection = singleSelection;
   }
 
   public Control createControl( final Composite parent )
@@ -115,18 +122,14 @@ public class ProfileExportResultChooser
         if( element instanceof IWspmResultNode )
         {
           if( event.getChecked() )
-          {
             addResultNode( (IWspmResultNode) element );
-          }
           else
-          {
             removeResultNode( (IWspmResultNode) element );
-          }
         }
         else
-        {
           treeViewer.setChecked( element, true );
-        }
+
+        treeViewer.refresh();
 
         fireCheckStateChanged( event );
       }
@@ -142,6 +145,9 @@ public class ProfileExportResultChooser
 
   protected void addResultNode( final IWspmResultNode node )
   {
+    if( m_singleSelection )
+      m_results.clear();
+
     m_results.add( node );
   }
 

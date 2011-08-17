@@ -74,14 +74,26 @@ public class ProfileResultExportPage extends ValidatingWizardPage
 
   private boolean m_showComponentChooser = true;
 
+  /**
+   * Same as {@link #ProfileResultExportPage(String, IWspmResultNode, false)}
+   */
   public ProfileResultExportPage( final String pageName, final IWspmResultNode results )
+  {
+    this( pageName, results, false );
+  }
+
+  /**
+   * @param singleSelection
+   *          If <code>true</code>, only one element can be selected.
+   */
+  public ProfileResultExportPage( final String pageName, final IWspmResultNode results, final boolean singleSelection )
   {
     super( pageName );
 
     setTitle( STR_AVAILABLE_RESULTS );
     setDescription( Messages.getString( "ProfileResultExportPage_1" ) ); //$NON-NLS-1$
 
-    m_resultChooser = new ProfileExportResultChooser( results );
+    m_resultChooser = new ProfileExportResultChooser( results, singleSelection );
     m_resultChooser.addCheckStateListener( new ICheckStateListener()
     {
       @Override
@@ -92,9 +104,6 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     } );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
