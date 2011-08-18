@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.update;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -55,6 +57,8 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.observable.value.PropertiesObservaleValue;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
+import org.kalypso.commons.databinding.validation.StringMustEndWithValidator;
+import org.kalypso.commons.databinding.validation.StringMustStartWithValidator;
 import org.kalypso.commons.databinding.validation.StringToUrlValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
@@ -120,7 +124,8 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
     final Group group = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().applyTo( group );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( "Document Base" );
+    final String documentBaseLabel = "Document Base";
+    group.setText( documentBaseLabel );
 
     final Text field = new Text( group, SWT.BORDER | SWT.SINGLE );
     field.setMessage( "<Base URL>" );
@@ -135,7 +140,17 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
     hyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final DataBinder binder = new DataBinder( targetBase, modelBase );
-    binder.addTargetAfterGetValidator( new StringToUrlValidator() );
+    binder.addTargetAfterGetValidator( new StringToUrlValidator( documentBaseLabel ) );
+
+    final String endsWithMessage = String.format( "'%s' must end with '/'", documentBaseLabel );
+    binder.addTargetAfterGetValidator( new StringMustEndWithValidator( IStatus.ERROR, endsWithMessage, new String[] { "/" } ) ); //$NON-NLS-1$
+
+    final String[] supportedProtocols = new String[] { "http://", "file:/" };
+    final String protocolMessage = StringUtils.join( supportedProtocols, " or " );
+    final String protocolWarning = String.format( "'%s' must start with %s", documentBaseLabel, protocolMessage );
+
+    binder.addTargetAfterGetValidator( new StringMustStartWithValidator( IStatus.ERROR, protocolWarning, supportedProtocols ) );
+
     m_binding.bindValue( binder );
   }
 }
