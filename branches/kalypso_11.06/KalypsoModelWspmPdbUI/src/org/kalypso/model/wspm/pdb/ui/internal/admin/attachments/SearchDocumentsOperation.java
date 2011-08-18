@@ -112,7 +112,7 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
   private Pattern asSearchPattern( final String searchPattern )
   {
     final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$
-    return Pattern.compile( generalPattern );
+    return Pattern.compile( generalPattern, Pattern.CASE_INSENSITIVE );
   }
 
   private Pattern[] preparePatterns( final String searchPattern )
@@ -123,7 +123,7 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
     for( int i = 0; i < m_searchContexts.length; i++ )
     {
       final String current = patternReplacer.replaceTokens( searchPattern, m_searchContexts[i] );
-      stationPatterns[i] = Pattern.compile( current );
+      stationPatterns[i] = Pattern.compile( current, Pattern.CASE_INSENSITIVE );
     }
 
     return stationPatterns;
@@ -141,10 +141,15 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
       throw new CoreException( new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg ) );
     }
 
+    if( importPattern.endsWith( token ) )
+    {
+      // REMARK: in this case, we automatically extend the pattern with a '*',
+      // as we assume that we at least have an extension
+      return asRegex( importPattern.substring( 0, importPattern.length() - token.length() ) ) + token + ".*"; //$NON-NLS-1$
+    }
+
     if( importPattern.startsWith( token ) )
       return token + asRegex( importPattern.substring( token.length() ) );
-    if( importPattern.endsWith( token ) )
-      return asRegex( importPattern.substring( 0, importPattern.length() - token.length() ) ) + token;
 
     final String[] split = StringUtils.split( importPattern, token );
     return asRegex( split[0] ) + token + asRegex( split[1] );

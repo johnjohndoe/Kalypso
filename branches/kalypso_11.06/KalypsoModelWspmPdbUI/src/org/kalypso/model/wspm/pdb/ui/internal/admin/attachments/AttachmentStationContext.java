@@ -112,7 +112,7 @@ public class AttachmentStationContext
       builder.append( "\\" ).append( m_thousandSeparator );
     }
 
-    builder.append( DIGITS );
+    builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
 
     if( m_decimalSeparator == null )
       builder.append( "+" ); //$NON-NLS-1$
