@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -73,11 +74,12 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportData.GUESS_STATION_STRATEGY;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationContext;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-
 
 /**
  * @author Gernot Belger
@@ -88,19 +90,39 @@ public class Sobek2Wspm
 
   private final IStatusCollector m_stati = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
-  private final WspmWaterBody m_water;
+  private final SobekImportData m_data;
 
+  private Pattern[] m_stationPatterns;
 
-  public Sobek2Wspm( final WspmWaterBody water )
+  public Sobek2Wspm( final SobekImportData data )
   {
-    m_water = water;
+    m_data = data;
   }
 
   public void convert( final SobekModel model )
   {
+    prepareSearchPatterns();
+
     final SobekProfile[] profiles = model.getProfiles();
     for( final SobekProfile sobekProfile : profiles )
       convert( sobekProfile );
+  }
+
+  private void prepareSearchPatterns( )
+  {
+    try
+    {
+      if( m_data.getStationPatternEnabled() )
+      {
+        final String searchRegex = GuessStationPatternReplacer.getSearchRegex( m_data.getStationPattern() );
+        m_stationPatterns = GuessStationPatternReplacer.preparePatterns( GuessStationContext.DEFAULT_SEARCH_CONTEXTS, searchRegex );
+      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      m_stati.add( e.getStatus() );
+    }
   }
 
   public void convert( final SobekProfile sobekProfile )
@@ -120,20 +142,24 @@ public class Sobek2Wspm
       return;
     }
 
-    final IProfileFeature newProfile = m_water.createNewProfile();
+    final WspmWaterBody water = m_data.getWater();
+    final String srs = m_data.getSrs();
+
+    final IProfileFeature newProfile = water.createNewProfile();
     newProfile.setName( profileDef.getId() );
     newProfile.setDescription( profileDef.getNm() );
     newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    // FIXME: ask from user
-    final String srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     newProfile.setSrsName( srs );
 
-    final ISobekProfileDefData data = profileDef.getData();
-    final IProfil profil = newProfile.getProfil();
+    final ISobekProfileDefData profileData = profileDef.getData();
 
     try
     {
-      convertData( profil, data );
+      final BigDecimal station = guessStation( profileDef );
+      newProfile.setBigStation( station );
+
+      final IProfil profil = newProfile.getProfil();
+      convertData( profil, profileData );
       convertFriction( profil, frictionDat );
       convertNetworkPoint( profil, networkPoint );
 
@@ -142,10 +168,42 @@ public class Sobek2Wspm
     }
     catch( final CoreException e )
     {
-      m_water.getProfiles().remove( newProfile );
+      water.getProfiles().remove( newProfile );
       m_stati.add( e.getStatus() );
       return;
     }
+  }
+
+  private BigDecimal guessStation( final SobekProfileDef profileDef )
+  {
+    final String id = profileDef.getId();
+    final String nm = profileDef.getNm();
+
+    final GUESS_STATION_STRATEGY strategy = m_data.getStationStrategy();
+    switch( strategy )
+    {
+      case doNotGuess:
+        return null;
+
+      case sectionId:
+        return guessStation( id );
+
+      case sectionNm:
+        return guessStation( nm );
+    }
+
+    throw new IllegalArgumentException();
+  }
+
+  private BigDecimal guessStation( final String searchString )
+  {
+    if( m_stationPatterns == null )
+      return null;
+
+    final BigDecimal station = GuessStationPatternReplacer.findStation( searchString, GuessStationContext.DEFAULT_SEARCH_CONTEXTS, m_stationPatterns );
+    if( station == null )
+      m_stati.add( IStatus.WARNING, "Failed to find station in '%s'", null, searchString );
+    return station;
   }
 
   private void convertData( final IProfil profil, final ISobekProfileDefData data ) throws CoreException
@@ -168,7 +226,7 @@ public class Sobek2Wspm
   {
     final TupleResult result = profil.getResult();
 
-    final int yIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE ); 
+    final int yIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
     final int zIndex = ProfilUtil.getOrCreateComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final SobekYZPoint[] points = data.getPoints();
@@ -223,7 +281,6 @@ public class Sobek2Wspm
 
       final int startIndex = profil.indexOfPoint( startRecord );
       final int endIndex = profil.indexOfPoint( endRecord );
-
 
       // We also set value of endIndex (against definition of friction, which is exclusive), in order to avoid holes.
       // Probably, the next section will overwrite the end with the next start.

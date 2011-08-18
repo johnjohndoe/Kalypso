@@ -82,12 +82,11 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
       final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
       final SobekModel model = modelParser.read( new SubProgressMonitor( monitor, 30 ) );
 
-      final CommandableWorkspace workspace = m_data.getWorkspace();
-      final WspmWaterBody water = m_data.getWater();
-
-      final Sobek2Wspm sobek2Wspm = new Sobek2Wspm( water );
+      final Sobek2Wspm sobek2Wspm = new Sobek2Wspm( m_data );
       sobek2Wspm.convert( model );
 
+      final CommandableWorkspace workspace = m_data.getWorkspace();
+      final WspmWaterBody water = m_data.getWater();
       final Feature[] newFeatures = sobek2Wspm.getNewFeatures();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, water, newFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 

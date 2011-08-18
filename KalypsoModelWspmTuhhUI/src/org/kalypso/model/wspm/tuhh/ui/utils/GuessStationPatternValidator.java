@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.tuhh.ui.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
@@ -49,15 +49,15 @@ import org.kalypso.commons.databinding.validation.TypedValidator;
 /**
  * @author Gernot Belger
  */
-public class AttachmentPatternValidator extends TypedValidator<String>
+public class GuessStationPatternValidator extends TypedValidator<String>
 {
   private final String m_token;
 
-  public AttachmentPatternValidator( )
+  public GuessStationPatternValidator( )
   {
     super( String.class, IStatus.ERROR, StringUtils.EMPTY );
 
-    m_token = String.format( "<%s>", AttachmentStationPattern.TOKEN );
+    m_token = String.format( "<%s>", GuessStationPattern.TOKEN );
   }
 
   @Override
@@ -66,7 +66,7 @@ public class AttachmentPatternValidator extends TypedValidator<String>
     final int countMatches = StringUtils.countMatches( pattern, m_token );
     if( countMatches != 1 )
     {
-      final String containsMessage = String.format( "'Pattern' must contains the %s token exactly once.", m_token );
+      final String containsMessage = String.format( "'Pattern' must contain the %s token exactly once.", m_token );
       fail( containsMessage );
     }
 

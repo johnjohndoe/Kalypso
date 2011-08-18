@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.tuhh.ui.utils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -49,8 +49,16 @@ import java.text.ParseException;
  * @author Gernot Belger
  *
  */
-public class AttachmentStationContext
+public class GuessStationContext
 {
+  public static final GuessStationContext[] DEFAULT_SEARCH_CONTEXTS = new GuessStationContext[] {
+    //
+    new GuessStationContext( null, '+', 3 ), //
+    new GuessStationContext( null, '-', 3 ), //
+    new GuessStationContext( null, '.', 0 ), //
+    new GuessStationContext( null, ',', 0 ) //
+  };
+
   // Max. UTF, so this separator will not be used
   private static final char NO_SEPARATOR = '\uffff'; //$NON-NLS-1$
 
@@ -66,7 +74,7 @@ public class AttachmentStationContext
 
   private final int m_factor;
 
-  public AttachmentStationContext( final Character thousandSeparator, final Character decimalSeparator, final int factor )
+  public GuessStationContext( final Character thousandSeparator, final Character decimalSeparator, final int factor )
   {
     m_thousandSeparator = thousandSeparator;
     m_decimalSeparator = decimalSeparator;
