@@ -115,7 +115,9 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
     final DataBinder binder = new DataBinder( targetSRS, modelSRS );
     binder.setTargetToModelConverter( new SridToSrsConverter() );
     binder.setTargetToModelConverter( new SrsToSridConverter() );
-    binder.addModelBeforeSetValidator( new StringBlankValidator( ERROR, "A valid coordinate System must be selected" ) );
+    final StringBlankValidator blankValidator = new StringBlankValidator( ERROR, "A valid coordinate System must be selected" );
+    // binder.addTargetAfterGetValidator( blankValidator );
+    binder.addModelBeforeSetValidator( blankValidator );
     m_binding.bindValue( binder );
   }
 

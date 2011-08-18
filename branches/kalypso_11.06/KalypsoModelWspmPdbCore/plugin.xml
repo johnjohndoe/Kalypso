@@ -36,6 +36,9 @@
          <page
                class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo">
          </page>
+         <page
+               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent">
+         </page>
       </script>
       <script
             comment="Postgis - Create DB"
@@ -44,6 +47,9 @@
             type="postgis">
          <page
                class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageBaseInfo">
+         </page>
+         <page
+               class="org.kalypso.model.wspm.pdb.internal.update.UpdatePageExtent">
          </page>
       </script>
    </extension>
