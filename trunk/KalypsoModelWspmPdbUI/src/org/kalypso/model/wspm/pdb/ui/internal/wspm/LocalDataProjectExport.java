@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.kalypso.core.projecthandle.local.exportwizard.WizardProjectExport;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.module.project.local.wizard.export.WizardProjectExport;
 
 /**
  * @author Gernot Belger

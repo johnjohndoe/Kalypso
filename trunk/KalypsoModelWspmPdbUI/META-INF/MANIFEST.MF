@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.ui.addlayer,
  org.kalypso.afgui,
  org.kalypso.model.wspm.tuhh.ui,
- org.kalypso.model.product
+ org.kalypso.model.product,
+ org.kalypso.module;bundle-version="11.6.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
