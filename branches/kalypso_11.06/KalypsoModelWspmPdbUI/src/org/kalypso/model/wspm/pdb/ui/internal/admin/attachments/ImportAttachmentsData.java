@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPattern;
 
 /**
  * @author Gernot Belger
@@ -90,7 +91,7 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   private final Map<String, Document> m_documentsByName = new HashMap<String, Document>();
 
-  private String m_importPattern = String.format( "*<%s>*", AttachmentStationPattern.TOKEN ); //$NON-NLS-1$
+  private String m_importPattern = String.format( "*<%s>*", GuessStationPattern.TOKEN ); //$NON-NLS-1$
 
   private File m_importDir;
 

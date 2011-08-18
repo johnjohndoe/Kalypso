@@ -45,26 +45,21 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationContext;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
 
 /**
  * @author Gernot Belger
  */
 public class SearchDocumentsOperation implements ICoreRunnableWithProgress
 {
-  final AttachmentStationContext[] m_searchContexts = new AttachmentStationContext[] {
-      //
-      new AttachmentStationContext( null, '+', 3 ), //
-      new AttachmentStationContext( null, '-', 3 ), //
-      new AttachmentStationContext( null, '.', 0 ), //
-      new AttachmentStationContext( null, ',', 0 ) //
-  };
+  private final GuessStationContext[] m_searchContexts = GuessStationContext.DEFAULT_SEARCH_CONTEXTS;
 
   private final ImportAttachmentsData m_data;
 
@@ -95,95 +90,14 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
-    final String searchRegex = getSearchRegex();
-    final Pattern[] stationPatterns = preparePatterns( searchRegex );
-    final Pattern searchPattern = asSearchPattern( searchRegex );
+    final String searchRegex = GuessStationPatternReplacer.getSearchRegex( m_data.getImportPattern() );
+    final Pattern[] stationPatterns = GuessStationPatternReplacer.preparePatterns( m_searchContexts, searchRegex );
+    final Pattern searchPattern = GuessStationPatternReplacer.asSearchPattern( searchRegex );
 
     for( final File file : allFiles )
       readFile( file, searchPattern, stationPatterns );
 
     return Status.OK_STATUS;
-  }
-
-  /*
-   * Replace the <station> token with a general search pattern, so we only consider any file that matches the basic
-   * pattern.
-   */
-  private Pattern asSearchPattern( final String searchPattern )
-  {
-    final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$
-    return Pattern.compile( generalPattern, Pattern.CASE_INSENSITIVE );
-  }
-
-  private Pattern[] preparePatterns( final String searchPattern )
-  {
-    final Pattern[] stationPatterns = new Pattern[m_searchContexts.length];
-
-    final AttachmentPatternReplacer patternReplacer = new AttachmentPatternReplacer();
-    for( int i = 0; i < m_searchContexts.length; i++ )
-    {
-      final String current = patternReplacer.replaceTokens( searchPattern, m_searchContexts[i] );
-      stationPatterns[i] = Pattern.compile( current, Pattern.CASE_INSENSITIVE );
-    }
-
-    return stationPatterns;
-  }
-
-  private String getSearchRegex( ) throws CoreException
-  {
-    final String importPattern = m_data.getImportPattern();
-    final String token = String.format( "<%s>", AttachmentStationPattern.TOKEN );
-
-    final int countMatches = StringUtils.countMatches( importPattern, token );
-    if( countMatches != 1 )
-    {
-      final String msg = String.format( "Invalid pattern: %s", importPattern );
-      throw new CoreException( new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg ) );
-    }
-
-    if( importPattern.endsWith( token ) )
-    {
-      // REMARK: in this case, we automatically extend the pattern with a '*',
-      // as we assume that we at least have an extension
-      return asRegex( importPattern.substring( 0, importPattern.length() - token.length() ) ) + token + ".*"; //$NON-NLS-1$
-    }
-
-    if( importPattern.startsWith( token ) )
-      return token + asRegex( importPattern.substring( token.length() ) );
-
-    final String[] split = StringUtils.split( importPattern, token );
-    return asRegex( split[0] ) + token + asRegex( split[1] );
-  }
-
-  private String asRegex( final String pattern )
-  {
-    final StringBuilder builder = new StringBuilder();
-
-    for( int i = 0; i < pattern.length(); i++ )
-    {
-      final int index = pattern.indexOf( '*', i );
-      if( index == -1 )
-      {
-        appendEscaped( builder, pattern.substring( i ) );
-        i = pattern.length();
-      }
-      else
-      {
-        appendEscaped( builder, pattern.substring( i, index ) );
-        builder.append( ".*?" );
-        i = index + 1;
-      }
-    }
-
-    return builder.toString();
-  }
-
-  private void appendEscaped( final StringBuilder builder, final String text )
-  {
-    if( text.isEmpty() )
-      return;
-
-    builder.append( "\\Q" ).append( text ).append( "\\E" );
   }
 
   private void readFile( final File file, final Pattern searchPattern, final Pattern[] stationPatterns )
@@ -194,32 +108,8 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
       return;
 
     /* Read station */
-    final BigDecimal station = findStation( file, stationPatterns );
+    final BigDecimal station = GuessStationPatternReplacer.findStation( file.getName(), m_searchContexts, stationPatterns );
 
     m_documentData.addDocument( station, file );
-  }
-
-  private BigDecimal findStation( final File file, final Pattern[] searchPatterns )
-  {
-    final String filename = file.getName();
-
-    for( int i = 0; i < searchPatterns.length; i++ )
-    {
-      final Matcher matcher = searchPatterns[i].matcher( filename );
-      if( matcher.matches() )
-      {
-        final String stationString = matcher.group( 1 );
-
-        final BigDecimal station = m_searchContexts[i].parseStation( stationString );
-        if( station == null )
-          return null;
-
-        // Set scale to 1, as it is in the database, else we get problems to compare
-        // with existing cross sections
-        return station.setScale( 1, BigDecimal.ROUND_HALF_UP );
-      }
-    }
-
-    return null;
   }
 }

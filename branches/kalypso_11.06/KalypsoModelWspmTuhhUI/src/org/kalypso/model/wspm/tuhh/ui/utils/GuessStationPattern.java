@@ -38,17 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.tuhh.ui.utils;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import org.kalypso.commons.patternreplace.AbstractPatternInput;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentPatternReplacer extends PatternInputReplacer<AttachmentStationContext>
+public class GuessStationPattern extends AbstractPatternInput<GuessStationContext>
 {
-  public AttachmentPatternReplacer( )
+  public static final String TOKEN = "station"; //$NON-NLS-1$
+
+  public GuessStationPattern( )
   {
-    addReplacer( new AttachmentStationPattern() );
+    super( TOKEN, "Station" );
+  }
+
+  @Override
+  public String getReplacement( final GuessStationContext context, final String param )
+  {
+    return context.getStationPattern();
   }
 }
