@@ -52,7 +52,7 @@ import org.apache.commons.io.IOUtils;
  * 
  * @author Belger
  */
-public class CalculationContentBean
+public class CalculationContentBeanPasche
 {
   public static enum KIND
   {
@@ -149,7 +149,7 @@ public class CalculationContentBean
    * @param max maximal runoff [dl/s]
    * @param step runoff step [dl/s]
    */
-  public CalculationContentBean( final KIND calcKind, final FLIESSGESETZ fliessgesetz, final OUTPUT output, final boolean ausgabeProfilnummer, final boolean isSimpleBerechnungWSPInt, final boolean reibungsverlustNachTrapezformal, final VERZOEGERUNSVERLUST verzoegerungsVerlust, final ART_ANFANGS_WSP artAnfangswasserspiegel, final boolean berechneBruecken, final boolean berechneWehre, final boolean ausgabewerteInLiter, final boolean erstelleWQDateien, final boolean ergebnislistenErstellen, final double gefaelle, final double min, final double step, final double max, final int abfluss, final double anfang, final double ende, final String strInfo, final double hoehe, final boolean nhmo, final boolean nwsfq, final boolean nwsfl, final String strQ, final boolean nusg, final boolean kalMin )
+  public CalculationContentBeanPasche( final KIND calcKind, final FLIESSGESETZ fliessgesetz, final OUTPUT output, final boolean ausgabeProfilnummer, final boolean isSimpleBerechnungWSPInt, final boolean reibungsverlustNachTrapezformal, final VERZOEGERUNSVERLUST verzoegerungsVerlust, final ART_ANFANGS_WSP artAnfangswasserspiegel, final boolean berechneBruecken, final boolean berechneWehre, final boolean ausgabewerteInLiter, final boolean erstelleWQDateien, final boolean ergebnislistenErstellen, final double gefaelle, final double min, final double step, final double max, final int abfluss, final double anfang, final double ende, final String strInfo, final double hoehe, final boolean nhmo, final boolean nwsfq, final boolean nwsfl, final String strQ, final boolean nusg, final boolean kalMin )
   {
     m_calcKind = calcKind;
     m_fliessgesetz = fliessgesetz;
@@ -321,7 +321,7 @@ public class CalculationContentBean
     return m_verzoegerungsVerlust;
   }
 
-  public static CalculationContentBean read( final File file ) throws IOException
+  public static CalculationContentBeanPasche read( final File file ) throws IOException
   {
     LineNumberReader lnr = null;
 
@@ -472,7 +472,7 @@ public class CalculationContentBean
 
       final boolean nKalMin = readBoolean( lnr );
 
-      return new CalculationContentBean( calcKind, fliessgesetz, output, ausgabeProfilnummer, isSimpleBerechnungWSPInt, reibungsverlustNachTrapezformal, verzoegerungsVerlust, artAnfangswasserspiegel, berechneBruecken, berechneWehre, ausgabewerteInLiter, erstelleWQDateien, ergebnislistenErstellen, dGefaelle, dQMin, dQStep, dQMax, nAbfluss, dAnfang, dEnde, strInfo, dHoehe, nHMO, nWSFQ, nWSFL, strQ, nUSG, nKalMin );
+      return new CalculationContentBeanPasche( calcKind, fliessgesetz, output, ausgabeProfilnummer, isSimpleBerechnungWSPInt, reibungsverlustNachTrapezformal, verzoegerungsVerlust, artAnfangswasserspiegel, berechneBruecken, berechneWehre, ausgabewerteInLiter, erstelleWQDateien, ergebnislistenErstellen, dGefaelle, dQMin, dQStep, dQMax, nAbfluss, dAnfang, dEnde, strInfo, dHoehe, nHMO, nWSFQ, nWSFL, strQ, nUSG, nKalMin );
     }
     finally
     {
@@ -480,25 +480,25 @@ public class CalculationContentBean
     }
   }
 
-  private static double readDouble( final LineNumberReader lnr ) throws IOException
+  static double readDouble( final LineNumberReader lnr ) throws IOException
   {
     final String line = expectNextLine( lnr );
     return line.length() == 0 ? 0.0 : Double.parseDouble( line );
   }
 
-  private static boolean readBoolean( final LineNumberReader lnr ) throws IOException
+  static boolean readBoolean( final LineNumberReader lnr ) throws IOException
   {
     return readInt( lnr ) == 1 ? true : false;
   }
 
-  private static int readInt( final LineNumberReader lnr ) throws IOException
+  static int readInt( final LineNumberReader lnr ) throws IOException
   {
     final String line = expectNextLine( lnr );
     return line.length() == 0 ? 0 : Integer.parseInt( line );
   }
 
   /** Returns the empty the, if no more lines are available. */
-  private static String expectNextLine( final LineNumberReader lnr ) throws IOException
+  static String expectNextLine( final LineNumberReader lnr ) throws IOException
   {
     final String line = lnr.ready() ? lnr.readLine() : null;
     if( line == null )
