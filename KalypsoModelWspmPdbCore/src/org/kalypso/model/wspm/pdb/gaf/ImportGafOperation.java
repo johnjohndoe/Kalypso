@@ -83,6 +83,8 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Import GAF", 100 );
 
+    checkPreconditions();
+
     final IStatusCollector stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
     /* Upload gaf data into db */
@@ -95,6 +97,26 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     stati.add( logStatus );
 
     return stati.asMultiStatusOrOK( "Problems during GAF Import", "GAF Import successfully terminated" );
+  }
+
+  // REMARK: extra check necessary here, because (due to validation-binding-problem) in some cases
+  // we cannot prohibit page completion although the state name already exists.
+  // Just produce a nice message and do not leave the wizard. So the user can change the name without pain.
+  private void checkPreconditions( ) throws CoreException
+  {
+    final State newState = m_data.getState();
+    final String newStateName = newState.getName();
+
+    final State[] existingStates = m_data.getExistingStates();
+    for( final State state : existingStates )
+    {
+      if( state.getName().equals( newStateName ) )
+      {
+        final String message = String.format( "A state with the same name '%s' already exists.\nPlease change the state's name.", newStateName );
+        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message );
+        throw new CoreException( status );
+      }
+    }
   }
 
   private IStatus doGaf2DB( final IProgressMonitor monitor ) throws CoreException
