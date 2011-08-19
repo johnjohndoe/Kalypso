@@ -46,8 +46,10 @@ import java.net.URL;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.results.processing.IResultLSFile;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
@@ -63,7 +65,7 @@ public class WspmTuhhPostProcessor
 
   private static final String TITLE_PATTERN_WATERLEVEL = "<calcname>"; //$NON-NLS-1$
 
-  private static final String LSFILE_PATTERN_WATERLEVEL = "Längsschnitt.gml";//$NON-NLS-1$ 
+  private static final String LSFILE_PATTERN_WATERLEVEL = IWspmTuhhConstants.FILE_LAENGSSCHNITT_GML;
 
   private static final String LSFILE_PATTERN_REIB_CONST = "lengthSection_<runoff>.gml";//$NON-NLS-1$ 
 

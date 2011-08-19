@@ -51,6 +51,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.math.NumberRange;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.wspm.tuhh.core.results.processing.AbstractResultLSFile;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;

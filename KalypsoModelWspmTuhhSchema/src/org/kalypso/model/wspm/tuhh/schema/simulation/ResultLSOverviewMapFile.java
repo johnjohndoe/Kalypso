@@ -46,6 +46,7 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.results.processing.AbstractResultLSFile;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
