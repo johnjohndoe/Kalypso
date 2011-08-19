@@ -57,4 +57,9 @@ public class WspWinHelper
   {
     return new File( wspwinDirectory, WspWinFiles.PROF );
   }
+
+  public static File getDathDir( final File wspwinDirectory )
+  {
+    return new File( wspwinDirectory, WspWinFiles.DATH );
+  }
 }
