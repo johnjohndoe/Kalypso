@@ -63,7 +63,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -79,8 +78,6 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.START_KONDITION_KIND;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -89,9 +86,6 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.wspwin.core.CalculationBean;
-import org.kalypso.wspwin.core.CalculationContentBean;
-import org.kalypso.wspwin.core.CalculationContentBean.ART_ANFANGS_WSP;
-import org.kalypso.wspwin.core.CalculationContentBean.FLIESSGESETZ;
 import org.kalypso.wspwin.core.LocalEnergyLossBean;
 import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
@@ -183,12 +177,8 @@ public final class WspWinImporter
       // /////////////////// //
       // Load WspWin Project //
       // /////////////////// //
-      final WspCfg wspCfgBean = new WspCfg(  );
+      final WspCfg wspCfgBean = new WspCfg();
       wspCfgBean.read( wspwinDirectory );
-
-      final boolean isNotTuhhProject = wspCfgBean.getType() != TYPE.PASCHE;
-      if( isNotTuhhProject )
-        PluginUtilities.logToPlugin( KalypsoModelWspmTuhhCorePlugin.getDefault(), IStatus.WARNING, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.14" ), null ); //$NON-NLS-1$
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
       final TuhhWspmProject tuhhProject = (TuhhWspmProject) modelRootFeature;
@@ -211,7 +201,7 @@ public final class WspWinImporter
       {
         try
         {
-          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustand, importedProfiles, isDirectionUpstreams, isNotTuhhProject ) );
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustand, importedProfiles, isDirectionUpstreams ) );
         }
         catch( final Exception e )
         {
@@ -336,7 +326,7 @@ public final class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final ZustandBean zustandBean = zustand.getBean();
 
@@ -397,7 +387,8 @@ public final class WspWinImporter
     // ////////////////////////////////////////////////////// //
 
     // map is used to remember position of runoff: used later by calculation to find reference
-    final Map<Integer, String> readRunOffEvents = new HashMap<Integer, String>();
+    final Map<Integer, String> runOffEventsByCount = new HashMap<Integer, String>();
+    final Map<String, String> runOffEventsByName = new HashMap<String, String>();
     try
     {
       final RunOffEventBean[] runOffEventBeans = zustand.getRunOffEvents();
@@ -406,10 +397,12 @@ public final class WspWinImporter
       {
         final IFeatureBindingCollection<IRunOffEvent> runoffEvents = waterBody.getRunoffEvents();
         final IRunOffEvent newEvent = runoffEvents.addNew( IRunOffEvent.FEATURE_RUNOFF_EVENT );
-        writeRunOffBeanIntoFeature( bean, baseName + bean.getName(), newEvent );
+        final String runoffEventName = baseName + bean.getName();
+        writeRunOffBeanIntoFeature( bean, runoffEventName, newEvent );
 
         // remember for reference from calculation
-        readRunOffEvents.put( count++, newEvent.getId() );
+        runOffEventsByCount.put( count++, newEvent.getId() );
+        runOffEventsByName.put( runoffEventName, newEvent.getId() );
       }
     }
     catch( final Exception e )
@@ -468,10 +461,9 @@ public final class WspWinImporter
     // ///////////////////////////// //
     try
     {
-      if( !isNotTuhhProject )
-      {
-        importCalculations( tuhhProject, zustand, log, reach, profDir, baseName, readRunOffEvents );
-      }
+      final TYPE type = wspCfg.getType();
+
+      importCalculations( zustand, log, reach, profDir, baseName, runOffEventsByCount, runOffEventsByName, type );
     }
     catch( final Exception e )
     {
@@ -481,124 +473,36 @@ public final class WspWinImporter
     return log.asMultiStatus( message );
   }
 
-  private static void importCalculations( final TuhhWspmProject tuhhProject, final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEvents )
+  private static void importCalculations( final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEventsByCount, final Map<String, String> runOffEventsByName, final TYPE projectType )
   {
+    final ICalculationWspmConverter converter = createCalculationConverter( projectType, reach, baseName, readRunOffEventsByCount, runOffEventsByName );
+
     final CalculationBean[] calcBeans = zustand.getCalculations();
     for( final CalculationBean bean : calcBeans )
     {
       try
       {
-        final CalculationContentBean contentBean = bean.readCalculationContent( profDir );
-
-        // create calculation
-        final TuhhCalculation calc = tuhhProject.createCalculation();
-
-        calc.setName( baseName + bean.getName() );
-        calc.setDescription( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.26" ) ); //$NON-NLS-1$
-        calc.setCalcCreation( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.27" ), new Date() ); //$NON-NLS-1$
-        calc.setReachRef( reach );
-
-        final FLIESSGESETZ fliessgesetz = contentBean.getFliessgesetz();
-        switch( fliessgesetz )
-        {
-          case MANNING_STRICKLER:
-            calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.MANNING_STRICKLER );
-            break;
-          case DARCY_WEISBACH_OHNE_FORMEINFLUSS:
-            calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS );
-            break;
-          case DARCY_WEISBACH_MIT_FORMEINFLUSS:
-            calc.setFliessgesetz( TuhhCalculation.FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS );
-            break;
-        }
-
-        calc.setSubReachDef( contentBean.getAnfang(), contentBean.getEnde() );
-
-        final ART_ANFANGS_WSP artAnfangswasserspiegel = contentBean.getArtAnfangswasserspiegel();
-        final START_KONDITION_KIND type;
-        switch( artAnfangswasserspiegel )
-        {
-          case DIREKTEINGABE:
-            type = TuhhCalculation.START_KONDITION_KIND.WATERLEVEL;
-            break;
-
-          case STATIONAER_GLEICHFOERMIGES_GEFAELLE:
-            type = TuhhCalculation.START_KONDITION_KIND.UNIFORM_BOTTOM_SLOPE;
-            break;
-
-          case GRENZTIEFE:
-          default:
-            type = TuhhCalculation.START_KONDITION_KIND.CRITICAL_WATER_DEPTH;
-            break;
-        }
-        final double startSlope = contentBean.getGefaelle();
-        final double startWsp = contentBean.getHoehe();
-        calc.setStartCondition( type, startWsp, startSlope );
-
-        final TuhhCalculation.WSP_ITERATION_TYPE iterationType;
-        if( contentBean.isSimpleBerechnungWSPInt() )
-        {
-          iterationType = TuhhCalculation.WSP_ITERATION_TYPE.SIMPLE;
-        }
-        else
-        {
-          iterationType = TuhhCalculation.WSP_ITERATION_TYPE.EXACT;
-        }
-
-        final TuhhCalculation.VERZOEGERUNSVERLUST_TYPE verzType;
-        switch( contentBean.getVerzoegerungsVerlust() )
-        {
-          default:
-          case BJOERNSEN:
-            verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.BJOERNSEN;
-            break;
-          case DFG:
-            verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DFG;
-            break;
-          case DVWK:
-            verzType = TuhhCalculation.VERZOEGERUNSVERLUST_TYPE.DVWK;
-            break;
-        }
-
-        final TuhhCalculation.REIBUNGSVERLUST_TYPE reibType;
-        if( contentBean.isReibungsverlustNachTrapezformel() )
-        {
-          reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.TRAPEZ_FORMULA;
-        }
-        else
-        {
-          reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.GEOMETRIC_FORMULA;
-        }
-
-        final boolean useExtremeRougness = false; // as WSPWIN did not know this option, set to false
-
-        calc.setWaterlevelParameters( iterationType, verzType, reibType, contentBean.isBerechneBruecken(), contentBean.isBerechneWehre(), useExtremeRougness );
-
-        switch( contentBean.getCalcKind() )
-        {
-          case WATERLEVEL:
-            calc.setCalcMode( TuhhCalculation.MODE.WATERLEVEL );
-            break;
-
-          case BF_UNIFORM:
-            calc.setCalcMode( TuhhCalculation.MODE.BF_UNIFORM );
-            break;
-
-          case BF_NON_UNIFORM:
-            calc.setCalcMode( TuhhCalculation.MODE.BF_NON_UNIFORM );
-            break;
-        }
-
-        final String runOffRef = readRunOffEvents.get( contentBean.getAbfluss() );
-        calc.setRunOffRef( runOffRef );
-
-        // set q-Range. Remember: Q-Range in CalculationcontentBean is in dl/s
-        calc.setQRange( contentBean.getMin() / 100.0, contentBean.getMax() / 100.0, contentBean.getStep() / 100.0 );
+        converter.convert( bean, profDir );
       }
       catch( final Exception e )
       {
         log.add( IStatus.ERROR, e.getLocalizedMessage(), e );
       }
+    }
+  }
+
+  protected static ICalculationWspmConverter createCalculationConverter( final TYPE projectType, final TuhhReach reach, final String baseName, final Map<Integer, String> readRunOffEventsByCount, final Map<String, String> runOffEventsByName )
+  {
+    switch( projectType )
+    {
+      case PASCHE:
+        return new CalculationPasche2WspmConverter( reach, baseName, readRunOffEventsByCount );
+
+      case KNAUF:
+        return new CalculationKnauf2WspmConverter( reach, baseName, runOffEventsByName );
+
+      default:
+        throw new IllegalArgumentException();
     }
   }
 

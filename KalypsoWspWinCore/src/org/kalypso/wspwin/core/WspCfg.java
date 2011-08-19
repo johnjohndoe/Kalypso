@@ -170,8 +170,7 @@ public class WspCfg
     {
       reader = new LineNumberReader( new FileReader( wspCfgFile ) );
 
-      final WspCfg bean = new WspCfg();
-      bean.setProjectDir( wspwinDir );
+      setProjectDir( wspwinDir );
 
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
@@ -180,7 +179,7 @@ public class WspCfg
       // ignore the values, we read the count from the linecount
       // just parse the type
       final char type = firstLine.charAt( firstLine.length() - 1 );
-      bean.setType( type );
+      setType( type );
 
       final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
       while( reader.ready() )
