@@ -43,7 +43,7 @@ package org.kalypso.model.rcm.internal.binding;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;

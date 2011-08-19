@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content.info;
 
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**

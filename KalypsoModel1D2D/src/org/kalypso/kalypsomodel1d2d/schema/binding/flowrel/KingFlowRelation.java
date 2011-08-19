@@ -45,7 +45,6 @@ import java.math.BigDecimal;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger

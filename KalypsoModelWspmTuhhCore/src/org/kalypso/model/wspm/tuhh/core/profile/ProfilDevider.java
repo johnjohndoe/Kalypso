@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
@@ -98,7 +97,7 @@ public class ProfilDevider extends PointMarker
         return;
       }
 
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
     }
 
     setValue( value );

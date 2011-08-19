@@ -69,7 +69,6 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Starting point for running 1d2d simulations.

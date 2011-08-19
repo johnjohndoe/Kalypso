@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import java.text.DateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.IElementWithDates;

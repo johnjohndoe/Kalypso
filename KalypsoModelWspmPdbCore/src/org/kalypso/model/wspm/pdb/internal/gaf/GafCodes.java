@@ -46,7 +46,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
 

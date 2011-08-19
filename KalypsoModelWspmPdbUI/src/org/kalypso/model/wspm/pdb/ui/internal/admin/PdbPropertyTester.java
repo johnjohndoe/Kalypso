@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;

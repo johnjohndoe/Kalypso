@@ -48,7 +48,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang.math.NumberRange;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;

@@ -117,7 +117,7 @@ public class BuildingEi extends AbstractProfileObject implements IProfileBuildin
 // IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT,
 // "Rauheit", "Rauheit" ) );
 //
-// throw new NotImplementedException();
+// throw new UnsupportedOperationException();
 //
 // }
   /**

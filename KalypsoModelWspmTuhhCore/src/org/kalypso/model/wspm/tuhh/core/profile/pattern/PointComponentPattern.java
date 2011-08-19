@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IRecord;

@@ -45,7 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.core.gml.WspmFixation;

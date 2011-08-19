@@ -3,7 +3,6 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.xmlbeans.impl.common.Levenshtein;
 import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -176,7 +175,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   {
     // final Feature feature = getStatisticObsFeature();
     // FIXME
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**

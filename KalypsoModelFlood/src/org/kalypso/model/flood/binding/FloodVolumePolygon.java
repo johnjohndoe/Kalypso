@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung

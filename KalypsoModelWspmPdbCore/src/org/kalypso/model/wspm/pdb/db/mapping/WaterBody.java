@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants;

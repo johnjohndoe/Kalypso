@@ -1,6 +1,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;

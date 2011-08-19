@@ -4,7 +4,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 public interface IVectorDataModel extends IModel
 {

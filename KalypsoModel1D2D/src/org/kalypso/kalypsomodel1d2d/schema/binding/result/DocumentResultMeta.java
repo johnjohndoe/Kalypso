@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung

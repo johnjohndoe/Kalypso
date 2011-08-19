@@ -43,7 +43,7 @@ package org.kalypso.ui.rrm.wizards.importLanduse;
 
 import java.io.File;
 
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang3.CharEncoding;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;

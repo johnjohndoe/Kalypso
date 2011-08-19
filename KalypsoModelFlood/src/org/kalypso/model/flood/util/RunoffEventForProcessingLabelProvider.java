@@ -1,6 +1,6 @@
 package org.kalypso.model.flood.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.i18n.Messages;

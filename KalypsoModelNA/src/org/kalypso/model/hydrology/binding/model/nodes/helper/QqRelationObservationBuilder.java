@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.binding.model.nodes.helper;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.gml.ZmlQQInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
