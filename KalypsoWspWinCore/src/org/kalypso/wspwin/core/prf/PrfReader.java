@@ -41,8 +41,11 @@
 package org.kalypso.wspwin.core.prf;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -50,6 +53,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
@@ -287,7 +291,6 @@ public class PrfReader
       textString.trim();
       final String dataString = line.length() > 40 ? line.substring( 40, line.length() ).trim() : ""; //$NON-NLS-1$
       m_metaMap.put( i, new String[] { textString, dataString } );
-
     }
   }
 
@@ -296,4 +299,24 @@ public class PrfReader
     return m_dbs.get( createFirstLine( key.toUpperCase() ) );
   }
 
+  public void read( final File file ) throws IOException
+  {
+    BufferedReader fileReader = null;
+    try
+    {
+      fileReader = new BufferedReader( new FileReader( file ) );
+      readFromReader( fileReader );
+      fileReader.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( fileReader );
+    }
+  }
+
+  public IDataBlock[] getDataBlocks( )
+  {
+    final Collection<IDataBlock> values = m_dbs.values();
+    return values.toArray( new IDataBlock[values.size()] );
+  }
 }
