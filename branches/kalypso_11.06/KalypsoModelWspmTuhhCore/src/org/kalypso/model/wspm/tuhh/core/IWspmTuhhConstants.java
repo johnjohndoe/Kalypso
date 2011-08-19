@@ -218,4 +218,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   String FILE_PATTERN_POLYNOME_LENGTH_SECTIONS_GML = "lengthSection_(.*).gml"; //$NON-NLS-1$
 
   String FILE_OVERVIEW_MAP = "Übersichtskarte.gmt"; //$NON-NLS-1$
+
+  String FILE_LAENGSSCHNITT_GML = "Längsschnitt.gml";//$NON-NLS-1$ 
+
+  String DIR_RESULT_DATEN = "Daten"; //$NON-NLS-1$
 }

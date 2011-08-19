@@ -201,7 +201,7 @@ public final class WspWinImporter
       {
         try
         {
-          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustand, importedProfiles, isDirectionUpstreams ) );
+          logStatus.add( importTuhhZustand( tuhhProject, wspCfgBean, zustand, importedProfiles, isDirectionUpstreams, targetContainer ) );
         }
         catch( final Exception e )
         {
@@ -326,7 +326,7 @@ public final class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams ) throws GMLSchemaException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfg wspCfg, final WspWinZustand zustand, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final IContainer targetContainer ) throws GMLSchemaException
   {
     final ZustandBean zustandBean = zustand.getBean();
 
@@ -462,8 +462,7 @@ public final class WspWinImporter
     try
     {
       final TYPE type = wspCfg.getType();
-
-      importCalculations( zustand, log, reach, profDir, baseName, runOffEventsByCount, runOffEventsByName, type );
+      importCalculations( zustand, log, reach, profDir, baseName, runOffEventsByCount, runOffEventsByName, type, targetContainer );
     }
     catch( final Exception e )
     {
@@ -473,9 +472,12 @@ public final class WspWinImporter
     return log.asMultiStatus( message );
   }
 
-  private static void importCalculations( final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEventsByCount, final Map<String, String> runOffEventsByName, final TYPE projectType )
+  private static void importCalculations( final WspWinZustand zustand, final IStatusCollector log, final TuhhReach reach, final File profDir, final String baseName, final Map<Integer, String> readRunOffEventsByCount, final Map<String, String> runOffEventsByName, final TYPE projectType, final IContainer targetContainer )
   {
     final ICalculationWspmConverter converter = createCalculationConverter( projectType, reach, baseName, readRunOffEventsByCount, runOffEventsByName );
+
+    final File dathDir = WspWinHelper.getDathDir( profDir.getParentFile() );
+    final CalculationResultConverter resultConverter = new CalculationResultConverter( projectType, baseName, log, targetContainer );
 
     final CalculationBean[] calcBeans = zustand.getCalculations();
     for( final CalculationBean bean : calcBeans )
@@ -483,6 +485,8 @@ public final class WspWinImporter
       try
       {
         converter.convert( bean, profDir );
+
+        resultConverter.convert( bean, dathDir );
       }
       catch( final Exception e )
       {
