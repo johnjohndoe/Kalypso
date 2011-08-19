@@ -44,7 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.net.URL;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;

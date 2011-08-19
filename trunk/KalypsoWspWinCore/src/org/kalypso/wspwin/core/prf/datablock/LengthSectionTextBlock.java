@@ -45,8 +45,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -70,7 +69,7 @@ public class LengthSectionTextBlock extends AbstractDataBlock
   @Override
   public final void readFromReader( final int count, final BufferedReader reader )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -88,7 +87,7 @@ public class LengthSectionTextBlock extends AbstractDataBlock
   @Override
   public Double[] getY( )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -149,6 +148,6 @@ public class LengthSectionTextBlock extends AbstractDataBlock
   @Override
   public String[] getText( )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 }

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 
 public abstract class AbstractProfileStringPattern extends AbstractPatternInput<IProfilePatternData> implements IValueWithFormat<String>

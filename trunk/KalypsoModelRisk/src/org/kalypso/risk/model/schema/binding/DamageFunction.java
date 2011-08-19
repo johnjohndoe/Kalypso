@@ -2,7 +2,6 @@ package org.kalypso.risk.model.schema.binding;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class DamageFunction extends Feature_Impl implements IDamageFunction

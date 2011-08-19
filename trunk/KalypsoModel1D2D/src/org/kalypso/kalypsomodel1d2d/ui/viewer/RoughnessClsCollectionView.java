@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

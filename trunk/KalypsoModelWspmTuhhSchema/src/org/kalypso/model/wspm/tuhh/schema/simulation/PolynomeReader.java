@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;

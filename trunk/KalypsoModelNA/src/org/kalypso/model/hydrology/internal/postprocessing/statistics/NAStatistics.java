@@ -58,8 +58,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -285,7 +284,7 @@ public class NAStatistics implements INaStatistics
       }
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   private Double getDoubleValueFormatted( final Object object )

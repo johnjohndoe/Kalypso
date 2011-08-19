@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;

@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.internal.connect;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;

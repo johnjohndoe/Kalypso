@@ -1,6 +1,5 @@
 package org.kalypso.calculation.connector;
 
-import org.apache.commons.lang.NotImplementedException;
 
 public interface IKalypsoModelConnectorType
 {
@@ -25,7 +24,7 @@ public interface IKalypsoModelConnectorType
         case CONNECTOR_FLOOD_RISK:
           return "KalypsoModelConnector_FM_RM";
         default:
-          throw new NotImplementedException();
+          throw new UnsupportedOperationException();
       }
     }
   }

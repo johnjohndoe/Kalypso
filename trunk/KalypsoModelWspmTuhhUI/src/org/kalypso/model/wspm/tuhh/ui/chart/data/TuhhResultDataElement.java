@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.data;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;

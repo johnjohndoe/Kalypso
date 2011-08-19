@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation;
 
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * @author Dejan Antanaskovic
@@ -63,7 +62,7 @@ public interface ISimulationSpecKalypsoRisk
         case RISK_ZONES_CALCULATION:
           return "KalypsoRisk_RiskZonesCalculation"; //$NON-NLS-1$
         default:
-          throw new NotImplementedException();
+          throw new UnsupportedOperationException();
       }
     }
   }
@@ -102,7 +101,7 @@ public interface ISimulationSpecKalypsoRisk
         case OUTPUT_SLD:
           return "styles/SpecificDamagePotentialCoverage.sld"; //$NON-NLS-1$
         default:
-          throw new NotImplementedException();
+          throw new UnsupportedOperationException();
       }
     }
   }

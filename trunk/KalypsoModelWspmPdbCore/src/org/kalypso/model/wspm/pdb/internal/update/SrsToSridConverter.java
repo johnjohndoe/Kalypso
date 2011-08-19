@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.update;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.databinding.conversion.TypedConverter;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 

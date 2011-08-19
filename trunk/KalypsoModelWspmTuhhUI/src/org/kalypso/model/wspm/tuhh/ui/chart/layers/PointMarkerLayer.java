@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.awt.geom.Point2D;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;

@@ -43,8 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;

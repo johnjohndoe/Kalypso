@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;

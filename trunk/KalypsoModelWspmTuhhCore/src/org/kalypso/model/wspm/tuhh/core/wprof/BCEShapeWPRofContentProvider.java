@@ -51,7 +51,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;

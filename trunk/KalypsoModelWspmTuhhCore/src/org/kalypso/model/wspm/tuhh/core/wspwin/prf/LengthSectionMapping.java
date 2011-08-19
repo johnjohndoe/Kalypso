@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockDescription;

@@ -7,8 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
-import org.kalypso.module.IKalypsoModuleProjectOpenAction;
-import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;

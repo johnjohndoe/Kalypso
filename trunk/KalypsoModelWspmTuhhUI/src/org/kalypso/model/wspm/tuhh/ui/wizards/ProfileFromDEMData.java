@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;

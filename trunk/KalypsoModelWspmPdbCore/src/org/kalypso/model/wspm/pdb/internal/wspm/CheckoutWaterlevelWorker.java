@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -127,7 +126,7 @@ public class CheckoutWaterlevelWorker
 
     if( wspmObject instanceof TuhhCalculation )
       // FIXME
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     return null;
   }
@@ -195,6 +194,6 @@ public class CheckoutWaterlevelWorker
   private Feature insertCalculation( final Event event, final WspmWaterBody wspmWater )
   {
     // FIXME
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 }

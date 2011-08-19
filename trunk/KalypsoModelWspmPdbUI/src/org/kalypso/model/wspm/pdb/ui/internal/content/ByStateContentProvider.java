@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import java.util.Collection;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;

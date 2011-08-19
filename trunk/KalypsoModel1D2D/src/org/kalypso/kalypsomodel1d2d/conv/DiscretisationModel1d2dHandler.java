@@ -55,7 +55,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaException;

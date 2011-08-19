@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
