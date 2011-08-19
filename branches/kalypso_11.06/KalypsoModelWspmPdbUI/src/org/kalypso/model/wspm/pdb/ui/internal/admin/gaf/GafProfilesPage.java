@@ -202,14 +202,14 @@ public class GafProfilesPage extends WizardPage
     fileButton.setText( "Browse..." );
 
     /* field binding */
-    final ISWTObservableValue target = SWTObservables.observeText( fileField, new int[] { SWT.Modify, SWT.DefaultSelection } );
+    final ISWTObservableValue target = SWTObservables.observeText( fileField, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_LOG_FILE );
     final DataBinder binder = new DataBinder( target, model );
 
     binder.setTargetToModelConverter( new StringToFileConverter() );
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, "Will not save log file" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, "Log file will not be saved" ) );
     binder.addTargetAfterConvertValidator( new FileShouldNotBeDirectoryValidator() );
     binder.addTargetAfterConvertValidator( new FileCannotWriteValidator() );
     binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
