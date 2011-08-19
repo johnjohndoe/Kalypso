@@ -12001,7 +12001,7 @@ an, um ein externes Bild zu referenzieren.</gml:description>
      <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
      <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
      <om:resultDefinition xmlns:om="http://www.opengis.net/om">
-      <swe:RecordDefinition gml:id="RecordDefinition1313488459789556">
+      <swe:RecordDefinition gml:id="RecordDefinition13137460386651063">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
@@ -12023,7 +12023,7 @@ an, um ein externes Bild zu referenzieren.</gml:description>
 228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011 null null
 235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329 null null
 262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801 null 366.015
-270.0769 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322 364.4 null
+269.59697858253185 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322 364.16449324221713 null
 283.6112 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803 null null
 294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338 null null
 300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019 null null
@@ -12045,7 +12045,7 @@ an, um ein externes Bild zu referenzieren.</gml:description>
       </gml:LineString>
      </prof:profileLocation>
      <prof:member>
-      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation1313488459789271">
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation13137460386651006">
        <gml:description>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE</gml:description>
        <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#BRUECKE</gml:name>
        <om:time/>
@@ -12053,7 +12053,7 @@ an, um ein externes Bild zu referenzieren.</gml:description>
        <om:observedProperty/>
        <om:featureOfInterest/>
        <om:resultDefinition>
-        <swe:RecordDefinition gml:id="RecordDefinition1313488459789733">
+        <swe:RecordDefinition gml:id="RecordDefinition1313746038665123">
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BREITE"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#UNTERWASSER"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#FORMBEIWERT"/>
@@ -12283,6 +12283,584 @@ an, um ein externes Bild zu referenzieren.</gml:description>
         </swe:RecordDefinition>
        </om:resultDefinition>
        <om:result><![CDATA[5.0 361.5 0.5 0.75
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile13137427436011222">
+     <gml:description>Position der Trennflächen</gml:description>
+     <gml:name>Fehler-Wehr</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313745837140760">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#OBERKANTEWEHR"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#WEHR"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 0.32 1.0 1.0 0.15 773844.522 3929366.43 null null
+15.0619 367.446 false none 0.32 1.0 1.0 0.15 773852.252 3929353.503 null null
+158.7515 367.087 false none 0.32 0.0 0.0 0.0 773925.989 3929230.176 null null
+197.751 366.221 false none 0.32 0.0 0.0 0.0 773946.002 3929196.703 null null
+228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011 null null
+235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329 null null
+262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801 null 1.0
+270.0769 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322 364.463 null
+283.6112 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803 null null
+294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338 null null
+300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019 null null
+302.4183 363.929 false none 0.75 0.0 0.0 0.0 773953.887 3929095.017 null null
+306.9274 364.732 false low 0.75 1.0 1.0 0.8 773953.673 3929090.513 364.732 null
+311.3654 365.523 false none 0.32 0.0 0.0 0.0 773953.462 3929086.08 null null
+315.8034 364.732 false none 0.75 0.0 0.0 0.0 773953.673 3929090.513 null null
+332.8006 366.614 false none 0.32 0.0 0.0 0.0 773952.866 3929073.535 null null
+355.9907 367.089 false none 0.32 0.0 0.0 0.0 773951.766 3929050.371 null null
+370.6803 372.445 false none 0.32 1.0 1.0 0.15 773951.069 3929035.698 null null
+377.2977 374.9 true none 0.32 1.0 1.0 0.15 773950.755 3929029.088 null null
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation13137458371401374">
+       <gml:description>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1313745837140487">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#WEHRART"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#FORMBEIWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_SCHARFKANTIG 1.0
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile131374308693331">
+     <gml:description>Wehrkrone unter Bodenniveau</gml:description>
+     <gml:name>Fehler-Wehr</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313745879029800">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#OBERKANTEWEHR"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#WEHR"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 0.32 1.0 1.0 0.15 773844.522 3929366.43 null null
+15.0619 367.446 false none 0.32 1.0 1.0 0.15 773852.252 3929353.503 null null
+158.7515 367.087 false none 0.32 0.0 0.0 0.0 773925.989 3929230.176 null null
+197.751 366.221 false none 0.32 0.0 0.0 0.0 773946.002 3929196.703 null null
+228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011 null null
+235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329 null null
+262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801 null null
+270.0769 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322 364.463 null
+283.54170407698933 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803 360.1509300138312 null
+294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338 null null
+300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019 null null
+302.4183 363.929 false none 0.75 0.0 0.0 0.0 773953.887 3929095.017 null null
+306.9274 364.732 false low 0.75 1.0 1.0 0.8 773953.673 3929090.513 364.732 null
+311.3654 365.523 false none 0.32 0.0 0.0 0.0 773953.462 3929086.08 null null
+315.8034 364.732 false none 0.75 0.0 0.0 0.0 773953.673 3929090.513 null null
+332.8006 366.614 false none 0.32 0.0 0.0 0.0 773952.866 3929073.535 null null
+355.9907 367.089 false none 0.32 0.0 0.0 0.0 773951.766 3929050.371 null null
+370.6803 372.445 false none 0.32 1.0 1.0 0.15 773951.069 3929035.698 null null
+377.2977 374.9 true none 0.32 1.0 1.0 0.15 773950.755 3929029.088 null null
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation1313745879029654">
+       <gml:description>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition131374587902917">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#WEHRART"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#FORMBEIWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_SCHARFKANTIG 1.0
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile1313743153987699">
+     <gml:description>Wehrkrone endet nicht auf Bodenniveau</gml:description>
+     <gml:name>Fehler-Wehr</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313745900982818">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#OBERKANTEWEHR"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#WEHR"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 0.32 1.0 1.0 0.15 773844.522 3929366.43 null null
+15.0619 367.446 false none 0.32 1.0 1.0 0.15 773852.252 3929353.503 null null
+158.7515 367.087 false none 0.32 0.0 0.0 0.0 773925.989 3929230.176 null null
+197.751 366.221 false none 0.32 0.0 0.0 0.0 773946.002 3929196.703 null null
+228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011 null null
+235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329 null null
+262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801 null null
+270.0769 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322 364.463 null
+283.6112 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803 null null
+294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338 null null
+300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019 null null
+302.4183 363.929 false low 0.75 0.0 0.0 0.0 773953.887 3929095.017 null null
+306.9274 364.732 false none 0.75 1.0 1.0 0.8 773953.673 3929090.513 364.732 null
+311.3654 365.523 false none 0.32 0.0 0.0 0.0 773953.462 3929086.08 null null
+315.8034 364.732 false none 0.75 0.0 0.0 0.0 773953.673 3929090.513 null null
+332.8006 366.614 false none 0.32 0.0 0.0 0.0 773952.866 3929073.535 null null
+355.9907 367.089 false none 0.32 0.0 0.0 0.0 773951.766 3929050.371 null null
+370.6803 372.445 false none 0.32 1.0 1.0 0.15 773951.069 3929035.698 null null
+377.2977 374.9 true none 0.32 1.0 1.0 0.15 773950.755 3929029.088 null null
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation13137459009821167">
+       <gml:description>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1313745900982903">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#WEHRART"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#FORMBEIWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_SCHARFKANTIG 1.0
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile13137431978111069">
+     <gml:description>Bewuchs im Wehr</gml:description>
+     <gml:name>Fehler-Wehr</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313745960277617">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#OBERKANTEWEHR"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#WEHR"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 0.32 1.0 1.0 0.15 773844.522 3929366.43 null null
+15.0619 367.446 false none 0.32 1.0 1.0 0.15 773852.252 3929353.503 null null
+158.7515 367.087 false none 0.32 0.0 0.0 0.0 773925.989 3929230.176 null null
+197.751 366.221 false none 0.32 0.0 0.0 0.0 773946.002 3929196.703 null null
+228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011 null null
+235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329 null null
+262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801 null null
+270.0769 364.463 false low 0.75 1.0 1.0 1.0 773955.421 3929127.322 364.463 null
+283.6112 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803 null null
+294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338 null null
+300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019 null null
+302.4183 363.929 false none 0.75 0.0 0.0 0.0 773953.887 3929095.017 null null
+306.9274 364.732 false low 0.75 1.0 1.0 0.8 773953.673 3929090.513 364.732 null
+311.3654 365.523 false none 0.32 0.0 0.0 0.0 773953.462 3929086.08 null null
+315.8034 364.732 false none 0.75 0.0 0.0 0.0 773953.673 3929090.513 null null
+332.8006 366.614 false none 0.32 0.0 0.0 0.0 773952.866 3929073.535 null null
+355.9907 367.089 false none 0.32 0.0 0.0 0.0 773951.766 3929050.371 null null
+370.6803 372.445 false none 0.32 1.0 1.0 0.15 773951.069 3929035.698 null null
+377.2977 374.9 true none 0.32 1.0 1.0 0.15 773950.755 3929029.088 null null
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation1313745960277928">
+       <gml:description>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1313745960277196">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#WEHRART"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#FORMBEIWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_SCHARFKANTIG 1.0
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile13137432796471237">
+     <gml:description>Parameter prüfen</gml:description>
+     <gml:name>Fehler-Wehr</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313745970542341">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#OBERKANTEWEHR"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#WEHR"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 0.32 1.0 1.0 0.15 773844.522 3929366.43 null null
+15.0619 367.446 false none 0.32 1.0 1.0 0.15 773852.252 3929353.503 null null
+158.7515 367.087 false none 0.32 0.0 0.0 0.0 773925.989 3929230.176 null null
+197.751 366.221 false none 0.32 0.0 0.0 0.0 773946.002 3929196.703 null null
+228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011 null null
+235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329 null null
+262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801 null null
+270.0769 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322 364.463 null
+283.6112 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803 null null
+294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338 null null
+300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019 null null
+302.4183 363.929 false none 0.75 0.0 0.0 0.0 773953.887 3929095.017 null null
+306.9274 364.732 false low 0.75 1.0 1.0 0.8 773953.673 3929090.513 364.732 null
+311.3654 365.523 false none 0.32 0.0 0.0 0.0 773953.462 3929086.08 null null
+315.8034 364.732 false none 0.75 0.0 0.0 0.0 773953.673 3929090.513 null null
+332.8006 366.614 false none 0.32 0.0 0.0 0.0 773952.866 3929073.535 null null
+355.9907 367.089 false none 0.32 0.0 0.0 0.0 773951.766 3929050.371 null null
+370.6803 372.445 false none 0.32 1.0 1.0 0.15 773951.069 3929035.698 null null
+377.2977 374.9 true none 0.32 1.0 1.0 0.15 773950.755 3929029.088 null null
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation13137459705581192">
+       <gml:description>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#WEHR</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition13137459705581261">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#WEHRART"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#FORMBEIWERT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_RUNDKRONIG 0.0
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile13137434149361261">
+     <gml:description>Rauheiten werden ignoriert</gml:description>
+     <gml:name>Fehler-Durchlass</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition13137436692701495">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RAUHEIT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 0.32 1.0 1.0 0.15 773844.522 3929366.43
+15.0619 367.446 false none 0.32 1.0 1.0 0.15 773852.252 3929353.503
+158.7515 367.087 false none 0.32 0.0 0.0 0.0 773925.989 3929230.176
+197.751 366.221 false none 0.32 0.0 0.0 0.0 773946.002 3929196.703
+228.3409 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
+235.0304 365.648 false none 0.32 0.0 0.0 0.0 773957.084 3929162.329
+262.5895 366.015 false none 0.32 1.0 1.0 0.08 773955.777 3929134.801
+270.0769 364.463 false low 0.75 0.0 0.0 0.0 773955.421 3929127.322
+283.6112 361.641 false none 0.18 0.0 0.0 0.0 773954.779 3929113.803
+294.088 361.044 false none 0.18 0.0 0.0 0.0 773954.282 3929103.338
+300.4141 361.297 false none 0.75 0.0 0.0 0.0 773953.982 3929097.019
+302.4183 363.929 false none 0.75 0.0 0.0 0.0 773953.887 3929095.017
+306.9274 364.732 false low 0.75 1.0 1.0 0.8 773953.673 3929090.513
+311.3654 365.523 false none 0.32 0.0 0.0 0.0 773953.462 3929086.08
+315.8034 364.732 false none 0.75 0.0 0.0 0.0 773953.673 3929090.513
+332.8006 366.614 false none 0.32 0.0 0.0 0.0 773952.866 3929073.535
+355.9907 367.089 false none 0.32 0.0 0.0 0.0 773951.766 3929050.371
+370.6803 372.445 false none 0.32 1.0 1.0 0.15 773951.069 3929035.698
+377.2977 374.9 true none 0.32 1.0 1.0 0.15 773950.755 3929029.088
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation1313743669286239">
+       <gml:description>Circle</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#KREIS</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition13137436692861419">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BEZUGSPUNKT_X"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BEZUGSPUNKT_Y"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#SOHLGEFAELLE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#RAUHEIT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[200.0 368.0 4.0 1.0 0.2
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile1313743681815703">
+     <gml:description>Paramezter prüfen</gml:description>
+     <gml:name>Fehler-Durchlass</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313743804349329">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 1.0 1.0 0.15 773844.522 3929366.43
+15.0619 367.446 false none 1.0 1.0 0.15 773852.252 3929353.503
+158.7515 367.087 false none 0.0 0.0 0.0 773925.989 3929230.176
+197.751 366.221 false none 0.0 0.0 0.0 773946.002 3929196.703
+228.3409 366.683 false none 1.0 1.0 0.08 773957.402 3929169.011
+235.0304 365.648 false none 0.0 0.0 0.0 773957.084 3929162.329
+262.5895 366.015 false none 1.0 1.0 0.08 773955.777 3929134.801
+270.0769 364.463 false low 0.0 0.0 0.0 773955.421 3929127.322
+283.6112 361.641 false none 0.0 0.0 0.0 773954.779 3929113.803
+294.088 361.044 false none 0.0 0.0 0.0 773954.282 3929103.338
+300.4141 361.297 false none 0.0 0.0 0.0 773953.982 3929097.019
+302.4183 363.929 false none 0.0 0.0 0.0 773953.887 3929095.017
+306.9274 364.732 false low 1.0 1.0 0.8 773953.673 3929090.513
+311.3654 365.523 false none 0.0 0.0 0.0 773953.462 3929086.08
+315.8034 364.732 false none 0.0 0.0 0.0 773953.673 3929090.513
+332.8006 366.614 false none 0.0 0.0 0.0 773952.866 3929073.535
+355.9907 367.089 false none 0.0 0.0 0.0 773951.766 3929050.371
+370.6803 372.445 false none 1.0 1.0 0.15 773951.069 3929035.698
+377.2977 374.9 true none 1.0 1.0 0.15 773950.755 3929029.088
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation13137438043491234">
+       <gml:description>Circle</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#KREIS</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1313743804349677">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BEZUGSPUNKT_X"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BEZUGSPUNKT_Y"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#SOHLGEFAELLE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#RAUHEIT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[null null null null 0.2
+]]></om:result>
+      </om:Observation>
+     </prof:member>
+    </prof:Profile>
+   </wspm:profileMember>
+   <wspm:profileMember>
+    <prof:Profile gml:id="Profile1313743817365279">
+     <gml:description>Seitenverhältnis Maul,Ei</gml:description>
+     <gml:name>Fehler-Durchlass</gml:name>
+     <om:time xmlns:om="http://www.opengis.net/om"/>
+     <om:procedure xmlns:om="http://www.opengis.net/om"/>
+     <om:observedProperty xmlns:om="http://www.opengis.net/om"/>
+     <om:featureOfInterest xmlns:om="http://www.opengis.net/om"/>
+     <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+      <swe:RecordDefinition gml:id="RecordDefinition1313743918487617">
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AX"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_AY"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BEWUCHS_DP"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOCHWERT"/>
+       <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#RECHTSWERT"/>
+      </swe:RecordDefinition>
+     </om:resultDefinition>
+     <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[0.0 370.906 true none 1.0 1.0 0.15 773844.522 3929366.43
+15.0619 367.446 false none 1.0 1.0 0.15 773852.252 3929353.503
+158.7515 367.087 false none 0.0 0.0 0.0 773925.989 3929230.176
+197.751 366.221 false none 0.0 0.0 0.0 773946.002 3929196.703
+228.3409 366.683 false none 1.0 1.0 0.08 773957.402 3929169.011
+235.0304 365.648 false none 0.0 0.0 0.0 773957.084 3929162.329
+262.5895 366.015 false none 1.0 1.0 0.08 773955.777 3929134.801
+270.0769 364.463 false low 0.0 0.0 0.0 773955.421 3929127.322
+283.6112 361.641 false none 0.0 0.0 0.0 773954.779 3929113.803
+294.088 361.044 false none 0.0 0.0 0.0 773954.282 3929103.338
+300.4141 361.297 false none 0.0 0.0 0.0 773953.982 3929097.019
+302.4183 363.929 false none 0.0 0.0 0.0 773953.887 3929095.017
+306.9274 364.732 false low 1.0 1.0 0.8 773953.673 3929090.513
+311.3654 365.523 false none 0.0 0.0 0.0 773953.462 3929086.08
+315.8034 364.732 false none 0.0 0.0 0.0 773953.673 3929090.513
+332.8006 366.614 false none 0.0 0.0 0.0 773952.866 3929073.535
+355.9907 367.089 false none 0.0 0.0 0.0 773951.766 3929050.371
+370.6803 372.445 false none 1.0 1.0 0.15 773951.069 3929035.698
+377.2977 374.9 true none 1.0 1.0 0.15 773950.755 3929029.088
+]]></om:result>
+     <prof:station>41.9000</prof:station>
+     <prof:type>org.kalypso.model.wspm.tuhh.profiletype</prof:type>
+     <prof:srsName>EPSG:31467</prof:srsName>
+     <prof:profileLocation>
+      <gml:LineString srsName="EPSG:31467" srsDimension="3">
+       <gml:posList srsDimension="3">3929366.43 773844.522 370.906 3929353.503 773852.252 367.446 3929230.176 773925.989 367.087 3929196.703 773946.002 366.221 3929169.011 773957.402 366.683 3929162.329 773957.084 365.648 3929134.801 773955.777 366.015 3929127.322 773955.421 364.463 3929113.803 773954.779 361.641 3929103.338 773954.282 361.044 3929097.019 773953.982 361.297 3929095.017 773953.887 363.929 3929090.513 773953.673 364.732 3929086.08 773953.462 365.523 3929090.513 773953.673 364.732 3929073.535 773952.866 366.614 3929050.371 773951.766 367.089 3929035.698 773951.069 372.445 3929029.088 773950.755 374.9 </gml:posList>
+      </gml:LineString>
+     </prof:profileLocation>
+     <prof:member>
+      <om:Observation xmlns:om="http://www.opengis.net/om" gml:id="Observation1313743918487489">
+       <gml:description>Oval</gml:description>
+       <gml:name>urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingTypes#EI</gml:name>
+       <om:time/>
+       <om:procedure/>
+       <om:observedProperty/>
+       <om:featureOfInterest/>
+       <om:resultDefinition>
+        <swe:RecordDefinition gml:id="RecordDefinition1313743918487242">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BEZUGSPUNKT_X"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BEZUGSPUNKT_Y"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#HOEHE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#BREITE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#SOHLGEFAELLE"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#RAUHEIT"/>
+        </swe:RecordDefinition>
+       </om:resultDefinition>
+       <om:result><![CDATA[200.0 368.0 2.0 2.0 1.0 0.2
 ]]></om:result>
       </om:Observation>
      </prof:member>
