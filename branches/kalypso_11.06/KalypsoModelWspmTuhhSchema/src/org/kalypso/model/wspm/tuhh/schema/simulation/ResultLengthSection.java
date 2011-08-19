@@ -55,10 +55,14 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.results.processing.IResultLSFile;
+import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSChartFile;
+import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSTableFile;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -109,7 +113,7 @@ public class ResultLengthSection
     m_epsThinning = epsThinning;
     m_ovwMapURL = ovwMapURL;
 
-    m_dataDir = new File( m_outDir, "Daten" ); //$NON-NLS-1$
+    m_dataDir = new File( m_outDir, IWspmTuhhConstants.DIR_RESULT_DATEN );
   }
 
   public void setLsFilePattern( final String pattern )
@@ -170,7 +174,7 @@ public class ResultLengthSection
 
     /* Create result file handlers */
     addResultFile( new ResultLSGmlFile( m_dataDir, dataFilename, lengthSectionWorkspace ) );
-    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title, m_calculation ) );
+    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title, m_calculation, "LengthSectionResult" ) ); //$NON-NLS-1$
     addResultFile( new ResultLSTableFile( m_outDir, runoffName, dataFilename ) );
     addResultFile( new ResultLSBreaklinesFile( m_dataDir, runoffName, breakLines ) );
     addResultFile( new ResultLSTinFile( m_dataDir, runoffName, breakLines ) );

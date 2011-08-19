@@ -44,6 +44,7 @@ import java.io.File;
 
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.results.processing.AbstractResultLSFile;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -63,9 +64,6 @@ public abstract class AbstractResultLSModelBoundaryFile extends AbstractResultLS
     m_segments = segments;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.AbstractResultLSFile#doWrite(java.io.File)
-   */
   @Override
   protected void doWrite( final File outputFile ) throws Exception
   {
