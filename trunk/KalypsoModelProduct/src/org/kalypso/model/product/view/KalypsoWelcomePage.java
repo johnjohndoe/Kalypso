@@ -111,6 +111,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
     m_form = toolkit.createScrolledForm( parent );
     final Composite body = m_form.getBody();
+
     body.setBackgroundImage( IMG_BACKGROUND );
     body.setBackgroundMode( SWT.INHERIT_FORCE );
     body.setLayout( new GridLayout() );
@@ -205,9 +206,14 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       public void mouseUp( final MouseEvent e )
       {
         final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+// helpSystem.displayHelp( "org.kalypso.KalypsoManualRisk.KalypsoRisikoDatenladen" );
         helpSystem.displayHelp();
       }
     } );
+
+// PlatformUI.getWorkbench().getHelpSystem().setHelp( footer, "org.kalypso.KalypsoManualRisk.KalypsoRisikoDatenladen" );
+// PlatformUI.getWorkbench().getHelpSystem().setHelp( m_contentArea,
+// "org.kalypso.KalypsoManualRisk.KalypsoRisikoDatenladen" );
 
     footer.addContentArea( footerHelpContent );
 
