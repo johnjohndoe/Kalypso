@@ -138,10 +138,16 @@ public class PdbStartup implements IStartup
 
     final InitPdbDataOperation operation = new InitPdbDataOperation( wspmProject );
     final IProgressService progressService = (IProgressService) window.getService( IProgressService.class );
-    final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, "Failed to initialize PDB project data" );
+    final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, null );
 
     if( !status.isOK() )
       new StatusDialog2( window.getShell(), status, "Initialize PDB data" ).open();
+
+    if( status.matches( IStatus.ERROR ) )
+    {
+      PlatformUI.getWorkbench().close();
+      return;
+    }
 
     WspmPdbUiPlugin.getDefault().setWspmProject( wspmProject );
 
