@@ -9,7 +9,7 @@ Name Kalypso
 
 # version number, which is used for builtin pathes and menu entries.
 !define VERSION 11.6.1
-!define DATE 20110816
+!define DATE 20110819
 
 !define COMPANY BCE
 !define URL http://kalypso.bjoernsen.de
@@ -98,7 +98,7 @@ InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
 ShowInstDetails hide
-VIProductVersion 11.6.1.20110816
+VIProductVersion 11.6.1.20110819
 
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductName Kalypso
