@@ -62,6 +62,8 @@ import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
 
+import com.google.common.base.Objects;
+
 /**
  * @author Gernot
  */
@@ -216,7 +218,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     }
 
     // FIXME:
-    profile.setStation( station == null ? -999.999 : station.doubleValue() );
+    profile.setStation( Double.valueOf( (Double) Objects.firstNonNull( station, -999.999 ) ) );
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
