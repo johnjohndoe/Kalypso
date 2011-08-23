@@ -178,7 +178,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     /* Only show calculation node */
-    final GMLXPath projectPath = new GMLXPath( TuhhWspmProject.QNAME );
+    final GMLXPath projectPath = new GMLXPath( TuhhWspmProject.QN_TYPE );
     final GMLXPath calculationsPath = new GMLXPath( projectPath, TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
     m_wspmGmlPage.setRootPath( calculationsPath );
 
