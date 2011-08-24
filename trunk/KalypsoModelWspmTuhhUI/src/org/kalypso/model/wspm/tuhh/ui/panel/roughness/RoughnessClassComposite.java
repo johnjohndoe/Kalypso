@@ -50,7 +50,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RoughnessClassComposite extends AbstractRoughnessComposite
 {
-  public static final String RAUHEIT_KLASSE_LABEL = "Roughness: Classes";
+  public static final String LABEL = "Roughness: Classes";
 
   public RoughnessClassComposite( final IProfil profile, final IComponent roughness )
   {
@@ -63,7 +63,7 @@ public class RoughnessClassComposite extends AbstractRoughnessComposite
   @Override
   public String getLabel( )
   {
-    return RAUHEIT_KLASSE_LABEL;
+    return LABEL;
   }
 
   /**

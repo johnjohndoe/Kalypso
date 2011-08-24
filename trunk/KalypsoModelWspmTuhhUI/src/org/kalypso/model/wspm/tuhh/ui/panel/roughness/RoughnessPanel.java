@@ -145,6 +145,8 @@ public class RoughnessPanel extends AbstractProfilView
           return "Add roughness of type kst";
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
           return "Add roughness classes";
+        else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( element ) )
+          return "Add roughness factor";
 
         return super.getText( element );
       }
@@ -172,6 +174,8 @@ public class RoughnessPanel extends AbstractProfilView
           RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( selected ) )
           RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+        else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
       }
     } );
   }
@@ -188,6 +192,8 @@ public class RoughnessPanel extends AbstractProfilView
         pages.add( new RoughnessKstComposite( getProfil(), roughness ) );
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
         pages.add( new RoughnessClassComposite( getProfil(), roughness ) );
+      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( roughness.getId() ) )
+        pages.add( new RoughnessFactorComposite( getProfil(), roughness ) );
       else
         pages.add( new MissingRoughnessTypePage( roughness ) );
     }
