@@ -239,21 +239,21 @@ public class RauheitenPanel extends AbstractProfilView
     ActionButton.createButton( toolkit, panel, m_addAction );
 
     final Group fieldsGroup = new Group( panel, SWT.None );
-    fieldsGroup.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.4" ) ); //$NON-NLS-1$
+    fieldsGroup.setText( "Roughness for flow zones" ); 
     fieldsGroup.setLayout( new GridLayout( 2, false ) );
     fieldsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 ) );
     toolkit.adapt( fieldsGroup );
 
     // Rauheitswerte Vorland links
-    createLabel( toolkit, fieldsGroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.6" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    createLabel( toolkit, fieldsGroup, "Left Flood-Plain", "Terrain is outside of the interfaces" );  
     m_li = createText( toolkit, fieldsGroup, ZONE.left );
 
     // Rauheitswerte Hauptöffnung
-    createLabel( toolkit, fieldsGroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.8" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    createLabel( toolkit, fieldsGroup, "River tube", "Terrain is within the interfaces" );  
     m_hf = createText( toolkit, fieldsGroup, ZONE.channel );
 
     // Rauheitswerte Vorland rechts
-    createLabel( toolkit, fieldsGroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.10" ), Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    createLabel( toolkit, fieldsGroup, "Right Flood-Plain", "Terrain is beyond the interfaces" );  
     m_re = createText( toolkit, fieldsGroup, ZONE.right );
 
     updateControls();
@@ -315,7 +315,7 @@ public class RauheitenPanel extends AbstractProfilView
 
     final Text field = toolkit.createText( panel, StringUtils.EMPTY, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setToolTipText( Messages.getString( "RauheitenPanel.0" ) ); //$NON-NLS-1$
+    field.setToolTipText( "Replaces all values of this zone with a constant value." ); 
 
     field.addModifyListener( doubleModifyListener );
 
@@ -496,17 +496,17 @@ public class RauheitenPanel extends AbstractProfilView
     if( value == null )
     {
       field.setText( StringUtils.EMPTY );
-      field.setMessage( Messages.getString( "RauheitenPanel.1" ) ); //$NON-NLS-1$
+      field.setMessage( "<input not possible>" ); 
     }
     else if( value.isNaN() )
     {
       field.setText( StringUtils.EMPTY );
-      field.setMessage( Messages.getString( "RauheitenPanel.2" ) ); //$NON-NLS-1$
+      field.setMessage( "<values different>" ); 
     }
     else if( value.isInfinite() )
     {
       field.setText( StringUtils.EMPTY );
-      field.setMessage( Messages.getString( "RauheitenPanel.3" ) ); //$NON-NLS-1$
+      field.setMessage( "<no value selected>" ); 
     }
     else
     {
@@ -547,7 +547,7 @@ public class RauheitenPanel extends AbstractProfilView
 
     final IProfil profil = getProfil();
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.1" ), profil, true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( "Edit roughness type", profil, true ); 
     operation.addChange( new PointPropertyAdd( getProfil(), component ) );
     new ProfilOperationJob( operation ).schedule();
   }

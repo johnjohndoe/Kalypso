@@ -38,40 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.panel;
+package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
 
 import org.eclipse.jface.action.Action;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-class AddWeirDeviderAction extends Action
+class DeleteWeirMarkerAction extends Action
 {
-  private final IProfilPointMarker m_devider;
-
   private final IProfil m_profile;
 
-  public AddWeirDeviderAction( final IProfil profile, final IProfilPointMarker devider, final boolean canAdd )
-  {
-    m_profile = profile;
-    m_devider = devider;
+  private final IProfilPointMarker m_devider;
 
-    setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.7" ) ); //$NON-NLS-1$
-    setImageDescriptor( KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD );
-    setEnabled( canAdd && devider != null );
+  public DeleteWeirMarkerAction( final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
+  {
+    m_devider = devider;
+    m_profile = profile;
+
+    setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.4" ) ); //$NON-NLS-1$
+
+    setImageDescriptor( KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE );
+
+    setEnabled( devider != null && canDelete );
   }
 
   /**
@@ -80,24 +77,9 @@ class AddWeirDeviderAction extends Action
   @Override
   public void run( )
   {
-    final IProfilPointMarker marker = m_devider;
-    final IRecord point = m_profile.getPoint( m_profile.indexOfPoint( marker.getPoint() ) + 1 );
-
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), m_profile, true ); //$NON-NLS-1$
-    final IProfilPointMarker trenner = m_profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
-
-    if( trenner != null )
-    {
-      final Object objVal = marker.getValue();
-
-      final BuildingWehr building = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
-      if( building == null )
-        return;
-
-      final Object dblVal = objVal instanceof Double ? objVal : Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
-      operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
-      operation.addChange( new ActiveObjectEdit( m_profile, point, null ) );
-      new ProfilOperationJob( operation ).schedule();
-    }
+    final IProfilChange change = new PointMarkerEdit( m_devider, null );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), m_profile, change, true ); //$NON-NLS-1$
+    new ProfilOperationJob( operation ).schedule();
   }
+
 }

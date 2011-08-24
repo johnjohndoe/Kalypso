@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.panel;
+package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
