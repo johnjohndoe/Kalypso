@@ -235,7 +235,7 @@ public class ImportAttachmentsData extends AbstractModelObject
     historySet.addAll( Arrays.asList( history ) );
 
     final String[] newHistory = historySet.toArray( new String[historySet.size()] );
-    return (String[]) ArrayUtils.subarray( newHistory, 0, 20 );
+    return ArrayUtils.subarray( newHistory, 0, 20 );
   }
 
   public State getState( )

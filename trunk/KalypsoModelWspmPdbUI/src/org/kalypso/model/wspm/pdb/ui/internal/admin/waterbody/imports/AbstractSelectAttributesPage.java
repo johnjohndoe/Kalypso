@@ -181,7 +181,7 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
 
       /* Refresh combos */
       final IDBFField[] fields = shapeFile.getFields();
-      final IDBFField[] fieldsWithNoData = (IDBFField[]) ArrayUtils.add( fields, ImportAttributeInfo.FIELD_USE_DEFAULT );
+      final IDBFField[] fieldsWithNoData = ArrayUtils.add( fields, ImportAttributeInfo.FIELD_USE_DEFAULT );
       for( final ImportAttributeInfo< ? > info : m_infos )
       {
         final IDBFField oldField = info.getField();
