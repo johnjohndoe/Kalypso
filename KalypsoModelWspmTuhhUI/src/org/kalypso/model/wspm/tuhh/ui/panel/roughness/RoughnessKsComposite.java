@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.AbstractDatabinding;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
 
@@ -56,7 +51,7 @@ import org.kalypso.observation.result.IComponent;
 public class RoughnessKsComposite extends AbstractRoughnessComposite
 {
 
-  public static final String RAUHEIT_KS_LABEL = "Rauheit: ks[-]";
+  public static final String RAUHEIT_KS_LABEL = "Roughness: ks[-]";
 
   public RoughnessKsComposite( final IProfil profile, final IComponent roughness )
   {
@@ -76,19 +71,8 @@ public class RoughnessKsComposite extends AbstractRoughnessComposite
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    final Group group = new Group( body, SWT.NULL );
-    group.setLayout( Layouts.createGridLayout( 2 ) );
-    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Roughnesses for Flow Zones" );
-    toolkit.adapt( group );
+    renderSimpleType( body, toolkit );
 
-    setBinding( new AbstractDatabinding( toolkit )
-    {
-    } );
-
-    build( group, toolkit, "Left Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null );
-    build( group, toolkit, "River Tube", ProfileRoguhnessesDataModel.PROPERTY_RIVER_TUBE, null );
-    build( group, toolkit, "Right Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null );
   }
 
 }
