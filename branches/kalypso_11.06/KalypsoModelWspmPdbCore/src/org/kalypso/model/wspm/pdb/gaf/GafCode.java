@@ -63,14 +63,14 @@ public class GafCode implements Comparable<GafCode>
 
   public GafCode( final String key, final String value )
   {
-    m_key = key;
+    m_key = StringUtils.trim( key );
 
     final String[] tokens = value.split( ";", 5 );
     m_number = Integer.parseInt( tokens[0] );
-    m_dbCode = tokens[1];
-    m_description = tokens[2];
-    m_hyk = tokens[3];
-    m_kind = tokens[4];
+    m_dbCode = StringUtils.trim( tokens[1] );
+    m_description = StringUtils.trim( tokens[2] );
+    m_hyk = StringUtils.trim( tokens[3] );
+    m_kind = StringUtils.trim( tokens[4] );
   }
 
   public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final String kind )
