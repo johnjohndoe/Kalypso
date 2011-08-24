@@ -65,9 +65,9 @@ public class TuhhProfil extends AbstractProfil
 {
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
-  public TuhhProfil( final TupleResult result )
+  public TuhhProfil( final TupleResult result, final Object source )
   {
-    super( PROFIL_TYPE, result );
+    super( PROFIL_TYPE, result, source );
     result.setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 

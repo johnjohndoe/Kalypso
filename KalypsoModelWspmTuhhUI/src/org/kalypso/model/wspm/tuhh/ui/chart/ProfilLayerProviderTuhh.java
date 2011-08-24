@@ -100,7 +100,7 @@ import org.kalypso.model.wspm.ui.view.chart.layer.StationLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wspfixation.WspFixationLayer;
-import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
+import org.kalypso.model.wspm.ui.view.table.handler.WspmTableUiHandlerProvider;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -543,7 +543,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
   @Override
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile )
   {
-    return new GenericComponentUiHandlerProvider( profile );
+    return new WspmTableUiHandlerProvider( profile );
   }
 
   public IAxis getDomainAxis( )

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmProperties;
 import org.kalypso.model.wspm.core.profil.AbstractPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -55,21 +55,22 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
 {
   public PointPropertyProviderTUHH( )
   {
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BREITE );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_HOEHE );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_BREITE );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_HOEHE );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_BEWUCHS_AX );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_BEWUCHS_AY );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_BEWUCHS_DP );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_HOCHWERT );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_RECHTSWERT );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
-    m_properties.add( IWspmConstants.POINT_PROPERTY_COMMENT );
+    m_properties.add( IWspmProperties.POINT_PROPERTY_COMMENT );
 
     // Markers
     /**
@@ -88,18 +89,18 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil(org.kalypso.observation.result.TupleResult)
    */
   @Override
-  public IProfil createProfil( final TupleResult result )
+  public IProfil createProfil( final TupleResult result, final Object source )
   {
     if( result.getComponents().length == 0 )
     {
       // Special case: result is yet empty: this can happen for a new profile created from a new profile-feature
-      result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
-      result.addComponent( getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      result.addComponent( getPointProperty( IWspmProperties.POINT_PROPERTY_BREITE ) );
+      result.addComponent( getPointProperty( IWspmProperties.POINT_PROPERTY_HOEHE ) );
       result.addComponent( getPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
       result.addComponent( getPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     }
 
-    return new TuhhProfil( result );
+    return new TuhhProfil( result, source );
   }
 
   /**
