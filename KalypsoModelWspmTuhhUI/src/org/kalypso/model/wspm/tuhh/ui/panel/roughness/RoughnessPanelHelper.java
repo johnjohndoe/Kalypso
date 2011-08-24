@@ -44,7 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmProperties;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -70,11 +70,11 @@ public final class RoughnessPanelHelper
     final IComponent[] properties = profile.getPointProperties();
     for( final IComponent property : properties )
     {
-      if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( property.getId() ) )
+      if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( property.getId() ) )
         found.add( property );
-      else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( property.getId() ) )
+      else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( property.getId() ) )
         found.add( property );
-      else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( property.getId() ) )
+      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( property.getId() ) )
         found.add( property );
     }
 
@@ -84,14 +84,14 @@ public final class RoughnessPanelHelper
   public static String[] findMissing( final IProfil profile )
   {
     final Set<String> missing = new LinkedHashSet<String>();
-    if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
-      missing.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS );
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
+      missing.add( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
 
-    if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
-      missing.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST );
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
+      missing.add( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
 
-    if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
-      missing.add( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
+      missing.add( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
     return missing.toArray( new String[] {} );
   }
