@@ -51,7 +51,7 @@ import org.kalypso.observation.result.IComponent;
 public class RoughnessKstComposite extends AbstractRoughnessComposite
 {
 
-  public static final String RAUHEIT_KST_LABEL = "Rauheit: kst [m^1/3/s]";
+  public static final String RAUHEIT_KST_LABEL = "Roughness: kst [m^1/3/s]";
 
   public RoughnessKstComposite( final IProfil profile, final IComponent roughness )
   {
@@ -71,8 +71,7 @@ public class RoughnessKstComposite extends AbstractRoughnessComposite
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    toolkit.createLabel( body, "blub" );
-
+    renderSimpleType( body, toolkit );
   }
 
 }

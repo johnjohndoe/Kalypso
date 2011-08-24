@@ -46,12 +46,19 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
@@ -67,6 +74,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RoughnessPanel extends AbstractProfilView
 {
+  static final Image IMG_ADD_ROUGHNESS = new Image( null, RoughnessPanel.class.getResourceAsStream( "images/roughnessPanelAdd.gif" ) );
 
   public RoughnessPanel( final IProfil profile )
   {
@@ -92,7 +100,7 @@ public class RoughnessPanel extends AbstractProfilView
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     final Composite body = toolkit.createComposite( parent, SWT.FLAT );
-    body.setLayout( Layouts.createGridLayout() );
+    body.setLayout( new GridLayout() );
 
     /** handle existing roughnesses */
     final IComponent[] roughnesses = RoughnessPanelHelper.fromProfile( getProfil() );
@@ -102,7 +110,10 @@ public class RoughnessPanel extends AbstractProfilView
     composite.setShowAlwaysComboViewer( true );
     composite.update();
 
-    toolkit.createLabel( body, "" ); // spacer
+    final Composite spacer = toolkit.createComposite( body ); // spacer
+    spacer.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    toolkit.createLabel( body, "Profil-Operationen" );
 
     /** handle missing roughnesses */
     createMissingRoughnessesControl( body, toolkit );
@@ -120,8 +131,6 @@ public class RoughnessPanel extends AbstractProfilView
     body.setLayout( Layouts.createGridLayout( 2 ) );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    toolkit.createLabel( body, "Komponente" );
-
     final ComboViewer viewer = new ComboViewer( body, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     viewer.setContentProvider( new ArrayContentProvider() );
@@ -131,15 +140,46 @@ public class RoughnessPanel extends AbstractProfilView
       public String getText( final Object element )
       {
         if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( element ) )
-          return RoughnessKsComposite.RAUHEIT_KS_LABEL;
+          return "Add roughness of type ks ";
         else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( element ) )
-          return RoughnessKstComposite.RAUHEIT_KST_LABEL;
+          return "Add roughness of type kst";
         else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
-          return RoughnessClassComposite.RAUHEIT_KLASSE_LABEL;
+          return "Add roughness classes";
 
         return super.getText( element );
       }
     } );
+
+    viewer.setInput( missing );
+    viewer.setSelection( new StructuredSelection( missing[0] ) );
+
+    final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( body, SWT.NULL );
+    lnkAdd.setImage( IMG_ADD_ROUGHNESS );
+
+    lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        final Object selected = selection.getFirstElement();
+        if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_RAUHEIT_KS );
+        else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_RAUHEIT_KST );
+        else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+      }
+    } );
+
+// m_removeAction = new RemoveRoughnessAction();
+// ActionButton.createButton( toolkit, panel, m_removeAction );
+
+// m_addAction = new AddRoughnessAction( this );
+// ActionButton.createButton( toolkit, panel, m_addAction );
 
   }
 

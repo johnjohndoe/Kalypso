@@ -131,6 +131,7 @@ public final class RoughnessFlowzones
     final IRecord[] points = profile.getPoints( p1, p2 );
     for( final IRecord point : points )
     {
+      @SuppressWarnings("deprecation")
       final Object object = point.getValue( roughness );
       if( object instanceof Number )
       {
@@ -172,6 +173,7 @@ public final class RoughnessFlowzones
     setCommonValue( profile, roughness, zone[0], zone[1], value );
   }
 
+  @SuppressWarnings("deprecation")
   private static void setCommonValue( final IProfil profile, final IComponent roughness, final int p1, final int p2, final Double value )
   {
     final IRecord[] points = profile.getPoints( p1, p2 );

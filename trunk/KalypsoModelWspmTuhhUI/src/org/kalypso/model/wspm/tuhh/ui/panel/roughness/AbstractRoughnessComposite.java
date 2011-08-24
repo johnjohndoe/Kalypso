@@ -47,9 +47,12 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
@@ -126,6 +129,24 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     final DataBinder binder = new DataBinder( targetValue, modelValue );
 
     m_binding.bindValue( binder );
+  }
+
+  protected void renderSimpleType( final Composite body, final FormToolkit toolkit )
+  {
+    final Group group = new Group( body, SWT.NULL );
+    group.setLayout( new GridLayout( 2, false ) );
+    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    group.setText( "Roughnesses for Flow Zones" );
+    toolkit.adapt( group );
+
+    setBinding( new AbstractDatabinding( toolkit )
+    {
+    } );
+
+    build( group, toolkit, "Left Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null );
+    build( group, toolkit, "River Tube", ProfileRoguhnessesDataModel.PROPERTY_RIVER_TUBE, null );
+    build( group, toolkit, "Right Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null );
+
   }
 
 }

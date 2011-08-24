@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmProperties;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -78,7 +83,7 @@ public final class RoughnessPanelHelper
 
   public static String[] findMissing( final IProfil profile )
   {
-    final Set<String> missing = new HashSet<String>();
+    final Set<String> missing = new LinkedHashSet<String>();
     if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
       missing.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS );
 
@@ -91,4 +96,23 @@ public final class RoughnessPanelHelper
     return missing.toArray( new String[] {} );
   }
 
+  public static void addRoughness( final IProfil profile, final String componentId )
+  {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IComponent component = provider.getPointProperty( componentId );
+
+    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    operation.addChange( new PointPropertyAdd( profile, component ) );
+    new ProfilOperationJob( operation ).schedule();
+  }
+
+  public static void removeRoughness( final IProfil profile, final String componentId )
+  {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IComponent component = provider.getPointProperty( componentId );
+
+    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    operation.addChange( new PointPropertyRemove( profile, component ) );
+    new ProfilOperationJob( operation ).schedule();
+  }
 }
