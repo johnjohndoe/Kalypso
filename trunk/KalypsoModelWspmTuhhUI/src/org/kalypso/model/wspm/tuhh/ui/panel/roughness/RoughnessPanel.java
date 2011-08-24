@@ -62,7 +62,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
-import org.kalypso.model.wspm.core.IWspmProperties;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -139,11 +139,11 @@ public class RoughnessPanel extends AbstractProfilView
       @Override
       public String getText( final Object element )
       {
-        if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( element ) )
+        if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( element ) )
           return "Add roughness of type ks ";
-        else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( element ) )
+        else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( element ) )
           return "Add roughness of type kst";
-        else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
+        else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
           return "Add roughness classes";
 
         return super.getText( element );
@@ -166,12 +166,12 @@ public class RoughnessPanel extends AbstractProfilView
       {
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final Object selected = selection.getFirstElement();
-        if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_RAUHEIT_KS );
-        else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_RAUHEIT_KST );
-        else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+        if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+        else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
+        else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( selected ) )
+          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
       }
     } );
   }
@@ -182,11 +182,11 @@ public class RoughnessPanel extends AbstractProfilView
 
     for( final IComponent roughness : roughnesses )
     {
-      if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
+      if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
         pages.add( new RoughnessKsComposite( getProfil(), roughness ) );
-      else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( roughness.getId() ) )
+      else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( roughness.getId() ) )
         pages.add( new RoughnessKstComposite( getProfil(), roughness ) );
-      else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
+      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
         pages.add( new RoughnessClassComposite( getProfil(), roughness ) );
       else
         pages.add( new MissingRoughnessTypePage( roughness ) );
