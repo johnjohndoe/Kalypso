@@ -48,16 +48,18 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Dirk Kuch
  */
-public class RoughnessKstComposite extends AbstractRoughnessComposite
+public class RoughnessFactorComposite extends AbstractRoughnessComposite
 {
+  public static final String LABEL = "Roughness Factor";
 
-  public static final String LABEL = "Roughness: kst [m^1/3/s]";
-
-  public RoughnessKstComposite( final IProfil profile, final IComponent roughness )
+  public RoughnessFactorComposite( final IProfil profile, final IComponent roughness )
   {
     super( profile, roughness );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.panel.roughness.AbstractRoughnessComposite#getLabel()
+   */
   @Override
   public String getLabel( )
   {
@@ -71,7 +73,8 @@ public class RoughnessKstComposite extends AbstractRoughnessComposite
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    renderSimpleType( body, toolkit );
+    // TODO Auto-generated method stub
+
   }
 
 }

@@ -76,6 +76,8 @@ public final class RoughnessPanelHelper
         found.add( property );
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( property.getId() ) )
         found.add( property );
+      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( property.getId() ) )
+        found.add( property );
     }
 
     return found.toArray( new IComponent[] {} );
@@ -92,6 +94,9 @@ public final class RoughnessPanelHelper
 
     if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
       missing.add( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR ) ) )
+      missing.add( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
 
     return missing.toArray( new String[] {} );
   }
