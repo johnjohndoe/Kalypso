@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
@@ -72,6 +74,21 @@ public final class RoughnessPanelHelper
     }
 
     return found.toArray( new IComponent[] {} );
+  }
+
+  public static String[] findMissing( final IProfil profile )
+  {
+    final Set<String> missing = new HashSet<String>();
+    if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
+      missing.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS );
+
+    if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
+      missing.add( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST );
+
+    if( Objects.isNull( profile.hasPointProperty( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
+      missing.add( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+
+    return missing.toArray( new String[] {} );
   }
 
 }
