@@ -45,7 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.RoughnessPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -113,9 +113,9 @@ public class RoughnessTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new RauheitenPanel( getProfil() );
+// return new RauheitenPanel( getProfil() );
 
-// return new RoughnessPanel( getProfil() );
+    return new RoughnessPanel( getProfil() );
   }
 
 }

@@ -76,7 +76,7 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     m_profile = profile;
     m_roughness = roughness;
 
-    m_model = new ProfileRoguhnessesDataModel( profile );
+    m_model = new ProfileRoguhnessesDataModel( profile, roughness );
     m_binding = new AbstractDatabinding( toolkit )
     {
     };
