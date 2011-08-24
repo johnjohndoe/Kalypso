@@ -138,13 +138,14 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Roughnesses for Flow Zones" );
+    group.setText( "Flow Zone Roughness" );
     toolkit.adapt( group );
 
     setBinding( new AbstractDatabinding( toolkit )
     {
     } );
 
+    // TODO validators
     build( group, toolkit, "Left Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null );
     build( group, toolkit, "River Tube", ProfileRoguhnessesDataModel.PROPERTY_RIVER_TUBE, null );
     build( group, toolkit, "Right Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null );
@@ -161,7 +162,6 @@ public abstract class AbstractRoughnessComposite implements IElementPage
         RoughnessPanelHelper.removeRoughness( getProfile(), getRoughness().getId() );
       }
     } );
-
   }
 
 }
