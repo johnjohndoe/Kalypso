@@ -174,13 +174,6 @@ public class RoughnessPanel extends AbstractProfilView
           RoughnessPanelHelper.addRoughness( getProfil(), IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
       }
     } );
-
-// m_removeAction = new RemoveRoughnessAction();
-// ActionButton.createButton( toolkit, panel, m_removeAction );
-
-// m_addAction = new AddRoughnessAction( this );
-// ActionButton.createButton( toolkit, panel, m_addAction );
-
   }
 
   private IElementPage[] getPages( final IComponent[] roughnesses )
@@ -191,7 +184,7 @@ public class RoughnessPanel extends AbstractProfilView
     {
       if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
         pages.add( new RoughnessKsComposite( getProfil(), roughness ) );
-      else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
+      else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( roughness.getId() ) )
         pages.add( new RoughnessKstComposite( getProfil(), roughness ) );
       else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
         pages.add( new RoughnessClassComposite( getProfil(), roughness ) );
