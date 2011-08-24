@@ -38,48 +38,67 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.panel;
+package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-class DeleteWeirMarkerAction extends Action
+public class ProfileRoguhnessesDataModel extends AbstractModelObject
 {
-  private final IProfil m_profile;
+  public static final String PROPERTY_LEFT_FLOODPLAIN = "leftFloodplain"; //$NON-NLS-1$
 
-  private final IProfilPointMarker m_devider;
+  public static final String PROPERTY_RIGHT_FLOODPLAIN = "rightFloodplain"; //$NON-NLS-1$
 
-  public DeleteWeirMarkerAction( final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
+  public static final String PROPERTY_RIVER_TUBE = "riverTube"; //$NON-NLS-1$
+
+  Double m_riverTube;
+
+  Double m_leftFloodplain;
+
+  Double m_rightFloodplain;
+
+  public ProfileRoguhnessesDataModel( final IProfil profile )
   {
-    m_devider = devider;
-    m_profile = profile;
-
-    setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.4" ) ); //$NON-NLS-1$
-
-    setImageDescriptor( KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE );
-
-    setEnabled( devider != null && canDelete );
+    // TODO Auto-generated constructor stub
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
-  @Override
-  public void run( )
+  public IObservableValue getObservableValue( final String property )
   {
-    final IProfilChange change = new PointMarkerEdit( m_devider, null );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), m_profile, change, true ); //$NON-NLS-1$
-    new ProfilOperationJob( operation ).schedule();
+    return BeanProperties.value( getClass(), property ).observe( this );
   }
 
+  public Double getLeftFloodplain( )
+  {
+    return m_leftFloodplain;
+  }
+
+  public Double getRightFloodplain( )
+  {
+    return m_rightFloodplain;
+  }
+
+  public Double getRiverTube( )
+  {
+    return m_riverTube;
+  }
+
+  public void setLeftFloodplain( final Double leftFloodplain )
+  {
+    m_leftFloodplain = leftFloodplain;
+  }
+
+  public void setRightFloodplain( final Double rightFloodplain )
+  {
+    m_rightFloodplain = rightFloodplain;
+  }
+
+  public void setRiverTube( final Double riverTube )
+  {
+    m_riverTube = riverTube;
+  }
 }

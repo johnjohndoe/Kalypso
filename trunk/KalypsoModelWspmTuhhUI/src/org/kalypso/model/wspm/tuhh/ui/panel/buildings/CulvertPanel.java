@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.panel;
+package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
