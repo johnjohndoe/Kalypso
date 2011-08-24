@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
@@ -93,7 +93,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.core.status.StatusLabelProvider;
+import org.kalypso.core.status.StatusViewer;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
@@ -208,9 +208,10 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
     m_resultTableViewer = new DefaultTableViewer( tableComposite, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL );
     m_resultTableViewer.setContentProvider( new ArrayContentProvider() );
 
-    StatusLabelProvider.addSeverityColumn( m_resultTableViewer );
-    StatusLabelProvider.addMessageColumn( m_resultTableViewer );
-    StatusLabelProvider.addTimeColumn( m_resultTableViewer );
+    // FIXME: probably we can replace all this by the StatusTableViewer
+    StatusViewer.addSeverityColumn( m_resultTableViewer );
+    StatusViewer.addMessageColumn( m_resultTableViewer );
+    StatusViewer.addTimeColumn( m_resultTableViewer );
 
     m_resultTableViewer.setInput( m_operations );
     final GridData tableData = new GridData( SWT.FILL, SWT.FILL, true, true );
@@ -461,10 +462,10 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
       for( final FlowRelationshipCalcOperation op : m_operations )
         op.applyResult();
 
-      // Post an empty command to flowrelationship model in order to make it dirty
-      KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
+          // Post an empty command to flowrelationship model in order to make it dirty
+          KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
-      return Status.OK_STATUS;
+          return Status.OK_STATUS;
     }
     catch( final Exception e )
     {
