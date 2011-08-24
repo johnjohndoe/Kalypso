@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.connect.ErrorSettings;
 import org.kalypso.model.wspm.pdb.internal.connect.PdbSettingsRegistry;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Access to the configured connections.
@@ -75,7 +76,7 @@ public final class PdbSettings
         return settings;
     }
 
-    final String msg = String.format( "Missing settings: '%s'", settingsName );
+    final String msg = String.format( Messages.getString("PdbSettings_0"), settingsName ); //$NON-NLS-1$
     throw new PdbConnectException( msg );
   }
 
@@ -99,7 +100,7 @@ public final class PdbSettings
     }
     catch( final PdbConnectException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Unable to access configured configurations", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("PdbSettings_1"), e ); //$NON-NLS-1$
       final ErrorSettings error = new ErrorSettings( status );
       return new IPdbSettings[] { error };
     }
