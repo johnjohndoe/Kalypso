@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
-import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -63,8 +63,15 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   Double m_rightFloodplain;
 
+  private final IProfil m_profile;
+
+  private final IComponent m_roughness;
+
   public ProfileRoguhnessesDataModel( final IProfil profile, final IComponent roughness )
   {
+    m_profile = profile;
+    m_roughness = roughness;
+
     init( profile, roughness );
   }
 
@@ -78,7 +85,7 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   public IObservableValue getObservableValue( final String property )
   {
-    return BeanProperties.value( getClass(), property ).observe( this );
+    return BeansObservables.observeValue( this, property );
   }
 
   public Double getLeftFloodplain( )
@@ -98,16 +105,35 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   public void setLeftFloodplain( final Double leftFloodplain )
   {
+    final Object oldValue = m_leftFloodplain;
+
     m_leftFloodplain = leftFloodplain;
+
+    RoughnessFlowzones.setLeftFloodplain( m_profile, m_roughness, leftFloodplain );
+
+    firePropertyChange( PROPERTY_LEFT_FLOODPLAIN, oldValue, leftFloodplain );
+
   }
 
   public void setRightFloodplain( final Double rightFloodplain )
   {
+    final Object oldValue = m_rightFloodplain;
+
     m_rightFloodplain = rightFloodplain;
+
+    RoughnessFlowzones.setRightFloodplain( m_profile, m_roughness, rightFloodplain );
+
+    firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN, oldValue, rightFloodplain );
   }
 
   public void setRiverTube( final Double riverTube )
   {
+    final Object oldValue = m_riverTube;
+
     m_riverTube = riverTube;
+
+    RoughnessFlowzones.setRiverTube( m_profile, m_roughness, riverTube );
+
+    firePropertyChange( PROPERTY_RIVER_TUBE, oldValue, riverTube );
   }
 }

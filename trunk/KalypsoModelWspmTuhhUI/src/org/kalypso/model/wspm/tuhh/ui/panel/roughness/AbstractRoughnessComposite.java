@@ -50,7 +50,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.AbstractDatabinding;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
@@ -62,25 +64,20 @@ import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
  */
 public abstract class AbstractRoughnessComposite implements IElementPage
 {
-
   private final IProfil m_profile;
 
   private final IComponent m_roughness;
 
   private final ProfileRoguhnessesDataModel m_model;
 
-  private final AbstractDatabinding m_binding;
+  private IDataBinding m_binding;
 
-  public AbstractRoughnessComposite( final IProfil profile, final IComponent roughness, final FormToolkit toolkit )
+  public AbstractRoughnessComposite( final IProfil profile, final IComponent roughness )
   {
     m_profile = profile;
     m_roughness = roughness;
 
     m_model = new ProfileRoguhnessesDataModel( profile, roughness );
-    m_binding = new AbstractDatabinding( toolkit )
-    {
-    };
-
   }
 
   /**
@@ -90,7 +87,6 @@ public abstract class AbstractRoughnessComposite implements IElementPage
   public final void dispose( )
   {
     m_binding.dispose();
-
   }
 
   protected IProfil getProfile( )
@@ -101,6 +97,14 @@ public abstract class AbstractRoughnessComposite implements IElementPage
   protected IComponent getRoughness( )
   {
     return m_roughness;
+  }
+
+  protected void setBinding( final IDataBinding binding )
+  {
+    if( Objects.isNotNull( m_binding ) )
+      m_binding.dispose();
+
+    m_binding = binding;
   }
 
   protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
@@ -119,7 +123,9 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     final ISWTObservableValue targetValue = SWTObservables.observeText( textField, SLDBinding.TEXT_DEFAULT_EVENTS );
     final IObservableValue modelValue = m_model.getObservableValue( property );
 
-    m_binding.bindValue( targetValue, modelValue, validator );
+    final DataBinder binder = new DataBinder( targetValue, modelValue );
+
+    m_binding.bindValue( binder );
   }
 
 }

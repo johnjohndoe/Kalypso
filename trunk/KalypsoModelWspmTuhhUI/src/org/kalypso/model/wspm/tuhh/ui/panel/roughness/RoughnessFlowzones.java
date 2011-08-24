@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -58,6 +59,16 @@ public final class RoughnessFlowzones
 
   public static Double findLeftFloodplainValue( final IProfil profile, final IComponent roughness )
   {
+    final int[] zone = getLeftFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    return findCommonValue( profile, roughness, zone[0], zone[1] );
+  }
+
+  private static int[] getLeftFloodplainZone( final IProfil profile )
+  {
+
     final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( trennflaechen.length < 2 )
       return null;
@@ -65,10 +76,19 @@ public final class RoughnessFlowzones
     final int p1 = 0;
     final int p2 = profile.indexOfPoint( trennflaechen[0].getPoint() );
 
-    return findCommonValue( profile, roughness, p1, p2 );
+    return new int[] { p1, p2 };
   }
 
   public static Double findRightFloodplainValue( final IProfil profile, final IComponent roughness )
+  {
+    final int[] zone = getRightFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    return findCommonValue( profile, roughness, zone[0], zone[1] );
+  }
+
+  private static int[] getRightFloodplainZone( final IProfil profile )
   {
     final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( trennflaechen.length < 2 )
@@ -77,10 +97,19 @@ public final class RoughnessFlowzones
     final int p1 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
     final int p2 = profile.getPoints().length - 1;
 
-    return findCommonValue( profile, roughness, p1, p2 );
+    return new int[] { p1, p2 };
   }
 
   public static Double findRiverTubeValue( final IProfil profile, final IComponent roughness )
+  {
+    final int[] zone = getRiverTube( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    return findCommonValue( profile, roughness, zone[0], zone[1] );
+  }
+
+  private static int[] getRiverTube( final IProfil profile )
   {
     final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( trennflaechen.length < 2 )
@@ -89,7 +118,7 @@ public final class RoughnessFlowzones
     final int p1 = profile.indexOfPoint( trennflaechen[0].getPoint() );
     final int p2 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
 
-    return findCommonValue( profile, roughness, p1, p2 );
+    return new int[] { p1, p2 };
   }
 
   /**
@@ -114,5 +143,41 @@ public final class RoughnessFlowzones
     }
 
     return value;
+  }
+
+  public static void setLeftFloodplain( final IProfil profile, final IComponent roughness, final Double value )
+  {
+    final int[] zone = getLeftFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return;
+
+    setCommonValue( profile, roughness, zone[0], zone[1], value );
+  }
+
+  public static void setRightFloodplain( final IProfil profile, final IComponent roughness, final Double value )
+  {
+    final int[] zone = getRightFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return;
+
+    setCommonValue( profile, roughness, zone[0], zone[1], value );
+  }
+
+  public static void setRiverTube( final IProfil profile, final IComponent roughness, final Double value )
+  {
+    final int[] zone = getRiverTube( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return;
+
+    setCommonValue( profile, roughness, zone[0], zone[1], value );
+  }
+
+  private static void setCommonValue( final IProfil profile, final IComponent roughness, final int p1, final int p2, final Double value )
+  {
+    final IRecord[] points = profile.getPoints( p1, p2 );
+    for( final IRecord point : points )
+    {
+      point.setValue( roughness, value );
+    }
   }
 }

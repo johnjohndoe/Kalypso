@@ -43,6 +43,10 @@ package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -90,28 +94,67 @@ public class RoughnessPanel extends AbstractProfilView
     final Composite body = toolkit.createComposite( parent, SWT.FLAT );
     body.setLayout( Layouts.createGridLayout() );
 
+    /** handle existing roughnesses */
     final IComponent[] roughnesses = RoughnessPanelHelper.fromProfile( getProfil() );
-    final IElementPage[] pages = getPages( roughnesses, toolkit );
+    final IElementPage[] pages = getPages( roughnesses );
     final ElementsComposite composite = new ElementsComposite( body, toolkit, pages );
     composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     composite.setShowAlwaysComboViewer( true );
     composite.update();
 
+    toolkit.createLabel( body, "" ); // spacer
+
+    /** handle missing roughnesses */
+    createMissingRoughnessesControl( body, toolkit );
+
     return body;
   }
 
-  private IElementPage[] getPages( final IComponent[] roughnesses, final FormToolkit toolkit )
+  private void createMissingRoughnessesControl( final Composite parent, final FormToolkit toolkit )
+  {
+    final String[] missing = RoughnessPanelHelper.findMissing( getProfil() );
+    if( ArrayUtils.isEmpty( missing ) )
+      return;
+
+    final Composite body = toolkit.createComposite( parent );
+    body.setLayout( Layouts.createGridLayout( 2 ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    toolkit.createLabel( body, "Komponente" );
+
+    final ComboViewer viewer = new ComboViewer( body, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
+    viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( element ) )
+          return RoughnessKsComposite.RAUHEIT_KS_LABEL;
+        else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KST.equals( element ) )
+          return RoughnessKstComposite.RAUHEIT_KST_LABEL;
+        else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
+          return RoughnessClassComposite.RAUHEIT_KLASSE_LABEL;
+
+        return super.getText( element );
+      }
+    } );
+
+  }
+
+  private IElementPage[] getPages( final IComponent[] roughnesses )
   {
     final List<IElementPage> pages = new ArrayList<IElementPage>();
 
     for( final IComponent roughness : roughnesses )
     {
       if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
-        pages.add( new RoughnessKsComposite( getProfil(), roughness, toolkit ) );
+        pages.add( new RoughnessKsComposite( getProfil(), roughness ) );
       else if( IWspmProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
-        pages.add( new RoughnessKstComposite( getProfil(), roughness, toolkit ) );
+        pages.add( new RoughnessKstComposite( getProfil(), roughness ) );
       else if( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
-        pages.add( new RoughnessClassComposite( getProfil(), roughness, toolkit ) );
+        pages.add( new RoughnessClassComposite( getProfil(), roughness ) );
       else
         pages.add( new MissingRoughnessTypePage( roughness ) );
     }
