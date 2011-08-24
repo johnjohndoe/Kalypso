@@ -63,7 +63,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.core.status.StatusLabelProvider;
+import org.kalypso.core.status.StatusViewer;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -124,9 +124,10 @@ public class CalculationUnitLogComponent
     final GridData tableGridData = new GridData( SWT.FILL, SWT.END, true, true );
     table.setLayoutData( tableGridData );
 
-    StatusLabelProvider.addSeverityColumn( logTableViewer );
-    StatusLabelProvider.addMessageColumn( logTableViewer );
-    StatusLabelProvider.addTimeColumn( logTableViewer );
+    // FIXME: probably we can replace all this by the StatusTableViewer
+    StatusViewer.addSeverityColumn( logTableViewer );
+    StatusViewer.addMessageColumn( logTableViewer );
+    StatusViewer.addTimeColumn( logTableViewer );
 
     logTableViewer.setContentProvider( new ArrayContentProvider() );
     logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
