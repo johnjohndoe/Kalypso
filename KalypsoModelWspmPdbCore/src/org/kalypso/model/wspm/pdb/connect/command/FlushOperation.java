@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.pdb.connect.command;
 
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Just flushes the session.
@@ -53,7 +54,7 @@ public class FlushOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Flush session";
+    return Messages.getString("FlushOperation_0"); //$NON-NLS-1$
   }
 
   @Override

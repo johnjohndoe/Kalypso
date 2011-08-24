@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,10 +68,10 @@ public class ConnectOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final String taskName = String.format( "Connecting to %s", m_settings.getName() );
+    final String taskName = String.format( Messages.getString("ConnectOperation.0"), m_settings.getName() ); //$NON-NLS-1$
     monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
-    monitor.subTask( "connecting..." );
+    monitor.subTask( Messages.getString("ConnectOperation.1") ); //$NON-NLS-1$
 
     try
     {
@@ -84,7 +85,7 @@ public class ConnectOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
 
       // TODO: make message more human readable
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Connection failed", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("ConnectOperation.2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

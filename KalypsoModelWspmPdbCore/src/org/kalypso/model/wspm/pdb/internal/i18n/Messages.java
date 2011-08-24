@@ -2,69 +2,72 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.connect.command;
+package org.kalypso.model.wspm.pdb.internal.i18n;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+import java.util.ResourceBundle;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
- * @author Gernot Belger
+ * @author Kim Werner
  */
-public class UpdateObjectOperation implements IPdbOperation
+public final class Messages
 {
-  private final Object m_element;
+  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.pdb.internal.i18n.messages"; //$NON-NLS-1$
 
-  public UpdateObjectOperation( final Object element )
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    m_element = element;
   }
 
-  @Override
-  public String getLabel( )
+  /*
+   * java reflections needs this method-signatur
+   */
+  public static String getString( final String key )
   {
-    return Messages.getString( "UpdateObjectOperation_0", m_element ); //$NON-NLS-1$
+    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
   }
 
-  @Override
-  public void execute( final Session session )
+  public static String getString( final String key, final Object... args )
   {
-    session.update( m_element );
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
   }
 }

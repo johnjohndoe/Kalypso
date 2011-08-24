@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.connect;
 
@@ -46,6 +46,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 import com.vividsolutions.jts.util.Assert;
 
@@ -97,7 +98,7 @@ public class Executor
     else
     {
       e.printStackTrace();
-      final String message = String.format( "Failed to execute command: %s", m_operation.getLabel() );
+      final String message = String.format( Messages.getString("Executor_0"), m_operation.getLabel() ); //$NON-NLS-1$
       return new PdbConnectException( message, e );
     }
   }
@@ -113,7 +114,7 @@ public class Executor
 
     e.printStackTrace();
 
-    final String message = String.format( "Failed to execute command: %s", m_operation.getLabel() );
+    final String message = String.format( Messages.getString( "Executor_0" ), m_operation.getLabel() ); //$NON-NLS-1$
     return new PdbConnectException( message, e );
   }
 
@@ -137,7 +138,7 @@ public class Executor
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( "Failed to rollback transaction", e );
+      throw new PdbConnectException( Messages.getString("Executor_2"), e ); //$NON-NLS-1$
     }
   }
 }
