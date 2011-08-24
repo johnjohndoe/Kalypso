@@ -73,4 +73,5 @@ public final class RoughnessPanelHelper
 
     return found.toArray( new IComponent[] {} );
   }
+
 }

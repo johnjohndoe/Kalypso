@@ -44,6 +44,7 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Dirk Kuch
@@ -62,9 +63,17 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   Double m_rightFloodplain;
 
-  public ProfileRoguhnessesDataModel( final IProfil profile )
+  public ProfileRoguhnessesDataModel( final IProfil profile, final IComponent roughness )
   {
-    // TODO Auto-generated constructor stub
+    init( profile, roughness );
+  }
+
+  private void init( final IProfil profile, final IComponent roughness )
+  {
+    m_leftFloodplain = RoughnessFlowzones.findLeftFloodplainValue( profile, roughness );
+    m_rightFloodplain = RoughnessFlowzones.findRightFloodplainValue( profile, roughness );
+    m_riverTube = RoughnessFlowzones.findRiverTubeValue( profile, roughness );
+
   }
 
   public IObservableValue getObservableValue( final String property )
