@@ -51,7 +51,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -146,6 +148,19 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     build( group, toolkit, "Left Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null );
     build( group, toolkit, "River Tube", ProfileRoguhnessesDataModel.PROPERTY_RIVER_TUBE, null );
     build( group, toolkit, "Right Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null );
+
+    final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
+    lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
+    lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
+
+    lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
+      {
+        RoughnessPanelHelper.removeRoughness( getProfile(), getRoughness().getId() );
+      }
+    } );
 
   }
 
