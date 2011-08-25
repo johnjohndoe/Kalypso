@@ -60,8 +60,14 @@ public class GafProfileToDetailsLabelConverter extends TypedConverter<GafProfile
   public String convertTyped( final GafProfile profile )
   {
     final BigDecimal station = findStation( profile );
+    String stationText;
 
-    return String.format( Messages.getString( "GafProfileToDetailsLabelConverter.0" ), station ); //$NON-NLS-1$
+    if( station == null )
+      stationText = "-"; //$NON-NLS-1$
+    else
+      stationText = station.toString();
+
+    return String.format( Messages.getString( "GafProfileToDetailsLabelConverter.0" ), stationText ); //$NON-NLS-1$
   }
 
   private BigDecimal findStation( final GafProfile profile )

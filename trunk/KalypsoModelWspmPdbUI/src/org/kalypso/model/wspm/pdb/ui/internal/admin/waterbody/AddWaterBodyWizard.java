@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
@@ -69,7 +69,7 @@ public class AddWaterBodyWizard extends Wizard
     m_existingWaterbodies = existingWaterBodies;
     m_viewer = viewer;
 
-    setWindowTitle( Messages.getString( "AddWaterBodyWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "AddWaterBodyAction.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
