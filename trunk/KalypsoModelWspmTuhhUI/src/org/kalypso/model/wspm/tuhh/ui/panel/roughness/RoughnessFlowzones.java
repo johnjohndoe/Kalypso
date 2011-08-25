@@ -174,12 +174,28 @@ public final class RoughnessFlowzones
   }
 
   @SuppressWarnings("deprecation")
-  private static void setCommonValue( final IProfil profile, final IComponent roughness, final int p1, final int p2, final Double value )
+  private static void setCommonValue( final IProfil profile, final IComponent component, final int p1, final int p2, final Object value )
   {
     final IRecord[] points = profile.getPoints( p1, p2 );
     for( final IRecord point : points )
     {
-      point.setValue( roughness, value );
+      point.setValue( component, value );
     }
+  }
+
+  public static Double findRoughnessFactor( final IProfil profile, final IComponent component )
+  {
+    final int pn = profile.getPoints().length - 1;
+    final Double value = findCommonValue( profile, component, 0, pn );
+    if( Objects.isNull( value ) )
+      return 1.0;
+
+    return value;
+  }
+
+  public static void setRoughnessFactor( final IProfil profile, final IComponent component, final Double factor )
+  {
+    final int pn = profile.getPoints().length - 1;
+    setCommonValue( profile, component, 0, pn, factor );
   }
 }
