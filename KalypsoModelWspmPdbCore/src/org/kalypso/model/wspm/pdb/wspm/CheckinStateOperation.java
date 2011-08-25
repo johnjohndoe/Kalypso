@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckinStateOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString("CheckinStateOperation.0"); //$NON-NLS-1$
+  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString( "CheckInEventOperation.0" ); //$NON-NLS-1$
 
   private final CheckinStateData m_data;
 
@@ -136,7 +136,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinStateOperation.3"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally

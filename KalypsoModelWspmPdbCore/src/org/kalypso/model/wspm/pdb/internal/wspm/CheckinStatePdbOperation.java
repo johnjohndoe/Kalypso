@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -130,18 +130,18 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final WaterBody waterBody : waterBodies )
       m_waterBodies.put( waterBody.getName(), waterBody );
 
-    m_monitor = monitor;
+        m_monitor = monitor;
 
-    final int srid = JTSAdapter.toSrid( dbSrs );
-    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
+        final int srid = JTSAdapter.toSrid( dbSrs );
+        m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
 
-    m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
+        m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
   }
 
   @Override
   public String getLabel( )
   {
-    return Messages.getString("CheckinStatePdbOperation.1"); //$NON-NLS-1$
+    return Messages.getString( "CheckinStateOperation.1" ); //$NON-NLS-1$
   }
 
   @Override
@@ -279,15 +279,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
-    final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
-    for( final CrossSectionPart part : parts )
-    {
-      /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
-      final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory() );
-      part.setName( uniquePartName );
-      part.setCrossSection( section );
-      section.getCrossSectionParts().add( part );
-    }
+        final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
+        for( final CrossSectionPart part : parts )
+        {
+          /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
+          final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory() );
+          part.setName( uniquePartName );
+          part.setCrossSection( section );
+          section.getCrossSectionParts().add( part );
+        }
   }
 
   private boolean isBlank( final CrossSectionPart part )

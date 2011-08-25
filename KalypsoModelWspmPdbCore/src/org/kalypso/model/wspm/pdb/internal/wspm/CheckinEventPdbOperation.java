@@ -40,12 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;

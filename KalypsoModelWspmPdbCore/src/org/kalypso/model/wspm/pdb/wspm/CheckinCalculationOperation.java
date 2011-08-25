@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -117,7 +117,7 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinCalculationOperation.2"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
