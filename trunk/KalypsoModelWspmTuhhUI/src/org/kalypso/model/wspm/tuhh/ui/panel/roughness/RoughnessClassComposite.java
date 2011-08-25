@@ -47,6 +47,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -57,14 +58,19 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.observation.result.IComponent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -126,6 +132,59 @@ public class RoughnessClassComposite extends AbstractRoughnessComposite
         RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
       }
     } );
+
+    /** additional actions */
+    if( hasActions() )
+    {
+
+      final Group grActions = new Group( body, SWT.NULL );
+      grActions.setLayout( new GridLayout() );
+      grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      grActions.setText( "Additional Actions" );
+
+      if( Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
+        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, grActions, toolkit, "Update ks values from mapped roughness class" );
+
+      if( Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
+        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, grActions, toolkit, "Update kst values from mapped roughness class" );
+
+      toolkit.adapt( grActions );
+      grActions.layout();
+    }
+
+    body.layout();
+  }
+
+  private void addWriteValueLink( final String property, final Composite body, final FormToolkit toolkit, final String label )
+  {
+    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NULL );
+    lnk.setText( label );
+
+    lnk.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), "Overwrite", "Overwrite existing roughness values?" );
+
+        final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( getProfile(), property, overwriteValues );
+        ProgressUtilities.busyCursorWhile( worker );
+
+      }
+    } );
+
+  }
+
+  private boolean hasActions( )
+  {
+    final IProfil profile = getProfile();
+
+    if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
+      return true;
+    else if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
+      return true;
+
+    return false;
   }
 
   @Override
