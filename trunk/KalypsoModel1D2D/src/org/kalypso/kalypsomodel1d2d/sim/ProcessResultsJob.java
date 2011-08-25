@@ -428,7 +428,7 @@ public class ProcessResultsJob extends Job
           /* GML(s) */
 
           /* result db */
-          
+
           switch( parameter )
           {
             case TERRAIN:
