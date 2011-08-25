@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinCalculationPdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -76,10 +77,10 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Upload waterlevel into database", 100 );
+    monitor.beginTask( Messages.getString("CheckinCalculationOperation.0"), 100 ); //$NON-NLS-1$
 
     if( m_lengthSection == null )
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "No result was selected" );
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinCalculationOperation.1") ); //$NON-NLS-1$
 
     Session session = null;
 
@@ -116,7 +117,7 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Operation failed", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinCalculationOperation.2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally

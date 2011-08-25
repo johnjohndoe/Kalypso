@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafReader;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * First stage of gaf reading: open log file, then delegate to next level.
@@ -90,7 +91,7 @@ public class ReadGafOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final String message = "Error while reading file";
+      final String message = Messages.getString("ReadGafOperation.0"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

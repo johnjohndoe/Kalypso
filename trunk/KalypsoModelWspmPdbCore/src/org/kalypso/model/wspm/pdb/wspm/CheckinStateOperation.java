@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinStatePdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -76,7 +77,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckinStateOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = "Failed to write to database";
+  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString("CheckinStateOperation.0"); //$NON-NLS-1$
 
   private final CheckinStateData m_data;
 
@@ -88,7 +89,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Upload cross sections into database", 100 );
+    monitor.beginTask( Messages.getString("CheckinStateOperation.1"), 100 ); //$NON-NLS-1$
 
     final IProfileFeature[] profiles = findProfiles();
 
@@ -129,13 +130,13 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to initialize GAF codes", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinStateOperation.2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Operation failed", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinStateOperation.3"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally

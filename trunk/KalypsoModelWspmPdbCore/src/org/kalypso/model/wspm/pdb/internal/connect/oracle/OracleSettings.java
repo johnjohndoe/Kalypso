@@ -69,7 +69,7 @@ public class OracleSettings extends HibernateSettings
 
   public OracleSettings( )
   {
-    super( "Oracle" );
+    super( "Oracle" ); //$NON-NLS-1$
   }
 
   public OracleSettings( final String name, final OracleSettings settings )
@@ -116,7 +116,7 @@ public class OracleSettings extends HibernateSettings
     if( PROPERTY_NAME.equals( property ) )
       return "Oracle"; //$NON-NLS-1$
 
-    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
+    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) ); //$NON-NLS-1$
   }
 
   public void setHost( final String host )

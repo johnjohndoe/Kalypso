@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Opens a connection in a separate thread.<br/>
@@ -80,7 +81,7 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    final String taskName = String.format( "Open Connection '%s'", m_settings.getName() );
+    final String taskName = String.format( Messages.getString("OpenConnectionThreadedOperation.0"), m_settings.getName() ); //$NON-NLS-1$
     monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
     final OpenConnectionJob job = new OpenConnectionJob( m_settings, m_closeConnection );

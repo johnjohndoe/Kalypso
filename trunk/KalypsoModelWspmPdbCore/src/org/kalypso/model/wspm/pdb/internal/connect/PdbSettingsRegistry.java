@@ -87,7 +87,7 @@ public class PdbSettingsRegistry
     if( OracleSettings.TYPE.equals( type ) )
       return new OracleSettings();
 
-    final String message = String.format( "Unknown connection type: %s", type );
+    final String message = String.format( "Unknown connection type: %s", type ); //$NON-NLS-1$
     final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
     return new ErrorSettings( status );
   }

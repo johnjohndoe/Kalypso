@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
@@ -63,7 +64,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractCheckinEventOperation implements IPdbOperation
 {
-  static final String STR_FAILED_TO_CONVERT_GEOMETRY = "Failed to convert geometry";
+  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString("AbstractCheckinEventOperation.0"); //$NON-NLS-1$
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
@@ -87,15 +88,15 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Upload water level into database";
+    return Messages.getString("AbstractCheckinEventOperation.1"); //$NON-NLS-1$
   }
 
   @Override
   public void execute( final Session session )
   {
-    m_monitor.beginTask( "Uploading new event into database", IProgressMonitor.UNKNOWN );
+    m_monitor.beginTask( Messages.getString("AbstractCheckinEventOperation.2"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-    m_monitor.subTask( "saving state..." );
+    m_monitor.subTask( Messages.getString("AbstractCheckinEventOperation.3") ); //$NON-NLS-1$
 
     final Date now = new Date();
     m_event.setCreationDate( now );
@@ -134,7 +135,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
       session.save( element );
     }
 
-    m_monitor.subTask( "transferring data into database..." );
+    m_monitor.subTask( Messages.getString("AbstractCheckinEventOperation.4") ); //$NON-NLS-1$
   }
 
   protected abstract IObservation<TupleResult> getObservation( );

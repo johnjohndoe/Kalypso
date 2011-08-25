@@ -161,7 +161,7 @@ public class CheckoutDataMapping
         return wspmWaterBody.findFixationByName( eventName );
 
       case Simulation:
-        final String simulationName = String.format( "%s_%s", waterBody.getName(), eventName );
+        final String simulationName = String.format( "%s_%s", waterBody.getName(), eventName ); //$NON-NLS-1$
         return m_project.findCalculationByName( simulationName );
     }
 

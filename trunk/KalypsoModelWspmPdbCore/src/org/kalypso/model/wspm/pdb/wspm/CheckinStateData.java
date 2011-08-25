@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -92,7 +93,7 @@ public class CheckinStateData
     m_state.setName( reach.getName() );
     m_state.setDescription( reach.getDescription() );
     m_state.setIsstatezero( State.ZERO_STATE_OFF );
-    m_state.setSource( "WSPM Local Data" );
+    m_state.setSource( Messages.getString("CheckinStateData_0") ); //$NON-NLS-1$
   }
 
   public void init( final IPdbConnection connection ) throws PdbConnectException, CoreException

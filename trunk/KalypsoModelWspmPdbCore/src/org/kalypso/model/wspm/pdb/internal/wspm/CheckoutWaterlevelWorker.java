@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.observation.IObservation;
@@ -80,13 +81,13 @@ public class CheckoutWaterlevelWorker
   {
     final Event[] events = m_mapping.getEvents();
 
-    monitor.beginTask( "Reading water levels from database", events.length );
+    monitor.beginTask( Messages.getString("CheckoutWaterlevelWorker.0"), events.length ); //$NON-NLS-1$
 
     try
     {
       for( final Event event : events )
       {
-        monitor.subTask( String.format( "Converting %s", event.getName() ) );
+        monitor.subTask( String.format( Messages.getString("CheckoutWaterlevelWorker.1"), event.getName() ) ); //$NON-NLS-1$
 
         final Object wspmObject = m_mapping.getWaterlevel( event );
         final Feature newWspmObject = createOrReplaceEvent( event, wspmObject );

@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -90,14 +91,14 @@ public class CheckoutCrossSectionsWorker
   {
     final CrossSection[] crossSections = m_mapping.getCrossSections();
 
-    monitor.beginTask( "Reading cross sections from database", crossSections.length );
+    monitor.beginTask( Messages.getString("CheckoutCrossSectionsWorker.0"), crossSections.length ); //$NON-NLS-1$
 
     try
     {
       /* Convert the cross sections */
       for( final CrossSection crossSection : crossSections )
       {
-        monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
+        monitor.subTask( String.format( Messages.getString("CheckoutCrossSectionsWorker.1"), crossSection.getStation() ) ); //$NON-NLS-1$
         insert( crossSection );
         ProgressUtilities.worked( monitor, 1 );
       }

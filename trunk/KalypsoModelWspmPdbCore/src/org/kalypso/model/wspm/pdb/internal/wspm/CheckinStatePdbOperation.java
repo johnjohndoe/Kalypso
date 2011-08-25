@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
@@ -92,7 +93,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class CheckinStatePdbOperation implements IPdbOperation
 {
-  static final String STR_FAILED_TO_CONVERT_GEOMETRY = "Failed to convert geometry";
+  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString("CheckinStatePdbOperation.0"); //$NON-NLS-1$
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
@@ -140,27 +141,27 @@ public class CheckinStatePdbOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Upload cross sections into database";
+    return Messages.getString("CheckinStatePdbOperation.1"); //$NON-NLS-1$
   }
 
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
-    m_monitor.beginTask( "Uploading new state into database", 10 + m_profiles.length );
+    m_monitor.beginTask( Messages.getString("CheckinStatePdbOperation.2"), 10 + m_profiles.length ); //$NON-NLS-1$
 
-    m_monitor.subTask( "saving state..." );
+    m_monitor.subTask( Messages.getString("CheckinStatePdbOperation.3") ); //$NON-NLS-1$
     Gaf2Db.addState( session, m_state );
     m_monitor.worked( 10 );
 
     for( final IProfileFeature feature : m_profiles )
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-      m_monitor.subTask( String.format( "saving profile '%s'...", label ) );
+      m_monitor.subTask( String.format( Messages.getString("CheckinStatePdbOperation.4"), label ) ); //$NON-NLS-1$
       uploadProfile( session, feature );
       m_monitor.worked( 1 );
     }
 
-    m_monitor.subTask( "transferring data into database..." );
+    m_monitor.subTask( Messages.getString("CheckinStatePdbOperation.5") ); //$NON-NLS-1$
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -187,7 +188,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     /* Check for uniqueness of profile name */
     if( !m_sectionNames.addUniqueName( name ) )
     {
-      final String message = String.format( "Name of profile (station %s) is not unique within the state: %s", station, name );
+      final String message = String.format( Messages.getString("CheckinStatePdbOperation.6"), station, name ); //$NON-NLS-1$
       throw new PdbConnectException( message );
     }
 
@@ -366,7 +367,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     // FIXME: not perfect... but probably unique enough for now
     final String unencoded = URIUtil.toUnencodedString( uri );
     final String filename = FilenameUtils.getName( unencoded );
-    return m_state.getName() + "/" + filename;
+    return m_state.getName() + "/" + filename; //$NON-NLS-1$
   }
 
   /**

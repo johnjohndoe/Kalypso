@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.version;
 
@@ -55,6 +55,8 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
+
+import com.google.common.base.Charsets;
 
 /**
  * @author Gernot Belger
@@ -103,8 +105,7 @@ public class UpdateScript implements Comparable<UpdateScript>
   {
     final Bundle bundle = Platform.getBundle( m_bundleID );
     final URL entry = bundle.getEntry( m_location );
-    // FIXME: encoding!
-    final String rawSQL = UrlUtilities.toString( entry, "UTF-8" );
+    final String rawSQL = UrlUtilities.toString( entry, Charsets.UTF_8.name() );
 
     final Collection<String> noComments = new ArrayList<String>();
 
@@ -112,15 +113,15 @@ public class UpdateScript implements Comparable<UpdateScript>
     for( final String line : lines )
     {
       final String trim = StringUtils.trimToEmpty( line );
-      if( !trim.isEmpty() && !trim.startsWith( "--" ) )
+      if( !trim.isEmpty() && !trim.startsWith( "--" ) ) //$NON-NLS-1$
       {
         noComments.add( trim );
       }
     }
 
-    final String result = StringUtils.join( noComments, "\n" );
+    final String result = StringUtils.join( noComments, "\n" ); //$NON-NLS-1$
 
-    return StringUtils.split( result, ';' );
+    return StringUtils.split( result, ';' ); //$NON-NLS-1$
   }
 
   public String getType( )
@@ -153,7 +154,7 @@ public class UpdateScript implements Comparable<UpdateScript>
       catch( final Exception e )
       {
         e.printStackTrace();
-        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to create update wizard page", e );
+        final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to create update wizard page", e ); //$NON-NLS-1$
         throw new CoreException( status );
       }
     }

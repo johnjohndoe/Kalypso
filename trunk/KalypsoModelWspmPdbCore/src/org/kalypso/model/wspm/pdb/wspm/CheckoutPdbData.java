@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,9 +68,9 @@ public class CheckoutPdbData extends AbstractModelObject
   /** Choice what shall be removed from the local data. */
   public enum RemoveStrategy
   {
-    keepAll("Keep everything"),
-    keepWaterBodies("Only keep water bodies"),
-    removeAll("Remove everything");
+    keepAll(Messages.getString("CheckoutPdbData.0")), //$NON-NLS-1$
+    keepWaterBodies(Messages.getString("CheckoutPdbData.1")), //$NON-NLS-1$
+    removeAll(Messages.getString("CheckoutPdbData.2")); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -130,7 +131,7 @@ public class CheckoutPdbData extends AbstractModelObject
     {
       e.printStackTrace();
 
-      final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
+      final String STR_ATTACHMENTS_DISABLED = Messages.getString("CheckoutPdbData.3"); //$NON-NLS-1$
       new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
 
       return null;
