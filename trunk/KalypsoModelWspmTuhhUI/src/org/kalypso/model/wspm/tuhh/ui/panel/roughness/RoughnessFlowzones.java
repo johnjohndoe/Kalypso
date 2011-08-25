@@ -53,17 +53,115 @@ import org.kalypso.observation.result.IRecord;
  */
 public final class RoughnessFlowzones
 {
+
   private RoughnessFlowzones( )
   {
   }
 
-  public static Double findLeftFloodplainValue( final IProfil profile, final IComponent roughness )
+  /**
+   * if an common is assigned to a left or right flood plain, this method will return this value
+   */
+  private static Object findCommonValue( final IProfil profile, final IComponent component, final int p1, final int p2 )
+  {
+    Object value = null;
+
+    final IRecord[] points = profile.getPoints( p1, p2 );
+    for( final IRecord point : points )
+    {
+      @SuppressWarnings("deprecation")
+      final Object object = point.getValue( component );
+      if( Objects.isNull( value ) )
+        value = object;
+      else if( Objects.notEqual( value, object ) )
+        return null;
+    }
+
+    return value;
+  }
+
+  public static String findLeftFloodplainClass( final IProfil profile, final IComponent component )
   {
     final int[] zone = getLeftFloodplainZone( profile );
     if( ArrayUtils.isEmpty( zone ) )
       return null;
 
-    return findCommonValue( profile, roughness, zone[0], zone[1] );
+    final Object value = findCommonValue( profile, component, zone[0], zone[1] );
+
+    return Objects.firstNonNull( value, "" ).toString();
+  }
+
+  public static Double findLeftFloodplainValue( final IProfil profile, final IComponent component )
+  {
+    final int[] zone = getLeftFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    final Object value = findCommonValue( profile, component, zone[0], zone[1] );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return null;
+
+  }
+
+  public static String findRightFloodplainClass( final IProfil profile, final IComponent component )
+  {
+    final int[] zone = getRightFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    final Object value = findCommonValue( profile, component, zone[0], zone[1] );
+
+    return Objects.firstNonNull( value, "" ).toString();
+
+  }
+
+  public static Double findRightFloodplainValue( final IProfil profile, final IComponent component )
+  {
+    final int[] zone = getRightFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    final Object value = findCommonValue( profile, component, zone[0], zone[1] );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return null;
+
+  }
+
+  public static String findRiverTubeClass( final IProfil profile, final IComponent component )
+  {
+    final int[] zone = getRiverTube( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    final Object value = findCommonValue( profile, component, zone[0], zone[1] );
+
+    return Objects.firstNonNull( value, "" ).toString();
+  }
+
+  public static Double findRiverTubeValue( final IProfil profile, final IComponent component )
+  {
+    final int[] zone = getRiverTube( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return null;
+
+    final Object value = findCommonValue( profile, component, zone[0], zone[1] );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return null;
+  }
+
+  public static Double findRoughnessFactor( final IProfil profile, final IComponent component )
+  {
+    final int pn = profile.getPoints().length - 1;
+    final Object value = findCommonValue( profile, component, 0, pn );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return 1.0;
   }
 
   private static int[] getLeftFloodplainZone( final IProfil profile )
@@ -79,15 +177,6 @@ public final class RoughnessFlowzones
     return new int[] { p1, p2 };
   }
 
-  public static Double findRightFloodplainValue( final IProfil profile, final IComponent roughness )
-  {
-    final int[] zone = getRightFloodplainZone( profile );
-    if( ArrayUtils.isEmpty( zone ) )
-      return null;
-
-    return findCommonValue( profile, roughness, zone[0], zone[1] );
-  }
-
   private static int[] getRightFloodplainZone( final IProfil profile )
   {
     final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
@@ -98,15 +187,6 @@ public final class RoughnessFlowzones
     final int p2 = profile.getPoints().length - 1;
 
     return new int[] { p1, p2 };
-  }
-
-  public static Double findRiverTubeValue( final IProfil profile, final IComponent roughness )
-  {
-    final int[] zone = getRiverTube( profile );
-    if( ArrayUtils.isEmpty( zone ) )
-      return null;
-
-    return findCommonValue( profile, roughness, zone[0], zone[1] );
   }
 
   private static int[] getRiverTube( final IProfil profile )
@@ -121,58 +201,6 @@ public final class RoughnessFlowzones
     return new int[] { p1, p2 };
   }
 
-  /**
-   * if an common is assigned to a left or right flood plain, this method will return this value
-   */
-  private static Double findCommonValue( final IProfil profile, final IComponent roughness, final int p1, final int p2 )
-  {
-    Double value = null;
-
-    final IRecord[] points = profile.getPoints( p1, p2 );
-    for( final IRecord point : points )
-    {
-      @SuppressWarnings("deprecation")
-      final Object object = point.getValue( roughness );
-      if( object instanceof Number )
-      {
-        final Double current = ((Number) object).doubleValue();
-        if( Objects.isNull( value ) )
-          value = current;
-        else if( !value.equals( current ) )
-          return null;
-      }
-    }
-
-    return value;
-  }
-
-  public static void setLeftFloodplain( final IProfil profile, final IComponent roughness, final Double value )
-  {
-    final int[] zone = getLeftFloodplainZone( profile );
-    if( ArrayUtils.isEmpty( zone ) )
-      return;
-
-    setCommonValue( profile, roughness, zone[0], zone[1], value );
-  }
-
-  public static void setRightFloodplain( final IProfil profile, final IComponent roughness, final Double value )
-  {
-    final int[] zone = getRightFloodplainZone( profile );
-    if( ArrayUtils.isEmpty( zone ) )
-      return;
-
-    setCommonValue( profile, roughness, zone[0], zone[1], value );
-  }
-
-  public static void setRiverTube( final IProfil profile, final IComponent roughness, final Double value )
-  {
-    final int[] zone = getRiverTube( profile );
-    if( ArrayUtils.isEmpty( zone ) )
-      return;
-
-    setCommonValue( profile, roughness, zone[0], zone[1], value );
-  }
-
   @SuppressWarnings("deprecation")
   private static void setCommonValue( final IProfil profile, final IComponent component, final int p1, final int p2, final Object value )
   {
@@ -183,14 +211,31 @@ public final class RoughnessFlowzones
     }
   }
 
-  public static Double findRoughnessFactor( final IProfil profile, final IComponent component )
+  public static void setLeftFloodplain( final IProfil profile, final IComponent component, final Object value )
   {
-    final int pn = profile.getPoints().length - 1;
-    final Double value = findCommonValue( profile, component, 0, pn );
-    if( Objects.isNull( value ) )
-      return 1.0;
+    final int[] zone = getLeftFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return;
 
-    return value;
+    setCommonValue( profile, component, zone[0], zone[1], value );
+  }
+
+  public static void setRightFloodplain( final IProfil profile, final IComponent component, final Object value )
+  {
+    final int[] zone = getRightFloodplainZone( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return;
+
+    setCommonValue( profile, component, zone[0], zone[1], value );
+  }
+
+  public static void setRiverTube( final IProfil profile, final IComponent component, final Object value )
+  {
+    final int[] zone = getRiverTube( profile );
+    if( ArrayUtils.isEmpty( zone ) )
+      return;
+
+    setCommonValue( profile, component, zone[0], zone[1], value );
   }
 
   public static void setRoughnessFactor( final IProfil profile, final IComponent component, final Double factor )
@@ -198,4 +243,5 @@ public final class RoughnessFlowzones
     final int pn = profile.getPoints().length - 1;
     setCommonValue( profile, component, 0, pn, factor );
   }
+
 }

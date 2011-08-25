@@ -72,6 +72,18 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   public static final String PROPERTY_ROUGHNESS_FACTOR = "roughnessFactor"; //$NON-NLS-1$
 
+  public static final String PROPERTY_LEFT_FLOODPLAIN_CLASS = "leftFloodplainClass"; //$NON-NLS-1$
+
+  public static final String PROPERTY_RIGHT_FLOODPLAIN_CLASS = "rightFloodplainClass"; //$NON-NLS-1$
+
+  public static final String PROPERTY_RIVER_TUBE_CLASS = "riverTubeClass"; //$NON-NLS-1$
+
+  String m_riverTubeClass;
+
+  String m_leftFloodplainClass;
+
+  String m_rightFloodplainClass;
+
   public ProfileRoguhnessesDataModel( final IProfil profile, final IComponent component )
   {
     m_profile = profile;
@@ -94,7 +106,12 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
     {
       m_roughnessFactor = RoughnessFlowzones.findRoughnessFactor( profile, component );
     }
-
+    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( component.getId() ) )
+    {
+      m_leftFloodplainClass = RoughnessFlowzones.findLeftFloodplainClass( profile, component );
+      m_rightFloodplainClass = RoughnessFlowzones.findRightFloodplainClass( profile, component );
+      m_riverTubeClass = RoughnessFlowzones.findRiverTubeClass( profile, component );
+    }
   }
 
   private boolean isSimpleRoughnessType( final IComponent component )
@@ -130,7 +147,6 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
   public void setLeftFloodplain( final Double leftFloodplain )
   {
     final Object oldValue = m_leftFloodplain;
-
     m_leftFloodplain = leftFloodplain;
 
     RoughnessFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplain );
@@ -142,7 +158,6 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
   public void setRightFloodplain( final Double rightFloodplain )
   {
     final Object oldValue = m_rightFloodplain;
-
     m_rightFloodplain = rightFloodplain;
 
     RoughnessFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplain );
@@ -153,7 +168,6 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
   public void setRiverTube( final Double riverTube )
   {
     final Object oldValue = m_riverTube;
-
     m_riverTube = riverTube;
 
     RoughnessFlowzones.setRiverTube( m_profile, m_component, riverTube );
@@ -169,10 +183,56 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
   public void setRoughnessFactor( final Double roughnessFactor )
   {
     final Object oldValue = m_roughnessFactor;
-
     m_roughnessFactor = roughnessFactor;
+
     RoughnessFlowzones.setRoughnessFactor( m_profile, m_component, roughnessFactor );
 
-    firePropertyChange( PROPERTY_RIVER_TUBE, oldValue, roughnessFactor );
+    firePropertyChange( PROPERTY_ROUGHNESS_FACTOR, oldValue, roughnessFactor );
   }
+
+  public String getRiverTubeClass( )
+  {
+    return m_riverTubeClass;
+  }
+
+  public void setRiverTubeClass( final String riverTubeClass )
+  {
+    final Object oldValue = m_riverTubeClass;
+    m_riverTubeClass = riverTubeClass;
+
+    RoughnessFlowzones.setRiverTube( m_profile, m_component, riverTubeClass );
+
+    firePropertyChange( PROPERTY_RIVER_TUBE_CLASS, oldValue, riverTubeClass );
+  }
+
+  public String getLeftFloodplainClass( )
+  {
+    return m_leftFloodplainClass;
+  }
+
+  public void setLeftFloodplainClass( final String leftFloodplainClass )
+  {
+    final Object oldValue = m_leftFloodplainClass;
+    m_leftFloodplainClass = leftFloodplainClass;
+
+    RoughnessFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplainClass );
+
+    firePropertyChange( PROPERTY_LEFT_FLOODPLAIN_CLASS, oldValue, leftFloodplainClass );
+  }
+
+  public String getRightFloodplainClass( )
+  {
+    return m_rightFloodplainClass;
+  }
+
+  public void setRightFloodplainClass( final String rightFloodplainClass )
+  {
+    final Object oldValue = m_rightFloodplainClass;
+    m_rightFloodplainClass = rightFloodplainClass;
+
+    RoughnessFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplainClass );
+
+    firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN_CLASS, oldValue, rightFloodplainClass );
+  }
+
 }
