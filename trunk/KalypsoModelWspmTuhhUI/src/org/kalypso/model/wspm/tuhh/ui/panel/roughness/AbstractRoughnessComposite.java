@@ -45,6 +45,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.AbstractDatabinding;
@@ -59,7 +61,10 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 
@@ -171,6 +176,45 @@ public abstract class AbstractRoughnessComposite implements IElementPage
         RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
       }
     } );
+
+    /** additional actions */
+    if( hasActions() )
+    {
+
+      final Group grActions = new Group( body, SWT.NULL );
+      grActions.setLayout( new GridLayout() );
+      grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      grActions.setText( "Additional Actions" );
+
+      final ImageHyperlink lnk = toolkit.createImageHyperlink( grActions, SWT.NULL );
+      if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( getComponent().getId() ) )
+        lnk.setText( "Guess roughess classes from existing ks values" );
+      else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( getComponent().getId() ) )
+        lnk.setText( "Guess roughess classes from existing kst values" );
+
+      lnk.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), "Overwrite", "Overwrite existing classes?" );
+
+          final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
+          ProgressUtilities.busyCursorWhile( worker );
+
+        }
+      } );
+
+      toolkit.adapt( grActions );
+      grActions.layout();
+    }
+
+    body.layout();
+  }
+
+  private boolean hasActions( )
+  {
+    return Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
   }
 
 }
