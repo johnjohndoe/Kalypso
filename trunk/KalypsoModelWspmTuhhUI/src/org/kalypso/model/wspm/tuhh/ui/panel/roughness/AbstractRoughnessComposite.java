@@ -214,6 +214,9 @@ public abstract class AbstractRoughnessComposite implements IElementPage
 
   private boolean hasActions( )
   {
+    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( getComponent().getId() ) )
+      return false;
+
     return Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
   }
 
