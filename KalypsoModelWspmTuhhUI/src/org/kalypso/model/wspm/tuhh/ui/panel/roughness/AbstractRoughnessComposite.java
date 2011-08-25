@@ -61,7 +61,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 
 /**
@@ -112,18 +111,28 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     m_binding = binding;
   }
 
+  protected IDataBinding getBinding( )
+  {
+    return m_binding;
+  }
+
+  protected ProfileRoguhnessesDataModel getModel( )
+  {
+    return m_model;
+  }
+
   protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
   {
     toolkit.createLabel( body, label );
 
     final Text text = toolkit.createText( body, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( MessageBundle.STYLE_EDITOR_FIELD_EMPTY );
+    text.setMessage( "<Variating or empty values>" );
 
     bind( text, property, validator );
   }
 
-  private void bind( final Text textField, final String property, final IValidator validator )
+  protected void bind( final Text textField, final String property, final IValidator validator )
   {
     final ISWTObservableValue targetValue = SWTObservables.observeText( textField, SLDBinding.TEXT_DEFAULT_EVENTS );
     final IObservableValue modelValue = m_model.getObservableValue( property );

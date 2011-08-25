@@ -40,10 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.commons.databinding.AbstractDatabinding;
+import org.kalypso.commons.databinding.DataBinder;
+import org.kalypso.model.wspm.core.gml.WspmProject;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
@@ -52,9 +76,11 @@ public class RoughnessClassComposite extends AbstractRoughnessComposite
 {
   public static final String LABEL = "Roughness: Classes";
 
-  public RoughnessClassComposite( final IProfil profile, final IComponent roughness )
+  private String[] m_roughnesses;
+
+  public RoughnessClassComposite( final IProfil profile, final IComponent component )
   {
-    super( profile, roughness );
+    super( profile, component );
   }
 
   /**
@@ -73,8 +99,84 @@ public class RoughnessClassComposite extends AbstractRoughnessComposite
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    // TODO Auto-generated method stub
+    final Group group = new Group( body, SWT.NULL );
+    group.setLayout( new GridLayout( 2, false ) );
+    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    group.setText( "Flow Zone Roughness" );
+    toolkit.adapt( group );
 
+    setBinding( new AbstractDatabinding( toolkit )
+    {
+    } );
+
+    // TODO validators
+    build( group, toolkit, "Left Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null );
+    build( group, toolkit, "River Tube", ProfileRoguhnessesDataModel.PROPERTY_RIVER_TUBE_CLASS, null );
+    build( group, toolkit, "Right Flood-Plain", ProfileRoguhnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null );
+
+    final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
+    lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
+    lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
+
+    lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
+      {
+        RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
+      }
+    } );
   }
 
+  @Override
+  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
+  {
+    toolkit.createLabel( body, label );
+
+    final ComboViewer viewer = new ComboViewer( body, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
+    viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider() );
+
+    viewer.setInput( getRoughnessClasses() );
+
+    viewer.setSelection( new StructuredSelection( property ) );
+
+    final ISWTObservableValue targetValue = SWTObservables.observeSelection( viewer.getCombo() );
+    final IObservableValue modelValue = getModel().getObservableValue( property );
+
+    getBinding().bindValue( new DataBinder( targetValue, modelValue ) );
+  }
+
+  private String[] getRoughnessClasses( )
+  {
+    if( m_roughnesses != null )
+      return m_roughnesses;
+
+    final IProfil profile = getProfile();
+    final Object source = profile.getSource();
+    if( !(source instanceof Feature) )
+      return new String[] {};
+
+    final Feature feature = (Feature) source;
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final Feature root = workspace.getRootFeature();
+    if( !(root instanceof WspmProject) )
+      return new String[] {};
+
+    final WspmProject project = (WspmProject) root;
+    final IWspmClassification classifications = project.getClassificationMember();
+
+    final Set<String> roughnesses = new TreeSet<String>();
+
+    final IRoughnessClass[] classes = classifications.getRoughnessClasses();
+    for( final IRoughnessClass clazz : classes )
+    {
+      roughnesses.add( clazz.getName() );
+    }
+
+    m_roughnesses = roughnesses.toArray( new String[] {} );
+
+    return m_roughnesses;
+  }
 }
