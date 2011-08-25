@@ -67,7 +67,7 @@ public class PdbSettingsViewer
     table.setHeaderVisible( false );
 
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new SettingsLabelProvider( "%s - %s" ) );
+    m_viewer.setLabelProvider( new SettingsLabelProvider( "%s - %s" ) ); //$NON-NLS-1$
     m_viewer.setSorter( new ViewerSorter() );
 
     reset();

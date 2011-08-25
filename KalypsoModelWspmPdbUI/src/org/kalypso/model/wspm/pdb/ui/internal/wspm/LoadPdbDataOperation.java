@@ -69,6 +69,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.IWspmTuhhUIConstants;
@@ -82,7 +83,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_ACCESSING_WSPM_PROJECT_DATA = "Accessing WSPM Project Data";
+  private static final String STR_ACCESSING_WSPM_PROJECT_DATA = Messages.getString("LoadPdbDataOperation.0"); //$NON-NLS-1$
 
   private final PdbWspmProject m_pdbProject;
 
@@ -94,29 +95,29 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Initializing WSPM project for cross section database", 100 );
+    monitor.beginTask( Messages.getString("LoadPdbDataOperation.1"), 100 ); //$NON-NLS-1$
 
-    monitor.subTask( "Open or create WSPM project..." );
+    monitor.subTask( Messages.getString("LoadPdbDataOperation.2") ); //$NON-NLS-1$
     final IProject project = ensureProject( new SubProgressMonitor( monitor, 45 ) );
     if( project == null )
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to open/create local data project. Aborting." );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("LoadPdbDataOperation.3") ); //$NON-NLS-1$
 
     /* Access wspm data */
-    monitor.subTask( "Loading WSPM data..." );
+    monitor.subTask( Messages.getString("LoadPdbDataOperation.4") ); //$NON-NLS-1$
     final URL projectLocation = ResourceUtilities.createQuietURL( project );
     final IPoolableObjectType key = new PoolableObjectType( "gml", IWspmTuhhConstants.FILE_MODELL_GML, projectLocation ); //$NON-NLS-1$
     final PoolFeaturesProvider provider = new PoolFeaturesProvider( key, StringUtils.EMPTY );
     final TuhhWspmProject wspmProject = waitForworkspaceLoad( provider, new SubProgressMonitor( monitor, 50 ) );
     if( wspmProject == null )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to load wspm data" );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("LoadPdbDataOperation.5") ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
     m_pdbProject.setData( provider, project );
 
     /* set data to views */
-    monitor.subTask( "Initializing perspective..." );
+    monitor.subTask( Messages.getString("LoadPdbDataOperation.6") ); //$NON-NLS-1$
     initPerspective();
     monitor.worked( 5 );
 
@@ -164,7 +165,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to create PDB data project", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("LoadPdbDataOperation.7"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -175,7 +176,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
   private boolean askForDeletion( final IProject project, final IStatus status )
   {
-    final String message = String.format( "Failed to open the local data project with following message:\n%s\n\nDelete local project data and try to recover (ALL LOCAL DATA WILL BE LOST)?", status.getMessage() );
+    final String message = String.format( Messages.getString("LoadPdbDataOperation.8"), status.getMessage() ); //$NON-NLS-1$
 
     final boolean confirm = SWT_AWT_Utilities.showSwtMessageBoxConfirm( STR_ACCESSING_WSPM_PROJECT_DATA, message );
     if( !confirm )
@@ -190,7 +191,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
 
       final Shell shell = SWT_AWT_Utilities.findActiveShell();
-      final StatusDialog2 dialog = new StatusDialog2( shell, e.getStatus(), STR_ACCESSING_WSPM_PROJECT_DATA, "Failed to delete local project data. Aborting..." );
+      final StatusDialog2 dialog = new StatusDialog2( shell, e.getStatus(), STR_ACCESSING_WSPM_PROJECT_DATA, Messages.getString("LoadPdbDataOperation.9") ); //$NON-NLS-1$
       SWT_AWT_Utilities.openSwtWindow( dialog );
 
       return false;
@@ -230,7 +231,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
   private TuhhWspmProject waitForworkspaceLoad( final PoolFeaturesProvider provider, final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Loading project data", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( Messages.getString("LoadPdbDataOperation.10"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     provider.startLoading();
 

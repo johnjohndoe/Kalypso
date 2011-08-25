@@ -52,6 +52,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -64,8 +65,8 @@ class SettingsTypePage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Choose connection type" );
-    setDescription( "Choose the type of connection you whish to create." );
+    setTitle( Messages.getString("SettingsTypePage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("SettingsTypePage.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -82,7 +83,7 @@ class SettingsTypePage extends WizardPage
     final TableViewer tableViewer = new TableViewer( parent, SWT.BORDER );
     setControl( tableViewer.getControl() );
 
-    tableViewer.setLabelProvider( new SettingsLabelProvider( "%s" ) );
+    tableViewer.setLabelProvider( new SettingsLabelProvider( "%s" ) ); //$NON-NLS-1$
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setSorter( new ViewerSorter() );
     tableViewer.setInput( settings );

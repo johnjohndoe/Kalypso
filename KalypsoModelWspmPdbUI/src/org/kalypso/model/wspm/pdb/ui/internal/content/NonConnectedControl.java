@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 
 /**
@@ -111,8 +112,8 @@ public class NonConnectedControl extends Composite
   {
     final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.DESCRIPTION );
     section.setLayout( new FillLayout() );
-    section.setText( "Available Settings" );
-    section.setDescription( "Open a cross section database or configure a new connection." );
+    section.setText( Messages.getString("NonConnectedControl.0") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("NonConnectedControl.1") ); //$NON-NLS-1$
 
     toolkit.adapt( section );
     section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -129,7 +130,7 @@ public class NonConnectedControl extends Composite
 
   private void createAutoConnectCheck( final FormToolkit toolkit, final Composite parent )
   {
-    final Button button = toolkit.createButton( parent, "Auto connect on startup", SWT.CHECK );
+    final Button button = toolkit.createButton( parent, Messages.getString("NonConnectedControl.2"), SWT.CHECK ); //$NON-NLS-1$
     button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( button );

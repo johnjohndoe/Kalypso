@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
@@ -65,8 +66,8 @@ public class ImportWaterBodiesData extends AbstractModelObject
 {
   public static enum INSERTION_MODE
   {
-    skip("Skip"),
-    overwrite("Overwrite");
+    skip(Messages.getString("ImportWaterBodiesData.0")), //$NON-NLS-1$
+    overwrite(Messages.getString("ImportWaterBodiesData.1")); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -142,7 +143,7 @@ public class ImportWaterBodiesData extends AbstractModelObject
       m_shapeFile = null;
     else
     {
-      if( shapeFile.toLowerCase().endsWith( ".shp" ) )
+      if( shapeFile.toLowerCase().endsWith( ".shp" ) ) //$NON-NLS-1$
         m_shapeFile = FilenameUtils.removeExtension( shapeFile );
       else
         m_shapeFile = shapeFile;

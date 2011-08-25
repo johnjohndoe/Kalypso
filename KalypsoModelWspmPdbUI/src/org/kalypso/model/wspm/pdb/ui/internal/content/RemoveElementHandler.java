@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.RemoveEventWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.RemoveStateWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RemoveWaterBodyWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -83,7 +84,7 @@ public class RemoveElementHandler extends AbstractHandler
 
     final IPdbOperation operation = worker.createOperation();
     final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
-    runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, "Element has been successfully removed" ) );
+    runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("RemoveElementHandler.0") ) ); //$NON-NLS-1$
 
     final IStatus result = ProgressUtilities.busyCursorWhile( runnable );
     new StatusDialog2( shell, result, worker.getWindowTitle() ).open();

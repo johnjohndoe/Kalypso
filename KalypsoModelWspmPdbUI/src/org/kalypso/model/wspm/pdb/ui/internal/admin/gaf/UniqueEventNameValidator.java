@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -60,7 +61,7 @@ public class UniqueEventNameValidator extends TypedValidator<String>
 
   public UniqueEventNameValidator( final String ignoreName )
   {
-    super( String.class, IStatus.ERROR, "A waterlevel event with that name already exists" );
+    super( String.class, IStatus.ERROR, Messages.getString("UniqueEventNameValidator.0") ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
   }

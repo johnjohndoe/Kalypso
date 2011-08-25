@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.SettingsNameValue;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * A {@link org.eclipse.jface.dialogs.IDialogPage} that edits the parameters of one {@link IPdbSettings}.
@@ -92,7 +93,7 @@ class SettingsPage extends WizardPage
   {
     super( pageName );
 
-    setDescription( "Configure the parameters of the database connection." );
+    setDescription( Messages.getString("SettingsPage.0") ); //$NON-NLS-1$
 
     setSettings( settings );
 
@@ -157,11 +158,11 @@ class SettingsPage extends WizardPage
 
   private void createNameControl( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Name" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("SettingsPage.1") ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( "<Empty>" );
+    field.setMessage( Messages.getString("SettingsPage.2") ); //$NON-NLS-1$
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
     final IObservableValue model = new SettingsNameValue( m_settings );
@@ -186,7 +187,7 @@ class SettingsPage extends WizardPage
   private void createSettingsGroup( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( "Connection Parameters" );
+    group.setText( Messages.getString("SettingsPage.3") ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
 

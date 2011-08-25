@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal;
 
@@ -54,6 +54,7 @@ import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.InitPdbDataOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmLightPerspective;
@@ -141,7 +142,7 @@ public class PdbStartup implements IStartup
     final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, null );
 
     if( !status.isOK() )
-      new StatusDialog2( window.getShell(), status, "Initialize PDB data" ).open();
+      new StatusDialog2( window.getShell(), status, Messages.getString("PdbStartup.0") ).open(); //$NON-NLS-1$
 
     if( status.matches( IStatus.ERROR ) )
     {

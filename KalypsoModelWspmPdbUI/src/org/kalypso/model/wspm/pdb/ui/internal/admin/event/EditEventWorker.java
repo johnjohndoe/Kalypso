@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
@@ -78,13 +79,13 @@ public class EditEventWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return "Edit Event Properties";
+    return Messages.getString("EditEventWorker.0"); //$NON-NLS-1$
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( "Fetching existing events from database..." );
+    monitor.subTask( Messages.getString("EditEventWorker.1") ); //$NON-NLS-1$
     final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
     m_eventToEdit = EventUtils.findEventByName( existingEvents, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );

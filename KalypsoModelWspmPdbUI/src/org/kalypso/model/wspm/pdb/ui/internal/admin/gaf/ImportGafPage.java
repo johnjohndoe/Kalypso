@@ -64,6 +64,7 @@ import org.kalypso.commons.databinding.validation.FileIsFileValidator;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
@@ -81,8 +82,8 @@ public class ImportGafPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "GAF Import" );
-    setDescription( "Please enter the parameters for the GAF import" );
+    setTitle( Messages.getString("ImportGafPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ImportGafPage.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -103,16 +104,16 @@ public class ImportGafPage extends WizardPage
   private Control createGafPathControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( "GAF Datei" );
+    group.setText( Messages.getString("ImportGafPage.2") ); //$NON-NLS-1$
 
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( false ).applyTo( group );
 
     final Text text = new Text( group, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( "<Path to GAF file>" );
+    text.setMessage( Messages.getString("ImportGafPage.3") ); //$NON-NLS-1$
 
     final Button fileSelectButton = new Button( group, SWT.PUSH );
-    fileSelectButton.setText( "..." );
+    fileSelectButton.setText( "..." ); //$NON-NLS-1$
 
     /* Binding */
     final ISWTObservableValue target = SWTObservables.observeText( text, SWT.Modify );
@@ -123,14 +124,14 @@ public class ImportGafPage extends WizardPage
     binder.setTargetToModelConverter( new StringToFileConverter() );
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "File path may not be empty" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("ImportGafPage.5") ) ); //$NON-NLS-1$
     binder.addTargetAfterConvertValidator( new FileIsFileValidator( IStatus.ERROR ) );
 
     m_context.bindValue( binder );
 
-    final String titel = "Select GAF file";
+    final String titel = Messages.getString("ImportGafPage.6"); //$NON-NLS-1$
     final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, titel, SWT.OPEN );
-    fileListener.addFilter( "GAF Files", "*.gaf" );
+    fileListener.addFilter( Messages.getString("ImportGafPage.7"), "*.gaf" ); //$NON-NLS-1$ //$NON-NLS-2$
     fileListener.addAllFilter();
     fileSelectButton.addSelectionListener( fileListener );
 
@@ -145,7 +146,7 @@ public class ImportGafPage extends WizardPage
     final IObservableValue crsValue = crsPanel.observe();
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_SRS );
 
-    final IValidator notNullValidator = new NotNullValidator<String>( String.class, IStatus.ERROR, "Coordinate system must be selected" );
+    final IValidator notNullValidator = new NotNullValidator<String>( String.class, IStatus.ERROR, Messages.getString("ImportGafPage.9") ); //$NON-NLS-1$
 
     m_context.bindValue( crsValue, model, notNullValidator );
 

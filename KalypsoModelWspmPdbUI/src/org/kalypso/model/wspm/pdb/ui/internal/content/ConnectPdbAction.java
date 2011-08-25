@@ -49,6 +49,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,10 +62,10 @@ public class ConnectPdbAction extends Action
 
   public ConnectPdbAction( final PdbView view, final IPdbSettings settings )
   {
-    super( String.format( "%s - %s", settings.getName(), settings.toString() ) );
+    super( String.format( "%s - %s", settings.getName(), settings.toString() ) ); //$NON-NLS-1$
 
     setImageDescriptor( settings.getImage() );
-    setToolTipText( "Connect to Database" );
+    setToolTipText( Messages.getString("ConnectPdbAction.1") ); //$NON-NLS-1$
 
     m_view = view;
     m_settings = settings;
@@ -79,7 +80,7 @@ public class ConnectPdbAction extends Action
 
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, "Open Connection" ).open();
+      new StatusDialog2( shell, result, Messages.getString("ConnectPdbAction.2") ).open(); //$NON-NLS-1$
 
     final IPdbConnection connection = operation.getConnection();
     m_view.setConnection( connection, result );

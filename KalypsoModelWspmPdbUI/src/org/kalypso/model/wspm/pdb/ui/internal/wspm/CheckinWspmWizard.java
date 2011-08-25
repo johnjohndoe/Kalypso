@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -206,7 +207,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
       if( role == PDBRole.user )
       {
         event.doit = false;
-        ((WizardPage) event.getCurrentPage()).setMessage( "This account is not allowed to write to the dataabse.", IMessageProvider.WARNING );
+        ((WizardPage) event.getCurrentPage()).setMessage( Messages.getString("CheckinWspmWizard.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
         return;
       }
 
@@ -242,7 +243,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to access database" );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("CheckinWspmWizard.1") ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

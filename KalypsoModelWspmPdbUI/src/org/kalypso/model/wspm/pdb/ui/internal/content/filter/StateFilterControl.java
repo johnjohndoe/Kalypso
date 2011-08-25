@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * Helper that allow to search for specific states.
@@ -117,7 +118,7 @@ public class StateFilterControl extends Composite
   {
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    nameField.setMessage( "Search Name" );
+    nameField.setMessage( Messages.getString("StateFilterControl.0") ); //$NON-NLS-1$
     nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( nameField );

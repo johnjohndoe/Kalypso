@@ -45,6 +45,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -55,11 +56,11 @@ public class DisconnectPdbAction extends Action
 
   public DisconnectPdbAction( final PdbView view )
   {
-    super( "Close Connection" );
+    super( Messages.getString("DisconnectPdbAction.0") ); //$NON-NLS-1$
 
     m_view = view;
 
-    setToolTipText( "Disconnect from Database" );
+    setToolTipText( Messages.getString("DisconnectPdbAction.1") ); //$NON-NLS-1$
 
     final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.DISCONNECT_FROM_PDB );
     setImageDescriptor( image );

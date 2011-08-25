@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 
 import org.kalypso.commons.databinding.conversion.TypedConverter;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author belger
@@ -61,7 +62,7 @@ public class GafProfileToDetailsLabelConverter extends TypedConverter<GafProfile
   {
     final BigDecimal station = findStation( profile );
 
-    return String.format( "Details - Station %s [m]", station );
+    return String.format( Messages.getString("GafProfileToDetailsLabelConverter.0"), station ); //$NON-NLS-1$
   }
 
   private BigDecimal findStation( final GafProfile profile )

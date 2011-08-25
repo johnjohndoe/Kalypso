@@ -66,6 +66,7 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -118,17 +119,17 @@ public class WaterlevelComposite extends Composite
 
   private void createNameControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Name" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("WaterlevelComposite.0") ); //$NON-NLS-1$
 
     m_nameField = new Text( parent, SWT.BORDER | SWT.SINGLE );
     m_nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_nameField.setMessage( "Unique name of the event" );
+    m_nameField.setMessage( Messages.getString("WaterlevelComposite.1") ); //$NON-NLS-1$
 
     final ISWTObservableValue target = SWTObservables.observeText( m_nameField, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_event, Event.PROPERTY_NAME );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' must not be empty" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("WaterlevelComposite.2") ) ); //$NON-NLS-1$
     m_uniqueEventNameValidator = new UniqueEventNameValidator( m_ignoreName );
     binder.addTargetAfterGetValidator( m_uniqueEventNameValidator );
 
@@ -137,17 +138,17 @@ public class WaterlevelComposite extends Composite
 
   private void createSourceControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Source" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("WaterlevelComposite.3") ); //$NON-NLS-1$
 
     m_sourceField = new Text( parent, SWT.BORDER | SWT.SINGLE );
     m_sourceField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_sourceField.setMessage( "Data source of the event" );
+    m_sourceField.setMessage( Messages.getString("WaterlevelComposite.4") ); //$NON-NLS-1$
 
     final ISWTObservableValue target = SWTObservables.observeText( m_sourceField, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_event, Event.PROPERTY_SOURCE );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, "'Source' should not be empty" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, Messages.getString("WaterlevelComposite.5") ) ); //$NON-NLS-1$
 
     m_binding.bindValue( binder );
   }
@@ -155,13 +156,13 @@ public class WaterlevelComposite extends Composite
   private void createDescriptionControls( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Description" );
+    label.setText( Messages.getString("WaterlevelComposite.6") ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     m_descriptionField = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     m_descriptionField.setTextLimit( Event.DESCRIPTION_LIMIT );
     m_descriptionField.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_descriptionField.setMessage( "<Beschreibung des Ereignisses>" );
+    m_descriptionField.setMessage( Messages.getString("WaterlevelComposite.7") ); //$NON-NLS-1$
 
     final IObservableValue target = SWTObservables.observeText( m_descriptionField, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_event, State.PROPERTY_DESCRIPTION );
@@ -171,7 +172,7 @@ public class WaterlevelComposite extends Composite
 
   private void createTypeControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Type" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("WaterlevelComposite.8") ); //$NON-NLS-1$
 
     m_typeField = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_typeField.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -189,7 +190,7 @@ public class WaterlevelComposite extends Composite
 
   private void createMeasurementControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Measurement Date" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("WaterlevelComposite.9") ); //$NON-NLS-1$
 
     m_measurementField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     m_measurementField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

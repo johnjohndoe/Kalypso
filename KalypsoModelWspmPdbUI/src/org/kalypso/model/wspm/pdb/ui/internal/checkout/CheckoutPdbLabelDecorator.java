@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -84,7 +85,7 @@ public class CheckoutPdbLabelDecorator extends BaseLabelProvider implements ILab
   public String decorateText( final String text, final Object element )
   {
     if( m_allPdbElementsWithWspm.contains( element ) )
-      return String.format( "%s (exists)", text );
+      return String.format( Messages.getString("CheckoutPdbLabelDecorator.0"), text ); //$NON-NLS-1$
 
     return text;
   }

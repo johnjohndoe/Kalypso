@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -45,13 +45,13 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationContext;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
 
@@ -80,14 +80,14 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
     final File importDir = m_data.getImportDir();
     if( !importDir.isDirectory() )
     {
-      final String msg = String.format( "Import directory does not exist: %s", importDir );
+      final String msg = String.format( Messages.getString("SearchDocumentsOperation.0"), importDir ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
     final File[] allFiles = importDir.listFiles();
     if( allFiles == null )
     {
-      final String msg = String.format( "Failed to access directory: %s", importDir );
+      final String msg = String.format( Messages.getString("SearchDocumentsOperation.1"), importDir ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
@@ -98,7 +98,7 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
     for( final File file : allFiles )
       readFile( file, searchPattern, stationPatterns );
 
-    return Status.OK_STATUS;
+        return Status.OK_STATUS;
   }
 
   private void readFile( final File file, final Pattern searchPattern, final Pattern[] stationPatterns )

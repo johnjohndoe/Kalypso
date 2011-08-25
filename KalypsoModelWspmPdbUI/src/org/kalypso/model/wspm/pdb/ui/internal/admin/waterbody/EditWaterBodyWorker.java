@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -57,8 +58,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
 public class EditWaterBodyWorker implements IEditWorker
 {
   private final WaterBody m_selectedItem;
-
-  final String windowTitle = "Edit Water Body Properties";
 
   private WaterBody m_clone;
 
@@ -75,13 +74,13 @@ public class EditWaterBodyWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return "Edit Water Body Properties";
+    return Messages.getString("EditWaterBodyWorker.0"); //$NON-NLS-1$
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( "Fetching existing water bodies from database..." );
+    monitor.subTask( Messages.getString("EditWaterBodyWorker.1") ); //$NON-NLS-1$
 
     final WaterBody[] existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
     m_waterBodyToEdit = WaterBodyUtils.findWaterBodyByName( existingWaterbodies, m_selectedItem.getName() );

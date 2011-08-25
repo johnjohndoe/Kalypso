@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +66,7 @@ public class UniqueStateNameValidator extends TypedValidator<String>
 
   public UniqueStateNameValidator( final State[] existingStates, final int severity, final String ignoreName )
   {
-    super( String.class, severity, "A state with the same name already exists" );
+    super( String.class, severity, Messages.getString("UniqueStateNameValidator.0") ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
 

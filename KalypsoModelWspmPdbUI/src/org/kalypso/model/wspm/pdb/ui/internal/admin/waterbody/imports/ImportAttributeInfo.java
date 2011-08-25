@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
@@ -62,7 +63,7 @@ public class ImportAttributeInfo<T> extends AbstractModelObject
   {
     try
     {
-      FIELD_USE_DEFAULT = new DBFField( "<Eingabe>", FieldType.C, (short) 1, (short) 0 );
+      FIELD_USE_DEFAULT = new DBFField( Messages.getString("ImportAttributeInfo.0"), FieldType.C, (short) 1, (short) 0 ); //$NON-NLS-1$
     }
     catch( final DBaseException e )
     {

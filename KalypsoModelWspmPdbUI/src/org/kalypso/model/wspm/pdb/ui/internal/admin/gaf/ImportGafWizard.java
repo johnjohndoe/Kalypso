@@ -76,6 +76,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStatesProvider, IGenericWizard
 {
@@ -105,7 +106,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
 
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
-    setWindowTitle( "Import GAF" );
+    setWindowTitle( Messages.getString("ImportGafWizard.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -121,7 +122,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   {
     try
     {
-      monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
+      monitor.beginTask( Messages.getString("ImportGafWizard.1"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
       m_data.initFromDb();
       m_data.init( getDialogSettings() );
       return Status.OK_STATUS;
@@ -146,7 +147,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     final IObservableValue waterValue = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_WATER_BODY );
 
     final ChooseWaterPage waterPage = new ChooseWaterPage( "waterBody", connection, waterValue ); //$NON-NLS-1$
-    waterPage.setDescription( "Choose the water body into which the profiles will be imported" );
+    waterPage.setDescription( Messages.getString("ImportGafWizard.2") ); //$NON-NLS-1$
     addPage( waterPage );
 
     m_optionsPage = new GafOptionsPage( "options", m_data ); //$NON-NLS-1$

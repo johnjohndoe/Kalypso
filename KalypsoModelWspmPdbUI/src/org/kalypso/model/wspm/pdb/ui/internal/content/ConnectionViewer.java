@@ -64,6 +64,7 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -95,8 +96,8 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
   private Control createPdbView( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent )
   {
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR );
-    section.setText( "Contents" );
-    section.setDescription( "Contents of the cross section database." );
+    section.setText( Messages.getString("ConnectionViewer.0") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("ConnectionViewer.1") ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     m_contentViewer = new ConnectionContentControl( serviceLocator, toolkit, section, m_connection );
@@ -109,8 +110,8 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
   private Control createSearchControls( final FormToolkit toolkit, final Composite parent, final StructuredViewer viewer )
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    section.setText( "Search" );
-    section.setDescription( "Edit search fields to filter visible items." );
+    section.setText( Messages.getString("ConnectionViewer.2") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("ConnectionViewer.3") ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     final ContentSearchViewer searchPanel = new ContentSearchViewer( toolkit, section, viewer, this );

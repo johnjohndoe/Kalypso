@@ -76,6 +76,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.WaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData.RemoveStrategy;
@@ -99,8 +100,8 @@ public class CheckoutPdbPreviewPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Preview" );
-    setDescription( "All shown elements will be downloaded into your local workspace." );
+    setTitle( Messages.getString("CheckoutPdbPreviewPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("CheckoutPdbPreviewPage.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -171,7 +172,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
     else
     {
       final Button confirmCheck = new Button( panel, SWT.CHECK );
-      confirmCheck.setToolTipText( "Confirm warning" );
+      confirmCheck.setToolTipText( Messages.getString("CheckoutPdbPreviewPage.2") ); //$NON-NLS-1$
       confirmCheck.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
       final ISWTObservableValue target = SWTObservables.observeSelection( confirmCheck );
       final IObservableValue model = BeansObservables.observeValue( m_data, confirmProperty );
@@ -199,7 +200,7 @@ public class CheckoutPdbPreviewPage extends WizardPage
     final Event[] events = mapping.getEvents();
     if( ArrayUtils.isEmpty( crossSections ) && ArrayUtils.isEmpty( events ) )
     {
-      final String msg = "Selection does not contain any cross sections or water levels.\nDownload will create an empty water body resp. state.";
+      final String msg = Messages.getString("CheckoutPdbPreviewPage.3"); //$NON-NLS-1$
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
@@ -213,17 +214,17 @@ public class CheckoutPdbPreviewPage extends WizardPage
     if( existingElements.isEmpty() )
       return Status.OK_STATUS;
 
-    final String msg = "The marked elements already exist in the local workspace.\nExisting elements will be overwritten and local changes are lost.";
+    final String msg = Messages.getString("CheckoutPdbPreviewPage.4"); //$NON-NLS-1$
     return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, msg );
   }
 
   private Control createOptionsGroup( final Composite panel )
   {
     final Group group = new Group( panel, SWT.NONE );
-    group.setText( "Options" );
+    group.setText( Messages.getString("CheckoutPdbPreviewPage.5") ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( group );
 
-    new Label( group, SWT.NONE ).setText( "Delete local data" );
+    new Label( group, SWT.NONE ).setText( Messages.getString("CheckoutPdbPreviewPage.6") ); //$NON-NLS-1$
 
     final ComboViewer combo = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
     combo.setContentProvider( new ArrayContentProvider() );

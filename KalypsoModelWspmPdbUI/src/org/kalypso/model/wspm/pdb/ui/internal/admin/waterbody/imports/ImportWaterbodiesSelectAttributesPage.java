@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.RankToStringConverter;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.StringToRankConverter;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBaseException;
@@ -81,7 +82,7 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
   {
     super( pageName );
 
-    setDescription( "Map the attributes of the shape files to attributes of water bodies." );
+    setDescription( Messages.getString("ImportWaterbodiesSelectAttributesPage.0") ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -110,7 +111,7 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
 
   private void createCodeControl( final Composite parent )
   {
-    createAttributeControl( "River Code", WaterBody.PROPERTY_NAME, parent, false );
+    createAttributeControl( Messages.getString("ImportWaterbodiesSelectAttributesPage.1"), WaterBody.PROPERTY_NAME, parent, false ); //$NON-NLS-1$
 
     /* No default control: code must be taken from shape */
     new Label( parent, SWT.NONE );
@@ -118,7 +119,7 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
 
   private void createNameControl( final Composite parent )
   {
-    createAttributeControl( "Name", WaterBody.PROPERTY_LABEL, parent, false );
+    createAttributeControl( Messages.getString("ImportWaterbodiesSelectAttributesPage.2"), WaterBody.PROPERTY_LABEL, parent, false ); //$NON-NLS-1$
 
     /* No default control: code must be taken from shape */
     new Label( parent, SWT.NONE );
@@ -126,11 +127,11 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
 
   private void createDescriptionControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<String> info = createAttributeControl( "Description", WaterBody.PROPERTY_DESCRIPTION, parent, true );
+    final ImportAttributeInfo<String> info = createAttributeControl( Messages.getString("ImportWaterbodiesSelectAttributesPage.3"), WaterBody.PROPERTY_DESCRIPTION, parent, true ); //$NON-NLS-1$
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( "Description for all water bodies" );
+    text.setMessage( Messages.getString("ImportWaterbodiesSelectAttributesPage.4") ); //$NON-NLS-1$
 
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
     final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( text );
@@ -144,7 +145,7 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
 
   private void createDirectionControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<STATIONING_DIRECTION> info = createAttributeControl( "Directection of Stationing", WaterBody.PROPERTY_DIRECTION_OF_STATIONING, parent, true );
+    final ImportAttributeInfo<STATIONING_DIRECTION> info = createAttributeControl( Messages.getString("ImportWaterbodiesSelectAttributesPage.5"), WaterBody.PROPERTY_DIRECTION_OF_STATIONING, parent, true ); //$NON-NLS-1$
 
     info.setDefaultValue( STATIONING_DIRECTION.upstream );
 
@@ -167,7 +168,7 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
 
   private void createRankControl( final Composite parent, final IDataBinding binding )
   {
-    final ImportAttributeInfo<Integer> info = createAttributeControl( "Rank", WaterBody.PROPERTY_RANK, parent, true );
+    final ImportAttributeInfo<Integer> info = createAttributeControl( Messages.getString("ImportWaterbodiesSelectAttributesPage.6"), WaterBody.PROPERTY_RANK, parent, true ); //$NON-NLS-1$
 
     info.setDefaultValue( WaterBody.DEFAULT_RANK );
 
@@ -204,10 +205,10 @@ public class ImportWaterbodiesSelectAttributesPage extends AbstractSelectAttribu
     {
       case POLYLINE:
       case POLYLINEZ:
-        return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s", label ) );
+        return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s", label ) ); //$NON-NLS-1$
 
       default:
-        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s (must be a line geometry)", label ) );
+        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("ImportWaterbodiesSelectAttributesPage.8"), label ) ); //$NON-NLS-1$
     }
   }
 }

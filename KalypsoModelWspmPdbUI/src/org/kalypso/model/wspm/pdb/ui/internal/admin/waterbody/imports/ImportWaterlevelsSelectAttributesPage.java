@@ -64,6 +64,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBaseException;
@@ -79,7 +80,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
   {
     super( pageName );
 
-    setDescription( "Map the attributes of the shape files to attributes of water levels." );
+    setDescription( Messages.getString("ImportWaterlevelsSelectAttributesPage.0") ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -128,7 +129,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( "Optional discharge for alle stations" );
+    text.setMessage( Messages.getString("ImportWaterlevelsSelectAttributesPage.1") ); //$NON-NLS-1$
 
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
     final IObservableValue modelValue = BeanProperties.value( ImportAttributeInfo.PROPERTY_DEFAULT_VALUE, BigDecimal.class ).observe( info );
@@ -147,7 +148,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
     final DateTime measurementField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     measurementField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    measurementField.setToolTipText( "Optional measurement date. If not set, the measurment date of the event will be used." );
+    measurementField.setToolTipText( Messages.getString("ImportWaterlevelsSelectAttributesPage.2") ); //$NON-NLS-1$
 
     final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     final Date measurementDate = m_data.getEvent().getMeasurementDate();
@@ -174,7 +175,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( "Optional dscription for all water bodies" );
+    text.setMessage( Messages.getString("ImportWaterlevelsSelectAttributesPage.3") ); //$NON-NLS-1$
 
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
     final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( text );
@@ -195,10 +196,10 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
     {
       case POINT:
       case POINTZ:
-        return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s", label ) );
+        return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s", label ) ); //$NON-NLS-1$
 
       default:
-        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s (must be a point geometry)", label ) );
+        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("ImportWaterlevelsSelectAttributesPage.5"), label ) ); //$NON-NLS-1$
     }
   }
 }

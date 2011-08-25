@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -79,8 +80,8 @@ public class ImportAttachmentsDocumentsData
 {
   enum ImportMode
   {
-    overwrite("Overwrite"),
-    skip("Skip");
+    overwrite(Messages.getString("ImportAttachmentsDocumentsData.0")), //$NON-NLS-1$
+    skip(Messages.getString("ImportAttachmentsDocumentsData.1")); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -189,7 +190,7 @@ public class ImportAttachmentsDocumentsData
   private String getFilePath( final String fileName )
   {
     final String stateName = m_state.getName();
-    return String.format( "%s/%s", stateName, fileName );
+    return String.format( "%s/%s", stateName, fileName ); //$NON-NLS-1$
   }
 
   private CrossSection findCrossSection( final BigDecimal station )
@@ -220,29 +221,29 @@ public class ImportAttachmentsDocumentsData
 
     if( station == null )
     {
-      stati.add( IStatus.ERROR, "Unable to determine station" );
+      stati.add( IStatus.ERROR, Messages.getString("ImportAttachmentsDocumentsData.3") ); //$NON-NLS-1$
       m_importableHash.put( document, Boolean.FALSE );
     }
     else if( document.getCrossSection() == null )
     {
-      stati.add( IStatus.ERROR, "Cross section not found" );
+      stati.add( IStatus.ERROR, Messages.getString("ImportAttachmentsDocumentsData.4") ); //$NON-NLS-1$
       m_importableHash.put( document, Boolean.FALSE );
     }
 
     final MimeType mimetype = MimeTypeUtils.createQuit( document.getMimetype() );
     if( mimetype == null )
-      stati.add( IStatus.WARNING, "Unknown mime type" );
+      stati.add( IStatus.WARNING, Messages.getString("ImportAttachmentsDocumentsData.5") ); //$NON-NLS-1$
 
     /* Already in database ? */
     final String name = document.getName();
     if( m_existingDocumentsByName.containsKey( name ) )
-      stati.add( IStatus.WARNING, "File already exists in the database" );
+      stati.add( IStatus.WARNING, Messages.getString("ImportAttachmentsDocumentsData.6") ); //$NON-NLS-1$
 
     final IStatus status;
     if( stati.size() == 1 )
       status = stati.getAllStati()[0];
     else
-      status = stati.asMultiStatusOrOK( "Multiple warnings (double-click" );
+      status = stati.asMultiStatusOrOK( Messages.getString("ImportAttachmentsDocumentsData.7") ); //$NON-NLS-1$
     m_statusHash.put( document, status );
   }
 

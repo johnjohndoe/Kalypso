@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.SHP2GM_Object;
@@ -74,6 +75,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 {
+  private static final String STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE = Messages.getString("ReadWaterLevelsOperation.0"); //$NON-NLS-1$
+
   private WaterlevelFixation[] m_waterLevels;
 
   private final ImportWaterLevelsData m_data;
@@ -117,7 +120,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to read water levels from shape", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
       throw new CoreException( status );
     }
 
@@ -127,7 +130,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to read water levels from shape", e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE, e );
       throw new CoreException( status );
     }
 
@@ -141,16 +144,16 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
     final BigDecimal station = wb.getStation();
     if( station == null )
-      stati.add( IStatus.ERROR, "Missing station value" );
+      stati.add( IStatus.ERROR, Messages.getString("ReadWaterLevelsOperation.1") ); //$NON-NLS-1$
 
     final Point location = wb.getLocation();
     if( location == null )
-      stati.add( IStatus.WARNING, "Missing geometry value" );
+      stati.add( IStatus.WARNING, Messages.getString("ReadWaterLevelsOperation.2") ); //$NON-NLS-1$
 
     if( stati.size() == 1 )
       return stati.getAllStati()[0];
 
-    return stati.asMultiStatusOrOK( "Mehrere Warnungen" );
+    return stati.asMultiStatusOrOK( Messages.getString("ReadWaterLevelsOperation.3") ); //$NON-NLS-1$
   }
 
   public WaterlevelFixation[] getWaterBodies( )
@@ -210,7 +213,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     if( value instanceof Date )
       return (Date) value;
 
-    final String msg = String.format( "Failed to read value of column '%s': '%s'. Value should be a date.", label, value );
+    final String msg = String.format( Messages.getString("ReadWaterLevelsOperation.4"), label, value ); //$NON-NLS-1$
     final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     throw new CoreException( status );
   }
@@ -230,7 +233,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     }
     catch( final NumberFormatException e )
     {
-      final String msg = String.format( "Failed to parse value of column '%s': '%s'. Value should be a number.", label, text );
+      final String msg = String.format( Messages.getString("ReadWaterLevelsOperation.5"), label, text ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }

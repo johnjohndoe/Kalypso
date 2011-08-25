@@ -51,6 +51,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.StateFilterControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -66,7 +67,7 @@ public class ContentSearchViewer extends Composite
     final Group waterGroup = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, waterGroup );
     waterGroup.setLayout( new FillLayout() );
-    waterGroup.setText( "Water Bodies" );
+    waterGroup.setText( Messages.getString("ContentSearchViewer.0") ); //$NON-NLS-1$
     waterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, waterGroup, connectionViewer );
@@ -75,7 +76,7 @@ public class ContentSearchViewer extends Composite
     final Group stateGroup = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, stateGroup );
     stateGroup.setLayout( new FillLayout() );
-    stateGroup.setText( "States" );
+    stateGroup.setText( Messages.getString("ContentSearchViewer.1") ); //$NON-NLS-1$
     stateGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, stateGroup );
