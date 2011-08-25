@@ -38,26 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.schema.simulation;
+package org.kalypso.model.wspm.tuhh.ui.utils;
 
-import java.io.File;
-
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.databinding.validation.TypedValidator;
 
 /**
- * Represents one result file of a wspm calculation.
- * 
  * @author Gernot Belger
  */
-public interface IResultLSFile
+public class GuessStationPatternValidator extends TypedValidator<String>
 {
-  IStatus writeFile( );
+  private final String m_token;
 
-  String getResultID( );
+  public GuessStationPatternValidator( )
+  {
+    super( String.class, IStatus.ERROR, StringUtils.EMPTY );
 
-  String getTitle( );
+    m_token = String.format( "<%s>", GuessStationPattern.TOKEN );
+  }
 
-  String getFilename( );
+  @Override
+  protected IStatus doValidate( final String pattern ) throws CoreException
+  {
+    final int countMatches = StringUtils.countMatches( pattern, m_token );
+    if( countMatches != 1 )
+    {
+      final String containsMessage = String.format( "'Pattern' must contain the %s token exactly once.", m_token );
+      fail( containsMessage );
+    }
 
-  File getResultFile( );
+    return ValidationStatus.ok();
+  }
 }

@@ -66,7 +66,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalculation
 {
-
   public TuhhCalculation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -293,13 +292,13 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     setProperty( new QName( NS_WSPM_TUHH, "mode" ), mode.name() ); //$NON-NLS-1$
   }
 
-  public void setQRange( final double minQ, final double maxQ, final double Qstep )
+  public void setQRange( final double minQ, final double maxQ, final double qStep )
   {
     final Feature feature = FeatureHelper.getSubFeature( this, new QName( NS_WSPM_TUHH, "runOffIntervalMember" ) ); //$NON-NLS-1$
 
     feature.setProperty( new QName( NS_WSPM_TUHH, "minimalRunOff" ), new Double( minQ ) ); //$NON-NLS-1$
     feature.setProperty( new QName( NS_WSPM_TUHH, "maximalRunOff" ), new Double( maxQ ) ); //$NON-NLS-1$
-    feature.setProperty( new QName( NS_WSPM_TUHH, "runOffStep" ), new Double( Qstep ) ); //$NON-NLS-1$
+    feature.setProperty( new QName( NS_WSPM_TUHH, "runOffStep" ), new Double( qStep ) ); //$NON-NLS-1$
   }
 
   public Double getMinQ( )
@@ -341,7 +340,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     if( QN_TUHH_CALC_REIB_CONST.equals( getQName() ) )
       return MODE.REIB_KONST;
 
-    final String value = (String) getProperty( new QName( NS_WSPM_TUHH, "mode" ) ); //$NON-NLS-1$
+    final String value = (String) getProperty( PROPERTY_MODE ); //$NON-NLS-1$
     return MODE.valueOf( value );
   }
 

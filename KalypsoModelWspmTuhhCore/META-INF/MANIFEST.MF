@@ -14,7 +14,7 @@ Require-Bundle: org.kalypso.model.wspm.core;visibility:=reexport,
  org.kalypso.model.wspm.tuhh.project.template,
  org.kalypso.model.wspm.tuhh.project.demo;resolution:=optional,
  org.junit4;resolution:=optional,
- org.kalypso.module;bundle-version="11.6.0"
+ org.kalypso.module
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.gml,
@@ -27,6 +27,7 @@ Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.profile.pattern,
  org.kalypso.model.wspm.tuhh.core.profile.sinuositaet,
  org.kalypso.model.wspm.tuhh.core.results,
+ org.kalypso.model.wspm.tuhh.core.results.processing,
  org.kalypso.model.wspm.tuhh.core.util,
  org.kalypso.model.wspm.tuhh.core.wprof,
  org.kalypso.model.wspm.tuhh.core.wspwin,

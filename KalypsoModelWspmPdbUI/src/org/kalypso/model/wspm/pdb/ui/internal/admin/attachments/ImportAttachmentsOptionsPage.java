@@ -61,6 +61,8 @@ import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
+import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternValidator;
 
 /**
  * @author Gernot Belger
@@ -147,7 +149,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     patternField.setMessage( "<File Pattern>" );
     patternField.setToolTipText( "Files will be attached to database elements according to this pattern." );
 
-    final AttachmentPatternReplacer replacer = new AttachmentPatternReplacer();
+    final GuessStationPatternReplacer replacer = new GuessStationPatternReplacer();
     replacer.createPatternButton( parent, patternField );
 
     /* binding */
@@ -156,7 +158,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     final DataBinder binder = new DataBinder( targetField, modelField );
     binder.addTargetAfterConvertValidator( new StringBlankValidator( IStatus.ERROR, "'Pattern' field is empty" ) );
-    binder.addTargetAfterConvertValidator( new AttachmentPatternValidator() );
+    binder.addTargetAfterConvertValidator( new GuessStationPatternValidator() );
 
     m_binding.bindValue( binder );
   }

@@ -38,17 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.tuhh.core.wspwin;
 
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
+import java.io.File;
+import java.io.IOException;
+
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.wspwin.core.CalculationBean;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentPatternReplacer extends PatternInputReplacer<AttachmentStationContext>
+public interface ICalculationWspmConverter
 {
-  public AttachmentPatternReplacer( )
-  {
-    addReplacer( new AttachmentStationPattern() );
-  }
+  void convert( CalculationBean bean, File profDir ) throws IOException, GMLSchemaException;
 }

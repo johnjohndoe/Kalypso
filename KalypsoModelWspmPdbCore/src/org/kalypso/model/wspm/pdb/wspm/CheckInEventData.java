@@ -44,7 +44,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -54,12 +53,13 @@ import org.kalypso.model.wspm.pdb.db.constants.EventConstants.TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * @author Gernot Belger
  */
-public class CheckInEventData implements IEditEventPageData
+public class CheckInEventData<W extends Feature> implements IEditEventPageData
 {
   private final Event m_event = new Event();
 
@@ -71,20 +71,20 @@ public class CheckInEventData implements IEditEventPageData
 
   private String m_dbSrs;
 
-  private final WspmFixation m_wspmFixation;
+  private final W m_wspmObject;
 
   private IPdbConnection m_connection;
 
-  public CheckInEventData( final CommandableWorkspace wspmWorkspace, final WspmFixation wspmFixation )
+  public CheckInEventData( final CommandableWorkspace wspmWorkspace, final W wspmObject )
   {
     m_wspmWorkspace = wspmWorkspace;
-    m_wspmFixation = wspmFixation;
+    m_wspmObject = wspmObject;
 
     /* Initial state data */
     final Date now = new Date();
     m_event.setMeasurementDate( now );
-    m_event.setName( wspmFixation.getName() );
-    m_event.setDescription( wspmFixation.getDescription() );
+    m_event.setName( wspmObject.getName() );
+    m_event.setDescription( wspmObject.getDescription() );
     m_event.setSource( "WSPM Local Data" );
     m_event.setEditingDate( now );
     m_event.setType( TYPE.Measurement );
@@ -144,9 +144,9 @@ public class CheckInEventData implements IEditEventPageData
     return m_dbSrs;
   }
 
-  public WspmFixation getWspmFixation( )
+  public W getWspmObject( )
   {
-    return m_wspmFixation;
+    return m_wspmObject;
   }
 
   public CommandableWorkspace getWorkspace( )

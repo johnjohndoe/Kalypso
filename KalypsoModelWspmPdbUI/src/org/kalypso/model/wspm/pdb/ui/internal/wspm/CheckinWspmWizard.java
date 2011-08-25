@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.checkout.ConnectionChooserPage;
+import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -143,6 +144,9 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
 
     if( element instanceof WspmFixation )
       return new CheckInEventWorker( workspace, (WspmFixation) element );
+
+    if( element instanceof CalculationWspmTuhhSteadyState )
+      return new CheckinCalculationWorker( workspace, (CalculationWspmTuhhSteadyState) element );
 
     return null;
   }

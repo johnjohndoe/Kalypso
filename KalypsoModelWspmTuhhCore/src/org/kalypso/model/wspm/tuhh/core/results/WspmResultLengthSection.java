@@ -189,4 +189,9 @@ public class WspmResultLengthSection
 
     return null;
   }
+
+  public IObservation<TupleResult> getObservation( )
+  {
+    return m_observation;
+  }
 }

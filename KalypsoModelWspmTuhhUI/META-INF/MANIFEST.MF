@@ -14,7 +14,8 @@ Export-Package: org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.tuhh.ui.imports,
  org.kalypso.model.wspm.tuhh.ui.light,
  org.kalypso.model.wspm.tuhh.ui.resolutions,
- org.kalypso.model.wspm.tuhh.ui.rules
+ org.kalypso.model.wspm.tuhh.ui.rules,
+ org.kalypso.model.wspm.tuhh.ui.utils
 Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.tuhh.core,
  org.kalypso.simulation.ui,
@@ -31,6 +32,6 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.module,
  org.kalypso.model.wspm.tuhh.schema,
  org.junit;resolution:=optional,
- org.kalypso.featureview;bundle-version="11.6.0"
+ org.kalypso.featureview
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

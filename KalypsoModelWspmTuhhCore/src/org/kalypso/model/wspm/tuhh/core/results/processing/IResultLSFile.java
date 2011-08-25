@@ -38,63 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.schema.simulation;
+package org.kalypso.model.wspm.tuhh.core.results.processing;
 
 import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
-import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 
 /**
+ * Represents one result file of a wspm calculation.
+ * 
  * @author Gernot Belger
  */
-public abstract class AbstractResultLSFile implements IResultLSFile
+public interface IResultLSFile
 {
-  private final String m_runoffName;
+  IStatus writeFile( );
 
-  private final File m_outDir;
+  String getResultID( );
 
-  public AbstractResultLSFile( final File outDir, final String runoffName )
-  {
-    m_outDir = outDir;
-    m_runoffName = runoffName;
-  }
+  String getTitle( );
 
-  protected String getRunoffName( )
-  {
-    return m_runoffName;
-  }
+  String getFilename( );
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getResultFile()
-   */
-  @Override
-  public final File getResultFile( )
-  {
-    return new File( m_outDir, getFilename() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#writeFile()
-   */
-  @Override
-  public final IStatus writeFile( )
-  {
-    try
-    {
-      final File resultFile = getResultFile();
-      doWrite( resultFile );
-      return Status.OK_STATUS;
-    }
-    catch( final Exception e )
-    {
-      final String title = getTitle();
-      final String message = String.format( Messages.getString("AbstractResultLSFile_0"), title ); //$NON-NLS-1$
-      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhSchemaPlugin.getID(), message, e );
-    }
-  }
-
-  protected abstract void doWrite( File outputFile ) throws Exception;
+  File getResultFile( );
 }

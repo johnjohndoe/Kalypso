@@ -69,11 +69,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckInEventOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = "Failed to write to database";
+  static final String STR_FAILED_TO_WRITE_TO_DATABASE = "Failed to write to database";
 
-  private final CheckInEventData m_data;
+  private final CheckInEventData<WspmFixation> m_data;
 
-  public CheckInEventOperation( final CheckInEventData data )
+  public CheckInEventOperation( final CheckInEventData<WspmFixation> data )
   {
     m_data = data;
   }
@@ -94,7 +94,7 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
       final Event event = m_data.getEvent();
       event.setEditingUser( connection.getSettings().getUsername() );
 
-      final WspmFixation fixation = m_data.getWspmFixation();
+      final WspmFixation fixation = m_data.getWspmObject();
 
       final CheckinEventPdbOperation operation = new CheckinEventPdbOperation( event, waterBodies, fixation, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
@@ -137,7 +137,7 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
     final String name = event.getName();
     final String description = event.getDescription();
 
-    final WspmFixation fixation = m_data.getWspmFixation();
+    final WspmFixation fixation = m_data.getWspmObject();
 
     final FeatureChange nameChange = new FeatureChange( fixation, Feature.QN_NAME, new ArrayList<String>( Collections.singletonList( name ) ) );
     final FeatureChange descChange = new FeatureChange( fixation, Feature.QN_DESCRIPTION, description );

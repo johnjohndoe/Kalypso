@@ -61,13 +61,13 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class CheckInEventWorker implements ICheckInWorker
 {
-  private final CheckInEventData m_data;
+  private final CheckInEventData<WspmFixation> m_data;
 
   private final CheckInEventOperation m_operation;
 
   public CheckInEventWorker( final CommandableWorkspace workspace, final WspmFixation fixation )
   {
-    m_data = new CheckInEventData( workspace, fixation );
+    m_data = new CheckInEventData<WspmFixation>( workspace, fixation );
     m_operation = new CheckInEventOperation( m_data );
   }
 
@@ -76,7 +76,7 @@ public class CheckInEventWorker implements ICheckInWorker
   {
     final Set<String> existingWaterCodes = CheckinStateWorker.hashWaterCodes( m_data.getExistingWaterBodies() );
 
-    final WspmFixation fixation = m_data.getWspmFixation();
+    final WspmFixation fixation = m_data.getWspmObject();
 
     final WspmWaterBody wspmWaterBody = fixation.getParent();
     final String waterCode = wspmWaterBody.getRefNr();

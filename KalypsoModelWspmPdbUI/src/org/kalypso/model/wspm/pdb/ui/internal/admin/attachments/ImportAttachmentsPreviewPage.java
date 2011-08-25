@@ -165,7 +165,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
 
     ColumnSortListener.setSortState( stationColumn, Boolean.TRUE );
 
-    /* Double-click shows ststua */
+    /* Double-click shows status */
     m_viewer.addOpenListener( new IOpenListener()
     {
       @Override

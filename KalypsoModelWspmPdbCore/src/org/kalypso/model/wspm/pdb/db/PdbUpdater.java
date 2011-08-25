@@ -286,38 +286,22 @@ public class PdbUpdater
   {
     final Properties properties = new Properties();
     /* some defaults */
-    properties.setProperty( PdbInfo.PROPERTY_DOCUMENT_SERVER, "http://example.com/document/path" ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_DOCUMENT_SERVER, "http://example.com/document/path/" ); //$NON-NLS-1$
     properties.setProperty( PdbInfo.PROPERTY_SRID, "31468" ); //$NON-NLS-1$
     /* Add depending variables */
     final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
     final Envelope domainOfValidity = m_connection.getCrsEnvelope( Integer.valueOf( srid ) );
 
+    properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_Z, String.format( Locale.US, "%f", -1000.0 ) );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_Z, String.format( Locale.US, "%f", 10000.0 ) );
+
     if( domainOfValidity != null )
     {
-      properties.setProperty( "srsMinX", String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
-      properties.setProperty( "srsMaxX", String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_X, String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_X, String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
 
-      properties.setProperty( "srsMinY", String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
-      properties.setProperty( "srsMaxY", String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
-
-      properties.setProperty( "srsXName", "X" );
-      properties.setProperty( "srsYName", "Y" );
-
-// CRS.decode(srid).getCoordinateSystem().getAxis( 0 ).getUnit()
-
-      // for geographic crs use the following
-      // properties.setProperty( "srsXName", "Longitude" ); // X is longitude!
-      // properties.setProperty( "srsYName", "Latitude" ); // Y is latitude!
-
-      properties.setProperty( "srsZName", "Z" ); // equal for all coordinate systems
-
-      properties.setProperty( "srsMinZ", String.format( Locale.US, "%f", -1000.0 ) );
-      properties.setProperty( "srsMaxZ", String.format( Locale.US, "%f", 10000.0 ) );
-
-      // maybe change (enlarge) x and y tolerance for geographic crs
-      properties.setProperty( "srsTolX", String.format( Locale.US, "%f", 0.0005 ) );
-      properties.setProperty( "srsTolY", String.format( Locale.US, "%f", 0.0005 ) );
-      properties.setProperty( "srsTolZ", String.format( Locale.US, "%f", 0.0005 ) );
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_Y, String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_Y, String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
     }
 
     final PdbInfo info = m_connection.getInfo();
@@ -337,6 +321,8 @@ public class PdbUpdater
       if( new WizardDialog( m_shell, wizard ).open() != Window.OK )
         throw new CoreException( Status.CANCEL_STATUS );
     }
+
+    updateDependendProperties( properties );
 
     return properties;
   }
@@ -358,4 +344,24 @@ public class PdbUpdater
 
     return pages.values().toArray( new IWizardPage[pages.size()] );
   }
+
+  private void updateDependendProperties( final Properties properties )
+  {
+    // FIXME: use the chosen srs in order to set these properties
+
+    properties.setProperty( PdbInfo.PROPERTY_SRS_X_NAME, "X" );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_Y_NAME, "Y" );
+
+    // CRS.decode(srid).getCoordinateSystem().getAxis( 0 ).getUnit()
+    // for geographic crs use the following
+    // properties.setProperty( PdbInfo.PROPERTY_SRS_XName", "Longitude" ); // X is longitude!
+    // properties.setProperty( PdbInfo.PROPERTY_SRS_YName", "Latitude" ); // Y is latitude!
+
+    // maybe change (enlarge) x and y tolerance for geographic crs
+    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_X, String.format( Locale.US, "%f", 0.0005 ) );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_Y, String.format( Locale.US, "%f", 0.0005 ) );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_Z, String.format( Locale.US, "%f", 0.0005 ) );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_Z_NAME, "Z" ); // equal for all coordinate systems
+  }
+
 }

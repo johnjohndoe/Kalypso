@@ -38,14 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.schema.simulation;
+package org.kalypso.model.wspm.tuhh.core.results.processing;
 
 import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -60,36 +60,24 @@ public class ResultLSTableFile extends AbstractResultLSFile
     m_dataFilename = dataFilename;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
-   */
   @Override
   public String getFilename( )
   {
     return "Tabelle" + getRunoffName() + ".gft"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
-   */
   @Override
   public String getTitle( )
   {
     return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.27" ); //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getResultID()
-   */
   @Override
   public String getResultID( )
   {
     return "LengthSectionTab"; //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.AbstractResultLSFile#doWrite(java.io.File)
-   */
   @Override
   protected void doWrite( final File outputFile ) throws Exception
   {

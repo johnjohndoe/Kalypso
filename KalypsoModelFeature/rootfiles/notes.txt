@@ -1,8 +1,4 @@
-Notes:
-kalypso_11.6.0.20110630
-=======================
-
-This is Version 11.6.0.20110630 of Kalypso
+This is Version 11.6.1.20110822 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 

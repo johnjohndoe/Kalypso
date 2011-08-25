@@ -99,14 +99,14 @@ public class CalculationBean
     // if a zustand has no calculations, no .ber file is present.
     if( !berFile.exists() )
       return new CalculationBean[0];
-    
+
     final List<CalculationBean> beans = new ArrayList<CalculationBean>( 10 );
 
     LineIterator lineIt = null;
     try
     {
       int count = 0;
-      lineIt = FileUtils.lineIterator( berFile, null );
+      lineIt = FileUtils.lineIterator( berFile, "CP850" );
 
       // ignore first line, we just read all lines
       lineIt.nextLine();
@@ -141,11 +141,4 @@ public class CalculationBean
       LineIterator.closeQuietly( lineIt );
     }
   }
-
-  public CalculationContentBean readCalculationContent( final File profDir ) throws IOException
-  {
-    final File file = new File( profDir, getFileName() );
-    return CalculationContentBean.read( file );
-  }
-
 }

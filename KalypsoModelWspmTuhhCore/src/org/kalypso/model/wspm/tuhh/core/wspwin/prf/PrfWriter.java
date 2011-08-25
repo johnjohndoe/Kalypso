@@ -57,6 +57,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
@@ -143,9 +144,12 @@ public class PrfWriter implements IPrfConstants
     m_defaultPrfMetadata.put( line, cleanValues );
   }
 
-  private static String cleanCarriageReturn( final String riverDescription )
+  private static String cleanCarriageReturn( final String value )
   {
-    return riverDescription.replace( '\n', '-' ).replace( '\r', '-' );
+    if( value == null )
+      return StringUtils.EMPTY;
+
+    return value.replace( '\n', '-' ).replace( '\r', '-' );
   }
 
   public DataBlockWriter export( )

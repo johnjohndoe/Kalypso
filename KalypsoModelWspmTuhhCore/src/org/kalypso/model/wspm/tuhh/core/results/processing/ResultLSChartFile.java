@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.schema.simulation;
+package org.kalypso.model.wspm.tuhh.core.results.processing;
 
 import java.io.File;
 import java.io.InputStream;
@@ -51,7 +51,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
@@ -72,6 +72,8 @@ public class ResultLSChartFile extends AbstractResultLSFile
 {
   static final String TOKEN_GMLFILENAME = "%GMLFILENAME%"; //$NON-NLS-1$
 
+  static final String TOKEN_ROOT_ID = "%ROOT_ID%"; //$NON-NLS-1$
+
   private final String m_dataFilename;
 
   private final boolean m_isDirectionUpstreams;
@@ -80,7 +82,9 @@ public class ResultLSChartFile extends AbstractResultLSFile
 
   private final TuhhCalculation m_calculation;
 
-  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle, final TuhhCalculation calculation )
+  private final String m_rootId;
+
+  public ResultLSChartFile( final File outDir, final String runoffName, final boolean isDirectionUpstreams, final String dataFilename, final String chartTitle, final TuhhCalculation calculation, final String rootId )
   {
     super( outDir, runoffName );
 
@@ -88,20 +92,15 @@ public class ResultLSChartFile extends AbstractResultLSFile
     m_dataFilename = dataFilename;
     m_chartTitle = chartTitle;
     m_calculation = calculation;
+    m_rootId = rootId;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getTitle()
-   */
   @Override
   public String getTitle( )
   {
     return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.26" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.IResultLSFile#getFilename()
-   */
   @Override
   public String getFilename( )
   {
@@ -117,16 +116,14 @@ public class ResultLSChartFile extends AbstractResultLSFile
     return "LengthSectionDiag"; //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.schema.simulation.AbstractResultLSFile#doWrite(java.io.File)
-   */
   @Override
   protected void doWrite( final File outputFile ) throws Exception
   {
     /* We just load the template and tweak the direction of the station-axis */
-    final URL kodResource = ResultLengthSection.class.getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
+    final URL kodResource = getClass().getResource( "resources/lengthSection.kod" ); //$NON-NLS-1$
     final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" ); //$NON-NLS-1$
-    final String kodContentReplaced = kodContent.replaceAll( TOKEN_GMLFILENAME, m_dataFilename );
+    String kodContentReplaced = kodContent.replaceAll( TOKEN_GMLFILENAME, m_dataFilename );
+    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_ROOT_ID, m_rootId );
 
     final InputStream inputStream = IOUtils.toInputStream( kodContentReplaced, "UTF-8" ); //$NON-NLS-1$
     final ChartConfigurationLoader ccl = new ChartConfigurationLoader( inputStream );
@@ -206,5 +203,4 @@ public class ResultLSChartFile extends AbstractResultLSFile
       }
     }
   }
-
 }

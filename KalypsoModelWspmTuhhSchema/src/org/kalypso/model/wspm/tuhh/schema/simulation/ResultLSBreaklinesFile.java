@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
 
+import org.kalypso.model.wspm.tuhh.core.results.processing.AbstractResultLSFile;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 
 /**
