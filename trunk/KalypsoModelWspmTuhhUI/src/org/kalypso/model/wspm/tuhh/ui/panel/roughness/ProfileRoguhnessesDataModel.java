@@ -68,10 +68,6 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   private final IComponent m_component;
 
-  private Double m_roughnessFactor;
-
-  public static final String PROPERTY_ROUGHNESS_FACTOR = "roughnessFactor"; //$NON-NLS-1$
-
   public static final String PROPERTY_LEFT_FLOODPLAIN_CLASS = "leftFloodplainClass"; //$NON-NLS-1$
 
   public static final String PROPERTY_RIGHT_FLOODPLAIN_CLASS = "rightFloodplainClass"; //$NON-NLS-1$
@@ -94,17 +90,12 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
 
   private void init( final IProfil profile, final IComponent component )
   {
-
     /* ks or kst value? */
     if( isSimpleRoughnessType( component ) )
     {
       m_leftFloodplain = RoughnessFlowzones.findLeftFloodplainValue( profile, component );
       m_rightFloodplain = RoughnessFlowzones.findRightFloodplainValue( profile, component );
       m_riverTube = RoughnessFlowzones.findRiverTubeValue( profile, component );
-    }
-    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( component.getId() ) )
-    {
-      m_roughnessFactor = RoughnessFlowzones.findRoughnessFactor( profile, component );
     }
     else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( component.getId() ) )
     {
@@ -119,6 +110,8 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
     if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( component.getId() ) )
       return true;
     else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( component.getId() ) )
+      return true;
+    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( component.getId() ) )
       return true;
 
     return false;
@@ -173,21 +166,6 @@ public class ProfileRoguhnessesDataModel extends AbstractModelObject
     RoughnessFlowzones.setRiverTube( m_profile, m_component, riverTube );
 
     firePropertyChange( PROPERTY_RIVER_TUBE, oldValue, riverTube );
-  }
-
-  public Double getRoughnessFactor( )
-  {
-    return m_roughnessFactor;
-  }
-
-  public void setRoughnessFactor( final Double roughnessFactor )
-  {
-    final Object oldValue = m_roughnessFactor;
-    m_roughnessFactor = roughnessFactor;
-
-    RoughnessFlowzones.setRoughnessFactor( m_profile, m_component, roughnessFactor );
-
-    firePropertyChange( PROPERTY_ROUGHNESS_FACTOR, oldValue, roughnessFactor );
   }
 
   public String getRiverTubeClass( )
