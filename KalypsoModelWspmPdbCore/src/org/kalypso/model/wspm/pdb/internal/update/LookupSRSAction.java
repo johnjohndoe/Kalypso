@@ -53,6 +53,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +66,7 @@ public class LookupSRSAction extends Action
   {
     m_data = data;
 
-    setText( "Lookup coordinate system extent at 'spatialreference.org'..." );
+    setText( Messages.getString("LookupSRSAction.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -78,7 +79,7 @@ public class LookupSRSAction extends Action
       final IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
       final IWebBrowser externalBrowser = support.getExternalBrowser();
 
-      final String location = String.format( "http://spatialreference.org/ref/epsg/%s/", srid );
+      final String location = String.format( "http://spatialreference.org/ref/epsg/%s/", srid ); //$NON-NLS-1$
       final URL url = new URL( location );
       externalBrowser.openURL( url );
     }

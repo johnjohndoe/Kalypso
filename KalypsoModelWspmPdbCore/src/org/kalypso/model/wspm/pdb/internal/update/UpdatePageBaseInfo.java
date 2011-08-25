@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.version.IUpdateScriptPage;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
@@ -81,8 +82,8 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
   {
     super( "basePage" ); //$NON-NLS-1$
 
-    setTitle( "Database Properties" );
-    setDescription( "Please enter some basic properties for the database." );
+    setTitle( Messages.getString("UpdatePageBaseInfo.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("UpdatePageBaseInfo.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -115,7 +116,7 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
     final DataBinder binder = new DataBinder( targetSRS, modelSRS );
     binder.setTargetToModelConverter( new SridToSrsConverter() );
     binder.setTargetToModelConverter( new SrsToSridConverter() );
-    final StringBlankValidator blankValidator = new StringBlankValidator( ERROR, "A valid coordinate System must be selected" );
+    final StringBlankValidator blankValidator = new StringBlankValidator( ERROR, Messages.getString("UpdatePageBaseInfo.2") ); //$NON-NLS-1$
     // binder.addTargetAfterGetValidator( blankValidator );
     binder.addModelBeforeSetValidator( blankValidator );
     m_binding.bindValue( binder );
@@ -126,12 +127,12 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
     final Group group = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().applyTo( group );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    final String documentBaseLabel = "Document Base";
+    final String documentBaseLabel = Messages.getString("UpdatePageBaseInfo.3"); //$NON-NLS-1$
     group.setText( documentBaseLabel );
 
     final Text field = new Text( group, SWT.BORDER | SWT.SINGLE );
-    field.setMessage( "<Base URL>" );
-    field.setToolTipText( "The base location of all attached documents" );
+    field.setMessage( Messages.getString("UpdatePageBaseInfo.4") ); //$NON-NLS-1$
+    field.setToolTipText( Messages.getString("UpdatePageBaseInfo.5") ); //$NON-NLS-1$
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final ISWTObservableValue targetBase = SWTObservables.observeText( field, SWT.Modify );
@@ -144,12 +145,12 @@ public class UpdatePageBaseInfo extends WizardPage implements IUpdateScriptPage
     final DataBinder binder = new DataBinder( targetBase, modelBase );
     binder.addTargetAfterGetValidator( new StringToUrlValidator( documentBaseLabel ) );
 
-    final String endsWithMessage = String.format( "'%s' must end with '/'", documentBaseLabel );
+    final String endsWithMessage = String.format( Messages.getString("UpdatePageBaseInfo.6"), documentBaseLabel ); //$NON-NLS-1$
     binder.addTargetAfterGetValidator( new StringMustEndWithValidator( IStatus.ERROR, endsWithMessage, new String[] { "/" } ) ); //$NON-NLS-1$
 
-    final String[] supportedProtocols = new String[] { "http://", "file:/" };
-    final String protocolMessage = StringUtils.join( supportedProtocols, " or " );
-    final String protocolWarning = String.format( "'%s' must start with %s", documentBaseLabel, protocolMessage );
+    final String[] supportedProtocols = new String[] { "http://", "file:/" }; //$NON-NLS-1$ //$NON-NLS-2$
+    final String protocolMessage = StringUtils.join( supportedProtocols, Messages.getString("UpdatePageBaseInfo.9") ); //$NON-NLS-1$
+    final String protocolWarning = String.format( Messages.getString("UpdatePageBaseInfo.10"), documentBaseLabel, protocolMessage ); //$NON-NLS-1$
 
     binder.addTargetAfterGetValidator( new StringMustStartWithValidator( IStatus.ERROR, protocolWarning, supportedProtocols ) );
 

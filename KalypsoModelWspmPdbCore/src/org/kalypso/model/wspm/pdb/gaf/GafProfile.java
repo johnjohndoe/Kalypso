@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPart;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -116,7 +117,7 @@ public class GafProfile implements IGafConstants
         if( KZ_CATEGORY_WATERLEVEL.equals( m_lastKind ) || kind.equals( KZ_CATEGORY_WATERLEVEL ) )
           return;
 
-        final String message = String.format( "Part '%s': gaps between points of this part", kind );
+        final String message = String.format( Messages.getString("GafProfile.0"), kind ); //$NON-NLS-1$
         m_stati.add( IStatus.WARNING, message );
       }
     }
@@ -164,8 +165,8 @@ public class GafProfile implements IGafConstants
       for( final GafPart part : values )
         m_stati.add( part.getStatus() );
 
-      final String okMessage = String.format( "Cross Section '%s': OK", getStation() );
-      final String message = String.format( "Cross Section '%s': Warnings/Errors", getStation() );
+      final String okMessage = String.format( Messages.getString("GafProfile.1"), getStation() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString("GafProfile.2"), getStation() ); //$NON-NLS-1$
       return m_stati.asMultiStatusOrOK( message, okMessage );
     }
 
@@ -180,7 +181,7 @@ public class GafProfile implements IGafConstants
     /* Find PP part */
     if( m_parts.size() == 0 )
     {
-      m_stati.add( IStatus.ERROR, "Cross sections does not contain any parts" );
+      m_stati.add( IStatus.ERROR, Messages.getString("GafProfile.3") ); //$NON-NLS-1$
       return;
     }
 
@@ -188,7 +189,7 @@ public class GafProfile implements IGafConstants
     final GafPart ppPart = m_parts.get( IGafConstants.KZ_CATEGORY_PROFILE );
     if( ppPart == null )
     {
-      m_stati.add( IStatus.ERROR, "No profile points (PP) in this cross section." );
+      m_stati.add( IStatus.ERROR, Messages.getString("GafProfile.4") ); //$NON-NLS-1$
       return;
     }
 
@@ -197,19 +198,19 @@ public class GafProfile implements IGafConstants
       final Geometry line = ppPart.getLine( null );
       if( line == null )
       {
-        m_stati.add( IStatus.WARNING, "Cross section has no line geometry" );
+        m_stati.add( IStatus.WARNING, Messages.getString("GafProfile.5") ); //$NON-NLS-1$
       }
       else if( riverline != null && !line.intersects( riverline ) )
       {
         final double distance = line.distance( riverline );
-        final String msg = String.format( "Cross section does not intersect with riverline. Distance is %.1f [km]", distance / 1000.0 );
+        final String msg = String.format( Messages.getString("GafProfile.6"), distance / 1000.0 ); //$NON-NLS-1$
         m_stati.add( IStatus.WARNING, msg );
       }
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_stati.add( IStatus.ERROR, "Inalid geometry for part 'PP'" );
+      m_stati.add( IStatus.ERROR, Messages.getString("GafProfile.7") ); //$NON-NLS-1$
     }
 
     // TODO More checks?

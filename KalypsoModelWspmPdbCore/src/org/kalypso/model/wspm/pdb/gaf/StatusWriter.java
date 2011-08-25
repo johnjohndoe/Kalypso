@@ -80,11 +80,11 @@ public class StatusWriter extends FileWriter
     final String severity = StatusUtilities.getLocalizedSeverity( status );
     final String message = status.getMessage();
 
-    final String line = String.format( "%s: %s", severity, message );
+    final String line = String.format( "%s: %s", severity, message ); //$NON-NLS-1$
 
     final Throwable exception = status.getException();
     if( exception != null )
-      write( String.format( " (%s)", exception ) );
+      write( String.format( " (%s)", exception ) ); //$NON-NLS-1$
 
     write( line );
     write( Strings.LINE_SEPARATOR );

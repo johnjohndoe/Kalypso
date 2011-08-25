@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.constants;
 
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
@@ -50,8 +52,8 @@ public interface EventConstants
     /**
      * Default
      */
-    Measurement("Measurement"),
-    Simulation("Simulation");
+    Measurement(Messages.getString("EventConstants.0")), //$NON-NLS-1$
+    Simulation(Messages.getString("EventConstants.1")); //$NON-NLS-1$
 
     private final String m_label;
 

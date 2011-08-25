@@ -65,7 +65,7 @@ public class GafCode implements Comparable<GafCode>
   {
     m_key = StringUtils.trim( key );
 
-    final String[] tokens = value.split( ";", 5 );
+    final String[] tokens = value.split( ";", 5 ); //$NON-NLS-1$
     m_number = Integer.parseInt( tokens[0] );
     m_dbCode = StringUtils.trim( tokens[1] );
     m_description = StringUtils.trim( tokens[2] );
@@ -89,7 +89,7 @@ public class GafCode implements Comparable<GafCode>
     if( StringUtils.isBlank( m_description ) )
       return m_key;
 
-    return String.format( "%-4s - %s", m_key, m_description );
+    return String.format( "%-4s - %s", m_key, m_description ); //$NON-NLS-1$
   }
 
   public String getDbCode( )

@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -98,7 +99,7 @@ public class Gaf2Db implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Import gaf data";
+    return Messages.getString("Gaf2Db.0"); //$NON-NLS-1$
   }
 
   @Override
@@ -107,24 +108,24 @@ public class Gaf2Db implements IPdbOperation
     try
     {
       final GafProfile[] profiles = m_profiles.getProfiles();
-      m_monitor.beginTask( "Importing cross sections into database", profiles.length );
+      m_monitor.beginTask( Messages.getString("Gaf2Db.1"), profiles.length ); //$NON-NLS-1$
 
       addState( session, m_state );
       commitWaterLevel( session );
 
       for( final GafProfile profile : profiles )
       {
-        m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
+        m_monitor.subTask( String.format( Messages.getString("Gaf2Db.2"), profile.getStation() ) ); //$NON-NLS-1$
         commitProfile( session, m_dbType, profile );
         m_monitor.worked( 1 );
       }
 
-      m_monitor.subTask( "writing data into database" );
+      m_monitor.subTask( Messages.getString("Gaf2Db.3") ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( "Failed to write data into database", e );
+      throw new PdbConnectException( Messages.getString("Gaf2Db.4"), e ); //$NON-NLS-1$
     }
   }
 

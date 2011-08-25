@@ -45,6 +45,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.hibernate.jdbc.Work;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,7 +62,7 @@ public class SqlWork implements Work
   @Override
   public String toString( )
   {
-    return "Creating database (this may take several minutes)....";
+    return Messages.getString("SqlWork.0"); //$NON-NLS-1$
   }
 
   @Override
@@ -104,7 +105,7 @@ public class SqlWork implements Work
       }
       catch( final SQLException e )
       {
-        System.err.println( "Failed to execute sql: " );
+        System.err.println( "Failed to execute sql: " ); //$NON-NLS-1$
         System.err.println( sql );
         System.err.println();
         throw e;

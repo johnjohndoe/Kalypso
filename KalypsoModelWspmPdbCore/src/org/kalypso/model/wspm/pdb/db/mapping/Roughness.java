@@ -55,7 +55,7 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
   @Override
   public String toString( )
   {
-    return String.format( "%s - %s", m_id.getName(), m_label );
+    return String.format( "%s - %s", m_id.getName(), m_label ); //$NON-NLS-1$
   }
 
   public Roughness( final RoughnessId id, final PointKind pointKind, final BigDecimal KValue, final BigDecimal kstValue, final String label, final String source, final String validity, final String description, final Set<Point> points )

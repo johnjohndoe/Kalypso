@@ -121,7 +121,7 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
 
     try
     {
-      final String statement = String.format( "select count(*) from session_roles where upper(role) = '%s'", PDBRole.fadmin.getName() );
+      final String statement = String.format( "select count(*) from session_roles where upper(role) = '%s'", PDBRole.fadmin.getName() ); //$NON-NLS-1$
       final SQLQuery query = session.createSQLQuery( statement );
       final List< ? > result = query.list();
       if( result.size() != 1 )

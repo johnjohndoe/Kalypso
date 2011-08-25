@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutCrossSectionsWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutRemoveWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutStateWorker;
@@ -71,7 +72,7 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Loading data from cross section database", 100 );
+    monitor.beginTask( Messages.getString("CheckoutPdbOperation.0"), 100 ); //$NON-NLS-1$
 
     final URI documentBase = m_data.getDocumentBase();
     final CheckoutDataMapping mapping = m_data.getMapping();

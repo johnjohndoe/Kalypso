@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db.constants;
 
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
@@ -69,8 +71,8 @@ public interface WaterBodyConstants
   public enum STATIONING_DIRECTION
   {
     /** Default */
-    upstream("upstreams"),
-    downstream("downstreams");
+    upstream(Messages.getString("WaterBodyConstants.0")), //$NON-NLS-1$
+    downstream(Messages.getString("WaterBodyConstants.1")); //$NON-NLS-1$
 
     private final String m_label;
 

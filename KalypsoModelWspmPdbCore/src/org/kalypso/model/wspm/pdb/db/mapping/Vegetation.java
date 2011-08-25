@@ -71,7 +71,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
   @Override
   public String toString( )
   {
-    return String.format( "%s - %s", m_id.getName(), m_label );
+    return String.format( "%s - %s", m_id.getName(), m_label ); //$NON-NLS-1$
   }
 
   @Override

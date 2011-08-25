@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * First stage of gaf importing: open log file, then delegate to next level.
@@ -81,7 +82,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Import GAF", 100 );
+    monitor.beginTask( Messages.getString("ImportGafOperation_0"), 100 ); //$NON-NLS-1$
 
     checkPreconditions();
 
@@ -96,7 +97,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     final IStatus logStatus = doWriteLog( new SubProgressMonitor( monitor, 10 ) );
     stati.add( logStatus );
 
-    return stati.asMultiStatusOrOK( "Problems during GAF Import", "GAF Import successfully terminated" );
+    return stati.asMultiStatusOrOK( Messages.getString("ImportGafOperation_1"), Messages.getString("ImportGafOperation_2") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   // REMARK: extra check necessary here, because (due to validation-binding-problem) in some cases
@@ -112,7 +113,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     {
       if( state.getName().equals( newStateName ) )
       {
-        final String message = String.format( "A state with the same name '%s' already exists.\nPlease change the state's name.", newStateName );
+        final String message = String.format( Messages.getString("ImportGafOperation_3"), newStateName ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message );
         throw new CoreException( status );
       }
@@ -139,11 +140,11 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
 
       session.close();
 
-      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, "GAF data written successfully into database" );
+      return new Status( IStatus.OK, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("ImportGafOperation_4") ); //$NON-NLS-1$
     }
     catch( final PdbConnectException e )
     {
-      final String message = "Failed to write data into database";
+      final String message = Messages.getString("ImportGafOperation_5"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -171,7 +172,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     StatusWriter writer = null;
     try
     {
-      monitor.beginTask( "Writing log file", 100 );
+      monitor.beginTask( Messages.getString("ImportGafOperation_6"), 100 ); //$NON-NLS-1$
 
       final File logFile = m_data.getLogFile();
       if( logFile == null )
@@ -187,7 +188,7 @@ public class ImportGafOperation implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "Failed to write log file", e );
+      return new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("ImportGafOperation_7"), e ); //$NON-NLS-1$
     }
     finally
     {

@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.pdb.internal.utils;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+
 /**
  * Generator for name when uploading gaf data into db.<br/>
  * This class is responsible for taking the various name constraints into account.
@@ -72,7 +74,7 @@ public class PDBNameGenerator
       }
     }
 
-    final String message = String.format( "More than 999 cross section have the same station(%s). Unable to create unique cross section name.", protoName );
+    final String message = String.format( Messages.getString("PDBNameGenerator.0"), protoName ); //$NON-NLS-1$
     throw new IllegalArgumentException( message );
   }
 

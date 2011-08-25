@@ -116,7 +116,7 @@ public class PostgisSettings extends HibernateSettings
     if( PROPERTY_NAME.equals( property ) )
       return "PostGIS"; //$NON-NLS-1$
 
-    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
+    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) ); //$NON-NLS-1$
   }
 
   public void setHost( final String host )

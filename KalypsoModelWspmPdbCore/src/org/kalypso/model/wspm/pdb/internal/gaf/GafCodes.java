@@ -49,6 +49,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Represents the 'Kennziffer' (KZ) of a GAF file.
@@ -57,7 +58,7 @@ import org.kalypso.model.wspm.pdb.gaf.GafCode;
  */
 public class GafCodes
 {
-  public static final GafCode NULL_HYK = new GafCode( -1, "<no HYK code>", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY );
+  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString("GafCodes.0"), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY ); //$NON-NLS-1$
 
   private final Map<String, GafCode> m_codes = new LinkedHashMap<String, GafCode>();
 

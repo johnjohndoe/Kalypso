@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -175,11 +175,7 @@ public class CheckinPartOperation
     }
 
     final int size = lineCrds.size();
-    if( size == 1 )
-    {
-      System.out.println( "oups" );
-    }
-    else
+    if( size != 1 )
     {
       final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[size] ) );
       m_part.setLine( line );

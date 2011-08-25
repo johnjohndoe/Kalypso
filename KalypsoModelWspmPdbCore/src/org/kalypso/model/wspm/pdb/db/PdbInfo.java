@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.osgi.framework.Version;
 
 /**
@@ -127,7 +128,7 @@ public class PdbInfo
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "Failed to load 'Info' table from database. Database might not exist yet.", e );
+      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("PdbInfo.0"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -169,7 +170,7 @@ public class PdbInfo
     final String documentServer = getDocumentServer();
     if( StringUtils.isBlank( documentServer ) )
     {
-      final String message = String.format( "Base url the document server is empty" );
+      final String message = String.format( Messages.getString("PdbInfo.1") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }
@@ -182,7 +183,7 @@ public class PdbInfo
     {
       e.printStackTrace();
 
-      final String message = String.format( "Illegal base url of the document server: '%s'", documentServer );
+      final String message = String.format( Messages.getString("PdbInfo.2"), documentServer ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

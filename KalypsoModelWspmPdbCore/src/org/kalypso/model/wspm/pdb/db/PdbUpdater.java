@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.pdb.db.version.UpdateScript;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptExtenions;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.update.SqlWork;
 import org.kalypso.model.wspm.pdb.internal.update.UpdateScriptWizard;
 import org.kalypso.model.wspm.pdb.internal.update.WorkRunnable;
@@ -90,13 +91,13 @@ public class PdbUpdater
     kalypsoOutdated
   }
 
-  private final static String WINDOW_TITLE = "Open Connection";
+  private final static String WINDOW_TITLE = Messages.getString("PdbUpdater_0"); //$NON-NLS-1$
 
-  private static final String STR_CONNECTION_IMPOSSIBLE = "Connection failed: ";
+  private static final String STR_CONNECTION_IMPOSSIBLE = Messages.getString("PdbUpdater_1"); //$NON-NLS-1$
 
-  private static final String STR_CREATE = STR_CONNECTION_IMPOSSIBLE + "database seems to be empty.";
+  private static final String STR_CREATE = STR_CONNECTION_IMPOSSIBLE + Messages.getString("PdbUpdater_2"); //$NON-NLS-1$
 
-  private static final String STR_UPDATE = STR_CONNECTION_IMPOSSIBLE + "database version (%s) is older than the current version (%s).";
+  private static final String STR_UPDATE = STR_CONNECTION_IMPOSSIBLE + Messages.getString("PdbUpdater_3"); //$NON-NLS-1$
 
   private final IPdbConnection m_connection;
 
@@ -128,7 +129,7 @@ public class PdbUpdater
           return handleShouldCreate();
 
       case kalypsoOutdated:
-        final String msg = String.format( STR_CONNECTION_IMPOSSIBLE + "database version (%s) is newer than the version of Kalypso.\nPlease update Kalypso.", version );
+        final String msg = String.format( STR_CONNECTION_IMPOSSIBLE + Messages.getString("PdbUpdater_4"), version ); //$NON-NLS-1$
         return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, msg );
 
       case dbOutdated:
@@ -168,8 +169,8 @@ public class PdbUpdater
   private IStatus handleCreate( )
   {
     /* ask user what to do */
-    final String msg = String.format( "%s\nDo you wish to create the database?", STR_CREATE );
-    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { "Create Now!", IDialogConstants.CANCEL_LABEL }, 1 );
+    final String msg = String.format( Messages.getString("PdbUpdater_5"), STR_CREATE ); //$NON-NLS-1$
+    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { Messages.getString("PdbUpdater_6"), IDialogConstants.CANCEL_LABEL }, 1 ); //$NON-NLS-1$
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -179,12 +180,12 @@ public class PdbUpdater
     if( createScript == null )
       throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
     final UpdateScript[] scripts = new UpdateScript[] { createScript };
-    return executeScripts( scripts, "Create Database" );
+    return executeScripts( scripts, Messages.getString("PdbUpdater_7") ); //$NON-NLS-1$
   }
 
   private IStatus handleShouldCreate( )
   {
-    final String msg = String.format( "%s\nLog-in with user '%s' to create the database.", STR_CREATE, IPdbConnection.SUPERUSER );
+    final String msg = String.format( Messages.getString("PdbUpdater_8"), STR_CREATE, IPdbConnection.SUPERUSER ); //$NON-NLS-1$
     MessageDialog.openWarning( m_shell, WINDOW_TITLE, msg );
     return Status.CANCEL_STATUS;
   }
@@ -195,8 +196,8 @@ public class PdbUpdater
 
     /* ask user what to do */
     final String baseMsg = String.format( STR_UPDATE, version, PdbInfo.CURRENT_VERSION );
-    final String msg = baseMsg + "\nPlease backup the database before updating.\nUpdate database now?";
-    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { "Update Now!", IDialogConstants.CANCEL_LABEL }, 1 );
+    final String msg = baseMsg + Messages.getString("PdbUpdater_9"); //$NON-NLS-1$
+    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { Messages.getString("PdbUpdater_10"), IDialogConstants.CANCEL_LABEL }, 1 ); //$NON-NLS-1$
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -205,13 +206,13 @@ public class PdbUpdater
     final UpdateScript[] scripts = UpdateScriptExtenions.getUpdateScripts( version, dbType );
     if( scripts == null )
       throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
-    return executeScripts( scripts, "Update Database" );
+    return executeScripts( scripts, Messages.getString("PdbUpdater_11") ); //$NON-NLS-1$
   }
 
   private IStatus handleShouldUpdate( final Version version )
   {
     final String baseMsg = String.format( STR_UPDATE, version, PdbInfo.CURRENT_VERSION );
-    final String msg = String.format( "%s\nLog-in with user '%s' to update.", baseMsg, IPdbConnection.SUPERUSER );
+    final String msg = String.format( Messages.getString("PdbUpdater_12"), baseMsg, IPdbConnection.SUPERUSER ); //$NON-NLS-1$
     MessageDialog.openWarning( m_shell, WINDOW_TITLE, msg );
     return Status.CANCEL_STATUS;
   }
@@ -264,13 +265,13 @@ public class PdbUpdater
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new IllegalStateException( "Failed to load update scripts", e );
+      throw new IllegalStateException( Messages.getString("PdbUpdater_13"), e ); //$NON-NLS-1$
     }
   }
 
   private PatternInputReplacer<Object> configurePatternReplacer( final Properties variables )
   {
-    final PatternInputReplacer<Object> inputReplacer = new PatternInputReplacer<Object>( "${", "}" );
+    final PatternInputReplacer<Object> inputReplacer = new PatternInputReplacer<Object>( "${", "}" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Set<String> names = variables.stringPropertyNames();
     for( final String name : names )
@@ -292,16 +293,16 @@ public class PdbUpdater
     final String srid = properties.getProperty( PdbInfo.PROPERTY_SRID );
     final Envelope domainOfValidity = m_connection.getCrsEnvelope( Integer.valueOf( srid ) );
 
-    properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_Z, String.format( Locale.US, "%f", -1000.0 ) );
-    properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_Z, String.format( Locale.US, "%f", 10000.0 ) );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_Z, String.format( Locale.US, "%f", -1000.0 ) ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_Z, String.format( Locale.US, "%f", 10000.0 ) ); //$NON-NLS-1$
 
     if( domainOfValidity != null )
     {
-      properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_X, String.format( Locale.US, "%f", domainOfValidity.getMinX() ) );
-      properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_X, String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) );
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_X, String.format( Locale.US, "%f", domainOfValidity.getMinX() ) ); //$NON-NLS-1$
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_X, String.format( Locale.US, "%f", domainOfValidity.getMaxX() ) ); //$NON-NLS-1$
 
-      properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_Y, String.format( Locale.US, "%f", domainOfValidity.getMinY() ) );
-      properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_Y, String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) );
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MIN_Y, String.format( Locale.US, "%f", domainOfValidity.getMinY() ) ); //$NON-NLS-1$
+      properties.setProperty( PdbInfo.PROPERTY_SRS_MAX_Y, String.format( Locale.US, "%f", domainOfValidity.getMaxY() ) ); //$NON-NLS-1$
     }
 
     final PdbInfo info = m_connection.getInfo();
@@ -349,8 +350,8 @@ public class PdbUpdater
   {
     // FIXME: use the chosen srs in order to set these properties
 
-    properties.setProperty( PdbInfo.PROPERTY_SRS_X_NAME, "X" );
-    properties.setProperty( PdbInfo.PROPERTY_SRS_Y_NAME, "Y" );
+    properties.setProperty( PdbInfo.PROPERTY_SRS_X_NAME, "X" ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_SRS_Y_NAME, "Y" ); //$NON-NLS-1$
 
     // CRS.decode(srid).getCoordinateSystem().getAxis( 0 ).getUnit()
     // for geographic crs use the following
@@ -358,10 +359,10 @@ public class PdbUpdater
     // properties.setProperty( PdbInfo.PROPERTY_SRS_YName", "Latitude" ); // Y is latitude!
 
     // maybe change (enlarge) x and y tolerance for geographic crs
-    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_X, String.format( Locale.US, "%f", 0.0005 ) );
-    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_Y, String.format( Locale.US, "%f", 0.0005 ) );
-    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_Z, String.format( Locale.US, "%f", 0.0005 ) );
-    properties.setProperty( PdbInfo.PROPERTY_SRS_Z_NAME, "Z" ); // equal for all coordinate systems
+    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_X, String.format( Locale.US, "%f", 0.0005 ) ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_Y, String.format( Locale.US, "%f", 0.0005 ) ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_SRS_TOL_Z, String.format( Locale.US, "%f", 0.0005 ) ); //$NON-NLS-1$
+    properties.setProperty( PdbInfo.PROPERTY_SRS_Z_NAME, "Z" ); // equal for all coordinate systems //$NON-NLS-1$
   }
 
 }

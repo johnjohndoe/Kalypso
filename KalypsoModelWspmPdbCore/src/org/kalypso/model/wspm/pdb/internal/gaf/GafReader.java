@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -83,7 +84,7 @@ public class GafReader
   {
     /* Reading gaf with progress stream to show nice progress for large files */
     final long contentLength = gafFile.length();
-    monitor.beginTask( "Reading GAF", (int) contentLength );
+    monitor.beginTask( Messages.getString("GafReader.0"), (int) contentLength ); //$NON-NLS-1$
 
     /* Open Reader */
     final InputStream fileStream = new BufferedInputStream( new FileInputStream( gafFile ) );
@@ -94,13 +95,13 @@ public class GafReader
 
     final IStatusCollector logger = new StatusCollector(WspmPdbCorePlugin.PLUGIN_ID);
 
-    logger.add( IStatus.INFO, String.format( "Reading file '%s'", gafFile.getAbsolutePath() ) );
+    logger.add( IStatus.INFO, String.format( Messages.getString("GafReader.1"), gafFile.getAbsolutePath() ) ); //$NON-NLS-1$
     if( m_goodLines > 0 )
-      logger.add( IStatus.OK, String.format( "%6d lines read", m_goodLines ) );
+      logger.add( IStatus.OK, String.format( Messages.getString("GafReader.2"), m_goodLines ) ); //$NON-NLS-1$
     if( m_badLines > 0 )
-      logger.add( IStatus.INFO, String.format( "%6d lines skipped", m_badLines ) );
+      logger.add( IStatus.INFO, String.format( Messages.getString("GafReader.3"), m_badLines ) ); //$NON-NLS-1$
 
-    return logger.asMultiStatus( "Successfully read GAF file" );
+    return logger.asMultiStatus( Messages.getString("GafReader.4") ); //$NON-NLS-1$
   }
 
   public GafLine[] getLines( )
@@ -161,20 +162,20 @@ public class GafReader
     final String[] tokens = tokenizer.getTokenArray();
 
     if( tokens.length < 9 )
-      throw failLine( IStatus.INFO, "Skipping line: too few tokens in line" );
+      throw failLine( IStatus.INFO, Messages.getString("GafReader.5") ); //$NON-NLS-1$
 
     final Object[] items = parseTokens( tokens );
     checkCommentLine( items );
 
-    final BigDecimal station = asDecimal( items[0], "Station" );
+    final BigDecimal station = asDecimal( items[0], Messages.getString("GafReader.6") ); //$NON-NLS-1$
     final String pointId = asString( tokens[1] );
-    final BigDecimal width = asDecimal( items[2], "Width" );
-    final BigDecimal height = asDecimal( items[3], "Height" );
+    final BigDecimal width = asDecimal( items[2], Messages.getString("GafReader.7") ); //$NON-NLS-1$
+    final BigDecimal height = asDecimal( items[3], Messages.getString("GafReader.8") ); //$NON-NLS-1$
     final String code = asString( tokens[4] ).toUpperCase();
     final String roughnessClass = asString( tokens[5] );
     final String vegetationClass = asString( tokens[6] );
-    final BigDecimal hw = asDecimal( items[7], "Hochwert" );
-    final BigDecimal rw = asDecimal( items[8], "Rechtswert" );
+    final BigDecimal hw = asDecimal( items[7], Messages.getString("GafReader.9") ); //$NON-NLS-1$
+    final BigDecimal rw = asDecimal( items[8], Messages.getString("GafReader.10") ); //$NON-NLS-1$
     final String hyk = tokens.length < 10 ? StringUtils.EMPTY : asString( tokens[9] ).toUpperCase();
 
     return new GafLine( station, pointId, width, height, code, roughnessClass, vegetationClass, rw, hw, hyk, Status.OK_STATUS );
@@ -196,7 +197,7 @@ public class GafReader
         return;
     }
 
-    throw failLine( IStatus.INFO, "Skipping line without numbers - comment line?" );
+    throw failLine( IStatus.INFO, Messages.getString("GafReader.11") ); //$NON-NLS-1$
   }
 
   private Object[] parseTokens( final String[] tokens )
@@ -221,13 +222,13 @@ public class GafReader
     if( item instanceof BigDecimal )
       return (BigDecimal) item;
 
-    final String message = String.format( "Field '%s' is not a number", label );
+    final String message = String.format( Messages.getString("GafReader.12"), label ); //$NON-NLS-1$
     throw failLine( IStatus.ERROR, message );
   }
 
   private CoreException failLine( final int severity, final String message )
   {
-    final String msg = String.format( "LINE %d: %s", m_reader.getLineNumber(), message );
+    final String msg = String.format( Messages.getString("GafReader.13"), m_reader.getLineNumber(), message ); //$NON-NLS-1$
     final IStatus status = new Status( severity, WspmPdbCorePlugin.PLUGIN_ID, msg );
     return new CoreException( status );
   }

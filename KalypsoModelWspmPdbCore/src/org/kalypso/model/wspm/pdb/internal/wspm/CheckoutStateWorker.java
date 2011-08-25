@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -74,7 +75,7 @@ public class CheckoutStateWorker
   {
     final State[] states = m_mapping.getStates();
 
-    monitor.beginTask( "Reading states from database", states.length );
+    monitor.beginTask( Messages.getString("CheckoutStateWorker.0"), states.length ); //$NON-NLS-1$
 
     try
     {
