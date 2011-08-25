@@ -74,31 +74,6 @@ public class RoughnessFactorComposite extends AbstractRoughnessComposite
   public void render( final Composite parent, final FormToolkit toolkit )
   {
     renderSimpleType( parent, toolkit );
-
-// setBinding( new AbstractDatabinding( toolkit )
-// {
-// } );
-//
-// final Composite body = toolkit.createComposite( parent );
-// body.setLayout( new GridLayout( 2, false ) );
-// body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-//
-// // TODO validators
-// build( body, toolkit, "Roughness Factor", ProfileRoguhnessesDataModel.PROPERTY_ROUGHNESS_FACTOR, null );
-//
-// final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( body, SWT.NULL );
-// lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
-// lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
-//
-// lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
-// {
-// @Override
-// public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
-// {
-// RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
-// }
-// } );
-
   }
 
 }

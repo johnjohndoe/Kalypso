@@ -182,8 +182,8 @@ public final class RoughnessFlowzones
     if( trennflaechen.length < 2 )
       return null;
 
-    final int p1 = profile.indexOfPoint( trennflaechen[0].getPoint() ) + 1;
-    final int p2 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() ) - 1;
+    final int p1 = profile.indexOfPoint( trennflaechen[0].getPoint() );
+    final int p2 = profile.indexOfPoint( trennflaechen[1].getPoint() ) - 1;
 
     return new int[] { p1, p2 };
   }
@@ -194,7 +194,7 @@ public final class RoughnessFlowzones
     if( trennflaechen.length < 2 )
       return null;
 
-    final int p1 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
+    final int p1 = profile.indexOfPoint( trennflaechen[1].getPoint() );
     final int p2 = profile.getPoints().length - 1;
 
     return new int[] { p1, p2 };

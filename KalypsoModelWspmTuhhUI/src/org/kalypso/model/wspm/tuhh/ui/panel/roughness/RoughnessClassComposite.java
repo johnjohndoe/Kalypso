@@ -149,10 +149,7 @@ public class RoughnessClassComposite extends AbstractRoughnessComposite
         addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, grActions, toolkit, "Update kst values from mapped roughness class" );
 
       toolkit.adapt( grActions );
-      grActions.layout();
     }
-
-    body.layout();
   }
 
   private void addWriteValueLink( final String property, final Composite body, final FormToolkit toolkit, final String label )
