@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -62,7 +63,7 @@ public class PdbConnectJob extends Job
 
   public PdbConnectJob( final String settingsName )
   {
-    super( "Connect to PDB" );
+    super( Messages.getString("PdbConnectJob.0") ); //$NON-NLS-1$
 
     m_settingsName = settingsName;
   }
@@ -81,7 +82,7 @@ public class PdbConnectJob extends Job
     }
     catch( final PdbConnectException e )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to autoconnect to cross section database", e );
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbConnectJob.1"), e ); //$NON-NLS-1$
     }
     catch( final InterruptedException e )
     {

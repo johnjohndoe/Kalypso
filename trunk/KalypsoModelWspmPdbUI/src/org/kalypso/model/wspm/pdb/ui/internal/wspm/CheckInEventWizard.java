@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
@@ -70,8 +71,8 @@ public class CheckInEventWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final EditEventPage editStatePage = new EditEventPage( "editEvent", m_data, false );
-    editStatePage.setDescription( "Edit the properties of the new waterlevel event." );
+    final EditEventPage editStatePage = new EditEventPage( "editEvent", m_data, false ); //$NON-NLS-1$
+    editStatePage.setDescription( Messages.getString("CheckInEventWizard.1") ); //$NON-NLS-1$
 
     addPage( editStatePage );
   }

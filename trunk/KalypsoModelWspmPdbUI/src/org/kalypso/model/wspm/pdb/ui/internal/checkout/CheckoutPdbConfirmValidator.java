@@ -44,6 +44,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -52,7 +53,7 @@ public class CheckoutPdbConfirmValidator extends TypedValidator<Boolean>
 {
   public CheckoutPdbConfirmValidator( )
   {
-    super( Boolean.class, IStatus.WARNING, "You need to confirm all warnings." );
+    super( Boolean.class, IStatus.WARNING, Messages.getString("CheckoutPdbConfirmValidator.0") ); //$NON-NLS-1$
   }
 
   @Override

@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IRemoveWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +66,7 @@ public class RemoveStateWorker implements IRemoveWorker
   @Override
   public String getWindowTitle( )
   {
-    return "Remove State";
+    return Messages.getString("RemoveStateWorker.0"); //$NON-NLS-1$
   }
 
   @Override

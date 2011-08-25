@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventPage;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 
 /**
@@ -98,7 +99,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
   public ImportWaterLevelsWizard( )
   {
-    setWindowTitle( "Import Water Levels" );
+    setWindowTitle( Messages.getString("ImportWaterLevelsWizard.0") ); //$NON-NLS-1$
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
     setNeedsProgressMonitor( true );
   }
@@ -117,9 +118,9 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   @Override
   public void addPages( )
   {
-    m_shapeFilePage = new SelectShapeFilePage( "selectPage", "Select Shape File", WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$
+    m_shapeFilePage = new SelectShapeFilePage( "selectPage", Messages.getString("ImportWaterLevelsWizard.1"), WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_shapeFilePage.setDescription( "Select the shape file of river lines on this page." );
+    m_shapeFilePage.setDescription( Messages.getString("ImportWaterLevelsWizard.2") ); //$NON-NLS-1$
     addPage( m_shapeFilePage );
 
     /* Page to choose a water body */
@@ -133,11 +134,11 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     /* Choose water body */
     final IPdbConnection connection = m_data.getConnection();
     final ChooseWaterPage waterPage = new ChooseWaterPage( "waterPage", connection, waterValue ); //$NON-NLS-1$
-    waterPage.setDescription( "Choose the water body into which the water levels will be imported" );
+    waterPage.setDescription( Messages.getString("ImportWaterLevelsWizard.3") ); //$NON-NLS-1$
     addPage( waterPage );
 
     /* Edit event properties */
-    m_eventPage = new EditEventPage( "eventPage", m_data, true );
+    m_eventPage = new EditEventPage( "eventPage", m_data, true ); //$NON-NLS-1$
     addPage( m_eventPage );
   }
 
@@ -146,7 +147,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   {
     try
     {
-      monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
+      monitor.beginTask( Messages.getString("ImportWaterLevelsWizard.5"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
       m_data.init( getDialogSettings() );
 
       return Status.OK_STATUS;

@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
 public interface WaterBodyStrings
 {
-  String STR_NAME = "Name";
+  String STR_NAME = Messages.getString("WaterBodyStrings.0"); //$NON-NLS-1$
 
-  String STR_GEWÄSSERKENNZIFFER = "Gewässerkennziffer";
+  String STR_GEWÄSSERKENNZIFFER = Messages.getString("WaterBodyStrings.1"); //$NON-NLS-1$
 }

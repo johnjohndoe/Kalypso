@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.GmltreeHandlerUtils;
@@ -151,7 +152,7 @@ public class CheckinPdbHandler extends AbstractHandler
       {
         try
         {
-          monitor.beginTask( "Reading database state", IProgressMonitor.UNKNOWN );
+          monitor.beginTask( Messages.getString("CheckinPdbHandler.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
           worker.preInit( connection );
           return Status.OK_STATUS;
         }
@@ -165,7 +166,7 @@ public class CheckinPdbHandler extends AbstractHandler
     if( result.isOK() )
       return true;
 
-    final String msg = "Failed to access database.";
+    final String msg = Messages.getString("CheckinPdbHandler.1"); //$NON-NLS-1$
     ErrorDialog.openError( shell, windowTitle, msg, result );
     return false;
   }
@@ -192,6 +193,6 @@ public class CheckinPdbHandler extends AbstractHandler
 
     final IStatus result = ProgressUtilities.busyCursorWhile( saveOperation );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, windowTitle, "Failed to save local project data" ).open();
+      new StatusDialog2( shell, result, windowTitle, Messages.getString("CheckinPdbHandler.2") ).open(); //$NON-NLS-1$
   }
 }

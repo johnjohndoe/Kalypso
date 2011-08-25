@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -55,6 +55,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -79,7 +80,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Importing documents into database";
+    return Messages.getString("ImportAttachmentsOperation.0"); //$NON-NLS-1$
   }
 
   @Override
@@ -94,7 +95,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
       for( final Document document : documents )
         addDcoument( session, document );
 
-      closeZip();
+          closeZip();
     }
     finally
     {
@@ -129,7 +130,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( "Failed to open output zip file", e );
+      throw new PdbConnectException( Messages.getString("ImportAttachmentsOperation.1"), e ); //$NON-NLS-1$
     }
   }
 
@@ -147,7 +148,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( "Failed to add file to output zip: %s", file.getName() );
+      final String msg = String.format( Messages.getString("ImportAttachmentsOperation.2"), file.getName() ); //$NON-NLS-1$
       throw new PdbConnectException( msg, e );
     }
   }
@@ -164,7 +165,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( "Failed to close output zip", e );
+      throw new PdbConnectException( Messages.getString("ImportAttachmentsOperation.3"), e ); //$NON-NLS-1$
     }
   }
 }

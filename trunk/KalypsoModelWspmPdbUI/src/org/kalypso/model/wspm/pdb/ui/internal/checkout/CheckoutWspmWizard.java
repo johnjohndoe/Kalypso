@@ -60,6 +60,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
@@ -94,7 +95,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
   public CheckoutWspmWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( "Import" );
+    setWindowTitle( Messages.getString("CheckoutWspmWizard.0") ); //$NON-NLS-1$
   }
 
   @Override

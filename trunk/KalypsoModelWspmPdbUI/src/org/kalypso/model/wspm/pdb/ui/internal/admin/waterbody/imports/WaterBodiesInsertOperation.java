@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesData.INSERTION_MODE;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -75,15 +76,15 @@ public class WaterBodiesInsertOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Insert water bodies";
+    return Messages.getString("WaterBodiesInsertOperation.0"); //$NON-NLS-1$
   }
 
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
-    m_monitor.beginTask( "Inserting Water Bodies", m_waterBodies.length * 2 + 20 );
+    m_monitor.beginTask( Messages.getString("WaterBodiesInsertOperation.1"), m_waterBodies.length * 2 + 20 ); //$NON-NLS-1$
 
-    m_monitor.subTask( "loading existing water bodies..." );
+    m_monitor.subTask( Messages.getString("WaterBodiesInsertOperation.2") ); //$NON-NLS-1$
     final List<WaterBody> existingWaterBodies = GetPdbList.getList( session, WaterBody.class );
     for( final WaterBody waterBody : existingWaterBodies )
       m_existingWaterBodies.put( waterBody.getName(), waterBody );
@@ -96,7 +97,7 @@ public class WaterBodiesInsertOperation implements IPdbOperation
       m_monitor.worked( 1 );
     }
 
-    m_monitor.subTask( "writing data into database..." );
+    m_monitor.subTask( Messages.getString("WaterBodiesInsertOperation.3") ); //$NON-NLS-1$
     session.flush();
 
     m_monitor.done();

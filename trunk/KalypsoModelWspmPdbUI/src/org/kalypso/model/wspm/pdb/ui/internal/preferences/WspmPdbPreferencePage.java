@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
@@ -83,7 +84,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
 
   public WspmPdbPreferencePage( )
   {
-    super( "Wspm Cross Section" );
+    super( Messages.getString("WspmPdbPreferencePage.0") ); //$NON-NLS-1$
 
     noDefaultAndApplyButton();
   }
@@ -106,8 +107,8 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to store connections", e );
-      return new StatusDialog2( getShell(), status, "Save Connections" ).open() == Window.OK;
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("WspmPdbPreferencePage.1"), e ); //$NON-NLS-1$
+      return new StatusDialog2( getShell(), status, Messages.getString("WspmPdbPreferencePage.2") ).open() == Window.OK; //$NON-NLS-1$
     }
   }
 
@@ -116,7 +117,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   {
     final Group panel = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
-    panel.setText( "Connections" );
+    panel.setText( Messages.getString("WspmPdbPreferencePage.3") ); //$NON-NLS-1$
 
     m_actions = createActions();
 
@@ -140,7 +141,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   {
     final Label label = new Label( panel, SWT.WRAP );
 
-    label.setText( "Add, remove or edit database connections." );
+    label.setText( Messages.getString("WspmPdbPreferencePage.4") ); //$NON-NLS-1$
 
     return label;
   }

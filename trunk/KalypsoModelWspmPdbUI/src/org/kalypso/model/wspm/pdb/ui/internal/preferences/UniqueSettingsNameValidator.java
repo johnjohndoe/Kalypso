@@ -50,6 +50,7 @@ import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -66,7 +67,7 @@ public class UniqueSettingsNameValidator extends TypedValidator<String>
    */
   public UniqueSettingsNameValidator( final String ignoreName )
   {
-    super( String.class, IStatus.ERROR, "A PDB connection with the same name already exists." );
+    super( String.class, IStatus.ERROR, Messages.getString("UniqueSettingsNameValidator.0") ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
 

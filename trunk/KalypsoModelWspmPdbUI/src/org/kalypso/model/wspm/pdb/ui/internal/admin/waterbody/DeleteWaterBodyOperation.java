@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.utils.WaterBodyUtils;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -62,7 +63,7 @@ public class DeleteWaterBodyOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( "Delete Water Body '%s'", m_name );
+    return String.format( Messages.getString("DeleteWaterBodyOperation.0"), m_name ); //$NON-NLS-1$
   }
 
   @Override

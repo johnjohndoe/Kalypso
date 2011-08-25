@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IRemoveWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,14 +66,14 @@ public class RemoveEventWorker implements IRemoveWorker
   @Override
   public String getWindowTitle( )
   {
-    return "Remove Event";
+    return Messages.getString("RemoveEventWorker.0"); //$NON-NLS-1$
   }
 
   @Override
   public boolean checkPrerequisites( final Shell shell )
   {
     final String name = m_selectedItem.getName();
-    final String message = String.format( "Remove event '%s' ? This operation cannot be undone.", name );
+    final String message = String.format( Messages.getString("RemoveEventWorker.1"), name ); //$NON-NLS-1$
     return MessageDialog.openConfirm( shell, getWindowTitle(), message );
   }
 

@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.DateTimeSelectionProperty;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.UniqueStateNameValidator;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -98,11 +99,11 @@ public class StateViewer extends Composite
 
   private void createNameControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Name" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("StateViewer.0") ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    field.setMessage( "<Eindeutiger Name des Zustands>" );
+    field.setMessage( Messages.getString("StateViewer.1") ); //$NON-NLS-1$
     field.setTextLimit( State.NAME_LIMIT );
     field.setEditable( m_editable );
 
@@ -110,7 +111,7 @@ public class StateViewer extends Composite
     final IObservableValue model = BeansObservables.observeValue( m_state, State.PROPERTY_NAME );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "'Name' is empty" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("StateViewer.2") ) ); //$NON-NLS-1$
 
     /* Ignore own name in edit mode */
     final String ignoreName = m_mode == Mode.EDIT ? m_state.getName() : null;
@@ -130,13 +131,13 @@ public class StateViewer extends Composite
   private void createCommentControls( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Description" );
+    label.setText( Messages.getString("StateViewer.3") ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     field.setTextLimit( State.COMMENT_LIMIT );
     field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-    field.setMessage( "<Beschreibung des Zustands>" );
+    field.setMessage( Messages.getString("StateViewer.4") ); //$NON-NLS-1$
     field.setEditable( m_editable );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
@@ -147,7 +148,7 @@ public class StateViewer extends Composite
 
   private void createSourceControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Source" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("StateViewer.5") ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER | SWT.READ_ONLY );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
@@ -161,7 +162,7 @@ public class StateViewer extends Composite
 
   private void createMeasureDateControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Measurement Date" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("StateViewer.6") ); //$NON-NLS-1$
 
     final DateTime dateField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     dateField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

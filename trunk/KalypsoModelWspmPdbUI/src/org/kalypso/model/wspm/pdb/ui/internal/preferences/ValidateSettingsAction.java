@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
 import org.eclipse.jface.action.Action;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -53,7 +54,7 @@ public class ValidateSettingsAction extends Action
   {
     m_page = page;
 
-    setText( "Test connection..." );
+    setText( Messages.getString("ValidateSettingsAction.0") ); //$NON-NLS-1$
   }
 
   /**

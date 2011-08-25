@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.ConnectionContentControl;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ContentSearchViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 
 /**
@@ -72,8 +73,8 @@ public class PdbContentPage extends WizardPage implements IConnectionViewer
   {
     super( pageName );
 
-    setTitle( "Database Content" );
-    setDescription( "Choose the elements to import on this page." );
+    setTitle( Messages.getString("PdbContentPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("PdbContentPage.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -123,7 +124,7 @@ public class PdbContentPage extends WizardPage implements IConnectionViewer
   {
     if( selection.isEmpty() )
     {
-      setMessage( "At least one element should be selected.", WARNING );
+      setMessage( Messages.getString("PdbContentPage.2"), WARNING ); //$NON-NLS-1$
       setPageComplete( false );
     }
     else

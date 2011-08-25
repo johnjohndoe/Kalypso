@@ -61,6 +61,7 @@ import org.kalypso.commons.databinding.validation.NotNullValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ConfigureConnectionsAction;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.PdbSettingsViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
 
@@ -81,8 +82,8 @@ public class ConnectionChooserPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Choose Database" );
-    setDescription( "Choose the cross section database on this page." );
+    setTitle( Messages.getString("ConnectionChooserPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ConnectionChooserPage.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -110,7 +111,7 @@ public class ConnectionChooserPage extends WizardPage
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( m_data, ConnectionChooserData.PROPERTY_SETTINGS );
     final DataBinder dataBinder = new DataBinder( target, model );
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<IPdbSettings>( IPdbSettings.class, IStatus.ERROR, "A connection must be selected." ) );
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<IPdbSettings>( IPdbSettings.class, IStatus.ERROR, Messages.getString("ConnectionChooserPage.2") ) ); //$NON-NLS-1$
     m_binding.bindValue( dataBinder );
 
     return viewer.getControl();

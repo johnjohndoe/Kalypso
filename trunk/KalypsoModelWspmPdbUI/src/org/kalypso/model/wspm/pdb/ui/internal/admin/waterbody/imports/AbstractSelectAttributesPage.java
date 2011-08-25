@@ -68,6 +68,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.ObjectNotSameValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBFFieldLabelProvider;
 import org.kalypso.shape.dbf.DBaseException;
@@ -91,7 +92,7 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
   {
     super( pageName );
 
-    setTitle( "Map Attributes" );
+    setTitle( Messages.getString("AbstractSelectAttributesPage.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -107,7 +108,7 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
 
     final Group attributeGroup = new Group( panel, SWT.NONE );
     attributeGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    attributeGroup.setText( "Attributes" );
+    attributeGroup.setText( Messages.getString("AbstractSelectAttributesPage.1") ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().numColumns( 3 ).equalWidth( false ).applyTo( attributeGroup );
 
     createAttributeControls( attributeGroup, m_binding );
@@ -126,7 +127,7 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( "Geometry" );
+    group.setText( Messages.getString("AbstractSelectAttributesPage.2") ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
     GridLayoutFactory.swtDefaults().applyTo( group );
 
@@ -156,7 +157,7 @@ public abstract class AbstractSelectAttributesPage extends WizardPage implements
     final DataBinder binder = new DataBinder( target, model );
     if( !optional )
     {
-      final String message = String.format( "'%s' is not set.", label );
+      final String message = String.format( Messages.getString("AbstractSelectAttributesPage.3"), label ); //$NON-NLS-1$
       final ObjectNotSameValidator validator = new ObjectNotSameValidator( IStatus.ERROR, message, ImportAttributeInfo.FIELD_USE_DEFAULT );
       binder.addTargetAfterGetValidator( validator );
       binder.addModelBeforeSetValidator( validator );

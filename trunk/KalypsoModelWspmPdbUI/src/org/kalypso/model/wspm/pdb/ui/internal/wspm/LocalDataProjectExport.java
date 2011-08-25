@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.module.project.local.wizard.export.WizardProjectExport;
 
 /**
@@ -52,7 +53,7 @@ public class LocalDataProjectExport extends WizardProjectExport
   {
     super( WspmPdbUiPlugin.getDefault().getWspmProject().getProject() );
 
-    setWindowTitle( "Export as KalypsoWSPM Project" );
+    setWindowTitle( Messages.getString("LocalDataProjectExport.0") ); //$NON-NLS-1$
 
     setUseTargetNameAsProjectName( true );
   }

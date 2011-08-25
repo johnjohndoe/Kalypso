@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
@@ -50,7 +51,7 @@ public class EditEventWizard extends Wizard
 {
   public EditEventWizard( final IEditEventPageData data )
   {
-    setWindowTitle( "Edit State" );
+    setWindowTitle( Messages.getString("EditEventWizard.0") ); //$NON-NLS-1$
 
     addPage( new EditEventPage( "editEvent", data, true ) ); //$NON-NLS-1$
   }

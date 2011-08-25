@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.event.EditEventWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStateWorker;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyWorker;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -135,7 +136,7 @@ public class EditElementHandler extends AbstractHandler
       {
         try
         {
-          monitor.beginTask( "Initializing Dialog", IProgressMonitor.UNKNOWN );
+          monitor.beginTask( Messages.getString("EditElementHandler.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
           wizards[0] = worker.createWizard( monitor, session );
           return Status.OK_STATUS;
         }

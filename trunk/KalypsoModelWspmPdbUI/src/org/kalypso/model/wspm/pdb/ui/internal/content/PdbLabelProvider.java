@@ -49,17 +49,18 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public class PdbLabelProvider extends ColumnLabelProvider
 {
-  public static final String PENDING = "Loading Data...";
+  public static final String PENDING = Messages.getString("PdbLabelProvider.0"); //$NON-NLS-1$
 
-  public static final String EMPTY_STATES = "<Database contains no state>";
+  public static final String EMPTY_STATES = Messages.getString("PdbLabelProvider.1"); //$NON-NLS-1$
 
-  public static final Object EMPTY_WATER_BODY = "<Database contains no waterbody>";
+  public static final Object EMPTY_WATER_BODY = Messages.getString("PdbLabelProvider.2"); //$NON-NLS-1$
 
   @Override
   public String getText( final Object element )

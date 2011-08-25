@@ -61,6 +61,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -81,7 +82,7 @@ public class CheckoutPdbHandler extends AbstractHandler
 
     if( selection.isEmpty() )
     {
-      final String message = "Please select at least one item in the tree.";
+      final String message = Messages.getString("CheckoutPdbHandler.0"); //$NON-NLS-1$
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }

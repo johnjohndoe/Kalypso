@@ -81,6 +81,7 @@ import org.kalypso.core.status.StatusViewerValue;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -103,8 +104,8 @@ public class GafProfilesPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "GAF Inhalt" );
-    setDescription( "The following cross sections have been read from the gaf file." );
+    setTitle( Messages.getString("GafProfilesPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("GafProfilesPage.1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -135,7 +136,7 @@ public class GafProfilesPage extends WizardPage
   private Control createProfileTable( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( "Read Cross Sections" );
+    group.setText( Messages.getString("GafProfilesPage.2") ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().applyTo( group );
 
     m_profileViewer = new TableViewer( group, SWT.BORDER | SWT.FULL_SELECTION );
@@ -150,7 +151,7 @@ public class GafProfilesPage extends WizardPage
     ColumnViewerUtil.createEmptyColumn( m_profileViewer ).setLabelProvider( new ColumnLabelProvider() );
 
     final TableViewerColumn stationColumn = new TableViewerColumn( m_profileViewer, SWT.NONE );
-    stationColumn.getColumn().setText( "Station [m]" );
+    stationColumn.getColumn().setText( Messages.getString("GafProfilesPage.3") ); //$NON-NLS-1$
     stationColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
 
@@ -169,14 +170,14 @@ public class GafProfilesPage extends WizardPage
       return;
 
     final IStatus status = ((GafProfile) firstElement).getStatus();
-    final StatusDialog statusTableDialog = new StatusDialog( getShell(), status, "Details" );
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), status, Messages.getString("GafProfilesPage.4") ); //$NON-NLS-1$
     statusTableDialog.open();
   }
 
   private Control createLogView( final Composite parent )
   {
     m_logPanel = new Group( parent, SWT.NONE );
-    m_logPanel.setText( "Details" );
+    m_logPanel.setText( Messages.getString("GafProfilesPage.5") ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().applyTo( m_logPanel );
 
     m_logViewer = new StatusTableViewer( m_logPanel, SWT.BORDER | SWT.FULL_SELECTION );
@@ -190,16 +191,16 @@ public class GafProfilesPage extends WizardPage
     final Group panel = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
     panel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    panel.setText( "Save Log File" );
+    panel.setText( Messages.getString("GafProfilesPage.6") ); //$NON-NLS-1$
 
     final Text fileField = new Text( panel, SWT.BORDER | SWT.SINGLE );
     fileField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fileField.setMessage( "<Path to Log File>" );
+    fileField.setMessage( Messages.getString("GafProfilesPage.7") ); //$NON-NLS-1$
 
     final Button fileButton = new Button( panel, SWT.PUSH );
     fileButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     // FIXME: move string to common place
-    fileButton.setText( "Browse..." );
+    fileButton.setText( Messages.getString("GafProfilesPage.8") ); //$NON-NLS-1$
 
     /* field binding */
     final ISWTObservableValue target = SWTObservables.observeText( fileField, SWT.Modify );
@@ -209,7 +210,7 @@ public class GafProfilesPage extends WizardPage
     binder.setTargetToModelConverter( new StringToFileConverter() );
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, "Log file will not be saved" ) );
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, Messages.getString("GafProfilesPage.9") ) ); //$NON-NLS-1$
     binder.addTargetAfterConvertValidator( new FileIsDirectoryValidator() );
     binder.addTargetAfterConvertValidator( new FileCannotWriteValidator() );
     binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
@@ -217,8 +218,8 @@ public class GafProfilesPage extends WizardPage
     m_binding.bindValue( binder );
 
     /* Button binding */
-    final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, "Save Log File", SWT.SAVE );
-    fileListener.addFilter( "Log Files", "*.log" ); //$NON-NLS-2$
+    final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, Messages.getString("GafProfilesPage.10"), SWT.SAVE ); //$NON-NLS-1$
+    fileListener.addFilter( Messages.getString("GafProfilesPage.11"), "*.log" );  //$NON-NLS-1$//$NON-NLS-2$
     fileListener.addAllFilter();
     fileButton.addSelectionListener( fileListener );
 
@@ -237,7 +238,7 @@ public class GafProfilesPage extends WizardPage
 
     if( profiles == null )
     {
-      setErrorMessage( "Failed to read GAF file" );
+      setErrorMessage( Messages.getString("GafProfilesPage.12") ); //$NON-NLS-1$
       setPageComplete( false );
       m_profileViewer.setInput( null );
     }

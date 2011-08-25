@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -81,7 +82,7 @@ public class AddWaterBodyAction extends UpdateableAction
     final WaterBody newWaterBody = new WaterBody();
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( m_viewer.getExistingWaterbodies(), newWaterBody, Mode.NEW );
-    wizard.setWindowTitle( "Create New Water Body" );
+    wizard.setWindowTitle( Messages.getString("AddWaterBodyAction.0") ); //$NON-NLS-1$
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() == Window.OK )

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal;
 
@@ -44,6 +44,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 
 
@@ -63,11 +64,11 @@ public final class PdbUiUtils
   {
     final PdbView view = new FindViewRunnable<PdbView>( PdbView.ID, window, true ).execute();
     if( view == null )
-      throw new ExecutionException( "Failed to find Cross Section Database View" );
+      throw new ExecutionException( Messages.getString("PdbUiUtils.0") ); //$NON-NLS-1$
 
     final IPdbConnection connection = view.getConnection();
     if( connection == null )
-      throw new ExecutionException( "Not connected to database" );
+      throw new ExecutionException( Messages.getString("PdbUiUtils.1") ); //$NON-NLS-1$
 
     return connection;
   }

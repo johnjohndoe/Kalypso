@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -68,7 +69,7 @@ public class AddWaterBodyWizard extends Wizard
     m_existingWaterbodies = existingWaterBodies;
     m_viewer = viewer;
 
-    setWindowTitle( "Create New Water Body" );
+    setWindowTitle( Messages.getString("AddWaterBodyWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

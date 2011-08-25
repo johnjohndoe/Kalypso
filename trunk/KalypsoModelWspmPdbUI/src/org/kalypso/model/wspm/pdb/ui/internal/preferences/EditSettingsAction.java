@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -51,7 +52,7 @@ class EditSettingsAction extends SettingsAction
 {
   public EditSettingsAction( final WspmPdbPreferencePage page )
   {
-    super( "Edit...", page );
+    super( Messages.getString("EditSettingsAction.0"), page ); //$NON-NLS-1$
   }
 
   @Override

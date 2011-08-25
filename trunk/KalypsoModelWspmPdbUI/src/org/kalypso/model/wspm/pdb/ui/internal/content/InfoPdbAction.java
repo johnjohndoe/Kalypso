@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.content.info.PdbInfoDialog;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -57,11 +58,11 @@ public class InfoPdbAction extends Action
 
   public InfoPdbAction( final PdbView pdbView )
   {
-    super( "Database Info" );
+    super( Messages.getString("InfoPdbAction.0") ); //$NON-NLS-1$
 
     m_pdbView = pdbView;
 
-    setToolTipText( "Show database information" );
+    setToolTipText( Messages.getString("InfoPdbAction.1") ); //$NON-NLS-1$
 
     final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.SHOW_INFO );
     setImageDescriptor( image );
