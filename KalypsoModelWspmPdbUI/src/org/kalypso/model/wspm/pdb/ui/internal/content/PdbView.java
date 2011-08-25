@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
@@ -348,7 +348,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     activateMapView();
 
     final IEvaluationService es = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
-    es.requestEvaluation( Messages.getString("PdbView.6") ); //$NON-NLS-1$
+    es.requestEvaluation( "pdbTester.hasRole" ); //$NON-NLS-1$
 
 // final ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
 // cs.refreshElements( "org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState", null );
