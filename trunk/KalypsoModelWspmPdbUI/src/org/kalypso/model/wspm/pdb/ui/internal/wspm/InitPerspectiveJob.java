@@ -83,12 +83,13 @@ import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
  */
 public class InitPerspectiveJob extends Job
 {
-  private static final String STR_LOCAL_DATA = Messages.getString("InitPerspectiveJob.0"); //$NON-NLS-1$
+  static final String STR_LOCAL_DATA = Messages.getString( "InitPerspectiveJob.0" ); //$NON-NLS-1$
+
   private final PdbWspmProject m_project;
 
   public InitPerspectiveJob( final PdbWspmProject project )
   {
-    super( Messages.getString("InitPerspectiveJob.1") ); //$NON-NLS-1$
+    super( Messages.getString( "InitPerspectiveJob.1" ) ); //$NON-NLS-1$
 
     m_project = project;
   }
