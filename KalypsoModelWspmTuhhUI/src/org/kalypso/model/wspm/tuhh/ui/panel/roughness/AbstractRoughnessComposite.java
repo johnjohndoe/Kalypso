@@ -71,18 +71,18 @@ public abstract class AbstractRoughnessComposite implements IElementPage
 {
   private final IProfil m_profile;
 
-  private final IComponent m_roughness;
+  private final IComponent m_component;
 
   private final ProfileRoguhnessesDataModel m_model;
 
   private IDataBinding m_binding;
 
-  public AbstractRoughnessComposite( final IProfil profile, final IComponent roughness )
+  public AbstractRoughnessComposite( final IProfil profile, final IComponent component )
   {
     m_profile = profile;
-    m_roughness = roughness;
+    m_component = component;
 
-    m_model = new ProfileRoguhnessesDataModel( profile, roughness );
+    m_model = new ProfileRoguhnessesDataModel( profile, component );
   }
 
   /**
@@ -99,9 +99,9 @@ public abstract class AbstractRoughnessComposite implements IElementPage
     return m_profile;
   }
 
-  protected IComponent getRoughness( )
+  protected IComponent getComponent( )
   {
-    return m_roughness;
+    return m_component;
   }
 
   protected void setBinding( final IDataBinding binding )
@@ -159,7 +159,7 @@ public abstract class AbstractRoughnessComposite implements IElementPage
       @Override
       public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
       {
-        RoughnessPanelHelper.removeRoughness( getProfile(), getRoughness().getId() );
+        RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
       }
     } );
   }

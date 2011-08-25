@@ -40,8 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
 
@@ -52,9 +58,9 @@ public class RoughnessFactorComposite extends AbstractRoughnessComposite
 {
   public static final String LABEL = "Roughness Factor";
 
-  public RoughnessFactorComposite( final IProfil profile, final IComponent roughness )
+  public RoughnessFactorComposite( final IProfil profile, final IComponent component )
   {
-    super( profile, roughness );
+    super( profile, component );
   }
 
   /**
@@ -71,9 +77,31 @@ public class RoughnessFactorComposite extends AbstractRoughnessComposite
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  public void render( final Composite body, final FormToolkit toolkit )
+  public void render( final Composite parent, final FormToolkit toolkit )
   {
-    // TODO Auto-generated method stub
+    setBinding( new AbstractDatabinding( toolkit )
+    {
+    } );
+
+    final Composite body = toolkit.createComposite( parent );
+    body.setLayout( new GridLayout( 2, false ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    // TODO validators
+    build( body, toolkit, "Roughness Factor", ProfileRoguhnessesDataModel.PROPERTY_ROUGHNESS_FACTOR, null );
+
+    final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( body, SWT.NULL );
+    lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
+    lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
+
+    lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
+      {
+        RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
+      }
+    } );
 
   }
 
