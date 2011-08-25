@@ -380,10 +380,10 @@ public class PrfWriter implements IPrfConstants
       return new DataBlockHeader( "TRENNLINIE", "WEHR" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST.equals( key ) ) //$NON-NLS-1$
-      return new DataBlockHeader( "RAUHEIT", "kst   m" ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new DataBlockHeader( "RAUHIGKEIT", "kst   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS.equals( key ) )
-      return new DataBlockHeader( "RAUHEIT", "k-s   m" ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new DataBlockHeader( "RAUHIGKEIT", "k-s   m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( IWspmConstants.POINT_PROPERTY_RECHTSWERT.equals( key ) ) //$NON-NLS-1$
       return new DataBlockHeader( "RECHTSWERT" ); //$NON-NLS-1$
