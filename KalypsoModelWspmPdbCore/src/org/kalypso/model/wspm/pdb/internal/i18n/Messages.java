@@ -50,11 +50,12 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
  */
 public final class Messages
 {
-  public static String STR_OPERATION_FAILED = getString( "CheckInEventOperation.2" );
-
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.pdb.internal.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  // IMPORTANT: MUST be initialized after the call to getBundle
+  public static String STR_OPERATION_FAILED = getString( "CheckInEventOperation.2" );
 
   private Messages( )
   {
