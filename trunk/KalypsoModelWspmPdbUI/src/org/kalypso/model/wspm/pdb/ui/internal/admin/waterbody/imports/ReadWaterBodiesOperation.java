@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
  */
 public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_READ_WATER_BODIES_FROM_SHAPE = Messages.getString("ReadWaterBodiesOperation.0"); //$NON-NLS-1$
+  private static final String STR_FAILED_TO_READ_WATER_BODIES_FROM_SHAPE = Messages.getString( "ReadWaterBodiesOperation.0" ); //$NON-NLS-1$
 
   private WaterBody[] m_waterBodies;
 
@@ -164,12 +164,12 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final GM_Curve[] allCurves = multi.getAllCurves();
     if( allCurves.length == 0 )
     {
-      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("ReadWaterBodiesOperation.1") ) ); //$NON-NLS-1$
+      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "ReadWaterBodiesOperation.1" ) ) ); //$NON-NLS-1$
       return null;
     }
 
     if( allCurves.length > 1 )
-      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("ReadWaterBodiesOperation.2") ) ); //$NON-NLS-1$
+      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "ReadWaterBodiesOperation.2" ) ) ); //$NON-NLS-1$
 
     return allCurves[0];
   }
@@ -184,7 +184,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final Object value = data[fieldIndex];
 
     if( WaterBody.PROPERTY_DIRECTION_OF_STATIONING.equals( info.getProperty() ) )
-      return parseDirection(value);
+      return parseDirection( value );
     if( WaterBody.PROPERTY_RANK.equals( info.getProperty() ) )
       return parseRank( value );
 
@@ -206,7 +206,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     }
     catch( final NumberFormatException e )
     {
-      final String msg = String.format( Messages.getString("ReadWaterBodiesOperation.3"), text ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "ReadWaterBodiesOperation.3" ), text ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
@@ -224,7 +224,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     catch( final IllegalArgumentException e )
     {
       final String possibleValues = StringUtils.join( STATIONING_DIRECTION.values() );
-      final String msg = String.format( Messages.getString("ReadWaterBodiesOperation.4"), value, possibleValues ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "ReadWaterBodiesOperation.4" ), value, possibleValues ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }

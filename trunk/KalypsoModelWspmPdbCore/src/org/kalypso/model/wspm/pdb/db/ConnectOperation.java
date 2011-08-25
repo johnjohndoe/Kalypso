@@ -68,10 +68,10 @@ public class ConnectOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final String taskName = String.format( Messages.getString("ConnectOperation.0"), m_settings.getName() ); //$NON-NLS-1$
+    final String taskName = String.format( Messages.getString( "ConnectOperation.0" ), m_settings.getName() ); //$NON-NLS-1$
     monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
-    monitor.subTask( Messages.getString("ConnectOperation.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "ConnectOperation.1" ) ); //$NON-NLS-1$
 
     try
     {
@@ -85,7 +85,7 @@ public class ConnectOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
 
       // TODO: make message more human readable
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("ConnectOperation.2"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "ConnectOperation.2" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

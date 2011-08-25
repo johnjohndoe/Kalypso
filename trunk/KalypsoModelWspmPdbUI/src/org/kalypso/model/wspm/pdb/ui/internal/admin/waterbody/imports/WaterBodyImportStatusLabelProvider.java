@@ -90,7 +90,7 @@ public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
       final WaterBody water = (WaterBody) element;
       final String name = water.getName();
       if( m_names.contains( name ) )
-        return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("WaterBodyImportStatusLabelProvider.0") ); //$NON-NLS-1$
+        return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "WaterBodyImportStatusLabelProvider.0" ) ); //$NON-NLS-1$
 
       // TODO: rather create combined status? Column will be too big...
 

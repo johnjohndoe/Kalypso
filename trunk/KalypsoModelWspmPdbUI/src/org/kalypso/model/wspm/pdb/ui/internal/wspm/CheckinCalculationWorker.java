@@ -100,7 +100,7 @@ public class CheckinCalculationWorker implements ICheckInWorker
     /* only certain calculation can check in...! */
     final TuhhReach reach = calculation.getReach();
     if( reach == null )
-      return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("CheckinCalculationWorker.0") ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "CheckinCalculationWorker.0" ) ); //$NON-NLS-1$
 
     final MODE calcMode = calculation.getCalcMode();
     if( calcMode != MODE.WATERLEVEL )
@@ -109,13 +109,12 @@ public class CheckinCalculationWorker implements ICheckInWorker
       final Map<Object, String> labelHash = PropertyUtils.createComboEntries( modeProperty );
       final String label = labelHash.get( MODE.WATERLEVEL.name() );
 
-      final String message = String.format( Messages.getString("CheckinCalculationWorker.1"), label ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CheckinCalculationWorker.1" ), label ); //$NON-NLS-1$
 
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
     }
 
     final Set<String> existingWaterCodes = CheckinStateWorker.hashWaterCodes( m_data.getExistingWaterBodies() );
-
 
     final WspmWaterBody wspmWaterBody = calculation.getReach().getWaterBody();
     final String waterCode = wspmWaterBody.getRefNr();

@@ -61,7 +61,7 @@ class EditSettingsWizard extends Wizard
     m_page = page;
     m_clonedSettings = settings.copy();
 
-    setWindowTitle( Messages.getString("EditSettingsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "EditSettingsWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
     addPage( new SettingsPage( "connectionPage", m_clonedSettings ) ); //$NON-NLS-1$

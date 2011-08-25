@@ -118,7 +118,7 @@ public class StateFilterControl extends Composite
   {
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    nameField.setMessage( Messages.getString("StateFilterControl.0") ); //$NON-NLS-1$
+    nameField.setMessage( Messages.getString( "StateFilterControl.0" ) ); //$NON-NLS-1$
     nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( nameField );

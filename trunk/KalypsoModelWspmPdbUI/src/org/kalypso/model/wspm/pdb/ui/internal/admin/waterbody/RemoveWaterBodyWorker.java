@@ -65,7 +65,7 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString("RemoveWaterBodyWorker.0"); //$NON-NLS-1$
+    return Messages.getString( "RemoveWaterBodyWorker.0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -73,7 +73,7 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
   {
     final String name = m_selectedItem.getName();
 
-    final boolean hasData = hasData(  );
+    final boolean hasData = hasData();
     if( hasData )
     {
       /* show dialog with states/cross-sections -> water cannot be removed */
@@ -82,7 +82,7 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
       return false;
     }
 
-    final String message = String.format( Messages.getString("RemoveWaterBodyWorker.1"), m_selectedItem.getLabel(), name ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "RemoveWaterBodyWorker.1" ), m_selectedItem.getLabel(), name ); //$NON-NLS-1$
     return MessageDialog.openConfirm( shell, getWindowTitle(), message );
   }
 

@@ -52,7 +52,7 @@ class CreateSettingsAction extends SettingsAction
 {
   public CreateSettingsAction( final WspmPdbPreferencePage page )
   {
-    super( Messages.getString("CreateSettingsAction.0"), page ); //$NON-NLS-1$
+    super( Messages.getString( "CreateSettingsAction.0" ), page ); //$NON-NLS-1$
   }
 
   @Override

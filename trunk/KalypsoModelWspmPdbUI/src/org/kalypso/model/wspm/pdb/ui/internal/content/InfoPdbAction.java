@@ -58,11 +58,11 @@ public class InfoPdbAction extends Action
 
   public InfoPdbAction( final PdbView pdbView )
   {
-    super( Messages.getString("InfoPdbAction.0") ); //$NON-NLS-1$
+    super( Messages.getString( "InfoPdbAction.0" ) ); //$NON-NLS-1$
 
     m_pdbView = pdbView;
 
-    setToolTipText( Messages.getString("InfoPdbAction.1") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "InfoPdbAction.1" ) ); //$NON-NLS-1$
 
     final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.SHOW_INFO );
     setImageDescriptor( image );

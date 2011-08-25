@@ -63,7 +63,7 @@ public class ImportAttributeInfo<T> extends AbstractModelObject
   {
     try
     {
-      FIELD_USE_DEFAULT = new DBFField( Messages.getString("ImportAttributeInfo.0"), FieldType.C, (short) 1, (short) 0 ); //$NON-NLS-1$
+      FIELD_USE_DEFAULT = new DBFField( Messages.getString( "ImportAttributeInfo.0" ), FieldType.C, (short) 1, (short) 0 ); //$NON-NLS-1$
     }
     catch( final DBaseException e )
     {

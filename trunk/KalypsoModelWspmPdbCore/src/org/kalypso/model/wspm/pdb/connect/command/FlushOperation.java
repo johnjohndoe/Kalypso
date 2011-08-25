@@ -54,7 +54,7 @@ public class FlushOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("FlushOperation_0"); //$NON-NLS-1$
+    return Messages.getString( "FlushOperation_0" ); //$NON-NLS-1$
   }
 
   @Override

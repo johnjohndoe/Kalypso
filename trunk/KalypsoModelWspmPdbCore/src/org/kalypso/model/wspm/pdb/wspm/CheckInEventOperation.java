@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckInEventOperation implements ICoreRunnableWithProgress
 {
-  static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString("CheckInEventOperation.0"); //$NON-NLS-1$
+  static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString( "CheckInEventOperation.0" ); //$NON-NLS-1$
 
   private final CheckInEventData<WspmFixation> m_data;
 
@@ -82,7 +82,7 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("CheckInEventOperation.1"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckInEventOperation.1" ), 100 ); //$NON-NLS-1$
 
     Session session = null;
 

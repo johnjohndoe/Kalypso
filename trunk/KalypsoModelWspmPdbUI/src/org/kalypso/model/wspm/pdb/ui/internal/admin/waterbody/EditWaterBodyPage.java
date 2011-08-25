@@ -75,7 +75,7 @@ public class EditWaterBodyPage extends WizardPage
   }
 
   // FIXME: should come from elsewhere
-  public static final String[] RANK_INPUT = new String[] { Messages.getString("EditWaterBodyPage.0"), "I", "II", "III", "IV" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+  public static final String[] RANK_INPUT = new String[] { Messages.getString( "EditWaterBodyPage.0" ), "I", "II", "III", "IV" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
   private final WaterBody m_waterBody;
 
@@ -93,8 +93,8 @@ public class EditWaterBodyPage extends WizardPage
     m_existingWaterbodies = existingWaterbodies;
     m_mode = mode;
 
-    setTitle( Messages.getString("EditWaterBodyPage.5") ); //$NON-NLS-1$
-    setDescription( Messages.getString("EditWaterBodyPage.6") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "EditWaterBodyPage.5" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "EditWaterBodyPage.6" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -116,18 +116,18 @@ public class EditWaterBodyPage extends WizardPage
 
   private void createNameControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("EditWaterBodyPage.7") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "EditWaterBodyPage.7" ) ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( Messages.getString("EditWaterBodyPage.8") ); //$NON-NLS-1$
+    field.setMessage( Messages.getString( "EditWaterBodyPage.8" ) ); //$NON-NLS-1$
     field.setTextLimit( WaterBodyConstants.NAME_LIMIT );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_NAME );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("EditWaterBodyPage.9") ) ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString( "EditWaterBodyPage.9" ) ) ); //$NON-NLS-1$
 
     final String ignoreName = m_mode == Mode.EDIT ? m_waterBody.getName() : null;
 
@@ -138,11 +138,11 @@ public class EditWaterBodyPage extends WizardPage
 
   private void createLabelControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("EditWaterBodyPage.10") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "EditWaterBodyPage.10" ) ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( Messages.getString("EditWaterBodyPage.11") ); //$NON-NLS-1$
+    field.setMessage( Messages.getString( "EditWaterBodyPage.11" ) ); //$NON-NLS-1$
     field.setTextLimit( WaterBody.NAME_LIMIT );
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
@@ -151,7 +151,7 @@ public class EditWaterBodyPage extends WizardPage
 
     final String ignoreLabel = m_mode == Mode.EDIT ? m_waterBody.getLabel() : null;
 
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("EditWaterBodyPage.12") ) ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString( "EditWaterBodyPage.12" ) ) ); //$NON-NLS-1$
     binder.addTargetAfterGetValidator( new UniqueWaterBodyLabelValidator( m_existingWaterbodies, ignoreLabel ) );
 
     m_binding.bindValue( binder );
@@ -159,7 +159,7 @@ public class EditWaterBodyPage extends WizardPage
 
   private void createDirectionControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("EditWaterBodyPage.13") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "EditWaterBodyPage.13" ) ); //$NON-NLS-1$
 
     final ComboViewer comboViewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -174,7 +174,7 @@ public class EditWaterBodyPage extends WizardPage
 
   private void createOrderControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("EditWaterBodyPage.14") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "EditWaterBodyPage.14" ) ); //$NON-NLS-1$
 
     final ComboViewer comboViewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -195,13 +195,13 @@ public class EditWaterBodyPage extends WizardPage
   private void createDescriptionControls( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString("EditWaterBodyPage.15") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "EditWaterBodyPage.15" ) ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.LEFT, SWT.TOP, false, false ) );
 
     final Text field = new Text( parent, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     field.setTextLimit( WaterBodyConstants.DESCRIPTION_LIMIT );
     field.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    field.setMessage( Messages.getString("EditWaterBodyPage.16") ); //$NON-NLS-1$
+    field.setMessage( Messages.getString( "EditWaterBodyPage.16" ) ); //$NON-NLS-1$
 
     final IObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( m_waterBody, WaterBody.PROPERTY_DESCRIPTION );

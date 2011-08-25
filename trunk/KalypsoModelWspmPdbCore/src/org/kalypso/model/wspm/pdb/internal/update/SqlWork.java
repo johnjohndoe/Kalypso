@@ -62,7 +62,7 @@ public class SqlWork implements Work
   @Override
   public String toString( )
   {
-    return Messages.getString("SqlWork.0"); //$NON-NLS-1$
+    return Messages.getString( "SqlWork.0" ); //$NON-NLS-1$
   }
 
   @Override

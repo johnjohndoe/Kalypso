@@ -67,7 +67,7 @@ public final class GetPdbList<T> implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("GetPdbList_0"); //$NON-NLS-1$
+    return Messages.getString( "GetPdbList_0" ); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public final class GetPdbList<T> implements IPdbOperation
     {
       e.printStackTrace();
 
-      final String message = String.format( Messages.getString("GetPdbList_1"), m_type.getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "GetPdbList_1" ), m_type.getName() ); //$NON-NLS-1$
       throw new PdbConnectException( message, e );
     }
   }

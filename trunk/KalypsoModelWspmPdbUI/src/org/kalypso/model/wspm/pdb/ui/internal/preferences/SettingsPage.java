@@ -93,7 +93,7 @@ class SettingsPage extends WizardPage
   {
     super( pageName );
 
-    setDescription( Messages.getString("SettingsPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "SettingsPage.0" ) ); //$NON-NLS-1$
 
     setSettings( settings );
 
@@ -158,11 +158,11 @@ class SettingsPage extends WizardPage
 
   private void createNameControl( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("SettingsPage.1") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "SettingsPage.1" ) ); //$NON-NLS-1$
 
     final Text field = new Text( parent, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( Messages.getString("SettingsPage.2") ); //$NON-NLS-1$
+    field.setMessage( Messages.getString( "SettingsPage.2" ) ); //$NON-NLS-1$
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
     final IObservableValue model = new SettingsNameValue( m_settings );
@@ -187,7 +187,7 @@ class SettingsPage extends WizardPage
   private void createSettingsGroup( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("SettingsPage.3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "SettingsPage.3" ) ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
 

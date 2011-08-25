@@ -65,8 +65,8 @@ public class TestDocumentBaseAction extends Action
   {
     m_modelBase = modelBase;
 
-    setText( Messages.getString("TestDocumentBaseAction.0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("TestDocumentBaseAction.1") ); //$NON-NLS-1$
+    setText( Messages.getString( "TestDocumentBaseAction.0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "TestDocumentBaseAction.1" ) ); //$NON-NLS-1$
 
     m_modelBase.addValueChangeListener( new IValueChangeListener()
     {

@@ -61,7 +61,7 @@ public class UniqueWaterBodyLabelValidator extends TypedValidator<String>
 
   public UniqueWaterBodyLabelValidator( final WaterBody[] existingWaterbodies, final String ignoreLabel )
   {
-    super( String.class, IStatus.WARNING, Messages.getString("UniqueWaterBodyLabelValidator_0") ); //$NON-NLS-1$
+    super( String.class, IStatus.WARNING, Messages.getString( "UniqueWaterBodyLabelValidator_0" ) ); //$NON-NLS-1$
 
     m_ignoreLabel = ignoreLabel;
 

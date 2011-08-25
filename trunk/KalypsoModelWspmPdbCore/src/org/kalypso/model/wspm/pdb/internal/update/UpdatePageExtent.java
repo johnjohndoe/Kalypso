@@ -81,8 +81,8 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
   {
     super( "extentPage" ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("UpdatePageExtent.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("UpdatePageExtent.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "UpdatePageExtent.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "UpdatePageExtent.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -109,7 +109,7 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
     final Group groupMin = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( groupMin );
     groupMin.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    groupMin.setText( Messages.getString("UpdatePageExtent.2") ); //$NON-NLS-1$
+    groupMin.setText( Messages.getString( "UpdatePageExtent.2" ) ); //$NON-NLS-1$
 
     createPropertyControl( groupMin, "X", PdbInfo.PROPERTY_SRS_MIN_X ); //$NON-NLS-1$
     createPropertyControl( groupMin, "Y", PdbInfo.PROPERTY_SRS_MIN_Y ); //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
     final Group groupMax = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( groupMax );
     groupMax.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    groupMax.setText( Messages.getString("UpdatePageExtent.6") ); //$NON-NLS-1$
+    groupMax.setText( Messages.getString( "UpdatePageExtent.6" ) ); //$NON-NLS-1$
 
     createPropertyControl( groupMax, "X", PdbInfo.PROPERTY_SRS_MAX_X ); //$NON-NLS-1$
     createPropertyControl( groupMax, "Y", PdbInfo.PROPERTY_SRS_MAX_Y ); //$NON-NLS-1$
@@ -136,7 +136,7 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
     final IObservableValue model = new PropertiesObservaleValue( m_data.getVariables(), property );
 
     final DataBinder binder = new DataBinder( target, model );
-    final String message = String.format( Messages.getString("UpdatePageExtent.10"), label ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "UpdatePageExtent.10" ), label ); //$NON-NLS-1$
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, message ) );
     binder.addTargetAfterGetValidator( new StringAsDoubleValidator( IStatus.ERROR, label ) );
 

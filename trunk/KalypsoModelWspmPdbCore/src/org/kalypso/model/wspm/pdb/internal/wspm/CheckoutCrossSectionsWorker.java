@@ -91,14 +91,14 @@ public class CheckoutCrossSectionsWorker
   {
     final CrossSection[] crossSections = m_mapping.getCrossSections();
 
-    monitor.beginTask( Messages.getString("CheckoutCrossSectionsWorker.0"), crossSections.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckoutCrossSectionsWorker.0" ), crossSections.length ); //$NON-NLS-1$
 
     try
     {
       /* Convert the cross sections */
       for( final CrossSection crossSection : crossSections )
       {
-        monitor.subTask( String.format( Messages.getString("CheckoutCrossSectionsWorker.1"), crossSection.getStation() ) ); //$NON-NLS-1$
+        monitor.subTask( String.format( Messages.getString( "CheckoutCrossSectionsWorker.1" ), crossSection.getStation() ) ); //$NON-NLS-1$
         insert( crossSection );
         ProgressUtilities.worked( monitor, 1 );
       }

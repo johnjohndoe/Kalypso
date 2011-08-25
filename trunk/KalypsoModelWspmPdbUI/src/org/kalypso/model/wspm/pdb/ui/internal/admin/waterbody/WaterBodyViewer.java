@@ -120,7 +120,7 @@ public class WaterBodyViewer
     final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
 
-    column.setText( Messages.getString("WaterBodyViewer.0") ); //$NON-NLS-1$
+    column.setText( Messages.getString( "WaterBodyViewer.0" ) ); //$NON-NLS-1$
     column.setToolTipText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
@@ -137,7 +137,7 @@ public class WaterBodyViewer
     final ViewerColumn rankColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.CENTER );
     final ViewerColumnItem column = new ViewerColumnItem( rankColumn );
 
-    column.setText( Messages.getString("WaterBodyViewer.1") ); //$NON-NLS-1$
+    column.setText( Messages.getString( "WaterBodyViewer.1" ) ); //$NON-NLS-1$
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     rankColumn.setLabelProvider( new WaterBodyRankLabelProvider() );

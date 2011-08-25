@@ -63,7 +63,7 @@ public class DeleteWaterBodyOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString("DeleteWaterBodyOperation.0"), m_name ); //$NON-NLS-1$
+    return String.format( Messages.getString( "DeleteWaterBodyOperation.0" ), m_name ); //$NON-NLS-1$
   }
 
   @Override

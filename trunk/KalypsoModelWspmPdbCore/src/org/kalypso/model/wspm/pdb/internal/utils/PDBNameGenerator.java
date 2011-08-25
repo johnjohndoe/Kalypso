@@ -74,7 +74,7 @@ public class PDBNameGenerator
       }
     }
 
-    final String message = String.format( Messages.getString("PDBNameGenerator.0"), protoName ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "PDBNameGenerator.0" ), protoName ); //$NON-NLS-1$
     throw new IllegalArgumentException( message );
   }
 

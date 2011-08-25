@@ -93,7 +93,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class CheckinStatePdbOperation implements IPdbOperation
 {
-  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString("CheckinStatePdbOperation.0"); //$NON-NLS-1$
+  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
@@ -130,12 +130,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final WaterBody waterBody : waterBodies )
       m_waterBodies.put( waterBody.getName(), waterBody );
 
-        m_monitor = monitor;
+    m_monitor = monitor;
 
-        final int srid = JTSAdapter.toSrid( dbSrs );
-        m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
+    final int srid = JTSAdapter.toSrid( dbSrs );
+    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
 
-        m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
+    m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
   }
 
   @Override
@@ -147,21 +147,21 @@ public class CheckinStatePdbOperation implements IPdbOperation
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
-    m_monitor.beginTask( Messages.getString("CheckinStatePdbOperation.2"), 10 + m_profiles.length ); //$NON-NLS-1$
+    m_monitor.beginTask( Messages.getString( "CheckinStatePdbOperation.2" ), 10 + m_profiles.length ); //$NON-NLS-1$
 
-    m_monitor.subTask( Messages.getString("CheckinStatePdbOperation.3") ); //$NON-NLS-1$
+    m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
     Gaf2Db.addState( session, m_state );
     m_monitor.worked( 10 );
 
     for( final IProfileFeature feature : m_profiles )
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-      m_monitor.subTask( String.format( Messages.getString("CheckinStatePdbOperation.4"), label ) ); //$NON-NLS-1$
+      m_monitor.subTask( String.format( Messages.getString( "CheckinStatePdbOperation.4" ), label ) ); //$NON-NLS-1$
       uploadProfile( session, feature );
       m_monitor.worked( 1 );
     }
 
-    m_monitor.subTask( Messages.getString("CheckinStatePdbOperation.5") ); //$NON-NLS-1$
+    m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -188,7 +188,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     /* Check for uniqueness of profile name */
     if( !m_sectionNames.addUniqueName( name ) )
     {
-      final String message = String.format( Messages.getString("CheckinStatePdbOperation.6"), station, name ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CheckinStatePdbOperation.6" ), station, name ); //$NON-NLS-1$
       throw new PdbConnectException( message );
     }
 
@@ -279,15 +279,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
-        final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
-        for( final CrossSectionPart part : parts )
-        {
-          /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
-          final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory() );
-          part.setName( uniquePartName );
-          part.setCrossSection( section );
-          section.getCrossSectionParts().add( part );
-        }
+    final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
+    for( final CrossSectionPart part : parts )
+    {
+      /* Instead of preserving the existing part name, we recreate it by the same system as when importing gaf */
+      final String uniquePartName = partNameGenerator.createUniqueName( part.getCategory() );
+      part.setName( uniquePartName );
+      part.setCrossSection( section );
+      section.getCrossSectionParts().add( part );
+    }
   }
 
   private boolean isBlank( final CrossSectionPart part )

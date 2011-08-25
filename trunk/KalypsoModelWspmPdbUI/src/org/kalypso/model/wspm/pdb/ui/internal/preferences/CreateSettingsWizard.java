@@ -77,7 +77,7 @@ class CreateSettingsWizard extends Wizard
 
     m_connectionPage = new SettingsPage( "connection", null ); //$NON-NLS-1$
 
-    setWindowTitle( Messages.getString("CreateSettingsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "CreateSettingsWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
     addPage( m_typePage );

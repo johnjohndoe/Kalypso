@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 
 /**
  * @author Gernot Belger
- *
  */
 public class GafProfileToStatusConverter extends TypedConverter<GafProfile, IStatus>
 {

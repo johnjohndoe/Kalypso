@@ -66,7 +66,7 @@ public class LookupSRSAction extends Action
   {
     m_data = data;
 
-    setText( Messages.getString("LookupSRSAction.0") ); //$NON-NLS-1$
+    setText( Messages.getString( "LookupSRSAction.0" ) ); //$NON-NLS-1$
   }
 
   @Override

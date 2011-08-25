@@ -63,7 +63,7 @@ public class DeleteStateOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString("DeleteStateOperation.0"), m_name ); //$NON-NLS-1$
+    return String.format( Messages.getString( "DeleteStateOperation.0" ), m_name ); //$NON-NLS-1$
   }
 
   @Override

@@ -70,7 +70,7 @@ public class RemoveStateDialog extends MessageDialog
 
   private static String formatMessage( final State state )
   {
-    return String.format( Messages.getString("RemoveStateDialog.0"), state.getName() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "RemoveStateDialog.0" ), state.getName() ); //$NON-NLS-1$
   }
 
   @Override

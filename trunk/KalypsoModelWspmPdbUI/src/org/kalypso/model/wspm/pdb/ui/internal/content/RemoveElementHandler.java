@@ -84,7 +84,7 @@ public class RemoveElementHandler extends AbstractHandler
 
     final IPdbOperation operation = worker.createOperation();
     final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
-    runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("RemoveElementHandler.0") ) ); //$NON-NLS-1$
+    runnable.setOKStatus( new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "RemoveElementHandler.0" ) ) ); //$NON-NLS-1$
 
     final IStatus result = ProgressUtilities.busyCursorWhile( runnable );
     new StatusDialog2( shell, result, worker.getWindowTitle() ).open();

@@ -51,7 +51,7 @@ public class EditEventWizard extends Wizard
 {
   public EditEventWizard( final IEditEventPageData data )
   {
-    setWindowTitle( Messages.getString("EditEventWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "EditEventWizard.0" ) ); //$NON-NLS-1$
 
     addPage( new EditEventPage( "editEvent", data, true ) ); //$NON-NLS-1$
   }

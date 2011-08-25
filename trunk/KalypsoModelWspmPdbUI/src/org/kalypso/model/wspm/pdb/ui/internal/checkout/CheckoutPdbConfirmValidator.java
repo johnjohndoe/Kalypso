@@ -53,7 +53,7 @@ public class CheckoutPdbConfirmValidator extends TypedValidator<Boolean>
 {
   public CheckoutPdbConfirmValidator( )
   {
-    super( Boolean.class, IStatus.WARNING, Messages.getString("CheckoutPdbConfirmValidator.0") ); //$NON-NLS-1$
+    super( Boolean.class, IStatus.WARNING, Messages.getString( "CheckoutPdbConfirmValidator.0" ) ); //$NON-NLS-1$
   }
 
   @Override

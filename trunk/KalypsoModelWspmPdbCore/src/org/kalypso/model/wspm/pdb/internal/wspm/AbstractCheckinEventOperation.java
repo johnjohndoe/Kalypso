@@ -64,7 +64,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractCheckinEventOperation implements IPdbOperation
 {
-  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString("AbstractCheckinEventOperation.0"); //$NON-NLS-1$
+  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "AbstractCheckinEventOperation.0" ); //$NON-NLS-1$
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
@@ -88,15 +88,15 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("AbstractCheckinEventOperation.1"); //$NON-NLS-1$
+    return Messages.getString( "AbstractCheckinEventOperation.1" ); //$NON-NLS-1$
   }
 
   @Override
   public void execute( final Session session )
   {
-    m_monitor.beginTask( Messages.getString("AbstractCheckinEventOperation.2"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    m_monitor.beginTask( Messages.getString( "AbstractCheckinEventOperation.2" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-    m_monitor.subTask( Messages.getString("AbstractCheckinEventOperation.3") ); //$NON-NLS-1$
+    m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.3" ) ); //$NON-NLS-1$
 
     final Date now = new Date();
     m_event.setCreationDate( now );
@@ -135,7 +135,7 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
       session.save( element );
     }
 
-    m_monitor.subTask( Messages.getString("AbstractCheckinEventOperation.4") ); //$NON-NLS-1$
+    m_monitor.subTask( Messages.getString( "AbstractCheckinEventOperation.4" ) ); //$NON-NLS-1$
   }
 
   protected abstract IObservation<TupleResult> getObservation( );

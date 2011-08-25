@@ -69,7 +69,7 @@ public class AddWaterBodyWizard extends Wizard
     m_existingWaterbodies = existingWaterBodies;
     m_viewer = viewer;
 
-    setWindowTitle( Messages.getString("AddWaterBodyWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "AddWaterBodyWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

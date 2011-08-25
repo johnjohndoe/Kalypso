@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
- *
  */
 public class DocumentsStatusComparator extends ViewerComparator
 {

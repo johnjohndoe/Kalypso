@@ -99,7 +99,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
   public ImportWaterLevelsWizard( )
   {
-    setWindowTitle( Messages.getString("ImportWaterLevelsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportWaterLevelsWizard.0" ) ); //$NON-NLS-1$
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
     setNeedsProgressMonitor( true );
   }
@@ -118,9 +118,9 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   @Override
   public void addPages( )
   {
-    m_shapeFilePage = new SelectShapeFilePage( "selectPage", Messages.getString("ImportWaterLevelsWizard.1"), WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_shapeFilePage = new SelectShapeFilePage( "selectPage", Messages.getString( "ImportWaterLevelsWizard.1" ), WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_shapeFilePage.setDescription( Messages.getString("ImportWaterLevelsWizard.2") ); //$NON-NLS-1$
+    m_shapeFilePage.setDescription( Messages.getString( "ImportWaterLevelsWizard.2" ) ); //$NON-NLS-1$
     addPage( m_shapeFilePage );
 
     /* Page to choose a water body */
@@ -134,7 +134,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
     /* Choose water body */
     final IPdbConnection connection = m_data.getConnection();
     final ChooseWaterPage waterPage = new ChooseWaterPage( "waterPage", connection, waterValue ); //$NON-NLS-1$
-    waterPage.setDescription( Messages.getString("ImportWaterLevelsWizard.3") ); //$NON-NLS-1$
+    waterPage.setDescription( Messages.getString( "ImportWaterLevelsWizard.3" ) ); //$NON-NLS-1$
     addPage( waterPage );
 
     /* Edit event properties */
@@ -147,7 +147,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
   {
     try
     {
-      monitor.beginTask( Messages.getString("ImportWaterLevelsWizard.5"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ImportWaterLevelsWizard.5" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
       m_data.init( getDialogSettings() );
 
       return Status.OK_STATUS;

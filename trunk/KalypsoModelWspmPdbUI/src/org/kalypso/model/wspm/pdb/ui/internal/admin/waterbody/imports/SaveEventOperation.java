@@ -67,7 +67,7 @@ public class SaveEventOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("SaveEventOperation.0"); //$NON-NLS-1$
+    return Messages.getString( "SaveEventOperation.0" ); //$NON-NLS-1$
   }
 
   @Override

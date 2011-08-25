@@ -108,14 +108,14 @@ public class CheckinStateWorker implements ICheckInWorker
 
       if( StringUtils.isEmpty( name ) )
       {
-        final String message = String.format( Messages.getString("CheckinStateWorker.0"), station ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "CheckinStateWorker.0" ), station ); //$NON-NLS-1$
         return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
       }
 
       if( profileNames.containsKey( name ) )
       {
         final BigDecimal otherStation = profileNames.get( name );
-        final String message = String.format( Messages.getString("CheckinStateWorker.1"), station, otherStation, name ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "CheckinStateWorker.1" ), station, otherStation, name ); //$NON-NLS-1$
         return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
       }
 

@@ -74,13 +74,13 @@ public class EditWaterBodyWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString("EditWaterBodyWorker.0"); //$NON-NLS-1$
+    return Messages.getString( "EditWaterBodyWorker.0" ); //$NON-NLS-1$
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( Messages.getString("EditWaterBodyWorker.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "EditWaterBodyWorker.1" ) ); //$NON-NLS-1$
 
     final WaterBody[] existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
     m_waterBodyToEdit = WaterBodyUtils.findWaterBodyByName( existingWaterbodies, m_selectedItem.getName() );

@@ -77,7 +77,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
   public VegetationId getId( )
   {
     return m_id;

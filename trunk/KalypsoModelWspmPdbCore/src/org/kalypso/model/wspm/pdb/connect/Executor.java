@@ -98,7 +98,7 @@ public class Executor
     else
     {
       e.printStackTrace();
-      final String message = String.format( Messages.getString("Executor_0"), m_operation.getLabel() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "Executor_0" ), m_operation.getLabel() ); //$NON-NLS-1$
       return new PdbConnectException( message, e );
     }
   }
@@ -109,7 +109,7 @@ public class Executor
     {
       final JDBCException je = (JDBCException) e;
       final SQLException sqlException = je.getSQLException();
-      logSQLException(sqlException);
+      logSQLException( sqlException );
     }
 
     e.printStackTrace();
@@ -138,7 +138,7 @@ public class Executor
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString("Executor_2"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "Executor_2" ), e ); //$NON-NLS-1$
     }
   }
 }

@@ -80,7 +80,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString("ImportAttachmentsOperation.0"); //$NON-NLS-1$
+    return Messages.getString( "ImportAttachmentsOperation.0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -95,7 +95,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
       for( final Document document : documents )
         addDcoument( session, document );
 
-          closeZip();
+      closeZip();
     }
     finally
     {
@@ -130,7 +130,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString("ImportAttachmentsOperation.1"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "ImportAttachmentsOperation.1" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -148,7 +148,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString("ImportAttachmentsOperation.2"), file.getName() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "ImportAttachmentsOperation.2" ), file.getName() ); //$NON-NLS-1$
       throw new PdbConnectException( msg, e );
     }
   }
@@ -165,7 +165,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString("ImportAttachmentsOperation.3"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "ImportAttachmentsOperation.3" ), e ); //$NON-NLS-1$
     }
   }
 }

@@ -90,7 +90,7 @@ public class PdbHandlerUtils
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      throw new ExecutionException( Messages.getString("PdbHandlerUtils.0"), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "PdbHandlerUtils.0" ), e ); //$NON-NLS-1$
     }
   }
 

@@ -66,7 +66,7 @@ public class UniqueStateNameValidator extends TypedValidator<String>
 
   public UniqueStateNameValidator( final State[] existingStates, final int severity, final String ignoreName )
   {
-    super( String.class, severity, Messages.getString("UniqueStateNameValidator.0") ); //$NON-NLS-1$
+    super( String.class, severity, Messages.getString( "UniqueStateNameValidator.0" ) ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
 

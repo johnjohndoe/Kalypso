@@ -86,7 +86,7 @@ public class CheckInEventData<W extends Feature> implements IEditEventPageData
     m_event.setMeasurementDate( now );
     m_event.setName( wspmObject.getName() );
     m_event.setDescription( wspmObject.getDescription() );
-    m_event.setSource( Messages.getString("CheckInEventData_0") ); //$NON-NLS-1$
+    m_event.setSource( Messages.getString( "CheckInEventData_0" ) ); //$NON-NLS-1$
     m_event.setEditingDate( now );
     m_event.setType( TYPE.Measurement );
   }

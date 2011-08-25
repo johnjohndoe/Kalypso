@@ -55,7 +55,7 @@ public class PortValidator extends TypedValidator<String>
 
   public PortValidator( final int defaultPort )
   {
-    super( String.class, IStatus.ERROR, Messages.getString("PortValidator.0") ); //$NON-NLS-1$
+    super( String.class, IStatus.ERROR, Messages.getString( "PortValidator.0" ) ); //$NON-NLS-1$
 
     m_defaultPort = defaultPort;
   }
@@ -64,19 +64,19 @@ public class PortValidator extends TypedValidator<String>
   protected IStatus doValidate( final String value )
   {
     if( StringUtils.isBlank( value ) )
-      return ValidationStatus.info( String.format( Messages.getString("PortValidator.1"), m_defaultPort ) ); //$NON-NLS-1$
+      return ValidationStatus.info( String.format( Messages.getString( "PortValidator.1" ), m_defaultPort ) ); //$NON-NLS-1$
 
     try
     {
       final int port = Integer.parseInt( value );
       if( port <= 0 || port > 9999 )
-        return ValidationStatus.error( Messages.getString("PortValidator.2") ); //$NON-NLS-1$
+        return ValidationStatus.error( Messages.getString( "PortValidator.2" ) ); //$NON-NLS-1$
 
       return ValidationStatus.ok();
     }
     catch( final NumberFormatException e )
     {
-      return ValidationStatus.error( Messages.getString("PortValidator.3") ); //$NON-NLS-1$
+      return ValidationStatus.error( Messages.getString( "PortValidator.3" ) ); //$NON-NLS-1$
     }
   }
 }

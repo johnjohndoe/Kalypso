@@ -55,7 +55,7 @@ public abstract class ConfigureConnectionsAction extends Action
 {
   public ConfigureConnectionsAction( )
   {
-    setText( Messages.getString("ConfigureConnectionsAction.0") ); //$NON-NLS-1$
+    setText( Messages.getString( "ConfigureConnectionsAction.0" ) ); //$NON-NLS-1$
   }
 
   @Override

@@ -83,7 +83,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_ACCESSING_WSPM_PROJECT_DATA = Messages.getString("LoadPdbDataOperation.0"); //$NON-NLS-1$
+  private static final String STR_ACCESSING_WSPM_PROJECT_DATA = Messages.getString( "LoadPdbDataOperation.0" ); //$NON-NLS-1$
 
   private final PdbWspmProject m_pdbProject;
 
@@ -95,29 +95,29 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("LoadPdbDataOperation.1"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "LoadPdbDataOperation.1" ), 100 ); //$NON-NLS-1$
 
-    monitor.subTask( Messages.getString("LoadPdbDataOperation.2") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "LoadPdbDataOperation.2" ) ); //$NON-NLS-1$
     final IProject project = ensureProject( new SubProgressMonitor( monitor, 45 ) );
     if( project == null )
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("LoadPdbDataOperation.3") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "LoadPdbDataOperation.3" ) ); //$NON-NLS-1$
 
     /* Access wspm data */
-    monitor.subTask( Messages.getString("LoadPdbDataOperation.4") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "LoadPdbDataOperation.4" ) ); //$NON-NLS-1$
     final URL projectLocation = ResourceUtilities.createQuietURL( project );
     final IPoolableObjectType key = new PoolableObjectType( "gml", IWspmTuhhConstants.FILE_MODELL_GML, projectLocation ); //$NON-NLS-1$
     final PoolFeaturesProvider provider = new PoolFeaturesProvider( key, StringUtils.EMPTY );
     final TuhhWspmProject wspmProject = waitForworkspaceLoad( provider, new SubProgressMonitor( monitor, 50 ) );
     if( wspmProject == null )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("LoadPdbDataOperation.5") ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "LoadPdbDataOperation.5" ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
     m_pdbProject.setData( provider, project );
 
     /* set data to views */
-    monitor.subTask( Messages.getString("LoadPdbDataOperation.6") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "LoadPdbDataOperation.6" ) ); //$NON-NLS-1$
     initPerspective();
     monitor.worked( 5 );
 
@@ -165,7 +165,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("LoadPdbDataOperation.7"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "LoadPdbDataOperation.7" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -176,7 +176,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
   private boolean askForDeletion( final IProject project, final IStatus status )
   {
-    final String message = String.format( Messages.getString("LoadPdbDataOperation.8"), status.getMessage() ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "LoadPdbDataOperation.8" ), status.getMessage() ); //$NON-NLS-1$
 
     final boolean confirm = SWT_AWT_Utilities.showSwtMessageBoxConfirm( STR_ACCESSING_WSPM_PROJECT_DATA, message );
     if( !confirm )
@@ -191,7 +191,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
 
       final Shell shell = SWT_AWT_Utilities.findActiveShell();
-      final StatusDialog2 dialog = new StatusDialog2( shell, e.getStatus(), STR_ACCESSING_WSPM_PROJECT_DATA, Messages.getString("LoadPdbDataOperation.9") ); //$NON-NLS-1$
+      final StatusDialog2 dialog = new StatusDialog2( shell, e.getStatus(), STR_ACCESSING_WSPM_PROJECT_DATA, Messages.getString( "LoadPdbDataOperation.9" ) ); //$NON-NLS-1$
       SWT_AWT_Utilities.openSwtWindow( dialog );
 
       return false;
@@ -231,7 +231,7 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
   private TuhhWspmProject waitForworkspaceLoad( final PoolFeaturesProvider provider, final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("LoadPdbDataOperation.10"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "LoadPdbDataOperation.10" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     provider.startLoading();
 

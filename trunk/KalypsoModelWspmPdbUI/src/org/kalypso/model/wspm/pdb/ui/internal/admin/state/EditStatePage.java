@@ -51,9 +51,9 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class EditStatePage extends WizardPage
 {
-  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = Messages.getString("EditStatePage.0"); //$NON-NLS-1$
+  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = Messages.getString( "EditStatePage.0" ); //$NON-NLS-1$
 
-  public static final String STR_ENTER_STATE_PROPERTIES = Messages.getString("EditStatePage.1"); //$NON-NLS-1$
+  public static final String STR_ENTER_STATE_PROPERTIES = Messages.getString( "EditStatePage.1" ); //$NON-NLS-1$
 
   public enum Mode
   {

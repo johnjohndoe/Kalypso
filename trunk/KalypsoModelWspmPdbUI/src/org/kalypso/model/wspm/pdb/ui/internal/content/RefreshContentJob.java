@@ -63,7 +63,7 @@ public class RefreshContentJob extends Job
 
   public RefreshContentJob( final IPdbConnection connection )
   {
-    super( Messages.getString("RefreshContentJob.0") ); //$NON-NLS-1$
+    super( Messages.getString( "RefreshContentJob.0" ) ); //$NON-NLS-1$
 
     m_connection = connection;
   }
@@ -86,7 +86,7 @@ public class RefreshContentJob extends Job
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("RefreshContentJob.1"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "RefreshContentJob.1" ), e ); //$NON-NLS-1$
     }
     finally
     {

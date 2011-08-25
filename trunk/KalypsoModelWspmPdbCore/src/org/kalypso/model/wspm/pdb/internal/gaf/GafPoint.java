@@ -130,7 +130,7 @@ public class GafPoint
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_stati.add( IStatus.ERROR, Messages.getString("GafPoint.0"), e ); //$NON-NLS-1$
+      m_stati.add( IStatus.ERROR, Messages.getString( "GafPoint.0" ), e ); //$NON-NLS-1$
       return null;
     }
   }
@@ -139,12 +139,12 @@ public class GafPoint
   {
     if( Double.isNaN( position.x ) || Double.isNaN( position.y ) )
     {
-      m_stati.add( IStatus.WARNING, Messages.getString("GafPoint.1") ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "GafPoint.1" ) ); //$NON-NLS-1$
       return false;
     }
 
     if( Double.isNaN( position.z ) || Double.isNaN( position.y ) )
-      m_stati.add( IStatus.WARNING, Messages.getString("GafPoint.2") ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "GafPoint.2" ) ); //$NON-NLS-1$
 
     return true;
   }

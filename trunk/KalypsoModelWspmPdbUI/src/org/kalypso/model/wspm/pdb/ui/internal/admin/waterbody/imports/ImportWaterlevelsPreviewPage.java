@@ -86,8 +86,8 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
   {
     super( pageName );
 
-    setTitle( Messages.getString("ImportWaterlevelsPreviewPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("ImportWaterlevelsPreviewPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "ImportWaterlevelsPreviewPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportWaterlevelsPreviewPage.1" ) ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -119,7 +119,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
     m_viewer.setCheckStateProvider( new EventFixationsCheckstateProvider( waterlevelEvent ) );
 
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    validColumn.getColumn().setText( Messages.getString("ImportWaterlevelsPreviewPage.2") ); //$NON-NLS-1$
+    validColumn.getColumn().setText( Messages.getString( "ImportWaterlevelsPreviewPage.2" ) ); //$NON-NLS-1$
     validColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
     ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
@@ -227,7 +227,7 @@ public class ImportWaterlevelsPreviewPage extends WizardPage implements IUpdatea
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, Messages.getString("ImportWaterlevelsPreviewPage.8") ).open(); //$NON-NLS-1$
+      new StatusDialog2( getShell(), status, Messages.getString( "ImportWaterlevelsPreviewPage.8" ) ).open(); //$NON-NLS-1$
 
     return operation.getWaterBodies();
   }

@@ -65,7 +65,7 @@ public class ConnectPdbAction extends Action
     super( String.format( "%s - %s", settings.getName(), settings.toString() ) ); //$NON-NLS-1$
 
     setImageDescriptor( settings.getImage() );
-    setToolTipText( Messages.getString("ConnectPdbAction.1") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "ConnectPdbAction.1" ) ); //$NON-NLS-1$
 
     m_view = view;
     m_settings = settings;
@@ -80,7 +80,7 @@ public class ConnectPdbAction extends Action
 
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, Messages.getString("ConnectPdbAction.2") ).open(); //$NON-NLS-1$
+      new StatusDialog2( shell, result, Messages.getString( "ConnectPdbAction.2" ) ).open(); //$NON-NLS-1$
 
     final IPdbConnection connection = operation.getConnection();
     m_view.setConnection( connection, result );

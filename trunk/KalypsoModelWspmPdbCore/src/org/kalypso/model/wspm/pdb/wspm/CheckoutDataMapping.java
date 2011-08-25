@@ -353,7 +353,7 @@ public class CheckoutDataMapping
     removeFromMapping( m_waterMapping, element );
   }
 
-  private void removeFromMapping( final Map<?, ?> mapping, final Feature element )
+  private void removeFromMapping( final Map< ? , ? > mapping, final Feature element )
   {
     if( !mapping.containsValue( element ) )
       return;

@@ -59,7 +59,7 @@ public class AddObjectOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString("AddObjectOperation.0"), m_object ); //$NON-NLS-1$
+    return String.format( Messages.getString( "AddObjectOperation.0" ), m_object ); //$NON-NLS-1$
   }
 
   @Override

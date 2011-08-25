@@ -85,7 +85,7 @@ public class CheckoutPdbLabelDecorator extends BaseLabelProvider implements ILab
   public String decorateText( final String text, final Object element )
   {
     if( m_allPdbElementsWithWspm.contains( element ) )
-      return String.format( Messages.getString("CheckoutPdbLabelDecorator.0"), text ); //$NON-NLS-1$
+      return String.format( Messages.getString( "CheckoutPdbLabelDecorator.0" ), text ); //$NON-NLS-1$
 
     return text;
   }

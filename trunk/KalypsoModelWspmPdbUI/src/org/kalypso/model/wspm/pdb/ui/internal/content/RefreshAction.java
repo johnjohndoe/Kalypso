@@ -56,7 +56,7 @@ public class RefreshAction extends Action
   {
     m_control = control;
 
-    setText( Messages.getString("RefreshAction.0") ); //$NON-NLS-1$
+    setText( Messages.getString( "RefreshAction.0" ) ); //$NON-NLS-1$
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
   }
 

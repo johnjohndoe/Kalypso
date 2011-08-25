@@ -122,7 +122,7 @@ public class ImportAttachmentsData extends AbstractModelObject
     load( settings );
 
     m_state = findState( selection );
-    buildDocumentHash(  );
+    buildDocumentHash();
 
     /* Propose a zip file name, based on state name */
     final File zipDir = m_zipFile != null ? m_zipFile.getParentFile() : FileUtils.getUserDirectory();

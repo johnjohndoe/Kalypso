@@ -71,8 +71,8 @@ public interface WaterBodyConstants
   public enum STATIONING_DIRECTION
   {
     /** Default */
-    upstream(Messages.getString("WaterBodyConstants.0")), //$NON-NLS-1$
-    downstream(Messages.getString("WaterBodyConstants.1")); //$NON-NLS-1$
+    upstream(Messages.getString( "WaterBodyConstants.0" )), //$NON-NLS-1$
+    downstream(Messages.getString( "WaterBodyConstants.1" )); //$NON-NLS-1$
 
     private final String m_label;
 

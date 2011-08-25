@@ -102,7 +102,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
   private final IAction m_infoAction = new InfoPdbAction( this );
 
-  private final UIJob m_updateControlJob = new UIJob( Messages.getString("PdbView.0") ) //$NON-NLS-1$
+  private final UIJob m_updateControlJob = new UIJob( Messages.getString( "PdbView.0" ) ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -203,10 +203,10 @@ public class PdbView extends ViewPart implements IConnectionViewer
   private String getFormTitel( )
   {
     if( m_wspmProject == null )
-      return Messages.getString("PdbView.1"); //$NON-NLS-1$
+      return Messages.getString( "PdbView.1" ); //$NON-NLS-1$
 
     if( m_pdbConnection == null )
-      return Messages.getString("PdbView.2"); //$NON-NLS-1$
+      return Messages.getString( "PdbView.2" ); //$NON-NLS-1$
 
     final String label = m_pdbConnection.getLabel();
     return String.format( "%s", label ); //$NON-NLS-1$
@@ -227,7 +227,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final String settingsName = m_autoConnectData.getAutoConnectName();
     final IStatus result = doConnect( settingsName );
     if( !result.isOK() )
-      new StatusDialog2( getSite().getShell(), result, Messages.getString("PdbView.4") ); //$NON-NLS-1$
+      new StatusDialog2( getSite().getShell(), result, Messages.getString( "PdbView.4" ) ); //$NON-NLS-1$
   }
 
   private IStatus doConnect( final String settingsName )
@@ -245,7 +245,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbView.5"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "PdbView.5" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -450,7 +450,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( m_connectionStatus == null )
       return;
 
-    new StatusDialog2( getSite().getShell(), m_connectionStatus, Messages.getString("PdbView.7") ).open(); //$NON-NLS-1$
+    new StatusDialog2( getSite().getShell(), m_connectionStatus, Messages.getString( "PdbView.7" ) ).open(); //$NON-NLS-1$
   }
 
   public PdbInfo getInfo( )

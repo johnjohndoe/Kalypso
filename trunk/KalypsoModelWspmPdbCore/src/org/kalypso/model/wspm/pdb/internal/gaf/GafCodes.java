@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
  */
 public class GafCodes
 {
-  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString("GafCodes.0"), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY ); //$NON-NLS-1$
+  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString( "GafCodes.0" ), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY ); //$NON-NLS-1$
 
   private final Map<String, GafCode> m_codes = new LinkedHashMap<String, GafCode>();
 

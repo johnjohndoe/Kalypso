@@ -109,7 +109,7 @@ public class GafProfiles
     m_currentProfile.addPoint( point, code );
     if( duplicateStation )
     {
-      final String message = String.format( Messages.getString("GafProfiles.0"), station ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "GafProfiles.0" ), station ); //$NON-NLS-1$
       m_currentProfile.addStatus( IStatus.WARNING, message );
     }
   }
@@ -168,7 +168,7 @@ public class GafProfiles
       for( final GafProfile profile : m_profiles )
         stati.add( profile.getStatus() );
 
-      m_status = stati.asMultiStatusOrOK( Messages.getString("GafProfiles.1") ); //$NON-NLS-1$
+      m_status = stati.asMultiStatusOrOK( Messages.getString( "GafProfiles.1" ) ); //$NON-NLS-1$
     }
 
     return m_status;

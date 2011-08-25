@@ -73,8 +73,8 @@ public class PdbContentPage extends WizardPage implements IConnectionViewer
   {
     super( pageName );
 
-    setTitle( Messages.getString("PdbContentPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("PdbContentPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "PdbContentPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "PdbContentPage.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -119,12 +119,11 @@ public class PdbContentPage extends WizardPage implements IConnectionViewer
     return new ContentSearchViewer( null, panel, treeViewer, this );
   }
 
-
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
     if( selection.isEmpty() )
     {
-      setMessage( Messages.getString("PdbContentPage.2"), WARNING ); //$NON-NLS-1$
+      setMessage( Messages.getString( "PdbContentPage.2" ), WARNING ); //$NON-NLS-1$
       setPageComplete( false );
     }
     else

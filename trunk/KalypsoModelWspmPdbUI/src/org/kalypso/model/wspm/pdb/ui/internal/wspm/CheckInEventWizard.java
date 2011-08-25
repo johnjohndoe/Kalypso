@@ -72,7 +72,7 @@ public class CheckInEventWizard extends Wizard
   public void addPages( )
   {
     final EditEventPage editStatePage = new EditEventPage( "editEvent", m_data, false ); //$NON-NLS-1$
-    editStatePage.setDescription( Messages.getString("CheckInEventWizard.1") ); //$NON-NLS-1$
+    editStatePage.setDescription( Messages.getString( "CheckInEventWizard.1" ) ); //$NON-NLS-1$
 
     addPage( editStatePage );
   }

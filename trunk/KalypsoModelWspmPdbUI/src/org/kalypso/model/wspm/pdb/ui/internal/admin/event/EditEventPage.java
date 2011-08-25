@@ -68,8 +68,8 @@ public class EditEventPage extends WizardPage
     m_data = data;
     m_ignoreOwnName = ignoreOwnName;
 
-    setTitle( Messages.getString("EditEventPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("EditEventPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "EditEventPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "EditEventPage.1" ) ); //$NON-NLS-1$
   }
 
   @Override

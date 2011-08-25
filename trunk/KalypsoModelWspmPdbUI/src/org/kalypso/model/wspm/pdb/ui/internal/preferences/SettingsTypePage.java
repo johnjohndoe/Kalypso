@@ -65,8 +65,8 @@ class SettingsTypePage extends WizardPage
   {
     super( pageName );
 
-    setTitle( Messages.getString("SettingsTypePage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("SettingsTypePage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "SettingsTypePage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "SettingsTypePage.1" ) ); //$NON-NLS-1$
   }
 
   /**
