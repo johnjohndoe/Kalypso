@@ -102,7 +102,7 @@ public class BewuchsRule extends AbstractValidatorRule
     final IRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
     final IRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
 
-    if( !Arrays.isEmpty( riverTube ) )
+    if( !Arrays.isEmpty( riverTube ) && WspmProfileHelper.getBuilding( profil, IProfileBuilding.class ) == null )
     {
       int i = leftIndex;
       for( final IRecord point : riverTube )
