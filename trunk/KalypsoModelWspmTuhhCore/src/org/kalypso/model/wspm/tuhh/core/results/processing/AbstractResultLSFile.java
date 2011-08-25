@@ -38,25 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.tuhh.core.results.processing;
 
-import org.kalypso.commons.patternreplace.AbstractPatternInput;
+import java.io.File;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentStationPattern extends AbstractPatternInput<AttachmentStationContext>
+public abstract class AbstractResultLSFile implements IResultLSFile
 {
-  static final String TOKEN = "station"; //$NON-NLS-1$
+  private final String m_runoffName;
 
-  public AttachmentStationPattern( )
+  private final File m_outDir;
+
+  public AbstractResultLSFile( final File outDir, final String runoffName )
   {
-    super( TOKEN, "Station" );
+    m_outDir = outDir;
+    m_runoffName = runoffName;
+  }
+
+  protected String getRunoffName( )
+  {
+    return m_runoffName;
   }
 
   @Override
-  public String getReplacement( final AttachmentStationContext context, final String param )
+  public final File getResultFile( )
   {
-    return context.getStationPattern();
+    return new File( m_outDir, getFilename() );
   }
+
+  @Override
+  public final IStatus writeFile( )
+  {
+    try
+    {
+      final File resultFile = getResultFile();
+      doWrite( resultFile );
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      final String title = getTitle();
+      final String message = String.format( Messages.getString( "AbstractResultLSFile_0" ), title ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
+    }
+  }
+
+  protected abstract void doWrite( File outputFile ) throws Exception;
 }

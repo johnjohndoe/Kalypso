@@ -207,6 +207,8 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
         return;
 
       final Feature newProfileLink = (Feature) treeSelectionDialog.getResult()[0];
+      if( !(newProfileLink instanceof IProfileFeature) )
+        return;
 
       // TODO: check, if the chosen profile is suitable for this relation
       final IProfil profile = ((IProfileFeature) newProfileLink).getProfil();

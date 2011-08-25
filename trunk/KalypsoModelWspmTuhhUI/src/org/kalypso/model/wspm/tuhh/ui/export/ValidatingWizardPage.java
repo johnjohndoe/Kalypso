@@ -51,9 +51,6 @@ public abstract class ValidatingWizardPage extends WizardPage
     super( pageName );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {

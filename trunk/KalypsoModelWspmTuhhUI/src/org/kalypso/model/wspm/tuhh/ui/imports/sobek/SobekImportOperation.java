@@ -40,11 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
+import org.kalypso.model.wspm.core.profil.sobek.parser.SobekModelParser;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Gernot Belger
@@ -59,16 +71,42 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    // TODO Auto-generated method stub
+    monitor.beginTask( "Converting SOBEK data to WSPM", 100 );
 
-    // TODO: read profile def/dat
+    try
+    {
+      // find files for parsing
+      final FileAndHistoryData inputDir = m_data.getInputDir();
+      final SobekModelParser modelParser = new SobekModelParser( inputDir.getFile() );
+      final SobekModel model = modelParser.read( new SubProgressMonitor( monitor, 30 ) );
 
-    // TODO: read frictions
+      final Sobek2Wspm sobek2Wspm = new Sobek2Wspm( m_data );
+      sobek2Wspm.convert( model );
 
-    // TODO: read flow zones
+      final CommandableWorkspace workspace = m_data.getWorkspace();
+      final WspmWaterBody water = m_data.getWater();
+      final Feature[] newFeatures = sobek2Wspm.getNewFeatures();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, water, newFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), "Sorry, this function is not yet implemented." );
+      workspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );
+
+      return sobek2Wspm.getStatus();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new InvocationTargetException( e );
+    }
   }
 }

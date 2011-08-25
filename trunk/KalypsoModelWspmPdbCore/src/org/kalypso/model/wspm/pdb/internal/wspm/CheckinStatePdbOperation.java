@@ -274,7 +274,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
       parts.add( okWeirPart );
 
     /* extract extra parts */
-    final CrossSectionPart[] additionalParts = createAdditionalParts( profil );
+    final CrossSectionPart[] additionalParts = createAdditionalParts();
     for( final CrossSectionPart additionalPart : additionalParts )
       parts.add( additionalPart );
 
@@ -306,7 +306,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return part;
   }
 
-  private CrossSectionPart[] createAdditionalParts( final IProfil profil )
+  private CrossSectionPart[] createAdditionalParts( )
   {
     // TODO
     return new CrossSectionPart[0];

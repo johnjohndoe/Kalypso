@@ -9,9 +9,9 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class RoughnessId implements java.io.Serializable, CoefficientId
 {
-  private String pointKind;
+  private String m_pointKind;
 
-  private String name;
+  private String m_name;
 
   public RoughnessId( )
   {
@@ -19,32 +19,32 @@ public class RoughnessId implements java.io.Serializable, CoefficientId
 
   public RoughnessId( final String pointKind, final String name )
   {
-    this.pointKind = pointKind;
-    this.name = name;
+    m_pointKind = pointKind;
+    m_name = name;
   }
 
   @Override
   @Column(name = "point_kind", nullable = false, length = 50)
   public String getPointKind( )
   {
-    return this.pointKind;
+    return m_pointKind;
   }
 
   public void setPointKind( final String pointKind )
   {
-    this.pointKind = pointKind;
+    m_pointKind = pointKind;
   }
 
   @Override
   @Column(name = "name", nullable = false, length = 50)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    this.name = name;
+    m_name = name;
   }
 
   @Override
@@ -58,8 +58,8 @@ public class RoughnessId implements java.io.Serializable, CoefficientId
       return false;
     final RoughnessId castOther = (RoughnessId) other;
 
-    return ((this.getPointKind() == castOther.getPointKind()) || (this.getPointKind() != null && castOther.getPointKind() != null && this.getPointKind().equals( castOther.getPointKind() )))
-    && ((this.getName() == castOther.getName()) || (this.getName() != null && castOther.getName() != null && this.getName().equals( castOther.getName() )));
+    return ((getPointKind() == castOther.getPointKind()) || (getPointKind() != null && castOther.getPointKind() != null && getPointKind().equals( castOther.getPointKind() )))
+        && ((getName() == castOther.getName()) || (getName() != null && castOther.getName() != null && getName().equals( castOther.getName() )));
   }
 
   @Override
@@ -67,9 +67,8 @@ public class RoughnessId implements java.io.Serializable, CoefficientId
   {
     int result = 17;
 
-    result = 37 * result + (getPointKind() == null ? 0 : this.getPointKind().hashCode());
-    result = 37 * result + (getName() == null ? 0 : this.getName().hashCode());
+    result = 37 * result + (getPointKind() == null ? 0 : getPointKind().hashCode());
+    result = 37 * result + (getName() == null ? 0 : getName().hashCode());
     return result;
   }
-
 }

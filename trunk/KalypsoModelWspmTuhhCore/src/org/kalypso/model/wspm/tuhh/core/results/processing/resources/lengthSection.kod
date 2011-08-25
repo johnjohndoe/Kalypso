@@ -9,7 +9,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
           </Parameters>
@@ -68,7 +68,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" name="targetComponentId" />
           </Parameters>
@@ -93,7 +93,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen" name="targetComponentId" />
           </Parameters>
@@ -118,7 +118,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="targetComponentId" />
           </Parameters>
@@ -151,7 +151,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" name="targetComponentId" />
           </Parameters>
@@ -176,7 +176,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="targetComponentId" />
           </Parameters>
@@ -207,7 +207,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="targetComponentId" />
           </Parameters>
@@ -239,7 +239,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="targetComponentId" />
           </Parameters>
@@ -277,7 +277,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeOK" name="targetComponentId" />
           </Parameters>
@@ -308,7 +308,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN" name="targetComponentId" />
           </Parameters>
@@ -338,7 +338,7 @@
           <Parameters>
             <Parameter value="Daten/%GMLFILENAME%" name="href" />
             <Parameter value="" name="gxlpath" />
-            <Parameter value="LengthSectionResult" name="observationId" />
+            <Parameter value="%ROOT_ID%" name="observationId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId" />
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_WeirOK" name="targetComponentId" />
           </Parameters>

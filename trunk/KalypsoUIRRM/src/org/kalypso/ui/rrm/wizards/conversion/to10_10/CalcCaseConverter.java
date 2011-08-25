@@ -180,7 +180,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyDir( INaCalcCaseConstants.ANFANGSWERTE_DIR );
     copyDir( INaCalcCaseConstants.KLIMA_DIR );
     copyDir( INaCalcCaseConstants.NIEDERSCHLAG_DIR );
-    copyDir( INaCalcCaseConstants.PEGEL_DIR );
+    copyPegel();
     copyZufluss();
 
     // TODO: Benutzer entscheiden lassen:
@@ -190,6 +190,19 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
     getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CalcCaseConverter_0") ) ); //$NON-NLS-1$
+  }
+
+  private void copyPegel( ) throws IOException
+  {
+    final File modelSourceDir = new File( m_sourceDir, INaCalcCaseConstants.PEGEL_DIR ); //$NON-NLS-1$
+    final File modelTargetDir = new File( m_targetCalcCaseDir, INaCalcCaseConstants.PEGEL_DIR ); //$NON-NLS-1$
+    if( modelSourceDir.isDirectory() )
+      FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
+    else
+    {
+      getLog().add( IStatus.INFO, "Missing 'Pegel' folder in calculation case. Creating an empty folder." );
+      modelTargetDir.mkdirs();
+    }
   }
 
   private void copyZufluss( ) throws IOException

@@ -232,10 +232,9 @@ public class ImportGafData extends AbstractModelObject
 
     firePropertyChange( PROPERTY_GAF_FILE, oldValue, m_gafFile );
 
-    File logFile;
-    if( m_gafFile == null )
-      logFile = null;
-    else
+    setLogFile( createLogFilename() );
+
+    if( m_gafFile != null )
     {
       final String filename = m_gafFile.getName();
 
@@ -246,13 +245,41 @@ public class ImportGafData extends AbstractModelObject
       m_state.setName( String.format( "Measurement %s %d", FilenameUtils.removeExtension( filename ), thisYear ) );
 
       m_waterlevelEvent.setSource( m_state.getSource() );
-      /* No need to set evetn name hee, it will be updated before event-page is displayed */
+      // REMARK: No need to set event name here, it will be updated before event-page is displayed
+    }
+  }
 
-      final String logFilename = FilenameUtils.removeExtension( filename ) + ".log";//$NON-NLS-1$
-      logFile = new File( m_gafFile.getParent(), logFilename );
+  private File createLogFilename( )
+  {
+    if( m_gafFile == null )
+      return null;
+
+    final File logFileParent = getLogFileParent();
+    if( logFileParent == null )
+      return null;
+
+    final String filename = m_gafFile.getName();
+    final String logFilename = FilenameUtils.removeExtension( filename ) + ".log";//$NON-NLS-1$
+    return new File( logFileParent, logFilename );
+  }
+
+  private File getLogFileParent( )
+  {
+    if( m_logFile != null )
+    {
+      final File parentFile = m_logFile.getParentFile();
+      if( parentFile.isDirectory() )
+        return parentFile;
     }
 
-    setLogFile( logFile );
+    if( m_gafFile != null )
+    {
+      final File gafParent = m_gafFile.getParentFile();
+      if( gafParent.isDirectory() )
+        return gafParent;
+    }
+
+    return null;
   }
 
   public State getState( )
@@ -349,7 +376,11 @@ public class ImportGafData extends AbstractModelObject
 
   public void setLogFile( final File logFile )
   {
+    final File oldValue = m_logFile;
+
     m_logFile = logFile;
+
+    firePropertyChange( PROPERTY_LOG_FILE, oldValue, logFile );
   }
 
   public boolean getHasWaterlevels( )

@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 	<Chart id="boundaryConditionChart">
-		<Title horizontalTextAnchor="CENTER">Randbedingungen</Title>
+		<!-- Title horizontalTextAnchor="CENTER">Randbedingungen</Title-->
 		<Description>Grundlagendaten zur Erzeugung der Randbedingungen</Description>
 		<Layers>
 			<Layer visible="true" id="gridLayer">

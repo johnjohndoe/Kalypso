@@ -38,19 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.tuhh.ui.utils;
 
 import java.math.BigDecimal;
-
-import org.apache.commons.lang3.StringUtils;
-import org.kalypso.contribs.java.lang.NumberUtils;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 
 /**
  * @author Gernot Belger
  *
  */
-public class AttachmentStationContext
+public class GuessStationContext
 {
+  public static final GuessStationContext[] DEFAULT_SEARCH_CONTEXTS = new GuessStationContext[] {
+    //
+    new GuessStationContext( null, '+', 3 ), //
+    new GuessStationContext( null, '-', 3 ), //
+    new GuessStationContext( null, '.', 0 ), //
+    new GuessStationContext( null, ',', 0 ) //
+  };
+
+  // Max. UTF, so this separator will not be used
+  private static final char NO_SEPARATOR = '\uffff'; //$NON-NLS-1$
+
   private static final String DIGITS = "\\d"; //$NON-NLS-1$
 
   private final Character m_thousandSeparator;
@@ -59,11 +70,38 @@ public class AttachmentStationContext
 
   private final String m_pattern;
 
-  public AttachmentStationContext( final Character thousandSeparator, final Character decimalSeparator )
+  private final DecimalFormat m_decimalFormat;
+
+  private final int m_factor;
+
+  public GuessStationContext( final Character thousandSeparator, final Character decimalSeparator, final int factor )
   {
     m_thousandSeparator = thousandSeparator;
     m_decimalSeparator = decimalSeparator;
+    m_factor = factor;
     m_pattern = buildPattern();
+    m_decimalFormat = buildFormat();
+  }
+
+  private DecimalFormat buildFormat( )
+  {
+    final DecimalFormat df = new DecimalFormat( "###,###.#" );
+    final DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+
+    if( m_thousandSeparator != null )
+      symbols.setGroupingSeparator( m_thousandSeparator );
+    else
+      symbols.setGroupingSeparator( NO_SEPARATOR );
+
+    if( m_decimalSeparator != null )
+      symbols.setDecimalSeparator( m_decimalSeparator );
+    else
+      symbols.setDecimalSeparator( '\uffff' );
+
+    df.setDecimalFormatSymbols( symbols );
+
+    df.setParseBigDecimal( true );
+    return df;
   }
 
   public String getStationPattern( )
@@ -82,14 +120,14 @@ public class AttachmentStationContext
       builder.append( "\\" ).append( m_thousandSeparator );
     }
 
-    builder.append( DIGITS );
+    builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
 
     if( m_decimalSeparator == null )
       builder.append( "+" ); //$NON-NLS-1$
     else
     {
-      builder.append( "*" );
-      builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
+      builder.append( "\\" ).append( m_decimalSeparator );
+      builder.append( DIGITS ).append( '+' );
     }
 
     builder.append( ')' );
@@ -99,13 +137,16 @@ public class AttachmentStationContext
 
   public BigDecimal parseStation( final String input )
   {
-    String normalized = input;
-
-    if( m_thousandSeparator != null )
-      normalized = StringUtils.remove( input, m_thousandSeparator );
-    if( m_decimalSeparator != null )
-      normalized = StringUtils.replaceChars( normalized, m_decimalSeparator, '.' ); //$NON-NLS-1$
-
-    return NumberUtils.parseQuietDecimal( normalized );
+    try
+    {
+      final BigDecimal decimal = (BigDecimal) m_decimalFormat.parse( input );
+      final BigDecimal decimalAdjusted = decimal.movePointRight( m_factor );
+      return decimalAdjusted.setScale( 1, BigDecimal.ROUND_HALF_UP );
+    }
+    catch( final ParseException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

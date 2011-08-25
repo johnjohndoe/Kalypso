@@ -78,6 +78,30 @@ public class PdbInfo
 
   public final static String PROPERTY_DOCUMENT_SERVER = "DocumentServer"; //$NON-NLS-1$
 
+  public final static String PROPERTY_SRS_MIN_X = "srsMinX"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_MAX_X = "srsMaxX"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_MIN_Y = "srsMinY"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_MAX_Y = "srsMaxY"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_X_NAME = "srsXName"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_Y_NAME = "srsYName"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_Z_NAME = "srsZName"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_MIN_Z = "srsMinZ"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_MAX_Z = "srsMaxZ"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_TOL_X = "srsTolX"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_TOL_Y = "srsTolY"; //$NON-NLS-1$
+
+  public final static String PROPERTY_SRS_TOL_Z = "srsTolZ"; //$NON-NLS-1$
+
   private final Properties m_properties = new Properties();
 
   private IStatus m_status;

@@ -28,36 +28,35 @@ import org.kalypso.model.wspm.pdb.db.constants.DocumentConstants;
 @Table(name = "document", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = "filename"))
 public class Document extends AbstractModelObject implements Serializable, DocumentConstants, IElementWithDates
 {
+  private BigDecimal m_id;
 
-  private BigDecimal id;
+  private String m_name;
 
-  private String name;
+  private com.vividsolutions.jts.geom.Point m_location;
 
-  private com.vividsolutions.jts.geom.Point location;
+  private String m_filename;
 
-  private String filename;
+  private String m_mimetype;
 
-  private String mimetype;
+  private Date m_creationDate;
 
-  private Date creationDate;
+  private Date m_editingDate;
 
-  private Date editingDate;
+  private String m_editingUser;
 
-  private String editingUser;
+  private Date m_measurementDate;
 
-  private Date measurementDate;
+  private BigDecimal m_shotdirection;
 
-  private BigDecimal shotdirection;
+  private BigDecimal m_viewangle;
 
-  private BigDecimal viewangle;
+  private String m_description;
 
-  private String description;
+  private CrossSection m_crossSection;
 
-  private CrossSection crossSection;
+  private WaterBody m_waterBody;
 
-  private WaterBody waterBody;
-
-  private State state;
+  private State m_state;
 
   public Document( )
   {
@@ -65,31 +64,31 @@ public class Document extends AbstractModelObject implements Serializable, Docum
 
   public Document( final BigDecimal id, final String name, final String filename, final Date creationDate, final Date editingDate, final String editingUser )
   {
-    this.id = id;
-    this.name = name;
-    this.filename = filename;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
+    m_id = id;
+    m_name = name;
+    m_filename = filename;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
   }
 
   public Document( final BigDecimal id, final String name, final com.vividsolutions.jts.geom.Point location, final String filename, final String mimetype, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final BigDecimal shotdirection, final BigDecimal viewangle, final String description, final CrossSection crossSection, final WaterBody waterBody, final State state )
   {
-    this.id = id;
-    this.waterBody = waterBody;
-    this.crossSection = crossSection;
-    this.state = state;
-    this.name = name;
-    this.location = location;
-    this.filename = filename;
-    this.mimetype = mimetype;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
-    this.measurementDate = measurementDate;
-    this.shotdirection = shotdirection;
-    this.viewangle = viewangle;
-    this.description = description;
+    m_id = id;
+    m_waterBody = waterBody;
+    m_crossSection = crossSection;
+    m_state = state;
+    m_name = name;
+    m_location = location;
+    m_filename = filename;
+    m_mimetype = mimetype;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
+    m_measurementDate = measurementDate;
+    m_shotdirection = shotdirection;
+    m_viewangle = viewangle;
+    m_description = description;
   }
 
   @Id
@@ -98,56 +97,56 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @SequenceGenerator(name = "document_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    this.id = id;
+    m_id = id;
   }
 
   @Column(name = "name", nullable = false, length = 100)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    this.name = name;
+    m_name = name;
   }
 
   @Column(name = "location", columnDefinition = "Geometry")
   public com.vividsolutions.jts.geom.Point getLocation( )
   {
-    return this.location;
+    return m_location;
   }
 
   public void setLocation( final com.vividsolutions.jts.geom.Point location )
   {
-    this.location = location;
+    m_location = location;
   }
 
   @Column(name = "filename", unique = true, nullable = false, length = 2048)
   public String getFilename( )
   {
-    return this.filename;
+    return m_filename;
   }
 
   public void setFilename( final String filename )
   {
-    this.filename = filename;
+    m_filename = filename;
   }
 
   @Column(name = "mimetype", length = 50)
   public String getMimetype( )
   {
-    return this.mimetype;
+    return m_mimetype;
   }
 
   public void setMimetype( final String mimetype )
   {
-    this.mimetype = mimetype;
+    m_mimetype = mimetype;
   }
 
   @Override
@@ -155,14 +154,14 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Column(name = "creation_date", nullable = false, length = 22)
   public Date getCreationDate( )
   {
-    return this.creationDate;
+    return m_creationDate;
   }
 
   public void setCreationDate( final Date creationDate )
   {
-    final Object oldValue = this.creationDate;
+    final Object oldValue = m_creationDate;
 
-    this.creationDate = creationDate;
+    m_creationDate = creationDate;
 
     firePropertyChange( PROPERTY_CREATIONDATE, oldValue, creationDate );
   }
@@ -172,14 +171,14 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Column(name = "editing_date", nullable = false, length = 22)
   public Date getEditingDate( )
   {
-    return this.editingDate;
+    return m_editingDate;
   }
 
   public void setEditingDate( final Date editingDate )
   {
-    final Object oldValue = this.editingDate;
+    final Object oldValue = m_editingDate;
 
-    this.editingDate = editingDate;
+    m_editingDate = editingDate;
 
     firePropertyChange( PROPERTY_EDITINGDATE, oldValue, editingDate );
   }
@@ -188,14 +187,14 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Column(name = "editing_user", nullable = false, length = 50)
   public String getEditingUser( )
   {
-    return this.editingUser;
+    return m_editingUser;
   }
 
   public void setEditingUser( final String editingUser )
   {
-    final Object oldValue = this.editingUser;
+    final Object oldValue = m_editingUser;
 
-    this.editingUser = editingUser;
+    m_editingUser = editingUser;
 
     firePropertyChange( PROPERTY_EDITINGUSER, oldValue, editingUser );
   }
@@ -205,14 +204,14 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Column(name = "measurement_date", length = 22)
   public Date getMeasurementDate( )
   {
-    return this.measurementDate;
+    return m_measurementDate;
   }
 
   public void setMeasurementDate( final Date measurementDate )
   {
-    final Object oldValue = this.measurementDate;
+    final Object oldValue = m_measurementDate;
 
-    this.measurementDate = measurementDate;
+    m_measurementDate = measurementDate;
 
     firePropertyChange( PROPERTY_MEASUREMENTDATE, oldValue, measurementDate );
   }
@@ -220,70 +219,69 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   @Column(name = "shotdirection", precision = 8, scale = 3)
   public BigDecimal getShotdirection( )
   {
-    return this.shotdirection;
+    return m_shotdirection;
   }
 
   public void setShotdirection( final BigDecimal shotdirection )
   {
-    this.shotdirection = shotdirection;
+    m_shotdirection = shotdirection;
   }
 
   @Column(name = "viewangle", precision = 8, scale = 3)
   public BigDecimal getViewangle( )
   {
-    return this.viewangle;
+    return m_viewangle;
   }
 
   public void setViewangle( final BigDecimal viewangle )
   {
-    this.viewangle = viewangle;
+    m_viewangle = viewangle;
   }
 
   @Column(name = "description", length = 255)
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    this.description = description;
+    m_description = description;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cross_section_id")
   public CrossSection getCrossSection( )
   {
-    return this.crossSection;
+    return m_crossSection;
   }
 
   public void setCrossSection( final CrossSection crossSection )
   {
-    this.crossSection = crossSection;
+    m_crossSection = crossSection;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "water_body_id")
   public WaterBody getWaterBody( )
   {
-    return this.waterBody;
+    return m_waterBody;
   }
 
   public void setWaterBody( final WaterBody waterBody )
   {
-    this.waterBody = waterBody;
+    m_waterBody = waterBody;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "state_id")
   public State getState( )
   {
-    return this.state;
+    return m_state;
   }
 
   public void setState( final State state )
   {
-    this.state = state;
+    m_state = state;
   }
-
 }

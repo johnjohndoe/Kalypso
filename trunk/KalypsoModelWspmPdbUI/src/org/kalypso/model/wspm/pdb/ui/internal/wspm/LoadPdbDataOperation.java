@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -51,8 +52,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.kalypso.afgui.wizards.NewProjectData;
@@ -61,6 +64,8 @@ import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
@@ -77,6 +82,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 {
+  private static final String STR_ACCESSING_WSPM_PROJECT_DATA = "Accessing WSPM Project Data";
+
   private final PdbWspmProject m_pdbProject;
 
   public LoadPdbDataOperation( final PdbWspmProject project )
@@ -91,6 +98,8 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
 
     monitor.subTask( "Open or create WSPM project..." );
     final IProject project = ensureProject( new SubProgressMonitor( monitor, 45 ) );
+    if( project == null )
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to open/create local data project. Aborting." );
 
     /* Access wspm data */
     monitor.subTask( "Loading WSPM data..." );
@@ -120,21 +129,21 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( "Accessing WSPM Project Data", 100 );
+      monitor.beginTask( STR_ACCESSING_WSPM_PROJECT_DATA, 100 );
 
       final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
       final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( PdbWspmProject.WSPM_PROJECT_NAME );
-      if( project.isOpen() )
+      try
       {
-        project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 100 ) );
-        return project;
+        if( checkProjectExists( project, monitor ) )
+          return project;
       }
-
-      if( project.exists() )
+      catch( final CoreException e )
       {
-        project.open( new SubProgressMonitor( monitor, 100 ) );
-        return project;
+        if( !askForDeletion( project, e.getStatus() ) )
+          return null;
+        // Fall through, project was deleted, we try to create it again.
       }
 
       final IProjectDescription description = workspace.newProjectDescription( project.getName() );
@@ -162,6 +171,61 @@ public class LoadPdbDataOperation implements ICoreRunnableWithProgress
     {
       monitor.done();
     }
+  }
+
+  private boolean askForDeletion( final IProject project, final IStatus status )
+  {
+    final String message = String.format( "Failed to open the local data project with following message:\n%s\n\nDelete local project data and try to recover (ALL LOCAL DATA WILL BE LOST)?", status.getMessage() );
+
+    final boolean confirm = SWT_AWT_Utilities.showSwtMessageBoxConfirm( STR_ACCESSING_WSPM_PROJECT_DATA, message );
+    if( !confirm )
+      return false;
+
+    try
+    {
+      project.delete( true, new NullProgressMonitor() );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+
+      final Shell shell = SWT_AWT_Utilities.findActiveShell();
+      final StatusDialog2 dialog = new StatusDialog2( shell, e.getStatus(), STR_ACCESSING_WSPM_PROJECT_DATA, "Failed to delete local project data. Aborting..." );
+      SWT_AWT_Utilities.openSwtWindow( dialog );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  private boolean checkProjectExists( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  {
+    if( project.isOpen() )
+    {
+      project.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 100 ) );
+      return checkProjectContent( project );
+    }
+
+    if( project.exists() )
+    {
+      project.open( new SubProgressMonitor( monitor, 100 ) );
+      return checkProjectContent( project );
+    }
+
+    // Project does not exist
+    return false;
+  }
+
+  private boolean checkProjectContent( final IProject project )
+  {
+    final IFile modelGML = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
+    if( !modelGML.exists() )
+      return false;
+
+    // TODO: check for other data
+
+    return true;
   }
 
   private TuhhWspmProject waitForworkspaceLoad( final PoolFeaturesProvider provider, final IProgressMonitor monitor )

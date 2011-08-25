@@ -102,6 +102,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   public ImportGafWizard( )
   {
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() );
+
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
     setWindowTitle( "Import GAF" );
@@ -197,6 +198,9 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
       m_data.store( settings );
+
+    if( result.matches( IStatus.ERROR ) )
+      return false;
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();

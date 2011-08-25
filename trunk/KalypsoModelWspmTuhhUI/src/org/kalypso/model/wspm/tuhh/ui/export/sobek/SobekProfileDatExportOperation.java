@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -59,20 +60,15 @@ import org.kalypso.observation.result.IRecord;
  */
 public class SobekProfileDatExportOperation extends AbstractSobekFileExportOperation
 {
-  public static final String PROFILE_DAT = "profile.dat"; //$NON-NLS-1$
-
   public SobekProfileDatExportOperation( final SobekExportInfo info )
   {
-    super( info, PROFILE_DAT );
+    super( info, ISobekConstants.PROFILE_DAT );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
-    return PROFILE_DAT;
+    return ISobekConstants.PROFILE_DAT;
   }
 
   @Override

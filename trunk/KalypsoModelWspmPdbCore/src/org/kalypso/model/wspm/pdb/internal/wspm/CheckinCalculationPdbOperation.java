@@ -38,38 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
+package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.wspm.pdb.db.mapping.Event;
+import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
+import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Gernot Belger
  */
-public class AttachmentPatternValidator extends TypedValidator<String>
+public class CheckinCalculationPdbOperation extends AbstractCheckinEventOperation
 {
-  private final String m_token;
+  private final WspmResultLengthSection m_lengthSection;
 
-  public AttachmentPatternValidator( )
+  public CheckinCalculationPdbOperation( final Event event, final WaterBody[] waterBodies, final TuhhCalculation calculation, final WspmResultLengthSection lengthSection, final IProgressMonitor monitor )
   {
-    super( String.class, IStatus.ERROR, StringUtils.EMPTY );
+    super( event, waterBodies, monitor, calculation.getReach().getWaterBody() );
 
-    m_token = String.format( "<%s>", AttachmentStationPattern.TOKEN );
+    m_lengthSection = lengthSection;
   }
 
   @Override
-  protected IStatus doValidate( final String pattern ) throws CoreException
+  protected IObservation<TupleResult> getObservation( )
   {
-    final int countMatches = StringUtils.countMatches( pattern, m_token );
-    if( countMatches != 1 )
-    {
-      final String containsMessage = String.format( "'Pattern' must contains the %s token exactly once.", m_token );
-      fail( containsMessage );
-    }
-
-    return ValidationStatus.ok();
+    return m_lengthSection.getObservation();
   }
 }

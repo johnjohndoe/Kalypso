@@ -30,32 +30,31 @@ import com.vividsolutions.jts.geom.LineString;
 @Table(name = "cross_section", schema = "pdb", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "state" }))
 public class CrossSection implements java.io.Serializable
 {
+  private BigDecimal m_id;
 
-  private BigDecimal id;
+  private WaterBody m_waterBody;
 
-  private WaterBody waterBody;
+  private State m_state;
 
-  private State state;
+  private String m_name;
 
-  private String name;
+  private Geometry m_line;
 
-  private Geometry line;
+  private BigDecimal m_station;
 
-  private BigDecimal station;
+  private Date m_creationDate;
 
-  private Date creationDate;
+  private Date m_editingDate;
 
-  private Date editingDate;
+  private String m_editingUser;
 
-  private String editingUser;
+  private Date m_measurementDate;
 
-  private Date measurementDate;
+  private String m_description;
 
-  private String description;
+  private Set<Document> m_documents = new HashSet<Document>( 0 );
 
-  private Set<Document> documents = new HashSet<Document>( 0 );
-
-  private Set<CrossSectionPart> crossSectionParts = new HashSet<CrossSectionPart>( 0 );
+  private Set<CrossSectionPart> m_crossSectionParts = new HashSet<CrossSectionPart>( 0 );
 
   public CrossSection( )
   {
@@ -63,31 +62,31 @@ public class CrossSection implements java.io.Serializable
 
   public CrossSection( final BigDecimal id, final WaterBody waterBody, final State state, final String name, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser )
   {
-    this.id = id;
-    this.waterBody = waterBody;
-    this.state = state;
-    this.name = name;
-    this.station = station;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
+    m_id = id;
+    m_waterBody = waterBody;
+    m_state = state;
+    m_name = name;
+    m_station = station;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
   }
 
   public CrossSection( final BigDecimal id, final WaterBody waterBody, final State state, final String name, final LineString line, final BigDecimal station, final Date creationDate, final Date editingDate, final String editingUser, final Date measurementDate, final String description, final Set<Document> documents, final Set<CrossSectionPart> crossSectionParts )
   {
-    this.id = id;
-    this.waterBody = waterBody;
-    this.state = state;
-    this.name = name;
-    this.line = line;
-    this.station = station;
-    this.creationDate = creationDate;
-    this.editingDate = editingDate;
-    this.editingUser = editingUser;
-    this.measurementDate = measurementDate;
-    this.description = description;
-    this.documents = documents;
-    this.crossSectionParts = crossSectionParts;
+    m_id = id;
+    m_waterBody = waterBody;
+    m_state = state;
+    m_name = name;
+    m_line = line;
+    m_station = station;
+    m_creationDate = creationDate;
+    m_editingDate = editingDate;
+    m_editingUser = editingUser;
+    m_measurementDate = measurementDate;
+    m_description = description;
+    m_documents = documents;
+    m_crossSectionParts = crossSectionParts;
   }
 
   @Id
@@ -96,149 +95,149 @@ public class CrossSection implements java.io.Serializable
   @SequenceGenerator(name = "crosssection_id_seq", sequenceName = "pdb.seq_pdb")
   public BigDecimal getId( )
   {
-    return this.id;
+    return m_id;
   }
 
   public void setId( final BigDecimal id )
   {
-    this.id = id;
+    m_id = id;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "water_body", nullable = false)
   public WaterBody getWaterBody( )
   {
-    return this.waterBody;
+    return m_waterBody;
   }
 
   public void setWaterBody( final WaterBody waterBody )
   {
-    this.waterBody = waterBody;
+    m_waterBody = waterBody;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "state", nullable = false)
   public State getState( )
   {
-    return this.state;
+    return m_state;
   }
 
   public void setState( final State state )
   {
-    this.state = state;
+    m_state = state;
   }
 
   @Column(name = "name", nullable = false, length = 50)
   public String getName( )
   {
-    return this.name;
+    return m_name;
   }
 
   public void setName( final String name )
   {
-    this.name = name;
+    m_name = name;
   }
 
   @Column(name = "line", columnDefinition = "Geometry")
   public Geometry getLine( )
   {
-    return this.line;
+    return m_line;
   }
 
   public void setLine( final Geometry line )
   {
-    this.line = line;
+    m_line = line;
   }
 
   @Column(name = "station", nullable = false, precision = 8, scale = 1)
   public BigDecimal getStation( )
   {
-    return this.station;
+    return m_station;
   }
 
   public void setStation( final BigDecimal station )
   {
-    this.station = station;
+    m_station = station;
   }
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "creation_date", nullable = false, length = 22)
   public Date getCreationDate( )
   {
-    return this.creationDate;
+    return m_creationDate;
   }
 
   public void setCreationDate( final Date creationDate )
   {
-    this.creationDate = creationDate;
+    m_creationDate = creationDate;
   }
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "editing_date", nullable = false, length = 22)
   public Date getEditingDate( )
   {
-    return this.editingDate;
+    return m_editingDate;
   }
 
   public void setEditingDate( final Date editingDate )
   {
-    this.editingDate = editingDate;
+    m_editingDate = editingDate;
   }
 
   @Column(name = "editing_user", nullable = false, length = 50)
   public String getEditingUser( )
   {
-    return this.editingUser;
+    return m_editingUser;
   }
 
   public void setEditingUser( final String editingUser )
   {
-    this.editingUser = editingUser;
+    m_editingUser = editingUser;
   }
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "measurement_date", length = 22)
   public Date getMeasurementDate( )
   {
-    return this.measurementDate;
+    return m_measurementDate;
   }
 
   public void setMeasurementDate( final Date measurementDate )
   {
-    this.measurementDate = measurementDate;
+    m_measurementDate = measurementDate;
   }
 
   @Column(name = "description")
   public String getDescription( )
   {
-    return this.description;
+    return m_description;
   }
 
   public void setDescription( final String description )
   {
-    this.description = description;
+    m_description = description;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSection")
   public Set<Document> getDocuments( )
   {
-    return this.documents;
+    return m_documents;
   }
 
   public void setDocuments( final Set<Document> documents )
   {
-    this.documents = documents;
+    m_documents = documents;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "crossSection")
   public Set<CrossSectionPart> getCrossSectionParts( )
   {
-    return this.crossSectionParts;
+    return m_crossSectionParts;
   }
 
   public void setCrossSectionParts( final Set<CrossSectionPart> crossSectionParts )
   {
-    this.crossSectionParts = crossSectionParts;
+    m_crossSectionParts = crossSectionParts;
   }
 
   // Helper accessors
