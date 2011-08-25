@@ -166,13 +166,24 @@ public final class RoughnessFlowzones
 
   private static int[] getLeftFloodplainZone( final IProfil profile )
   {
-
     final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( trennflaechen.length < 2 )
       return null;
 
     final int p1 = 0;
-    final int p2 = profile.indexOfPoint( trennflaechen[0].getPoint() );
+    final int p2 = profile.indexOfPoint( trennflaechen[0].getPoint() ) - 1;
+
+    return new int[] { p1, p2 };
+  }
+
+  private static int[] getRiverTube( final IProfil profile )
+  {
+    final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    if( trennflaechen.length < 2 )
+      return null;
+
+    final int p1 = profile.indexOfPoint( trennflaechen[0].getPoint() ) + 1;
+    final int p2 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() ) - 1;
 
     return new int[] { p1, p2 };
   }
@@ -185,18 +196,6 @@ public final class RoughnessFlowzones
 
     final int p1 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
     final int p2 = profile.getPoints().length - 1;
-
-    return new int[] { p1, p2 };
-  }
-
-  private static int[] getRiverTube( final IProfil profile )
-  {
-    final IProfilPointMarker[] trennflaechen = profile.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( trennflaechen.length < 2 )
-      return null;
-
-    final int p1 = profile.indexOfPoint( trennflaechen[0].getPoint() );
-    final int p2 = profile.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
 
     return new int[] { p1, p2 };
   }
