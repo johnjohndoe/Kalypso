@@ -61,7 +61,7 @@ public class UniqueWaterBodyNameValidator extends TypedValidator<String>
 
   public UniqueWaterBodyNameValidator( final WaterBody[] existingWaterbodies, final String ignoreName )
   {
-    super( String.class, IStatus.ERROR, Messages.getString("UniqueWaterBodyNameValidator.0") ); //$NON-NLS-1$
+    super( String.class, IStatus.ERROR, Messages.getString( "UniqueWaterBodyNameValidator.0" ) ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
 

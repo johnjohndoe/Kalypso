@@ -52,7 +52,7 @@ class EditSettingsAction extends SettingsAction
 {
   public EditSettingsAction( final WspmPdbPreferencePage page )
   {
-    super( Messages.getString("EditSettingsAction.0"), page ); //$NON-NLS-1$
+    super( Messages.getString( "EditSettingsAction.0" ), page ); //$NON-NLS-1$
   }
 
   @Override

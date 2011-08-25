@@ -56,11 +56,11 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class PdbLabelProvider extends ColumnLabelProvider
 {
-  public static final String PENDING = Messages.getString("PdbLabelProvider.0"); //$NON-NLS-1$
+  public static final String PENDING = Messages.getString( "PdbLabelProvider.0" ); //$NON-NLS-1$
 
-  public static final String EMPTY_STATES = Messages.getString("PdbLabelProvider.1"); //$NON-NLS-1$
+  public static final String EMPTY_STATES = Messages.getString( "PdbLabelProvider.1" ); //$NON-NLS-1$
 
-  public static final Object EMPTY_WATER_BODY = Messages.getString("PdbLabelProvider.2"); //$NON-NLS-1$
+  public static final Object EMPTY_WATER_BODY = Messages.getString( "PdbLabelProvider.2" ); //$NON-NLS-1$
 
   @Override
   public String getText( final Object element )

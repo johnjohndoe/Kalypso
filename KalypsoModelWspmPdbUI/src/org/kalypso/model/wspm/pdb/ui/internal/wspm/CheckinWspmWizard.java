@@ -207,7 +207,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
       if( role == PDBRole.user )
       {
         event.doit = false;
-        ((WizardPage) event.getCurrentPage()).setMessage( Messages.getString("CheckinWspmWizard.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
+        ((WizardPage) event.getCurrentPage()).setMessage( Messages.getString( "CheckinWspmWizard.0" ), IMessageProvider.WARNING ); //$NON-NLS-1$
         return;
       }
 
@@ -243,7 +243,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("CheckinWspmWizard.1") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "CheckinWspmWizard.1" ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

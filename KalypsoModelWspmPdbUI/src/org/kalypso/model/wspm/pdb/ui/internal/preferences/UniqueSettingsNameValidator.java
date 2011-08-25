@@ -67,7 +67,7 @@ public class UniqueSettingsNameValidator extends TypedValidator<String>
    */
   public UniqueSettingsNameValidator( final String ignoreName )
   {
-    super( String.class, IStatus.ERROR, Messages.getString("UniqueSettingsNameValidator.0") ); //$NON-NLS-1$
+    super( String.class, IStatus.ERROR, Messages.getString( "UniqueSettingsNameValidator.0" ) ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
 

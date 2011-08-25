@@ -63,7 +63,7 @@ public class PdbConnectJob extends Job
 
   public PdbConnectJob( final String settingsName )
   {
-    super( Messages.getString("PdbConnectJob.0") ); //$NON-NLS-1$
+    super( Messages.getString( "PdbConnectJob.0" ) ); //$NON-NLS-1$
 
     m_settingsName = settingsName;
   }
@@ -82,7 +82,7 @@ public class PdbConnectJob extends Job
     }
     catch( final PdbConnectException e )
     {
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("PdbConnectJob.1"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "PdbConnectJob.1" ), e ); //$NON-NLS-1$
     }
     catch( final InterruptedException e )
     {

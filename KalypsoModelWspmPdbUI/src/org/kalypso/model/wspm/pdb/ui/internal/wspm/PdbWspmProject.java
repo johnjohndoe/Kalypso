@@ -100,7 +100,7 @@ public class PdbWspmProject implements IPdbWspmProject
 
   static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
 
-  static final String STR_SAVE_LOCAL_DATA_TITLE = Messages.getString("PdbWspmProject.0"); //$NON-NLS-1$
+  static final String STR_SAVE_LOCAL_DATA_TITLE = Messages.getString( "PdbWspmProject.0" ); //$NON-NLS-1$
 
   private final IFeaturesProviderListener m_modelListener = new IFeaturesProviderListener()
   {
@@ -234,7 +234,7 @@ public class PdbWspmProject implements IPdbWspmProject
     final FindReachThemesVisitor findReachesVisitor = new FindReachThemesVisitor();
     mapModell.accept( findReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("PdbWspmProject.1") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "PdbWspmProject.1" ) ); //$NON-NLS-1$
 
     final TuhhWspmProject project = getWspmProject();
     final IFeatureBindingCollection<WspmWaterBody> waterBodies = project.getWaterBodies();
@@ -331,7 +331,7 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    final String message = Messages.getString("PdbWspmProject.2"); //$NON-NLS-1$
+    final String message = Messages.getString( "PdbWspmProject.2" ); //$NON-NLS-1$
     final String[] buttonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
     final MessageDialog dialog = new MessageDialog( shell, STR_SAVE_LOCAL_DATA_TITLE, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
     final int result = dialog.open();
@@ -348,7 +348,7 @@ public class PdbWspmProject implements IPdbWspmProject
         }
       };
 
-      return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, Messages.getString("PdbWspmProject.3") ); //$NON-NLS-1$
+      return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, Messages.getString( "PdbWspmProject.3" ) ); //$NON-NLS-1$
     }
     else if( result == 1 )
       return true;
@@ -374,7 +374,7 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    final String message = Messages.getString("PdbWspmProject.4"); //$NON-NLS-1$
+    final String message = Messages.getString( "PdbWspmProject.4" ); //$NON-NLS-1$
     final boolean result = MessageDialog.openConfirm( shell, STR_SAVE_LOCAL_DATA_TITLE, message );
     if( !result )
       return false;
@@ -389,7 +389,7 @@ public class PdbWspmProject implements IPdbWspmProject
       }
     };
 
-    return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, Messages.getString("PdbWspmProject.5") ); //$NON-NLS-1$
+    return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, Messages.getString( "PdbWspmProject.5" ) ); //$NON-NLS-1$
   }
 
   private boolean busyCursorWhile( final ICoreRunnableWithProgress operation, final String title, final String errorMessage )

@@ -225,7 +225,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString("HibernateConnection.0"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "HibernateConnection.0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -251,7 +251,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString("HibernateConnection.1"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "HibernateConnection.1" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -263,7 +263,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   public Session openSession( ) throws PdbConnectException
   {
     if( !isConnected() )
-      throw new PdbConnectException( Messages.getString("HibernateConnection.2") ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "HibernateConnection.2" ) ); //$NON-NLS-1$
 
     try
     {
@@ -272,7 +272,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString("HibernateConnection.3"), e ); //$NON-NLS-1$
+      throw new PdbConnectException( Messages.getString( "HibernateConnection.3" ), e ); //$NON-NLS-1$
     }
   }
 

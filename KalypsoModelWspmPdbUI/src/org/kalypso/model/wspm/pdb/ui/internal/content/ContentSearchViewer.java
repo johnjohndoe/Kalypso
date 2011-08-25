@@ -67,7 +67,7 @@ public class ContentSearchViewer extends Composite
     final Group waterGroup = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, waterGroup );
     waterGroup.setLayout( new FillLayout() );
-    waterGroup.setText( Messages.getString("ContentSearchViewer.0") ); //$NON-NLS-1$
+    waterGroup.setText( Messages.getString( "ContentSearchViewer.0" ) ); //$NON-NLS-1$
     waterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final WaterBodyFilterControl waterFilterControl = new WaterBodyFilterControl( toolkit, waterGroup, connectionViewer );
@@ -76,7 +76,7 @@ public class ContentSearchViewer extends Composite
     final Group stateGroup = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, stateGroup );
     stateGroup.setLayout( new FillLayout() );
-    stateGroup.setText( Messages.getString("ContentSearchViewer.1") ); //$NON-NLS-1$
+    stateGroup.setText( Messages.getString( "ContentSearchViewer.1" ) ); //$NON-NLS-1$
     stateGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, stateGroup );

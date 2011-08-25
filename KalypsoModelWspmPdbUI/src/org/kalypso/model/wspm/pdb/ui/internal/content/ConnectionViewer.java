@@ -96,8 +96,8 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
   private Control createPdbView( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent )
   {
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR );
-    section.setText( Messages.getString("ConnectionViewer.0") ); //$NON-NLS-1$
-    section.setDescription( Messages.getString("ConnectionViewer.1") ); //$NON-NLS-1$
+    section.setText( Messages.getString( "ConnectionViewer.0" ) ); //$NON-NLS-1$
+    section.setDescription( Messages.getString( "ConnectionViewer.1" ) ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     m_contentViewer = new ConnectionContentControl( serviceLocator, toolkit, section, m_connection );
@@ -110,8 +110,8 @@ public class ConnectionViewer extends Composite implements IConnectionViewer
   private Control createSearchControls( final FormToolkit toolkit, final Composite parent, final StructuredViewer viewer )
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    section.setText( Messages.getString("ConnectionViewer.2") ); //$NON-NLS-1$
-    section.setDescription( Messages.getString("ConnectionViewer.3") ); //$NON-NLS-1$
+    section.setText( Messages.getString( "ConnectionViewer.2" ) ); //$NON-NLS-1$
+    section.setDescription( Messages.getString( "ConnectionViewer.3" ) ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     final ContentSearchViewer searchPanel = new ContentSearchViewer( toolkit, section, viewer, this );

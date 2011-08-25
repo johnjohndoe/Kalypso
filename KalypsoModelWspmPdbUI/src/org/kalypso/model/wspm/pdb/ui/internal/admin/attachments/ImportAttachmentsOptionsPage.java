@@ -80,8 +80,8 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     m_data = data;
 
-    setTitle( Messages.getString("ImportAttachmentsOptionsPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("ImportAttachmentsOptionsPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "ImportAttachmentsOptionsPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportAttachmentsOptionsPage.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -115,7 +115,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
   {
     final Group group = new Group( panel, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setText( Messages.getString("ImportAttachmentsOptionsPage.2") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ImportAttachmentsOptionsPage.2" ) ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( group );
 
     /* Import directory */
@@ -125,7 +125,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
   private void createImportDirectoryControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("ImportAttachmentsOptionsPage.3") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.3" ) ); //$NON-NLS-1$
 
     final IObservableValue modelDir = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_DIR );
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_DIR_HISTORY );
@@ -134,21 +134,21 @@ public class ImportAttachmentsOptionsPage extends WizardPage
 
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( parent, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    historyControl.setToolTipText( Messages.getString("ImportAttachmentsOptionsPage.4") ); //$NON-NLS-1$
+    historyControl.setToolTipText( Messages.getString( "ImportAttachmentsOptionsPage.4" ) ); //$NON-NLS-1$
 
     final String windowTitle = getWizard().getWindowTitle();
-    final Button searchButton = directoryBinding.createDirectorySearchButton( parent, historyControl, windowTitle, Messages.getString("ImportAttachmentsOptionsPage.5") ); //$NON-NLS-1$
+    final Button searchButton = directoryBinding.createDirectorySearchButton( parent, historyControl, windowTitle, Messages.getString( "ImportAttachmentsOptionsPage.5" ) ); //$NON-NLS-1$
     setButtonLayoutData( searchButton );
   }
 
   private void createImportPatternControls( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("ImportAttachmentsOptionsPage.6") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.6" ) ); //$NON-NLS-1$
 
     final Text patternField = new Text( parent, SWT.SINGLE | SWT.BORDER );
     patternField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    patternField.setMessage( Messages.getString("ImportAttachmentsOptionsPage.7") ); //$NON-NLS-1$
-    patternField.setToolTipText( Messages.getString("ImportAttachmentsOptionsPage.8") ); //$NON-NLS-1$
+    patternField.setMessage( Messages.getString( "ImportAttachmentsOptionsPage.7" ) ); //$NON-NLS-1$
+    patternField.setToolTipText( Messages.getString( "ImportAttachmentsOptionsPage.8" ) ); //$NON-NLS-1$
 
     final GuessStationPatternReplacer replacer = new GuessStationPatternReplacer();
     replacer.createPatternButton( parent, patternField );
@@ -158,7 +158,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     final IObservableValue modelField = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_PATTERN );
 
     final DataBinder binder = new DataBinder( targetField, modelField );
-    binder.addTargetAfterConvertValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("ImportAttachmentsOptionsPage.9") ) ); //$NON-NLS-1$
+    binder.addTargetAfterConvertValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString( "ImportAttachmentsOptionsPage.9" ) ) ); //$NON-NLS-1$
     binder.addTargetAfterConvertValidator( new GuessStationPatternValidator() );
 
     m_binding.bindValue( binder );
@@ -168,20 +168,20 @@ public class ImportAttachmentsOptionsPage extends WizardPage
   {
     final Group group = new Group( parent, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setText( Messages.getString("ImportAttachmentsOptionsPage.10") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ImportAttachmentsOptionsPage.10" ) ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( group );
 
     final Label infoLabel = new Label( group, SWT.NONE );
-    infoLabel.setText( Messages.getString("ImportAttachmentsOptionsPage.11") ); //$NON-NLS-1$
+    infoLabel.setText( Messages.getString( "ImportAttachmentsOptionsPage.11" ) ); //$NON-NLS-1$
     infoLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
 
-    new Label( group, SWT.NONE ).setText( Messages.getString("ImportAttachmentsOptionsPage.12") ); //$NON-NLS-1$
+    new Label( group, SWT.NONE ).setText( Messages.getString( "ImportAttachmentsOptionsPage.12" ) ); //$NON-NLS-1$
 
     final IObservableValue modelFile = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_FILE );
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_ZIP_HISTORY );
 
     final FileChooserDelegateSave delegate = new FileChooserDelegateSave();
-    delegate.addFilter( Messages.getString("ImportAttachmentsOptionsPage.13"), "*.zip" );  //$NON-NLS-1$//$NON-NLS-2$
+    delegate.addFilter( Messages.getString( "ImportAttachmentsOptionsPage.13" ), "*.zip" ); //$NON-NLS-1$//$NON-NLS-2$
 
     final FileBinding fileBinding = new FileBinding( m_binding, modelFile, delegate );
     final Control historyControl = fileBinding.createFileFieldWithHistory( group, modelHistory );

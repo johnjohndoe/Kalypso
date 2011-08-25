@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
@@ -81,7 +81,7 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    final String taskName = String.format( Messages.getString("OpenConnectionThreadedOperation.0"), m_settings.getName() ); //$NON-NLS-1$
+    final String taskName = Messages.getString( "OpenConnectionThreadedOperation.0", m_settings.getName() ); //$NON-NLS-1$
     monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
     final OpenConnectionJob job = new OpenConnectionJob( m_settings, m_closeConnection );

@@ -90,8 +90,8 @@ public class GafOptionsPage extends WizardPage
 
     m_data = data;
 
-    setTitle( Messages.getString("GafOptionsPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("GafOptionsPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "GafOptionsPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "GafOptionsPage.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -115,7 +115,7 @@ public class GafOptionsPage extends WizardPage
   private void createReadStatusControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("GafOptionsPage.2") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "GafOptionsPage.2" ) ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_readStatusComposite = new StatusComposite( group, StatusComposite.DETAILS );
@@ -143,11 +143,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownCodes();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString("GafOptionsPage.3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "GafOptionsPage.3" ) ); //$NON-NLS-1$
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString("GafOptionsPage.4") ); //$NON-NLS-1$
+      createOkCodeControl( group, Messages.getString( "GafOptionsPage.4" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -168,11 +168,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownHyks();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString("GafOptionsPage.6") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "GafOptionsPage.6" ) ); //$NON-NLS-1$
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString("GafOptionsPage.7") ); //$NON-NLS-1$
+      createOkCodeControl( group, Messages.getString( "GafOptionsPage.7" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -193,11 +193,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownRoughnes();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString("GafOptionsPage.9") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "GafOptionsPage.9" ) ); //$NON-NLS-1$
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString("GafOptionsPage.10") ); //$NON-NLS-1$
+      createOkCodeControl( group, Messages.getString( "GafOptionsPage.10" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -218,11 +218,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownVegetation();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString("GafOptionsPage.12") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "GafOptionsPage.12" ) ); //$NON-NLS-1$
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString("GafOptionsPage.13") ); //$NON-NLS-1$
+      createOkCodeControl( group, Messages.getString( "GafOptionsPage.13" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -258,7 +258,7 @@ public class GafOptionsPage extends WizardPage
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
 
     final DataBinder dataBinder = new DataBinder( target, model );
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<Object>( Object.class, IStatus.ERROR, Messages.getString("GafOptionsPage.15") ) ); //$NON-NLS-1$
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<Object>( Object.class, IStatus.ERROR, Messages.getString( "GafOptionsPage.15" ) ) ); //$NON-NLS-1$
 
     m_binding.bindValue( dataBinder );
   }

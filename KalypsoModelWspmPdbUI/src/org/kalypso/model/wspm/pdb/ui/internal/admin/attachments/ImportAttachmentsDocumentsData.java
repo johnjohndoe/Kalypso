@@ -80,8 +80,8 @@ public class ImportAttachmentsDocumentsData
 {
   enum ImportMode
   {
-    overwrite(Messages.getString("ImportAttachmentsDocumentsData.0")), //$NON-NLS-1$
-    skip(Messages.getString("ImportAttachmentsDocumentsData.1")); //$NON-NLS-1$
+    overwrite(Messages.getString( "ImportAttachmentsDocumentsData.0" )), //$NON-NLS-1$
+    skip(Messages.getString( "ImportAttachmentsDocumentsData.1" )); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -221,29 +221,29 @@ public class ImportAttachmentsDocumentsData
 
     if( station == null )
     {
-      stati.add( IStatus.ERROR, Messages.getString("ImportAttachmentsDocumentsData.3") ); //$NON-NLS-1$
+      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.3" ) ); //$NON-NLS-1$
       m_importableHash.put( document, Boolean.FALSE );
     }
     else if( document.getCrossSection() == null )
     {
-      stati.add( IStatus.ERROR, Messages.getString("ImportAttachmentsDocumentsData.4") ); //$NON-NLS-1$
+      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.4" ) ); //$NON-NLS-1$
       m_importableHash.put( document, Boolean.FALSE );
     }
 
     final MimeType mimetype = MimeTypeUtils.createQuit( document.getMimetype() );
     if( mimetype == null )
-      stati.add( IStatus.WARNING, Messages.getString("ImportAttachmentsDocumentsData.5") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "ImportAttachmentsDocumentsData.5" ) ); //$NON-NLS-1$
 
     /* Already in database ? */
     final String name = document.getName();
     if( m_existingDocumentsByName.containsKey( name ) )
-      stati.add( IStatus.WARNING, Messages.getString("ImportAttachmentsDocumentsData.6") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "ImportAttachmentsDocumentsData.6" ) ); //$NON-NLS-1$
 
     final IStatus status;
     if( stati.size() == 1 )
       status = stati.getAllStati()[0];
     else
-      status = stati.asMultiStatusOrOK( Messages.getString("ImportAttachmentsDocumentsData.7") ); //$NON-NLS-1$
+      status = stati.asMultiStatusOrOK( Messages.getString( "ImportAttachmentsDocumentsData.7" ) ); //$NON-NLS-1$
     m_statusHash.put( document, status );
   }
 

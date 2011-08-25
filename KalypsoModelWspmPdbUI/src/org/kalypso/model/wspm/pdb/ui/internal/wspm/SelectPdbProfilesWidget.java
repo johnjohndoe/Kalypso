@@ -69,7 +69,7 @@ public class SelectPdbProfilesWidget extends SelectFeatureWidget
 
   public SelectPdbProfilesWidget( )
   {
-    super( Messages.getString("SelectPdbProfilesWidget.0"), Messages.getString("SelectPdbProfilesWidget.1"), QNAMES_TO_SELECT, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "SelectPdbProfilesWidget.0" ), Messages.getString( "SelectPdbProfilesWidget.1" ), QNAMES_TO_SELECT, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

@@ -243,7 +243,7 @@ public class ImportGafData extends AbstractModelObject
 
       final Calendar now = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       final Object thisYear = now.get( Calendar.YEAR );
-      m_state.setName( String.format( Messages.getString("ImportGafData.0"), FilenameUtils.removeExtension( filename ), thisYear ) ); //$NON-NLS-1$
+      m_state.setName( String.format( Messages.getString( "ImportGafData.0" ), FilenameUtils.removeExtension( filename ), thisYear ) ); //$NON-NLS-1$
 
       m_waterlevelEvent.setSource( m_state.getSource() );
       // REMARK: No need to set event name here, it will be updated before event-page is displayed

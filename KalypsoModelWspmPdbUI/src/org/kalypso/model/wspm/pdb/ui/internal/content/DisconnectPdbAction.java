@@ -56,11 +56,11 @@ public class DisconnectPdbAction extends Action
 
   public DisconnectPdbAction( final PdbView view )
   {
-    super( Messages.getString("DisconnectPdbAction.0") ); //$NON-NLS-1$
+    super( Messages.getString( "DisconnectPdbAction.0" ) ); //$NON-NLS-1$
 
     m_view = view;
 
-    setToolTipText( Messages.getString("DisconnectPdbAction.1") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "DisconnectPdbAction.1" ) ); //$NON-NLS-1$
 
     final ImageDescriptor image = WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.DISCONNECT_FROM_PDB );
     setImageDescriptor( image );

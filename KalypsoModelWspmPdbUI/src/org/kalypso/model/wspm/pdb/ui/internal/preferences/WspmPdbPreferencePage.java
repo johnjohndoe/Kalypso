@@ -84,7 +84,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
 
   public WspmPdbPreferencePage( )
   {
-    super( Messages.getString("WspmPdbPreferencePage.0") ); //$NON-NLS-1$
+    super( Messages.getString( "WspmPdbPreferencePage.0" ) ); //$NON-NLS-1$
 
     noDefaultAndApplyButton();
   }
@@ -107,8 +107,8 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString("WspmPdbPreferencePage.1"), e ); //$NON-NLS-1$
-      return new StatusDialog2( getShell(), status, Messages.getString("WspmPdbPreferencePage.2") ).open() == Window.OK; //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "WspmPdbPreferencePage.1" ), e ); //$NON-NLS-1$
+      return new StatusDialog2( getShell(), status, Messages.getString( "WspmPdbPreferencePage.2" ) ).open() == Window.OK; //$NON-NLS-1$
     }
   }
 
@@ -117,7 +117,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   {
     final Group panel = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
-    panel.setText( Messages.getString("WspmPdbPreferencePage.3") ); //$NON-NLS-1$
+    panel.setText( Messages.getString( "WspmPdbPreferencePage.3" ) ); //$NON-NLS-1$
 
     m_actions = createActions();
 
@@ -141,7 +141,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
   {
     final Label label = new Label( panel, SWT.WRAP );
 
-    label.setText( Messages.getString("WspmPdbPreferencePage.4") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "WspmPdbPreferencePage.4" ) ); //$NON-NLS-1$
 
     return label;
   }

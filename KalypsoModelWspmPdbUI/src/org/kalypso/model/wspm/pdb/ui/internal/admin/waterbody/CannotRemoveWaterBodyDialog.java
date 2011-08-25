@@ -65,11 +65,11 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public class CannotRemoveWaterBodyDialog extends MessageDialog
 {
-  private static String DIALOG_MESSAGE = Messages.getString("CannotRemoveWaterBodyDialog.0"); //$NON-NLS-1$
+  private static String DIALOG_MESSAGE = Messages.getString( "CannotRemoveWaterBodyDialog.0" ); //$NON-NLS-1$
 
   private final WaterBody m_waterBody;
 
-  public CannotRemoveWaterBodyDialog(final Shell shell, final String dialogTitle, final WaterBody waterBody )
+  public CannotRemoveWaterBodyDialog( final Shell shell, final String dialogTitle, final WaterBody waterBody )
   {
     super( shell, dialogTitle, null, DIALOG_MESSAGE, INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0 );
 

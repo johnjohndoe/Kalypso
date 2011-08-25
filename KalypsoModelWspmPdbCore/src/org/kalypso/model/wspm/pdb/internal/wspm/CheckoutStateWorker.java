@@ -75,7 +75,7 @@ public class CheckoutStateWorker
   {
     final State[] states = m_mapping.getStates();
 
-    monitor.beginTask( Messages.getString("CheckoutStateWorker.0"), states.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckoutStateWorker.0" ), states.length ); //$NON-NLS-1$
 
     try
     {

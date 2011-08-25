@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
  */
 public interface WaterBodyStrings
 {
-  String STR_NAME = Messages.getString("WaterBodyStrings.0"); //$NON-NLS-1$
+  String STR_NAME = Messages.getString( "WaterBodyStrings.0" ); //$NON-NLS-1$
 
-  String STR_GEWÄSSERKENNZIFFER = Messages.getString("WaterBodyStrings.1"); //$NON-NLS-1$
+  String STR_GEWÄSSERKENNZIFFER = Messages.getString( "WaterBodyStrings.1" ); //$NON-NLS-1$
 }

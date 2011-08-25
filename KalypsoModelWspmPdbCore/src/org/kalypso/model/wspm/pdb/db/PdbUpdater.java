@@ -91,13 +91,13 @@ public class PdbUpdater
     kalypsoOutdated
   }
 
-  private final static String WINDOW_TITLE = Messages.getString("PdbUpdater_0"); //$NON-NLS-1$
+  private final static String WINDOW_TITLE = Messages.getString( "PdbUpdater_0" ); //$NON-NLS-1$
 
-  private static final String STR_CONNECTION_IMPOSSIBLE = Messages.getString("PdbUpdater_1"); //$NON-NLS-1$
+  private static final String STR_CONNECTION_IMPOSSIBLE = Messages.getString( "PdbUpdater_1" ); //$NON-NLS-1$
 
-  private static final String STR_CREATE = STR_CONNECTION_IMPOSSIBLE + Messages.getString("PdbUpdater_2"); //$NON-NLS-1$
+  private static final String STR_CREATE = STR_CONNECTION_IMPOSSIBLE + Messages.getString( "PdbUpdater_2" ); //$NON-NLS-1$
 
-  private static final String STR_UPDATE = STR_CONNECTION_IMPOSSIBLE + Messages.getString("PdbUpdater_3"); //$NON-NLS-1$
+  private static final String STR_UPDATE = STR_CONNECTION_IMPOSSIBLE + Messages.getString( "PdbUpdater_3" ); //$NON-NLS-1$
 
   private final IPdbConnection m_connection;
 
@@ -129,7 +129,7 @@ public class PdbUpdater
           return handleShouldCreate();
 
       case kalypsoOutdated:
-        final String msg = String.format( STR_CONNECTION_IMPOSSIBLE + Messages.getString("PdbUpdater_4"), version ); //$NON-NLS-1$
+        final String msg = String.format( STR_CONNECTION_IMPOSSIBLE + Messages.getString( "PdbUpdater_4" ), version ); //$NON-NLS-1$
         return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, msg );
 
       case dbOutdated:
@@ -169,8 +169,8 @@ public class PdbUpdater
   private IStatus handleCreate( )
   {
     /* ask user what to do */
-    final String msg = String.format( Messages.getString("PdbUpdater_5"), STR_CREATE ); //$NON-NLS-1$
-    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { Messages.getString("PdbUpdater_6"), IDialogConstants.CANCEL_LABEL }, 1 ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "PdbUpdater_5" ), STR_CREATE ); //$NON-NLS-1$
+    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { Messages.getString( "PdbUpdater_6" ), IDialogConstants.CANCEL_LABEL }, 1 ); //$NON-NLS-1$
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -180,12 +180,12 @@ public class PdbUpdater
     if( createScript == null )
       throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
     final UpdateScript[] scripts = new UpdateScript[] { createScript };
-    return executeScripts( scripts, Messages.getString("PdbUpdater_7") ); //$NON-NLS-1$
+    return executeScripts( scripts, Messages.getString( "PdbUpdater_7" ) ); //$NON-NLS-1$
   }
 
   private IStatus handleShouldCreate( )
   {
-    final String msg = String.format( Messages.getString("PdbUpdater_8"), STR_CREATE, IPdbConnection.SUPERUSER ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "PdbUpdater_8" ), STR_CREATE, IPdbConnection.SUPERUSER ); //$NON-NLS-1$
     MessageDialog.openWarning( m_shell, WINDOW_TITLE, msg );
     return Status.CANCEL_STATUS;
   }
@@ -196,8 +196,8 @@ public class PdbUpdater
 
     /* ask user what to do */
     final String baseMsg = String.format( STR_UPDATE, version, PdbInfo.CURRENT_VERSION );
-    final String msg = baseMsg + Messages.getString("PdbUpdater_9"); //$NON-NLS-1$
-    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { Messages.getString("PdbUpdater_10"), IDialogConstants.CANCEL_LABEL }, 1 ); //$NON-NLS-1$
+    final String msg = baseMsg + Messages.getString( "PdbUpdater_9" ); //$NON-NLS-1$
+    final MessageDialog dialog = new MessageDialog( m_shell, WINDOW_TITLE, null, msg, MessageDialog.CONFIRM, new String[] { Messages.getString( "PdbUpdater_10" ), IDialogConstants.CANCEL_LABEL }, 1 ); //$NON-NLS-1$
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -206,13 +206,13 @@ public class PdbUpdater
     final UpdateScript[] scripts = UpdateScriptExtenions.getUpdateScripts( version, dbType );
     if( scripts == null )
       throw new IllegalStateException( "Missing create script" ); //$NON-NLS-1$
-    return executeScripts( scripts, Messages.getString("PdbUpdater_11") ); //$NON-NLS-1$
+    return executeScripts( scripts, Messages.getString( "PdbUpdater_11" ) ); //$NON-NLS-1$
   }
 
   private IStatus handleShouldUpdate( final Version version )
   {
     final String baseMsg = String.format( STR_UPDATE, version, PdbInfo.CURRENT_VERSION );
-    final String msg = String.format( Messages.getString("PdbUpdater_12"), baseMsg, IPdbConnection.SUPERUSER ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "PdbUpdater_12" ), baseMsg, IPdbConnection.SUPERUSER ); //$NON-NLS-1$
     MessageDialog.openWarning( m_shell, WINDOW_TITLE, msg );
     return Status.CANCEL_STATUS;
   }
@@ -265,7 +265,7 @@ public class PdbUpdater
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new IllegalStateException( Messages.getString("PdbUpdater_13"), e ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "PdbUpdater_13" ), e ); //$NON-NLS-1$
     }
   }
 

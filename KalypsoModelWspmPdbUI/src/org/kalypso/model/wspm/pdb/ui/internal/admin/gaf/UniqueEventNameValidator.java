@@ -61,7 +61,7 @@ public class UniqueEventNameValidator extends TypedValidator<String>
 
   public UniqueEventNameValidator( final String ignoreName )
   {
-    super( String.class, IStatus.ERROR, Messages.getString("UniqueEventNameValidator.0") ); //$NON-NLS-1$
+    super( String.class, IStatus.ERROR, Messages.getString( "UniqueEventNameValidator.0" ) ); //$NON-NLS-1$
 
     m_ignoreName = ignoreName;
   }

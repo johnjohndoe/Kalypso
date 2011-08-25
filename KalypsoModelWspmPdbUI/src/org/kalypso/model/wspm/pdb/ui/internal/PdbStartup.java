@@ -142,7 +142,7 @@ public class PdbStartup implements IStartup
     final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, null );
 
     if( !status.isOK() )
-      new StatusDialog2( window.getShell(), status, Messages.getString("PdbStartup.0") ).open(); //$NON-NLS-1$
+      new StatusDialog2( window.getShell(), status, Messages.getString( "PdbStartup.0" ) ).open(); //$NON-NLS-1$
 
     if( status.matches( IStatus.ERROR ) )
     {

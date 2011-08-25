@@ -82,7 +82,7 @@ public class CheckoutPdbHandler extends AbstractHandler
 
     if( selection.isEmpty() )
     {
-      final String message = Messages.getString("CheckoutPdbHandler.0"); //$NON-NLS-1$
+      final String message = Messages.getString( "CheckoutPdbHandler.0" ); //$NON-NLS-1$
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }

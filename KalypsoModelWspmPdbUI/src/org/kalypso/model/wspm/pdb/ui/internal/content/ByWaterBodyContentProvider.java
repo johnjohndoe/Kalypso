@@ -66,7 +66,7 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
       if( !ArrayUtils.isEmpty( allChildren ) )
         return allChildren;
       else
-        return new String[] { Messages.getString("ByWaterBodyContentProvider.0") }; //$NON-NLS-1$
+        return new String[] { Messages.getString( "ByWaterBodyContentProvider.0" ) }; //$NON-NLS-1$
     }
 
     if( inputElement instanceof Object[] )

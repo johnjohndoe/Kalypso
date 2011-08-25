@@ -89,7 +89,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("CheckinStateOperation.1"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckinStateOperation.1" ), 100 ); //$NON-NLS-1$
 
     final IProfileFeature[] profiles = findProfiles();
 
@@ -130,7 +130,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinStateOperation.2"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "CheckinStateOperation.2" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final Exception e )

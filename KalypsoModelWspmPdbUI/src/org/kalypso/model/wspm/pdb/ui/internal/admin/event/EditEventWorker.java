@@ -79,13 +79,13 @@ public class EditEventWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString("EditEventWorker.0"); //$NON-NLS-1$
+    return Messages.getString( "EditEventWorker.0" ); //$NON-NLS-1$
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( Messages.getString("EditEventWorker.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "EditEventWorker.1" ) ); //$NON-NLS-1$
     final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
     m_eventToEdit = EventUtils.findEventByName( existingEvents, m_selectedItem.getName() );
     m_clone = cloneForEdit( m_selectedItem );

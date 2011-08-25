@@ -63,7 +63,6 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
   private final CheckoutPdbData m_data;
 
-
   public CheckoutPdbOperation( final CheckoutPdbData data )
   {
     m_data = data;
@@ -72,7 +71,7 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("CheckoutPdbOperation.0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckoutPdbOperation.0" ), 100 ); //$NON-NLS-1$
 
     final URI documentBase = m_data.getDocumentBase();
     final CheckoutDataMapping mapping = m_data.getMapping();

@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 
-
 /**
  * General helper stuff for PDB-UI
  * 
@@ -64,11 +63,11 @@ public final class PdbUiUtils
   {
     final PdbView view = new FindViewRunnable<PdbView>( PdbView.ID, window, true ).execute();
     if( view == null )
-      throw new ExecutionException( Messages.getString("PdbUiUtils.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "PdbUiUtils.0" ) ); //$NON-NLS-1$
 
     final IPdbConnection connection = view.getConnection();
     if( connection == null )
-      throw new ExecutionException( Messages.getString("PdbUiUtils.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "PdbUiUtils.1" ) ); //$NON-NLS-1$
 
     return connection;
   }

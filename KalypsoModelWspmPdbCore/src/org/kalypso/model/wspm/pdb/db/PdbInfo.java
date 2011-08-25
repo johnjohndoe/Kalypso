@@ -128,7 +128,7 @@ public class PdbInfo
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("PdbInfo.0"), e ); //$NON-NLS-1$
+      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "PdbInfo.0" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -170,7 +170,7 @@ public class PdbInfo
     final String documentServer = getDocumentServer();
     if( StringUtils.isBlank( documentServer ) )
     {
-      final String message = String.format( Messages.getString("PdbInfo.1") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "PdbInfo.1" ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }
@@ -183,7 +183,7 @@ public class PdbInfo
     {
       e.printStackTrace();
 
-      final String message = String.format( Messages.getString("PdbInfo.2"), documentServer ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "PdbInfo.2" ), documentServer ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

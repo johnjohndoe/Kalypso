@@ -78,13 +78,13 @@ public class EditStateWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString("EditStateWorker.0"); //$NON-NLS-1$
+    return Messages.getString( "EditStateWorker.0" ); //$NON-NLS-1$
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( Messages.getString("EditStateWorker.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "EditStateWorker.1" ) ); //$NON-NLS-1$
 
     final State[] existingStates = GetPdbList.getArray( session, State.class );
     m_stateToEdit = StateUtils.findStateByName( existingStates, m_selectedItem.getName() );

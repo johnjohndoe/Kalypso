@@ -112,8 +112,8 @@ public class NonConnectedControl extends Composite
   {
     final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.DESCRIPTION );
     section.setLayout( new FillLayout() );
-    section.setText( Messages.getString("NonConnectedControl.0") ); //$NON-NLS-1$
-    section.setDescription( Messages.getString("NonConnectedControl.1") ); //$NON-NLS-1$
+    section.setText( Messages.getString( "NonConnectedControl.0" ) ); //$NON-NLS-1$
+    section.setDescription( Messages.getString( "NonConnectedControl.1" ) ); //$NON-NLS-1$
 
     toolkit.adapt( section );
     section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -130,7 +130,7 @@ public class NonConnectedControl extends Composite
 
   private void createAutoConnectCheck( final FormToolkit toolkit, final Composite parent )
   {
-    final Button button = toolkit.createButton( parent, Messages.getString("NonConnectedControl.2"), SWT.CHECK ); //$NON-NLS-1$
+    final Button button = toolkit.createButton( parent, Messages.getString( "NonConnectedControl.2" ), SWT.CHECK ); //$NON-NLS-1$
     button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( button );

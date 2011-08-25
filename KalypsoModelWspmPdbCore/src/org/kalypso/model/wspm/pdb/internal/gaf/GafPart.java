@@ -103,7 +103,7 @@ public class GafPart
     // TODO: we should provide log messages here...
     if( cs.length < 2 )
     {
-      m_stati.add( IStatus.WARNING, Messages.getString("GafPart_0") ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "GafPart_0" ) ); //$NON-NLS-1$
       return createEmptyGeometry( dbType );
     }
 
@@ -140,8 +140,8 @@ public class GafPart
 
   public IStatus getStatus( )
   {
-    final String message = String.format( Messages.getString("GafPart_1"), getKind() ); //$NON-NLS-1$
-    final String okMessage = String.format( Messages.getString("GafPart_2"), getKind() ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "GafPart_1" ), getKind() ); //$NON-NLS-1$
+    final String okMessage = String.format( Messages.getString( "GafPart_2" ), getKind() ); //$NON-NLS-1$
     return m_stati.asMultiStatusOrOK( message, okMessage );
   }
 }

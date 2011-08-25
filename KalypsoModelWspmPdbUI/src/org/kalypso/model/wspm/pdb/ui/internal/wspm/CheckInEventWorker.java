@@ -94,7 +94,7 @@ public class CheckInEventWorker implements ICheckInWorker
 
   static String formatMissingWaterBody( final String waterCode, final String waterName )
   {
-    return String.format( Messages.getString("CheckInEventWorker.0"), waterName, waterCode ); //$NON-NLS-1$
+    return String.format( Messages.getString( "CheckInEventWorker.0" ), waterName, waterCode ); //$NON-NLS-1$
   }
 
   @Override

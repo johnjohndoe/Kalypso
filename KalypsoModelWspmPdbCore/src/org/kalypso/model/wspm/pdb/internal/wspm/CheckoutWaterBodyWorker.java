@@ -74,7 +74,7 @@ public class CheckoutWaterBodyWorker
     {
       final WaterBody[] waterBodies = m_mapping.getWaterBodies();
 
-      monitor.beginTask( Messages.getString("CheckoutWaterBodyWorker.0"), waterBodies.length ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "CheckoutWaterBodyWorker.0" ), waterBodies.length ); //$NON-NLS-1$
 
       for( final WaterBody waterBody : waterBodies )
       {

@@ -82,8 +82,8 @@ public class ConnectionChooserPage extends WizardPage
 
     m_data = data;
 
-    setTitle( Messages.getString("ConnectionChooserPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("ConnectionChooserPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "ConnectionChooserPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ConnectionChooserPage.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -111,7 +111,7 @@ public class ConnectionChooserPage extends WizardPage
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( m_data, ConnectionChooserData.PROPERTY_SETTINGS );
     final DataBinder dataBinder = new DataBinder( target, model );
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<IPdbSettings>( IPdbSettings.class, IStatus.ERROR, Messages.getString("ConnectionChooserPage.2") ) ); //$NON-NLS-1$
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<IPdbSettings>( IPdbSettings.class, IStatus.ERROR, Messages.getString( "ConnectionChooserPage.2" ) ) ); //$NON-NLS-1$
     m_binding.bindValue( dataBinder );
 
     return viewer.getControl();

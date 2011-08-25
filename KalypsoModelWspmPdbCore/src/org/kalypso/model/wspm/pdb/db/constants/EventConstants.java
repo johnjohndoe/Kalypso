@@ -52,8 +52,8 @@ public interface EventConstants
     /**
      * Default
      */
-    Measurement(Messages.getString("EventConstants.0")), //$NON-NLS-1$
-    Simulation(Messages.getString("EventConstants.1")); //$NON-NLS-1$
+    Measurement(Messages.getString( "EventConstants.0" )), //$NON-NLS-1$
+    Simulation(Messages.getString( "EventConstants.1" )); //$NON-NLS-1$
 
     private final String m_label;
 

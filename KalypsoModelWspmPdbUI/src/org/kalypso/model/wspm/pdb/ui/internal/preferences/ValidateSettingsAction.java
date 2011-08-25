@@ -54,7 +54,7 @@ public class ValidateSettingsAction extends Action
   {
     m_page = page;
 
-    setText( Messages.getString("ValidateSettingsAction.0") ); //$NON-NLS-1$
+    setText( Messages.getString( "ValidateSettingsAction.0" ) ); //$NON-NLS-1$
   }
 
   /**

@@ -81,13 +81,13 @@ public class CheckoutWaterlevelWorker
   {
     final Event[] events = m_mapping.getEvents();
 
-    monitor.beginTask( Messages.getString("CheckoutWaterlevelWorker.0"), events.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckoutWaterlevelWorker.0" ), events.length ); //$NON-NLS-1$
 
     try
     {
       for( final Event event : events )
       {
-        monitor.subTask( String.format( Messages.getString("CheckoutWaterlevelWorker.1"), event.getName() ) ); //$NON-NLS-1$
+        monitor.subTask( String.format( Messages.getString( "CheckoutWaterlevelWorker.1" ), event.getName() ) ); //$NON-NLS-1$
 
         final Object wspmObject = m_mapping.getWaterlevel( event );
         final Feature newWspmObject = createOrReplaceEvent( event, wspmObject );

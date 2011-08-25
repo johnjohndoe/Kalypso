@@ -68,9 +68,9 @@ public class CheckoutPdbData extends AbstractModelObject
   /** Choice what shall be removed from the local data. */
   public enum RemoveStrategy
   {
-    keepAll(Messages.getString("CheckoutPdbData.0")), //$NON-NLS-1$
-    keepWaterBodies(Messages.getString("CheckoutPdbData.1")), //$NON-NLS-1$
-    removeAll(Messages.getString("CheckoutPdbData.2")); //$NON-NLS-1$
+    keepAll(Messages.getString( "CheckoutPdbData.0" )), //$NON-NLS-1$
+    keepWaterBodies(Messages.getString( "CheckoutPdbData.1" )), //$NON-NLS-1$
+    removeAll(Messages.getString( "CheckoutPdbData.2" )); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -131,7 +131,7 @@ public class CheckoutPdbData extends AbstractModelObject
     {
       e.printStackTrace();
 
-      final String STR_ATTACHMENTS_DISABLED = Messages.getString("CheckoutPdbData.3"); //$NON-NLS-1$
+      final String STR_ATTACHMENTS_DISABLED = Messages.getString( "CheckoutPdbData.3" ); //$NON-NLS-1$
       new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
 
       return null;

@@ -66,7 +66,7 @@ public class RemoveStateWorker implements IRemoveWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString("RemoveStateWorker.0"); //$NON-NLS-1$
+    return Messages.getString( "RemoveStateWorker.0" ); //$NON-NLS-1$
   }
 
   @Override

@@ -80,14 +80,14 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
     final File importDir = m_data.getImportDir();
     if( !importDir.isDirectory() )
     {
-      final String msg = String.format( Messages.getString("SearchDocumentsOperation.0"), importDir ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "SearchDocumentsOperation.0" ), importDir ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
     final File[] allFiles = importDir.listFiles();
     if( allFiles == null )
     {
-      final String msg = String.format( Messages.getString("SearchDocumentsOperation.1"), importDir ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "SearchDocumentsOperation.1" ), importDir ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     }
 
@@ -98,7 +98,7 @@ public class SearchDocumentsOperation implements ICoreRunnableWithProgress
     for( final File file : allFiles )
       readFile( file, searchPattern, stationPatterns );
 
-        return Status.OK_STATUS;
+    return Status.OK_STATUS;
   }
 
   private void readFile( final File file, final Pattern searchPattern, final Pattern[] stationPatterns )

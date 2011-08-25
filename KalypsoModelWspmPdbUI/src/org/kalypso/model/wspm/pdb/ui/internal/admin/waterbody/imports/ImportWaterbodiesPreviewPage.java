@@ -95,8 +95,8 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
   {
     super( pageName );
 
-    setTitle( Messages.getString("ImportWaterbodiesPreviewPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("ImportWaterbodiesPreviewPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "ImportWaterbodiesPreviewPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportWaterbodiesPreviewPage.1" ) ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -126,7 +126,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
     WaterBodyViewer.createRankColumn( m_viewer );
 
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    validColumn.getColumn().setText( Messages.getString("ImportWaterbodiesPreviewPage.2") ); //$NON-NLS-1$
+    validColumn.getColumn().setText( Messages.getString( "ImportWaterbodiesPreviewPage.2" ) ); //$NON-NLS-1$
     validColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
     ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
@@ -180,7 +180,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
     final Composite panel = new Composite( parent, SWT.NONE );
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
 
-    new Label( panel, SWT.NONE ).setText( Messages.getString("ImportWaterbodiesPreviewPage.3") ); //$NON-NLS-1$
+    new Label( panel, SWT.NONE ).setText( Messages.getString( "ImportWaterbodiesPreviewPage.3" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     viewer.setLabelProvider( new LabelProvider() );
@@ -207,7 +207,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, Messages.getString("ImportWaterbodiesPreviewPage.4") ).open(); //$NON-NLS-1$
+      new StatusDialog2( getShell(), status, Messages.getString( "ImportWaterbodiesPreviewPage.4" ) ).open(); //$NON-NLS-1$
 
     return operation.getWaterBodies();
   }

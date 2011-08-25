@@ -46,7 +46,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
   {
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( Messages.getString("ImportAttachmentsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportAttachmentsWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -137,7 +137,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
     if( zipFile == null || !zipFile.exists() )
       return true;
 
-    final String message = String.format( Messages.getString("ImportAttachmentsWizard.1"), zipFile.getName() ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "ImportAttachmentsWizard.1" ), zipFile.getName() ); //$NON-NLS-1$
     return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 

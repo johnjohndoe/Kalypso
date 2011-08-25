@@ -87,7 +87,7 @@ public class ChooseWaterPage extends WizardPage
     m_connection = connection;
     m_waterValue = waterValue;
 
-    setTitle( Messages.getString("ChooseWaterPage.0") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "ChooseWaterPage.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -145,7 +145,7 @@ public class ChooseWaterPage extends WizardPage
 
     final DataBinder dataBinder = new DataBinder( target, m_waterValue );
 
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBody>( WaterBody.class, IStatus.ERROR, Messages.getString("ChooseWaterPage.1") ) ); //$NON-NLS-1$
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBody>( WaterBody.class, IStatus.ERROR, Messages.getString( "ChooseWaterPage.1" ) ) ); //$NON-NLS-1$
     binding.bindValue( dataBinder );
 
     return m_waterBodyViewer.getControl();
@@ -155,7 +155,7 @@ public class ChooseWaterPage extends WizardPage
   {
     final Group panel = new Group( parent, SWT.NONE );
     panel.setLayout( new FillLayout() );
-    panel.setText( Messages.getString("ChooseWaterPage.2") ); //$NON-NLS-1$
+    panel.setText( Messages.getString( "ChooseWaterPage.2" ) ); //$NON-NLS-1$
 
     m_waterBodyFilterControl = new WaterBodyFilterControl( null, panel, null );
 
@@ -164,7 +164,7 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createActions( final Composite panel )
   {
-    final Action addAction = new AddWaterBodyAction( m_session, m_waterBodyViewer, Messages.getString("ChooseWaterPage.3") ); //$NON-NLS-1$
+    final Action addAction = new AddWaterBodyAction( m_session, m_waterBodyViewer, Messages.getString( "ChooseWaterPage.3" ) ); //$NON-NLS-1$
     return ActionHyperlink.createHyperlink( null, panel, SWT.NONE, addAction );
   }
 }

@@ -77,10 +77,10 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("CheckinCalculationOperation.0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "CheckinCalculationOperation.0" ), 100 ); //$NON-NLS-1$
 
     if( m_lengthSection == null )
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("CheckinCalculationOperation.1") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "CheckinCalculationOperation.1" ) ); //$NON-NLS-1$
 
     Session session = null;
 

@@ -152,7 +152,7 @@ public class CheckinPdbHandler extends AbstractHandler
       {
         try
         {
-          monitor.beginTask( Messages.getString("CheckinPdbHandler.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString( "CheckinPdbHandler.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
           worker.preInit( connection );
           return Status.OK_STATUS;
         }
@@ -166,7 +166,7 @@ public class CheckinPdbHandler extends AbstractHandler
     if( result.isOK() )
       return true;
 
-    final String msg = Messages.getString("CheckinPdbHandler.1"); //$NON-NLS-1$
+    final String msg = Messages.getString( "CheckinPdbHandler.1" ); //$NON-NLS-1$
     ErrorDialog.openError( shell, windowTitle, msg, result );
     return false;
   }
@@ -193,6 +193,6 @@ public class CheckinPdbHandler extends AbstractHandler
 
     final IStatus result = ProgressUtilities.busyCursorWhile( saveOperation );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, windowTitle, Messages.getString("CheckinPdbHandler.2") ).open(); //$NON-NLS-1$
+      new StatusDialog2( shell, result, windowTitle, Messages.getString( "CheckinPdbHandler.2" ) ).open(); //$NON-NLS-1$
   }
 }

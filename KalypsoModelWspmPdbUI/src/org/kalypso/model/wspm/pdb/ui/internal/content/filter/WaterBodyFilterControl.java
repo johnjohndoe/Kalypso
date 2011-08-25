@@ -117,7 +117,7 @@ public class WaterBodyFilterControl extends Composite
   {
     final Text gknField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     gknField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    gknField.setMessage( Messages.getString("WaterBodyFilterControl_0") ); //$NON-NLS-1$
+    gknField.setMessage( Messages.getString( "WaterBodyFilterControl_0" ) ); //$NON-NLS-1$
     gknField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( gknField );
@@ -136,7 +136,7 @@ public class WaterBodyFilterControl extends Composite
   {
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    nameField.setMessage( Messages.getString("WaterBodyFilterControl_1") ); //$NON-NLS-1$
+    nameField.setMessage( Messages.getString( "WaterBodyFilterControl_1" ) ); //$NON-NLS-1$
     nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( nameField );

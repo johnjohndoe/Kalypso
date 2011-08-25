@@ -47,9 +47,9 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
  */
 public enum PDBRole
 {
-  superuser(Messages.getString("PDBRole_0"), null), //$NON-NLS-1$
-  fadmin(Messages.getString("PDBRole_1"), "PDB_ADMIN"), //$NON-NLS-1$ //$NON-NLS-2$
-  user(Messages.getString("PDBRole_3"), "PDB_USER"); //$NON-NLS-1$ //$NON-NLS-2$
+  superuser(Messages.getString( "PDBRole_0" ), null), //$NON-NLS-1$
+  fadmin(Messages.getString( "PDBRole_1" ), "PDB_ADMIN"), //$NON-NLS-1$ //$NON-NLS-2$
+  user(Messages.getString( "PDBRole_3" ), "PDB_USER"); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final String m_label;
 

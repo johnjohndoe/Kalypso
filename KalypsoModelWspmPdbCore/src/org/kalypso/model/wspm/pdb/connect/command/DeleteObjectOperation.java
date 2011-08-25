@@ -59,7 +59,7 @@ public class DeleteObjectOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString("DeleteObjectOperation_0"), m_element ); //$NON-NLS-1$
+    return String.format( Messages.getString( "DeleteObjectOperation_0" ), m_element ); //$NON-NLS-1$
   }
 
   @Override

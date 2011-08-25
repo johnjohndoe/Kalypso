@@ -136,7 +136,7 @@ public class EditElementHandler extends AbstractHandler
       {
         try
         {
-          monitor.beginTask( Messages.getString("EditElementHandler.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString( "EditElementHandler.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
           wizards[0] = worker.createWizard( monitor, session );
           return Status.OK_STATUS;
         }

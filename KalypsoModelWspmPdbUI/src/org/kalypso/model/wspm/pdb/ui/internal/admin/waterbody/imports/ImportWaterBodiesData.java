@@ -66,8 +66,8 @@ public class ImportWaterBodiesData extends AbstractModelObject
 {
   public static enum INSERTION_MODE
   {
-    skip(Messages.getString("ImportWaterBodiesData.0")), //$NON-NLS-1$
-    overwrite(Messages.getString("ImportWaterBodiesData.1")); //$NON-NLS-1$
+    skip(Messages.getString( "ImportWaterBodiesData.0" )), //$NON-NLS-1$
+    overwrite(Messages.getString( "ImportWaterBodiesData.1" )); //$NON-NLS-1$
 
     private final String m_label;
 

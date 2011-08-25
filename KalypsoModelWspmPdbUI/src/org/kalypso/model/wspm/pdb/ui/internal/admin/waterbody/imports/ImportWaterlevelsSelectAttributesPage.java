@@ -80,7 +80,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
   {
     super( pageName );
 
-    setDescription( Messages.getString("ImportWaterlevelsSelectAttributesPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImportWaterlevelsSelectAttributesPage.0" ) ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -129,7 +129,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( Messages.getString("ImportWaterlevelsSelectAttributesPage.1") ); //$NON-NLS-1$
+    text.setMessage( Messages.getString( "ImportWaterlevelsSelectAttributesPage.1" ) ); //$NON-NLS-1$
 
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
     final IObservableValue modelValue = BeanProperties.value( ImportAttributeInfo.PROPERTY_DEFAULT_VALUE, BigDecimal.class ).observe( info );
@@ -148,7 +148,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
     final DateTime measurementField = new DateTime( parent, SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN );
     measurementField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    measurementField.setToolTipText( Messages.getString("ImportWaterlevelsSelectAttributesPage.2") ); //$NON-NLS-1$
+    measurementField.setToolTipText( Messages.getString( "ImportWaterlevelsSelectAttributesPage.2" ) ); //$NON-NLS-1$
 
     final Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     final Date measurementDate = m_data.getEvent().getMeasurementDate();
@@ -175,7 +175,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
 
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( Messages.getString("ImportWaterlevelsSelectAttributesPage.3") ); //$NON-NLS-1$
+    text.setMessage( Messages.getString( "ImportWaterlevelsSelectAttributesPage.3" ) ); //$NON-NLS-1$
 
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
     final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( text );
@@ -199,7 +199,7 @@ public class ImportWaterlevelsSelectAttributesPage extends AbstractSelectAttribu
         return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s", label ) ); //$NON-NLS-1$
 
       default:
-        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString("ImportWaterlevelsSelectAttributesPage.5"), label ) ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString( "ImportWaterlevelsSelectAttributesPage.5" ), label ) ); //$NON-NLS-1$
     }
   }
 }

@@ -73,8 +73,8 @@ public class AddWaterLevelPage extends WizardPage
     super( pageName );
     m_data = data;
 
-    setTitle( Messages.getString("AddWaterLevelPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("AddWaterLevelPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "AddWaterLevelPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "AddWaterLevelPage.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -96,7 +96,7 @@ public class AddWaterLevelPage extends WizardPage
   {
     final Button checkbox = new Button( parent, SWT.CHECK );
     checkbox.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    checkbox.setText( Messages.getString("AddWaterLevelPage.2") ); //$NON-NLS-1$
+    checkbox.setText( Messages.getString( "AddWaterLevelPage.2" ) ); //$NON-NLS-1$
 
     final ISWTObservableValue targetSelection = SWTObservables.observeSelection( checkbox );
     final IObservableValue modelSelection = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_IMPORT_WATERLEVELS );
@@ -111,7 +111,7 @@ public class AddWaterLevelPage extends WizardPage
   {
     final Group group = new Group( panel, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    group.setText( Messages.getString("AddWaterLevelPage.3") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "AddWaterLevelPage.3" ) ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
 
     final Event event = m_data.getWaterlevelEvent();
@@ -132,7 +132,7 @@ public class AddWaterLevelPage extends WizardPage
     if( m_data.getHasWaterlevels() )
       setMessage( null );
     else
-      setMessage( Messages.getString("AddWaterLevelPage.4"), INFORMATION ); //$NON-NLS-1$
+      setMessage( Messages.getString( "AddWaterLevelPage.4" ), INFORMATION ); //$NON-NLS-1$
 
     final Event[] existingEvents = m_data.getExistingEvents();
     if( m_waterlevelComposite != null )

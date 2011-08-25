@@ -53,7 +53,7 @@ public class LocalDataProjectExport extends WizardProjectExport
   {
     super( WspmPdbUiPlugin.getDefault().getWspmProject().getProject() );
 
-    setWindowTitle( Messages.getString("LocalDataProjectExport.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "LocalDataProjectExport.0" ) ); //$NON-NLS-1$
 
     setUseTargetNameAsProjectName( true );
   }

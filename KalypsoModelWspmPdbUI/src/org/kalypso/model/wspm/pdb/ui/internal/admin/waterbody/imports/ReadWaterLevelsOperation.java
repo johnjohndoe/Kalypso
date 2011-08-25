@@ -75,7 +75,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE = Messages.getString("ReadWaterLevelsOperation.0"); //$NON-NLS-1$
+  private static final String STR_FAILED_TO_READ_WATER_LEVELS_FROM_SHAPE = Messages.getString( "ReadWaterLevelsOperation.0" ); //$NON-NLS-1$
 
   private WaterlevelFixation[] m_waterLevels;
 
@@ -109,7 +109,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
         final ISHPGeometry shape = shapeFile.getShape( row );
         final WaterlevelFixation wb = toWaterlevelFixation( shape, data, fields );
 
-        final IStatus valid = checkWaterlevel(wb);
+        final IStatus valid = checkWaterlevel( wb );
         wbs.add( wb );
         m_waterLevelStatus.put( wb, valid );
       }
@@ -144,16 +144,16 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
 
     final BigDecimal station = wb.getStation();
     if( station == null )
-      stati.add( IStatus.ERROR, Messages.getString("ReadWaterLevelsOperation.1") ); //$NON-NLS-1$
+      stati.add( IStatus.ERROR, Messages.getString( "ReadWaterLevelsOperation.1" ) ); //$NON-NLS-1$
 
     final Point location = wb.getLocation();
     if( location == null )
-      stati.add( IStatus.WARNING, Messages.getString("ReadWaterLevelsOperation.2") ); //$NON-NLS-1$
+      stati.add( IStatus.WARNING, Messages.getString( "ReadWaterLevelsOperation.2" ) ); //$NON-NLS-1$
 
     if( stati.size() == 1 )
       return stati.getAllStati()[0];
 
-    return stati.asMultiStatusOrOK( Messages.getString("ReadWaterLevelsOperation.3") ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( Messages.getString( "ReadWaterLevelsOperation.3" ) ); //$NON-NLS-1$
   }
 
   public WaterlevelFixation[] getWaterBodies( )
@@ -213,7 +213,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     if( value instanceof Date )
       return (Date) value;
 
-    final String msg = String.format( Messages.getString("ReadWaterLevelsOperation.4"), label, value ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "ReadWaterLevelsOperation.4" ), label, value ); //$NON-NLS-1$
     final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
     throw new CoreException( status );
   }
@@ -233,7 +233,7 @@ public class ReadWaterLevelsOperation implements ICoreRunnableWithProgress
     }
     catch( final NumberFormatException e )
     {
-      final String msg = String.format( Messages.getString("ReadWaterLevelsOperation.5"), label, text ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "ReadWaterLevelsOperation.5" ), label, text ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }

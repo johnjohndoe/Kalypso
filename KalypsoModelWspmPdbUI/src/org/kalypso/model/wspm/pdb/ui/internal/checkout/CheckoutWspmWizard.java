@@ -95,7 +95,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
   public CheckoutWspmWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString("CheckoutWspmWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "CheckoutWspmWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override

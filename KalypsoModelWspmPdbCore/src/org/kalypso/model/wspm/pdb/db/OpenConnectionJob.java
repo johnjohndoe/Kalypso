@@ -65,7 +65,7 @@ public class OpenConnectionJob extends Job
 
   public OpenConnectionJob( final IPdbSettings settings, final boolean closeConnection )
   {
-    super( Messages.getString("OpenConnectionJob_0") ); //$NON-NLS-1$
+    super( Messages.getString( "OpenConnectionJob_0" ) ); //$NON-NLS-1$
 
     m_settings = settings;
     m_closeConnection = closeConnection;
@@ -99,13 +99,13 @@ public class OpenConnectionJob extends Job
         m_connection = connection;
 
       if( info == null )
-        m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("OpenConnectionJob_1") ); //$NON-NLS-1$
+        m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "OpenConnectionJob_1" ) ); //$NON-NLS-1$
       else
         m_connectionStatus = info.getStatus();
     }
     catch( final Exception e )
     {
-      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString("OpenConnectionJob_2"), e ); //$NON-NLS-1$
+      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "OpenConnectionJob_2" ), e ); //$NON-NLS-1$
     }
     finally
     {

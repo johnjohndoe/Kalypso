@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 
 /**
  * @author Gernot Belger
- *
  */
 public interface IEditWorker
 {
