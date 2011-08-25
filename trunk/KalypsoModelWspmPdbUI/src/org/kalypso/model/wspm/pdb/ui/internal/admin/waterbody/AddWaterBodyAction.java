@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
@@ -82,7 +82,7 @@ public class AddWaterBodyAction extends UpdateableAction
     final WaterBody newWaterBody = new WaterBody();
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( m_viewer.getExistingWaterbodies(), newWaterBody, Mode.NEW );
-    wizard.setWindowTitle( Messages.getString("AddWaterBodyAction.0") ); //$NON-NLS-1$
+    wizard.setWindowTitle( Messages.getString( "AddWaterBodyWizard.0" ) ); //$NON-NLS-1$
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() == Window.OK )
