@@ -65,6 +65,18 @@ public class VegetationsDataModel extends AbstractModelObject
 
   Double m_rightFloodplain;
 
+  public static final String PROPERTY_LEFT_FLOODPLAIN_CLASS = "leftFloodplainClass"; //$NON-NLS-1$
+
+  public static final String PROPERTY_RIGHT_FLOODPLAIN_CLASS = "rightFloodplainClass"; //$NON-NLS-1$
+
+  public static final String PROPERTY_RIVER_TUBE_CLASS = "riverTubeClass"; //$NON-NLS-1$
+
+  String m_riverTubeClass;
+
+  String m_leftFloodplainClass;
+
+  String m_rightFloodplainClass;
+
   private final IProfil m_profile;
 
   private final IComponent m_component;
@@ -85,6 +97,13 @@ public class VegetationsDataModel extends AbstractModelObject
       m_rightFloodplain = ProfileFlowzones.findRightFloodplainValue( profile, component );
       m_riverTube = ProfileFlowzones.findRiverTubeValue( profile, component );
     }
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( component.getId() ) )
+    {
+      m_leftFloodplainClass = ProfileFlowzones.findLeftFloodplainClass( profile, component );
+      m_riverTubeClass = ProfileFlowzones.findRiverTubeClass( profile, component );
+      m_rightFloodplainClass = ProfileFlowzones.findRightFloodplainClass( profile, component );
+    }
+
   }
 
   private boolean isSimpleType( final IComponent component )
@@ -150,4 +169,48 @@ public class VegetationsDataModel extends AbstractModelObject
     firePropertyChange( PROPERTY_RIVER_TUBE, oldValue, riverTube );
   }
 
+  public String getRiverTubeClass( )
+  {
+    return m_riverTubeClass;
+  }
+
+  public void setRiverTubeClass( final String riverTubeClass )
+  {
+    final Object oldValue = m_riverTubeClass;
+    m_riverTubeClass = riverTubeClass;
+
+    ProfileFlowzones.setRiverTube( m_profile, m_component, riverTubeClass );
+
+    firePropertyChange( PROPERTY_RIVER_TUBE_CLASS, oldValue, riverTubeClass );
+  }
+
+  public String getLeftFloodplainClass( )
+  {
+    return m_leftFloodplainClass;
+  }
+
+  public void setLeftFloodplainClass( final String leftFloodplainClass )
+  {
+    final Object oldValue = m_leftFloodplainClass;
+    m_leftFloodplainClass = leftFloodplainClass;
+
+    ProfileFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplainClass );
+
+    firePropertyChange( PROPERTY_LEFT_FLOODPLAIN_CLASS, oldValue, leftFloodplainClass );
+  }
+
+  public String getRightFloodplainClass( )
+  {
+    return m_rightFloodplainClass;
+  }
+
+  public void setRightFloodplainClass( final String rightFloodplainClass )
+  {
+    final Object oldValue = m_rightFloodplainClass;
+    m_rightFloodplainClass = rightFloodplainClass;
+
+    ProfileFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplainClass );
+
+    firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN_CLASS, oldValue, rightFloodplainClass );
+  }
 }

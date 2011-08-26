@@ -169,7 +169,6 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
   @Override
   public void dispose( )
   {
-
   }
 
   protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
