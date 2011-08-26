@@ -63,6 +63,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.ui.pager.IElementPageListener;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -73,9 +74,11 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Dirk Kuch
  */
-public class RoughnessPanel extends AbstractProfilView
+public class RoughnessPanel extends AbstractProfilView implements IElementPageListener
 {
   static final Image IMG_ADD_ROUGHNESS = new Image( null, RoughnessPanel.class.getResourceAsStream( "images/roughnessPanelAdd.gif" ) );
+
+  private static String LAST_SELECTED_PAGE;
 
   public RoughnessPanel( final IProfil profile )
   {
@@ -106,7 +109,9 @@ public class RoughnessPanel extends AbstractProfilView
     /** handle existing roughnesses */
     final IComponent[] roughnesses = RoughnessPanelHelper.fromProfile( getProfil() );
     final IElementPage[] pages = getPages( roughnesses );
-    final ElementsComposite composite = new ElementsComposite( body, toolkit, pages );
+    final ElementsComposite composite = new ElementsComposite( body, toolkit, pages, getSelectedPage( pages ) );
+    composite.addPageListener( this );
+
     composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     composite.setShowAlwaysComboViewer( true );
     composite.update();
@@ -119,6 +124,20 @@ public class RoughnessPanel extends AbstractProfilView
     body.layout();
 
     return body;
+  }
+
+  private IElementPage getSelectedPage( final IElementPage[] pages )
+  {
+    if( LAST_SELECTED_PAGE == null )
+      return pages[0];
+
+    for( final IElementPage page : pages )
+    {
+      if( page.getIdentifier().equals( LAST_SELECTED_PAGE ) )
+        return page;
+    }
+
+    return pages[0];
   }
 
   private void createMissingRoughnessesControl( final Composite parent, final FormToolkit toolkit )
@@ -203,5 +222,14 @@ public class RoughnessPanel extends AbstractProfilView
     }
 
     return pages.toArray( new IElementPage[] {} );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPageListener#pageChanged(java.lang.String)
+   */
+  @Override
+  public void pageChanged( final String identifier )
+  {
+    LAST_SELECTED_PAGE = identifier;
   }
 }
