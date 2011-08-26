@@ -112,8 +112,8 @@ public class ProfileFromDEMWizardPage extends WizardPage
       return;
 
     final Label lName = new Label( parent, SWT.NONE );
-    lName.setText( "Theme" );
-    lName.setToolTipText( "The new profile will be added to this container." );
+    lName.setText( Messages.getString("ProfileFromDEMWizardPage.2") ); //$NON-NLS-1$
+    lName.setToolTipText( Messages.getString("ProfileFromDEMWizardPage.3") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -143,7 +143,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     final DataBinder binder = new DataBinder( target, model );
 
-    final String warning = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" );
+    final String warning = Messages.getString( Messages.getString("ProfileFromDEMWizardPage.4") ); //$NON-NLS-1$
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, warning ) );
 
     m_binding.bindValue( binder );

@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -103,18 +104,18 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
    */
   public static Pattern asSearchPattern( final String searchPattern )
   {
-    final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$
+    final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Pattern.compile( generalPattern, Pattern.CASE_INSENSITIVE );
   }
 
   public static String getSearchRegex( final String stationPattern ) throws CoreException
   {
-    final String token = String.format( "<%s>", GuessStationPattern.TOKEN );
+    final String token = String.format( "<%s>", GuessStationPattern.TOKEN ); //$NON-NLS-1$
 
     final int countMatches = StringUtils.countMatches( stationPattern, token );
     if( countMatches != 1 )
     {
-      final String msg = String.format( "Invalid pattern: '%s'", stationPattern );
+      final String msg = String.format( Messages.getString("GuessStationPatternReplacer.2"), stationPattern ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg ) );
     }
 
@@ -128,7 +129,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
     if( stationPattern.startsWith( token ) )
       return token + asRegex( stationPattern.substring( token.length() ) );
 
-    final String[] split = stationPattern.split( "\\Q" + token + "\\E" );
+    final String[] split = stationPattern.split( "\\Q" + token + "\\E" ); //$NON-NLS-1$ //$NON-NLS-2$
     return asRegex( split[0] ) + token + asRegex( split[1] );
   }
 
@@ -147,7 +148,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
       else
       {
         appendEscaped( builder, pattern.substring( i, index ) );
-        builder.append( ".*?" );
+        builder.append( ".*?" ); //$NON-NLS-1$
         i = index;
       }
     }
@@ -160,7 +161,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
     if( text.isEmpty() )
       return;
 
-    builder.append( "\\Q" ).append( text ).append( "\\E" );
+    builder.append( "\\Q" ).append( text ).append( "\\E" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

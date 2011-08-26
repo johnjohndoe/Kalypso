@@ -183,7 +183,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     final String containerName = getContainerName();
 
     final String fName = String.format( "%s_%.4f-%.4f", containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() ); //$NON-NLS-1$
-    final String title = String.format( "%s - km %.4f - km %.4f", containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() );
+    final String title = String.format( Messages.getString("CreateLengthSectionWizard.1"), containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() ); //$NON-NLS-1$
     final IFolder targetFolder = parentFolder.getFolder( fName );
     if( !targetFolder.exists() )
       targetFolder.create( false, true, new NullProgressMonitor() );
