@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -71,6 +71,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * @author Gernot Belger
@@ -78,6 +79,8 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 public class CheckoutDataMapping
 {
   private final List<Feature> m_changedFeatures = new ArrayList<Feature>();
+
+  private final List<Feature> m_addedFeatures = new ArrayList<Feature>();
 
   private final List<Feature> m_removedFeatures = new ArrayList<Feature>();
 
@@ -239,7 +242,7 @@ public class CheckoutDataMapping
     try
     {
       final Feature[] removedFeatures = m_removedFeatures.toArray( new Feature[m_removedFeatures.size()] );
-      final Feature[] changedFeatures = m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
+      final Feature[] addedFeatures = m_addedFeatures.toArray( new Feature[m_addedFeatures.size()] );
 
       // REMARK: we do fire an event for each parent, else we get refresh problems
       final Feature[] removedParents = findParents( m_removedFeatures );
@@ -249,12 +252,15 @@ public class CheckoutDataMapping
         m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, removedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
       }
 
-      final Feature[] changedParents = findParents( m_changedFeatures );
-      for( final Feature changedParent : changedParents )
+      final Feature[] addedParents = findParents( m_addedFeatures );
+      for( final Feature changedParent : addedParents )
       {
-        final Feature[] children = findChildren( changedParent, changedFeatures );
+        final Feature[] children = findChildren( changedParent, addedFeatures );
         m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, changedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
+
+      final Feature[] changedFeatures = m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
+      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeatures ) );
 
       m_workspace.postCommand( new EmptyCommand( null, false ) );
     }
@@ -307,6 +313,11 @@ public class CheckoutDataMapping
     m_changedFeatures.add( changedFeature );
   }
 
+  public void addAddedFeatures( final Feature newFeature )
+  {
+    m_addedFeatures.add( newFeature );
+  }
+
   public void addRemovedFeatures( final Feature feature )
   {
     m_removedFeatures.add( feature );
@@ -314,7 +325,7 @@ public class CheckoutDataMapping
 
   public Feature[] getNewElements( )
   {
-    return m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
+    return m_addedFeatures.toArray( new Feature[m_addedFeatures.size()] );
   }
 
   public Set<Object> getAllPdbElements( )
