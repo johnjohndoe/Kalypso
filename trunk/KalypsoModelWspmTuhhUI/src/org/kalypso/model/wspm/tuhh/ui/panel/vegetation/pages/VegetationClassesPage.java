@@ -105,7 +105,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
   @Override
   public String getLabel( )
   {
-    return Messages.getString("VegetationClassesPage.0"); //$NON-NLS-1$
+    return Messages.getString( "VegetationClassesPage.0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -123,7 +123,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("VegetationClassesPage.1") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "VegetationClassesPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     m_binding = new AbstractDatabinding( toolkit )
@@ -131,13 +131,12 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     };
 
     // TODO validators
-    build( group, toolkit, Messages.getString("VegetationClassesPage.2"), VegetationsDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("VegetationClassesPage.3"), VegetationsDataModel.PROPERTY_RIVER_TUBE_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("VegetationClassesPage.4"), VegetationsDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationClassesPage.2" ), VegetationsDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationClassesPage.4" ), VegetationsDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
-    lnkRemove.setText( String.format( Messages.getString("VegetationClassesPage.5"), getLabel() ) ); //$NON-NLS-1$
+    lnkRemove.setText( String.format( Messages.getString( "VegetationClassesPage.5" ), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -154,9 +153,9 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( Messages.getString("VegetationClassesPage.6") ); //$NON-NLS-1$
+      grActions.setText( Messages.getString( "VegetationClassesPage.6" ) ); //$NON-NLS-1$
 
-      addWriteValueLink( grActions, toolkit, Messages.getString("VegetationClassesPage.7") ); //$NON-NLS-1$
+      addWriteValueLink( grActions, toolkit, Messages.getString( "VegetationClassesPage.7" ) ); //$NON-NLS-1$
 
       toolkit.adapt( grActions );
     }
@@ -172,7 +171,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("VegetationClassesPage.8"), Messages.getString("VegetationClassesPage.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString( "VegetationClassesPage.8" ), Messages.getString( "VegetationClassesPage.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final UpdateVegetationProperties worker = new UpdateVegetationProperties( m_profile, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );

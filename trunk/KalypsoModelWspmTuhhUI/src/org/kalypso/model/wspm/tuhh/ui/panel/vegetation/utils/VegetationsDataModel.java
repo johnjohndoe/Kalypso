@@ -57,10 +57,6 @@ public class VegetationsDataModel extends AbstractModelObject
 
   public static final String PROPERTY_RIGHT_FLOODPLAIN = "rightFloodplain"; //$NON-NLS-1$
 
-  public static final String PROPERTY_RIVER_TUBE = "riverTube"; //$NON-NLS-1$
-
-  Double m_riverTube;
-
   Double m_leftFloodplain;
 
   Double m_rightFloodplain;
@@ -68,10 +64,6 @@ public class VegetationsDataModel extends AbstractModelObject
   public static final String PROPERTY_LEFT_FLOODPLAIN_CLASS = "leftFloodplainClass"; //$NON-NLS-1$
 
   public static final String PROPERTY_RIGHT_FLOODPLAIN_CLASS = "rightFloodplainClass"; //$NON-NLS-1$
-
-  public static final String PROPERTY_RIVER_TUBE_CLASS = "riverTubeClass"; //$NON-NLS-1$
-
-  String m_riverTubeClass;
 
   String m_leftFloodplainClass;
 
@@ -95,12 +87,10 @@ public class VegetationsDataModel extends AbstractModelObject
     {
       m_leftFloodplain = ProfileFlowzones.findLeftFloodplainValue( profile, component );
       m_rightFloodplain = ProfileFlowzones.findRightFloodplainValue( profile, component );
-      m_riverTube = ProfileFlowzones.findRiverTubeValue( profile, component );
     }
     else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( component.getId() ) )
     {
       m_leftFloodplainClass = ProfileFlowzones.findLeftFloodplainClass( profile, component );
-      m_riverTubeClass = ProfileFlowzones.findRiverTubeClass( profile, component );
       m_rightFloodplainClass = ProfileFlowzones.findRightFloodplainClass( profile, component );
     }
 
@@ -133,11 +123,6 @@ public class VegetationsDataModel extends AbstractModelObject
     return m_rightFloodplain;
   }
 
-  public Double getRiverTube( )
-  {
-    return m_riverTube;
-  }
-
   public void setLeftFloodplain( final Double leftFloodplain )
   {
     final Object oldValue = m_leftFloodplain;
@@ -157,31 +142,6 @@ public class VegetationsDataModel extends AbstractModelObject
     ProfileFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplain );
 
     firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN, oldValue, rightFloodplain );
-  }
-
-  public void setRiverTube( final Double riverTube )
-  {
-    final Object oldValue = m_riverTube;
-    m_riverTube = riverTube;
-
-    ProfileFlowzones.setRiverTube( m_profile, m_component, riverTube );
-
-    firePropertyChange( PROPERTY_RIVER_TUBE, oldValue, riverTube );
-  }
-
-  public String getRiverTubeClass( )
-  {
-    return m_riverTubeClass;
-  }
-
-  public void setRiverTubeClass( final String riverTubeClass )
-  {
-    final Object oldValue = m_riverTubeClass;
-    m_riverTubeClass = riverTubeClass;
-
-    ProfileFlowzones.setRiverTube( m_profile, m_component, riverTubeClass );
-
-    firePropertyChange( PROPERTY_RIVER_TUBE_CLASS, oldValue, riverTubeClass );
   }
 
   public String getLeftFloodplainClass( )

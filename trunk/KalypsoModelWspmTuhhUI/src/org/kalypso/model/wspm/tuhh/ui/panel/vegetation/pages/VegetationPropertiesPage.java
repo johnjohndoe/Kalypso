@@ -77,7 +77,7 @@ import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
  */
 public class VegetationPropertiesPage extends AbstractElementPage implements IElementPage
 {
-  private static final String EMPTY_STRING = Messages.getString("VegetationPropertiesPage.0"); //$NON-NLS-1$
+  private static final String EMPTY_STRING = Messages.getString( "VegetationPropertiesPage.0" ); //$NON-NLS-1$
 
   protected final IProfil m_profile;
 
@@ -92,7 +92,7 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
   @Override
   public String getLabel( )
   {
-    return Messages.getString("VegetationPropertiesPage.1"); //$NON-NLS-1$
+    return Messages.getString( "VegetationPropertiesPage.1" ); //$NON-NLS-1$
   }
 
   @Override
@@ -101,7 +101,7 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 4, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("VegetationPropertiesPage.2") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "VegetationPropertiesPage.2" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     m_binding = new AbstractDatabinding( toolkit )
@@ -109,18 +109,17 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     };
 
     toolkit.createLabel( group, "" ); //$NON-NLS-1$
-    toolkit.createLabel( group, Messages.getString("VegetationPropertiesPage.4") ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
-    toolkit.createLabel( group, Messages.getString("VegetationPropertiesPage.5") ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
-    toolkit.createLabel( group, Messages.getString("VegetationPropertiesPage.6") ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
+    toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.4" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
+    toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.5" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
+    toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.6" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
     // TODO validators
-    build( group, toolkit, Messages.getString("VegetationPropertiesPage.7"), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("VegetationPropertiesPage.8"), RoughnessesDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("VegetationPropertiesPage.9"), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.7" ), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.9" ), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 4, 0 ) );
-    lnkRemove.setText( String.format( Messages.getString("VegetationPropertiesPage.10"), getLabel() ) ); //$NON-NLS-1$
+    lnkRemove.setText( String.format( Messages.getString( "VegetationPropertiesPage.10" ), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -138,16 +137,16 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( Messages.getString("VegetationPropertiesPage.11") ); //$NON-NLS-1$
+      grActions.setText( Messages.getString( "VegetationPropertiesPage.11" ) ); //$NON-NLS-1$
 
       final ImageHyperlink lnk = toolkit.createImageHyperlink( grActions, SWT.NULL );
-      lnk.setText( Messages.getString("VegetationPropertiesPage.12") ); //$NON-NLS-1$
+      lnk.setText( Messages.getString( "VegetationPropertiesPage.12" ) ); //$NON-NLS-1$
       lnk.addHyperlinkListener( new HyperlinkAdapter()
       {
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
-          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("VegetationPropertiesPage.13"), Messages.getString("VegetationPropertiesPage.14") ); //$NON-NLS-1$ //$NON-NLS-2$
+          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString( "VegetationPropertiesPage.13" ), Messages.getString( "VegetationPropertiesPage.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final GuessVegetationClassesRunnable worker = new GuessVegetationClassesRunnable( m_profile, overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
