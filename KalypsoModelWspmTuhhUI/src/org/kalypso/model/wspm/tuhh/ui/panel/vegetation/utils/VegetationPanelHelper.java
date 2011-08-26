@@ -45,7 +45,10 @@ import java.util.Set;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
@@ -93,5 +96,34 @@ public final class VegetationPanelHelper
       operation.addChange( new PointPropertyRemove( profile, dx ) );
 
     new ProfilOperationJob( operation ).schedule();
+  }
+
+  public static void addVegetationTypes( final IProfil profile )
+  {
+    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IComponent ax = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent ay = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent dp = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+
+    operation.addChange( new PointPropertyAdd( profile, ax ) );
+    operation.addChange( new PointPropertyAdd( profile, ay ) );
+    operation.addChange( new PointPropertyAdd( profile, dp ) );
+
+    new ProfilOperationJob( operation ).schedule();
+  }
+
+  public static void addVegetationClass( final IProfil profile )
+  {
+    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IComponent clazz = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+
+    operation.addChange( new PointPropertyAdd( profile, clazz ) );
+
+    new ProfilOperationJob( operation ).schedule();
+
   }
 }

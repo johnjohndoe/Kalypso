@@ -41,8 +41,15 @@
 package org.kalypso.model.wspm.tuhh.ui.panel.vegetation;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -50,7 +57,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
@@ -60,6 +70,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationPropertiesPage;
+import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationPanelHelper;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 
 /**
@@ -83,8 +94,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    // TODO Auto-generated method stub
-
+// TODO
   }
 
   /**
@@ -130,9 +140,32 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
     return pages[0];
   }
 
+  protected enum MISSING_TYPES
+  {
+    eVegetationTypes("Add Vegetation Type Properties"),
+    eVegetationClass("Add Vegetation Class Property");
+
+    private final String m_label;
+
+    MISSING_TYPES( final String label )
+    {
+      m_label = label;
+    }
+
+    /**
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
+
+  }
+
   private void createMissingVegetationPropertiesControl( final Composite parent, final FormToolkit toolkit )
   {
-    if( Vegetations.hasVegetationProperties( getProfile() ) )
+    if( Vegetations.hasVegetationProperties( getProfile() ) && Vegetations.hasVegetationClass( getProfile() ) )
       return;
 
     final Group group = new Group( parent, SWT.NULL );
@@ -140,7 +173,53 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     group.setText( "Profiloperationen" );
 
+    final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
+    viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider() );
+
+    final MISSING_TYPES[] missing = getMissingTypes();
+
+    viewer.setInput( missing );
+    viewer.setSelection( new StructuredSelection( missing[0] ) );
+
+    final ImageHyperlink lnkAdd = toolkit.createImageHyperlink( group, SWT.NULL );
+    lnkAdd.setImage( IMG_ADD_ROUGHNESS );
+
+    lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        final Object selected = selection.getFirstElement();
+        if( MISSING_TYPES.eVegetationTypes.equals( selected ) )
+          VegetationPanelHelper.addVegetationTypes( getProfile() );
+        else if( MISSING_TYPES.eVegetationClass.equals( selected ) )
+          VegetationPanelHelper.addVegetationClass( getProfile() );
+      }
+    } );
+
+    group.layout();
+    parent.layout();
+
     toolkit.createLabel( group, "TODO" );
+  }
+
+  private MISSING_TYPES[] getMissingTypes( )
+  {
+    final Set<MISSING_TYPES> types = new LinkedHashSet<VegetationPanel.MISSING_TYPES>();
+
+    if( !Vegetations.hasVegetationProperties( getProfile() ) )
+      types.add( MISSING_TYPES.eVegetationTypes );
+
+    if( !Vegetations.hasVegetationClass( getProfile() ) )
+      types.add( MISSING_TYPES.eVegetationClass );
+
+    return types.toArray( new MISSING_TYPES[] {} );
   }
 
   private IElementPage[] getPages( )
