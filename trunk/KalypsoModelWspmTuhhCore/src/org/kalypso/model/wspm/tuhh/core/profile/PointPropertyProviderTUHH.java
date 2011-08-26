@@ -60,6 +60,8 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+    m_properties.add( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
