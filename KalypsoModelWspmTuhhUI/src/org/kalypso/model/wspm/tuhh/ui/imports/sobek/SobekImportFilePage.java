@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
@@ -122,7 +122,7 @@ public class SobekImportFilePage extends WizardPage
     final IObservableValue modelDir = BeansObservables.observeValue( inputDir, FileAndHistoryData.PROPERTY_FILE );
     final IObservableValue modelHistory = BeansObservables.observeValue( inputDir, FileAndHistoryData.PROPERTY_HISTORY );
 
-    final DirectoryBinding directoryBinding = new DirectoryBinding( m_binding, modelDir, SWT.OPEN );
+    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
 
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( group, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -130,6 +130,8 @@ public class SobekImportFilePage extends WizardPage
     final String message = "Please select the SOBEK project directory:";
     final Button searchButton = directoryBinding.createDirectorySearchButton( group, historyControl, getWizard().getWindowTitle(), message );
     setButtonLayoutData( searchButton );
+
+    directoryBinding.applyBinding( m_binding );
 
     return group;
   }

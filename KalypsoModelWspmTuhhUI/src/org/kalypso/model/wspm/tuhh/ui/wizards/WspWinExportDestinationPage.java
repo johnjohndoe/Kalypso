@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -59,8 +60,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
+import org.kalypso.commons.databinding.validation.FileIsisAsciiPrintable;
+import org.kalypso.commons.databinding.validation.StringMustNotContainValidator;
+import org.kalypso.commons.databinding.validation.StringTooLongValidator;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -71,11 +76,11 @@ import org.kalypso.wspwin.core.WspCfg.TYPE;
  */
 public class WspWinExportDestinationPage extends WizardPage
 {
+  private static final int WSPWIN_MAX_PATH_LENGTH = 100;
+
   private static final String SELECT_DESTINATION_MESSAGE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.2" ); //$NON-NLS-1$
 
   private static final String SELECT_DESTINATION_TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.3" ); //$NON-NLS-1$
-
-  // private static final String DESTINATION_BROWSE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.4" ); //$NON-NLS-1$
 
   private static final String DESTINATION_LABEL = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.5" ); //$NON-NLS-1$
 
@@ -142,13 +147,21 @@ public class WspWinExportDestinationPage extends WizardPage
     final IObservableValue modelDir = BeansObservables.observeValue( m_data, WspWinExportProjectData.PROPERTY_OUTPUT_DIR );
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, WspWinExportProjectData.PROPERTY_OUTPUT_DIR_HISTORY );
 
-    final DirectoryBinding directoryBinding = new DirectoryBinding( m_binding, modelDir, SWT.SAVE );
+    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.SAVE );
 
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( destinationSelectionGroup, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    final String tooLongMessage = String.format( "The path should not be longer than %d characters, else WspWin will get problems.", WSPWIN_MAX_PATH_LENGTH );
+    final DataBinder historyBinder = directoryBinding.getHistoryBinder();
+    historyBinder.addTargetAfterGetValidator( new StringTooLongValidator( IStatus.WARNING, tooLongMessage, WSPWIN_MAX_PATH_LENGTH ) );
+    historyBinder.addTargetAfterGetValidator( new StringMustNotContainValidator( IStatus.WARNING, "The path should not contains spaces, else WspWin will get problems.", " " ) ); //$NON-NLS-2$
+    historyBinder.addTargetAfterConvertValidator( new FileIsisAsciiPrintable( IStatus.WARNING, "The path should not contains umlauts or other special characters, else WspWin will get problems." ) );
+
     final Button searchButton = directoryBinding.createDirectorySearchButton( destinationSelectionGroup, historyControl, SELECT_DESTINATION_TITLE, SELECT_DESTINATION_MESSAGE );
     setButtonLayoutData( searchButton );
+
+    directoryBinding.applyBinding( m_binding );
   }
 
   private void createOptionsGroup( final Composite composite )

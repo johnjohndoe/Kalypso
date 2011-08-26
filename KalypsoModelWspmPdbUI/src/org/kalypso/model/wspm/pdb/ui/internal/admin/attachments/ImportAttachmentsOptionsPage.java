@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -130,7 +130,7 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     final IObservableValue modelDir = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_DIR );
     final IObservableValue modelHistory = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_DIR_HISTORY );
 
-    final DirectoryBinding directoryBinding = new DirectoryBinding( m_binding, modelDir, SWT.OPEN );
+    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
 
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( parent, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -139,6 +139,8 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     final String windowTitle = getWizard().getWindowTitle();
     final Button searchButton = directoryBinding.createDirectorySearchButton( parent, historyControl, windowTitle, Messages.getString( "ImportAttachmentsOptionsPage.5" ) ); //$NON-NLS-1$
     setButtonLayoutData( searchButton );
+
+    directoryBinding.applyBinding( m_binding );
   }
 
   private void createImportPatternControls( final Composite parent )
