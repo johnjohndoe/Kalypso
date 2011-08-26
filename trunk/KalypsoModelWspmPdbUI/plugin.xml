@@ -146,8 +146,8 @@
            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            icon="icons/exportLocalAsWspm.gif"
            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
-           name="%wizard.name">
-           <description>%wizard.description</description>
+           name="%org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport.name">
+           <description>%org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport.description</description>
      </wizard>
       <wizard
           id="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
