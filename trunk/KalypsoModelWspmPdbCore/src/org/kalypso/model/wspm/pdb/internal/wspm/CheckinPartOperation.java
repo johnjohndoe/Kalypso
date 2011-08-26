@@ -132,13 +132,13 @@ public class CheckinPartOperation
       final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, m_heightComponentID );
       final com.vividsolutions.jts.geom.Point location = toPoint( loc );
 
-      // FIXME: use real roughness
-      final Roughness roughness = m_coefficients.getRoughnessOrUnknown( null );
+      final String roughnessClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, null );
+      final Roughness roughness = m_coefficients.getRoughnessOrUnknown( roughnessClassId );
       final BigDecimal kstValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, null );
       final BigDecimal kValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, null );
 
-      // FIXME: use real vegetation
-      final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( null );
+      final String vegetationClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, null );
+      final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( vegetationClassId );
       final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, VEGETATION_0 );
       final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, VEGETATION_0 );
       final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, VEGETATION_0 );
