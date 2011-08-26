@@ -45,16 +45,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
+import org.kalypso.model.wspm.core.IWspmLengthSectionProperties;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -109,9 +109,9 @@ public abstract class AbstractCheckinEventOperation implements IPdbOperation
 
     final TupleResult result = observation.getResult();
 
-    final int stationIndex = result.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
-    final int waterlevelIndex = result.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL );
-    final int runoffIndex = result.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_RUNOFF );
+    final int stationIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_STATION );
+    final int waterlevelIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_WATERLEVEL );
+    final int runoffIndex = result.indexOfComponent( IWspmLengthSectionProperties.LENGTH_SECTION_PROPERTY_RUNOFF );
 
     for( final IRecord record : result )
     {
