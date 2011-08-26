@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -56,6 +56,8 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
+import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
+import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.utils.ConsecutiveNumComparator;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -267,7 +269,10 @@ public class CrossSectionConverter
       setValue( record, IWspmConstants.POINT_PROPERTY_HOCHWERT, location.getY() );
     }
 
-    // TODO: add roughness class component
+    // REMARK: the checkout operation makes sure that all necessary classes are present
+    final Roughness roughness = point.getRoughness();
+    setValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName() );
+
     // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getRoughness() );
     final BigDecimal roughnessKst = point.getRoughnessKstValue();
     if( roughnessKst != null )
@@ -277,8 +282,9 @@ public class CrossSectionConverter
     if( roughnessK != null )
       setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, roughnessK.doubleValue() );
 
-    // TODO: add vegetation class component
-    // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getVegetation() );
+    // REMARK: the checkout operation makes sure that all necessary classes are present
+    final Vegetation vegetation = point.getVegetation();
+    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName() );
     setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point.getVegetationAx().doubleValue() );
     setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point.getVegetationAy().doubleValue() );
     setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point.getVegetationDp().doubleValue() );
