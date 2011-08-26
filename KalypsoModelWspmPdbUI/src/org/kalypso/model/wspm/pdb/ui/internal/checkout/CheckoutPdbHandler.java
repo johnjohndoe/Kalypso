@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
@@ -101,7 +101,12 @@ public class CheckoutPdbHandler extends AbstractHandler
     wizard.setWindowTitle( commandName );
 
     final IDialogSettings settings = wizard.getDialogSettings();
-    data.init( shell, commandName, settings, connection );
+    final IStatus initStatus = data.init( shell, commandName, settings, connection );
+    if( !initStatus.isOK() )
+    {
+      new StatusDialog2( shell, initStatus, commandName ).open();
+      return null;
+    }
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();

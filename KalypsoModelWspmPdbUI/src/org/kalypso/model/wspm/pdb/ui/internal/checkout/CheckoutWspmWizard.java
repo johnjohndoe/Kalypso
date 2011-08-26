@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -182,20 +183,31 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
   {
     final IPdbSettings settings = m_settingsData.getSettings();
 
-    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
-    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( result.isOK() )
-    {
-      final IPdbConnection connection = operation.getConnection();
-      m_checkoutData.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
-      m_contentPage.setConnection( connection );
-    }
-    else
+    final IStatus result = doConnectAndInitData( settings );
+    if( !result.isOK() )
     {
       event.doit = false;
       final IMessage message = MessageUtilitites.convertStatus( result );
       ((WizardPage) event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
     }
+  }
+
+  private IStatus doConnectAndInitData( final IPdbSettings settings )
+  {
+    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+
+    if( !result.isOK() )
+      return result;
+
+    final IPdbConnection connection = operation.getConnection();
+    final IStatus initStatus = m_checkoutData.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
+    if( !initStatus.isOK() )
+      return initStatus;
+
+    m_contentPage.setConnection( connection );
+
+    return Status.OK_STATUS;
   }
 
   private void doSelectContent( final PageChangingEvent event )

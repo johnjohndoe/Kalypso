@@ -81,7 +81,7 @@ public class CheckoutWaterBodyWorker
         final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
         final WspmWaterBody newWspmWater = updateOrCreateWspmWaterBody( waterBody, wspmWater );
         m_mapping.set( waterBody, newWspmWater );
-        m_mapping.addChangedFeatures( newWspmWater );
+        m_mapping.addAddedFeatures( newWspmWater );
 
         monitor.worked( 1 );
       }

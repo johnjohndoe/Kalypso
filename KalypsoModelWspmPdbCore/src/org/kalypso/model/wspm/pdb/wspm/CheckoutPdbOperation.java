@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutCrossSectionsWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutRemoveWorker;
@@ -75,10 +76,14 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 
     final URI documentBase = m_data.getDocumentBase();
     final CheckoutDataMapping mapping = m_data.getMapping();
+    final Coefficients coefficients = m_data.getCoefficients();
 
     final CheckoutRemoveWorker removeWorker = new CheckoutRemoveWorker( m_data );
     removeWorker.execute();
     monitor.worked( 5 );
+
+    final CheckoutClassesWorker classesWorker = new CheckoutClassesWorker( coefficients, mapping );
+    classesWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
     final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( mapping );
     waterBodyWorker.execute( new SubProgressMonitor( monitor, 5 ) );

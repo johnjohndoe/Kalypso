@@ -91,7 +91,7 @@ public class CheckoutWaterlevelWorker
 
         final Object wspmObject = m_mapping.getWaterlevel( event );
         final Feature newWspmObject = createOrReplaceEvent( event, wspmObject );
-        m_mapping.addChangedFeatures( newWspmObject );
+        m_mapping.addAddedFeatures( newWspmObject );
 
         ProgressUtilities.worked( monitor, 1 );
       }

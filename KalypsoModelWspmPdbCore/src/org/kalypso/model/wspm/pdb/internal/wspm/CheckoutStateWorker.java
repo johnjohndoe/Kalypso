@@ -86,7 +86,7 @@ public class CheckoutStateWorker
 
         m_mapping.set( state, newReach );
 
-        m_mapping.addChangedFeatures( newReach );
+        m_mapping.addAddedFeatures( newReach );
 
         monitor.worked( 1 );
       }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,25 +36,34 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
+import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
+import org.kalypso.model.wspm.pdb.connect.command.GetCoefficients;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -100,23 +109,43 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private IPdbConnection m_connection;
 
-  public void init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
+  private Coefficients m_coefficients;
+
+  public IStatus init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
   {
-    closeConnection();
+    try
+    {
+      closeConnection();
 
-    m_connection = connection;
-    m_documentBase = findDocumentBase( shell, windowTitle, connection );
+      m_connection = connection;
+      m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
-    if( settings == null )
-      return;
+      m_coefficients = loadCoefficients( connection );
+
+      if( settings != null )
+      {
+        // TODO?
+      }
+
+      return Status.OK_STATUS;
+    }
+    catch( final InvocationTargetException e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
+  }
+
+  private Coefficients loadCoefficients( final IPdbConnection connection ) throws InvocationTargetException
+  {
+    final GetCoefficients operation = new GetCoefficients( IGafConstants.POINT_KIND_GAF );
+    new ExecutorRunnable( connection, operation ).execute( new NullProgressMonitor() );
+    return operation.getCoefficients();
   }
 
   public void store( final IDialogSettings settings )
   {
     if( settings == null )
       return;
-    // TODO Auto-generated method stub
-
   }
 
   private URI findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
@@ -198,5 +227,10 @@ public class CheckoutPdbData extends AbstractModelObject
   {
     if( m_connection != null )
       PdbUtils.closeQuietly( m_connection );
+  }
+
+  public Coefficients getCoefficients( )
+  {
+    return m_coefficients;
   }
 }
