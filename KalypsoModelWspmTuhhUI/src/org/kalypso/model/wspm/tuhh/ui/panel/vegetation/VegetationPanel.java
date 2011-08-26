@@ -207,8 +207,6 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
 
     group.layout();
     parent.layout();
-
-    toolkit.createLabel( group, "TODO" );
   }
 
   private MISSING_TYPES[] getMissingTypes( )
