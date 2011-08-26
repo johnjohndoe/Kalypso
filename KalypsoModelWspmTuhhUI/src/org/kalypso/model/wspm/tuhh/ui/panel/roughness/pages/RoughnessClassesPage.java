@@ -80,15 +80,15 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dirk Kuch
  */
-public class RoughnessClassPage extends AbstractRoughnessPage
+public class RoughnessClassesPage extends AbstractRoughnessPage
 {
   public static final String LABEL = "Roughness: Classes";
 
   private String[] m_roughnesses;
 
-  public RoughnessClassPage( final IProfil profile, final IComponent component )
+  public RoughnessClassesPage( final IProfil profile, final IComponent component )
   {
-    super( profile, component, RoughnessClassPage.class.getName() );
+    super( profile, component, RoughnessClassesPage.class.getName() );
   }
 
   /**

@@ -65,10 +65,12 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPageListener;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationClassesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationPropertiesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationPanelHelper;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -224,11 +226,13 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
 
   private IElementPage[] getPages( )
   {
-    final List<IElementPage> pages = new ArrayList<IElementPage>();
-
     final IProfil profile = getProfile();
+
+    final List<IElementPage> pages = new ArrayList<IElementPage>();
     if( Vegetations.hasVegetationProperties( profile ) )
       pages.add( new VegetationPropertiesPage( profile ) );
+    if( Vegetations.hasVegetationClass( profile ) )
+      pages.add( new VegetationClassesPage( profile, profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) ) );
 
     return pages.toArray( new IElementPage[] {} );
   }

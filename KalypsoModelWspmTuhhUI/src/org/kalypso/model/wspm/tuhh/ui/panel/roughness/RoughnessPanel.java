@@ -69,7 +69,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.MissingRoughnessTypePage;
-import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessClassPage;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessClassesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessFactorPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessKsPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessKstPage;
@@ -220,7 +220,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
       else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( roughness.getId() ) )
         pages.add( new RoughnessKstPage( getProfile(), roughness ) );
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
-        pages.add( new RoughnessClassPage( getProfile(), roughness ) );
+        pages.add( new RoughnessClassesPage( getProfile(), roughness ) );
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( roughness.getId() ) )
         pages.add( new RoughnessFactorPage( getProfile(), roughness ) );
       else
