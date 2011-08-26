@@ -44,7 +44,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -200,14 +203,11 @@ public final class RoughnessFlowzones
     return new int[] { p1, p2 };
   }
 
-  @SuppressWarnings("deprecation")
   private static void setCommonValue( final IProfil profile, final IComponent component, final int p1, final int p2, final Object value )
   {
-    final IRecord[] points = profile.getPoints( p1, p2 );
-    for( final IRecord point : points )
-    {
-      point.setValue( component, value );
-    }
+    final PointPropertyEdit changes = new PointPropertyEdit( profile.getPoints( p1, p2 ), component, value );
+    final ProfilOperation operation = new ProfilOperation( "updating profile properties", profile, changes, true );
+    new ProfilOperationJob( operation ).schedule();
   }
 
   public static void setLeftFloodplain( final IProfil profile, final IComponent component, final Object value )
