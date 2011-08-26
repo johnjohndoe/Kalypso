@@ -86,7 +86,7 @@ public class RoughnessClassComposite extends AbstractRoughnessComposite
 
   public RoughnessClassComposite( final IProfil profile, final IComponent component )
   {
-    super( profile, component );
+    super( profile, component, RoughnessClassComposite.class.getName() );
   }
 
   /**

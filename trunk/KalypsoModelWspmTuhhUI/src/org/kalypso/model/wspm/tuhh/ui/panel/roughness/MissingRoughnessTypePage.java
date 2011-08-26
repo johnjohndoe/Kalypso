@@ -42,19 +42,21 @@ package org.kalypso.model.wspm.tuhh.ui.panel.roughness;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kuch
  */
-public class MissingRoughnessTypePage implements IElementPage
+public class MissingRoughnessTypePage extends AbstractElementPage
 {
 
   private final IComponent m_roughness;
 
   public MissingRoughnessTypePage( final IComponent roughness )
   {
+    super( MissingRoughnessTypePage.class.getName() );
+
     m_roughness = roughness;
   }
 

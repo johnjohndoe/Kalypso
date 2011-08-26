@@ -60,7 +60,7 @@ import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -71,7 +71,7 @@ import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractRoughnessComposite implements IElementPage
+public abstract class AbstractRoughnessComposite extends AbstractElementPage
 {
   private final IProfil m_profile;
 
@@ -81,8 +81,10 @@ public abstract class AbstractRoughnessComposite implements IElementPage
 
   private IDataBinding m_binding;
 
-  public AbstractRoughnessComposite( final IProfil profile, final IComponent component )
+  public AbstractRoughnessComposite( final IProfil profile, final IComponent component, final String identifier )
   {
+    super( identifier );
+
     m_profile = profile;
     m_component = component;
 
