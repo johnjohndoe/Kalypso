@@ -47,7 +47,6 @@ import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -55,28 +54,27 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class CheckoutRoughnessWorker
 {
-  private final TuhhWspmProject m_project;
-
   private final Roughness[] m_roughnesses;
 
   private final CheckoutDataMapping m_mapping;
 
-  public CheckoutRoughnessWorker( final CheckoutDataMapping mapping, final TuhhWspmProject project, final Roughness[] roughnesses )
+  private final IWspmClassification m_classification;
+
+  public CheckoutRoughnessWorker( final CheckoutDataMapping mapping, final IWspmClassification classification, final Roughness[] roughnesses )
   {
     m_mapping = mapping;
-    m_project = project;
+    m_classification = classification;
     m_roughnesses = roughnesses;
   }
 
   public void execute( )
   {
-    final IWspmClassification classificationMember = m_project.getClassificationMember();
-    final IFeatureBindingCollection<IRoughnessClass> roughnessClassCollection = classificationMember.getRoughnessClassCollection();
+    final IFeatureBindingCollection<IRoughnessClass> roughnessClassCollection = m_classification.getRoughnessClassCollection();
 
     for( final Roughness roughness : m_roughnesses )
     {
       final String name = roughness.getId().getName();
-      final IRoughnessClass roughnessClass = classificationMember.findRoughnessClass( name );
+      final IRoughnessClass roughnessClass = m_classification.findRoughnessClass( name );
       if( roughnessClass == null )
         createRoughnessClass( roughness, roughnessClassCollection );
       else
@@ -86,7 +84,7 @@ public class CheckoutRoughnessWorker
 
   private void createRoughnessClass( final Roughness roughness, final IFeatureBindingCollection<IRoughnessClass> collection )
   {
-    final IRoughnessClass newClass = collection.addNew( IRoughnessClass.QNAME_FEATURE );
+    final IRoughnessClass newClass = collection.addNew( IRoughnessClass.FEATURE_ROUGHNESS_CLASS );
     newClass.setName( roughness.getId().getName() );
     final Color randomColor = ColorUtilities.random();
     final RGB randomRGB = org.kalypso.contribs.eclipse.swt.ColorUtilities.toRGB( randomColor );
@@ -108,7 +106,7 @@ public class CheckoutRoughnessWorker
   {
     roughnessClass.setDescription( roughness.getLabel() );
     roughnessClass.setKstValue( roughness.getKstValue() );
-    roughnessClass.setKstValue( roughness.getKValue() );
+    roughnessClass.setKsValue( roughness.getKValue() );
 
     // TODO: we have no equivalent for the following properties
     // roughnessClass.setComment( roughness.getDescription() );

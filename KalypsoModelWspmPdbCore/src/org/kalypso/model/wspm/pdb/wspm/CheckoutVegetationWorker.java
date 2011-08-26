@@ -47,7 +47,6 @@ import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -55,28 +54,27 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class CheckoutVegetationWorker
 {
-  private final TuhhWspmProject m_project;
-
   private final CheckoutDataMapping m_mapping;
 
   private final Vegetation[] m_vegetations;
 
-  public CheckoutVegetationWorker( final CheckoutDataMapping mapping, final TuhhWspmProject project, final Vegetation[] vegetation )
+  private final IWspmClassification m_classification;
+
+  public CheckoutVegetationWorker( final CheckoutDataMapping mapping, final IWspmClassification classification, final Vegetation[] vegetation )
   {
     m_mapping = mapping;
-    m_project = project;
+    m_classification = classification;
     m_vegetations = vegetation;
   }
 
   public void execute( )
   {
-    final IWspmClassification classificationMember = m_project.getClassificationMember();
-    final IFeatureBindingCollection<IVegetationClass> vegetationClassCollection = classificationMember.getVegetationClassCollection();
+    final IFeatureBindingCollection<IVegetationClass> vegetationClassCollection = m_classification.getVegetationClassCollection();
 
     for( final Vegetation vegetation : m_vegetations )
     {
       final String name = vegetation.getId().getName();
-      final IVegetationClass vegetationClass = classificationMember.findVegetationClass( name );
+      final IVegetationClass vegetationClass = m_classification.findVegetationClass( name );
       if( vegetationClass == null )
         createVegetationClass( vegetation, vegetationClassCollection );
       else
@@ -86,7 +84,7 @@ public class CheckoutVegetationWorker
 
   private void createVegetationClass( final Vegetation vegetation, final IFeatureBindingCollection<IVegetationClass> vegetationClassCollection )
   {
-    final IVegetationClass newClass = vegetationClassCollection.addNew( IVegetationClass.QNAME_FEATURE );
+    final IVegetationClass newClass = vegetationClassCollection.addNew( IVegetationClass.FEATURE_VEGETATION_CLASS );
     newClass.setName( vegetation.getId().getName() );
     final Color randomColor = ColorUtilities.random();
     final RGB randomRGB = org.kalypso.contribs.eclipse.swt.ColorUtilities.toRGB( randomColor );

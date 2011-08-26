@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 
@@ -61,11 +62,25 @@ public class CheckoutClassesWorker
 
   public void execute( final IProgressMonitor monitor )
   {
-    final TuhhWspmProject project = m_mapping.getProject();
+    final IWspmClassification classification = getOrCreateClassification();
 
-    new CheckoutRoughnessWorker( m_mapping, project, m_coefficients.getAllRoughness() ).execute();
-    new CheckoutVegetationWorker( m_mapping, project, m_coefficients.getAllVegetation() ).execute();
+    new CheckoutRoughnessWorker( m_mapping, classification, m_coefficients.getAllRoughness() ).execute();
+    new CheckoutVegetationWorker( m_mapping, classification, m_coefficients.getAllVegetation() ).execute();
 
     monitor.done();
+  }
+
+  private IWspmClassification getOrCreateClassification( )
+  {
+    final TuhhWspmProject project = m_mapping.getProject();
+    final IWspmClassification classification = project.getClassificationMember();
+    if( classification != null )
+      return classification;
+
+    final IWspmClassification newClassification = project.createClassificationMember();
+
+    m_mapping.addAddedFeatures( newClassification );
+
+    return newClassification;
   }
 }
