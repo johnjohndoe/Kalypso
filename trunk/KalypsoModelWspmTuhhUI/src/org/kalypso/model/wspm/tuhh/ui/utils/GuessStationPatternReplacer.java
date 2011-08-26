@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.utils;
 
@@ -128,7 +128,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
     if( stationPattern.startsWith( token ) )
       return token + asRegex( stationPattern.substring( token.length() ) );
 
-    final String[] split = StringUtils.split( stationPattern, token );
+    final String[] split = stationPattern.split( "\\Q" + token + "\\E" );
     return asRegex( split[0] ) + token + asRegex( split[1] );
   }
 
@@ -148,7 +148,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
       {
         appendEscaped( builder, pattern.substring( i, index ) );
         builder.append( ".*?" );
-        i = index + 1;
+        i = index;
       }
     }
 

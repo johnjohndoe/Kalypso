@@ -140,6 +140,8 @@ public class ImportAttachmentsOptionsPage extends WizardPage
     final Button searchButton = directoryBinding.createDirectorySearchButton( parent, historyControl, windowTitle, Messages.getString( "ImportAttachmentsOptionsPage.5" ) ); //$NON-NLS-1$
     setButtonLayoutData( searchButton );
 
+    directoryBinding.getHistoryBinder().addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "Source directory must not be empty" ) );
+
     directoryBinding.applyBinding( m_binding );
   }
 
