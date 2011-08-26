@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.oracle;
 
@@ -82,6 +82,11 @@ public class OracleConnection extends HibernateConnection<OracleSettings>
     configuration.setProperty( Environment.URL, connectionUrl );
     configuration.setProperty( Environment.USER, settings.getUsername() );
     configuration.setProperty( Environment.PASS, settings.getPassword() );
+
+    configuration.setProperty( Environment.CONNECTION_PREFIX + ".defaultNChar", "true" ); //$NON-NLS-1$ //$NON-NLS-2$
+    configuration.setProperty( Environment.CONNECTION_PREFIX + ".charSet", "utf-8" ); //$NON-NLS-1$ //$NON-NLS-2$
+    configuration.setProperty( Environment.CONNECTION_PREFIX + ".useUnicode", "true" ); //$NON-NLS-1$ //$NON-NLS-2$
+    configuration.setProperty( Environment.CONNECTION_PREFIX + ".characterEncoding", "utf-8" ); //$NON-NLS-1$ //$NON-NLS-2$
 
 // final OracleConnectInfo connectInfo = getConnectInfo();
 //
