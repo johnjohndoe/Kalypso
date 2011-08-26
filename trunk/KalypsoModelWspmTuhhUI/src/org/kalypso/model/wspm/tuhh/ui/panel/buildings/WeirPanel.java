@@ -59,12 +59,12 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 
@@ -105,7 +105,7 @@ public class WeirPanel extends AbstractProfilView
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     m_toolkit = toolkit;
-    final IProfil profile = getProfil();
+    final IProfil profile = getProfile();
     final Composite panel = toolkit.createComposite( parent );
     panel.setLayout( new GridLayout( 2, false ) );
 
@@ -126,7 +126,7 @@ public class WeirPanel extends AbstractProfilView
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final BuildingWehr building = WspmProfileHelper.getBuilding( getProfil(), BuildingWehr.class );
+        final BuildingWehr building = WspmProfileHelper.getBuilding( getProfile(), BuildingWehr.class );
         if( building == null )
           return;
 
@@ -140,7 +140,7 @@ public class WeirPanel extends AbstractProfilView
         if( id.equals( building.getValue( cWehr ) ) )
           return;
         final IProfilChange change = new ProfileObjectEdit( building, cWehr, id );
-        final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32" ), getProfil(), change, true ); //$NON-NLS-1$
+        final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.32" ), getProfile(), change, true ); //$NON-NLS-1$
         new ProfilOperationJob( operation ).schedule();
       }
     } );
@@ -167,7 +167,7 @@ public class WeirPanel extends AbstractProfilView
     if( m_wehrart.getCombo().isDisposed() )
       return;
 
-    final IProfil profile = getProfil();
+    final IProfil profile = getProfile();
     final BuildingWehr building = WspmProfileHelper.getBuilding( profile, BuildingWehr.class );
     if( building == null )
       return;

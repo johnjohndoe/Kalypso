@@ -68,6 +68,12 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.MissingRoughnessTypePage;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessClassPage;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessFactorPage;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessKsPage;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessKstPage;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 
@@ -107,7 +113,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     body.setLayout( new GridLayout() );
 
     /** handle existing roughnesses */
-    final IComponent[] roughnesses = RoughnessPanelHelper.fromProfile( getProfil() );
+    final IComponent[] roughnesses = RoughnessPanelHelper.fromProfile( getProfile() );
     final IElementPage[] pages = getPages( roughnesses );
     final ElementsComposite composite = new ElementsComposite( body, toolkit, pages, getSelectedPage( pages ) );
     composite.addPageListener( this );
@@ -142,7 +148,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
 
   private void createMissingRoughnessesControl( final Composite parent, final FormToolkit toolkit )
   {
-    final String[] missing = RoughnessPanelHelper.findMissing( getProfil() );
+    final String[] missing = RoughnessPanelHelper.findMissing( getProfile() );
     if( ArrayUtils.isEmpty( missing ) )
       return;
 
@@ -189,13 +195,13 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         final Object selected = selection.getFirstElement();
         if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+          RoughnessPanelHelper.addRoughness( getProfile(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
         else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
+          RoughnessPanelHelper.addRoughness( getProfile(), IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+          RoughnessPanelHelper.addRoughness( getProfile(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( selected ) )
-          RoughnessPanelHelper.addRoughness( getProfil(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
+          RoughnessPanelHelper.addRoughness( getProfile(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
       }
     } );
 
@@ -210,13 +216,13 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     for( final IComponent roughness : roughnesses )
     {
       if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughness.getId() ) )
-        pages.add( new RoughnessKsComposite( getProfil(), roughness ) );
+        pages.add( new RoughnessKsPage( getProfile(), roughness ) );
       else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( roughness.getId() ) )
-        pages.add( new RoughnessKstComposite( getProfil(), roughness ) );
+        pages.add( new RoughnessKstPage( getProfile(), roughness ) );
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( roughness.getId() ) )
-        pages.add( new RoughnessClassComposite( getProfil(), roughness ) );
+        pages.add( new RoughnessClassPage( getProfile(), roughness ) );
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( roughness.getId() ) )
-        pages.add( new RoughnessFactorComposite( getProfil(), roughness ) );
+        pages.add( new RoughnessFactorPage( getProfile(), roughness ) );
       else
         pages.add( new MissingRoughnessTypePage( roughness ) );
     }

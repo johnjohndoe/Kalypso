@@ -76,12 +76,12 @@ import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -123,7 +123,7 @@ public class TrennerPanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
-    final IProfil profil = getProfil();
+    final IProfil profil = getProfile();
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
@@ -327,7 +327,7 @@ public class TrennerPanel extends AbstractProfilView
     if( m_panel == null || m_panel.isDisposed() )
       return;
 
-    final IProfil profil = getProfil();
+    final IProfil profil = getProfile();
     final IProfilPointMarker[] tfDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker[] dbDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IProfilPointMarker[] bvDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
@@ -468,7 +468,7 @@ public class TrennerPanel extends AbstractProfilView
       if( e.widget instanceof Text )
       {
         final Text text = (Text) e.widget;
-        final IProfil profil = getProfil();
+        final IProfil profil = getProfile();
         final double value = NumberUtils.parseQuietDouble( text.getText() );
         final IProfilPointMarker[] devs = profil.getPointMarkerFor( m_component );
         final IComponent type = profil.hasPointProperty( m_component );

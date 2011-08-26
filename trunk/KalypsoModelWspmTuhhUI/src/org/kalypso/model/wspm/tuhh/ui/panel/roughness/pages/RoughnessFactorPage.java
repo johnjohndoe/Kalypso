@@ -38,48 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
+package org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.observation.result.IComponent;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-class DeleteWeirMarkerAction extends Action
+public class RoughnessFactorPage extends AbstractRoughnessPage
 {
-  private final IProfil m_profile;
+  public static final String LABEL = "Roughness Factor";
 
-  private final IProfilPointMarker m_devider;
-
-  public DeleteWeirMarkerAction( final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
+  public RoughnessFactorPage( final IProfil profile, final IComponent component )
   {
-    m_devider = devider;
-    m_profile = profile;
-
-    setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.4" ) ); //$NON-NLS-1$
-
-    setImageDescriptor( KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE );
-
-    setEnabled( devider != null && canDelete );
+    super( profile, component, RoughnessFactorPage.class.getName() );
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.kalypso.model.wspm.tuhh.ui.panel.roughness.AbstractRoughnessComposite#getLabel()
    */
   @Override
-  public void run( )
+  public String getLabel( )
   {
-    final IProfilChange change = new PointMarkerEdit( m_devider, null );
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.5" ), m_profile, change, true ); //$NON-NLS-1$
-    new ProfilOperationJob( operation ).schedule();
+    return LABEL;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  @Override
+  public void render( final Composite parent, final FormToolkit toolkit )
+  {
+    renderSimpleType( parent, toolkit );
   }
 
 }
