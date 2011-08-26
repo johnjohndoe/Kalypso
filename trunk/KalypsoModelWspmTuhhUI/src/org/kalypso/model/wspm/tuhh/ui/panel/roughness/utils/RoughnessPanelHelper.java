@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -106,7 +107,7 @@ public final class RoughnessPanelHelper
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( componentId );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("RoughnessPanelHelper.0"), profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyAdd( profile, component ) );
     new ProfilOperationJob( operation ).schedule();
   }
@@ -116,7 +117,7 @@ public final class RoughnessPanelHelper
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( componentId );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("RoughnessPanelHelper.1"), profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyRemove( profile, component ) );
     new ProfilOperationJob( operation ).schedule();
   }

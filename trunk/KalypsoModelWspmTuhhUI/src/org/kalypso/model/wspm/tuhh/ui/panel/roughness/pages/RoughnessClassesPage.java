@@ -71,6 +71,7 @@ import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.observation.result.IComponent;
@@ -82,7 +83,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class RoughnessClassesPage extends AbstractRoughnessPage
 {
-  public static final String LABEL = "Roughness: Classes";
+  public static final String LABEL = Messages.getString("RoughnessClassesPage.0"); //$NON-NLS-1$
 
   private String[] m_roughnesses;
 
@@ -110,7 +111,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Flow Zone Roughness" );
+    group.setText( Messages.getString("RoughnessClassesPage.1") ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     setBinding( new AbstractDatabinding( toolkit )
@@ -118,13 +119,13 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     } );
 
     // TODO validators
-    build( group, toolkit, "Left Flood-Plain", RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null );
-    build( group, toolkit, "River Tube", RoughnessesDataModel.PROPERTY_RIVER_TUBE_CLASS, null );
-    build( group, toolkit, "Right Flood-Plain", RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null );
+    build( group, toolkit, Messages.getString("RoughnessClassesPage.2"), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("RoughnessClassesPage.3"), RoughnessesDataModel.PROPERTY_RIVER_TUBE_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("RoughnessClassesPage.4"), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
-    lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
+    lnkRemove.setText( String.format( Messages.getString("RoughnessClassesPage.5"), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -142,13 +143,13 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( "Additional Actions" );
+      grActions.setText( Messages.getString("RoughnessClassesPage.6") ); //$NON-NLS-1$
 
       if( Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
-        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, grActions, toolkit, "Update ks values from mapped roughness class" );
+        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, grActions, toolkit, Messages.getString("RoughnessClassesPage.7") ); //$NON-NLS-1$
 
       if( Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
-        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, grActions, toolkit, "Update kst values from mapped roughness class" );
+        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, grActions, toolkit, Messages.getString("RoughnessClassesPage.8") ); //$NON-NLS-1$
 
       toolkit.adapt( grActions );
     }
@@ -164,7 +165,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), "Overwrite", "Overwrite existing roughness values?" );
+        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("RoughnessClassesPage.9"), Messages.getString("RoughnessClassesPage.10") ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( getProfile(), property, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );

@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
@@ -66,7 +67,7 @@ public class SobekImportWizard extends Wizard implements IWorkbenchWizard
   {
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() ) );
 
-    setWindowTitle( "Import SOBEK data" );
+    setWindowTitle( Messages.getString("SobekImportWizard.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -81,7 +82,7 @@ public class SobekImportWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    addPage( new SobekImportFilePage( "inputPage", m_data ) );
+    addPage( new SobekImportFilePage( "inputPage", m_data ) ); //$NON-NLS-1$
   }
 
   @Override

@@ -45,6 +45,7 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -57,7 +58,7 @@ public class GuessStationPatternValidator extends TypedValidator<String>
   {
     super( String.class, IStatus.ERROR, StringUtils.EMPTY );
 
-    m_token = String.format( "<%s>", GuessStationPattern.TOKEN );
+    m_token = String.format( "<%s>", GuessStationPattern.TOKEN ); //$NON-NLS-1$
   }
 
   @Override
@@ -66,7 +67,7 @@ public class GuessStationPatternValidator extends TypedValidator<String>
     final int countMatches = StringUtils.countMatches( pattern, m_token );
     if( countMatches != 1 )
     {
-      final String containsMessage = String.format( "'Pattern' must contain the %s token exactly once.", m_token );
+      final String containsMessage = String.format( Messages.getString("GuessStationPatternValidator.1"), m_token ); //$NON-NLS-1$
       fail( containsMessage );
     }
 

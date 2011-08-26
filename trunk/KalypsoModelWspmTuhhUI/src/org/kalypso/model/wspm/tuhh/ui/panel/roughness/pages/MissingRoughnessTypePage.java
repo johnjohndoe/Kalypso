@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -66,7 +67,7 @@ public class MissingRoughnessTypePage extends AbstractElementPage
   @Override
   public String getLabel( )
   {
-    return "Error: Missing Roughness Type";
+    return Messages.getString("MissingRoughnessTypePage.0"); //$NON-NLS-1$
   }
 
   /**
@@ -76,7 +77,7 @@ public class MissingRoughnessTypePage extends AbstractElementPage
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    toolkit.createLabel( body, String.format( "Missing roughness type for profile property: %s", m_roughness.getId() ) );
+    toolkit.createLabel( body, String.format( Messages.getString("MissingRoughnessTypePage.1"), m_roughness.getId() ) ); //$NON-NLS-1$
 
   }
 

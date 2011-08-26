@@ -152,11 +152,11 @@ public class WspWinExportDestinationPage extends WizardPage
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( destinationSelectionGroup, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final String tooLongMessage = String.format( "The path should not be longer than %d characters, else WspWin will get problems.", WSPWIN_MAX_PATH_LENGTH );
+    final String tooLongMessage = String.format( Messages.getString("WspWinExportDestinationPage.3"), WSPWIN_MAX_PATH_LENGTH ); //$NON-NLS-1$
     final DataBinder historyBinder = directoryBinding.getHistoryBinder();
     historyBinder.addTargetAfterGetValidator( new StringTooLongValidator( IStatus.WARNING, tooLongMessage, WSPWIN_MAX_PATH_LENGTH ) );
-    historyBinder.addTargetAfterGetValidator( new StringMustNotContainValidator( IStatus.WARNING, "The path should not contains spaces, else WspWin will get problems.", " " ) ); //$NON-NLS-2$
-    historyBinder.addTargetAfterConvertValidator( new FileIsisAsciiPrintable( IStatus.WARNING, "The path should not contains umlauts or other special characters, else WspWin will get problems." ) );
+    historyBinder.addTargetAfterGetValidator( new StringMustNotContainValidator( IStatus.WARNING, Messages.getString("WspWinExportDestinationPage.4"), " " ) );  //$NON-NLS-1$//$NON-NLS-2$
+    historyBinder.addTargetAfterConvertValidator( new FileIsisAsciiPrintable( IStatus.WARNING, Messages.getString("WspWinExportDestinationPage.5") ) ); //$NON-NLS-1$
 
     final Button searchButton = directoryBinding.createDirectorySearchButton( destinationSelectionGroup, historyControl, SELECT_DESTINATION_TITLE, SELECT_DESTINATION_MESSAGE );
     setButtonLayoutData( searchButton );

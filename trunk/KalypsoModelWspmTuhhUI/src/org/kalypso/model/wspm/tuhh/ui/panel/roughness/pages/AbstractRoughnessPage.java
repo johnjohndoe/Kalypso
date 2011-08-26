@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.observation.result.IComponent;
@@ -136,7 +137,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
 
     final Text text = toolkit.createText( body, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( "<Variating or empty values>" );
+    text.setMessage( Messages.getString("AbstractRoughnessPage.0") ); //$NON-NLS-1$
 
     bind( text, property, validator );
   }
@@ -156,7 +157,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Flow Zone Roughness" );
+    group.setText( Messages.getString("AbstractRoughnessPage.1") ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     setBinding( new AbstractDatabinding( toolkit )
@@ -164,13 +165,13 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     } );
 
     // TODO validators
-    build( group, toolkit, "Left Flood-Plain", RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null );
-    build( group, toolkit, "River Tube", RoughnessesDataModel.PROPERTY_RIVER_TUBE, null );
-    build( group, toolkit, "Right Flood-Plain", RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null );
+    build( group, toolkit, Messages.getString("AbstractRoughnessPage.2"), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("AbstractRoughnessPage.3"), RoughnessesDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("AbstractRoughnessPage.4"), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
-    lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
+    lnkRemove.setText( String.format( Messages.getString("AbstractRoughnessPage.5"), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -188,20 +189,20 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( "Additional Actions" );
+      grActions.setText( Messages.getString("AbstractRoughnessPage.6") ); //$NON-NLS-1$
 
       final ImageHyperlink lnk = toolkit.createImageHyperlink( grActions, SWT.NULL );
       if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( getComponent().getId() ) )
-        lnk.setText( "Guess roughess classes from existing ks values" );
+        lnk.setText( Messages.getString("AbstractRoughnessPage.7") ); //$NON-NLS-1$
       else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( getComponent().getId() ) )
-        lnk.setText( "Guess roughess classes from existing kst values" );
+        lnk.setText( Messages.getString("AbstractRoughnessPage.8") ); //$NON-NLS-1$
 
       lnk.addHyperlinkListener( new HyperlinkAdapter()
       {
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
-          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), "Overwrite", "Overwrite existing classes?" );
+          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("AbstractRoughnessPage.9"), Messages.getString("AbstractRoughnessPage.10") ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );

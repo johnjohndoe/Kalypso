@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -87,7 +88,7 @@ public final class VegetationPanelHelper
     final IComponent ay = profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     final IComponent dx = profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("VegetationPanelHelper.0"), profile, true ); //$NON-NLS-1$
     if( Objects.isNotNull( ax ) )
       operation.addChange( new PointPropertyRemove( profile, ax ) );
     if( Objects.isNotNull( ay ) )
@@ -100,7 +101,7 @@ public final class VegetationPanelHelper
 
   public static void addVegetationTypes( final IProfil profile )
   {
-    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("VegetationPanelHelper.1"), profile, true ); //$NON-NLS-1$
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent ax = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
@@ -116,7 +117,7 @@ public final class VegetationPanelHelper
 
   public static void addVegetationClass( final IProfil profile )
   {
-    final ProfilOperation operation = new ProfilOperation( "Adding roughness type", profile, true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("VegetationPanelHelper.2"), profile, true ); //$NON-NLS-1$
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent clazz = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );

@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnable;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationPanelHelper;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationsDataModel;
@@ -76,7 +77,7 @@ import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
  */
 public class VegetationPropertiesPage extends AbstractElementPage implements IElementPage
 {
-  private static final String EMPTY_STRING = "<Variating>";
+  private static final String EMPTY_STRING = Messages.getString("VegetationPropertiesPage.0"); //$NON-NLS-1$
 
   protected final IProfil m_profile;
 
@@ -91,7 +92,7 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
   @Override
   public String getLabel( )
   {
-    return "Vegetation Properties";
+    return Messages.getString("VegetationPropertiesPage.1"); //$NON-NLS-1$
   }
 
   @Override
@@ -100,26 +101,26 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 4, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Flow Zone Vegetations" );
+    group.setText( Messages.getString("VegetationPropertiesPage.2") ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     m_binding = new AbstractDatabinding( toolkit )
     {
     };
 
-    toolkit.createLabel( group, "" );
-    toolkit.createLabel( group, "AX" ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
-    toolkit.createLabel( group, "AY" ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
-    toolkit.createLabel( group, "DP" ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
+    toolkit.createLabel( group, "" ); //$NON-NLS-1$
+    toolkit.createLabel( group, Messages.getString("VegetationPropertiesPage.4") ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
+    toolkit.createLabel( group, Messages.getString("VegetationPropertiesPage.5") ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
+    toolkit.createLabel( group, Messages.getString("VegetationPropertiesPage.6") ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
     // TODO validators
-    build( group, toolkit, "Left Flood-Plain", RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null );
-    build( group, toolkit, "River Tube", RoughnessesDataModel.PROPERTY_RIVER_TUBE, null );
-    build( group, toolkit, "Right Flood-Plain", RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null );
+    build( group, toolkit, Messages.getString("VegetationPropertiesPage.7"), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("VegetationPropertiesPage.8"), RoughnessesDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("VegetationPropertiesPage.9"), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 4, 0 ) );
-    lnkRemove.setText( String.format( "Remove: %s", getLabel() ) );
+    lnkRemove.setText( String.format( Messages.getString("VegetationPropertiesPage.10"), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -137,16 +138,16 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( "Additional Actions" );
+      grActions.setText( Messages.getString("VegetationPropertiesPage.11") ); //$NON-NLS-1$
 
       final ImageHyperlink lnk = toolkit.createImageHyperlink( grActions, SWT.NULL );
-      lnk.setText( "Guess vegetation classes from existing vegetation values" );
+      lnk.setText( Messages.getString("VegetationPropertiesPage.12") ); //$NON-NLS-1$
       lnk.addHyperlinkListener( new HyperlinkAdapter()
       {
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
-          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), "Overwrite", "Overwrite existing classes?" );
+          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("VegetationPropertiesPage.13"), Messages.getString("VegetationPropertiesPage.14") ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final GuessVegetationClassesRunnable worker = new GuessVegetationClassesRunnable( m_profile, overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );

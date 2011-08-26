@@ -74,6 +74,7 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportData.GUESS_STATION_STRATEGY;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationContext;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
@@ -138,7 +139,7 @@ public class Sobek2Wspm
     if( profileDef == null )
     {
       final String id = profileDat.getId();
-      m_stati.add( IStatus.ERROR, "Missing definition for cross section with id '%s'", null, id );
+      m_stati.add( IStatus.ERROR, Messages.getString("Sobek2Wspm.0"), null, id ); //$NON-NLS-1$
       return;
     }
 
@@ -202,7 +203,7 @@ public class Sobek2Wspm
 
     final BigDecimal station = GuessStationPatternReplacer.findStation( searchString, GuessStationContext.DEFAULT_SEARCH_CONTEXTS, m_stationPatterns );
     if( station == null )
-      m_stati.add( IStatus.WARNING, "Failed to find station in '%s'", null, searchString );
+      m_stati.add( IStatus.WARNING, Messages.getString("Sobek2Wspm.1"), null, searchString ); //$NON-NLS-1$
     return station;
   }
 
@@ -216,7 +217,7 @@ public class Sobek2Wspm
         break;
 
       default:
-        final String message = String.format( "Cross section '%s' has unknown type: %d", profil.getName(), type );
+        final String message = String.format( Messages.getString("Sobek2Wspm.2"), profil.getName(), type ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
         throw new CoreException( status );
     }
@@ -243,7 +244,7 @@ public class Sobek2Wspm
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( "Problems during SOBEK conversion", "Conversion sucessfully terminated" );
+    return m_stati.asMultiStatusOrOK( Messages.getString("Sobek2Wspm.3"), Messages.getString("Sobek2Wspm.4") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public Feature[] getNewFeatures( )
@@ -255,7 +256,7 @@ public class Sobek2Wspm
   {
     if( frictionDat == null )
     {
-      m_stati.add( IStatus.WARNING, "Missing friction for cross section '%s'", null, profil.getName() );
+      m_stati.add( IStatus.WARNING, Messages.getString("Sobek2Wspm.5"), null, profil.getName() ); //$NON-NLS-1$
       return;
     }
 

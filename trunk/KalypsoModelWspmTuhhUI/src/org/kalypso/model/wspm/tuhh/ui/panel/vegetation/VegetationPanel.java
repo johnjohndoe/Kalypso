@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationClassesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages.VegetationPropertiesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationPanelHelper;
@@ -80,7 +81,7 @@ import org.kalypso.model.wspm.ui.view.AbstractProfilView;
  */
 public class VegetationPanel extends AbstractProfilView implements IElementPageListener
 {
-  static final Image IMG_ADD_ROUGHNESS = new Image( null, VegetationPanel.class.getResourceAsStream( "images/vegetationPanelAdd.gif" ) );
+  static final Image IMG_ADD_ROUGHNESS = new Image( null, VegetationPanel.class.getResourceAsStream( "images/vegetationPanelAdd.gif" ) ); //$NON-NLS-1$
 
   private static String LAST_SELECTED_PAGE;
 
@@ -118,7 +119,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
     composite.setShowAlwaysComboViewer( true );
     composite.update();
 
-    toolkit.createLabel( body, " " ); // spacer
+    toolkit.createLabel( body, " " ); // spacer //$NON-NLS-1$
 
     /** handle missing roughnesses */
     createMissingVegetationPropertiesControl( body, toolkit );
@@ -144,8 +145,8 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
 
   protected enum MISSING_TYPES
   {
-    eVegetationTypes("Add Vegetation Type Properties"),
-    eVegetationClass("Add Vegetation Class Property");
+    eVegetationTypes(Messages.getString("VegetationPanel.2")), //$NON-NLS-1$
+    eVegetationClass(Messages.getString("VegetationPanel.3")); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -173,7 +174,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
     final Group group = new Group( parent, SWT.NULL );
     group.setLayout( Layouts.createGridLayout( 2 ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Profiloperationen" );
+    group.setText( Messages.getString("VegetationPanel.4") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

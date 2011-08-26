@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.MissingRoughnessTypePage;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessClassesPage;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.RoughnessFactorPage;
@@ -82,7 +83,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RoughnessPanel extends AbstractProfilView implements IElementPageListener
 {
-  static final Image IMG_ADD_ROUGHNESS = new Image( null, RoughnessPanel.class.getResourceAsStream( "images/roughnessPanelAdd.gif" ) );
+  static final Image IMG_ADD_ROUGHNESS = new Image( null, RoughnessPanel.class.getResourceAsStream( "images/roughnessPanelAdd.gif" ) ); //$NON-NLS-1$
 
   private static String LAST_SELECTED_PAGE;
 
@@ -122,7 +123,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     composite.setShowAlwaysComboViewer( true );
     composite.update();
 
-    toolkit.createLabel( body, " " ); // spacer
+    toolkit.createLabel( body, " " ); // spacer //$NON-NLS-1$
 
     /** handle missing roughnesses */
     createMissingRoughnessesControl( body, toolkit );
@@ -155,7 +156,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     final Group group = new Group( parent, SWT.NULL );
     group.setLayout( Layouts.createGridLayout( 2 ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Profiloperationen" );
+    group.setText( Messages.getString("RoughnessPanel.2") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -166,13 +167,13 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
       public String getText( final Object element )
       {
         if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( element ) )
-          return "Add roughness of type ks ";
+          return Messages.getString("RoughnessPanel.3"); //$NON-NLS-1$
         else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( element ) )
-          return "Add roughness of type kst";
+          return Messages.getString("RoughnessPanel.4"); //$NON-NLS-1$
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
-          return "Add roughness classes";
+          return Messages.getString("RoughnessPanel.5"); //$NON-NLS-1$
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( element ) )
-          return "Add roughness factor";
+          return Messages.getString("RoughnessPanel.6"); //$NON-NLS-1$
 
         return super.getText( element );
       }
