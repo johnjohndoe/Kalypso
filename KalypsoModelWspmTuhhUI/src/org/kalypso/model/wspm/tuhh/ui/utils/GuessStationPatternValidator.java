@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.utils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;

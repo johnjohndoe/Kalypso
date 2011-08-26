@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
