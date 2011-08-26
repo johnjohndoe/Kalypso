@@ -55,7 +55,7 @@ public class RoughnessKstComposite extends AbstractRoughnessComposite
 
   public RoughnessKstComposite( final IProfil profile, final IComponent roughness )
   {
-    super( profile, roughness );
+    super( profile, roughness, RoughnessKstComposite.class.getName() );
   }
 
   @Override
