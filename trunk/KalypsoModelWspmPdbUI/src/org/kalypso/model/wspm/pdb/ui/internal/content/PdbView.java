@@ -79,6 +79,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.PdbUpdater;
+import org.kalypso.model.wspm.pdb.ui.internal.IPdbHelp;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
@@ -190,6 +191,8 @@ public class PdbView extends ViewPart implements IConnectionViewer
     body.setLayout( new FillLayout() );
 
     m_updateControlJob.schedule( 250 );
+
+    PlatformUI.getWorkbench().getHelpSystem().setHelp( m_form, IPdbHelp.CONTEXT_PDB_USER_MANUAL );
   }
 
   private Image getFormImage( )

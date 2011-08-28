@@ -460,5 +460,18 @@
            properties="hasRole"
            type="org.eclipse.ui.IWorkbenchWindow">
      </propertyTester>
+  </extension>
+  <extension
+        point="org.eclipse.help.toc">
+     <toc
+           file="$nl$/toc.xml"
+           primary="true">
+     </toc>
+  </extension>
+  <extension
+        point="org.eclipse.help.contexts">
+     <contexts
+           file="$nl$/contexts.xml">
+     </contexts>
   </extension>   
 </plugin>
