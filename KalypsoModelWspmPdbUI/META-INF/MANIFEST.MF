@@ -7,6 +7,7 @@ Bundle-Activator: org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.apache.commons,
  org.kalypso.model.wspm.pdb.core,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
@@ -19,6 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.afgui,
  org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.product,
- org.kalypso.module;bundle-version="11.6.1"
+ org.kalypso.module;bundle-version="11.6.1",
+ org.eclipse.help;bundle-version="3.5.100",
+ org.junit4;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
