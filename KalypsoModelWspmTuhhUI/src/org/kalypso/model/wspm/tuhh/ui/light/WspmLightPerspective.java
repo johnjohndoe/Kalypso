@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.light;
 
@@ -135,6 +135,8 @@ public class WspmLightPerspective implements IPerspectiveFactory
     final IFolderLayout mainRightFolder = layout.createFolder( MAIN_RIGHT_FOLDER, IPageLayout.RIGHT, 0.7f, MAIN_FOLDER );
     mainRightFolder.addView( ViewContentOutline.ID );
     mainRightFolder.addPlaceholder( MapWidgetView.ID );
+    mainRightFolder.addPlaceholder( "org.eclipse.help.ui.HelpView" ); //$NON-NLS-1$
+    // mainRightFolder.addPlaceholder( IPageLayout.ID_PROGRESS_VIEW );
 
     layout.getViewLayout( WspmGmvViewPart.ID ).setCloseable( false );
     layout.getViewLayout( WspmGmvViewPart.ID ).setMoveable( false );
