@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.oracle;
 
@@ -110,7 +110,9 @@ class OracleSettingsControl extends Composite implements IPdbSettingsControl
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
     for( final IValidator validator : validators )
+    {
       targetToModel.setAfterConvertValidator( validator );
+    }
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
     final IObservableValue model = new SettingsPropertyValue( m_settings, property );
