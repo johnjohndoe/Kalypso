@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -58,11 +59,14 @@ import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
  */
 public class GafCodes
 {
-  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString( "GafCodes.0" ), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY ); //$NON-NLS-1$
+  public static final GafCode NULL_HYK = new GafCode( -1, Messages.getString( "GafCodes.0" ), StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, null, false ); //$NON-NLS-1$
 
   private final Map<String, GafCode> m_codes = new LinkedHashMap<String, GafCode>();
 
   private final Map<String, GafCode> m_hykCodes = new LinkedHashMap<String, GafCode>();
+
+  /* Category -> default code */
+  private final Map<String, GafCode> m_defaultCodes = new HashMap<String, GafCode>();
 
   public GafCodes( ) throws IOException
   {
@@ -78,6 +82,9 @@ public class GafCodes
 
       // m_codes.put( StringUtils.EMPTY, NULL_CODE );
       m_hykCodes.put( StringUtils.EMPTY, NULL_HYK );
+
+      if( gafCode.isDefault() )
+        m_defaultCodes.put( gafCode.getKind(), gafCode );
     }
   }
 
@@ -101,5 +108,10 @@ public class GafCodes
   {
     final Collection<GafCode> values = m_hykCodes.values();
     return values.toArray( new GafCode[values.size()] );
+  }
+
+  public GafCode getDefaultCode( final String category )
+  {
+    return m_defaultCodes.get( category );
   }
 }

@@ -110,10 +110,13 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
 
       final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
+      final IStatus status = operation.getStatus();
 
       session.close();
 
       updateReach( state );
+
+      return status;
     }
     catch( final HibernateException e )
     {
@@ -143,8 +146,6 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     {
       monitor.done();
     }
-
-    return Status.OK_STATUS;
   }
 
   /**
