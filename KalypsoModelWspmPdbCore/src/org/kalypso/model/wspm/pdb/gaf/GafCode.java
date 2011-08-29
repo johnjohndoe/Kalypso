@@ -63,22 +63,25 @@ public class GafCode implements Comparable<GafCode>
 
   private final int m_number;
 
-  private RGB m_color;
+  private final RGB m_color;
+
+  private final boolean m_isDefault;
 
   public GafCode( final String key, final String value )
   {
     m_key = StringUtils.trim( key );
 
-    final String[] tokens = value.split( ";", 6 ); //$NON-NLS-1$
+    final String[] tokens = value.split( ";", 7 ); //$NON-NLS-1$
     m_number = Integer.parseInt( tokens[0] );
     m_dbCode = StringUtils.trim( tokens[1] );
     m_description = StringUtils.trim( tokens[2] );
     m_hyk = StringUtils.trim( tokens[3] );
     m_kind = StringUtils.trim( tokens[4] );
     m_color = ColorUtilities.toRGBFromHTML( StringUtils.trim( tokens[5] ) );
+    m_isDefault = Boolean.valueOf( tokens[6] );
   }
 
-  public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final String kind )
+  public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final String kind, final RGB color, final boolean isDefault )
   {
     m_number = number;
     m_key = key;
@@ -86,6 +89,8 @@ public class GafCode implements Comparable<GafCode>
     m_description = description;
     m_hyk = hyk;
     m_kind = kind;
+    m_color = color;
+    m_isDefault = isDefault;
   }
 
   @Override
@@ -134,5 +139,10 @@ public class GafCode implements Comparable<GafCode>
   public int compareTo( final GafCode o )
   {
     return m_number - o.m_number;
+  }
+
+  public boolean isDefault( )
+  {
+    return m_isDefault;
   }
 }

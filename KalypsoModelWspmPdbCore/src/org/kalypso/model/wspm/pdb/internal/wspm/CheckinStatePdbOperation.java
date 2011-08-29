@@ -51,8 +51,11 @@ import javax.activation.MimeType;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -67,6 +70,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
@@ -95,6 +99,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
 {
   static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
 
+  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
   private final PDBNameGenerator m_sectionNames = new PDBNameGenerator();
@@ -115,6 +121,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final URI m_documentBase;
 
+
   /**
    * @param dbSrs
    *          The coordinate system of the database
@@ -130,12 +137,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
     for( final WaterBody waterBody : waterBodies )
       m_waterBodies.put( waterBody.getName(), waterBody );
 
-    m_monitor = monitor;
+        m_monitor = monitor;
 
-    final int srid = JTSAdapter.toSrid( dbSrs );
-    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
+        final int srid = JTSAdapter.toSrid( dbSrs );
+        m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
 
-    m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
+        m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
   }
 
   @Override
@@ -162,6 +169,11 @@ public class CheckinStatePdbOperation implements IPdbOperation
     }
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
+  }
+
+  public IStatus getStatus( )
+  {
+    return m_stati.asMultiStatusOrOK( "Warnings occured during check-in" );
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -270,14 +282,16 @@ public class CheckinStatePdbOperation implements IPdbOperation
     if( !isBlank( okPart ) )
       parts.add( okPart );
 
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, IGafConstants.KZ_CATEGORY_OK );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
     /* extract extra parts */
     final CrossSectionPart[] additionalParts = createAdditionalParts();
     for( final CrossSectionPart additionalPart : additionalParts )
+    {
       parts.add( additionalPart );
+    }
 
     final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
     for( final CrossSectionPart part : parts )
@@ -300,8 +314,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final String mainComponentID, final String category ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID );
-    partOperation.execute();
+    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID, category );
+
+    final IStatus result = partOperation.execute();
+    if( !result.isOK() )
+      m_stati.add( result );
+
     final CrossSectionPart part = partOperation.getPart();
     part.setCategory( category );
     return part;

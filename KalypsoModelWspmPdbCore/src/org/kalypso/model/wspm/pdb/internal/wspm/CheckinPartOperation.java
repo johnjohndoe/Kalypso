@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -55,6 +58,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
@@ -79,6 +83,8 @@ public class CheckinPartOperation
 {
   private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
 
+  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
   private final CrossSectionPart m_part = new CrossSectionPart();
 
   private final IProfil m_profil;
@@ -95,8 +101,11 @@ public class CheckinPartOperation
 
   private final IGeoTransformer m_transformer;
 
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID )
+  private final String m_category;
+
+  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID, final String category )
   {
+    m_category = category;
     m_coefficients = stateOperation.getCoefficients();
     m_gafCodes = stateOperation.getGafCodes();
     m_geometryFactory = stateOperation.getGeometryFactory();
@@ -111,7 +120,7 @@ public class CheckinPartOperation
     return m_part;
   }
 
-  public void execute( ) throws PdbConnectException
+  public IStatus execute( ) throws PdbConnectException
   {
     // Name must be unique within each part
     final PDBNameGenerator nameGenerator = new PDBNameGenerator();
@@ -126,19 +135,20 @@ public class CheckinPartOperation
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
       final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
       final BigDecimal height = getDecimalValue( record, m_heightComponentID, null );
+      // FIMXE: check code
       final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
-      final String hyk = toHyk( code );
 
       final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, m_heightComponentID );
       final com.vividsolutions.jts.geom.Point location = toPoint( loc );
 
+      // FIMXE: check class
       final String roughnessClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, null );
-      final Roughness roughness = m_coefficients.getRoughnessOrUnknown( roughnessClassId );
       final BigDecimal kstValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, null );
       final BigDecimal kValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, null );
 
+      // FIMXE: check class
       final String vegetationClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, null );
-      final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( vegetationClassId );
+      // FIXME: use null as default instead??
       final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, VEGETATION_0 );
       final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, VEGETATION_0 );
       final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, VEGETATION_0 );
@@ -148,6 +158,12 @@ public class CheckinPartOperation
       if( height == null )
         continue;
 
+      final Roughness roughness = toRoughness( roughnessClassId );
+      final Vegetation vegetation = toVegetation( vegetationClassId );
+      final GafCode gafCode = toGafCode( code );
+
+      final String hyk = toHyk( gafCode.getCode() );
+
       /* Keep old point name if possible, else create a new unique one */
       final String uniquePointName = nameGenerator.createUniqueName( name );
       final Point point = new Point( null, m_part, uniquePointName, i );
@@ -155,7 +171,7 @@ public class CheckinPartOperation
       point.setDescription( comment );
       point.setWidth( width );
       point.setHeight( height );
-      point.setCode( code );
+      point.setCode( gafCode.getCode() );
       point.setHyk( hyk );
       point.setLocation( location );
 
@@ -180,8 +196,65 @@ public class CheckinPartOperation
       final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[size] ) );
       m_part.setLine( line );
     }
+
+    final double station = m_profil.getStation();
+    final String warning = String.format( "Cross section km %.4f, part '%s'", station, m_category );
+    return m_stati.asMultiStatusOrOK( warning );
   }
 
+  private GafCode toGafCode( final String code )
+  {
+    final GafCode defaultCode = m_gafCodes.getDefaultCode( m_category );
+    if( StringUtils.isBlank( code ) )
+      return defaultCode;
+
+    final GafCode gc = m_gafCodes.getCode( code );
+    if( gc == null )
+    {
+      m_stati.add( IStatus.WARNING, "Unknown GAF code '%s'. Using code '%s' instead.", null, code, defaultCode.getCode() );
+      return defaultCode;
+    }
+
+    return gc;
+  }
+
+  private Vegetation toVegetation( final String vegetationClassId )
+  {
+    if( StringUtils.isBlank( vegetationClassId ) )
+      return m_coefficients.getUnknownVegetation();
+
+    final Vegetation vegetation = m_coefficients.getVegetation( vegetationClassId );
+    if( vegetation == null )
+    {
+      final Vegetation unknownVegetation = m_coefficients.getUnknownVegetation();
+      m_stati.add( IStatus.WARNING, "Unknown vegetation class '%s'. Using class '%s' instead.", null, vegetationClassId, unknownVegetation.getLabel() );
+      return unknownVegetation;
+    }
+
+    /* TODO: Check, if class values coincide */
+
+    return vegetation;
+  }
+
+  private Roughness toRoughness( final String roughnessClassId )
+  {
+    if( StringUtils.isBlank( roughnessClassId ) )
+      return m_coefficients.getUnknownRoughness();
+
+    final Roughness roughness = m_coefficients.getRoughness( roughnessClassId );
+    if( roughness == null )
+    {
+      final Roughness unknownRoughness = m_coefficients.getUnknownRoughness();
+      m_stati.add( IStatus.WARNING, "Unknown roughness class '%s'. Using class '%s' instead.", null, roughnessClassId, unknownRoughness.getLabel() );
+      return unknownRoughness;
+    }
+
+    /* TODO: Check, if class values coincide */
+
+    return roughness;
+  }
+
+  // FIXME: alternatively, set codes according to markers
   private String toHyk( final String code )
   {
     /* Just check if it is an existing code */
