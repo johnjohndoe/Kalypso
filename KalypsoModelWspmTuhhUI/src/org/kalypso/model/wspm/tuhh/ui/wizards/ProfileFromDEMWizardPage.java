@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
@@ -143,7 +143,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     final DataBinder binder = new DataBinder( target, model );
 
-    final String warning = Messages.getString( Messages.getString("ProfileFromDEMWizardPage.4") ); //$NON-NLS-1$
+    final String warning = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" ); //$NON-NLS-1$
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, warning ) );
 
     m_binding.bindValue( binder );
