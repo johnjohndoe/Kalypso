@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
@@ -97,7 +97,7 @@ public class AddWaterBodyAction extends UpdateableAction
       {
         e.printStackTrace();
         final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
-        new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
+        new StatusDialog( shell, status, wizard.getWindowTitle() ).open();
       }
     }
   }

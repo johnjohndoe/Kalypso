@@ -18,7 +18,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
@@ -122,7 +122,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
     final ElementSelector selector = new ElementSelector();
     selector.addStateName( m_data.getState().getName() );

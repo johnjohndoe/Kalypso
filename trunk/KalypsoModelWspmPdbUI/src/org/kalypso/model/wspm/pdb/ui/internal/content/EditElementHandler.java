@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
@@ -56,7 +56,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
@@ -113,7 +113,7 @@ public class EditElementHandler extends AbstractHandler
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
       final String windowTitle = worker.getWindowTitle();
-      new StatusDialog2( shell, status, windowTitle ).open();
+      new StatusDialog( shell, status, windowTitle ).open();
     }
     finally
     {
@@ -149,7 +149,7 @@ public class EditElementHandler extends AbstractHandler
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     if( !status.isOK() )
-      new StatusDialog2( shell, status, worker.getWindowTitle() ).open();
+      new StatusDialog( shell, status, worker.getWindowTitle() ).open();
 
     return wizards[0];
   }

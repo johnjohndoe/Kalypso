@@ -70,7 +70,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
@@ -230,7 +230,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final String settingsName = m_autoConnectData.getAutoConnectName();
     final IStatus result = doConnect( settingsName );
     if( !result.isOK() )
-      new StatusDialog2( getSite().getShell(), result, Messages.getString( "PdbView.4" ) ); //$NON-NLS-1$
+      new StatusDialog( getSite().getShell(), result, Messages.getString( "PdbView.4" ) ); //$NON-NLS-1$
   }
 
   private IStatus doConnect( final String settingsName )
@@ -453,7 +453,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( m_connectionStatus == null )
       return;
 
-    new StatusDialog2( getSite().getShell(), m_connectionStatus, Messages.getString( "PdbView.7" ) ).open(); //$NON-NLS-1$
+    new StatusDialog( getSite().getShell(), m_connectionStatus, Messages.getString( "PdbView.7" ) ).open(); //$NON-NLS-1$
   }
 
   public PdbInfo getInfo( )

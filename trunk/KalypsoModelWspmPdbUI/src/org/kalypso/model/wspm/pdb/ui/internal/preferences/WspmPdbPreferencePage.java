@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
@@ -108,7 +108,7 @@ public class WspmPdbPreferencePage extends PreferencePage implements IWorkbenchP
       e.printStackTrace();
 
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "WspmPdbPreferencePage.1" ), e ); //$NON-NLS-1$
-      return new StatusDialog2( getShell(), status, Messages.getString( "WspmPdbPreferencePage.2" ) ).open() == Window.OK; //$NON-NLS-1$
+      return new StatusDialog( getShell(), status, Messages.getString( "WspmPdbPreferencePage.2" ) ).open() == Window.OK; //$NON-NLS-1$
     }
   }
 

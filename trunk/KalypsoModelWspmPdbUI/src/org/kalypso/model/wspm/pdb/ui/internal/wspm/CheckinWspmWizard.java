@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
@@ -60,7 +60,7 @@ import org.eclipse.ui.forms.IMessage;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
@@ -163,7 +163,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     final IWizardPage[] pages = wizard.getPages();
     for( final IWizardPage page : pages )
       addPage( page );
-    wizard.dispose();
+        wizard.dispose();
   }
 
   @Override
@@ -172,7 +172,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     final ICoreRunnableWithProgress operation = m_worker.getOperation();
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
     // FIXME: if wizard is not closed due to error, we need to reinitialize the state, as it is still attached to the
     // old session
@@ -226,7 +226,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     final IStatus status = doPreinit( connection );
     if( !status.isOK() )
     {
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog( getShell(), status, getWindowTitle() ).open();
       return false;
     }
 
