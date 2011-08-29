@@ -50,7 +50,6 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -64,22 +63,22 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.AbstractDatabinding;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationsDataModel;
 import org.kalypso.observation.result.IComponent;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
@@ -192,9 +191,9 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     final ComboViewer viewer = new ComboViewer( body, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setLabelProvider( new AbstractClassificationLabelProvider( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
 
-    viewer.setInput( getRoughnessClasses() );
+    viewer.setInput( getVegetationClasses() );
 
     viewer.setSelection( new StructuredSelection( property ) );
 
@@ -204,29 +203,17 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     m_binding.bindValue( new DataBinder( targetValue, modelValue ) );
   }
 
-  private String[] getRoughnessClasses( )
+  private String[] getVegetationClasses( )
   {
     if( m_vegetations != null )
       return m_vegetations;
 
-    final IProfil profile = m_profile;
-    final Object source = profile.getSource();
-    if( !(source instanceof Feature) )
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( Objects.isNull( classification ) )
       return new String[] {};
-
-    final Feature feature = (Feature) source;
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final Feature root = workspace.getRootFeature();
-    if( !(root instanceof WspmProject) )
-      return new String[] {};
-
-    final WspmProject project = (WspmProject) root;
-    final IWspmClassification classifications = project.getClassificationMember();
 
     final Set<String> vegetations = new TreeSet<String>();
-
-    final IVegetationClass[] classes = classifications.getVegetationClasses();
-    for( final IVegetationClass clazz : classes )
+    for( final IVegetationClass clazz : classification.getVegetationClasses() )
     {
       vegetations.add( clazz.getName() );
     }
