@@ -45,10 +45,14 @@ import java.net.URI;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -57,6 +61,8 @@ import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutRemoveWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutStateWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutWaterBodyWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutWaterlevelWorker;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -101,8 +107,31 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 
     mapping.fireEvents( new SubProgressMonitor( monitor, 5 ) );
 
+    final IStatus status = checkClassesUpdate( mapping );
+
     ProgressUtilities.done( monitor );
 
-    return Status.OK_STATUS;
+    return status;
+  }
+
+  private IStatus checkClassesUpdate( final CheckoutDataMapping mapping )
+  {
+    final IStatusCollector stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+
+    final Feature[] changedFeatures = mapping.getChangedFeatures();
+    for( final Feature feature : changedFeatures )
+      checkForClassChange( stati, feature );
+
+    return stati.asMultiStatusOrOK( "Some class definitions of the WSPM project have been overwritten with values from the database. Please check your data." );
+  }
+
+  private void checkForClassChange( final IStatusCollector stati, final Feature feature )
+  {
+    if( feature instanceof IClassificationClass )
+    {
+      final IClassificationClass cc = (IClassificationClass) feature;
+      final String typeName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
+      stati.add( IStatus.WARNING, "%s class '%s' (id = '%s')", null, typeName, cc.getDescription(), cc.getName() );
+    }
   }
 }

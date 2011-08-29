@@ -259,7 +259,7 @@ public class CheckoutDataMapping
         m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, changedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
-      final Feature[] changedFeatures = m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
+      final Feature[] changedFeatures = getChangedFeatures();
       m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeatures ) );
 
       m_workspace.postCommand( new EmptyCommand( null, false ) );
@@ -374,5 +374,10 @@ public class CheckoutDataMapping
       if( element.equals( entry.getValue() ) )
         entry.setValue( null );
     }
+  }
+
+  public Feature[] getChangedFeatures( )
+  {
+    return m_changedFeatures.toArray( new Feature[m_changedFeatures.size()] );
   }
 }

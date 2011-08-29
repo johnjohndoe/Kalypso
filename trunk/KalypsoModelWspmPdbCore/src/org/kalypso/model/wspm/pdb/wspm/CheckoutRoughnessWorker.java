@@ -97,20 +97,13 @@ public class CheckoutRoughnessWorker
 
   private void updateRoughnessClass( final Roughness roughness, final IRoughnessClass roughnessClass )
   {
-    updateRoughnessProperties( roughness, roughnessClass );
-
-    m_mapping.addChangedFeatures( roughnessClass );
+    final boolean changed = updateRoughnessProperties( roughness, roughnessClass );
+    if( changed )
+      m_mapping.addChangedFeatures( roughnessClass );
   }
 
-  private void updateRoughnessProperties( final Roughness roughness, final IRoughnessClass roughnessClass )
+  private boolean updateRoughnessProperties( final Roughness roughness, final IRoughnessClass roughnessClass )
   {
-    roughnessClass.setDescription( roughness.getLabel() );
-    roughnessClass.setKstValue( roughness.getKstValue() );
-    roughnessClass.setKsValue( roughness.getKValue() );
-    roughnessClass.setComment( roughness.getDescription() );
-
-    // TODO: we have no equivalent for the following properties
-    // roughness.getSource();
-    // roughness.getValidity();
+    return new CheckoutRoughnessUpdater( roughness, roughnessClass ).update();
   }
 }
