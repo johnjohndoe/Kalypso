@@ -40,52 +40,67 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutClassesWorker
+public class CheckoutCodeWorker
 {
-  private final Coefficients m_coefficients;
-
   private final CheckoutDataMapping m_mapping;
+
+  private final IWspmClassification m_classification;
 
   private final GafCodes m_codes;
 
-  public CheckoutClassesWorker( final GafCodes codes, final Coefficients coefficients, final CheckoutDataMapping mapping )
+  public CheckoutCodeWorker( final CheckoutDataMapping mapping, final IWspmClassification classification, final GafCodes codes )
   {
-    m_codes = codes;
-    m_coefficients = coefficients;
     m_mapping = mapping;
+    m_classification = classification;
+    m_codes = codes;
   }
 
-  public void execute( final IProgressMonitor monitor )
+  public void execute( )
   {
-    final IWspmClassification classification = getOrCreateClassification();
+    final IFeatureBindingCollection<ICodeClass> codeClassCollection = m_classification.getCodeClassCollection();
 
-    new CheckoutCodeWorker( m_mapping, classification, m_codes ).execute();
-    new CheckoutRoughnessWorker( m_mapping, classification, m_coefficients.getAllRoughness() ).execute();
-    new CheckoutVegetationWorker( m_mapping, classification, m_coefficients.getAllVegetation() ).execute();
-
-    monitor.done();
+    final GafCode[] codes = m_codes.getAllCodes();
+    for( final GafCode code : codes )
+    {
+      final String name = code.getCode();
+      final ICodeClass codeClass = m_classification.findCodeClass( name );
+      if( codeClass == null )
+        createCodeClass( code, codeClassCollection );
+      else
+        updateCodeClass( code, codeClass );
+    }
   }
 
-  private IWspmClassification getOrCreateClassification( )
+  private void createCodeClass( final GafCode code, final IFeatureBindingCollection<ICodeClass> collection )
   {
-    final TuhhWspmProject project = m_mapping.getProject();
-    final IWspmClassification classification = project.getClassificationMember();
-    if( classification != null )
-      return classification;
+    final ICodeClass newClass = collection.addNew( ICodeClass.FEATURE_CODE_CLASS );
+    newClass.setName( code.getCode() );
 
-    final IWspmClassification newClassification = project.createClassificationMember();
+    updateCodeProperties( code, newClass );
 
-    m_mapping.addAddedFeatures( newClassification );
+    m_mapping.addAddedFeatures( newClass );
+  }
 
-    return newClassification;
+  private void updateCodeClass( final GafCode code, final ICodeClass codeClass )
+  {
+    updateCodeProperties( code, codeClass );
+
+    m_mapping.addChangedFeatures( codeClass );
+  }
+
+  private void updateCodeProperties( final GafCode code, final ICodeClass codeClass )
+  {
+    codeClass.setDescription( code.getCode() );
+    codeClass.setComment( code.getDescription() );
+    codeClass.setColor( code.getColor() );
   }
 }

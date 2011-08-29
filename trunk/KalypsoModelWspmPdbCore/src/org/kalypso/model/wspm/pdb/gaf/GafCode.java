@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.gaf;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 
 /**
  * Represents the 'Kennziffer' (KZ) of a gaf file.
@@ -61,16 +63,19 @@ public class GafCode implements Comparable<GafCode>
 
   private final int m_number;
 
+  private RGB m_color;
+
   public GafCode( final String key, final String value )
   {
     m_key = StringUtils.trim( key );
 
-    final String[] tokens = value.split( ";", 5 ); //$NON-NLS-1$
+    final String[] tokens = value.split( ";", 6 ); //$NON-NLS-1$
     m_number = Integer.parseInt( tokens[0] );
     m_dbCode = StringUtils.trim( tokens[1] );
     m_description = StringUtils.trim( tokens[2] );
     m_hyk = StringUtils.trim( tokens[3] );
     m_kind = StringUtils.trim( tokens[4] );
+    m_color = ColorUtilities.toRGBFromHTML( StringUtils.trim( tokens[5] ) );
   }
 
   public GafCode( final int number, final String key, final String dbCode, final String description, final String hyk, final String kind )
@@ -110,6 +115,11 @@ public class GafCode implements Comparable<GafCode>
   public String getCode( )
   {
     return m_key;
+  }
+
+  public RGB getColor( )
+  {
+    return m_color;
   }
 
   /**

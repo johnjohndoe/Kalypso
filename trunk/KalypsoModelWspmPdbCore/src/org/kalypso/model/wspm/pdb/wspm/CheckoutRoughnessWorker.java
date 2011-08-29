@@ -107,9 +107,9 @@ public class CheckoutRoughnessWorker
     roughnessClass.setDescription( roughness.getLabel() );
     roughnessClass.setKstValue( roughness.getKstValue() );
     roughnessClass.setKsValue( roughness.getKValue() );
+    roughnessClass.setComment( roughness.getDescription() );
 
     // TODO: we have no equivalent for the following properties
-    // roughnessClass.setComment( roughness.getDescription() );
     // roughness.getSource();
     // roughness.getValidity();
   }
