@@ -61,6 +61,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -102,6 +103,8 @@ public class PrfWriter implements IPrfConstants
 
   private final PrfRoughnessWriter m_roughnessWriter;
 
+  private final PrfVegetationWriter m_vegetationWriter;
+
   public PrfWriter( final IProfil profil, final IWaterlevel[] waterlevels )
   {
     this( profil, waterlevels, "" ); //$NON-NLS-1$
@@ -114,7 +117,7 @@ public class PrfWriter implements IPrfConstants
     fillDefaultPrfMetadata();
 
     m_roughnessWriter = new PrfRoughnessWriter( this, m_dbWriter, profil, defaultRoughnessType );
-
+    m_vegetationWriter = new PrfVegetationWriter( m_dbWriter, profil );
   }
 
   private void fillDefaultPrfMetadata( )
@@ -233,10 +236,10 @@ public class PrfWriter implements IPrfConstants
     {
       writeHochRechts();
     }
-    if( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) != null )
-    {
-      writeBewuchs();
-    }
+
+    if( Objects.isNotNull( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
+      m_vegetationWriter.writeBewuchs();
+
     if( m_profil.getComment() != null )
     {
       writeComment();
@@ -569,22 +572,6 @@ public class PrfWriter implements IPrfConstants
 
   }
 
-  private void writeBewuchs( )
-  {
-    final DataBlockHeader dbhx = PrfHeaders.createHeader( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
-    final CoordDataBlock dbx = new CoordDataBlock( dbhx );
-    final DataBlockHeader dbhy = PrfHeaders.createHeader( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
-    final CoordDataBlock dby = new CoordDataBlock( dbhy );
-    final DataBlockHeader dbhp = PrfHeaders.createHeader( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
-    final CoordDataBlock dbp = new CoordDataBlock( dbhp );
-    writeCoords( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ), dbx, 0.0 );
-    writeCoords( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ), dby, 0.0 );
-    writeCoords( m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ), dbp, 0.0 );
-    m_dbWriter.addDataBlock( dbx );
-    m_dbWriter.addDataBlock( dby );
-    m_dbWriter.addDataBlock( dbp );
-  }
-
   public void write( final Writer writer ) throws IOException
   {
     final DataBlockWriter dbWriter = export();
@@ -606,10 +593,15 @@ public class PrfWriter implements IPrfConstants
     }
   }
 
-  public void setPreferesRoughnessClasses( final boolean prefersRoughnessClasses )
+  public void setPreferRoughnessClasses( final boolean preferRoughnessClasses )
   {
-    m_roughnessWriter.setPreferesRoughnessClasses( prefersRoughnessClasses );
+    m_roughnessWriter.setPreferClasses( preferRoughnessClasses );
 
+  }
+
+  public void setPreferVegetationClasses( final boolean preferVegetationClasses )
+  {
+    m_vegetationWriter.setPreferClasses( preferVegetationClasses );
   }
 
 }

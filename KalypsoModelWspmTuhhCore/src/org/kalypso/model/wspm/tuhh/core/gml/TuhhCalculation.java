@@ -127,6 +127,16 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     return Boolean.valueOf( property.toString() );
   }
 
+  @Override
+  public boolean isPreferingVegetationClasses( )
+  {
+    final Object property = getProperty( QN_PROPERTY_PREFERE_VEGETATION_CLASSES );
+    if( Objects.isNull( property ) )
+      return false;
+
+    return Boolean.valueOf( property.toString() );
+  }
+
   public void setSubReachDef( final double startStation, final double endStation )
   {
     final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );

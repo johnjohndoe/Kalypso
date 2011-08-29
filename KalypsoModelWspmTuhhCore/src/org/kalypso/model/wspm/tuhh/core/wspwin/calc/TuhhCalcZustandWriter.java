@@ -69,14 +69,15 @@ public class TuhhCalcZustandWriter
 
   private final String m_roughnessType;
 
-  private final boolean m_prefersRoughnessClasses;
+  private boolean m_preferRoughnessClasses = false;
 
-  public TuhhCalcZustandWriter( final TuhhReach reach, final TuhhStationRange stationRange, final String roughnessType, final boolean prefersRoughnessClasses )
+  private boolean m_preferVegetationClasses = false;
+
+  public TuhhCalcZustandWriter( final TuhhReach reach, final TuhhStationRange stationRange, final String roughnessType )
   {
     m_stationRange = stationRange;
     m_reach = reach;
     m_roughnessType = roughnessType;
-    m_prefersRoughnessClasses = prefersRoughnessClasses;
     m_segments = m_reach.getReachProfileSegments();
 
     final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( stationRange.getDirection() );
@@ -121,6 +122,21 @@ public class TuhhCalcZustandWriter
 
     final File outPrfFile = new File( profDir, prfName );
 
-    new WspWinProfileWriter( profil, fileCount, m_roughnessType, m_prefersRoughnessClasses ).write( outPrfFile );
+    final WspWinProfileWriter writer = new WspWinProfileWriter( profil, fileCount, m_roughnessType );
+    writer.setPreferRoughnessClasses( m_preferRoughnessClasses );
+    writer.setPreferVegetationClasses( m_preferVegetationClasses );
+
+    writer.write( outPrfFile );
+  }
+
+  public void setPreferRoughnessClasses( final boolean preferingRoughnessClasses )
+  {
+    m_preferRoughnessClasses = preferingRoughnessClasses;
+
+  }
+
+  public void setPreferVegetationClasses( final boolean preferingVegetationClasses )
+  {
+    m_preferVegetationClasses = preferingVegetationClasses;
   }
 }

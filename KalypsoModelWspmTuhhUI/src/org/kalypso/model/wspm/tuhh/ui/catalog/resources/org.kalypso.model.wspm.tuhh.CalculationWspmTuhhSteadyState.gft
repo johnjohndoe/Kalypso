@@ -53,6 +53,19 @@
   <gft:validatorlabel property="tuhh:preferRoughnessClasses" visible="true" style="SWT.NONE">
     <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
   </gft:validatorlabel>
+  
+  
+  <gft:label property="tuhh:preferVegetationClasses" visible="true" style="SWT.NONE">
+    <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" verticalAlignment="GridData.CENTER" />
+  </gft:label>
+  <gft:checkbox editable="true" property="tuhh:preferVegetationClasses" style="SWT.NONE">
+    <gft:gridData grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" />
+    <gft:text> </gft:text>
+  </gft:checkbox>
+  <gft:validatorlabel property="tuhh:preferVegetationClasses" visible="true" style="SWT.NONE">
+    <gft:gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING" />
+  </gft:validatorlabel>
+  
 
   <gft:label property="tuhh:mode" visible="true" style="SWT.NONE">
     <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />

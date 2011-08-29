@@ -59,12 +59,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -310,8 +308,11 @@ public final class WspWinExporter
   private static void write1DTuhhZustand( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File zustFile ) throws IOException
   {
     final String roughnessType = getRoughnessForFG( calculation.getFliessgesetz() );
-    
-    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( calculation.getReach(), stationRange, roughnessType,  calculation.isPreferingRoughnessClasses() );
+
+    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( calculation.getReach(), stationRange, roughnessType );
+    zustandWriter.setPreferRoughnessClasses( calculation.isPreferingRoughnessClasses() );
+    zustandWriter.setPreferVegetationClasses( calculation.isPreferingVegetationClasses() );
+
     zustandWriter.write( zustFile );
   }
 

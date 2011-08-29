@@ -151,6 +151,7 @@
 				<sequence>
 					<element ref="tuhh:fliessgesetz" />
                     <element name="preferRoughnessClasses" type="boolean" default="false" /> 
+                    <element name="preferVegetationClasses" type="boolean" default="false" />
 					<element name="mode" default="WATERLEVEL">
 						<simpleType>
 							<restriction base="string">
