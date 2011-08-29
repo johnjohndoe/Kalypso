@@ -69,11 +69,14 @@ public class TuhhCalcZustandWriter
 
   private final String m_roughnessType;
 
-  public TuhhCalcZustandWriter( final TuhhReach reach, final TuhhStationRange stationRange, final String roughnessType )
+  private final boolean m_prefersRoughnessClasses;
+
+  public TuhhCalcZustandWriter( final TuhhReach reach, final TuhhStationRange stationRange, final String roughnessType, final boolean prefersRoughnessClasses )
   {
     m_stationRange = stationRange;
     m_reach = reach;
     m_roughnessType = roughnessType;
+    m_prefersRoughnessClasses = prefersRoughnessClasses;
     m_segments = m_reach.getReachProfileSegments();
 
     final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( stationRange.getDirection() );
@@ -118,6 +121,6 @@ public class TuhhCalcZustandWriter
 
     final File outPrfFile = new File( profDir, prfName );
 
-    new WspWinProfileWriter( profil, m_roughnessType, fileCount ).write( outPrfFile );
+    new WspWinProfileWriter( profil, fileCount, m_roughnessType, m_prefersRoughnessClasses ).write( outPrfFile );
   }
 }

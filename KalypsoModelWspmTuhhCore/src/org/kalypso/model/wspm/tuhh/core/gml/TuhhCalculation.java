@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -66,6 +67,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalculation
 {
+
   public TuhhCalculation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -99,7 +101,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public void setFliessgesetz( final FLIESSGESETZ gesetz )
   {
-    setProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), gesetz.name() ); //$NON-NLS-1$
+    setProperty( QN_PROPERTY_FLIESSGESETZ, gesetz.name() ); //$NON-NLS-1$
   }
 
   public FLIESSGESETZ getFliessgesetz( )
@@ -110,15 +112,24 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
         return FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS;
 
       default:
-        final String property = getProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), String.class ); //$NON-NLS-1$
+        final String property = getProperty( QN_PROPERTY_FLIESSGESETZ, String.class ); //$NON-NLS-1$
         return FLIESSGESETZ.valueOf( property );
     }
   }
 
+  @Override
+  public boolean isPreferingRoughnessClasses( )
+  {
+    final Object property = getProperty( QN_PROPERTY_PREFERE_ROUGHNESS_CLASSES );
+    if( Objects.isNull( property ) )
+      return false;
+
+    return Boolean.valueOf( property.toString() );
+  }
+
   public void setSubReachDef( final double startStation, final double endStation )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
-    final Feature subReachFeature = FeatureHelper.getSubFeature( this, qname );
+    final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
 
     final BigDecimal bigStart = ProfilUtil.stationToBigDecimal( startStation );
     final BigDecimal bigEnd = ProfilUtil.stationToBigDecimal( endStation );
@@ -128,16 +139,14 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public BigDecimal getStartStation( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
-    final Feature subReachFeature = FeatureHelper.getSubFeature( this, qname );
+    final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
 
     return (BigDecimal) subReachFeature.getProperty( new QName( NS_WSPM_TUHH, "startStation" ) ); //$NON-NLS-1$
   }
 
   public BigDecimal getEndStation( )
   {
-    final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
-    final Feature subReachFeature = FeatureHelper.getSubFeature( this, qname );
+    final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
 
     return (BigDecimal) subReachFeature.getProperty( new QName( NS_WSPM_TUHH, "endStation" ) ); //$NON-NLS-1$
   }
@@ -356,7 +365,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     if( polyFeature == null )
       return null;
 
-    return  (PolynomeProperties) polyFeature;
+    return (PolynomeProperties) polyFeature;
   }
 
   public String getVersion( )

@@ -144,6 +144,9 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
         return page;
     }
 
+    if( ArrayUtils.isEmpty( pages ) )
+      return null;
+
     return pages[0];
   }
 
@@ -156,7 +159,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     final Group group = new Group( parent, SWT.NULL );
     group.setLayout( Layouts.createGridLayout( 2 ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("RoughnessPanel.2") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "RoughnessPanel.2" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -167,13 +170,13 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
       public String getText( final Object element )
       {
         if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( element ) )
-          return Messages.getString("RoughnessPanel.3"); //$NON-NLS-1$
+          return Messages.getString( "RoughnessPanel.3" ); //$NON-NLS-1$
         else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( element ) )
-          return Messages.getString("RoughnessPanel.4"); //$NON-NLS-1$
+          return Messages.getString( "RoughnessPanel.4" ); //$NON-NLS-1$
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( element ) )
-          return Messages.getString("RoughnessPanel.5"); //$NON-NLS-1$
+          return Messages.getString( "RoughnessPanel.5" ); //$NON-NLS-1$
         else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( element ) )
-          return Messages.getString("RoughnessPanel.6"); //$NON-NLS-1$
+          return Messages.getString( "RoughnessPanel.6" ); //$NON-NLS-1$
 
         return super.getText( element );
       }
