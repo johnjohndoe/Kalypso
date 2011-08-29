@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -140,13 +141,16 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
         return page;
     }
 
+    if( ArrayUtils.isEmpty( pages ) )
+      return null;
+
     return pages[0];
   }
 
   protected enum MISSING_TYPES
   {
-    eVegetationTypes(Messages.getString("VegetationPanel.2")), //$NON-NLS-1$
-    eVegetationClass(Messages.getString("VegetationPanel.3")); //$NON-NLS-1$
+    eVegetationTypes(Messages.getString( "VegetationPanel.2" )), //$NON-NLS-1$
+    eVegetationClass(Messages.getString( "VegetationPanel.3" )); //$NON-NLS-1$
 
     private final String m_label;
 
@@ -174,7 +178,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
     final Group group = new Group( parent, SWT.NULL );
     group.setLayout( Layouts.createGridLayout( 2 ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("VegetationPanel.4") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "VegetationPanel.4" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

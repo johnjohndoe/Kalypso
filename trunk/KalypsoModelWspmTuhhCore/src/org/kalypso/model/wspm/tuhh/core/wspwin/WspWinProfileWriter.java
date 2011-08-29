@@ -61,11 +61,19 @@ public class WspWinProfileWriter
 
   private final int m_profileNumber;
 
-  public WspWinProfileWriter( final IProfil profil, final String roughnessType, final int profileNumber )
+  private final boolean m_prefersRoughnessClasses;
+
+  public WspWinProfileWriter( final IProfil profil, final int profileNumber, final String roughnessType, final boolean prefersRoughnessClasses )
   {
     m_profil = profil;
     m_roughnessType = roughnessType;
     m_profileNumber = profileNumber;
+    m_prefersRoughnessClasses = prefersRoughnessClasses;
+  }
+
+  public WspWinProfileWriter( final IProfil profil, final int profileNumber, final String roughnessType )
+  {
+    this( profil, profileNumber, roughnessType, false );
   }
 
   public void write( final File outFile ) throws IOException
@@ -76,6 +84,7 @@ public class WspWinProfileWriter
       pw = new PrintWriter( outFile );
 
       final PrfWriter prfWriter = new PrfWriter( m_profil, new IWaterlevel[0], m_roughnessType );
+      prfWriter.setPreferesRoughnessClasses( m_prefersRoughnessClasses );
       prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_8_BLATTBEZEICHNUNG_2, Integer.toString( m_profileNumber ) );
 
       prfWriter.write( pw );

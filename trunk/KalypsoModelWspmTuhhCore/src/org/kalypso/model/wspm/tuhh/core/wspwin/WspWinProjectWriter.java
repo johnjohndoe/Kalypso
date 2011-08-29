@@ -232,7 +232,7 @@ public class WspWinProjectWriter
       final IProfil profil = entry.getValue();
       final File outPrfFile = new File( profDir, filename );
 
-      final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, m_roughnessType, prfCount );
+      final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, prfCount, m_roughnessType );
       profileWriter.write( outPrfFile );
     }
 

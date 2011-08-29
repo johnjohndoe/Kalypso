@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -308,22 +309,20 @@ public final class WspWinExporter
 
   private static void write1DTuhhZustand( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File zustFile ) throws IOException
   {
-    final ITuhhCalculation.FLIESSGESETZ fliessgesetz = calculation.getFliessgesetz();
-    final String roughnessType = getRoughnessForFG( fliessgesetz );
-    final TuhhReach reach = calculation.getReach();
-
-    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( reach, stationRange, roughnessType );
+    final String roughnessType = getRoughnessForFG( calculation.getFliessgesetz() );
+    
+    final TuhhCalcZustandWriter zustandWriter = new TuhhCalcZustandWriter( calculation.getReach(), stationRange, roughnessType,  calculation.isPreferingRoughnessClasses() );
     zustandWriter.write( zustFile );
   }
 
   private static String getRoughnessForFG( final FLIESSGESETZ fg )
   {
     if( FLIESSGESETZ.DARCY_WEISBACH_MIT_FORMEINFLUSS.equals( fg ) )
-      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KS;
+      return IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS;
     else if( FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS.equals( fg ) )
-      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KS;
+      return IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS;
     else if( FLIESSGESETZ.MANNING_STRICKLER.equals( fg ) )
-      return IWspmConstants.POINT_PROPERTY_RAUHEIT_KST;
+      return IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST;
     else
       return ""; //$NON-NLS-1$
   }
