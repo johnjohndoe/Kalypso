@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
@@ -64,6 +65,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -111,6 +113,8 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private Coefficients m_coefficients;
 
+  private GafCodes m_codes;
+
   public IStatus init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
   {
     try
@@ -121,6 +125,7 @@ public class CheckoutPdbData extends AbstractModelObject
       m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
       m_coefficients = loadCoefficients( connection );
+      m_codes = new GafCodes();
 
       if( settings != null )
       {
@@ -130,6 +135,10 @@ public class CheckoutPdbData extends AbstractModelObject
       return Status.OK_STATUS;
     }
     catch( final InvocationTargetException e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
+    catch( final IOException e )
     {
       return StatusUtilities.statusFromThrowable( e );
     }
@@ -232,5 +241,10 @@ public class CheckoutPdbData extends AbstractModelObject
   public Coefficients getCoefficients( )
   {
     return m_coefficients;
+  }
+
+  public GafCodes getCodes( )
+  {
+    return m_codes;
   }
 }

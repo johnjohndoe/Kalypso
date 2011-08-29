@@ -108,9 +108,9 @@ public class CheckoutVegetationWorker
     vegetationClass.setAx( vegetation.getAx() );
     vegetationClass.setAy( vegetation.getAy() );
     vegetationClass.setDp( vegetation.getDp() );
+    vegetationClass.setComment( vegetation.getDescription() );
 
     // TODO: we have no equivalent for the following properties
-    // vegetationClass.setComment( roughness.getDescription() );
     // vegetation.getSource();
     // vegetation.getValidity();
   }
