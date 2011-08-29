@@ -73,6 +73,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
     m_properties.add( IWspmPointProperties.POINT_PROPERTY_COMMENT );
+    m_properties.add( IWspmPointProperties.POINT_PROPERTY_CODE );
 
     // Markers
     /**
@@ -125,7 +126,6 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
       return new Double( 0.0 );
 
     return super.getDefaultValue( propertyID );
-
   }
 
   @Override
@@ -133,5 +133,4 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
   {
     return ProfilUtil.getFeatureComponent( propertyId );
   }
-
 }
