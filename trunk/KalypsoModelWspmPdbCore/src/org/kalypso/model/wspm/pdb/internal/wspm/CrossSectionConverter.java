@@ -273,7 +273,6 @@ public class CrossSectionConverter
     final Roughness roughness = point.getRoughness();
     setValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName() );
 
-    // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getRoughness() );
     final BigDecimal roughnessKst = point.getRoughnessKstValue();
     if( roughnessKst != null )
       setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, roughnessKst.doubleValue() );
@@ -285,8 +284,17 @@ public class CrossSectionConverter
     // REMARK: the checkout operation makes sure that all necessary classes are present
     final Vegetation vegetation = point.getVegetation();
     setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point.getVegetationAx().doubleValue() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point.getVegetationAy().doubleValue() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point.getVegetationDp().doubleValue() );
+
+    final BigDecimal vegetationAx = point.getVegetationAx();
+    if( vegetationAx != null )
+      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, vegetationAx.doubleValue() );
+
+    final BigDecimal vegetationAy = point.getVegetationAy();
+    if( vegetationAy != null )
+      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, vegetationAy.doubleValue() );
+
+    final BigDecimal vegetationDp = point.getVegetationDp();
+    if( vegetationDp != null )
+      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue() );
   }
 }

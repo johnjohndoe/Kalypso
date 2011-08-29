@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
@@ -239,14 +239,16 @@ public class Gaf2Db implements IPdbOperation
 
     final Roughness roughness = gafPoint.getRoughnessClass();
     point.setRoughness( roughness );
-    point.setRoughnessKstValue( roughness.getKstValue() );
-    point.setRoughnessKValue( roughness.getKValue() );
+    // REMARK: we do not resolve the values here, because a set values means 'overwritten'
+    // point.setRoughnessKstValue( roughness.getKstValue() );
+    // point.setRoughnessKValue( roughness.getKValue() );
 
     final Vegetation vegetation = gafPoint.getVegetationClass();
     point.setVegetation( vegetation );
-    point.setVegetationAx( vegetation.getAx() );
-    point.setVegetationAy( vegetation.getAy() );
-    point.setVegetationDp( vegetation.getDp() );
+    // REMARK: we do not resolve the values here, because a set values means 'overwritten'
+    // point.setVegetationAx( vegetation.getAx() );
+    // point.setVegetationAy( vegetation.getAy() );
+    // point.setVegetationDp( vegetation.getDp() );
 
     session.save( point );
   }
