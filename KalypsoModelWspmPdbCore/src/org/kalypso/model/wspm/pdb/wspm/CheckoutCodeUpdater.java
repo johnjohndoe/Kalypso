@@ -38,46 +38,68 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.checkout;
+package org.kalypso.model.wspm.pdb.wspm;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
-import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
+import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
+import org.kalypso.model.wspm.pdb.gaf.GafCode;
 
 /**
  * @author Gernot Belger
  */
-public class CheckoutPdbWizard extends Wizard
+public class CheckoutCodeUpdater
 {
-  private final CheckoutPdbData m_data;
+  private final GafCode m_code;
 
-  public CheckoutPdbWizard( final CheckoutPdbData data )
+  private final ICodeClass m_codeClass;
+
+  private boolean m_changed = false;
+
+  public CheckoutCodeUpdater( final GafCode code, final ICodeClass codeClass )
   {
-    m_data = data;
-
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
+    m_code = code;
+    m_codeClass = codeClass;
   }
 
-  @Override
-  public void addPages( )
+  public boolean update( )
   {
-    addPage( new CheckoutPdbPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
+    updateCode();
+    updateDescription();
+    updateColor();
+    return m_changed;
   }
 
-  @Override
-  public boolean performFinish( )
+  private void updateCode( )
   {
-    final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+    final String gafCode = m_code.getCode();
+    final String oldGafCode = m_codeClass.getDescription();
+    if( ObjectUtils.equals( gafCode, oldGafCode ) )
+      return;
 
-    return !status.matches( IStatus.ERROR );
+    m_codeClass.setDescription( gafCode );
+    m_changed = true;
+  }
+
+  private void updateDescription( )
+  {
+    final String description = m_code.getDescription();
+    final String oldDescription = m_codeClass.getComment();
+    if( ObjectUtils.equals( description, oldDescription ) )
+      return;
+
+    m_codeClass.setComment( description );
+    m_changed = true;
+  }
+
+  private void updateColor( )
+  {
+    final RGB color = m_code.getColor();
+    final RGB oldColor = m_codeClass.getColor();
+    if( ObjectUtils.equals( color, oldColor ) )
+      return;
+
+    m_codeClass.setColor( color );
+    m_changed = true;
   }
 }

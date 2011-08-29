@@ -97,21 +97,13 @@ public class CheckoutVegetationWorker
 
   private void updateVegetationClass( final Vegetation vegetation, final IVegetationClass vegetationClass )
   {
-    updateVegetationProperties( vegetation, vegetationClass );
-
-    m_mapping.addChangedFeatures( vegetationClass );
+    final boolean changed = updateVegetationProperties( vegetation, vegetationClass );
+    if( changed )
+      m_mapping.addChangedFeatures( vegetationClass );
   }
 
-  private void updateVegetationProperties( final Vegetation vegetation, final IVegetationClass vegetationClass )
+  private boolean updateVegetationProperties( final Vegetation vegetation, final IVegetationClass vegetationClass )
   {
-    vegetationClass.setDescription( vegetation.getLabel() );
-    vegetationClass.setAx( vegetation.getAx() );
-    vegetationClass.setAy( vegetation.getAy() );
-    vegetationClass.setDp( vegetation.getDp() );
-    vegetationClass.setComment( vegetation.getDescription() );
-
-    // TODO: we have no equivalent for the following properties
-    // vegetation.getSource();
-    // vegetation.getValidity();
+    return new CheckoutVegetationUpdater( vegetation, vegetationClass ).update();
   }
 }

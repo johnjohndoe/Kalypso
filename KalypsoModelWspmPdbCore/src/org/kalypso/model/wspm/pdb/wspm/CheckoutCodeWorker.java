@@ -85,22 +85,21 @@ public class CheckoutCodeWorker
     final ICodeClass newClass = collection.addNew( ICodeClass.FEATURE_CODE_CLASS );
     newClass.setName( code.getCode() );
 
-    updateCodeProperties( code, newClass );
+    updateProperties( code, newClass );
 
     m_mapping.addAddedFeatures( newClass );
   }
 
   private void updateCodeClass( final GafCode code, final ICodeClass codeClass )
   {
-    updateCodeProperties( code, codeClass );
-
-    m_mapping.addChangedFeatures( codeClass );
+    final boolean changed = updateProperties( code, codeClass );
+    if( changed )
+      m_mapping.addChangedFeatures( codeClass );
   }
 
-  private void updateCodeProperties( final GafCode code, final ICodeClass codeClass )
+  private boolean updateProperties( final GafCode code, final ICodeClass newClass )
   {
-    codeClass.setDescription( code.getCode() );
-    codeClass.setComment( code.getDescription() );
-    codeClass.setColor( code.getColor() );
+    return new CheckoutCodeUpdater( code, newClass ).update();
   }
+
 }
