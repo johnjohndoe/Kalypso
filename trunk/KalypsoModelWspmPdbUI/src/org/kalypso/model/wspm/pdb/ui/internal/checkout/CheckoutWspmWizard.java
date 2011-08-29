@@ -57,7 +57,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.forms.IMessage;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
@@ -159,7 +159,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
     final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_checkoutData );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
     return !status.matches( IStatus.ERROR );
   }
