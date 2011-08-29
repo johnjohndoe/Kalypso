@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
@@ -63,7 +63,7 @@ import org.hibernate.jdbc.Work;
 import org.kalypso.commons.patternreplace.ConstantReplacer;
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScript;
@@ -231,7 +231,7 @@ public class PdbUpdater
 
       final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
       if( !status.isOK() )
-        new StatusDialog2( m_shell, status, windowTitle ).open();
+        new StatusDialog( m_shell, status, windowTitle ).open();
 
       m_connection.updateInfo();
 
@@ -315,17 +315,17 @@ public class PdbUpdater
 
     /* Ask user for missing variables */
     final IWizardPage[] pages = findUpdatePages( scripts, properties );
-    if( pages.length > 0 )
-    {
-      final UpdateScriptWizard wizard = new UpdateScriptWizard( pages );
-      wizard.setWindowTitle( WINDOW_TITLE );
-      if( new WizardDialog( m_shell, wizard ).open() != Window.OK )
-        throw new CoreException( Status.CANCEL_STATUS );
-    }
+          if( pages.length > 0 )
+          {
+            final UpdateScriptWizard wizard = new UpdateScriptWizard( pages );
+            wizard.setWindowTitle( WINDOW_TITLE );
+            if( new WizardDialog( m_shell, wizard ).open() != Window.OK )
+              throw new CoreException( Status.CANCEL_STATUS );
+          }
 
-    updateDependendProperties( properties );
+          updateDependendProperties( properties );
 
-    return properties;
+          return properties;
   }
 
   private IWizardPage[] findUpdatePages( final UpdateScript[] scripts, final Properties properties ) throws CoreException

@@ -57,7 +57,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
@@ -104,7 +104,7 @@ public class CheckoutPdbHandler extends AbstractHandler
     final IStatus initStatus = data.init( shell, commandName, settings, connection );
     if( !initStatus.isOK() )
     {
-      new StatusDialog2( shell, initStatus, commandName ).open();
+      new StatusDialog( shell, initStatus, commandName ).open();
       return null;
     }
 
@@ -141,6 +141,6 @@ public class CheckoutPdbHandler extends AbstractHandler
     } );
 
     if( !saveStatus.isOK() )
-      new StatusDialog2( shell, saveStatus, windowTitle ).open();
+      new StatusDialog( shell, saveStatus, windowTitle ).open();
   }
 }

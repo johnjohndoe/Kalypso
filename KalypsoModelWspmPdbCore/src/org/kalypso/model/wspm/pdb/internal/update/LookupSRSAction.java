@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.update;
 
@@ -50,7 +50,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
@@ -86,7 +86,7 @@ public class LookupSRSAction extends Action
     catch( final PartInitException e )
     {
       final Shell shell = event.widget.getDisplay().getActiveShell();
-      new StatusDialog2( shell, e.getStatus(), getText() );
+      new StatusDialog( shell, e.getStatus(), getText() );
       e.printStackTrace();
     }
     catch( final MalformedURLException e )
