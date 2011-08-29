@@ -50,7 +50,6 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -66,24 +65,23 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
+import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
 import org.kalypso.observation.result.IComponent;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
  */
 public class RoughnessClassesPage extends AbstractRoughnessPage
 {
-  public static final String LABEL = Messages.getString("RoughnessClassesPage.0"); //$NON-NLS-1$
+  public static final String LABEL = Messages.getString( "RoughnessClassesPage.0" ); //$NON-NLS-1$
 
   private String[] m_roughnesses;
 
@@ -111,7 +109,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("RoughnessClassesPage.1") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "RoughnessClassesPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     setBinding( new AbstractDatabinding( toolkit )
@@ -119,13 +117,13 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     } );
 
     // TODO validators
-    build( group, toolkit, Messages.getString("RoughnessClassesPage.2"), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("RoughnessClassesPage.3"), RoughnessesDataModel.PROPERTY_RIVER_TUBE_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("RoughnessClassesPage.4"), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "RoughnessClassesPage.2" ), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "RoughnessClassesPage.3" ), RoughnessesDataModel.PROPERTY_RIVER_TUBE_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "RoughnessClassesPage.4" ), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
-    lnkRemove.setText( String.format( Messages.getString("RoughnessClassesPage.5"), getLabel() ) ); //$NON-NLS-1$
+    lnkRemove.setText( String.format( Messages.getString( "RoughnessClassesPage.5" ), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -143,13 +141,13 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( Messages.getString("RoughnessClassesPage.6") ); //$NON-NLS-1$
+      grActions.setText( Messages.getString( "RoughnessClassesPage.6" ) ); //$NON-NLS-1$
 
       if( Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
-        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, grActions, toolkit, Messages.getString("RoughnessClassesPage.7") ); //$NON-NLS-1$
+        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, grActions, toolkit, Messages.getString( "RoughnessClassesPage.7" ) ); //$NON-NLS-1$
 
       if( Objects.isNotNull( getProfile().hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
-        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, grActions, toolkit, Messages.getString("RoughnessClassesPage.8") ); //$NON-NLS-1$
+        addWriteValueLink( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, grActions, toolkit, Messages.getString( "RoughnessClassesPage.8" ) ); //$NON-NLS-1$
 
       toolkit.adapt( grActions );
     }
@@ -165,7 +163,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("RoughnessClassesPage.9"), Messages.getString("RoughnessClassesPage.10") ); //$NON-NLS-1$ //$NON-NLS-2$
+        final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString( "RoughnessClassesPage.9" ), Messages.getString( "RoughnessClassesPage.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( getProfile(), property, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
@@ -195,7 +193,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     final ComboViewer viewer = new ComboViewer( body, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setLabelProvider( new AbstractClassificationLabelProvider( getProfile(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
 
     viewer.setInput( getRoughnessClasses() );
 
@@ -212,23 +210,11 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     if( m_roughnesses != null )
       return m_roughnesses;
 
-    final IProfil profile = getProfile();
-    final Object source = profile.getSource();
-    if( !(source instanceof Feature) )
-      return new String[] {};
-
-    final Feature feature = (Feature) source;
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final Feature root = workspace.getRootFeature();
-    if( !(root instanceof WspmProject) )
-      return new String[] {};
-
-    final WspmProject project = (WspmProject) root;
-    final IWspmClassification classifications = project.getClassificationMember();
+    final IWspmClassification classification = WspmClassifications.getClassification( getProfile() );
 
     final Set<String> roughnesses = new TreeSet<String>();
 
-    final IRoughnessClass[] classes = classifications.getRoughnessClasses();
+    final IRoughnessClass[] classes = classification.getRoughnessClasses();
     for( final IRoughnessClass clazz : classes )
     {
       roughnesses.add( clazz.getName() );
