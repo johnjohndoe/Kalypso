@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
@@ -45,7 +45,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
@@ -80,7 +80,7 @@ public class ConnectPdbAction extends Action
 
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, Messages.getString( "ConnectPdbAction.2" ) ).open(); //$NON-NLS-1$
+      new StatusDialog( shell, result, Messages.getString( "ConnectPdbAction.2" ) ).open(); //$NON-NLS-1$
 
     final IPdbConnection connection = operation.getConnection();
     m_view.setConnection( connection, result );

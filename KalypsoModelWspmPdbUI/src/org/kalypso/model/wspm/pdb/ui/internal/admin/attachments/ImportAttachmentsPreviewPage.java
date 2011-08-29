@@ -74,7 +74,6 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnSortListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -272,7 +271,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     if( !status.isOK() )
     {
       final String windowTitle = getWizard().getWindowTitle();
-      new StatusDialog2( getShell(), status, windowTitle ).open();
+      new StatusDialog( getShell(), status, windowTitle ).open();
     }
   }
 }

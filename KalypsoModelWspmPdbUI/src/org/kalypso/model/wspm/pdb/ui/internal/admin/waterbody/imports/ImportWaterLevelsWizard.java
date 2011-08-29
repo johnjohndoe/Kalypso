@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
@@ -61,7 +61,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
@@ -209,7 +209,7 @@ public class ImportWaterLevelsWizard extends Wizard implements IWorkbenchWizard,
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
     if( !status.isOK() )
-      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();

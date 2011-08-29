@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
@@ -62,7 +62,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -193,7 +193,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   {
     final ImportGafOperation operation = new ImportGafOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    new StatusDialog2( getShell(), result, getWindowTitle() ).open();
+    new StatusDialog( getShell(), result, getWindowTitle() ).open();
 
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -217,7 +217,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
       final ReadGafOperation operation = new ReadGafOperation( m_data );
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       if( !status.isOK() )
-        new StatusDialog2( getShell(), status, getWindowTitle() ).open();
+        new StatusDialog( getShell(), status, getWindowTitle() ).open();
 
       m_optionsPage.updateControl();
     }

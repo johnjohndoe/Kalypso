@@ -52,7 +52,7 @@ import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.InitPdbDataOperation;
@@ -142,7 +142,7 @@ public class PdbStartup implements IStartup
     final IStatus status = ProgressUtilities.busyCursorWhile( progressService, operation, null );
 
     if( !status.isOK() )
-      new StatusDialog2( window.getShell(), status, Messages.getString( "PdbStartup.0" ) ).open(); //$NON-NLS-1$
+      new StatusDialog( window.getShell(), status, Messages.getString( "PdbStartup.0" ) ).open(); //$NON-NLS-1$
 
     if( status.matches( IStatus.ERROR ) )
     {

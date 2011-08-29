@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
@@ -60,7 +60,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
@@ -246,28 +246,28 @@ public class PdbWspmProject implements IPdbWspmProject
     for( final IKalypsoTheme theme : obsoleteThemes )
       compositeCommand.addCommand( new RemoveThemeCommand( mapModell, theme, true ) );
 
-    /* Add necessary themes */
-    for( final WspmWaterBody waterBody : waterBodies )
-    {
-      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
-      for( final WspmReach reach : reaches )
-      {
-        final String reachGmlID = reach.getId();
-        if( !findReachesVisitor.hasReachTheme( reachGmlID ) )
+        /* Add necessary themes */
+        for( final WspmWaterBody waterBody : waterBodies )
         {
-          final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
-          if( newTheme != null )
-            compositeCommand.addCommand( newTheme );
+          final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
+          for( final WspmReach reach : reaches )
+          {
+            final String reachGmlID = reach.getId();
+            if( !findReachesVisitor.hasReachTheme( reachGmlID ) )
+            {
+              final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
+              if( newTheme != null )
+                compositeCommand.addCommand( newTheme );
+            }
+          }
         }
-      }
-    }
 
-    if( compositeCommand.getCommands().length == 0 )
-      return;
+        if( compositeCommand.getCommands().length == 0 )
+          return;
 
-    mapView.postCommand( compositeCommand, null );
+        mapView.postCommand( compositeCommand, null );
 
-    mapView.doSave( new NullProgressMonitor() );
+        mapView.doSave( new NullProgressMonitor() );
   }
 
   private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
@@ -400,7 +400,7 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    new StatusDialog2( shell, status, title );
+    new StatusDialog( shell, status, title ).open();
     /* Do not close workbench on error */
     return false;
   }
