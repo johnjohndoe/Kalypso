@@ -57,6 +57,8 @@ public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants, Fe
 
   QName QN_PROPERTY_PREFERE_ROUGHNESS_CLASSES = new QName( NS_WSPM_TUHH, "preferRoughnessClasses" ); //$NON-NLS-1$
 
+  QName QN_PROPERTY_PREFERE_VEGETATION_CLASSES = new QName( NS_WSPM_TUHH, "preferVegetationClasses" ); //$NON-NLS-1$
+
   QName QN_PROPERTY_STEADY_STATE_MEMBER = new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ); //$NON-NLS-1$
 
   QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" ); //$NON-NLS-1$
@@ -122,4 +124,6 @@ public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants, Fe
   }
 
   boolean isPreferingRoughnessClasses( );
+
+  boolean isPreferingVegetationClasses( );
 }

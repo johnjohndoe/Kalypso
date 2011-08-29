@@ -67,8 +67,7 @@ import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
  */
 public class PrfRoughnessWriter
 {
-
-  private boolean m_prefersRoughnessClasses;
+  private boolean m_preferClasses;
 
   private final String m_defaultRoughnessType;
 
@@ -86,9 +85,9 @@ public class PrfRoughnessWriter
     m_defaultRoughnessType = defaultRoughnessType;
   }
 
-  public void setPreferesRoughnessClasses( final boolean prefersRoughnessClasses )
+  public void setPreferClasses( final boolean prefereClasses )
   {
-    m_prefersRoughnessClasses = prefersRoughnessClasses;
+    m_preferClasses = prefereClasses;
 
   }
 
@@ -209,7 +208,7 @@ public class PrfRoughnessWriter
   private Double getValue( final IRecord point, final IComponent component )
   {
     final Double plainValue = (Double) point.getValue( component );
-    if( !m_prefersRoughnessClasses )
+    if( !m_preferClasses )
       return plainValue;
 
     final IComponent componentRoughnessClass = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
