@@ -44,7 +44,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -137,19 +138,23 @@ public class RoughnessAdjuster
 
   private IComponent[] findRoughnessComponents( )
   {
-    final Collection<IComponent> roughnessComponents = new ArrayList<IComponent>( 2 );
+    final Collection<IComponent> roughnessComponents = new ArrayList<IComponent>();
 
-    final IComponent cmpKS = m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent cmpKS = m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
     if( cmpKS != null )
-    {
       roughnessComponents.add( cmpKS );
-    }
 
-    final IComponent cmpKST = m_profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    final IComponent cmpKST = m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
     if( cmpKST != null )
-    {
       roughnessComponents.add( cmpKST );
-    }
+
+    final IComponent clazzes = m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    if( Objects.isNotNull( clazzes ) )
+      roughnessComponents.add( clazzes );
+
+    final IComponent factor = m_profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
+    if( Objects.isNotNull( factor ) )
+      roughnessComponents.add( factor );
 
     return roughnessComponents.toArray( new IComponent[roughnessComponents.size()] );
   }
