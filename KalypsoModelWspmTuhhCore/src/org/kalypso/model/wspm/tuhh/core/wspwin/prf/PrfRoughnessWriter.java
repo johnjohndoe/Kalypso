@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -211,27 +207,7 @@ public class PrfRoughnessWriter
     if( !m_preferClasses )
       return plainValue;
 
-    final IComponent componentRoughnessClass = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    if( Objects.isNull( componentRoughnessClass ) )
-      return plainValue;
-
-    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    if( Objects.isNull( classification ) )
-      return plainValue;
-
-    final String clazzName = (String) point.getValue( componentRoughnessClass );
-    if( Strings.isEmpty( clazzName ) )
-      return plainValue;
-
-    final IRoughnessClass clazz = classification.findRoughnessClass( clazzName );
-    if( Objects.isNull( clazz ) )
-      return plainValue;
-
-    final BigDecimal value = clazz.getValue( component.getId() );
-    if( Objects.isNotNull( value ) )
-      return value.doubleValue();
-
-    return plainValue;
+    return WspmClassifications.findRoughnessValue( m_profile, point, component, plainValue );
   }
 
   private void writeEmptyRauheit( )

@@ -67,7 +67,7 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnable;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationPanelHelper;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationsDataModel;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
@@ -114,8 +114,8 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.6" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
     // TODO validators
-    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.7" ), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.9" ), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.7" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.9" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 4, 0 ) );

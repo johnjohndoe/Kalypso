@@ -110,7 +110,7 @@ public class RoughnessAdjuster
       final Object valueMain = mainChannel.getValue( roughnessIndex );
       final Object valueRight = rightChannel.getValue( roughnessIndex );
 
-      if( valueLeft != null && valueMain != null && valueRight != null )
+      if( Objects.allNotNull( valueLeft, valueMain, valueRight ) )
       {
         newLeftChannel.setValue( roughnessIndex, valueLeft );
         newMainChannel.setValue( roughnessIndex, valueMain );

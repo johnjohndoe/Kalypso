@@ -66,7 +66,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
@@ -80,7 +80,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
 
   private final IComponent m_component;
 
-  private final RoughnessesDataModel m_model;
+  private final RoughnessDataModel m_model;
 
   private IDataBinding m_binding;
 
@@ -91,7 +91,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     m_profile = profile;
     m_component = component;
 
-    m_model = new RoughnessesDataModel( profile, component );
+    m_model = new RoughnessDataModel( profile, component );
   }
 
   /**
@@ -126,7 +126,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     return m_binding;
   }
 
-  protected RoughnessesDataModel getModel( )
+  protected RoughnessDataModel getModel( )
   {
     return m_model;
   }
@@ -165,9 +165,9 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     } );
 
     // TODO validators
-    build( group, toolkit, Messages.getString("AbstractRoughnessPage.2"), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("AbstractRoughnessPage.3"), RoughnessesDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("AbstractRoughnessPage.4"), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("AbstractRoughnessPage.2"), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("AbstractRoughnessPage.3"), RoughnessDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString("AbstractRoughnessPage.4"), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );

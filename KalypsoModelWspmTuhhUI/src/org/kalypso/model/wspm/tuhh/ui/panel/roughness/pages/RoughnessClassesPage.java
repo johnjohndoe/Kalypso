@@ -40,17 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -72,8 +71,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.WspmClassificationClassesComparator;
+import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
-import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessesDataModel;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -83,7 +83,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
 {
   public static final String LABEL = Messages.getString( "RoughnessClassesPage.0" ); //$NON-NLS-1$
 
-  private String[] m_roughnesses;
+  private IRoughnessClass[] m_roughnesses;
 
   public RoughnessClassesPage( final IProfil profile, final IComponent component )
   {
@@ -117,9 +117,9 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     } );
 
     // TODO validators
-    build( group, toolkit, Messages.getString( "RoughnessClassesPage.2" ), RoughnessesDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "RoughnessClassesPage.3" ), RoughnessesDataModel.PROPERTY_RIVER_TUBE_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "RoughnessClassesPage.4" ), RoughnessesDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "RoughnessClassesPage.2" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "RoughnessClassesPage.3" ), RoughnessDataModel.PROPERTY_RIVER_TUBE_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "RoughnessClassesPage.4" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
@@ -197,30 +197,24 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
 
     viewer.setInput( getRoughnessClasses() );
 
-    viewer.setSelection( new StructuredSelection( property ) );
-
-    final ISWTObservableValue targetValue = SWTObservables.observeSelection( viewer.getCombo() );
+    final IObservableValue viewerSelection = ViewersObservables.observeSingleSelection( viewer );
     final IObservableValue modelValue = getModel().getObservableValue( property );
 
-    getBinding().bindValue( new DataBinder( targetValue, modelValue ) );
+    getBinding().bindValue( new DataBinder( viewerSelection, modelValue ) );
+
   }
 
-  private String[] getRoughnessClasses( )
+  private IRoughnessClass[] getRoughnessClasses( )
   {
     if( m_roughnesses != null )
       return m_roughnesses;
 
     final IWspmClassification classification = WspmClassifications.getClassification( getProfile() );
 
-    final Set<String> roughnesses = new TreeSet<String>();
+    final Set<IRoughnessClass> roughnesses = new TreeSet<IRoughnessClass>( new WspmClassificationClassesComparator() );
+    Collections.addAll( roughnesses, classification.getRoughnessClasses() );
 
-    final IRoughnessClass[] classes = classification.getRoughnessClasses();
-    for( final IRoughnessClass clazz : classes )
-    {
-      roughnesses.add( clazz.getName() );
-    }
-
-    m_roughnesses = roughnesses.toArray( new String[] {} );
+    m_roughnesses = roughnesses.toArray( new IRoughnessClass[] {} );
 
     return m_roughnesses;
   }

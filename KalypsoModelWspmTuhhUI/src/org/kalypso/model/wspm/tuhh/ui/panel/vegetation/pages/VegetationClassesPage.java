@@ -40,17 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -76,6 +75,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.WspmClassificationClassesComparator;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessPanelHelper;
 import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.utils.VegetationsDataModel;
 import org.kalypso.observation.result.IComponent;
@@ -91,7 +91,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
 
   private final VegetationsDataModel m_model;
 
-  private String[] m_vegetations;
+  private IVegetationClass[] m_vegetations;
 
   public VegetationClassesPage( final IProfil profile, final IComponent component )
   {
@@ -195,30 +195,24 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
 
     viewer.setInput( getVegetationClasses() );
 
-    viewer.setSelection( new StructuredSelection( property ) );
-
-    final ISWTObservableValue targetValue = SWTObservables.observeSelection( viewer.getCombo() );
+    final IObservableValue viewerSelection = ViewersObservables.observeSingleSelection( viewer );
     final IObservableValue modelValue = m_model.getObservableValue( property );
 
-    m_binding.bindValue( new DataBinder( targetValue, modelValue ) );
+    m_binding.bindValue( new DataBinder( viewerSelection, modelValue ) );
   }
 
-  private String[] getVegetationClasses( )
+  private IVegetationClass[] getVegetationClasses( )
   {
     if( m_vegetations != null )
       return m_vegetations;
 
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( classification ) )
-      return new String[] {};
+      return new IVegetationClass[] {};
 
-    final Set<String> vegetations = new TreeSet<String>();
-    for( final IVegetationClass clazz : classification.getVegetationClasses() )
-    {
-      vegetations.add( clazz.getName() );
-    }
-
-    m_vegetations = vegetations.toArray( new String[] {} );
+    final Set<IVegetationClass> vegetations = new TreeSet<IVegetationClass>( new WspmClassificationClassesComparator() );
+    Collections.addAll( vegetations, classification.getVegetationClasses() );
+    m_vegetations = vegetations.toArray( new IVegetationClass[] {} );
 
     return m_vegetations;
   }
