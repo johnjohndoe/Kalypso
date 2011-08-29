@@ -40,15 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
@@ -128,27 +124,6 @@ public class PrfVegetationWriter
     if( !m_preferClasses )
       return plainValue;
 
-    final IComponent componentVegetationClass = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
-    if( Objects.isNull( componentVegetationClass ) )
-      return plainValue;
-
-    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    if( Objects.isNull( classification ) )
-      return plainValue;
-
-    final String clazzName = (String) point.getValue( componentVegetationClass );
-    if( Strings.isEmpty( clazzName ) )
-      return plainValue;
-
-    final IVegetationClass clazz = classification.findVegetationClass( clazzName );
-    if( Objects.isNull( clazz ) )
-      return plainValue;
-
-    final BigDecimal value = clazz.getValue( component.getId() );
-    if( Objects.isNotNull( value ) )
-      return value.doubleValue();
-
-    return plainValue;
+    return WspmClassifications.findVegetationValue( m_profile, point, component, plainValue );
   }
-
 }

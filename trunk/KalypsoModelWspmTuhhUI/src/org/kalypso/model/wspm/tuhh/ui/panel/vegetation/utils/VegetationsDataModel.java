@@ -44,6 +44,9 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.ProfileFlowzones;
 import org.kalypso.observation.result.IComponent;
@@ -65,9 +68,9 @@ public class VegetationsDataModel extends AbstractModelObject
 
   public static final String PROPERTY_RIGHT_FLOODPLAIN_CLASS = "rightFloodplainClass"; //$NON-NLS-1$
 
-  String m_leftFloodplainClass;
+  IVegetationClass m_leftFloodplainClass;
 
-  String m_rightFloodplainClass;
+  IVegetationClass m_rightFloodplainClass;
 
   private final IProfil m_profile;
 
@@ -90,8 +93,12 @@ public class VegetationsDataModel extends AbstractModelObject
     }
     else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( component.getId() ) )
     {
-      m_leftFloodplainClass = ProfileFlowzones.findLeftFloodplainClass( profile, component );
-      m_rightFloodplainClass = ProfileFlowzones.findRightFloodplainClass( profile, component );
+      final String leftFloodplainClassId = ProfileFlowzones.findLeftFloodplainClass( profile, component );
+      final String rightFloodplainClassId = ProfileFlowzones.findRightFloodplainClass( profile, component );
+
+      final IWspmClassification classification = WspmClassifications.getClassification( profile );
+      m_leftFloodplainClass = classification.findVegetationClass( leftFloodplainClassId );
+      m_rightFloodplainClass = classification.findVegetationClass( rightFloodplainClassId );
     }
 
   }
@@ -144,32 +151,32 @@ public class VegetationsDataModel extends AbstractModelObject
     firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN, oldValue, rightFloodplain );
   }
 
-  public String getLeftFloodplainClass( )
+  public IVegetationClass getLeftFloodplainClass( )
   {
     return m_leftFloodplainClass;
   }
 
-  public void setLeftFloodplainClass( final String leftFloodplainClass )
+  public void setLeftFloodplainClass( final IVegetationClass leftFloodplainClass )
   {
     final Object oldValue = m_leftFloodplainClass;
     m_leftFloodplainClass = leftFloodplainClass;
 
-    ProfileFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplainClass );
+    ProfileFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplainClass.getName() );
 
     firePropertyChange( PROPERTY_LEFT_FLOODPLAIN_CLASS, oldValue, leftFloodplainClass );
   }
 
-  public String getRightFloodplainClass( )
+  public IVegetationClass getRightFloodplainClass( )
   {
     return m_rightFloodplainClass;
   }
 
-  public void setRightFloodplainClass( final String rightFloodplainClass )
+  public void setRightFloodplainClass( final IVegetationClass rightFloodplainClass )
   {
     final Object oldValue = m_rightFloodplainClass;
     m_rightFloodplainClass = rightFloodplainClass;
 
-    ProfileFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplainClass );
+    ProfileFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplainClass.getName() );
 
     firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN_CLASS, oldValue, rightFloodplainClass );
   }

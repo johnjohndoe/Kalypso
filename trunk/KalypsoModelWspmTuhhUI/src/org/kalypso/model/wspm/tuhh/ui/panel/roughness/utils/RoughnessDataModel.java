@@ -44,6 +44,9 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.ProfileFlowzones;
 import org.kalypso.observation.result.IComponent;
@@ -51,7 +54,7 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Dirk Kuch
  */
-public class RoughnessesDataModel extends AbstractModelObject
+public class RoughnessDataModel extends AbstractModelObject
 {
   public static final String PROPERTY_LEFT_FLOODPLAIN = "leftFloodplain"; //$NON-NLS-1$
 
@@ -75,13 +78,13 @@ public class RoughnessesDataModel extends AbstractModelObject
 
   public static final String PROPERTY_RIVER_TUBE_CLASS = "riverTubeClass"; //$NON-NLS-1$
 
-  String m_riverTubeClass;
+  IRoughnessClass m_riverTubeClass;
 
-  String m_leftFloodplainClass;
+  IRoughnessClass m_leftFloodplainClass;
 
-  String m_rightFloodplainClass;
+  IRoughnessClass m_rightFloodplainClass;
 
-  public RoughnessesDataModel( final IProfil profile, final IComponent component )
+  public RoughnessDataModel( final IProfil profile, final IComponent component )
   {
     m_profile = profile;
     m_component = component;
@@ -100,9 +103,14 @@ public class RoughnessesDataModel extends AbstractModelObject
     }
     else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( component.getId() ) )
     {
-      m_leftFloodplainClass = ProfileFlowzones.findLeftFloodplainClass( profile, component );
-      m_rightFloodplainClass = ProfileFlowzones.findRightFloodplainClass( profile, component );
-      m_riverTubeClass = ProfileFlowzones.findRiverTubeClass( profile, component );
+      final String leftFloodplainClassId = ProfileFlowzones.findLeftFloodplainClass( profile, component );
+      final String riverTubeClassId = ProfileFlowzones.findRiverTubeClass( profile, component );
+      final String rightFloodplainClassId = ProfileFlowzones.findRightFloodplainClass( profile, component );
+
+      final IWspmClassification classification = WspmClassifications.getClassification( profile );
+      m_leftFloodplainClass = classification.findRoughnessClass( leftFloodplainClassId );
+      m_riverTubeClass = classification.findRoughnessClass( riverTubeClassId );
+      m_rightFloodplainClass = classification.findRoughnessClass( rightFloodplainClassId );
     }
   }
 
@@ -169,47 +177,47 @@ public class RoughnessesDataModel extends AbstractModelObject
     firePropertyChange( PROPERTY_RIVER_TUBE, oldValue, riverTube );
   }
 
-  public String getRiverTubeClass( )
+  public IRoughnessClass getRiverTubeClass( )
   {
     return m_riverTubeClass;
   }
 
-  public void setRiverTubeClass( final String riverTubeClass )
+  public void setRiverTubeClass( final IRoughnessClass riverTubeClass )
   {
     final Object oldValue = m_riverTubeClass;
     m_riverTubeClass = riverTubeClass;
 
-    ProfileFlowzones.setRiverTube( m_profile, m_component, riverTubeClass );
+    ProfileFlowzones.setRiverTube( m_profile, m_component, riverTubeClass.getName() );
 
     firePropertyChange( PROPERTY_RIVER_TUBE_CLASS, oldValue, riverTubeClass );
   }
 
-  public String getLeftFloodplainClass( )
+  public IRoughnessClass getLeftFloodplainClass( )
   {
     return m_leftFloodplainClass;
   }
 
-  public void setLeftFloodplainClass( final String leftFloodplainClass )
+  public void setLeftFloodplainClass( final IRoughnessClass leftFloodplainClass )
   {
     final Object oldValue = m_leftFloodplainClass;
     m_leftFloodplainClass = leftFloodplainClass;
 
-    ProfileFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplainClass );
+    ProfileFlowzones.setLeftFloodplain( m_profile, m_component, leftFloodplainClass.getName() );
 
     firePropertyChange( PROPERTY_LEFT_FLOODPLAIN_CLASS, oldValue, leftFloodplainClass );
   }
 
-  public String getRightFloodplainClass( )
+  public IRoughnessClass getRightFloodplainClass( )
   {
     return m_rightFloodplainClass;
   }
 
-  public void setRightFloodplainClass( final String rightFloodplainClass )
+  public void setRightFloodplainClass( final IRoughnessClass rightFloodplainClass )
   {
     final Object oldValue = m_rightFloodplainClass;
     m_rightFloodplainClass = rightFloodplainClass;
 
-    ProfileFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplainClass );
+    ProfileFlowzones.setRightFloodplain( m_profile, m_component, rightFloodplainClass.getName() );
 
     firePropertyChange( PROPERTY_RIGHT_FLOODPLAIN_CLASS, oldValue, rightFloodplainClass );
   }
