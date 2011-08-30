@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -159,10 +159,12 @@ public class ImportAttachmentsDocumentsData
 
     final Document document = new Document();
 
-    document.setState( m_state );
     document.setCrossSection( cs );
-    if( cs != null )
-      document.setWaterBody( cs.getWaterBody() );
+
+    // REMARK: we set state + water body to null here: this is a profile document!
+    // I.e. if the profile is removed, also this document will be destroyed which is ok.
+    document.setState( null );
+    document.setWaterBody( null );
 
     // FIXME: better name; what is unique? -> probably filename should be unique!
     document.setName( filePath );

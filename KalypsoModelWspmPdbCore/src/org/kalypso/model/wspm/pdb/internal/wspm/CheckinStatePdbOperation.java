@@ -380,9 +380,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
       document.setMimetype( mimeType == null ? null : mimeType.toString() );
       document.setName( asName( uri ) );
       // document.setShotdirection( null );
-      document.setState( m_state );
       // document.setViewangle( null );
-      document.setWaterBody( section.getWaterBody() );
+
+      // REMARK: we set state + water body to null here: this is a profile document!
+      // I.e. if the profile is removed, also this document will be destroyed which is ok.
+      document.setState( null );
+      document.setWaterBody( null );
 
       session.save( document );
     }
