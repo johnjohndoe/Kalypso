@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages;
 
@@ -137,7 +137,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
 
     final Text text = toolkit.createText( body, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setMessage( Messages.getString("AbstractRoughnessPage.0") ); //$NON-NLS-1$
+    text.setMessage( Messages.getString( "AbstractRoughnessPage.0" ) ); //$NON-NLS-1$
 
     bind( text, property, validator );
   }
@@ -157,7 +157,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( Messages.getString("AbstractRoughnessPage.1") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "AbstractRoughnessPage.1" ) ); //$NON-NLS-1$
     toolkit.adapt( group );
 
     setBinding( new AbstractDatabinding( toolkit )
@@ -165,20 +165,21 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     } );
 
     // TODO validators
-    build( group, toolkit, Messages.getString("AbstractRoughnessPage.2"), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("AbstractRoughnessPage.3"), RoughnessDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString("AbstractRoughnessPage.4"), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.2" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.3" ), RoughnessDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.4" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
-    lnkRemove.setText( String.format( Messages.getString("AbstractRoughnessPage.5"), getLabel() ) ); //$NON-NLS-1$
+    lnkRemove.setText( String.format( Messages.getString( "AbstractRoughnessPage.5" ), getLabel() ) ); //$NON-NLS-1$
 
     lnkRemove.addHyperlinkListener( new HyperlinkAdapter()
     {
       @Override
       public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
       {
-        RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
+        if( MessageDialog.openConfirm( lnkRemove.getShell(), "Delete", "Are you really sure?" ) )
+          RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
       }
     } );
 
@@ -189,20 +190,20 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
       final Group grActions = new Group( body, SWT.NULL );
       grActions.setLayout( new GridLayout() );
       grActions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      grActions.setText( Messages.getString("AbstractRoughnessPage.6") ); //$NON-NLS-1$
+      grActions.setText( Messages.getString( "AbstractRoughnessPage.6" ) ); //$NON-NLS-1$
 
       final ImageHyperlink lnk = toolkit.createImageHyperlink( grActions, SWT.NULL );
       if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( getComponent().getId() ) )
-        lnk.setText( Messages.getString("AbstractRoughnessPage.7") ); //$NON-NLS-1$
+        lnk.setText( Messages.getString( "AbstractRoughnessPage.7" ) ); //$NON-NLS-1$
       else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( getComponent().getId() ) )
-        lnk.setText( Messages.getString("AbstractRoughnessPage.8") ); //$NON-NLS-1$
+        lnk.setText( Messages.getString( "AbstractRoughnessPage.8" ) ); //$NON-NLS-1$
 
       lnk.addHyperlinkListener( new HyperlinkAdapter()
       {
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
-          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString("AbstractRoughnessPage.9"), Messages.getString("AbstractRoughnessPage.10") ); //$NON-NLS-1$ //$NON-NLS-2$
+          final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString( "AbstractRoughnessPage.9" ), Messages.getString( "AbstractRoughnessPage.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
