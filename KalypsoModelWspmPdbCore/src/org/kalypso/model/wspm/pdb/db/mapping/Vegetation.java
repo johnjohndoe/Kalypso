@@ -22,7 +22,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  */
 @Entity
 @Table(name = "vegetation", schema = "pdb")
-public class Vegetation implements java.io.Serializable, Coefficient, Comparable<Vegetation>
+public class Vegetation implements java.io.Serializable, Coefficient, Comparable<Vegetation>, IPdbClass
 {
   private VegetationId m_id;
 
@@ -77,7 +77,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
   public VegetationId getId( )
   {
     return m_id;
@@ -133,6 +133,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
     m_ay = ay;
   }
 
+  @Override
   @Column(name = "label", length = 100)
   public String getLabel( )
   {
@@ -144,6 +145,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
     m_label = label;
   }
 
+  @Override
   @Column(name = "source", length = 255)
   public String getSource( )
   {
@@ -155,6 +157,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
     m_source = source;
   }
 
+  @Override
   @Column(name = "description")
   public String getDescription( )
   {

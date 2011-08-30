@@ -81,7 +81,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class CheckinPartOperation
 {
-  private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
+// private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
 
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
@@ -103,9 +103,12 @@ public class CheckinPartOperation
 
   private final String m_category;
 
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID, final String category )
+  private final ClassChecker m_classChcker;
+
+  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID, final String category, final ClassChecker classChcker )
   {
     m_category = category;
+    m_classChcker = classChcker;
     m_coefficients = stateOperation.getCoefficients();
     m_gafCodes = stateOperation.getGafCodes();
     m_geometryFactory = stateOperation.getGeometryFactory();
@@ -148,10 +151,9 @@ public class CheckinPartOperation
 
       // FIMXE: check class
       final String vegetationClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, null );
-      // FIXME: use null as default instead??
-      final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, VEGETATION_0 );
-      final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, VEGETATION_0 );
-      final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, VEGETATION_0 );
+      final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, null );
+      final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, null );
+      final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, null );
 
       /* Not all point may pass */
       // TODO: allow point without geometry?
@@ -231,7 +233,7 @@ public class CheckinPartOperation
       return unknownVegetation;
     }
 
-    /* TODO: Check, if class values coincide */
+    m_classChcker.addVegetation( vegetation );
 
     return vegetation;
   }
@@ -249,7 +251,7 @@ public class CheckinPartOperation
       return unknownRoughness;
     }
 
-    /* TODO: Check, if class values coincide */
+    m_classChcker.addRoughness( roughness );
 
     return roughness;
   }
@@ -313,5 +315,4 @@ public class CheckinPartOperation
       throw new PdbConnectException( CheckinStatePdbOperation.STR_FAILED_TO_CONVERT_GEOMETRY, e );
     }
   }
-
 }
