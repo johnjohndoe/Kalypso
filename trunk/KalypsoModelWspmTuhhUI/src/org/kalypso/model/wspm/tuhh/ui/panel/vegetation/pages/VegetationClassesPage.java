@@ -69,7 +69,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
@@ -181,7 +180,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
 
   private boolean hasActions( )
   {
-    return Vegetations.hasVegetationProperties( m_profile );
+    return WspmClassifications.hasVegetationProperties( m_profile );
   }
 
   protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
