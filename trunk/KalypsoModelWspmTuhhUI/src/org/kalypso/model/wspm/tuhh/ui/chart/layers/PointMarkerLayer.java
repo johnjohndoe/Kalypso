@@ -46,7 +46,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -101,7 +101,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
-    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) );
+    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyleHover() );
@@ -144,7 +144,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
         continue;
       }
 
-      if( devider.getId().getId().equals( getTargetComponent().getId() ) )
+      if( devider.getComponent().getId().equals( getTargetComponent().getId() ) )
       {
         moveDevider( devider, newPoint );
       }
@@ -247,10 +247,10 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
   private boolean movesOnSameDeviderType( final IProfilPointMarker devider, final IProfilPointMarker[] targetDeviders )
   {
-    final String id = devider.getId().getId();
+    final String id = devider.getComponent().getId();
     for( final IProfilPointMarker marker : targetDeviders )
     {
-      final String targetId = marker.getId().getId();
+      final String targetId = marker.getComponent().getId();
       if( ObjectUtils.equals( id, targetId ) )
         return true;
     }
@@ -291,7 +291,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
       final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
       final Point p1 = new Point( screenX, bottom );
       final Point p2 = new Point( screenX, top );
