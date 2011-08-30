@@ -59,7 +59,7 @@ public class ProfilDevider extends PointMarker
   @Override
   public Object getIntepretedValue( )
   {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getId().getId() ) )
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getComponent().getId() ) )
     {
       final Object value = getValue();
 
@@ -79,7 +79,7 @@ public class ProfilDevider extends PointMarker
   @Override
   public void setInterpretedValue( final Object value )
   {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getId().getId() ) )
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getComponent().getId() ) )
     {
       if( value instanceof Boolean )
       {
