@@ -67,7 +67,7 @@ import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPageListener;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.classifications.helper.Vegetations;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -172,7 +172,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
 
   private void createMissingVegetationPropertiesControl( final Composite parent, final FormToolkit toolkit )
   {
-    if( Vegetations.hasVegetationProperties( getProfile() ) && Vegetations.hasVegetationClass( getProfile() ) )
+    if( WspmClassifications.hasVegetationProperties( getProfile() ) && WspmClassifications.hasVegetationClass( getProfile() ) )
       return;
 
     final Group group = new Group( parent, SWT.NULL );
@@ -218,10 +218,10 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
   {
     final Set<MISSING_TYPES> types = new LinkedHashSet<VegetationPanel.MISSING_TYPES>();
 
-    if( !Vegetations.hasVegetationProperties( getProfile() ) )
+    if( !WspmClassifications.hasVegetationProperties( getProfile() ) )
       types.add( MISSING_TYPES.eVegetationTypes );
 
-    if( !Vegetations.hasVegetationClass( getProfile() ) )
+    if( !WspmClassifications.hasVegetationClass( getProfile() ) )
       types.add( MISSING_TYPES.eVegetationClass );
 
     return types.toArray( new MISSING_TYPES[] {} );
@@ -232,9 +232,9 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
     final IProfil profile = getProfile();
 
     final List<IElementPage> pages = new ArrayList<IElementPage>();
-    if( Vegetations.hasVegetationProperties( profile ) )
+    if( WspmClassifications.hasVegetationProperties( profile ) )
       pages.add( new VegetationPropertiesPage( profile ) );
-    if( Vegetations.hasVegetationClass( profile ) )
+    if( WspmClassifications.hasVegetationClass( profile ) )
       pages.add( new VegetationClassesPage( profile, profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) ) );
 
     return pages.toArray( new IElementPage[] {} );
