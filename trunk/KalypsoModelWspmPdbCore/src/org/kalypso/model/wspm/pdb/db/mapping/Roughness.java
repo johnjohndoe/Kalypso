@@ -22,7 +22,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  */
 @Entity
 @Table(name = "roughness", schema = "pdb")
-public class Roughness implements java.io.Serializable, Coefficient, Comparable<Roughness>
+public class Roughness implements java.io.Serializable, Coefficient, Comparable<Roughness>, IPdbClass
 {
   private RoughnessId m_id;
 
@@ -74,7 +74,7 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
   public RoughnessId getId( )
   {
     return m_id;
@@ -119,6 +119,7 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
     m_kstValue = kstValue;
   }
 
+  @Override
   @Column(name = "label", length = 100)
   public String getLabel( )
   {
@@ -130,6 +131,7 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
     m_label = label;
   }
 
+  @Override
   @Column(name = "source", length = 255)
   public String getSource( )
   {
@@ -152,6 +154,7 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
     m_validity = validity;
   }
 
+  @Override
   @Column(name = "description")
   public String getDescription( )
   {

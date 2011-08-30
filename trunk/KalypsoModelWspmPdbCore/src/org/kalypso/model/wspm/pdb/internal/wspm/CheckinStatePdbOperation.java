@@ -121,6 +121,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final URI m_documentBase;
 
+  private final ClassChecker m_classChecker;
 
   /**
    * @param dbSrs
@@ -130,19 +131,22 @@ public class CheckinStatePdbOperation implements IPdbOperation
   {
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
+    m_classChecker = new ClassChecker( profiles );
     m_state = state;
     m_profiles = profiles;
     m_documentBase = documentBase;
 
     for( final WaterBody waterBody : waterBodies )
+    {
       m_waterBodies.put( waterBody.getName(), waterBody );
+    }
 
-        m_monitor = monitor;
+    m_monitor = monitor;
 
-        final int srid = JTSAdapter.toSrid( dbSrs );
-        m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
+    final int srid = JTSAdapter.toSrid( dbSrs );
+    m_geometryFactory = new GeometryFactory( new PrecisionModel(), srid );
 
-        m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
+    m_transformer = GeoTransformerFactory.getGeoTransformer( dbSrs );
   }
 
   @Override
@@ -167,6 +171,10 @@ public class CheckinStatePdbOperation implements IPdbOperation
       uploadProfile( session, feature );
       m_monitor.worked( 1 );
     }
+
+    final IStatus classStatus = m_classChecker.execute();
+    if( !classStatus.isOK() )
+      m_stati.add( classStatus );
 
     m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
   }
@@ -314,7 +322,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final String mainComponentID, final String category ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID, category );
+    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID, category, m_classChecker );
 
     final IStatus result = partOperation.execute();
     if( !result.isOK() )
