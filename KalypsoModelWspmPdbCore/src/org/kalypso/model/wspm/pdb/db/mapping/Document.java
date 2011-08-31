@@ -16,8 +16,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.pdb.db.constants.DocumentConstants;
 
@@ -283,5 +287,19 @@ public class Document extends AbstractModelObject implements Serializable, Docum
   public void setState( final State state )
   {
     m_state = state;
+  }
+
+  /**
+   * Gets the file name (i.e. not the path as getFilename).
+   */
+  @Transient
+  public String getFilenameName( )
+  {
+    final String filepath = getFilename();
+    if( StringUtils.isBlank( filepath ) )
+      return null;
+
+    final IPath path = Path.fromPortableString( filepath );
+    return path.lastSegment();
   }
 }
