@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -53,11 +59,13 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
@@ -76,6 +84,8 @@ import org.kalypso.ui.wizards.i18n.Messages;
  */
 public class SelectResultWizardPage extends WizardPage implements IWizardPage
 {
+  private final Collection<IAction> m_actions = new ArrayList<IAction>();
+
   private final IThemeConstructionFactory m_factory;
 
   private final ViewerFilter m_filter;
@@ -93,27 +103,41 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
   public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory, final IGeoLog geoLog )
   {
     super( pageName, title, titleImage );
+
     m_comparator = comparator;
 
     m_factory = factory;
     m_filter = filter;
-    if( geoLog == null )
-    {
-      try
-      {
-        m_geoLog = new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-    else
-    {
-      m_geoLog = geoLog;
-    }
+
+    m_geoLog = setOrCreateLog( geoLog );
 
     setDescription( Messages.getString( "org.kalypso.ui.wizards.results.SelectResultWizardPage.0" ) ); //$NON-NLS-1$
+  }
+
+  /**
+   * Adds an action to the toolbar. Must be called before {@link #createControl(Composite)} is called.
+   */
+  protected final void addAction( final IAction action )
+  {
+    Assert.isTrue( m_treeViewer == null );
+
+    m_actions.add( action );
+  }
+
+  private IGeoLog setOrCreateLog( final IGeoLog geoLog )
+  {
+    if( geoLog != null )
+      return geoLog;
+
+    try
+    {
+      return new GeoLog( KalypsoModel1D2DPlugin.getDefault().getLog() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public void setResultMeta( final IResultMeta resultRoot )
@@ -129,9 +153,6 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     return m_resultRoot;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -145,10 +166,13 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
       pLayout.heightHint = 400;
       parent.layout();
     }
+
     final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayout( new FillLayout( SWT.HORIZONTAL ) );
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
 
     m_treeViewer = new CheckboxTreeViewer( panel, SWT.BORDER );
+    m_treeViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     m_treeViewer.setContentProvider( new WorkbenchContentProvider() );
     m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
     m_treeViewer.addFilter( m_filter );
@@ -156,11 +180,15 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     m_treeViewer.setInput( m_resultRoot );
 
     /* The next two lines are needed so that checking children of checked elements always works. */
+    // FIXME: only, because getParent on the content provider does not work correctly, we should fix that
     m_treeViewer.expandAll();
     m_treeViewer.collapseAll();
 
     /* Info View for one result */
     final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE, m_factory );
+    resultViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    createToolbar( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -198,6 +226,33 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     setControl( panel );
   }
 
+  private Control createToolbar( final Composite parent )
+  {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayout( new RowLayout() );
+
+    // final ToolBarManager manager = new ToolBarManager( SWT.NONE );
+
+    for( final IAction action : m_actions )
+    {
+      ActionButton.createButton( null, panel, action );
+      // manager.add( action );
+    }
+
+    // panel.addDisposeListener( new DisposeListener()
+    // {
+    // @Override
+    // public void widgetDisposed( final DisposeEvent e )
+    // {
+    // manager.dispose();
+    // }
+    // } );
+    //
+    // manager.createControl( panel );
+    // return manager.getControl();
+    return panel;
+  }
+
   protected void handleSelectionChanged( final IStructuredSelection selection, final ResultMetaInfoViewer resultViewer )
   {
     resultViewer.setInput( selection.getFirstElement() );
@@ -224,7 +279,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
   }
 
   /**
-   * The elements which should initally be checked.
+   * The elements which should initially be checked.
    * <p>
    * This method must be called before createControl is invoked.
    * </p>
@@ -234,8 +289,13 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     m_checkedElements = checkedElements;
   }
 
-  protected CheckboxTreeViewer getTreeViewer( )
+  public CheckboxTreeViewer getTreeViewer( )
   {
     return m_treeViewer;
+  }
+
+  public IGeoLog getLog( )
+  {
+    return m_geoLog;
   }
 }
