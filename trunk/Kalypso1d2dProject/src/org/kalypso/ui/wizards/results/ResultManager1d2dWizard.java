@@ -40,29 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
@@ -72,95 +62,55 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  *
  * @author Thomas Jung
  */
-public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImportWizard
+public class ResultManager1d2dWizard extends Wizard
 {
   private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
-  private IKalypsoLayerModell m_modell;
+  private final IKalypsoLayerModell m_modell;
 
-  private IScenarioResultMeta m_resultModel;
+  private final IScenarioResultMeta m_resultModel;
 
-  private ICommandTarget m_commandTarget;
+  private final ICommandTarget m_commandTarget;
 
-  private ICaseDataProvider<Feature> m_modelProvider;
-
-  private ResultManager1d2dWizardPage m_selectResultWizardPage;
+  private final ICaseDataProvider<IModel> m_modelProvider;
 
   private IGeoLog m_geoLog;
 
-  public ResultManager1d2dWizard( )
+  public ResultManager1d2dWizard( final IKalypsoLayerModell mapModel, final JobExclusiveCommandTarget commandTarget, final IScenarioResultMeta resultModel, final ICaseDataProvider<IModel> modelProvider )
   {
+    m_modell = mapModel;
+    m_commandTarget = commandTarget;
+    m_resultModel = resultModel;
+    m_modelProvider = modelProvider;
+
     setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1") ); //$NON-NLS-1$
+    setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
-    m_selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2"), null, resultFilter, resultComparator, null, m_geoLog ); //$NON-NLS-1$
-    m_selectResultWizardPage.setResultMeta( m_resultModel );
-    m_selectResultWizardPage.setCommandTarget( m_commandTarget );
-    m_selectResultWizardPage.setMapModel( m_modell );
-    m_selectResultWizardPage.setCaseDataProvidet( m_modelProvider );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2" ), null, resultFilter, resultComparator, null, m_geoLog ); //$NON-NLS-1$
+    selectResultWizardPage.setResultMeta( m_resultModel );
 
-    addPage( m_selectResultWizardPage );
+    selectResultWizardPage.addAction( new DeleteResultAction( selectResultWizardPage, m_commandTarget, m_modell ) );
+    selectResultWizardPage.addAction( new ReevaluateResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider ) );
+    selectResultWizardPage.addAction( new ImportResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider ) );
+
+    addPage( selectResultWizardPage );
   }
 
-  /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setCommandTarget(org.kalypso.commons.command.ICommandTarget)
-   */
-  @Override
-  public void setCommandTarget( final ICommandTarget commandTarget )
-  {
-    m_commandTarget = commandTarget;
-  }
-
-  /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
-   */
-  @Override
-  public void setMapModel( final IKalypsoLayerModell modell )
-  {
-    m_modell = modell;
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  @Override
-  @SuppressWarnings("unchecked")
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    m_modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    try
-    {
-      // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
-    }
-    catch( final CoreException e )
-    {
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.3"), Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.4"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
     try
     {
+      // FIXME: we always make the pool dirty and safe the workspace... is this ok?
+      // FIXME: what happens with cancel?
+
       final EmptyCommand command = new EmptyCommand( "You are dirty now, pool!", false ); //$NON-NLS-1$
       final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IScenarioResultMeta.class );
       commandableWorkspace.postCommand( command );

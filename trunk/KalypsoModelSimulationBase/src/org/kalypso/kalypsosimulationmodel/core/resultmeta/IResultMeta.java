@@ -54,32 +54,33 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public interface IResultMeta extends IModel
 {
-  public static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" ); //$NON-NLS-1$
+  static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" ); //$NON-NLS-1$
+  static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "childMember" ); //$NON-NLS-1$
+  static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "childMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "parentMember" ); //$NON-NLS-1$
+  static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "parentMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" ); //$NON-NLS-1$
+  static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" ); //$NON-NLS-1$
 
-  public IPath getPath( );
+  IPath getPath( );
 
-  public void setPath( IPath path );
+  void setPath( IPath path );
 
-  public IStatus getStatus( );
+  IStatus getStatus( );
 
-  public void setStatus( IStatus status );
+  void setStatus( IStatus status );
 
-  public IResultMeta getParent( );
+  @Override
+  IResultMeta getParent( );
 
-  public IFeatureBindingCollection<IResultMeta> getChildren( );
+  IFeatureBindingCollection<IResultMeta> getChildren( );
 
-  public void removeChild( final IResultMeta result );
+  void removeChild( final IResultMeta result );
 
   /**
    * Returns the complete path resolved against all the parent-pathes
    */
-  public IPath getFullPath( );
+  IPath getFullPath( );
 }

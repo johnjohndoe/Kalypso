@@ -78,9 +78,6 @@ public class ImportWspmRestartPage extends WizardPage
     setDescription( Messages.getString("org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartPage.2") ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -89,7 +86,7 @@ public class ImportWspmRestartPage extends WizardPage
     {
 
       @Override
-      public boolean select( Viewer viewer, Object parentElement, Object element )
+      public boolean select( final Viewer viewer, final Object parentElement, final Object element )
       {
         try
         {
