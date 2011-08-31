@@ -80,8 +80,8 @@ public class ImportResultAction extends Action
     MessageDialog.openWarning( shell, wizard.getWindowTitle(), "Sorry, not implemented yet..." );
 
     // TODO: ask user for external file(s)
+    // - *.2d
 
     // TODO: for each file, import into the current structure; add an pseudo 'external results' calc unit
-
   }
 }
