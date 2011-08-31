@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,15 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
+import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
 
 /**
  * @author Gernot Belger
@@ -97,7 +99,16 @@ public class DocumentsCheckstateHandler implements ICheckStateProvider, ICheckSt
 
   protected boolean cannotImport( final Document doc )
   {
-    return !m_data.getDocumentData().isImportable( doc );
+    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final DocumentInfo info = documentData.getInfo( doc );
+
+    final Document[] existingDcouments = info.getExistingDcouments();
+    final ImportMode importMode = m_data.getImportMode();
+    /* If existing docs will be skipped we ignore elements with counterparts */
+    if( importMode == ImportMode.skip && !ArrayUtils.isEmpty( existingDcouments ) )
+      return true;
+
+    return !info.isImportable();
   }
 
   public void selectAll( )

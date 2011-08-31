@@ -48,10 +48,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.activation.MimeType;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.Sanselan;
@@ -59,16 +61,13 @@ import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.image.ExifUtils;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
+import com.google.common.primitives.Longs;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -99,13 +98,7 @@ public class ImportAttachmentsDocumentsData
 
   private final GeometryFactory m_locationFactory = new GeometryFactory( new PrecisionModel(), 4326 ); // WGS84
 
-  private final Map<Document, IStatus> m_statusHash = new HashMap<Document, IStatus>();
-
-  private final Map<Document, BigDecimal> m_stationHash = new HashMap<Document, BigDecimal>();
-
-  private final Map<Document, Boolean> m_importableHash = new HashMap<Document, Boolean>();
-
-  private final Map<Document, File> m_fileHash = new HashMap<Document, File>();
+  private final Map<Document, DocumentInfo> m_infoHash = new HashMap<Document, DocumentInfo>();
 
   private Map<BigDecimal, CrossSection> m_csHash = null;
 
@@ -113,41 +106,44 @@ public class ImportAttachmentsDocumentsData
 
   private final MimeTypeFinder m_mimeFinder = new MimeTypeFinder();
 
-  private final Map<String, Document> m_existingDocumentsByName;
+  // Encodes database id's as base64 filenames
+  private final Base64 m_idEncoder = new Base64( Integer.MAX_VALUE, null, true );
 
-  public ImportAttachmentsDocumentsData( final State state, final Map<String, Document> existingDocumentsByName )
+
+  public ImportAttachmentsDocumentsData( final State state )
   {
     m_state = state;
-    m_existingDocumentsByName = existingDocumentsByName;
   }
 
   public Document[] getDocuments( )
   {
-    return m_stationHash.keySet().toArray( new Document[m_stationHash.size()] );
+    return m_infoHash.keySet().toArray( new Document[m_infoHash.size()] );
   }
 
   public void clear( )
   {
-    m_statusHash.clear();
-    m_stationHash.clear();
-    m_fileHash.clear();
-    m_importableHash.clear();
+    m_infoHash.clear();
   }
 
-  public IStatus getStatus( final Document element )
+  public DocumentInfo getInfo( final Document element )
   {
-    return m_statusHash.get( element );
+    return m_infoHash.get( element );
   }
 
-  public BigDecimal getStation( final Document element )
-  {
-    return m_stationHash.get( element );
-  }
-
-  public File getFile( final Document document )
-  {
-    return m_fileHash.get( document );
-  }
+// public IStatus getStatus( final Document element )
+// {
+// return m_statusHash.get( element );
+// }
+//
+// public BigDecimal getStation( final Document element )
+// {
+// return m_stationHash.get( element );
+// }
+//
+// public File getFile( final Document document )
+// {
+// return m_fileHash.get( document );
+// }
 
   public Document addDocument( final BigDecimal station, final File file )
   {
@@ -155,19 +151,18 @@ public class ImportAttachmentsDocumentsData
     final MimeType mimeType = m_mimeFinder.getMimeType( file );
 
     final CrossSection cs = findCrossSection( station );
-    final String filePath = getFilePath( filename );
+    final String filePath = getFilePath( cs, filename );
 
+    /* Create the new document */
     final Document document = new Document();
-
-    document.setCrossSection( cs );
 
     // REMARK: we set state + water body to null here: this is a profile document!
     // I.e. if the profile is removed, also this document will be destroyed which is ok.
     document.setState( null );
     document.setWaterBody( null );
+    document.setCrossSection( cs );
 
-    // FIXME: better name; what is unique? -> probably filename should be unique!
-    document.setName( filePath );
+    document.setName( filename );
     document.setDescription( StringUtils.EMPTY );
     document.setFilename( filePath );
     if( mimeType != null )
@@ -181,18 +176,28 @@ public class ImportAttachmentsDocumentsData
     if( exif != null )
       applyImageMetadata( document, exif );
 
-    validate( document, station );
-
-    m_stationHash.put( document, station );
-    m_fileHash.put( document, file );
+    final DocumentInfo info = new DocumentInfo( document, station, file );
+    m_infoHash.put( document, info );
 
     return document;
   }
 
-  private String getFilePath( final String fileName )
+  private String getFilePath( final CrossSection cs, final String fileName )
   {
     final String stateName = m_state.getName();
-    return String.format( "%s/%s", stateName, fileName ); //$NON-NLS-1$
+    final String stateID64 = encodeID( m_state.getId().longValue() );
+
+    final String csName = cs.getName();
+    final String csID64 = encodeID( cs.getId().longValue() );
+
+    return String.format( "%s_%s/%s_%s/%s", stateName, stateID64, csName, csID64, fileName ); //$NON-NLS-1$
+  }
+
+  private String encodeID( final long id )
+  {
+    final byte[] longBytes = Longs.toByteArray( id );
+
+    return new String( m_idEncoder.encode( longBytes ) );
   }
 
   private CrossSection findCrossSection( final BigDecimal station )
@@ -212,41 +217,6 @@ public class ImportAttachmentsDocumentsData
       final BigDecimal station = crossSection.getStation().setScale( 1, BigDecimal.ROUND_HALF_UP );
       m_csHash.put( station, crossSection );
     }
-  }
-
-  private void validate( final Document document, final BigDecimal station )
-  {
-    final IStatusCollector stati = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
-
-    /* Default to true */
-    m_importableHash.put( document, Boolean.TRUE );
-
-    if( station == null )
-    {
-      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.3" ) ); //$NON-NLS-1$
-      m_importableHash.put( document, Boolean.FALSE );
-    }
-    else if( document.getCrossSection() == null )
-    {
-      stati.add( IStatus.ERROR, Messages.getString( "ImportAttachmentsDocumentsData.4" ) ); //$NON-NLS-1$
-      m_importableHash.put( document, Boolean.FALSE );
-    }
-
-    final MimeType mimetype = MimeTypeUtils.createQuit( document.getMimetype() );
-    if( mimetype == null )
-      stati.add( IStatus.WARNING, Messages.getString( "ImportAttachmentsDocumentsData.5" ) ); //$NON-NLS-1$
-
-    /* Already in database ? */
-    final String name = document.getName();
-    if( m_existingDocumentsByName.containsKey( name ) )
-      stati.add( IStatus.WARNING, Messages.getString( "ImportAttachmentsDocumentsData.6" ) ); //$NON-NLS-1$
-
-    final IStatus status;
-    if( stati.size() == 1 )
-      status = stati.getAllStati()[0];
-    else
-      status = stati.asMultiStatusOrOK( Messages.getString( "ImportAttachmentsDocumentsData.7" ) ); //$NON-NLS-1$
-    m_statusHash.put( document, status );
   }
 
   private TiffImageMetadata readImageMetadata( final Document document, final File file )
@@ -306,19 +276,15 @@ public class ImportAttachmentsDocumentsData
     }
   }
 
-  public boolean isImportable( final Document doc )
-  {
-    return m_importableHash.get( doc );
-  }
-
   public Document[] getImportableDocuments( )
   {
     final Collection<Document> importable = new ArrayList<Document>();
 
-    final Document[] documents = getDocuments();
-    for( final Document document : documents )
+    for( final Entry<Document, DocumentInfo> entry : m_infoHash.entrySet() )
     {
-      if( isImportable( document ) )
+      final Document document = entry.getKey();
+      final DocumentInfo info = entry.getValue();
+      if( info.isImportable() )
         importable.add( document );
     }
     return importable.toArray( new Document[importable.size()] );
@@ -326,15 +292,7 @@ public class ImportAttachmentsDocumentsData
 
   public boolean isExisting( final Document document )
   {
-    return m_existingDocumentsByName.containsKey( document.getName() );
-  }
-
-  public BigDecimal getExistingID( final Document document )
-  {
-    final Document existing = m_existingDocumentsByName.get( document.getName() );
-    if( existing == null )
-      return null;
-
-    return existing.getId();
+    final DocumentInfo info = getInfo( document );
+    return info.hasExistingInDatabase();
   }
 }

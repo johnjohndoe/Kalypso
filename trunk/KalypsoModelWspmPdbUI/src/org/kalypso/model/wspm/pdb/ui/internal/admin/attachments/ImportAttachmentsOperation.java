@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.zip.ZipOutputStream;
 
@@ -95,7 +94,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
       for( final Document document : documents )
         addDcoument( session, document );
 
-      closeZip();
+          closeZip();
     }
     finally
     {
@@ -107,14 +106,22 @@ public class ImportAttachmentsOperation implements IPdbOperation
   {
     addToZip( document );
 
-    document.setCreationDate( m_creationDate );
+    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final DocumentInfo info = documentData.getInfo( document );
+
+    /* Delete any documents with the same file -> we overwrite them all with the new information */
+    final Document[] existingDocuments = info.getExistingDcouments();
+    for( final Document existingDcoument : existingDocuments )
+    {
+      session.delete( existingDcoument );
+    }
+
+    /* Save the new document */
     document.setEditingDate( m_creationDate );
     document.setEditingUser( m_username );
+    document.setCreationDate( m_creationDate );
 
-    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
-    final BigDecimal id = documentData.getExistingID( document );
-    document.setId( id );
-    session.merge( document );
+    session.save( document );
   }
 
   private void createZip( ) throws PdbConnectException
@@ -139,7 +146,9 @@ public class ImportAttachmentsOperation implements IPdbOperation
     if( m_zipStream == null )
       return;
 
-    final File file = m_data.getDocumentData().getFile( document );
+    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final DocumentInfo info = documentData.getInfo( document );
+    final File file = info.getFile();
     try
     {
       final String path = document.getFilename();

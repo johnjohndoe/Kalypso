@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -61,8 +61,11 @@ public class DocumentsStationComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final BigDecimal s1 = m_documentData.getStation( (Document) e1 );
-    final BigDecimal s2 = m_documentData.getStation( (Document) e2 );
+    final DocumentInfo info1 = m_documentData.getInfo( (Document) e1 );
+    final DocumentInfo info2 = m_documentData.getInfo( (Document) e2 );
+
+    final BigDecimal s1 = info1.getStation();
+    final BigDecimal s2 = info2.getStation();
 
     if( s1 == null )
       return -1;

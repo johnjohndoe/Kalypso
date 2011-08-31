@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -193,7 +195,8 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof Document )
     {
-      final IStatus status = m_documentData.getStatus( (Document) firstElement );
+      final DocumentInfo info = m_documentData.getInfo( (Document) firstElement );
+      final IStatus status = info.getStatus();
       new StatusDialog( getShell(), status, getWizard().getWindowTitle() ).open();
     }
   }
@@ -222,6 +225,22 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_MODE );
     m_binding.bindValue( target, model );
+
+    // TRICKY: we need to refresh the table when the import mode changes, in order
+    // to show the gray state correctly
+    model.addValueChangeListener( new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( final ValueChangeEvent event )
+      {
+        handleImportModeChanged();
+      }
+    } );
+  }
+
+  protected void handleImportModeChanged( )
+  {
+    m_viewer.update( m_documentData.getDocuments(), null );
   }
 
   private void createSelectionButtons( final Composite parent )

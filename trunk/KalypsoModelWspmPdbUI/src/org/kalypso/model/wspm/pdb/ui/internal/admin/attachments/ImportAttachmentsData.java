@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -44,11 +44,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -89,8 +86,6 @@ public class ImportAttachmentsData extends AbstractModelObject
 
   private State m_state;
 
-  private final Map<String, Document> m_documentsByName = new HashMap<String, Document>();
-
   private String m_importPattern = String.format( "*<%s>*", GuessStationPattern.TOKEN ); //$NON-NLS-1$
 
   private File m_importDir;
@@ -122,7 +117,6 @@ public class ImportAttachmentsData extends AbstractModelObject
     load( settings );
 
     m_state = findState( selection );
-    buildDocumentHash();
 
     /* Propose a zip file name, based on state name */
     final File zipDir = m_zipFile != null ? m_zipFile.getParentFile() : FileUtils.getUserDirectory();
@@ -131,16 +125,6 @@ public class ImportAttachmentsData extends AbstractModelObject
     setZipFile( zipFile );
 
     Assert.isNotNull( m_state );
-  }
-
-  private void buildDocumentHash( )
-  {
-    if( m_state == null )
-      return;
-
-    final Set<Document> documents = m_state.getDocuments();
-    for( final Document document : documents )
-      m_documentsByName.put( document.getName(), document );
   }
 
   private State findState( final IStructuredSelection selection )
@@ -314,11 +298,6 @@ public class ImportAttachmentsData extends AbstractModelObject
     firePropertyChange( PROPERTY_ZIP_HISTORY, oldValue, zipHistory );
   }
 
-  public Map<String, Document> getExistingDocuments( )
-  {
-    return Collections.unmodifiableMap( m_documentsByName );
-  }
-
   public ImportMode getImportMode( )
   {
     return m_importMode;
@@ -340,8 +319,7 @@ public class ImportAttachmentsData extends AbstractModelObject
     if( m_documentData == null )
     {
       final State state = getState();
-      final Map<String, Document> documentsByName = getExistingDocuments();
-      m_documentData = new ImportAttachmentsDocumentsData( state, documentsByName );
+      m_documentData = new ImportAttachmentsDocumentsData( state );
     }
 
     return m_documentData;
