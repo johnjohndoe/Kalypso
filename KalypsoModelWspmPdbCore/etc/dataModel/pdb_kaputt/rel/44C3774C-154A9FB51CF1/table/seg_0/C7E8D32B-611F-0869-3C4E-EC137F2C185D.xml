@@ -1,0 +1,220 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="C7E8D32B-611F-0869-3C4E-EC137F2C185D" directorySegmentName="seg_0" name="Event">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-09-01 07:41:32 UTC</changedTime>
+   <generatorID>90F0EE48-08A3-D666-C1C5-A0D069D98D8E</generatorID>
+   <ownerDesignName>pdb_kaputt</ownerDesignName>
+   <pkName>Event PK</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="ID" id="C6F51DF3-1333-1F30-EF49-5FAE880E0C6F">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>292AAF8C-462E-EC60-FCB4-CD8E2C7BBDE0</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Name" id="BF84E17D-9EB2-E537-B778-2B96FF6D02C7">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>6E6D3D6F-CF9C-80E3-3CBD-5EBF8C7EBAB7</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <use>2</use>
+         <distinctType>232885D0-DA0B-DA98-7B45-84565601B46D</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>100</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Creation_Date" id="B2160FF0-6D65-CCBF-6EE9-D5056036517F">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>607841B9-67B0-CBF8-8A65-A8B05D7C80D8</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Editing_Date" id="BA1E4B83-8462-13F2-B347-D754DB6BDE79">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>F7A15B2B-6E03-B072-AFA9-C21070BB764E</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Editing_User" id="AA6501AF-0772-5E49-A7FA-8B80E3D4E1D3">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>6FF9A707-936E-97D3-6B6B-F596AAF8CD08</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <use>2</use>
+         <distinctType>35D7D61C-E71A-566D-F228-AA52140297FC</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Measurement_Date" id="89384A96-C26A-563D-30E5-1C9FAA60C184">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>3028D4CD-E67F-8C15-E4B9-807B009CC6BE</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT015</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Source" id="7D99EAEB-FAA6-0E00-0B4B-91CCBEE6800A">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>EA07AB65-280A-8AE1-D471-F441FFC0722B</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Type" id="5D1F4E3C-7F38-E6F6-A700-4CDA503FAF2A">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <comment>Art des Ereignisses: Messung, Simulation</comment>
+         <commentInRDBMS>Art des Ereignisses: Messung, Simulation</commentInRDBMS>
+         <generatorID>E6D9D65E-ABA8-A1ED-240A-6F51FC3AF983</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <defaultValue>Measurement</defaultValue>
+         <use>0</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+         <domain>51069AA8-C186-3A89-0E0F-1FCD4BB0B869</domain>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Description" id="8DB21F2E-6411-E313-AF87-B8BB0303CE96">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>E54BA92E-4C0E-51CD-088D-C5B9FB6BBC1E</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>2</use>
+         <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>255</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="Water_Body" id="39E31429-FDE7-2AE9-D800-710FE6E09151">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>111F0F77-33A5-3AA4-7547-7BE2AEB80E15</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>20</dataTypePrecision>
+         <dataTypeScale>0</dataTypeScale>
+         <delegate>84ED4314-D7E4-E922-5848-813D18723456</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="28086312-2F14-56AF-DCDA-2A2D5BDE87B5" referredColumn="84ED4314-D7E4-E922-5848-813D18723456"/>
+         </associations>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="009D29E0-096F-66DB-15B8-62A81607DACE" name="Event PK">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>CCBC10B7-9091-4E1D-BD1C-85982C975405</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="C6F51DF3-1333-1F30-EF49-5FAE880E0C6F"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="E0A596AA-B296-9483-3C70-8B20F7A06E92" name="Event Name UK">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:31 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:31 UTC</changedTime>
+         <generatorID>528B90D9-7300-3B6F-17D5-AA0AE91ECBA2</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <indexState>Unique Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="BF84E17D-9EB2-E537-B778-2B96FF6D02C7"/>
+            <colUsage columnID="39E31429-FDE7-2AE9-D800-710FE6E09151"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="C3307B42-0522-37ED-09E0-E19A0F66AB98" name="Water_Body__Event">
+         <createdBy>thuel</createdBy>
+         <createdTime>2011-09-01 07:41:32 UTC</createdTime>
+         <changedBy>thuel</changedBy>
+         <changedTime>2011-09-01 07:41:32 UTC</changedTime>
+         <generatorID>4DA29273-5536-7444-DBAB-DB3CD8690770</generatorID>
+         <ownerDesignName>pdb_kaputt</ownerDesignName>
+         <indexColumnUsage>
+            <colUsage columnID="39E31429-FDE7-2AE9-D800-710FE6E09151"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>

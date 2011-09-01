@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 07:10:52 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-08-31 14:40:13 UTC</changedTime>
+   <changedTime>2011-08-31 16:06:22 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Documents PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -197,6 +197,7 @@
          <changedTime>2011-07-13 08:05:04 UTC</changedTime>
          <generatorID>47EB62A6-D621-1FA9-4AD3-DCF8458FA8FF</generatorID>
          <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
          <referedAttribute>33383B8A-2227-7303-6229-3D0BEEFB079C</referedAttribute>
          <use>1</use>
          <logicalDatatype>LOGDT019</logicalDatatype>
@@ -210,6 +211,7 @@
          <changedTime>2011-07-13 08:05:31 UTC</changedTime>
          <generatorID>F4DBF7B7-F817-D2DB-A9EC-247FAB515183</generatorID>
          <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
          <referedAttribute>A33E5868-B530-9247-FB21-C8C8A2B2C89B</referedAttribute>
          <use>1</use>
          <logicalDatatype>LOGDT019</logicalDatatype>
@@ -223,6 +225,7 @@
          <changedTime>2011-07-13 08:05:42 UTC</changedTime>
          <generatorID>ED036F90-3A0B-BCD4-7B25-5A62D7453B2F</generatorID>
          <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
          <referedAttribute>AF03C36A-B735-E7F5-A897-5BFD00389CB3</referedAttribute>
          <use>1</use>
          <logicalDatatype>LOGDT019</logicalDatatype>
@@ -235,7 +238,7 @@
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-18 07:11:09 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2011-08-31 14:40:13 UTC</changedTime>
+         <changedTime>2011-08-31 16:06:22 UTC</changedTime>
          <ownerDesignName>pdb</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>
