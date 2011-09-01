@@ -3,11 +3,11 @@
    <createdBy>thuel</createdBy>
    <createdTime>2011-07-13 08:05:42 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-08-31 14:40:00 UTC</changedTime>
+   <changedTime>2011-08-31 16:06:22 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <identifying>false</identifying>
    <optionalSource>true</optionalSource>
-   <optionalTarget>false</optionalTarget>
+   <optionalTarget>true</optionalTarget>
    <sourceCardinality>1</sourceCardinality>
    <sourceEntity>4DDF1425-19B6-FBE3-AE6E-5807076C47F7</sourceEntity>
    <targetCardinalityString>*</targetCardinalityString>
