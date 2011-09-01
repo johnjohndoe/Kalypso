@@ -21,7 +21,7 @@ CREATE TABLE Cross_Section
      Measurement_Date TIMESTAMP (0) ,
      Description Varchar (255) ,
      Water_Body Numeric (20)  NOT NULL ,
-     State Numeric (20)  NOT NULL
+     State Numeric (20)  NOT NULL 
     )
 WITH (
   OIDS=TRUE
