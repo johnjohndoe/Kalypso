@@ -131,7 +131,7 @@ public class Document extends AbstractModelObject implements Serializable, Docum
     m_location = location;
   }
 
-  @Column(name = "filename", unique = true, nullable = false, length = 2048)
+  @Column(name = "filename", nullable = false, length = 2048)
   public String getFilename( )
   {
     return m_filename;

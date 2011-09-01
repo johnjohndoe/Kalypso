@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="B00BF29D-FEA0-C0BA-B691-8ACA16A91DB1" directorySegmentName="seg_0" name="Water_Body__CS">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-09-01 15:17:25 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-09-01 15:17:25 UTC</changedTime>
+   <generatorID>0F32BF9B-46F9-4E46-AF6D-E77DE5ED02F0</generatorID>
+   <ownerDesignName>pdb_V0.0.4</ownerDesignName>
+   <containerWithKeyObject>F6B13C32-290A-30A4-C096-67AB6C36D61D</containerWithKeyObject>
+   <deleteRule>CASCADE</deleteRule>
+   <localFKIndex>0F66A3FA-6DC2-970C-CD7A-5EBC89AAC3B5</localFKIndex>
+   <keyObject>48B47D80-7776-6B20-5D5A-1E81FDCE72D2</keyObject>
+   <mandatory>true</mandatory>
+   <transferable>true</transferable>
+</FKIndexAssociation>

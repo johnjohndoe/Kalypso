@@ -46,7 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -118,8 +118,8 @@ public class CrossSectionConverter
       final IRecord record = result.createRecord();
       result.add( record );
 
-      setValue( record, IWspmConstants.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
-      setValue( record, IWspmConstants.POINT_PROPERTY_HOEHE, asDouble( point.getHeight() ) );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_HOEHE, asDouble( point.getHeight() ) );
 
       convertStandardProperties( point, record );
 
@@ -258,43 +258,45 @@ public class CrossSectionConverter
 
   private void convertStandardProperties( final Point point, final IRecord record )
   {
-    setValue( record, IWspmConstants.POINT_PROPERTY_ID, point.getName() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_CODE, point.getCode() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, point.getDescription() );
+    setValue( record, IWspmPointProperties.POINT_PROPERTY_ID, point.getName() );
+    setValue( record, IWspmPointProperties.POINT_PROPERTY_CODE, point.getCode() );
+    setValue( record, IWspmPointProperties.POINT_PROPERTY_COMMENT, point.getDescription() );
 
     final com.vividsolutions.jts.geom.Point location = point.getLocation();
     if( location != null )
     {
-      setValue( record, IWspmConstants.POINT_PROPERTY_RECHTSWERT, location.getX() );
-      setValue( record, IWspmConstants.POINT_PROPERTY_HOCHWERT, location.getY() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, location.getX() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_HOCHWERT, location.getY() );
     }
 
     // REMARK: the checkout operation makes sure that all necessary classes are present
     final Roughness roughness = point.getRoughness();
-    setValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName() );
+    if( roughness != null )
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, roughness.getId().getName() );
 
     final BigDecimal roughnessKst = point.getRoughnessKstValue();
     if( roughnessKst != null )
-      setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, roughnessKst.doubleValue() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, roughnessKst.doubleValue() );
 
     final BigDecimal roughnessK = point.getRoughnessKValue();
     if( roughnessK != null )
-      setValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, roughnessK.doubleValue() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, roughnessK.doubleValue() );
 
     // REMARK: the checkout operation makes sure that all necessary classes are present
     final Vegetation vegetation = point.getVegetation();
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName() );
+    if( vegetation != null )
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, vegetation.getId().getName() );
 
     final BigDecimal vegetationAx = point.getVegetationAx();
     if( vegetationAx != null )
-      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, vegetationAx.doubleValue() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, vegetationAx.doubleValue() );
 
     final BigDecimal vegetationAy = point.getVegetationAy();
     if( vegetationAy != null )
-      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, vegetationAy.doubleValue() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, vegetationAy.doubleValue() );
 
     final BigDecimal vegetationDp = point.getVegetationDp();
     if( vegetationDp != null )
-      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue() );
+      setValue( record, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue() );
   }
 }
