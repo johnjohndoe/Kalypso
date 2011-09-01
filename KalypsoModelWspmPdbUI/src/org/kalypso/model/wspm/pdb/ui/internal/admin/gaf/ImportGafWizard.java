@@ -189,15 +189,21 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   }
 
   @Override
+  public boolean performCancel( )
+  {
+    storeSettings();
+
+    return super.performCancel();
+  }
+
+  @Override
   public boolean performFinish( )
   {
     final ImportGafOperation operation = new ImportGafOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
     new StatusDialog( getShell(), result, getWindowTitle() ).open();
 
-    final IDialogSettings settings = getDialogSettings();
-    if( settings != null )
-      m_data.store( settings );
+    storeSettings();
 
     if( result.matches( IStatus.ERROR ) )
       return false;
@@ -208,6 +214,13 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     m_viewer.reload( selector );
 
     return true;
+  }
+
+  private void storeSettings( )
+  {
+    final IDialogSettings settings = getDialogSettings();
+    if( settings != null )
+      m_data.store( settings );
   }
 
   protected void handlePageChanged( final Object selectedPage )
