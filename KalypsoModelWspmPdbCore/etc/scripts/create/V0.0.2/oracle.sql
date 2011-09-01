@@ -631,27 +631,27 @@ INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value)
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('3', 'Sand oder Feinkies', 'Sand oder Feinkies', 'GAF',0.05, 53);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('4', 'Feinkies', 'Feinkies', 'GAF',0.05, 50);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('5', 'mittlerer Kies', 'mittlerer Kies', 'GAF',0.08, 40);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('6', 'Schotter, mittlerer Grobkies, verkrautete Erdkanäle', 'Schotter, mittlerer Grobkies, verkrautete Erdkanäle', 'GAF',0.082, 35);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('6', 'Schotter, mittlerer Grobkies, verkrautete ErdkanÃ¤le', 'Schotter, mittlerer Grobkies, verkrautete ErdkanÃ¤le', 'GAF',0.082, 35);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('7', 'Lehm, Wasserpflanzen', 'Lehm, Wasserpflanzen', 'GAF',0.1, 33);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('8', 'Steinschüttung,stark geschiebeführender Fluss,Wurzeln', 'Steinschüttung,stark geschiebeführender Fluss,Wurzeln', 'GAF',0.15, 30);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('8', 'SteinschÃ¼ttung,stark geschiebefÃ¼hrender Fluss,Wurzeln', 'SteinschÃ¼ttung,stark geschiebefÃ¼hrender Fluss,Wurzeln', 'GAF',0.15, 30);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('9', 'Kiesanlandung, Wurzelgeflecht', 'Kiesanlandung, Wurzelgeflecht', 'GAF',0.2, 28);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('10', 'grobe Steine, Geröllanlandung', 'grobe Steine, Geröllanlandung', 'GAF',0.3, 25);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('11', 'Gebirgsflüsse mit grobem Geröll, verkrautete Erdkanäle', 'Gebirgsflüsse mit grobem Geröll, verkrautete Erdkanäle', 'GAF',0.45, 22.5);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('10', 'grobe Steine, GerÃ¶llanlandung', 'grobe Steine, GerÃ¶llanlandung', 'GAF',0.3, 25);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('11', 'GebirgsflÃ¼sse mit grobem GerÃ¶ll, verkrautete ErdkanÃ¤le', 'GebirgsflÃ¼sse mit grobem GerÃ¶ll, verkrautete ErdkanÃ¤le', 'GAF',0.45, 22.5);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('12', 'Fels', 'Fels', 'GAF',0.6, 20);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('13', 'Wildbach', 'Wildbach', 'GAF',0.9, 15);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('14', 'Wildbach mit starkem Geschiebetrieb, roher Felsausbruch', 'Wildbach mit starkem Geschiebetrieb, roher Felsausbruch', 'GAF',2, 12);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('20', 'Stahl, Zementputz geglättet, Beton aus Vakuumschalung', 'Stahl, Zementputz geglättet, Beton aus Vakuumschalung', 'GAF',0.001, 95);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('20', 'Stahl, Zementputz geglÃ¤ttet, Beton aus Vakuumschalung', 'Stahl, Zementputz geglÃ¤ttet, Beton aus Vakuumschalung', 'GAF',0.001, 95);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('21', 'Holz, ungehobelt', 'Holz, ungehobelt', 'GAF',0.002, 90);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('22', 'Beton, glatt, Asphaltbeton, Klinker, sorgfältig verfugt', 'Beton, glatt, Asphaltbeton, Klinker, sorgfältig verfugt', 'GAF',0.003, 75);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('22', 'Beton, glatt, Asphaltbeton, Klinker, sorgfÃ¤ltig verfugt', 'Beton, glatt, Asphaltbeton, Klinker, sorgfÃ¤ltig verfugt', 'GAF',0.003, 75);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('23', 'Ziegelmauerwerk, Rauputz, Verbundpflaster', 'Ziegelmauerwerk, Rauputz, Verbundpflaster', 'GAF',0.005, 70);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('24', 'Beton rauh, glatte Bruchsteine', 'Beton rauh, glatte Bruchsteine', 'GAF',0.015, 60);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('25', 'Pflaster, ARMCO-Profile', 'Pflaster, ARMCO-Profile', 'GAF',0.04, 50);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('26', 'Beton mit Fugen, grobes Bruchsteinmauerwerk', 'Beton mit Fugen, grobes Bruchsteinmauerwerk', 'GAF',0.02, 48);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('27', 'Natursteine, rauh', 'Natursteine, rauh', 'GAF',0.09, 40);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('28', 'Spundwände', 'Spundwände', 'GAF',0.06, 35);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('29', 'Schotter, Steinschüttung, Rasengittersteine', 'Schotter, Steinschüttung, Rasengittersteine', 'GAF',0.2, 30);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('30', 'grobe Steinschüttung', 'grobe Steinschüttung', 'GAF',0.4, 25);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('31', 'Steinschüttung mit Krautbewuchs', 'Steinschüttung mit Krautbewuchs', 'GAF',0.5, 23.5);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('28', 'SpundwÃ¤nde', 'SpundwÃ¤nde', 'GAF',0.06, 35);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('29', 'Schotter, SteinschÃ¼ttung, Rasengittersteine', 'Schotter, SteinschÃ¼ttung, Rasengittersteine', 'GAF',0.2, 30);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('30', 'grobe SteinschÃ¼ttung', 'grobe SteinschÃ¼ttung', 'GAF',0.4, 25);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('31', 'SteinschÃ¼ttung mit Krautbewuchs', 'SteinschÃ¼ttung mit Krautbewuchs', 'GAF',0.5, 23.5);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('32', 'Rauhe Sohlrampe', 'Rauhe Sohlrampe', 'GAF',1.5, 15);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('50', 'Rasen', 'Rasen', 'GAF',0.06, 40);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('51', 'Gras, Acker ohne Bewuchs', 'Gras, Acker ohne Bewuchs', 'GAF',0.2, 30);
@@ -660,24 +660,24 @@ INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value)
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('54', 'Gras mit Stauden', 'Gras mit Stauden', 'GAF',0.3, 24);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('55', 'Krautiger Bewuchs', 'Krautiger Bewuchs', 'GAF',0.4, 22);
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('56', 'Acker mit Kulturen', 'Acker mit Kulturen', 'GAF',0.6, 21);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('57', 'unregelmäßiges Vorland', 'unregelmäßiges Vorland', 'GAF',0.8, 15);
-INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('58', 'sehr unregelmäßiges Vorland mit Verbauungen', 'sehr unregelmäßiges Vorland mit Verbauungen', 'GAF',1, 12);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('57', 'unregelmÃ¤ÃŸiges Vorland', 'unregelmÃ¤ÃŸiges Vorland', 'GAF',0.8, 15);
+INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('58', 'sehr unregelmÃ¤ÃŸiges Vorland mit Verbauungen', 'sehr unregelmÃ¤ÃŸiges Vorland mit Verbauungen', 'GAF',1, 12);
 
 
 -- 09_prefill_table__vegetation
 INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('-1', 'unknown', 'unknown','GAF',0,0,0);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('1', 'Röhricht, licht', 'Röhricht, licht', 'GAF',0.003, 0.03, 0.03);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('2', 'Röhricht, dicht', 'Röhricht, dicht', 'GAF',0.005, 0.02, 0.02);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('3', 'Sträucher, licht', 'Sträucher, licht', 'GAF',0.03, 0.35, 0.35);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('4', 'Sträucher, mittel', 'Sträucher, mittel', 'GAF',0.045, 0.25, 0.25);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('5', 'Sträucher, dicht', 'Sträucher, dicht', 'GAF',0.06, 0.15, 0.15);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('6', 'Bäume, licht', 'Bäume, licht', 'GAF',0.05, 5, 5);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('7', 'Bäume, mittel', 'Bäume, mittel', 'GAF',0.2, 10, 10);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('8', 'Bäume, dicht', 'Bäume, dicht', 'GAF',1, 5, 5);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('11', 'Büsche, einjährig', 'Büsche, einjährig', 'GAF',0.5, 10, 10);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('12', 'Büsche, mehrjährig', 'Büsche, mehrjährig', 'GAF',3.5, 10, 10);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('13', 'Bäume, einjährig', 'Bäume, einjährig', 'GAF',0.05, 20, 20);
-INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('14', 'Bäume, mehrjährig', 'Bäume, mehrjährig', 'GAF',1, 20, 20);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('1', 'RÃ¶hricht, licht', 'RÃ¶hricht, licht', 'GAF',0.003, 0.03, 0.03);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('2', 'RÃ¶hricht, dicht', 'RÃ¶hricht, dicht', 'GAF',0.005, 0.02, 0.02);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('3', 'StrÃ¤ucher, licht', 'StrÃ¤ucher, licht', 'GAF',0.03, 0.35, 0.35);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('4', 'StrÃ¤ucher, mittel', 'StrÃ¤ucher, mittel', 'GAF',0.045, 0.25, 0.25);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('5', 'StrÃ¤ucher, dicht', 'StrÃ¤ucher, dicht', 'GAF',0.06, 0.15, 0.15);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('6', 'BÃ¤ume, licht', 'BÃ¤ume, licht', 'GAF',0.05, 5, 5);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('7', 'BÃ¤ume, mittel', 'BÃ¤ume, mittel', 'GAF',0.2, 10, 10);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('8', 'BÃ¤ume, dicht', 'BÃ¤ume, dicht', 'GAF',1, 5, 5);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('11', 'BÃ¼sche, einjÃ¤hrig', 'BÃ¼sche, einjÃ¤hrig', 'GAF',0.5, 10, 10);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('12', 'BÃ¼sche, mehrjÃ¤hrig', 'BÃ¼sche, mehrjÃ¤hrig', 'GAF',3.5, 10, 10);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('13', 'BÃ¤ume, einjÃ¤hrig', 'BÃ¤ume, einjÃ¤hrig', 'GAF',0.05, 20, 20);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('14', 'BÃ¤ume, mehrjÃ¤hrig', 'BÃ¤ume, mehrjÃ¤hrig', 'GAF',1, 20, 20);
 
 -- 99_create_spatial_indexes.sql
 
@@ -687,7 +687,7 @@ CREATE INDEX IX_CROSS_SECTION__LINE ON CROSS_SECTION(LINE) INDEXTYPE IS MDSYS.SP
 CREATE INDEX IX_WATER_BODY__RIVERLINE ON WATER_BODY(RIVERLINE) INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 CREATE INDEX IX_WL_FIX__LOCATION ON WATERLEVEL_FIXATION(LOCATION) INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 
--- Version endgültig setzen
+-- Version endgÃ¼ltig setzen
 UPDATE INFO set value='0.0.1'  where key ='Version';
 commit;
 
@@ -716,10 +716,10 @@ CREATE TABLE Document
      Editing_User VARCHAR2 (50)  NOT NULL , 
      Measurement_Date TIMESTAMP (0) , 
 
---  [°] - Aufnahmerichtung (0-360)
+--  [Â°] - Aufnahmerichtung (0-360)
  ShotDirection NUMBER (8,3) CHECK ( ShotDirection BETWEEN 0 AND 360) ,
 
---  [°] - Öffnungswinkel (0-360)
+--  [Â°] - Ã–ffnungswinkel (0-360)
  ViewAngle NUMBER (8,3) CHECK ( ViewAngle BETWEEN 0 AND 360) ,
      Description VARCHAR2 (255) , 
      Cross_Section_ID NUMBER (20) ,
@@ -730,10 +730,10 @@ CREATE TABLE Document
 
 
 
-COMMENT ON COLUMN Document.ShotDirection IS '[°] - Aufnahmerichtung (0-360)'
+COMMENT ON COLUMN Document.ShotDirection IS '[Â°] - Aufnahmerichtung (0-360)'
 ;
 
-COMMENT ON COLUMN Document.ViewAngle IS '[°] - Öffnungswinkel (0-360)'
+COMMENT ON COLUMN Document.ViewAngle IS '[Â°] - Ã–ffnungswinkel (0-360)'
 ;
 
 ALTER TABLE Document
@@ -783,7 +783,7 @@ COMMENT ON COLUMN Point.Vegetation_Ay IS '[m]'
 ;
 
 
-COMMENT ON COLUMN Point_Kind.Name IS 'Quelle für Import: GAF, WPROF, ...'
+COMMENT ON COLUMN Point_Kind.Name IS 'Quelle fÃ¼r Import: GAF, WPROF, ...'
 ;
 
 
@@ -823,7 +823,7 @@ COMMENT ON COLUMN Vegetation.Source IS 'Angabe einer Literaturstelle'
 ;
 
 
-COMMENT ON COLUMN Water_Body.Rank IS 'Gewässerordnung (ggf. zur Darstellung)'
+COMMENT ON COLUMN Water_Body.Rank IS 'GewÃ¤sserordnung (ggf. zur Darstellung)'
 ;
 
 
@@ -835,7 +835,7 @@ COMMENT ON COLUMN Waterlevel_Fixation.Waterlevel IS '[m NN]'
 ;
 
 
-COMMENT ON COLUMN Waterlevel_Fixation.Discharge IS '[m³/s]'
+COMMENT ON COLUMN Waterlevel_Fixation.Discharge IS '[mÂ³/s]'
 ;
 
 
@@ -935,6 +935,6 @@ INSERT INTO INFO("KEY", "VALUE") VALUES ('DocumentServer', '${DocumentServer}');
 -- 99_create_spatial_indexes
 CREATE INDEX IX_DOCUMENT__LOCATION ON "DOCUMENT"("LOCATION") INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 
--- Version endgültig setzen
+-- Version endgÃ¼ltig setzen
 UPDATE INFO set value='0.0.2'  where key ='Version';
 commit;
