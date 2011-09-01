@@ -1,4 +1,4 @@
--- Version setzen auf "creating" oder "updateing"
+-- Version setzen auf "creating" oder "updating"
 UPDATE INFO set value='updateing 0.0.2 to 0.0.3'  where key ='Version';
 
 GRANT SELECT ON CROSS_SECTION TO PDB_USER;
