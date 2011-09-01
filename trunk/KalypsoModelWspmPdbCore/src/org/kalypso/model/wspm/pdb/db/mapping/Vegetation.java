@@ -40,6 +40,8 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
 
   private String m_description;
 
+  private String m_color;
+
   private Set<Point> m_points = new HashSet<Point>( 0 );
 
   public Vegetation( )
@@ -55,7 +57,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
     m_ay = ay;
   }
 
-  public Vegetation( final VegetationId id, final PointKind pointKind, final BigDecimal dp, final BigDecimal ax, final BigDecimal ay, final String label, final String source, final String description, final Set<Point> points )
+  public Vegetation( final VegetationId id, final PointKind pointKind, final BigDecimal dp, final BigDecimal ax, final BigDecimal ay, final String label, final String source, final String description, final Set<Point> points, final String color )
   {
     m_id = id;
     m_pointKind = pointKind;
@@ -66,6 +68,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
     m_source = source;
     m_description = description;
     m_points = points;
+    m_color = color;
   }
 
   @Override
@@ -77,7 +80,7 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
   public VegetationId getId( )
   {
     return m_id;
@@ -167,6 +170,17 @@ public class Vegetation implements java.io.Serializable, Coefficient, Comparable
   public void setDescription( final String description )
   {
     m_description = description;
+  }
+
+  @Column(name = "color", length = 10)
+  public String getColor( )
+  {
+    return m_color;
+  }
+
+  public void setColor( final String color )
+  {
+    m_color = color;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "vegetation")

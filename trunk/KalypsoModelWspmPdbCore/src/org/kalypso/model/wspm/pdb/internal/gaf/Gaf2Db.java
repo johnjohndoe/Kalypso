@@ -244,6 +244,11 @@ public class Gaf2Db implements IPdbOperation
     // point.setRoughnessKValue( roughness.getKValue() );
 
     final Vegetation vegetation = gafPoint.getVegetationClass();
+    if( vegetation == null )
+    {
+      System.out.println();
+    }
+
     point.setVegetation( vegetation );
     // REMARK: we do not resolve the values here, because a set values means 'overwritten'
     // point.setVegetationAx( vegetation.getAx() );

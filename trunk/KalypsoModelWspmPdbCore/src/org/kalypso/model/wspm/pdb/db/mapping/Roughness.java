@@ -40,6 +40,8 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
 
   private String m_description;
 
+  private String m_color;
+
   private Set<Point> m_points = new HashSet<Point>( 0 );
 
   public Roughness( )
@@ -58,7 +60,7 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
     return String.format( "%s - %s", m_id.getName(), m_label ); //$NON-NLS-1$
   }
 
-  public Roughness( final RoughnessId id, final PointKind pointKind, final BigDecimal KValue, final BigDecimal kstValue, final String label, final String source, final String validity, final String description, final Set<Point> points )
+  public Roughness( final RoughnessId id, final PointKind pointKind, final BigDecimal KValue, final BigDecimal kstValue, final String label, final String source, final String validity, final String description, final Set<Point> points, final String color )
   {
     m_id = id;
     m_pointKind = pointKind;
@@ -69,12 +71,13 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
     m_validity = validity;
     m_description = description;
     m_points = points;
+    m_color = color;
   }
 
   @Override
   @EmbeddedId
   @AttributeOverrides({ @AttributeOverride(name = "pointKind", column = @Column(name = "point_kind", nullable = false, length = 50)),
-    @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
+      @AttributeOverride(name = "name", column = @Column(name = "name", nullable = false, length = 50)) })
   public RoughnessId getId( )
   {
     return m_id;
@@ -164,6 +167,17 @@ public class Roughness implements java.io.Serializable, Coefficient, Comparable<
   public void setDescription( final String description )
   {
     m_description = description;
+  }
+
+  @Column(name = "color", length = 10)
+  public String getColor( )
+  {
+    return m_color;
+  }
+
+  public void setColor( final String color )
+  {
+    m_color = color;
   }
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "roughness")
