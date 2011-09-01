@@ -60,7 +60,7 @@ import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
-import org.apache.sanselan.formats.tiff.constants.TiffConstants;
+import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.kalypso.commons.image.ExifUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
@@ -108,7 +108,6 @@ public class ImportAttachmentsDocumentsData
 
   // Encodes database id's as base64 filenames
   private final Base64 m_idEncoder = new Base64( Integer.MAX_VALUE, null, true );
-
 
   public ImportAttachmentsDocumentsData( final State state )
   {
@@ -184,6 +183,9 @@ public class ImportAttachmentsDocumentsData
 
   private String getFilePath( final CrossSection cs, final String fileName )
   {
+    if( cs == null )
+      return null;
+
     final String stateName = m_state.getName();
     final String stateID64 = encodeID( m_state.getId().longValue() );
 
@@ -267,7 +269,7 @@ public class ImportAttachmentsDocumentsData
     if( angle != null )
       document.setViewangle( BigDecimal.valueOf( angle ) );
 
-    final Date creationDate = ExifUtils.getQuietDate( exif, TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL );
+    final Date creationDate = ExifUtils.getQuietDate( exif, ExifTagConstants.EXIF_TAG_DATE_TIME_ORIGINAL );
     if( creationDate != null )
     {
       // REMARK: setting measurement date, as Document#creationDate means the database's creation date
