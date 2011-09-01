@@ -1,9 +1,8 @@
-#Thu Sep 01 10:08:06 CEST 2011
+#Thu Sep 01 10:08:56 CEST 2011
 eclipse.preferences.version=1
 encoding//etc/scripts=UTF-8
 encoding//etc/scripts/create=UTF-8
 encoding//etc/scripts/create/V0.0.1=UTF-8
-encoding//etc/scripts/create/V0.0.1/oracle=UTF-8
 encoding//etc/scripts/create/V0.0.1/oracle.sql=UTF-8
 encoding//etc/scripts/create/V0.0.1/postgis.sql=UTF-8
 encoding//etc/scripts/create/V0.0.2=UTF-8
