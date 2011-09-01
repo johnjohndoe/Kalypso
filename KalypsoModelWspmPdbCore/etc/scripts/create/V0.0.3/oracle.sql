@@ -18,7 +18,7 @@ CREATE TABLE Cross_Section
      Creation_Date TIMESTAMP (0)  NOT NULL ,
      Editing_Date TIMESTAMP (0)  NOT NULL ,
      Editing_User VARCHAR2 (50)  NOT NULL ,
-     Measurement_Date TIMESTAMP (0) ,
+     Measurement_Date TIMESTAMP (0) , 
      Description VARCHAR2 (255) ,
      Water_Body NUMBER (20)  NOT NULL ,
      State NUMBER (20)  NOT NULL

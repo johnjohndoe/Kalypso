@@ -22,7 +22,7 @@ CREATE TABLE Cross_Section
      Description Varchar (255) ,
      Water_Body Numeric (20)  NOT NULL ,
      State Numeric (20)  NOT NULL
-    )
+    ) 
 WITH (
   OIDS=TRUE
 );

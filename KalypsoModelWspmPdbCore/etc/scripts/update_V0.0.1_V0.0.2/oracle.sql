@@ -9,7 +9,7 @@ UPDATE INFO set value='updateing 0.0.1 to 0.0.2'  where key ='Version';
 
 CREATE TABLE Document
     (
-     ID NUMBER (20)  NOT NULL ,
+     ID NUMBER (20)  NOT NULL , 
      Name VARCHAR2 (100)  NOT NULL ,
      Location MDSYS.SDO_GEOMETRY ,
      FileName VARCHAR2 (2048)  NOT NULL , 

@@ -5,7 +5,7 @@ UPDATE INFO set value='updating 0.0.1 to 0.0.2'  where key ='Version';
 --   at:        2011-07-13 16:56:15 MESZ
 --   site:      Oracle Database 10g
 --   type:      Oracle Database 10g
-
+ 
 
 CREATE TABLE Document
     (
@@ -19,10 +19,10 @@ CREATE TABLE Document
      Editing_User varchar (50)  NOT NULL , 
      Measurement_Date TIMESTAMP (0) ,
 
---  [°] - Aufnahmerichtung (0-360)
+--  [Â°] - Aufnahmerichtung (0-360)
  ShotDirection numeric (8,3) CHECK ( ShotDirection BETWEEN 0 AND 360) ,
 
---  [°] - Öffnungswinkel (0-360)
+--  [Â°] - Ã–ffnungswinkel (0-360)
  ViewAngle numeric (8,3) CHECK ( ViewAngle BETWEEN 0 AND 360) , 
      Description varchar (255) , 
      Cross_Section_ID numeric (20) ,
@@ -33,10 +33,10 @@ CREATE TABLE Document
 
 
 
-COMMENT ON COLUMN Document.ShotDirection IS '[°] - Aufnahmerichtung (0-360)'
+COMMENT ON COLUMN Document.ShotDirection IS '[Â°] - Aufnahmerichtung (0-360)'
 ;
 
-COMMENT ON COLUMN Document.ViewAngle IS '[°] - Öffnungswinkel (0-360)'
+COMMENT ON COLUMN Document.ViewAngle IS '[Â°] - Ã–ffnungswinkel (0-360)'
 ;
 
 ALTER TABLE Document
@@ -88,7 +88,7 @@ COMMENT ON COLUMN Point.Vegetation_Ay IS '[m]'
 ;
 
 
-COMMENT ON COLUMN Point_Kind.Name IS 'Quelle für Import: GAF, WPROF, ...'
+COMMENT ON COLUMN Point_Kind.Name IS 'Quelle fÃ¼r Import: GAF, WPROF, ...'
 ;
 
 
@@ -128,7 +128,7 @@ COMMENT ON COLUMN Vegetation.Source IS 'Angabe einer Literaturstelle'
 ;
 
 
-COMMENT ON COLUMN Water_Body.Rank IS 'Gewässerordnung (ggf. zur Darstellung)'
+COMMENT ON COLUMN Water_Body.Rank IS 'GewÃ¤sserordnung (ggf. zur Darstellung)'
 ;
 
 
@@ -139,7 +139,7 @@ COMMENT ON COLUMN Waterlevel_Fixation.Station IS '[m]'
 COMMENT ON COLUMN Waterlevel_Fixation.Waterlevel IS '[m NN]'
 ;
 
-COMMENT ON COLUMN Waterlevel_Fixation.Discharge IS '[m³/s]'
+COMMENT ON COLUMN Waterlevel_Fixation.Discharge IS '[mÂ³/s]'
 ;
 
 ALTER TABLE Event DROP CONSTRAINT "Event Name UK" CASCADE
@@ -232,7 +232,7 @@ INSERT INTO info("key", "value") VALUES ('DocumentServer', '${DocumentServer}');
 -- 99_create_spatial_indexes
 CREATE INDEX IX_DOCUMENT__LOCATION ON DOCUMENT USING GIST ( LOCATION );
 
--- Version endgültig setzen
+-- Version endgÃ¼ltig setzen
 UPDATE INFO set value='0.0.2'  where key ='Version';
 
 commit;

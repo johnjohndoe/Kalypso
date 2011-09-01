@@ -20,7 +20,7 @@ CREATE TABLE Cross_Section
      Editing_Date TIMESTAMP (0)  NOT NULL ,
      Editing_User Varchar (50)  NOT NULL ,
      Measurement_Date TIMESTAMP (0) ,
-     Description Varchar (255) ,
+     Description Varchar (255) , 
      Water_Body Numeric (20)  NOT NULL ,
      State Numeric (20)  NOT NULL
     )

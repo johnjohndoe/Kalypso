@@ -678,7 +678,7 @@ INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES 
 INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('13', 'Bäume, einjährig', 'Bäume, einjährig', 'GAF',0.05, 20, 20);
 INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('14', 'Bäume, mehrjährig', 'Bäume, mehrjährig', 'GAF',1, 20, 20);
 
--- 99_create_spatial_indexes.sql
+-- 99_create_spatial_indexes.sql 
 
 CREATE INDEX IX_POINT__LOCATION ON "POINT"("LOCATION") INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
 CREATE INDEX IX_CROSS_SECTION_PART__LINE ON CROSS_SECTION_PART(LINE) INDEXTYPE IS MDSYS.SPATIAL_INDEX ;
