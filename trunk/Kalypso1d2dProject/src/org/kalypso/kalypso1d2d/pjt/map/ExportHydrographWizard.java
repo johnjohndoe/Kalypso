@@ -23,8 +23,8 @@ import java.util.Set;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -113,8 +113,8 @@ public class ExportHydrographWizard extends Wizard
     m_exportHydrographWizardPage = new ExportHydrographWizardPage( lSelectedHydrograph );
     addPage( m_exportHydrographWizardPage );
     m_exportHydrographWizardPage.setShell( this.getShell() );
-    final String javaTmpDir = FrameworkProperties.getProperty( FileUtilities.JAVA_IO_TMPDIR );
-    m_outDefaultDir = FrameworkProperties.getProperty( ISimulationConstants.SYSPROP_SIM_DIR, javaTmpDir );
+    final String javaTmpDir = FrameworkUtilities.getProperty( FileUtilities.JAVA_IO_TMPDIR, null );
+    m_outDefaultDir = FrameworkUtilities.getProperty( ISimulationConstants.SYSPROP_SIM_DIR, javaTmpDir );
     m_exportHydrographWizardPage.setDefaultOutDir( m_outDefaultDir );
   }
 
@@ -230,7 +230,7 @@ public class ExportHydrographWizard extends Wizard
     }
     else
     {
-      lListHydrographs.add( lSelectedHydrograph);
+      lListHydrographs.add( lSelectedHydrograph );
     }
 
     m_mapDateStringsToPrint = new HashMap<XMLGregorianCalendar, String>();
