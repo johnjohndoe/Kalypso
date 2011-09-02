@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -88,7 +88,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
   private ICalcUnitResultMeta m_calcUnitMeta;
 
   private String[] m_originalStepsToDelete;
-  
+
   private boolean m_boolRemoveRawResult;
 
   public ResultManagerOperation( final ResultManager resultManager, final IContainer unitFolder, final IStatus simulationStatus, final ICaseDataProvider<IModel> caseDataProvider, final File outputDir, final ICalcUnitResultMeta calcUnitMeta, final String[] originalStepsToDelete )
@@ -145,10 +145,10 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       // Step 3: Fill in result of calculation
       m_calcUnitMeta.setStatus( m_simulationStatus );
       m_calcUnitMeta.setCalcEndTime( new Date() );
- 
+
       // Step 4: Move results into workspace and save result-DB
       m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.5" ) ); //$NON-NLS-1$
-      
+
       return moveResults( m_outputDir, progress.newChild( 5 ) );
     }
     catch( final CoreException ce )
@@ -165,18 +165,19 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
    * Delete all existing results inside the current result database.
    */
   private IStatus deleteExistingResults( final IProgressMonitor monitor ) throws CoreException
-//  private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final IProgressMonitor monitor ) throws CoreException
+  // private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit,
+  // final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
     progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.7" ) ); //$NON-NLS-1$
 
-//    final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );
+    // final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );
 
     /* If no results available yet, nothing to do. */
     if( m_calcUnitMeta == null )
       return Status.OK_STATUS;
 
-//    final String[] stepsToDelete = findStepsToDelete( calcUnitMeta, processBean );
+    // final String[] stepsToDelete = findStepsToDelete( calcUnitMeta, processBean );
     ProgressUtilities.worked( progress, 5 );
 
     final IStatus result = ResultMeta1d2dHelper.deleteAllByID( m_calcUnitMeta, m_originalStepsToDelete, progress.newChild( 90 ), m_boolRemoveRawResult );
@@ -199,7 +200,6 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     return result;
   }
 
-
   private IStatus moveResults( final File outputDir, final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
@@ -210,7 +210,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       final File unitWorkspaceDir = m_unitFolder.getLocation().toFile();
       FileUtils.forceMkdir( unitWorkspaceDir );
 
-      FileUtilities.moveContents( outputDir, unitWorkspaceDir );
+      VFSUtilities.moveContents( outputDir, unitWorkspaceDir );
       ProgressUtilities.worked( progress, 70 );
 
       m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );
@@ -241,6 +241,5 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
   {
     m_boolRemoveRawResult = boolRemoveRawResult;
   }
-  
 
 }

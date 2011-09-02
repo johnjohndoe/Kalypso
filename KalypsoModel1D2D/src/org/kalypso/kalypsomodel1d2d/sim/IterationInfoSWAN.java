@@ -56,9 +56,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileUtil;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -290,7 +290,7 @@ public class IterationInfoSWAN implements IIterationInfo
       String strActDateSWAN = (String) stepNrObj;
       return SWANDataConverterHelper.getDateForStepFromString( strActDateSWAN.trim() );
     }
-    else if( stepNrObj == null && m_strActDate != null)
+    else if( stepNrObj == null && m_strActDate != null )
     {
       return SWANDataConverterHelper.getDateForStepFromString( m_strActDate.trim() );
     }

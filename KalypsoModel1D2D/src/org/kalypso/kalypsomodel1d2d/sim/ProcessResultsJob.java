@@ -55,8 +55,8 @@ import java.util.zip.ZipOutputStream;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -64,7 +64,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -249,7 +248,7 @@ public class ProcessResultsJob extends Job
       try
       {
         /* Read into NodeResults */
-        contentStream = FileUtilities.getInputStreamFromFileObject( m_inputFile );
+        contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile );
 
         readActSWANRes();
         read2DIntoGmlResults( contentStream );
@@ -295,14 +294,14 @@ public class ProcessResultsJob extends Job
         {
           lResFile = m_inputResFileSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
         }
-        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString("ProcessResultsJob.0") + lResFile ) ); //$NON-NLS-1$
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.0" ) + lResFile ) ); //$NON-NLS-1$
         // only read the *.mat files
         if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
         {
           lSWANResultsReader = new SWANResultsReader( lResFile );
           final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
           m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString("ProcessResultsJob.1") + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.1" ) + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
         }
       }
       catch( final Throwable e )
@@ -342,7 +341,7 @@ public class ProcessResultsJob extends Job
         for( final ResultType.TYPE parameter : m_parameters )
         {
           /* GML(s) */
-          if( parameter == ResultType.TYPE.TERRAIN && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta )  )
+          if( parameter == ResultType.TYPE.TERRAIN && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
           {
             /* create TIN-Dir for FEM terrain model */
             // TODO: obscure, why go outside our output dir... TODO: refaktor it!

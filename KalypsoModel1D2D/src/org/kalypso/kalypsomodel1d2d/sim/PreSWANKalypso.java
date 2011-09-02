@@ -16,9 +16,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManagerWrapper;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -27,6 +26,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -218,7 +218,7 @@ public class PreSWANKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString("PreSWANKalypso.0"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "PreSWANKalypso.0" ), e ); //$NON-NLS-1$
     }
     finally
     {

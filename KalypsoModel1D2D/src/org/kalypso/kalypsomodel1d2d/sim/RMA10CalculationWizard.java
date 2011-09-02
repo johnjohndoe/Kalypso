@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;

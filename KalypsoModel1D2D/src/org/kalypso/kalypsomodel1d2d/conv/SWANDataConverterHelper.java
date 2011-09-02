@@ -45,7 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -54,11 +54,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author ilya
- *
+ * 
  */
 public class SWANDataConverterHelper
 {
-  private static String getTimeStringFormatedForSWANWithDelim( final Object pObjTime, final String pStrDelim ){
+  private static String getTimeStringFormatedForSWANWithDelim( final Object pObjTime, final String pStrDelim )
+  {
     String lStrTimeRes = ""; //$NON-NLS-1$
     SimpleDateFormat lDateFormatter;
     lDateFormatter = new SimpleDateFormat( "yyyyMMdd" + pStrDelim + "HHmmss" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -77,23 +78,23 @@ public class SWANDataConverterHelper
     }
     else if( pObjTime instanceof Date )
     {
-      
+
       Date lDate = (Date) pObjTime;
       lStrTimeRes = lDateFormatter.format( lDate );
     }
     return lStrTimeRes;
   }
-  
+
   public static String getTimeStringFormatedForSWANInput( final Object pObjTime )
   {
     return getTimeStringFormatedForSWANWithDelim( pObjTime, "." ); //$NON-NLS-1$
   }
-  
+
   public static String getTimeStringFormatedForSWANOutput( final Object pObjTime )
   {
     return getTimeStringFormatedForSWANWithDelim( pObjTime, "_" ); //$NON-NLS-1$
   }
-  
+
   public static Date getDateForStepFromString( String strActDateSWAN )
   {
     try
@@ -110,12 +111,11 @@ public class SWANDataConverterHelper
     return null;
 
   }
-  
-  
+
   public static GM_Position readCoordinateShiftValues( final FileObject pFile )
   {
     GM_Position lPosRes = null;
-    
+
     Scanner scannerFile = null;
     Scanner scannerLine = null;
     try
@@ -172,6 +172,5 @@ public class SWANDataConverterHelper
 
     return lPosRes;
   }
-
 
 }
