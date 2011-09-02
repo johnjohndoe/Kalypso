@@ -54,7 +54,7 @@ import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -100,7 +100,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
   private WPSRequest m_wpsRequest = null;
 
   private IWPSProcess m_wpsProcess = null;
-  
+
   private boolean m_boolFirstDone = false;
 
   public RMAKalypsoSimulationRunner( final IGeoLog geoLog, final IControlModel1D2D controlModel, final String serviceEndpoint )
@@ -158,7 +158,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
       // abort on error
       if( !preStatus.isOK() )
         return preStatus;
-      
+
       m_boolFirstDone = true;
 
       // gather inputs for simulation

@@ -49,7 +49,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -111,7 +111,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     Calendar lCal = Calendar.getInstance();
     lCal.setTime( actDate );
     double lDoubleTime = lCal.get( Calendar.HOUR_OF_DAY );
-    lDoubleTime += ((double) lCal.get( Calendar.MINUTE )) / 60 ;
+    lDoubleTime += ((double) lCal.get( Calendar.MINUTE )) / 60;
     formatterWindData.format( "DY          %2.2f %7d %7d\n", lDoubleTime, lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.YEAR ) ); //$NON-NLS-1$
   }
 
@@ -131,7 +131,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     {
       e.printStackTrace();
     }
-    finally 
+    finally
     {
       lFormatter.close();
     }
@@ -141,8 +141,8 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
   private void writeRMA10WindNodes( )
   {
     Formatter lFormatter = null;
-    int lIntSecondCorner = m_descriptorWrittenGrid == null? 0: m_descriptorWrittenGrid.getNumColumns();
-    int lIntThirdCorner = m_descriptorWrittenGrid == null? 0: m_descriptorWrittenGrid.getNumColumns() * (m_descriptorWrittenGrid.getNumRows() - 1) + 1;
+    int lIntSecondCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns();
+    int lIntThirdCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns() * (m_descriptorWrittenGrid.getNumRows() - 1) + 1;
     int lIntSize = m_listRMA10Nodes == null ? 0 : m_listRMA10Nodes.size();
     int lIntCount = 1;
     try
@@ -156,7 +156,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
           lFormatter.format( "CRD     %8d %13.2f %13.2f\n", lIntCount++, lPositionNode.getX(), lPositionNode.getY() ); //$NON-NLS-1$
         }
         lFormatter.format( "OUT     %8d%8d%8d%8d\n", 1, lIntSecondCorner, lIntThirdCorner, lIntSize );//$NON-NLS-1$
-      } 
+      }
 
       lFormatter.format( "ENDDATA\n" );//$NON-NLS-1$
     }

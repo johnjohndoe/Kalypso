@@ -48,14 +48,14 @@ import java.util.Map;
 
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManagerWrapper;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog;
@@ -110,7 +110,8 @@ public class ExecuteRMAKalypsoSimulation
       m_wpsRequest = new DefaultWPSProcess( RMAKalypsoSimulation.ID, m_serviceEndpoint, m_manager );
       m_wpsRequest.startProcess( m_inputs, outputs, progress );
 
-//      final AsynchronousWPSWatchdog rmaWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 60 * 60 * 1000 );
+      // final AsynchronousWPSWatchdog rmaWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 60 * 60 *
+      // 1000 );
       final AsynchronousWPSWatchdog rmaWatchdog = new AsynchronousWPSWatchdog( m_wpsRequest, m_wpsObserver, 0 );
       final IStatus executeStatus = rmaWatchdog.waitForProcess( progress );
 

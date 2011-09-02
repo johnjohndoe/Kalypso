@@ -60,9 +60,9 @@ import java.util.TreeSet;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.vfs.FileName;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs2.FileName;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -581,7 +581,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ICalcUnitResultMeta getCalcUnitMeta( )
   {
-    return m_calcUnitMeta ;
+    return m_calcUnitMeta;
   }
 
 }

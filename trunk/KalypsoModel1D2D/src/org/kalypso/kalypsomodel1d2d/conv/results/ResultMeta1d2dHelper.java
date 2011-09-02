@@ -66,8 +66,8 @@ import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -81,7 +81,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -814,7 +814,7 @@ public class ResultMeta1d2dHelper
 
     String lStrRes = "";//$NON-NLS-1$
     String lStrParam = linePrefix.trim().toUpperCase();
-    InputStream lInStream = FileUtilities.getInputStreamFromFileObject( file );
+    InputStream lInStream = VFSUtilities.getInputStreamFromFileObject( file );
 
     Reader lReader = new InputStreamReader( lInStream );
     BufferedReader lBufferedReader = new BufferedReader( lReader );
@@ -911,7 +911,7 @@ public class ResultMeta1d2dHelper
     {
       if( iCount++ != 1 )
       {
-        lNewName += (lStrTokenizer.nextToken()); 
+        lNewName += (lStrTokenizer.nextToken());
       }
       else
       {
@@ -966,7 +966,7 @@ public class ResultMeta1d2dHelper
         }
       }
     }
-    
+
     return false;
   }
 
@@ -981,7 +981,7 @@ public class ResultMeta1d2dHelper
     }
     return false;
   }
-  
+
   /**
    * gets the CalcUnitResultMeta as the papa of all steps
    */

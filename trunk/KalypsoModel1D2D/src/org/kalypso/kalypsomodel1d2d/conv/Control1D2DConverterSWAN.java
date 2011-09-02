@@ -55,7 +55,7 @@ import java.util.Set;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -308,7 +308,7 @@ public class Control1D2DConverterSWAN
         "$********************MODEL INPUT*************************\n" + //$NON-NLS-1$
         "$\n" + //$NON-NLS-1$
         "SET LEVEL %f\n" + //$NON-NLS-1$
-//        "SET NAUTICAL\n" + //$NON-NLS-1$
+        //        "SET NAUTICAL\n" + //$NON-NLS-1$
         "set maxerr=3\n" + //$NON-NLS-1$
         "$\n" + //$NON-NLS-1$
         "MODE %s TWOD\n" + //$NON-NLS-1$
@@ -317,9 +317,9 @@ public class Control1D2DConverterSWAN
         "$\n", //$NON-NLS-1$
 
     m_controlModel.getDescription(), m_version.toString(), m_controlModel.getId(), m_strTimeFrom, m_strTimeTo, ((new Date()).toGMTString()), // date
-    // and time of actual simulation run
-    0.0, // TODO: check if the default see level can be other
-    m_strStationary, COORD ); // TODO: check if we have some different coordinates as Cartesian
+        // and time of actual simulation run
+        0.0, // TODO: check if the default see level can be other
+        m_strStationary, COORD ); // TODO: check if we have some different coordinates as Cartesian
   }
 
   /**
@@ -332,7 +332,7 @@ public class Control1D2DConverterSWAN
     formatter.format( "CGRID UNSTRUCTURED CIRCLE 36 0.0521 1. 31\n" + //$NON-NLS-1$
         "READGRID UNSTRUCTURED triangle '%s'\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
-    ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
+        ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
     formatter.format( "$internal shift in X:%f, internal shift in Y:%f\n$\n", m_doubleShiftX, m_doubleShiftY ); //$NON-NLS-1$
   }
 
@@ -345,7 +345,7 @@ public class Control1D2DConverterSWAN
     formatter.format( "INPGRID BOTTOM UNSTRUCTURED EXC %s\n" + //$NON-NLS-1$
         "READINP BOTTOM -1. '%s.bot' 1 0 FREE\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
-    ISimulation1D2DConstants.SIM_SWAN_EXCLUSION_NUMBER, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
+        ISimulation1D2DConstants.SIM_SWAN_EXCLUSION_NUMBER, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
 
   }
 
@@ -371,7 +371,7 @@ public class Control1D2DConverterSWAN
       if( m_controlModel.isConstantWindSWAN() )
       {
         formatter.format( "WIND %s\n$\n", //$NON-NLS-1$
-        m_controlModel.getConstantWindParSWAN() );
+            m_controlModel.getConstantWindParSWAN() );
       }
       else
       {
@@ -380,17 +380,19 @@ public class Control1D2DConverterSWAN
         String lStrCRS = m_gridDescriptor.getCoordinateSystem();
         String lStrStartTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( 0 ) );
         String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
-        if( m_listWritenDatesWind.size() == 1 ){
+        if( m_listWritenDatesWind.size() == 1 )
+        {
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s\n", //$NON-NLS-1$ 
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind );
         }
-        else{
+        else
+        {
           String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$  
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s %s %s %s\n", //$NON-NLS-1$ 
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind, lStrTimeStepLen, m_strStepLengthUnit, lStrEndTimeWind );
         }
         formatter.format( "READINP WIND 1. SERIES '%s' 3 0 FREE\n$\n", //$NON-NLS-1$ 
-        ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
+            ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
       }
     }
     catch( Exception e )
@@ -408,7 +410,7 @@ public class Control1D2DConverterSWAN
     formatter.format( "INPGRID CURRENT UNSTRUCTURED %s %s\n" + //$NON-NLS-1$
         "READINP CURRENT 1. %s'%s' 1 0 FREE\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
-    m_strStationary, m_strTimeFromToFormated, m_strSeries, getSeriesFileNameFormated( ISimulation1D2DConstants.SIM_SWAN_CURRENT_DATA_FILE ) );
+        m_strStationary, m_strTimeFromToFormated, m_strSeries, getSeriesFileNameFormated( ISimulation1D2DConstants.SIM_SWAN_CURRENT_DATA_FILE ) );
 
   }
 
@@ -495,7 +497,7 @@ public class Control1D2DConverterSWAN
     {
       formatter.format( "$\n" + //$NON-NLS-1$
           "%s\n", //$NON-NLS-1$
-      lOperationSpec ); //$NON-NLS-1$
+          lOperationSpec ); //$NON-NLS-1$
 
     }
     // TODO: what calculations do we exactly need, what can be default?
@@ -536,9 +538,9 @@ public class Control1D2DConverterSWAN
     ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, m_controlModel.isUnsteadySelected() ? ("OUTPUT " + m_strTimeZeroFromFormated) : "", //$NON-NLS-1$   //$NON-NLS-2$
 
     ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, m_controlModel.isUnsteadySelected() ? "TIME " : "", //$NON-NLS-1$   //$NON-NLS-2$
-    m_controlModel.isUnsteadySelected() ? "OUTPUT " + m_strTimeZeroFromFormated : "", //$NON-NLS-1$   //$NON-NLS-2$
-    m_controlModel.isUnsteadySelected() ? "NONST" : "STATIONARY", //$NON-NLS-1$  //$NON-NLS-2$
-    m_strTimeZeroFromToFormated );
+        m_controlModel.isUnsteadySelected() ? "OUTPUT " + m_strTimeZeroFromFormated : "", //$NON-NLS-1$   //$NON-NLS-2$
+        m_controlModel.isUnsteadySelected() ? "NONST" : "STATIONARY", //$NON-NLS-1$  //$NON-NLS-2$
+        m_strTimeZeroFromToFormated );
 
   }
 

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -208,9 +208,9 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     m_coupledSimulationCheck = new Button( tweakGroup, SWT.CHECK );
     m_coupledSimulationCheck.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
-    m_coupledSimulationCheck.setText( Messages.getString("RMA10CalculationPage.0") ); //$NON-NLS-1$
+    m_coupledSimulationCheck.setText( Messages.getString( "RMA10CalculationPage.0" ) ); //$NON-NLS-1$
     m_coupledSimulationCheck.setEnabled( false );
-    m_coupledSimulationCheck.setToolTipText( Messages.getString("RMA10CalculationPage.1") ); //$NON-NLS-1$
+    m_coupledSimulationCheck.setToolTipText( Messages.getString( "RMA10CalculationPage.1" ) ); //$NON-NLS-1$
     if( calculationUnit.getType() != TYPE.TYPE1D2D )
     {
       m_isCoupledSimulation = false;
