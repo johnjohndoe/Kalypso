@@ -57,7 +57,9 @@ public class Import2dWizard extends Wizard implements INewWizard
   {
     m_data.save( getDialogSettings() );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
+    // FIXME: canceling is not correctly implemented: elements are added but the models are not dirty; leads to strange
+    // behavior
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_operation );
 
     new StatusDialog( getShell(), status, getWindowTitle() ).open();
     return !status.matches( IStatus.ERROR );

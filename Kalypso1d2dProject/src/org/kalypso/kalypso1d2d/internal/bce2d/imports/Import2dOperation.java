@@ -13,19 +13,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * Provides the mechanism for transforming a 2D-Ascii model into a 1d 2d gml model
@@ -57,8 +54,9 @@ public class Import2dOperation implements ICoreRunnableWithProgress
       // TODO: use this position provider to import 2d-files with missing 6th coordinate -> ask user for offset values
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem() );
 
-      final CommandableWorkspace workspace = m_data.getCommandableWorkspace( IFEDiscretisationModel1d2d.class.getName() );
-      final DiscretisationModel1d2dHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, workspace );
+      final SzenarioDataProvider szenarioDataProvider = m_data.getSzenarioDataProvider();
+      final DiscretisationModel1d2dHandler handler = new DiscretisationModel1d2dHandler( szenarioDataProvider, positionProvider );
+      handler.setImportRoughness( m_data.getImportRoughness() );
 
       final BufferedInputStream fis = new BufferedInputStream( new FileInputStream( importFile ) );
       is = new ProgressInputStream( fis, contentLength, monitor );
@@ -74,10 +72,10 @@ public class Import2dOperation implements ICoreRunnableWithProgress
       final String[] dirtyModels = handler.getDirtyModels();
       for( final String modelID : dirtyModels )
       {
-        m_data.postCommand( modelID, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        szenarioDataProvider.postCommand( modelID, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       }
 
-      return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Import succesfully terminated." );
+      return handler.getStatus();
     }
     catch( final CoreException e )
     {

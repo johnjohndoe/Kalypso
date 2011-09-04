@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wizards.export2d;
 
@@ -72,7 +72,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
   private final boolean m_exportMiddleNodes;
 
-  public Export2dMeshRunnable( File exportFile, String selectedExtension, boolean exportRoughness, boolean exportMiddleNodes )
+  public Export2dMeshRunnable( final File exportFile, final String selectedExtension, final boolean exportRoughness, final boolean exportMiddleNodes )
   {
     m_exportFile = exportFile;
     m_selectedExtension = selectedExtension;
@@ -81,7 +81,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.wizards.export2d.Export2dMeshRunnable.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
@@ -89,20 +89,20 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
     final IRoughnessClsCollection roughnessModel = m_exportRoughness ? dataProvider.getModel( IRoughnessClsCollection.class ) : null;
-     
+
     try
-    {      
-      final I2DMeshConverter converter = ( new MeshConverterFactory()) .getConverter( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ), m_selectedExtension );      
+    {
+      final I2DMeshConverter converter = MeshConverterFactory.getConverter( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ), m_selectedExtension );
       converter.writeMesh( m_exportFile );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new InvocationTargetException( e );
-    }   
-    
+    }
+
     monitor.done();
-    
+
     return Status.OK_STATUS;
   }
 }

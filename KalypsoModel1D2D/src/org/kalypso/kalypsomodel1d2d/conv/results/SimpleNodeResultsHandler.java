@@ -71,10 +71,8 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author ig
  */
-@SuppressWarnings("unchecked")
 public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 {
-
   private final Map<Integer, INodeResult> m_nodeIndex = new HashMap<Integer, INodeResult>();
 
   private final String m_crs;
@@ -101,35 +99,36 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#end()
    */
+  @Override
   public void end( )
   {
-    List<INodeResult> lListActResults = new ArrayList<INodeResult>( m_mapInitialPoints.size() );
+    final List<INodeResult> lListActResults = new ArrayList<INodeResult>( m_mapInitialPoints.size() );
     fillListWithDefaults( lListActResults, m_mapInitialPoints.size() );
-    Set<Integer> lSetIdsDone = new HashSet<Integer>();
-    Set<Integer> lSetKeys = m_nodeIndex.keySet();
-    Iterator<Integer> lIterSetKeys = lSetKeys.iterator();
+    final Set<Integer> lSetIdsDone = new HashSet<Integer>();
+    final Set<Integer> lSetKeys = m_nodeIndex.keySet();
+    final Iterator<Integer> lIterSetKeys = lSetKeys.iterator();
 
     while( lIterSetKeys.hasNext() )
     {
-      Integer lIntIndex = lIterSetKeys.next();
-      INodeResult lActNode = m_nodeIndex.get( lIntIndex );
+      final Integer lIntIndex = lIterSetKeys.next();
+      final INodeResult lActNode = m_nodeIndex.get( lIntIndex );
       int lIntPos = -1;
-      GM_Position lGM_Position = lActNode.getPoint().getPosition();
+      final GM_Position lGM_Position = lActNode.getPoint().getPosition();
       GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
 
       try
       {
         lIntPos = m_mapInitialPoints.get( lGM_PositionRounded );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
-        IFE1D2DNode lNode = getResultNodeFromPoint( lActNode.getPoint() );
+        final IFE1D2DNode lNode = getResultNodeFromPoint( lActNode.getPoint() );
         try
         {
           lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lNode.getPoint().getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lNode.getPoint().getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
           lIntPos = m_mapInitialPoints.get( lGM_PositionRounded );
         }
-        catch( Exception e1 )
+        catch( final Exception e1 )
         {
           // e1.printStackTrace();
         }
@@ -156,10 +155,10 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 
   private void fillListWithDefaults( final List<INodeResult> listActResults, final int pIntSize )
   {
-    List<GM_Position> lListPositions = new ArrayList<GM_Position>( m_mapInitialPoints.keySet() );
+    final List<GM_Position> lListPositions = new ArrayList<GM_Position>( m_mapInitialPoints.keySet() );
     for( int i = 0; i < pIntSize; ++i )
     {
-      SimpleNodeResult lDefaultNodeResult = new SimpleNodeResult();
+      final SimpleNodeResult lDefaultNodeResult = new SimpleNodeResult();
       lDefaultNodeResult.setWaterlevel( Double.parseDouble( "0.0" ) ); //$NON-NLS-1$
       lDefaultNodeResult.setLocation( lListPositions.get( i ).getX(), lListPositions.get( i ).getY(), lListPositions.get( i ).getZ(), m_crs );
       listActResults.add( lDefaultNodeResult );
@@ -178,10 +177,12 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
    *      int, int)
    */
+  @Override
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
   }
 
+  @Override
   public void handleFlowResitance( final String lineString, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
   }
@@ -190,6 +191,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int,
    *      int)
    */
+  @Override
   public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
     // // For each element calculate the geometry (elemID, cornernode1, midsidenode1, cornernode2, midsidenode2,
@@ -200,6 +202,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
    *      double)
    */
+  @Override
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
     try
@@ -224,23 +227,16 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String,
    *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
    */
+  @Override
   public void handleError( final String lineString, final EReadError errorHints )
   {
     System.out.println( "Error: " + lineString + ", " + errorHints ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
-   */
-  public void handlerUnIdentifyable( final String lineString )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
    */
+  @Override
   public void start( )
   {
     m_timeOfResult = null;
@@ -255,6 +251,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double,
    *      double, double, double)
    */
+  @Override
   public void handleResult( final String lineString, final int id, final double vx, final double vy, final double virtualDepth, final double waterlevel )
   {
     final INodeResult result = m_nodeIndex.get( id );
@@ -266,13 +263,14 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 
     // set actual values to result node
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
-    List<Double> velocity = new LinkedList<Double>();
+    final List<Double> velocity = new LinkedList<Double>();
     velocity.add( vx );
     velocity.add( vy );
     result.setVelocity( velocity );
 
   }
 
+  @Override
   public void handleTimeDependentAdditionalResult( final String lineString, final int id, final double velXComponent, final double velYComponent, final double depthComponent, final RESULTLINES resultlines )
   {
     final INodeResult result = m_nodeIndex.get( id );
@@ -299,9 +297,9 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
       case LINE_VA:
         break;
 
-      // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
-      // stage information!
-      // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
+        // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
+        // stage information!
+        // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
 
     }
   }
@@ -309,6 +307,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, java.util.Date)
    */
+  @Override
   public void handleTime( final String line, final Date time )
   {
     if( m_timeOfResult == null )
@@ -329,6 +328,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int,
    *      int)
    */
+  @Override
   public void handleJunction( final String parseLine, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
   }
@@ -337,6 +337,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
    *      double, double, double, double)
    */
+  @Override
   public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
   {
     final INodeResult result = m_nodeIndex.get( id );
@@ -352,6 +353,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
    *      int, java.util.List)
    */
+  @Override
   public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
   }
@@ -361,7 +363,7 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
     return m_mapInitialPoints;
   }
 
-  public List<INodeResult> getResultsForDate( Date pDate )
+  public List<INodeResult> getResultsForDate( final Date pDate )
   {
     return m_mapSortedResults.get( pDate );
   }
@@ -372,44 +374,28 @@ public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
     return m_listActResults;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String, java.lang.String, int, int, java.util.List)
-   */
   @Override
-  public void handle1dPolynomialRangesInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges )
+  public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges )
   {
-    // TODO Auto-generated method stub
-    
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int, double, double)
-   */
   @Override
-  public void handle1dPolynomeMinMax( String line, int id, double min, double max )
+  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
   {
-    // TODO Auto-generated method stub
-    
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String, java.lang.String, int, int, java.util.List, java.lang.Double)
-   */
   @Override
-  public void handle1dSplittedPolynomialsInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges, Double lIntSlope )
+  public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope )
   {
-    // TODO Auto-generated method stub
-    
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
-   */
   @Override
-  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
+  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
   {
-    // TODO Auto-generated method stub
-    
   }
 
+  @Override
+  public void handleRoughness( final String id, final String label )
+  {
+  }
 }

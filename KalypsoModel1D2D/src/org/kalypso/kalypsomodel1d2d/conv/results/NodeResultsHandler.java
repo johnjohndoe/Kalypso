@@ -169,7 +169,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    //should not be done for calculated by RMA results 
+    //should not be done for calculated by RMA results
     // extrapolateWaterLevel( 0 );
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
@@ -232,7 +232,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* store the information of the connection between arcs and elements at the element object */
     /* left element */
     writeArcInfoAtElement( elementLeftID, arcResult );
-    if (elementLeftID != elementRightID) 
+    if (elementLeftID != elementRightID)
       /* right element */
       writeArcInfoAtElement( elementRightID, arcResult );
 
@@ -470,7 +470,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* check the element (number of arcs, nodes, mid-side nodes) */
 
         /* check water levels for dry nodes */
-        //should not be done for calculated by RMA results 
+        //should not be done for calculated by RMA results
         //        elementResult.checkWaterlevels();
       }
     }
@@ -601,7 +601,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
     }
-    
+
     final double curveDistance = curves[0].distance( curves[1] );
     create1dTriangles( nodes, curves, curveDistance );
 
@@ -1307,14 +1307,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
       // result.setDescription( "" + id );
 
-      result.setCalcId( id ); 
+      result.setCalcId( id );
       result.setLocation( easting, northing, elevation, m_crs );
       // if swan results found.
       if( m_mapSWANResults != null )
-      { 
+      {
         final GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
         try
-        { 
+        {
           result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
           result.setWaveHsig( m_mapWAVEHsig.get( lPositionKey ) );
           result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
@@ -1357,19 +1357,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
-   */
-  @Override
-  public void handlerUnIdentifyable( final String lineString )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
-   */
   @Override
   public void start( )
   {
@@ -1558,36 +1545,25 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String, java.lang.String, int, int, java.util.List)
-   */
   @Override
   public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int, double, double)
-   */
   @Override
   public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String, java.lang.String, int, int, java.util.List, java.lang.Double)
-   */
   @Override
   public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope )
   {
-    // TODO Auto-generated method stub
+  }
 
+  @Override
+  public void handleRoughness( final String id, final String label )
+  {
   }
 }

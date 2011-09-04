@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
@@ -62,7 +62,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -82,7 +81,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -184,7 +182,7 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
     }
 
     final Rectangle screenBounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( Messages.getString( "CreatePolygonWidgetWrapper.3" ) ); //$NON-NLS-1$ 
+    m_toolTipRenderer.setTooltip( Messages.getString( "CreatePolygonWidgetWrapper.3" ) ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, screenBounds.height - 5 ), g, screenBounds );
 
     final GM_Point pos = MapUtilities.transform( getMapPanel(), m_currentPoint );
@@ -326,9 +324,7 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
       final IRoughnessPolygon newZone = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
 
       newZone.setSurface( (GM_Surface< ? >) poly );
-
-      final XLinkedFeature_Impl xlink = RoughnessPolygon.createClassLink( newZone, selectedClass );
-      newZone.setRoughnessClassMember( xlink );
+      newZone.setRoughnessClass( selectedClass );
 
       /* Inform workspace */
       final GMLWorkspace workspace = newZone.getWorkspace();
