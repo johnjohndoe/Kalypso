@@ -1,12 +1,16 @@
-package org.kalypso.wizards.import1d2d;
+package org.kalypso.kalypso1d2d.internal.bce2d.imports;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -21,17 +25,18 @@ import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * Provides the mechanism for transforming a 2D-Ascii model into a 1d 2d gml model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class Transformer implements ICoreRunnableWithProgress
+public class Import2dOperation implements ICoreRunnableWithProgress
 {
-  private final DataContainer m_data;
+  private final Import2dData m_data;
 
-  public Transformer( final DataContainer data )
+  public Import2dOperation( final Import2dData data )
   {
     m_data = data;
   }
@@ -41,42 +46,54 @@ public class Transformer implements ICoreRunnableWithProgress
   {
     if( monitor == null )
       monitor = new NullProgressMonitor();
+
+    InputStream is = null;
     try
     {
       RMA10S2GmlConv.VERBOSE_MODE = false;
-      final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem( true ) );
-      final RMA10S2GmlConv converter = new RMA10S2GmlConv( monitor, getNumberOfLines( m_data.getInputFile() ) );
+      final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem() );
+
+      final File importFile = m_data.getInputFileData().getFile();
+
+      // FIXME: counting and using line numbers here is heavy, use monitor-stream instead
+      final RMA10S2GmlConv converter = new RMA10S2GmlConv( monitor, getNumberOfLines( importFile ) );
       final Set< Class< ? extends IModel> > lSetModelClassesSetDirty = new HashSet<Class< ? extends IModel> >();
-      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, lSetModelClassesSetDirty, m_data.getCommandableWorkspace( IFEDiscretisationModel1d2d.class ) );
+      final CommandableWorkspace workspace = m_data.getCommandableWorkspace( IFEDiscretisationModel1d2d.class.getName() );
+      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, lSetModelClassesSetDirty, workspace );
       converter.setRMA10SModelElementHandler( handler );
-      converter.parse( m_data.getInputFileURL().openStream() );
+
+      is = new BufferedInputStream( new FileInputStream( importFile ) );
+      converter.parse( is );
+      is.close();
+
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
-      
-      for( Class< ? extends IModel> element : lSetModelClassesSetDirty )
+
+      for( final Class< ? extends IModel> element : lSetModelClassesSetDirty )
       {
-        Class< ? extends IModel> clazz = element;
-        m_data.postCommand( clazz, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        final Class< ? extends IModel> clazz = element;
+        m_data.postCommand( clazz.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       }
-      monitor.done();
-      /* post empty command(s) in order to make pool dirty. */
-      // m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("Transformer.0"),
-      // false ) ); //$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
     }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+      monitor.done();
+    }
+
     return Status.OK_STATUS;
   }
 
-  public static int getNumberOfLines( String fileName )
+  // FIXME: heavy operation just to get the lines, is this really necessary?
+  public static int getNumberOfLines( final File file )
   {
-    final File file = new File( fileName );
     if( file == null || !file.exists() )
-    {
       return -1;
-    }
+
     int linesCnt = 0;
     try
     {
@@ -92,11 +109,10 @@ public class Transformer implements ICoreRunnableWithProgress
       while( true );
       buf_reader.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       return -1;
     }
     return linesCnt;
   }
-
 }
