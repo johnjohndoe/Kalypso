@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -57,19 +58,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class TestRoughnessClsCollection_2 extends TestCase
 {
-  public void testWorkspaceLoad( )
+  public void testWorkspaceLoad( ) throws MalformedURLException, Exception
   {
-
-    GMLWorkspace workspace = null;
-
-    try
-    {
-      workspace = GmlSerializer.createGMLWorkspace( new URL( "data/roughness.gml" ), null ); //$NON-NLS-1$
-    }
-    catch( final Throwable th )
-    {
-      fail( TestUtils.getStackTraceAsString( th ) );
-    }
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "data/roughness.gml" ), null ); //$NON-NLS-1$
 
     final Feature root = workspace.getRootFeature();
     final RoughnessClsCollection roughnessClsList = (RoughnessClsCollection) root;
