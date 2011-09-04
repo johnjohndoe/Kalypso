@@ -259,7 +259,7 @@ public class PreSWANKalypso implements ISimulation
 
     for( final Date m_calculatedStep : m_calculatedSteps )
     {
-      final RMA10S2GmlConv lRMA2GmlConverter = new RMA10S2GmlConv();
+      final RMA10S2GmlConv lRMA2GmlConverter = new RMA10S2GmlConv( null );
       final SimpleNodeResultsHandler lRMAResultsSimpleHandler = new SimpleNodeResultsHandler( m_mapGMPositions );
       lRMA2GmlConverter.setRMA10SModelElementHandler( lRMAResultsSimpleHandler );
       final FileObject lResultRMAFile = lMapDatesFiles.get( m_calculatedStep );

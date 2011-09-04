@@ -107,11 +107,9 @@ public class VeloDiff2DTest extends TestCase
         subtrahentSurfaces[i] = getSurfaces( outputDir2, resultTypes[i] );
       }
 
-      final RMA10S2GmlConv converter = new RMA10S2GmlConv();
-      IRMA10SModelElementHandler handler;
+      final RMA10S2GmlConv converter = new RMA10S2GmlConv( null );
 
-      handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, resultTypes, differenceType );
-
+      final IRMA10SModelElementHandler handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, resultTypes, differenceType );
       converter.setRMA10SModelElementHandler( handler );
 
       converter.parse( is );

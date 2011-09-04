@@ -1,27 +1,27 @@
 package org.kalypso.kalypso1d2d.internal.bce2d.imports;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
-import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -42,7 +42,7 @@ public class Import2dOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
     if( monitor == null )
       monitor = new NullProgressMonitor();
@@ -50,69 +50,57 @@ public class Import2dOperation implements ICoreRunnableWithProgress
     InputStream is = null;
     try
     {
-      RMA10S2GmlConv.VERBOSE_MODE = false;
+      final File importFile = m_data.getInputFileData().getFile();
+      final long contentLength = importFile.length();
+      monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.0" ), (int) contentLength );//$NON-NLS-1$
+
+      // TODO: use this position provider to import 2d-files with missing 6th coordinate -> ask user for offset values
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem() );
 
-      final File importFile = m_data.getInputFileData().getFile();
-
-      // FIXME: counting and using line numbers here is heavy, use monitor-stream instead
-      final RMA10S2GmlConv converter = new RMA10S2GmlConv( monitor, getNumberOfLines( importFile ) );
-      final Set< Class< ? extends IModel> > lSetModelClassesSetDirty = new HashSet<Class< ? extends IModel> >();
       final CommandableWorkspace workspace = m_data.getCommandableWorkspace( IFEDiscretisationModel1d2d.class.getName() );
-      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, lSetModelClassesSetDirty, workspace );
+      final DiscretisationModel1d2dHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), m_data.getFlowrelationshipModel(), positionProvider, workspace );
+
+      final BufferedInputStream fis = new BufferedInputStream( new FileInputStream( importFile ) );
+      is = new ProgressInputStream( fis, contentLength, monitor );
+
+      final RMA10S2GmlConv converter = new RMA10S2GmlConv( monitor );
       converter.setRMA10SModelElementHandler( handler );
 
-      is = new BufferedInputStream( new FileInputStream( importFile ) );
       converter.parse( is );
       is.close();
 
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
+      ProgressUtilities.worked( monitor, 0 );
 
-      for( final Class< ? extends IModel> element : lSetModelClassesSetDirty )
+      final String[] dirtyModels = handler.getDirtyModels();
+      for( final String modelID : dirtyModels )
       {
-        final Class< ? extends IModel> clazz = element;
-        m_data.postCommand( clazz.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        m_data.postCommand( modelID, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       }
+
+      return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, "Import succesfully terminated." );
+    }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final IOException e )
+    {
+      // better error message needed?
+      throw new InvocationTargetException( e );
+    }
+    catch( final OperationCanceledException e )
+    {
+      throw new InterruptedException();
     }
     catch( final Exception e )
     {
-      return new Status( Status.ERROR, KalypsoCorePlugin.getID(), Status.CANCEL, e.getMessage(), e );
+      // Should never happen; problems accessing the models
+      throw new InvocationTargetException( e );
     }
     finally
     {
       IOUtils.closeQuietly( is );
       monitor.done();
     }
-
-    return Status.OK_STATUS;
-  }
-
-  // FIXME: heavy operation just to get the lines, is this really necessary?
-  public static int getNumberOfLines( final File file )
-  {
-    if( file == null || !file.exists() )
-      return -1;
-
-    int linesCnt = 0;
-    try
-    {
-      final FileReader file_reader = new FileReader( file );
-      final BufferedReader buf_reader = new BufferedReader( file_reader );
-      do
-      {
-        final String line = buf_reader.readLine();
-        if( line == null )
-          break;
-        linesCnt++;
-      }
-      while( true );
-      buf_reader.close();
-    }
-    catch( final IOException e )
-    {
-      return -1;
-    }
-    return linesCnt;
   }
 }
