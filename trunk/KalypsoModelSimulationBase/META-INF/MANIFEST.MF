@@ -23,8 +23,7 @@ Export-Package: org.kalypso.kalypsosimulationmodel,
  org.kalypso.kalypsosimulationmodel.core.wind,
  org.kalypso.kalypsosimulationmodel.schema,
  org.kalypso.kalypsosimulationmodel.ui.calccore,
- org.kalypso.kalypsosimulationmodel.utils,
- test.org.kalypso.kalypsosimulationmodel
+ org.kalypso.kalypsosimulationmodel.utils
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Activator: org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase

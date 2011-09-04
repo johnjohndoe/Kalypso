@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
 import junit.framework.TestCase;
 
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -57,50 +56,39 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class TestTerrainElevationModelSystem extends TestCase
 {
-
-  public void testWorkspaceLoad( )
+  public void testWorkspaceLoad( ) throws Exception
   {
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_TEM_SYSREM, null );
+    final Feature rcFeature = workspace.getRootFeature();
+    // ITerrainElevationModelSystem temSystem=
+    // (ITerrainElevationModelSystem)rcFeature.getAdapter(
+    // ITerrainElevationModelSystem.class );
+    // TODO test with adapater
+    final ITerrainElevationModelSystem temSystem = (ITerrainElevationModelSystem) rcFeature;
+    assertNotNull( Messages.getString( "TestTerrainElevationModelSystem.0" ) + ITerrainElevationModelSystem.class, //$NON-NLS-1$
+        temSystem );
 
-    GMLWorkspace workspace = null;
-
-    try
+    for( int i = 0; i < 10; i++ )
     {
-      workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_TEM_SYSREM, null );
-      Feature rcFeature = workspace.getRootFeature();
-      // ITerrainElevationModelSystem temSystem=
-      // (ITerrainElevationModelSystem)rcFeature.getAdapter(
-      // ITerrainElevationModelSystem.class );
-      // TODO test with adapater
-      ITerrainElevationModelSystem temSystem = (ITerrainElevationModelSystem) rcFeature;
-      assertNotNull( Messages.getString( "TestTerrainElevationModelSystem.0" ) + ITerrainElevationModelSystem.class, //$NON-NLS-1$
-      temSystem );
-
-      for( int i = 0; i < 10; i++ )
+      for( int j = 0; j < 10; j++ )
       {
-        for( int j = 0; j < 10; j++ )
+        final double jFlip = 9 - j;
+        final double x = 5 * i + 1 + 13;
+        final double y = 5 * jFlip + 1 + 154;
+        if( i == j )
         {
-          double jFlip = 9 - j;
-          double x = 5 * i + 1 + 13;
-          double y = 5 * jFlip + 1 + 154;
-          if( i == j )
-          {
-            GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-            double ele = temSystem.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+          final double ele = temSystem.getElevation( curPoint );
+          assertEquals( "i=" + i + " j=" + j + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-          }
-          else
-          {
-            GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-            double ele = temSystem.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          }
+        }
+        else
+        {
+          final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+          final double ele = temSystem.getElevation( curPoint );
+          assertEquals( "i=" + i + " j=" + j + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
       }
-    }
-    catch( Throwable th )
-    {
-      fail( TestUtils.getStackTraceAsString( th ) );
     }
   }
 
