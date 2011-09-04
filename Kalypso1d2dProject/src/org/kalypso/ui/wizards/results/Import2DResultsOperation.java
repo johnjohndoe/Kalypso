@@ -159,7 +159,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
       final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
 
       final IFolder calcUnitFolder = scenarioFolder.getFolder( calcMeta.getFullPath() );
-      removeOldResults( calcMeta, resultsToRemove, calcUnitFolder );
+      removeOldResults( calcMeta, resultsToRemove );
 
       /* Move processed files to the right place */
       final File calcUnitDir = calcUnitFolder.getLocation().toFile();
@@ -174,17 +174,14 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void removeOldResults( final ICalcUnitResultMeta calcMeta, final IResultMeta[] resultsToRemove, final IFolder calcUnitFolder ) throws CoreException
+  private void removeOldResults( final ICalcUnitResultMeta calcMeta, final IResultMeta[] resultsToRemove ) throws CoreException
   {
     // FIXME: the result processor added the step meta himself, so we are not able to know what id/name is set :-(
     // For now, we clear everything
 
     for( final IResultMeta resultMeta : resultsToRemove )
     {
-      final IResource member = calcUnitFolder.findMember( resultMeta.getPath() );
-      if( member != null )
-        member.delete( true, null );
-
+      ResultMeta1d2dHelper.removeResultMetaFileWithChidren( resultMeta );
       calcMeta.removeChild( resultMeta );
     }
   }
@@ -238,7 +235,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
 
     final List<TYPE> parameter = null; // read all default parameters
 
-    final ProcessResult2DOperation operation = new ProcessResult2DOperation( inputFile, null, resultDir, flowModel, controlModel, discModel, parameter, stepDate, calcMeta, false );
+    final ProcessResult2DOperation operation = new ProcessResult2DOperation( inputFile, null, resultDir, flowModel, controlModel, discModel, parameter, stepDate, calcMeta, true );
     final IStatus fileStatus = operation.execute( monitor );
     m_stati.add( fileStatus );
   }
