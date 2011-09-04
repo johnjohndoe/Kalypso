@@ -87,6 +87,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -755,25 +756,19 @@ public class ResultMeta1d2dHelper
     if( line.length() < 32 )
       return null;
 
-    try
-    {
-      final String yearString = line.substring( 6, 13 ).trim();
-      final String hourString = line.substring( 18, 32 ).trim();
+    final String yearString = line.substring( 6, 13 ).trim();
+    final String hourString = line.substring( 18, 32 ).trim();
 
-      final int year = Integer.parseInt( yearString );
+    final int year = Integer.parseInt( yearString );
 
-      final Calendar calendar = parseTimelineHour( hourString, year );
-      return calendar.getTime();
-    }
-    catch( final NumberFormatException e )
-    {
-      return null;
-    }
+    return parseTimelineHour( hourString, year );
   }
 
-  public static Calendar parseTimelineHour( final String hourString, final int year )
+  public static Date parseTimelineHour( final String hourString, final int year )
   {
-    final BigDecimal hours = new BigDecimal( hourString );
+    final BigDecimal hours = NumberUtils.parseQuietDecimal( hourString );
+    if( hours == null )
+      return null;
 
     // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
@@ -798,7 +793,7 @@ public class ResultMeta1d2dHelper
       calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
     }
 
-    return calendar;
+    return calendar.getTime();
   }
 
   /**

@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,10 +53,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -63,6 +69,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
@@ -98,21 +105,35 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Importing external 2D results", 1 + m_files.length );
+    monitor.beginTask( "Importing external 2D results", 1 + m_files.length * 2 );
 
-    // TODO: create iCalcunitMeta
-    final ICalcUnitResultMeta calcMeta = findOrCreateCalcMeta();
+    final File outputDir = FileUtilities.createNewTempDir( "resultImport2d" ); //$NON-NLS-1$
 
-    // TODO: remove old nodes with same file name -> the operation wil ladd the automatically
-    removeOldResults( calcMeta );
+    try
+    {
+      final ICalcUnitResultMeta calcMeta = findOrCreateCalcMeta();
+      final IFeatureBindingCollection<IResultMeta> calcMetaChildren = calcMeta.getChildren();
+      final IResultMeta[] resultsToRemove = calcMetaChildren.toArray( new IResultMeta[calcMetaChildren.size()] );
 
-    // prerequisites:
-    // - empty result node
-    // - ...?
-    final File outputDir = new File( FileUtils.getTempDirectory(), "2dtest" );
+      ProgressUtilities.worked( monitor, 1 );
 
-    ProgressUtilities.worked( monitor, 1 );
+      importFiles( monitor, outputDir, calcMeta );
 
+      importData( outputDir, calcMeta, resultsToRemove, new SubProgressMonitor( monitor, m_files.length ) );
+    }
+    finally
+    {
+      FileUtils.deleteQuietly( outputDir );
+
+      monitor.done();
+    }
+
+
+    return m_stati.asMultiStatusOrOK( "Problem(s) during import", String.format( "%d file(s) imported", m_files.length ) );
+  }
+
+  private void importFiles( final IProgressMonitor monitor, final File outputDir, final ICalcUnitResultMeta calcMeta ) throws InvocationTargetException
+  {
     final FileSystemManager manager = getFileSystemManager();
 
     for( final File file : m_files )
@@ -129,20 +150,43 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
         m_stati.add( IStatus.ERROR, "Failed to import result file '%s'", e, filename );
       }
     }
-
-    monitor.done();
-
-    return m_stati.asMultiStatusOrOK( "Problem(s) during import", String.format( "%d file(s) imported", m_files.length ) );
   }
 
-  private void removeOldResults( final ICalcUnitResultMeta calcMeta )
+  private void importData( final File outputDir, final ICalcUnitResultMeta calcMeta, final IResultMeta[] resultsToRemove, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    // FIXME: the result processor addd the step meta himself, so we are not able to know what id/name is set :-(
-    // For now, we clear everything
-    // TODO: clear underlying data
+    try
+    {
+      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
 
-    final IFeatureBindingCollection<IResultMeta> children = calcMeta.getChildren();
-    children.clear();
+      final IFolder calcUnitFolder = scenarioFolder.getFolder( calcMeta.getFullPath() );
+      removeOldResults( calcMeta, resultsToRemove, calcUnitFolder );
+
+      /* Move processed files to the right place */
+      final File calcUnitDir = calcUnitFolder.getLocation().toFile();
+      VFSUtilities.moveContents( outputDir, calcUnitDir );
+      ProgressUtilities.worked( monitor, 90 );
+
+      calcUnitFolder.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 10 ) );
+    }
+    catch( final IOException e )
+    {
+      throw new InvocationTargetException( e );
+    }
+  }
+
+  private void removeOldResults( final ICalcUnitResultMeta calcMeta, final IResultMeta[] resultsToRemove, final IFolder calcUnitFolder ) throws CoreException
+  {
+    // FIXME: the result processor added the step meta himself, so we are not able to know what id/name is set :-(
+    // For now, we clear everything
+
+    for( final IResultMeta resultMeta : resultsToRemove )
+    {
+      final IResource member = calcUnitFolder.findMember( resultMeta.getPath() );
+      if( member != null )
+        member.delete( true, null );
+
+      calcMeta.removeChild( resultMeta );
+    }
   }
 
   private ICalcUnitResultMeta findOrCreateCalcMeta( ) throws CoreException
@@ -150,7 +194,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     final String calcUnitMetaName = findCalcMetaName();
 
     final IScenarioResultMeta scenarioResultMeta = m_modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
-    final ICalcUnitResultMeta existingMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnitMetaName );
+    final ICalcUnitResultMeta existingMeta = scenarioResultMeta.findCalcUnitMetaResultByName( calcUnitMetaName );
     if( existingMeta != null )
       return existingMeta;
 
@@ -159,6 +203,7 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
     final String description = String.format( "External .2d files imported from '%s'", calcUnitMetaName );
     newMeta.setDescription( description );
     newMeta.setName( calcUnitMetaName );
+    newMeta.setPath( new Path( calcUnitMetaName ) );
     return newMeta;
   }
 
@@ -206,8 +251,8 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
       if( StringUtils.isBlank( timeLine ) )
         return ResultManager.STEADY_DATE;
 
-      // FIXME: doe snot work yet -> special case for bce-2d
-      final Date stepDate = ResultMeta1d2dHelper.interpreteRMA10TimeLine( timeLine );
+      // FIXME: does not work yet -> special case for bce-2d
+      final Date stepDate = interpreteRMA2TimeLine( timeLine );
       if( stepDate == null )
         return ResultManager.STEADY_DATE;
 
@@ -223,5 +268,24 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
       throw new InvocationTargetException( e );
     }
+  }
+
+  /**
+   * parse the time string from the "2d" result file with according format, interprets the date given in Kalypso-RMA
+   * format, checks the need for additional day in case of leap year
+   * 
+   * @return {@link Date} interpreted from given line, in case of invalid format or bad string - null
+   * 
+   */
+  public static Date interpreteRMA2TimeLine( final String line )
+  {
+    if( line.length() < 32 )
+      return null;
+
+    final String hourString = line.substring( 2, 28 ).trim();
+
+    final int year = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() ).get( Calendar.YEAR );
+
+    return ResultMeta1d2dHelper.parseTimelineHour( hourString, year );
   }
 }

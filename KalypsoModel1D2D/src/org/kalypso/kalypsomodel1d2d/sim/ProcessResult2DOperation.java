@@ -167,7 +167,6 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 
   private void init( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean boolDoFullEvaluate )
   {
-    //    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.0" ) + file.getName() ); //$NON-NLS-1$
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_inputFile = file;
@@ -179,7 +178,6 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
     m_stepDate = stepDate;
     m_inputResFileSWAN = fileResSWAN;
 
-    // m_mapSWANResults = mapResults;
     m_boolDoFullEvaluate = boolDoFullEvaluate;
 
     if( unitResultMeta != null )
@@ -427,7 +425,6 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
           // TODO: use station range for min max...
           ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.65" ) + calcUnit.getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.66" ), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( lsObsFile.getName() ), Status.OK_STATUS, new BigDecimal( 0 ), new BigDecimal( 0 ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
-
       }
 
       logger.takeInterimTime();

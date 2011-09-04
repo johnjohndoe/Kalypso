@@ -45,6 +45,8 @@ import java.math.BigDecimal;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -124,11 +126,11 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     final String resFolder = resultsFolder.getFullPath().toPortableString();
 
     final String featurePath = "nodeResultMember"; //$NON-NLS-1$
-    final String source = "../" + m_documentResult.getFullPath().toPortableString(); //$NON-NLS-1$
-//    final String style = "Vector Style"; //$NON-NLS-1$
+    final IPath sourcePath = new Path( ".." ).append( m_documentResult.getFullPath() ); //$NON-NLS-1$
+    final String source = sourcePath.toPortableString();
     final String style = "Node Results Style"; //$NON-NLS-1$
     String styleLocation = null;
-    final String type = NodeResultHelper.NODE_TYPE; 
+    final String type = NodeResultHelper.NODE_TYPE;
     final String resultType = "gml"; //$NON-NLS-1$
 
     // check, if there is a style already chosen, if not create one from default template
@@ -143,7 +145,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
       m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, type );
     else
       m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, m_scenarioFolder, type );
-  
+
     m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
     m_resultLayerCommandData[0].setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, THEME_INFO_ID );
 
@@ -160,12 +162,12 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     final IFolder sldFolder = stylesFolder.getFolder( type );
 
     final String sldFileName = ResultMeta1d2dHelper.getDefaultStyleFileName( type, m_documentResult.getDocumentType().name() );
-    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final IPath stylePath = new Path( ".." ).append( relativePathTo ).append( type ).append( sldFileName ); //$NON-NLS-1$
+    final String styleLocation = stylePath.toPortableString();
 
     final IFile styleFile = sldFolder.getFile( sldFileName );
 
     if( !ResultSldHelper.allDefaultNodeStylesExist( sldFolder ) )
-//    if( styleFile.exists() == false )
     {
       ResultSldHelper.processStyle( styleFile, sldFolder, type, m_minValue, m_maxValue );
     }

@@ -46,22 +46,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.model.IModel;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.FileDialogUtils;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.bce2d.I2DContants;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -76,7 +76,7 @@ public class ImportResultAction extends Action
 
   private final ICaseDataProvider<IModel> m_modelProvider;
 
-  public ImportResultAction( final SelectResultWizardPage page, final ICommandTarget commandTarget, final IKalypsoLayerModell modell, final ICaseDataProvider<IModel> modelProvider )
+  public ImportResultAction( final SelectResultWizardPage page, final ICaseDataProvider<IModel> modelProvider )
   {
     m_page = page;
 
@@ -105,6 +105,10 @@ public class ImportResultAction extends Action
 
     final IStatus status = RunnableContextHelper.execute( wizard.getContainer(), true, true, importOperation );
     new StatusDialog( shell, status, wizard.getWindowTitle() ).open();
+
+    /* handle tree */
+    final CheckboxTreeViewer treeViewer = m_page.getTreeViewer();
+    ViewerUtilities.refresh( treeViewer, true );
   }
 
   private ICoreRunnableWithProgress askForFiles( final Shell shell, final IDialogSettings settings )
