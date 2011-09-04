@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMeta
 {
-  public ScenarioResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public ScenarioResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
     // set the path and the name of the scenarioResultMeta
@@ -68,9 +68,6 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
 
   private static final String RESULTS = "results"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#findCalcUnitMetaResult(java.lang.String)
-   */
   @Override
   public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID )
   {
@@ -81,6 +78,22 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
       {
         final ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) resultMeta;
         if( calcUnitMeta.getCalcUnit().equals( calcUnitGmlID ) )
+          return calcUnitMeta;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public ICalcUnitResultMeta findCalcUnitMetaResultByName( final String calcUnitName )
+  {
+    final IFeatureBindingCollection<IResultMeta> children = getChildren();
+    for( final IResultMeta resultMeta : children )
+    {
+      if( resultMeta instanceof ICalcUnitResultMeta )
+      {
+        final ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) resultMeta;
+        if( calcUnitMeta.getName().equals( calcUnitName ) )
           return calcUnitMeta;
       }
     }

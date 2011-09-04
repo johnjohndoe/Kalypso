@@ -98,7 +98,7 @@ public class ResultManager1d2dWizard extends Wizard
 
     selectResultWizardPage.addAction( new DeleteResultAction( selectResultWizardPage, m_commandTarget, m_modell ) );
     selectResultWizardPage.addAction( new ReevaluateResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider ) );
-    selectResultWizardPage.addAction( new ImportResultAction( selectResultWizardPage, m_commandTarget, m_modell, m_modelProvider ) );
+    selectResultWizardPage.addAction( new ImportResultAction( selectResultWizardPage, m_modelProvider ) );
 
     addPage( selectResultWizardPage );
   }
