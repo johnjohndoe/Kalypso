@@ -53,7 +53,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -80,8 +80,6 @@ public class RMA10S2GmlConv
   }
 
   private final IProgressMonitor m_monitor;
-
-  private final int m_monitorStep;
 
   // all of the patterns are left here as comments to show the format of parsed strings.
 
@@ -125,46 +123,30 @@ public class RMA10S2GmlConv
   //
   //  private static final Pattern lineJE = Pattern.compile( "JE.*" ); //$NON-NLS-1$
 
-  public RMA10S2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
+  public RMA10S2GmlConv( final IProgressMonitor monitor )
   {
-    m_monitorStep = numberOfLinesToProcess / 100;
-    if( monitor == null )
-      m_monitor = new NullProgressMonitor();
-    else
-      m_monitor = monitor;
+    m_monitor = monitor;
   }
 
-  public RMA10S2GmlConv( )
-  {
-    m_monitor = new NullProgressMonitor();
-    m_monitorStep = -1;
-  }
-
-  public void parse( final InputStream inputStream ) throws IllegalStateException, IOException
+  public void parse( final InputStream inputStream ) throws IOException
   {
     Assert.throwIAEOnNullParam( inputStream, "inputStream" ); //$NON-NLS-1$
     parse( new InputStreamReader( inputStream ) );
   }
 
-  public void parse( final Reader reader ) throws IllegalStateException, IOException
+  private void parse( final Reader reader ) throws IOException
   {
     Assert.throwIAEOnNullParam( reader, "inputStreamReader" ); //$NON-NLS-1$
 
-    m_monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.0" ), 100 );//$NON-NLS-1$
     m_handler.start();
 
-    int numberOfLinesProcessed = 0;
-    final boolean traceProgress = !(m_monitor instanceof NullProgressMonitor) && (m_monitorStep > 0);
     final LineNumberReader lnReader = new LineNumberReader( reader );
+
     for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
     {
-      if( m_monitor.isCanceled() )
-        return;
-      if( traceProgress && (++numberOfLinesProcessed == m_monitorStep) )
-      {
-        numberOfLinesProcessed = 0;
-        m_monitor.worked( 1 );
-      }
+      if( m_monitor != null && m_monitor.isCanceled() )
+        throw new OperationCanceledException();
+
       if( line.length() < 2 )
         continue;
       if( line.startsWith( "FP" ) ) //$NON-NLS-1$
@@ -207,7 +189,6 @@ public class RMA10S2GmlConv
         interpretePolynomialRangesLine( line );
       else if( line.startsWith( "ALP" ) ) //$NON-NLS-1$
         interpreteSplittedPolynomialsLine( line );
-      
       else if( VERBOSE_MODE )
         System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
     }
@@ -217,14 +198,14 @@ public class RMA10S2GmlConv
 
   }
 
-  private void interpreteSplittedPolynomialsLine( String line )
+  private void interpreteSplittedPolynomialsLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
 
     try
     {
       int lIntStartMaxes = 3;
-      final String lStrPolyKind = lStringParser.getSub( 0 ); 
+      final String lStrPolyKind = lStringParser.getSub( 0 );
       final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
       final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
       final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
@@ -234,8 +215,8 @@ public class RMA10S2GmlConv
           lDoubleSlope = Double.parseDouble( lStringParser.getSub( 3 ) );
           lIntStartMaxes++;
         }
-        catch (Exception e) {
-        } 
+        catch (final Exception e) {
+        }
       }
       for( int i = lIntStartMaxes; i < lStringParser.getIntSepCounter(); ++i )
       {
@@ -247,16 +228,16 @@ public class RMA10S2GmlConv
     {
       m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
-    
+
   }
 
-  private void interpretePolynomialRangesLine( String line )
+  private void interpretePolynomialRangesLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
 
     try
     {
-      final String lStrPolyKind = lStringParser.getSub( 0 ); 
+      final String lStrPolyKind = lStringParser.getSub( 0 );
       final int lIntNodeId = Integer.parseInt( lStringParser.getSub( 1 ) );
       final int lIntAmountRanges = Integer.parseInt( lStringParser.getSub( 2 ) );
       final List<Double> lListPolyAreaMaxRanges = new ArrayList<Double>();
@@ -271,12 +252,12 @@ public class RMA10S2GmlConv
     {
       m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
-    
+
   }
 
-  private void interpretePolynomeMinMaxLine( String line )
+  private void interpretePolynomeMinMaxLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
     if( lStringParser.getIntSepCounter() == 4 )
     {
       try
@@ -294,7 +275,7 @@ public class RMA10S2GmlConv
     }
     else
       m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
-    
+
   }
 
   // this form of parsing was used on all types of lines from the result line
@@ -334,24 +315,24 @@ public class RMA10S2GmlConv
     {
       try
       {
-//        final String yearString = line.substring( 6, 13 ).trim();
-//        final String hourString = line.substring( 18, 32 ).trim();
-//
-//        final int year = Integer.parseInt( yearString );
-//        final BigDecimal hours = new BigDecimal( hourString );
-//
-//        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
-//        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-//        calendar.clear();
-//        calendar.set( year, 0, 1 );
-//
-//        final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
-//        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
-//
-//        calendar.add( Calendar.HOUR, wholeHours.intValue() );
-//        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+        //        final String yearString = line.substring( 6, 13 ).trim();
+        //        final String hourString = line.substring( 18, 32 ).trim();
+        //
+        //        final int year = Integer.parseInt( yearString );
+        //        final BigDecimal hours = new BigDecimal( hourString );
+        //
+        //        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
+        //        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+        //        calendar.clear();
+        //        calendar.set( year, 0, 1 );
+        //
+        //        final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
+        //        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
+        //
+        //        calendar.add( Calendar.HOUR, wholeHours.intValue() );
+        //        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
 
-//        m_handler.handleTime( line, calendar.getTime() );
+        //        m_handler.handleTime( line, calendar.getTime() );
         m_handler.handleTime( line, ResultMeta1d2dHelper.interpreteRMA10TimeLine( line ) );
       }
       catch( final NumberFormatException e )
@@ -374,11 +355,11 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
     {
       try
       {
-        //other way to use this parser to get the custom substrings  
+        //other way to use this parser to get the custom substrings
         // lStringParser.getFirstSub();
         // final int id = Integer.parseInt( lStringParser.getNextSub() );
         // final double easting = Double.parseDouble( lStringParser.getNextSub() );
@@ -391,7 +372,7 @@ public class RMA10S2GmlConv
         try{
           elevation = Double.parseDouble( lStringParser.getSub( 4 ) );
         }
-        catch (Exception e) {
+        catch (final Exception e) {
           // also allow the NaN in result file
         }
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
@@ -401,7 +382,7 @@ public class RMA10S2GmlConv
           try{
             m_handler.handleNode( line, id, easting, northing, elevation, Double.parseDouble( lStringParser.getSub( 5 ) ) );
           }
-          catch (Exception e) {
+          catch (final Exception e) {
           }
         }
         else{
@@ -417,7 +398,7 @@ public class RMA10S2GmlConv
 
   private void interpreteResultLine( final String line, final RESULTLINES resultlines )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
     if( lStringParser.getIntSepCounter() == 6 )
     {
       try
@@ -457,7 +438,7 @@ public class RMA10S2GmlConv
 
   private void interpreteArcLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " \t" ); //$NON-NLS-1$
     try
     {
       if( lStringParser.getIntSepCounter() == 7 )
@@ -493,7 +474,7 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeInformationLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " ); //$NON-NLS-1$
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " ); //$NON-NLS-1$
     try
     {
       {
@@ -528,7 +509,7 @@ public class RMA10S2GmlConv
     // - nodeID7 (opt.)
     // - nodeID8 (opt.)
 
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, ' ' );
 
     try
     {
@@ -575,7 +556,7 @@ public class RMA10S2GmlConv
 
   private void interpreteElementLine( final String line )
   {
-    RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " ); //$NON-NLS-1$
+    final RMA10ResultsLineSplitter lStringParser = new RMA10ResultsLineSplitter( line, " " ); //$NON-NLS-1$
     try
     {
       if( lStringParser.getIntSepCounter() >= 5 )
@@ -738,7 +719,7 @@ public class RMA10S2GmlConv
     {
       if( m_stringTokenizer.hasMoreTokens() )
       {
-        String lStrRes = m_stringTokenizer.nextToken();
+        final String lStrRes = m_stringTokenizer.nextToken();
         return lStrRes;
       }
       return ""; //$NON-NLS-1$

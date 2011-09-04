@@ -56,7 +56,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -109,9 +108,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  * @author ilya
- * 
  */
-@SuppressWarnings("unchecked")
 public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandler
 {
   /**
@@ -132,6 +129,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private final Map<Integer, SortedMap<Integer, Integer>> m_mapIdBuildingType = new HashMap<Integer, SortedMap<Integer, Integer>>();
 
   private final Map<Integer, Integer> m_mapIdBuildingDirection = new HashMap<Integer, Integer>();
+
+  private final Set<String> m_dirtyModels = new HashSet<String>();
 
   private GM_Envelope m_gmExistingEnvelope;
 
@@ -157,8 +156,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final GMLWorkspace m_flowWorkspace;
 
-  private final Set<Class< ? extends IModel>> m_setModelClassesToSetDirty;
-
   private final List<Feature> m_listNewFlowElements = new ArrayList<Feature>();
 
   private final List<Feature> m_listNewPolysWithWeir = new ArrayList<Feature>();
@@ -167,7 +164,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final Set<Integer> m_setMiddleNodeIDs = new HashSet<Integer>();
 
-  public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IFlowRelationshipModel pFlowRelationshipModel, final IPositionProvider positionProvider, final Set<Class< ? extends IModel>> pSetClassesSetDirty, final CommandableWorkspace pCommandableWorkspace2d )
+  public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IFlowRelationshipModel pFlowRelationshipModel, final IPositionProvider positionProvider, final CommandableWorkspace pCommandableWorkspace2d )
   {
     m_model = model;
     m_flowModel = pFlowRelationshipModel;
@@ -176,7 +173,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_cmdWorkspace2d = pCommandableWorkspace2d;
     m_positionProvider = positionProvider;
     m_setNotInsertedNodes = new HashSet<Integer>();
-    m_setModelClassesToSetDirty = pSetClassesSetDirty;
+
     try
     {
       m_gmExistingEnvelope = m_model.getNodes().getBoundingBox();
@@ -185,7 +182,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       e.printStackTrace();
     }
-
   }
 
   /**
@@ -208,7 +204,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( lIntCountCreated > 0 && lAllElementsFlow.length > 0 )
     {
       m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel, lAllElementsFlow, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
-      m_setModelClassesToSetDirty.add( IFlowRelationshipModel.class );
+      m_dirtyModels.add( IFlowRelationshipModel.class.getName() );
     }
 
     m_flowModel.getFlowRelationsShips().getFeatureList().invalidate();
@@ -219,8 +215,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
     if( lAllElements.length > 0 )
     {
-      m_setModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
+      m_dirtyModels.add( IFEDiscretisationModel1d2d.class.getName() );
     }
+
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model, lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     removeElements( lElementsToRemove );
@@ -236,12 +233,12 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( m_listNewFlowElements.size() > 0 )
     {
       m_flowWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_flowWorkspace, m_flowModel, m_listNewFlowElements.toArray( new Feature[m_listNewFlowElements.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );//
-      m_setModelClassesToSetDirty.add( IFlowRelationshipModel.class );
+      m_dirtyModels.add( IFlowRelationshipModel.class.getName() );
     }
 
     if( m_listNewPolysWithWeir.size() > 0 )
     {
-      m_setModelClassesToSetDirty.add( IFEDiscretisationModel1d2d.class );
+      m_dirtyModels.add( IFEDiscretisationModel1d2d.class.getName() );
     }
 
     m_model.getNodes().getFeatureList().invalidate();
@@ -1029,4 +1026,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     result.setStation( new BigDecimal( stationName ) );
   }
 
+  public String[] getDirtyModels( )
+  {
+    return m_dirtyModels.toArray( new String[m_dirtyModels.size()] );
+  }
 }

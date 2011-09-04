@@ -348,7 +348,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
       final LengthSectionHandler1d lsHandler = new LengthSectionHandler1d( componentID, lsObsUrl );
 
       /* .2d Datei lesen und GML füllen */
-      final RMA10S2GmlConv conv = new RMA10S2GmlConv();
+      final RMA10S2GmlConv conv = new RMA10S2GmlConv( null );
 
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();

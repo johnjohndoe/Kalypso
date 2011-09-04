@@ -182,7 +182,8 @@ public class VeloDiff2D
         subtrahentSurfaces[i] = getSurfaces( outputDir2, types[i] );
       }
 
-      final RMA10S2GmlConv converter = new RMA10S2GmlConv();
+      final RMA10S2GmlConv converter = new RMA10S2GmlConv( null );
+
       final IRMA10SModelElementHandler handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, types, resultDifferenceType );
       converter.setRMA10SModelElementHandler( handler );
 

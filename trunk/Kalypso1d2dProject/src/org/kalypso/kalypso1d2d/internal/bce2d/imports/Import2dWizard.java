@@ -11,14 +11,12 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -60,23 +58,8 @@ public class Import2dWizard extends Wizard implements INewWizard
     m_data.save( getDialogSettings() );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-    if( !status.isOK() )
-    {
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
-      return false;
-    }
 
-    try
-    {
-      /* post empty command(s) in order to make pool dirty. */
-      m_data.postCommand( IFEDiscretisationModel1d2d.class.getName(), new EmptyCommand( getWindowTitle(), false ) );
-    }
-    catch( final Exception e )
-    {
-      // will never happen?
-      e.printStackTrace();
-    }
-
-    return true;
+    new StatusDialog( getShell(), status, getWindowTitle() ).open();
+    return !status.matches( IStatus.ERROR );
   }
 }
