@@ -41,8 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -50,24 +52,25 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipException;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -110,7 +113,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * 
  * @author Gernot Belger
  */
-public class ProcessResultsJob extends Job
+public class ProcessResult2DOperation implements ICoreRunnableWithProgress
 {
   private File m_outputDir;
 
@@ -134,7 +137,7 @@ public class ProcessResultsJob extends Job
 
   private boolean m_boolDoFullEvaluate = false;
 
-  private Map<String, Map<GM_Position, Double>> m_mapResults;
+  private Map<String, Map<GM_Position, Double>> m_mapResults = null;
 
   /**
    * @param inputFile
@@ -152,10 +155,14 @@ public class ProcessResultsJob extends Job
    * @param stepDate
    *          The date which is determined by the result file name (i.e. step-number) and the control timeseries.
    */
-  public ProcessResultsJob( final FileObject file, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
+  public ProcessResult2DOperation( final FileObject file, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.0" ) + file.getName() ); //$NON-NLS-1$
     init( file, null, outputDir, flowModel, controlModel, discModel, parameter, stepDate, unitResultMeta, true );
+
+  }
+  public ProcessResult2DOperation( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean doFullEvaluate )
+  {
+    init( file, fileResSWAN, outputDir, flowModel, controlModel, discModel, parameter, stepDate, unitResultMeta, doFullEvaluate );
   }
 
   private void init( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean boolDoFullEvaluate )
@@ -194,121 +201,130 @@ public class ProcessResultsJob extends Job
         m_parameters.add( ResultType.TYPE.WAVEPER );
       }
     }
-
   }
 
-  public ProcessResultsJob( final FileObject file, final FileObject fileResSWAN, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta, final boolean doFullEvaluate )
-  {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.0" ) + file.getName() ); //$NON-NLS-1$
-    init( file, fileResSWAN, outputDir, flowModel, controlModel, discModel, parameter, stepDate, unitResultMeta, doFullEvaluate );
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus run( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.4" ) ); //$NON-NLS-1$
 
-    final String timeStepName;
-    if( m_stepDate == ResultManager.STEADY_DATE )
-      timeStepName = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.5" ); //$NON-NLS-1$
-    else if( m_stepDate == ResultManager.MAXI_DATE )
-      timeStepName = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.6" ); //$NON-NLS-1$
-    else
-      timeStepName = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7", m_stepDate ); //$NON-NLS-1$
+    final String timeStepName = createTimeStepName();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.8" ) + timeStepName, 10 ); //$NON-NLS-1$
     monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.9" ) + timeStepName ); //$NON-NLS-1$
 
-    // TODO: simultaneous parsing and zipping caused problems
-    // the last few lines of the 2d-file were just ignored
     try
     {
-      InputStream contentStream = null;
-
-      final ZipOutputStream zos = null;
-      try
-      {
-        /* Zip .2d file to outputDir */
-        if( !m_inputFile.getName().getBaseName().toLowerCase().endsWith( ".2d.zip" ) ) //$NON-NLS-1$
-        {
-          final File outputZip2d = new File( m_outputDir, ResultMeta1d2dHelper.ORIGINAL_2D_FILE_NAME + ".zip" ); //$NON-NLS-1$
-          ZipUtilities.zip( outputZip2d, new File[] { new File( m_inputFile.getURL().toURI() ) }, new File( m_inputFile.getParent().getURL().toURI() ) );
-        }
-      }
-      finally
-      {
-        IOUtils.closeQuietly( zos );
-        IOUtils.closeQuietly( contentStream );
-      }
+      zipInputFile();
       ProgressUtilities.worked( monitor, 1 );
 
-      try
-      {
-        /* Read into NodeResults */
-        contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile );
+      readActSWANRes();
 
-        readActSWANRes();
-        read2DIntoGmlResults( contentStream );
-      }
-      finally
-      {
-        IOUtils.closeQuietly( contentStream );
-        m_inputFile.close();
-      }
+      read2D();
 
+      // FIXME: only add this metadata if we added a zip file?
       ResultMeta1d2dHelper.addDocument( m_stepResultMeta, ResultMeta1d2dHelper.RMA_RAW_DATA_META_NAME, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.12" ), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( ResultMeta1d2dHelper.ORIGINAL_2D_FILE_NAME + ".zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      if( m_mapResults != null )
-      {
-        ResultMeta1d2dHelper.addDocument( m_stepResultMeta, ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.13" ), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "../" + ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      }
 
       ProgressUtilities.worked( monitor, 1 );
     }
     catch( final Throwable e )
     {
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.14" ); //$NON-NLS-1$
+      final String filename = m_inputFile.getName().getBaseName();
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.14", filename ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), msg, e );
     }
 
     return Status.OK_STATUS;
   }
 
-  private void readActSWANRes( )
+  private String createTimeStepName( )
   {
-    m_mapResults = null;
-    SWANResultsReader lSWANResultsReader = null;
-    if( m_stepDate != ResultManager.STEADY_DATE && m_stepDate != ResultManager.MAXI_DATE && m_inputResFileSWAN != null )
+    if( m_stepDate == ResultManager.STEADY_DATE )
+      return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.5" ); //$NON-NLS-1$
+
+    if( m_stepDate == ResultManager.MAXI_DATE )
+      return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.6" ); //$NON-NLS-1$
+
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7", m_stepDate ); //$NON-NLS-1$
+  }
+
+  private void read2D( ) throws Exception
+  {
+    InputStream contentStream = null;
+    try
     {
-      try
+      /* Read into NodeResults */
+      contentStream = VFSUtilities.getInputStreamFromFileObject( m_inputFile );
+      read2DIntoGmlResults( contentStream );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contentStream );
+      m_inputFile.close();
+    }
+  }
+
+  private void zipInputFile( ) throws FileSystemException, IOException, URISyntaxException
+  {
+    final InputStream contentStream = null;
+    try
+    {
+      /* Zip .2d file to outputDir */
+      if( !m_inputFile.getName().getBaseName().toLowerCase().endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       {
-        FileObject lResFile = m_inputResFileSWAN;
-        if( m_inputResFileSWAN.getName().getFriendlyURI().endsWith( "zip" ) ) { //$NON-NLS-1$
-          ZipUtilities.unzip( new File( m_inputResFileSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
-          lResFile = VFSUtilities.getNewManager().resolveFile( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
-        }
-        // check if the given object is the directory with swan results.
-        else if( m_inputResFileSWAN.getType().equals( FileType.FOLDER ) )
-        {
-          lResFile = m_inputResFileSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
-        }
-        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.0" ) + lResFile ) ); //$NON-NLS-1$
-        // only read the *.mat files
-        if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
-        {
-          lSWANResultsReader = new SWANResultsReader( lResFile );
-          final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
-          m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.1" ) + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
-        }
-      }
-      catch( final Throwable e )
-      {
-        e.printStackTrace();
+        final File outputZip2d = new File( m_outputDir, ResultMeta1d2dHelper.ORIGINAL_2D_FILE_NAME + ".zip" ); //$NON-NLS-1$
+        ZipUtilities.zip( outputZip2d, new File[] { new File( m_inputFile.getURL().toURI() ) }, new File( m_inputFile.getParent().getURL().toURI() ) );
       }
     }
+    finally
+    {
+      IOUtils.closeQuietly( contentStream );
+    }
+  }
+
+  private void readActSWANRes( )
+  {
+    if( m_stepDate == ResultManager.STEADY_DATE || m_stepDate == ResultManager.MAXI_DATE || m_inputResFileSWAN == null )
+      return;
+
+    try
+    {
+      final FileObject lResFile = getOrUnzipSwanResult();
+
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.0" ) + lResFile ) ); //$NON-NLS-1$
+
+      // only read the *.mat files
+      if( lResFile.getName().getFriendlyURI().endsWith( ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ) )
+      {
+        final SWANResultsReader lSWANResultsReader = new SWANResultsReader( lResFile );
+        final String timeStringFormatedForSWANOutput = SWANDataConverterHelper.getTimeStringFormatedForSWANOutput( m_stepDate );
+        m_mapResults = lSWANResultsReader.readMatResultsFile( timeStringFormatedForSWANOutput );
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( Messages.getString( "ProcessResultsJob.1" ) + timeStringFormatedForSWANOutput ) ); //$NON-NLS-1$
+
+        ResultMeta1d2dHelper.addDocument( m_stepResultMeta, ResultMeta1d2dHelper.SWAN_RAW_DATA_META_NAME, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.13" ), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "../" + ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + ".zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      }
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+      // FIXME: error handling ?!
+    }
+  }
+
+  private FileObject getOrUnzipSwanResult( ) throws ZipException, IOException, URISyntaxException, FileSystemException
+  {
+    FileObject lResFile = m_inputResFileSWAN;
+    if( m_inputResFileSWAN.getName().getFriendlyURI().endsWith( "zip" ) ) //$NON-NLS-1$
+    {
+      ZipUtilities.unzip( new File( m_inputResFileSWAN.getURL().toURI() ), new File( m_outputDir.toURI() ) );
+      lResFile = VFSUtilities.getNewManager().resolveFile( m_outputDir, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
+    }
+    // check if the given object is the directory with swan results.
+    else if( m_inputResFileSWAN.getType().equals( FileType.FOLDER ) )
+    {
+      lResFile = m_inputResFileSWAN.getChild( ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT ); //$NON-NLS-1$
+    }
+    return lResFile;
   }
 
   public File read2DIntoGmlResults( final InputStream is ) throws Exception
@@ -486,18 +502,9 @@ public class ProcessResultsJob extends Job
           }
         }
       }
-      // min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      // max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      //      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.89" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.90" ), IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gz" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
       // we will set all min max results to the node results meta also
       ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.89" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.90" ), IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gz" ), Status.OK_STATUS, m_resultMinMaxCatcher ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-      /* HMO(s) */
-      /*
-       * try { final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" ); final
-       * HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter ); multiEater.addEater(
-       * hmoTriangleEater ); } catch (Exception e) { e.printStackTrace(); }
-       */
 
       // TODO: maybe check if time and stepTime are equal?
       if( m_stepResultMeta != null )
@@ -572,25 +579,6 @@ public class ProcessResultsJob extends Job
     final QNameAndString[] props = properties.toArray( new QNameAndString[properties.size()] );
     return new TriangulatedSurfaceDirectTriangleEater( tinResultFile, parameter, crs, props );
   }
-
-  // /**
-  // * Checks, if there exists already an entry for terrainTin
-  // */
-  // private boolean existsTerrain( final ICalcUnitResultMeta calcUnitResult )
-  // {
-  // final IFeatureBindingCollection<IResultMeta> children = calcUnitResult.getChildren();
-  // for( final IResultMeta resultMeta : children )
-  // {
-  // if( resultMeta instanceof IDocumentResultMeta )
-  // {
-  // final IDocumentResultMeta document = (IDocumentResultMeta) resultMeta;
-  // if( document.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinTerrain )
-  // return true;
-  // }
-  // }
-  //
-  // return false;
-  // }
 
   private static void addToResultDB( final IStepResultMeta stepResultMeta, final Date stepDate, final File outputDir )
   {
