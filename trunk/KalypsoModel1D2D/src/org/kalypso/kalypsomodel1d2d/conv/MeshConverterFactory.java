@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
@@ -61,69 +61,52 @@ public class MeshConverterFactory
   private static final String _2DM_EXTENSION = "*.2dm"; //$NON-NLS-1$
 
   private static final String _HMO_EXTENSION = "*.hmo"; //$NON-NLS-1$
-  
+
   public MeshConverterFactory( )
   {
 
   }
 
-  public I2DMeshConverter getConverter( final IFEDiscretisationModel1d2d discretisationModel, final IFlowRelationshipModel flowRelationshipModel, final ICalculationUnit calcUnit, IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log, final String extension ) 
+  // FIXME: all these switches are bad, introduce an abstraction here!
+  public static I2DMeshConverter getConverter( final IFEDiscretisationModel1d2d discretisationModel, final IFlowRelationshipModel flowRelationshipModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log, final String extension )
   {
-    I2DMeshConverter converter = null;
-    if( extension.equals( _2D_EXTENSION ) )
-    {
-      converter = new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, calcUnit, roughnessModel, restartNodes, exportRequested, exportMiddleNode, log );
-    }
-    else if( extension.equals( _2DM_EXTENSION ) )
-    {
-      converter = new Gml2SMSConv( discretisationModel, roughnessModel );
-    }
+    if( _2D_EXTENSION.equals( extension ) )
+      return new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, calcUnit, roughnessModel, restartNodes, exportRequested, exportMiddleNode, log );
 
-    else if( extension.equals( _HMO_EXTENSION ) )
-    {
-      converter = new GmlMesh2HmoConverter( discretisationModel );
-    }
+    if( _2DM_EXTENSION.equals( extension ) )
+      return new Gml2SMSConv( discretisationModel, roughnessModel );
 
-    return converter;
+    if( _HMO_EXTENSION.equals( extension ) )
+      return new GmlMesh2HmoConverter( discretisationModel );
+
+    return null;
   }
-  
+
   public static boolean supportMidSideNodes( final String extension )
   {
-    boolean support = false;
-    if( extension.equals( _2D_EXTENSION ) )
-    {
-      support = Gml2RMA10SConv.SUPPORT_MIDSIDE_NODES;
-    }
-    else if( extension.equals( _2DM_EXTENSION ) )
-    {
-      support = Gml2SMSConv.SUPPORT_MIDSIDE_NODES;
-    }
+    if( _2D_EXTENSION.equals( extension ) )
+      return Gml2RMA10SConv.SUPPORT_MIDSIDE_NODES;
 
-    else if( extension.equals( _HMO_EXTENSION ) )
-    {
-      support = GmlMesh2HmoConverter.SUPPORT_MIDSIDE_NODES;
-    }
-    
-    return support;
+    if( _2DM_EXTENSION.equals( extension ) )
+      return Gml2SMSConv.SUPPORT_MIDSIDE_NODES;
+
+    if( _HMO_EXTENSION.equals( extension ) )
+      return GmlMesh2HmoConverter.SUPPORT_MIDSIDE_NODES;
+
+    return false;
   }
-  
+
   public static boolean supportFlowResistanceClasses( final String extension )
   {
-    boolean support = false;
-    if( extension.equals( _2D_EXTENSION ) )
-    {
-      support = Gml2RMA10SConv.SUPPORT_FLOW_RESISTANCE_CLASSES;
-    }
-    else if( extension.equals( _2DM_EXTENSION ) )
-    {
-      support = Gml2SMSConv.SUPPORT_FLOW_RESISTANCE_CLASSES;
-    }
+    if( _2D_EXTENSION.equals( extension ) )
+      return Gml2RMA10SConv.SUPPORT_FLOW_RESISTANCE_CLASSES;
 
-    else if( extension.equals( _HMO_EXTENSION ) )
-    {
-      support = GmlMesh2HmoConverter.SUPPORT_FLOW_RESISTANCE_CLASSES;
-    }
-    
-    return support;
+    if( _2DM_EXTENSION.equals( extension ) )
+      return Gml2SMSConv.SUPPORT_FLOW_RESISTANCE_CLASSES;
+
+    if( _HMO_EXTENSION.equals( extension ) )
+      return GmlMesh2HmoConverter.SUPPORT_FLOW_RESISTANCE_CLASSES;
+
+    return false;
   }
 }

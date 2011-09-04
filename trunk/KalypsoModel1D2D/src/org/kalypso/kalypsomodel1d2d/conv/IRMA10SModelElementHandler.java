@@ -16,15 +16,15 @@ public interface IRMA10SModelElementHandler
   /**
    * Invoqued to signal the start the reading process
    */
-  public void start( );
+  void start( );
 
   /**
    * Invoke to signal the end of the reading process
    */
-  public void end( );
+  void end( );
 
   /**
-   * Invoqued by the reader to signal that an node has been read and parsed
+   * Invoked by the reader to signal that an node has been read and parsed
    * 
    * @param the
    *          complete line read
@@ -37,7 +37,7 @@ public interface IRMA10SModelElementHandler
    * @param the
    *          elevation of the node
    */
-  public void handleNode( String lineString, int id, double easting, double northing, double elevation );
+  void handleNode( String lineString, int id, double easting, double northing, double elevation );
 
   // edge LINEID, ID, node1, node2, ellinks, elrechts, mid-side node (or -1)
   /**
@@ -58,54 +58,48 @@ public interface IRMA10SModelElementHandler
    * @param middleNodeID
    *          ID of the mid-side node of the edge (created while calculation) or -1 if there is non yet
    */
-  public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID );
+  void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID );
 
   // LineID, ID
   /**
    * Invoqued by the reader to signal that an element has been read and parsed
    */
-  public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber );
+  void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber );
 
   // LineID, ID
   /**
    * Invoqued by the reader to signal that a result (VA) has been read and parsed
    */
-  public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel );
+  void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel );
 
   // LineID, ID
   /**
    * Invoqued by the reader to signal that a result (VO, GA, GO) has been read and parsed
    */
-  public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines );
-
-  /**
-   * Handle a line that the reader cannot interpret
-   * 
-   * @param lineString
-   *          the line that cannot be interpreted by the ready
-   */
-  public void handlerUnIdentifyable( String lineString );
+  void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines );
 
   /**
    * Handle error the Reader
    */
-  public void handleError( String lineString, EReadError errorHints );
+  void handleError( String lineString, EReadError errorHints );
 
-  public void handleTime( final String line, final Date time );
+  void handleTime( final String line, final Date time );
 
-  public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID );
+  void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID );
 
-  public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda );
+  void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda );
 
-  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 );
+  void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 );
 
-  public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList );
+  void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList );
 
-  public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges );
+  void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges );
 
-  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max );
+  void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max );
 
-  public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope );
+  void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope );
 
-  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName );
+  void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName );
+
+  void handleRoughness( String id, String label );
 }

@@ -2,10 +2,13 @@ package org.kalypso.kalypso1d2d.internal.bce2d.imports;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -57,7 +60,8 @@ public class Import2dPage extends WizardPage
     m_binding = new DatabindingWizardPage( this, null );
 
     createImportFileControls( composite );
-    creaSrsControls( composite );
+    createSrsControls( composite );
+    createImportRoughnessControls( composite );
 
     /* Initially clear message */
     setErrorMessage( null );
@@ -82,10 +86,10 @@ public class Import2dPage extends WizardPage
     fileBinding.createFileSearchButton( composite, fileControl );
   }
 
-  private void creaSrsControls( final Composite parent )
+  private void createSrsControls( final Composite parent )
   {
     m_crsPanel = new CRSSelectionPanel( parent, SWT.NONE );
-    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 ) );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
 
     m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.7" ) ); //$NON-NLS-1$
 
@@ -97,4 +101,15 @@ public class Import2dPage extends WizardPage
     m_binding.bindValue( crsTarget, crsModel );
   }
 
+  private void createImportRoughnessControls( final Composite parent )
+  {
+    final Button checkbox = new Button( parent, SWT.CHECK );
+    checkbox.setText( "Import Roughness Classes" );
+    checkbox.setToolTipText( "Adds roughness classes from the import file as new flow resistance classes into the model" );
+    checkbox.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
+
+    final ISWTObservableValue target = SWTObservables.observeSelection( checkbox );
+    final IObservableValue model = BeansObservables.observeValue( m_data, Import2dData.PROPERTY_IMPORT_ROUGHNESS );
+    m_binding.bindValue( target, model );
+  }
 }

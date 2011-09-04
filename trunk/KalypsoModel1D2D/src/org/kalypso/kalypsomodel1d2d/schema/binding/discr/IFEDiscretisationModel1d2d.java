@@ -147,7 +147,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
    *          the width of the search re
    * @param alreadyExists
    *          if not null and not empty a boolean is set at position 0 which indicates with true that a node already
-   *          exists and fals otherwise
+   *          exists and false otherwise
    * @return the created or found node
    * 
    */

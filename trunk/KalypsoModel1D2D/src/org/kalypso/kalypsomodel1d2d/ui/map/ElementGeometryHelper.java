@@ -122,9 +122,7 @@ public class ElementGeometryHelper
    * @param points
    *          the {@link GM_Point} list
    */
-  @SuppressWarnings("unchecked")
   public static Feature createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
-
   {
     final IGMLSchema schema = workspace.getGMLSchema();
 
@@ -306,7 +304,6 @@ public class ElementGeometryHelper
     return nodes;
   }
 
-  @SuppressWarnings("unchecked")
   public static IFE1D2DEdge[] buildNewEdges( final int numOfEdges, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentEdgeProperty, final IPropertyType nodeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<FeatureChange> changes, final IFE1D2DNode[] nodes )
   {
     /* Build new edges */

@@ -180,14 +180,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     // initialize Roughness IDs
     // TODO: Fishy!
-    if( roughnessModel == null )
-      m_roughnessIDProvider = null;
-    else
-    {
-      m_roughnessIDProvider = new IdMap( roughnessModel.getRoughnessClasses().size() );
-      for( final IRoughnessCls o : roughnessModel.getRoughnessClasses() )
-        m_roughnessIDProvider.getOrAdd( o.getId() );
-    }
+    m_roughnessIDProvider = createRoughnessIndex( roughnessModel );
 
     // collect information about 2d buildings to perform this mapping fast on demand
     for( final IFlowRelationship relationship : flowrelationModel.getFlowRelationsShips() )
@@ -202,7 +195,19 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         }
       }
     }
-    // m_intBuildingsIdCounter = 1;
+  }
+
+  private IdMap createRoughnessIndex( final IRoughnessClsCollection roughnessModel )
+  {
+    if( roughnessModel == null )
+      return null;
+
+    final IdMap roughnessIDProvider = new IdMap( roughnessModel.getRoughnessClasses().size() );
+    for( final IRoughnessCls o : roughnessModel.getRoughnessClasses() )
+    {
+      roughnessIDProvider.getOrAdd( o.getId() );
+    }
+    return roughnessIDProvider;
   }
 
   @Override
@@ -984,7 +989,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
             //
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           continue;
         }

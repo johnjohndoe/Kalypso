@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
@@ -66,7 +66,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHandler
 {
-
   private Formatter m_formatter = null;
 
   private int m_lastnodeID;
@@ -330,87 +329,44 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
     return valueMap;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, java.util.Date)
-   */
   @Override
   public void handleTime( final String line, final Date time )
   {
     m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
-   */
-  @Override
-  public void handlerUnIdentifyable( final String lineString )
-  {
-    m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
-   */
   @Override
   public void start( )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTimeDependentAdditionalResult(java.lang.String,
-   *      int, double, double, double, org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES)
-   */
   @Override
-  public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines )
+  public void handleTimeDependentAdditionalResult( final String lineString, final int id, final double vx, final double vy, final double depth, final RESULTLINES resultlines )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomialRangesInformation(java.lang.String,
-   *      java.lang.String, int, int, java.util.List)
-   */
   @Override
-  public void handle1dPolynomialRangesInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges )
+  public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dPolynomeMinMax(java.lang.String, int,
-   *      double, double)
-   */
   @Override
-  public void handle1dPolynomeMinMax( String line, int id, double min, double max )
+  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dSplittedPolynomialsInformation(java.lang.String,
-   *      java.lang.String, int, int, java.util.List, java.lang.Double)
-   */
   @Override
-  public void handle1dSplittedPolynomialsInformation( String line, String lStrPolyKind, int lIntNodeId, int lIntAmountRanges, List<Double> lListPolyAreaMaxRanges, Double lIntSlope )
+  public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
-   *      double, double)
-   */
   @Override
-  public void handleNode( String line, int id, double easting, double northing, double elevation, double stationName )
+  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
   {
-    // TODO Auto-generated method stub
-
   }
 
+  @Override
+  public void handleRoughness( final String id, final String label )
+  {
+  }
 }

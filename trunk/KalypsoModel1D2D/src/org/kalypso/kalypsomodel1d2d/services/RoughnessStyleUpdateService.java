@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -78,18 +79,12 @@ public class RoughnessStyleUpdateService extends Job
   private static final IPath ROUGHNESS_SLD_PATH = new Path( ".metadata/roughness.sld" ); //$NON-NLS-1$
 
   private static final String POLYGON_LAYER_NAME = "Flow Resistance Class";  //$NON-NLS-1$
-  private static final String LABEL_LAYER_NAME = "Labels";  //$NON-NLS-1$
-
 
   // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
 
   private static final String POLYGON_STYLE_NAME = "Roughness style"; //$NON-NLS-1$
 
   private static final String POLYGON_STYLE_TITLE = "Flow Resistance Class"; //$NON-NLS-1$
-
-  private static final String LABEL_STYLE_NAME = "Label style"; //$NON-NLS-1$
-
-  private static final String LABEL_STYLE_TITLE = "Labels"; //$NON-NLS-1$
 
   private final IFile m_roughnessDBFile;
 
@@ -102,12 +97,14 @@ public class RoughnessStyleUpdateService extends Job
     m_sldFile = m_roughnessDBFile.getProject().getFile( ROUGHNESS_SLD_PATH );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
+    if( PlatformUI.getWorkbench().isClosing() )
+      return Status.OK_STATUS;
+    if( PlatformUI.getWorkbench().isClosing() )
+      return Status.OK_STATUS;
+
     try
     {
       final URL roughnessUrl = ResourceUtilities.createURL( m_roughnessDBFile );
