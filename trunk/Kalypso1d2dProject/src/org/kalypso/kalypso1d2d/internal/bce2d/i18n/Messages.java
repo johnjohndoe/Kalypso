@@ -38,14 +38,36 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.bce2d;
+package org.kalypso.kalypso1d2d.internal.bce2d.i18n;
+
+import java.util.ResourceBundle;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
- * @author Gernot Belger
+ * @author Kim Werner
  */
-public interface I2DContants
+public class Messages
 {
-  String EXTENSION_2D = "*.2d"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.internal.bce2d.i18n.messages"; //$NON-NLS-1$
 
-  String STR_FILTERNAME_2D = "BCE-2D files";
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
+  {
+  }
+
+  /*
+   * java reflections needs this method-signatur
+   */
+  public static String getString( final String key )
+  {
+    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
+  }
 }

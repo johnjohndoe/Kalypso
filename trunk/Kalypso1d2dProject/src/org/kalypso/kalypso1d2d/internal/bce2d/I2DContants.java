@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,54 +36,16 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.wizards.i18n;
-
-import java.util.IllegalFormatException;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+package org.kalypso.kalypso1d2d.internal.bce2d;
 
 /**
- * @author kimwerner
- *
+ * @author Gernot Belger
  */
-public class Messages
+public interface I2DContants
 {
-  private static final String BUNDLE_NAME = "org.kalypso.wizards.i18n.messages"; //$NON-NLS-1$
+  String EXTENSION_2D = "*.2d"; //$NON-NLS-1$
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
-
-  private Messages( )
-  {
-  }
-
-  public static String getString( String key )
-  {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-  }public static String getFormatString( final String key, Object... args )
-  {
-    String formatStr = ""; //$NON-NLS-1$
-    try
-    {
-      formatStr = RESOURCE_BUNDLE.getString( key );
-      return String.format( formatStr, args );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-    catch( final IllegalFormatException e )
-    {
-      return '!' + formatStr + '!';
-    }
-
-  }
+  String STR_FILTERNAME_2D = "BCE-2D files";
 }

@@ -50,13 +50,13 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter;
 import org.kalypso.kalypsomodel1d2d.conv.MeshConverterFactory;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
