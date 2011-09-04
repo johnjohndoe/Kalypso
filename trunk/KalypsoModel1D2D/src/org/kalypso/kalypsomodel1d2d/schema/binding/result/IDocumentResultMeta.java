@@ -57,126 +57,29 @@ public interface IDocumentResultMeta extends IResultMeta
 {
   enum DOCUMENTTYPE
   {
-    nodes
+    nodes(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0" )), //$NON-NLS-1$
+    tinTerrain(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1" )), //$NON-NLS-1$
+    tinWsp(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2" )), //$NON-NLS-1$
+    tinVelo(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3" )), //$NON-NLS-1$
+    tinDepth(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4" )), //$NON-NLS-1$
+    tinShearStress(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5" )), //$NON-NLS-1$
+    hydrograph(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6" )), //$NON-NLS-1$
+    lengthSection(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7" )), //$NON-NLS-1$
+    tinDifference(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8" )), //$NON-NLS-1$
+    log(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9" )), //$NON-NLS-1$
+    coreDataZip(Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10" )); //$NON-NLS-1$
+
+    private final String m_label;
+
+    private DOCUMENTTYPE( final String label )
     {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0" ); //$NON-NLS-1$
-      }
-    },
-    tinTerrain
+      m_label = label;
+    }
+
+    @Override
+    public final String toString( )
     {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1" ); //$NON-NLS-1$
-      }
-    },
-    tinWsp
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2" ); //$NON-NLS-1$
-      }
-    },
-    tinVelo
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3" ); //$NON-NLS-1$
-      }
-    },
-    tinDepth
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4" ); //$NON-NLS-1$
-      }
-    },
-    tinShearStress
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5" ); //$NON-NLS-1$
-      }
-    },
-    hydrograph
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6" ); //$NON-NLS-1$
-      }
-    },
-    lengthSection
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7" ); //$NON-NLS-1$
-      }
-    },
-    tinDifference
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8" ); //$NON-NLS-1$
-      }
-    },
-    log
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9" ); //$NON-NLS-1$
-      }
-    },
-    coreDataZip
-    {
-      /**
-       * @see java.lang.Enum#toString()
-       */
-      @Override
-      public String toString( )
-      {
-        return Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10" ); //$NON-NLS-1$
-      }
+      return m_label;
     }
   }
 
@@ -243,16 +146,16 @@ public interface IDocumentResultMeta extends IResultMeta
   public BigDecimal getMaxValueWavePer( );
 
   /**
-   * returns the {@link BigDecimal} max value from this result document for given type of result, the type string should be
-   * one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper}
-   * on error returns null
+   * returns the {@link BigDecimal} max value from this result document for given type of result, the type string should
+   * be one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper} on
+   * error returns null
    */
   public BigDecimal getMaxValueForType( String type );
 
   /**
-   * returns the {@link BigDecimal} min value from this result document for given type of result, the type string should be
-   * one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper}
-   * on error returns null
+   * returns the {@link BigDecimal} min value from this result document for given type of result, the type string should
+   * be one of the node result types provided by {@link org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper} on
+   * error returns null
    */
   public BigDecimal getMinValueForType( String type );
 }

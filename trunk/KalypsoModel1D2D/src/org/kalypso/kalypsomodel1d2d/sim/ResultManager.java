@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.impl.StandardFileSystemManager;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,6 +68,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -77,7 +81,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
@@ -146,8 +153,13 @@ public class ResultManager implements ISimulation1D2DConstants
     m_parameters.add( ResultType.TYPE.VELOCITY );
     m_parameters.add( ResultType.TYPE.TERRAIN );
 
-    final IObservation<TupleResult> obs = controlModel.getTimeSteps();
-    m_timeSteps = obs.getResult();
+    if( controlModel == null )
+      m_timeSteps = null;
+    else
+    {
+      final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+      m_timeSteps = obs.getResult();
+    }
   }
 
   public IStatus processResults( final ICalcUnitResultMeta calcUnitMeta, final boolean doFullEvaluate, final IProgressMonitor monitor )
@@ -168,7 +180,7 @@ public class ResultManager implements ISimulation1D2DConstants
       {
         final SwanResultProcessor swanProcessor = new SwanResultProcessor( m_resultDirSWAN, m_controlModel, m_outputDir );
         // FIXME: what to do with that status?
-        final IStatus swanSatus = swanProcessor.execute();
+        /* final IStatus swanSatus = */swanProcessor.execute();
         // FIXME:why is the swan result dir changed here?
         m_resultDirSWAN = swanProcessor.getSwanResultDir();
       }
@@ -332,6 +344,7 @@ public class ResultManager implements ISimulation1D2DConstants
     return DateUtilities.toDate( stepCal );
   }
 
+  // FIXME: bad, use result-meta to access all files! This is just pfusch...!
   private FileObject[] find2dFiles( final FileObject remoteWorking ) throws IOException
   {
     final List<FileObject> resultList = new ArrayList<FileObject>();
@@ -409,48 +422,46 @@ public class ResultManager implements ISimulation1D2DConstants
     m_stepsToProcess = fileList.toArray( new FileObject[fileList.size()] );
   }
 
-  public FileObject[] getStepsToProcess( )
-  {
-    return m_stepsToProcess;
-  }
-
   private void fillStepMap( final IControlModel1D2D controlModel ) throws IOException
   {
     m_mapDateFile = new HashMap<Date, FileObject>();
-    Date fileDate = null;
     final FileObject[] existing2dFiles = find2dFiles( m_resultDirRMA );
 
     for( final FileObject file : existing2dFiles )
     {
-      final String baseName = file.getName().getBaseName();
-      if( baseName.equals( "steady.2d" ) ) { //$NON-NLS-1$
-        m_mapDateFile.put( STEADY_DATE, file );
-      }
-      if( baseName.equals( "maxi.2d" ) ) { //$NON-NLS-1$
-        m_mapDateFile.put( MAXI_DATE, file );
-      }
-      if( baseName.equals( "steady.2d" ) || baseName.equals( "maxi.2d" ) || baseName.equals( "mini.2d" ) || baseName.equals( "model.2d" ) ) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        continue;
-      }
-      if( baseName.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
-        fileDate = ResultMeta1d2dHelper.resolveDateFromResultStep( file );
-      else
-      {
-        final String resultFileName = baseName;
-        final int index = resultFileName.indexOf( "." ); //$NON-NLS-1$
-        final CharSequence sequence = resultFileName.subSequence( 1, index );
-        final String string = sequence.toString();
-        final int step = Integer.parseInt( string );
-
-        final IObservation<TupleResult> obs = controlModel.getTimeSteps();
-        final TupleResult timeSteps = obs.getResult();
-
-        final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-        final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
-        fileDate = DateUtilities.toDate( stepCal );
-      }
-      m_mapDateFile.put( fileDate, file );
+      final Date fileDate = getStepMapDate( file, controlModel );
+      if( fileDate != null )
+        m_mapDateFile.put( fileDate, file );
     }
+  }
+
+  private Date getStepMapDate( final FileObject file, final IControlModel1D2D controlModel )
+  {
+    final String baseName = file.getName().getBaseName();
+    if( baseName.equals( "steady.2d" ) ) //$NON-NLS-1$
+      return STEADY_DATE;
+
+    if( baseName.equals( "maxi.2d" ) ) //$NON-NLS-1$
+      return MAXI_DATE;
+
+    if( baseName.equals( "steady.2d" ) || baseName.equals( "maxi.2d" ) || baseName.equals( "mini.2d" ) || baseName.equals( "model.2d" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      return null;
+
+    if( baseName.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
+      return ResultMeta1d2dHelper.resolveDateFromResultStep( file );
+
+    final String resultFileName = baseName;
+    final int index = resultFileName.indexOf( "." ); //$NON-NLS-1$
+    final CharSequence sequence = resultFileName.subSequence( 1, index );
+    final String string = sequence.toString();
+    final int step = Integer.parseInt( string );
+
+    final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+    final TupleResult timeSteps = obs.getResult();
+
+    final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
+    return DateUtilities.toDate( stepCal );
   }
 
   public final Map<Date, FileObject> getDateFileMap( )

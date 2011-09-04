@@ -51,6 +51,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -997,4 +998,26 @@ public class ResultMeta1d2dHelper
     return null;
   }
 
+  public static IDocumentResultMeta[] findDocumentsByType( final IResultMeta parent, final DOCUMENTTYPE searchType )
+  {
+    final Collection<IDocumentResultMeta> documents = new ArrayList<IDocumentResultMeta>();
+
+    final IFeatureBindingCollection<IResultMeta> children = parent.getChildren();
+    for( final IResultMeta child : children )
+    {
+      if( child instanceof IDocumentResultMeta )
+      {
+        final IDocumentResultMeta document = (IDocumentResultMeta) child;
+        final DOCUMENTTYPE documentType = document.getDocumentType();
+        if( searchType == documentType )
+          documents.add( document );
+      }
+
+      /* Recurse */
+      final IDocumentResultMeta[] childDocs = findDocumentsByType( child, searchType );
+      documents.addAll( Arrays.asList( childDocs ) );
+    }
+
+    return documents.toArray( new IDocumentResultMeta[documents.size()] );
+  }
 }
