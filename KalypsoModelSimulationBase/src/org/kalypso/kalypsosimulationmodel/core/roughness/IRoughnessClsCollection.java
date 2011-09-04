@@ -22,14 +22,13 @@ public interface IRoughnessClsCollection extends IModel
 
 
   /**
-   * Select all rougthness in the collection with a name matching the the given regular expression
+   * Select all roughness in the collection with a name matching the the given regular expression
    * 
    * @param nameRegExp
    *          --
    * @return
    */
   public List<IRoughnessCls> selectRoughnessByName( String nameRegExp );
-  
-  public IFeatureBindingCollection<IRoughnessCls> getRoughnessClasses( );
 
+  public IFeatureBindingCollection<IRoughnessCls> getRoughnessClasses( );
 }

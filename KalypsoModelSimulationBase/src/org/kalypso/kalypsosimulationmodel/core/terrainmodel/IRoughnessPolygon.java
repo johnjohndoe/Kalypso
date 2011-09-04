@@ -49,7 +49,7 @@ public interface IRoughnessPolygon extends Feature
    */
   public IRoughnessCls getRoughnessCls( );
 
-  public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException;
+  public void setRoughnessClass( IRoughnessCls reference ) throws IllegalArgumentException;
 
   public FeatureChange[] resetRoughnessClassMemberXLink( );
 

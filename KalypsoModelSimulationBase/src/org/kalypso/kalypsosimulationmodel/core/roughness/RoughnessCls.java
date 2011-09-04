@@ -16,7 +16,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 public class RoughnessCls extends Feature_Impl implements IRoughnessCls
 {
 
-  public RoughnessCls( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RoughnessCls( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -217,15 +217,14 @@ public class RoughnessCls extends Feature_Impl implements IRoughnessCls
     if( check != RoughnessConfigConsistency.OK )
       return check;
 
-    final Feature feature = this;
-    feature.setProperty( Feature.QN_NAME, name );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, ks );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, dp );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, eddy_xx );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, eddy_yx );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, eddy_xy );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, eddy_yy );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, axay );
+    setProperty( Feature.QN_NAME, name );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, ks );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, dp );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, eddy_xx );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, eddy_yx );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, eddy_xy );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, eddy_yy );
+    setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, axay );
 
     return RoughnessConfigConsistency.OK;
   }
