@@ -90,6 +90,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -165,6 +166,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
   private final Map<IPolyElement, IFlowRelation2D> m_mapPolyElementsWithWeir = new HashMap<IPolyElement, IFlowRelation2D>();
 
+  private final Set<String> m_calculationUnitIndex;
+
   // TODO: check: calculation?
   public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
   {
@@ -178,6 +181,9 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     m_log = log;
     m_restartNodes = restartNodes;
 
+    // REAMRK/FIX: lookup with calcUnit.ctonains() is VERY slow. Indexing the elements first is MUCH faster.
+    m_calculationUnitIndex = buildExistingElementIndex();
+
     // initialize Roughness IDs
     // TODO: Fishy!
     m_roughnessIDProvider = createRoughnessIndex( roughnessModel );
@@ -189,7 +195,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
       {
         final IFlowRelation2D lBuilding2d = (IFlowRelation2D) relationship;
         final IPolyElement lPolyElementWithWeir = m_discretisationModel1d2d.find2DElement( lBuilding2d.getPosition(), 0.01 );
-        if( m_calculationUnit == null || m_calculationUnit.contains( lPolyElementWithWeir ) )
+        if( isCalcUnitElement( lPolyElementWithWeir ) )
         {
           m_mapPolyElementsWithWeir.put( lPolyElementWithWeir, lBuilding2d );
         }
@@ -403,11 +409,13 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         for( final Object edgeContainer : edgeContainers )
         {
           if( edgeContainer instanceof IElement1D )
-            if( m_calculationUnit.contains( (IElement1D) edgeContainer ) )
+          {
+            if( isCalcUnitElement( (IElement1D) edgeContainer ) )
             {
               element1D_ID = getConversionID( (IElement1D) edgeContainer );
               break;
             }
+          }
         }
       }
     }
@@ -560,8 +568,8 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
         }
         else
         {
-          leftParent = m_calculationUnit.contains( leftElement ) ? getConversionIDIntern( leftElement, edge ) : 0;
-          rightParent = m_calculationUnit.contains( rightElement ) ? getConversionIDIntern( rightElement, edge ) : 0;
+          leftParent = isCalcUnitElement( leftElement ) ? getConversionIDIntern( leftElement, edge ) : 0;
+          rightParent = isCalcUnitElement( rightElement ) ? getConversionIDIntern( rightElement, edge ) : 0;
         }
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID ); //$NON-NLS-1$
       }
@@ -907,17 +915,6 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     final List<IFE1D2DElement> lListAllElements = new ArrayList<IFE1D2DElement>();
     lListAllElements.addAll( elementsInBBox );
 
-    // better way, but creates some errors because of the order of elements in output
-    // TODO: check the reordering problem
-    // if( m_exportRequest ){
-    // lListAllElements = m_discretisationModel1d2d.getElements();
-    // }
-    // else{
-    // final List<IElement1D> elements1dInBBox = m_calculationUnit.getElements1D();
-    // final List<IPolyElement> elements2dInBBox = m_calculationUnit.getElements2D();
-    // lListAllElements.addAll( elements2dInBBox );
-    // lListAllElements.addAll( elements1dInBBox );
-    // }
     final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( lListAllElements.size() * 2 );
 
     int lIntWeirDirection = 0;
@@ -930,8 +927,9 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     for( final IFE1D2DElement element : lListAllElements )
     {
-      // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit?
-      if( !m_exportRequest && !m_calculationUnit.contains( element ) )
+      // TODO: shouldn't the check for calculation unit always happens? -> So export is per calculation unit? // FIXME:
+      // major performance problem here: this leads to a list search in all 2d-elements
+      if( !m_exportRequest && !isCalcUnitElement( element ) )
         continue;
 
       // // TODO: has nothing to do with export request; make special flag which kinds of elements should get exported
@@ -1114,6 +1112,33 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
 
     // write edges
     writeEdgeSet( formatter, edgeSet );
+  }
+
+  private Set<String> buildExistingElementIndex( )
+  {
+    final Set<String> index = new HashSet<String>();
+
+    if( m_calculationUnit == null )
+      return index;
+
+    final IFeatureBindingCollection<IFENetItem> elements = m_calculationUnit.getElements();
+    for( final IFENetItem item : elements )
+    {
+      index.add( item.getId() );
+    }
+
+    return index;
+  }
+
+  private boolean isCalcUnitElement( final Feature feature )
+  {
+    if( m_calculationUnit == null )
+      return true;
+
+    if( feature == null )
+      return false;
+
+    return m_calculationUnitIndex.contains( feature.getId() );
   }
 
   private List<IFE1D2DNode> getOrderedListOfNodes( final IFE1D2DElement element )
