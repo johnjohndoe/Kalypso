@@ -127,8 +127,8 @@ public class PreSWANKalypso implements ISimulation
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
-    OutputStream logOS = null;
-    OutputStream errorOS = null;
+    final OutputStream logOS = null;
+    final OutputStream errorOS = null;
     FileSystemManagerWrapper manager = null;
     try
     {
@@ -149,7 +149,7 @@ public class PreSWANKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( m_discretisationModel == null )
@@ -165,7 +165,7 @@ public class PreSWANKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( m_flowRelationshipModel == null )
@@ -181,7 +181,7 @@ public class PreSWANKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_scenarioMetaData = caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( m_scenarioMetaData == null )
@@ -196,7 +196,7 @@ public class PreSWANKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( m_windRelationshipModel == null )
@@ -239,36 +239,36 @@ public class PreSWANKalypso implements ISimulation
     {
       ProgressUtilities.worked( subProgress, 1 );
     }
-    catch( CoreException e1 )
+    catch( final CoreException e1 )
     {
       e1.printStackTrace();
     }
 
     /* Process all remaining .2d files. */
-    Map<Date, FileObject> lMapDatesFiles = pResultManager.getDateFileMap();
+    final Map<Date, FileObject> lMapDatesFiles = pResultManager.getDateFileMap();
 
     String lStrFileNameWLData = ISimulation1D2DConstants.SIM_SWAN_WATER_LEVEL_DATA_FILE;
     String lStrFileNameCurrentData = ISimulation1D2DConstants.SIM_SWAN_CURRENT_DATA_FILE;
 
     lStrFileNameWLData += ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
     lStrFileNameCurrentData += ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
-    FileObject lModelWLFile = pFileObjWorkingDir.resolveFile( lStrFileNameWLData );
-    FileObject lModelCurrentFile = pFileObjWorkingDir.resolveFile( lStrFileNameCurrentData );
-    Formatter lFormatterWLData = new Formatter( lModelWLFile.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
-    Formatter lFormatterCurrentData = new Formatter( lModelCurrentFile.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
+    final FileObject lModelWLFile = pFileObjWorkingDir.resolveFile( lStrFileNameWLData );
+    final FileObject lModelCurrentFile = pFileObjWorkingDir.resolveFile( lStrFileNameCurrentData );
+    final Formatter lFormatterWLData = new Formatter( lModelWLFile.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
+    final Formatter lFormatterCurrentData = new Formatter( lModelCurrentFile.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
 
-    for( int i = 0; i < m_calculatedSteps.length; i++ )
+    for( final Date m_calculatedStep : m_calculatedSteps )
     {
-      RMA10S2GmlConv lRMA2GmlConverter = new RMA10S2GmlConv();
-      SimpleNodeResultsHandler lRMAResultsSimpleHandler = new SimpleNodeResultsHandler( m_mapGMPositions );
+      final RMA10S2GmlConv lRMA2GmlConverter = new RMA10S2GmlConv();
+      final SimpleNodeResultsHandler lRMAResultsSimpleHandler = new SimpleNodeResultsHandler( m_mapGMPositions );
       lRMA2GmlConverter.setRMA10SModelElementHandler( lRMAResultsSimpleHandler );
-      final FileObject lResultRMAFile = lMapDatesFiles.get( m_calculatedSteps[i] );
+      final FileObject lResultRMAFile = lMapDatesFiles.get( m_calculatedStep );
 
       lRMA2GmlConverter.parse( lResultRMAFile.getContent().getInputStream() );
-      lRMAResultsSimpleHandler.updateLastRecordForDate( m_calculatedSteps[i] );
+      lRMAResultsSimpleHandler.updateLastRecordForDate( m_calculatedStep );
 
-      final SWANAdditionalDataConverter lRma2SwanConverter = new SWANAdditionalDataConverter( pResultManager, lRMAResultsSimpleHandler, pFileObjWorkingDir, new Date[] { m_calculatedSteps[i] } );
-      Map<String, List<String>> lMapWrittenFiles = lRma2SwanConverter.writeDataFiles();
+      final SWANAdditionalDataConverter lRma2SwanConverter = new SWANAdditionalDataConverter( pResultManager, lRMAResultsSimpleHandler, pFileObjWorkingDir, new Date[] { m_calculatedStep } );
+      final Map<String, List<String>> lMapWrittenFiles = lRma2SwanConverter.writeDataFiles();
       for( final String lStrWLFileName : lMapWrittenFiles.get( SWANAdditionalDataConverter.WATER_LEVEL_SERIES_NAMES_KEY ) )
       {
         lFormatterWLData.format( "%s\n", lStrWLFileName );//$NON-NLS-1$
@@ -282,7 +282,7 @@ public class PreSWANKalypso implements ISimulation
       {
         ProgressUtilities.worked( subProgress, 100 / m_calculatedSteps.length );
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         m_log.log( StatusUtilities.statusFromThrowable( e ) );
         // e.printStackTrace();
@@ -292,7 +292,7 @@ public class PreSWANKalypso implements ISimulation
     lFormatterCurrentData.close();
   }
 
-  private void writeContolFile( FileObject pFileObjWorkingDir, ResultManager pResultManager, SWANWindDataWriter pWindWriter ) throws FileSystemException, IOException
+  private void writeContolFile( final FileObject pFileObjWorkingDir, final ResultManager pResultManager, final SWANWindDataWriter pWindWriter ) throws FileSystemException, IOException
   {
     final FileObject lSWANControlFile = pFileObjWorkingDir.resolveFile( ISimulation1D2DConstants.SIM_SWAN_CONTROL_FILE );
     final Control1D2DConverterSWAN controlConverter = new Control1D2DConverterSWAN( pFileObjWorkingDir, m_discretisationModel, m_controlModel, m_flowRelationshipModel, m_log, pResultManager, m_mapContiLineWithSWANBoundaryToCondition, pWindWriter.getListWritenDates(), pWindWriter.getWrittenGrid(), m_doubleShiftX, m_doubleShiftY );
@@ -317,12 +317,12 @@ public class PreSWANKalypso implements ISimulation
       {
         lUrlFileAdditionalCoord = new URL( m_controlModel.getInputFileAdditionalCoordSWAN() );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         // cannot interpret given URL or file
       }
     }
-    FileObject lAdditionalCoordFile = null;
+    final FileObject lAdditionalCoordFile = null;
     List<GM_Position> lListAdditionalCoord = null;
     if( lUrlFileAdditionalCoord != null && !"".equals( lUrlFileAdditionalCoord ) ) //$NON-NLS-1$
     {
@@ -332,7 +332,7 @@ public class PreSWANKalypso implements ISimulation
         {
           lListAdditionalCoord = readAdditionalCoordinates( ZipUtilities.getInputStreamForSingleFile( lUrlFileAdditionalCoord, lUrlFileAdditionalCoord.getQuery() ) );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
         }
       }
@@ -350,12 +350,12 @@ public class PreSWANKalypso implements ISimulation
           }
           converter2D.setListAdditionalOuputCoord( lListAdditionalCoord );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // cannot interpret given URL or file
           // e.printStackTrace();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
         }
       }
@@ -373,25 +373,25 @@ public class PreSWANKalypso implements ISimulation
 
   private List<GM_Position> readAdditionalCoordinates( final InputStream lAdditionalCoordInputStream )
   {
-    List<GM_Position> lListPositions = new ArrayList<GM_Position>();
+    final List<GM_Position> lListPositions = new ArrayList<GM_Position>();
     try
     {
-      Scanner scannerFile = new Scanner( lAdditionalCoordInputStream );
+      final Scanner scannerFile = new Scanner( lAdditionalCoordInputStream );
       while( scannerFile.hasNextLine() )
       {
-        String lStrNextLine = scannerFile.nextLine();
-        Scanner scannerLine = new Scanner( lStrNextLine );
+        final String lStrNextLine = scannerFile.nextLine();
+        final Scanner scannerLine = new Scanner( lStrNextLine );
         scannerLine.useDelimiter( " " ); //$NON-NLS-1$
-        String lStrX = scannerLine.next();
-        String lStrY = scannerLine.next();
-        double doubleX = NumberUtils.parseQuietDouble( lStrX );
-        double doubleY = NumberUtils.parseQuietDouble( lStrY );
+        final String lStrX = scannerLine.next();
+        final String lStrY = scannerLine.next();
+        final double doubleX = NumberUtils.parseQuietDouble( lStrX );
+        final double doubleY = NumberUtils.parseQuietDouble( lStrY );
         scannerLine.close();
-        GM_Position lPosition = GeometryFactory.createGM_Position( doubleX, doubleY );
+        final GM_Position lPosition = GeometryFactory.createGM_Position( doubleX, doubleY );
         lListPositions.add( lPosition );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return null;
@@ -409,8 +409,6 @@ public class PreSWANKalypso implements ISimulation
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.3" ) ); //$NON-NLS-1$
 
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.4" ) ); //$NON-NLS-1$
-      //progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.5" ) ); //$NON-NLS-1$
-      // ProgressUtilities.worked( progress, 20 );
 
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.6" ) ); //$NON-NLS-1$
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.7" ) ); //$NON-NLS-1$
@@ -439,7 +437,7 @@ public class PreSWANKalypso implements ISimulation
       writeAdditionaData( pFileObjWorkingDir, resultManager, progress );
 
       ProgressUtilities.worked( progress, 60 );
-      SWANWindDataWriter lWindWriter = writeWindData( pFileObjWorkingDir );
+      final SWANWindDataWriter lWindWriter = writeWindData( pFileObjWorkingDir );
 
       ProgressUtilities.worked( progress, 10 );
 
@@ -463,10 +461,10 @@ public class PreSWANKalypso implements ISimulation
     }
   }
 
-  private SWANWindDataWriter writeWindData( FileObject pFileObjWorkingDir ) throws IOException
+  private SWANWindDataWriter writeWindData( final FileObject pFileObjWorkingDir ) throws IOException
   {
-    GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( m_controlModel.getCalculationUnit() );
-    SWANWindDataWriter lWindWriter = new SWANWindDataWriter( pFileObjWorkingDir, lGmEnvelope, m_calculatedSteps, m_windRelationshipModel.getWindDataModelSystems() );
+    final GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( m_controlModel.getCalculationUnit() );
+    final SWANWindDataWriter lWindWriter = new SWANWindDataWriter( pFileObjWorkingDir, lGmEnvelope, m_calculatedSteps, m_windRelationshipModel.getWindDataModelSystems() );
     lWindWriter.setWindDataModel( m_windRelationshipModel );
     lWindWriter.write( m_controlModel.isConstantWindSWAN() );
     return lWindWriter;

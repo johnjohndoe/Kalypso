@@ -59,7 +59,7 @@ import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
-import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
+import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -104,8 +104,8 @@ public class NodeResultsHandler2DTest
       final List<TYPE> parameters = new ArrayList<TYPE>();
       parameters.add( TYPE.DEPTH );
       parameters.add( TYPE.WATERLEVEL );
-      final ProcessResultsJob job = new ProcessResultsJob( resultFileObject, outputDir, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-      final IStatus result = job.run( new NullProgressMonitor() );
+      final ProcessResult2DOperation job = new ProcessResult2DOperation( resultFileObject, outputDir, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+      final IStatus result = job.execute( new NullProgressMonitor() );
       log.log( result );
 
       if( result.isOK() )

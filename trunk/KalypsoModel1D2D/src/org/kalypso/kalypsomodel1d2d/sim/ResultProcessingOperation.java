@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -76,11 +76,37 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
   private File m_outputDir;
 
-  private ICalcUnitResultMeta m_calcUnitMeta;
+  private final ICalcUnitResultMeta m_calcUnitMeta;
 
   private String[] m_originalStepsToDelete;
 
-  private ProcessResultsBean m_bean;
+  private final ProcessResultsBean m_bean;
+
+  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean )
+  {
+    this( resultManager, bean, null );
+  }
+
+  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean, final ICalcUnitResultMeta calcunitMeta )
+  {
+    m_resultManager = resultManager;
+    m_geoLog = m_resultManager.getGeoLog();
+    m_bean = bean;
+
+    m_calcUnitMeta = findCalcUnitMeta( calcunitMeta );
+  }
+
+  private ICalcUnitResultMeta findCalcUnitMeta( final ICalcUnitResultMeta calcUnitMeta )
+  {
+    if( calcUnitMeta != null )
+      return calcUnitMeta;
+
+    final IControlModel1D2D controlModel = m_resultManager.getControlModel();
+    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
+
+    final IScenarioResultMeta scenarioMeta = m_resultManager.getScenarioMeta();
+    return scenarioMeta.findCalcUnitMetaResult( calculationUnit.getId() );
+  }
 
   public String[] getOriginalStepsToDelete( )
   {
@@ -92,16 +118,6 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     return m_outputDir;
   }
 
-  public ResultProcessingOperation( final ResultManager resultManager, ProcessResultsBean bean )
-  {
-    m_resultManager = resultManager;
-    m_geoLog = m_resultManager.getGeoLog();
-    m_bean = bean;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
@@ -127,15 +143,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
   {
     try
     {
-      final IControlModel1D2D controlModel = m_resultManager.getControlModel();
-      final IScenarioResultMeta scenarioMeta = m_resultManager.getScenarioMeta();
-      final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
-
       final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-
-      m_calcUnitMeta = m_resultManager.getCalcUnitMeta();
-      if( m_calcUnitMeta == null )
-        m_calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getId() );
 
       m_originalStepsToDelete = findStepsToDelete( m_calcUnitMeta, m_bean );
 
@@ -170,14 +178,15 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     final SortedSet<Date> allCalculatedDates = new TreeSet<Date>();
 
     /* Always delete all calculated steps */
-//    allCalculatedDates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
-    for( final Date dateTest: processBean.userCalculatedSteps ){
-      if( dateTest != null ){
+    for( final Date dateTest : processBean.userCalculatedSteps )
+    {
+      if( dateTest != null )
+      {
         allCalculatedDates.add( dateTest );
       }
     }
 
-    List<String> ids = new ArrayList<String>();
+    final List<String> ids = new ArrayList<String>();
 
     if( processBean.deleteFollowers && !allCalculatedDates.isEmpty() )
     {
@@ -189,7 +198,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
         final Date firstCalculated = allCalculatedDates.first();
         for( final String id : existingSteps.keySet() )
         {
-          Date date = existingSteps.get( id );
+          final Date date = existingSteps.get( id );
           if( date == null )
           {
             ids.add( id );
@@ -199,29 +208,21 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
             ids.add( id );
           }
         }
-      } else {
+      }
+      else
+      {
         ids.addAll( existingSteps.keySet() );
       }
-
-      // // then add them again.
-      // if( maxi == true )
-      // allDates.add( MAXI_DATE );
-      // if( steady == true )
-      // allDates.add( STEADY_DATE );
     }
-    else if( !allCalculatedDates.isEmpty() ){
-//      final Date firstCalculated = allCalculatedDates.first();
+    else if( !allCalculatedDates.isEmpty() )
+    {
       for( final String id : existingSteps.keySet() )
       {
-        Date date = existingSteps.get( id );
-        if( date == null || date.getTime() == 0)
+        final Date date = existingSteps.get( id );
+        if( date == null || date.getTime() == 0 )
         {
           ids.add( id );
         }
-//        else if( date.equals( firstCalculated ) )
-//        {
-//          ids.add( id );
-//        }
         else if( allCalculatedDates.contains( date ) )
         {
           ids.add( id );

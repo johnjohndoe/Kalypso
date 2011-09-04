@@ -60,7 +60,7 @@ import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
-import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
+import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -203,12 +203,12 @@ public class VeloDiff2D
   private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-    job1.run( new NullProgressMonitor() );
+    final ProcessResult2DOperation job1 = new ProcessResult2DOperation( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+    job1.execute( new NullProgressMonitor() );
 
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ProcessResultsJob job2 = new ProcessResultsJob( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-    job2.run( new NullProgressMonitor() );
+    final ProcessResult2DOperation job2 = new ProcessResult2DOperation( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+    job2.execute( new NullProgressMonitor() );
   }
 
   private static GM_TriangulatedSurface getSurfaces( final File outputDir, final TYPE resultType ) throws Exception
@@ -221,7 +221,7 @@ public class VeloDiff2D
     else
       gmlFile = new File( tinFolder, "tin_VELOCITY_Y.gml" ); //$NON-NLS-1$
 
-    final URL url = gmlFile.toURL();
+    final URL url = gmlFile.toURI().toURL();
 
     // REMARK 1: loads the source tin directly into memory.... will bring performance problems...
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );

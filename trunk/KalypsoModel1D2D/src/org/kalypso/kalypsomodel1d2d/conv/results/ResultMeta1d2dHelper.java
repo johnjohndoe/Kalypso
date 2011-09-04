@@ -48,6 +48,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -218,10 +219,10 @@ public class ResultMeta1d2dHelper
         {
           resource.delete( true, new NullProgressMonitor() );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
-          IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
-          WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } ); //$NON-NLS-1$
+          final IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
+          final WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } ); //$NON-NLS-1$
           final Collection< ? > files = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lNoDirFilter );
           for( final Object lFile : files )
           {
@@ -229,19 +230,19 @@ public class ResultMeta1d2dHelper
               FileUtils.deleteQuietly( (File) lFile );
           }
 
-          IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
+          final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
           final Collection< ? > dirs = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lDirFilter );
           for( final Object lDir : dirs )
           {
             if( lDir instanceof File )
               try
-              {
+            {
                 FileUtils.deleteDirectory( (File) lDir );
-              }
-              catch( IOException e1 )
-              {
-                e1.printStackTrace();
-              }
+            }
+            catch( final IOException e1 )
+            {
+              e1.printStackTrace();
+            }
           }
         }
       }
@@ -265,7 +266,7 @@ public class ResultMeta1d2dHelper
                 children[i].delete();
               }
             }
-            catch( MalformedURLException e )
+            catch( final MalformedURLException e )
             {
               e.printStackTrace();
             }
@@ -663,7 +664,7 @@ public class ResultMeta1d2dHelper
         + stepResult.getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
   }
 
-  public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  public static String getIsolineResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
   {
     return docResult.getName()
         + STR_THEME_NAME_SEPARATOR
@@ -681,34 +682,33 @@ public class ResultMeta1d2dHelper
   //    return docResult.getName() + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10" ) + calcUnitMeta.getName(); //$NON-NLS-1$
   // }
 
-  public static String getIsoareaResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  public static String getIsoareaResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
   {
     return docResult.getName()
         + STR_THEME_NAME_SEPARATOR
         + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$
   }
 
-  /**
-   *
-   */
   public static Date resolveDateFromResultStep( final FileObject pFileResult )
   {
-    Date lDateRes = null;
     try
     {
-      lDateRes = interpreteDateFromURL( pFileResult.getParent().getURL() );
+      return interpreteDateFromURL( pFileResult.getParent().getURL() );
     }
-    catch( FileSystemException e0 )
+    catch( final FileSystemException e0 )
     {
+      // FIXME: will never happen due to gerneric exception caught in the first call
       try
       {
-        lDateRes = interpreteRMA10TimeLine( findFirstSpecifiedLine2dFile( pFileResult, "DA" ) ); //$NON-NLS-1$
+        // DEAD CODE:
+        return interpreteRMA10TimeLine( findFirstSpecifiedLine2dFile( pFileResult, "DA" ) ); //$NON-NLS-1$
       }
-      catch( IOException e1 )
+      catch( final Exception e1 )
       {
       }
     }
-    return lDateRes;
+
+    return null;
   }
 
   /**
@@ -720,26 +720,23 @@ public class ResultMeta1d2dHelper
   {
     try
     {
-      String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
-      String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
-      SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
-      SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
-      int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
-      // Date lDateRes = lSimpleDateFormat.parse( url.toExternalForm().substring( indexOfStepDate, indexOfStepDate +
-      // lStrTimeFormat.length() ) );
-      Date lDateRes = null;
-      String dateString = url.toExternalForm().substring( indexOfStepDate );
+      final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
+      final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
+      final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
+      final SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
+      final int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
+
+      final String dateString = url.toExternalForm().substring( indexOfStepDate );
       try
       {
-        lDateRes = lSimpleDateFormatFull.parse( dateString );
+        return lSimpleDateFormatFull.parse( dateString );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
-        lDateRes = lSimpleDateFormat.parse( dateString );
+        return lSimpleDateFormat.parse( dateString );
       }
-      return lDateRes;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -755,48 +752,53 @@ public class ResultMeta1d2dHelper
    */
   public static Date interpreteRMA10TimeLine( final String line )
   {
-    if( line.length() >= 32 )
+    if( line.length() < 32 )
+      return null;
+
+    try
     {
-      try
-      {
-        final String yearString = line.substring( 6, 13 ).trim();
-        final String hourString = line.substring( 18, 32 ).trim();
+      final String yearString = line.substring( 6, 13 ).trim();
+      final String hourString = line.substring( 18, 32 ).trim();
 
-        final int year = Integer.parseInt( yearString );
-        final BigDecimal hours = new BigDecimal( hourString );
+      final int year = Integer.parseInt( yearString );
 
-        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
-        final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
-        calendar.clear();
-        calendar.set( year, 0, 1 );
-
-        BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
-        BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
-        if( wholeHours.intValue() > 1 )
-        {
-          wholeHours = new BigDecimal( wholeHours.intValue() - 1 );
-        }
-        calendar.add( Calendar.HOUR, wholeHours.intValue() );
-        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
-        boolean lBoolLeapYear = DateUtilities.isLeapYear( calendar );
-        if( lBoolLeapYear && calendar.get( Calendar.DAY_OF_YEAR ) > 59 )
-        {
-          calendar.clear();
-          calendar.set( year, 0, 1 );
-          calendar.add( Calendar.HOUR, wholeHours.intValue() - 24 );
-          calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
-        }
-        return calendar.getTime();
-      }
-      catch( final NumberFormatException e )
-      {
-        return null;
-      }
+      final Calendar calendar = parseTimelineHour( hourString, year );
+      return calendar.getTime();
     }
-    else
+    catch( final NumberFormatException e )
     {
       return null;
     }
+  }
+
+  public static Calendar parseTimelineHour( final String hourString, final int year )
+  {
+    final BigDecimal hours = new BigDecimal( hourString );
+
+    // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
+    final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    calendar.clear();
+    calendar.set( year, 0, 1 );
+
+    BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
+    final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
+    if( wholeHours.intValue() > 1 )
+    {
+      wholeHours = new BigDecimal( wholeHours.intValue() - 1 );
+    }
+    calendar.add( Calendar.HOUR, wholeHours.intValue() );
+    calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+
+    final boolean lBoolLeapYear = DateUtilities.isLeapYear( calendar );
+    if( lBoolLeapYear && calendar.get( Calendar.DAY_OF_YEAR ) > 59 )
+    {
+      calendar.clear();
+      calendar.set( year, 0, 1 );
+      calendar.add( Calendar.HOUR, wholeHours.intValue() - 24 );
+      calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+    }
+
+    return calendar;
   }
 
   /**
@@ -806,18 +808,18 @@ public class ResultMeta1d2dHelper
    * 
    * @return {@link String} the first matching line
    */
-  public static String findFirstSpecifiedLine2dFile( final FileObject file, final String linePrefix ) throws IOException
+  public static String findFirstSpecifiedLine2dFile( final FileObject file, final String linePrefix ) throws IOException, URISyntaxException
   {
     if( linePrefix == null || linePrefix.equals( "" ) || file == null ) {//$NON-NLS-1$
       return "";//$NON-NLS-1$
     }
 
     String lStrRes = "";//$NON-NLS-1$
-    String lStrParam = linePrefix.trim().toUpperCase();
-    InputStream lInStream = VFSUtilities.getInputStreamFromFileObject( file );
+    final String lStrParam = linePrefix.trim().toUpperCase();
+    final InputStream lInStream = VFSUtilities.getInputStreamFromFileObject( file );
 
-    Reader lReader = new InputStreamReader( lInStream );
-    BufferedReader lBufferedReader = new BufferedReader( lReader );
+    final Reader lReader = new InputStreamReader( lInStream );
+    final BufferedReader lBufferedReader = new BufferedReader( lReader );
     try
     {
       while( true )
@@ -889,7 +891,7 @@ public class ResultMeta1d2dHelper
       if( child instanceof IStepResultMeta )
       {
         final IStepResultMeta stepMeta = (IStepResultMeta) child;
-        IPath lRes = getSavedSWANRawResultData( stepMeta );
+        final IPath lRes = getSavedSWANRawResultData( stepMeta );
         if( lRes != null )
         {
           return lRes;
@@ -906,7 +908,7 @@ public class ResultMeta1d2dHelper
   {
     int iCount = 0;
     String lNewName = ""; //$NON-NLS-1$
-    StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() );
+    final StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() );
     while( lStrTokenizer.hasMoreTokens() )
     {
       if( iCount++ != 1 )
@@ -932,10 +934,10 @@ public class ResultMeta1d2dHelper
   public static String resolveResultTypeFromSldFileName( final String sldFileName, final String strType )
   {
     if( sldFileName == null || "".equals( sldFileName ) || strType == null || "".equals( strType ) ) { //$NON-NLS-1$ //$NON-NLS-2$
-      return ""; //$NON-NLS-1$ 
+      return ""; //$NON-NLS-1$
     }
-    int beginIndex = sldFileName.toLowerCase().indexOf( strType.toLowerCase() ) + strType.length();
-    int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$ 
+    final int beginIndex = sldFileName.toLowerCase().indexOf( strType.toLowerCase() ) + strType.length();
+    final int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$
     return sldFileName.substring( beginIndex, endIndex );
   }
 

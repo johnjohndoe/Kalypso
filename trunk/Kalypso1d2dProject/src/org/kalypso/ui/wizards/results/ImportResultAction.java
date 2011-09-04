@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.widgets.FileDialogUtils;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.kalypso1d2d.bce2d.I2DContants;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -69,15 +70,17 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class ImportResultAction extends Action
 {
-  private static final String EXTENSION_2D = "*.2d"; //$NON-NLS-1$
-
   private static final String SETTINGS_IMPORT_DIR = "externalRsultImportDir"; //$NON-NLS-1$
 
   private final SelectResultWizardPage m_page;
 
+  private final ICaseDataProvider<IModel> m_modelProvider;
+
   public ImportResultAction( final SelectResultWizardPage page, final ICommandTarget commandTarget, final IKalypsoLayerModell modell, final ICaseDataProvider<IModel> modelProvider )
   {
     m_page = page;
+
+    m_modelProvider = modelProvider;
 
     setToolTipText( "Import external result file(s)" );
 
@@ -108,11 +111,11 @@ public class ImportResultAction extends Action
   {
     final File lastDir = findLastDir( settings );
 
-    final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
+    final FileDialog dialog = new FileDialog( shell, SWT.OPEN | SWT.MULTI );
     if( lastDir != null )
       dialog.setFilterPath( lastDir.getAbsolutePath() );
 
-    FileDialogUtils.addFilter( dialog, "BCE-2D files", EXTENSION_2D );
+    FileDialogUtils.addFilter( dialog, I2DContants.STR_FILTERNAME_2D, I2DContants.EXTENSION_2D );
 
     final File[] files = FileDialogUtils.open( dialog );
     if( files == null )
@@ -136,8 +139,8 @@ public class ImportResultAction extends Action
 
   private ICoreRunnableWithProgress createImportOperation( final String selectedExtension, final File[] files )
   {
-    if( EXTENSION_2D.equals( selectedExtension ) )
-      return new Import2DResultsOperation( files );
+    if( I2DContants.EXTENSION_2D.equals( selectedExtension ) )
+      return new Import2DResultsOperation( files, m_modelProvider );
 
     throw new IllegalStateException();
   }

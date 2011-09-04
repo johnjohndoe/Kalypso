@@ -88,8 +88,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class ReevaluateResultOperation implements ICoreRunnableWithProgress
 {
-  // protected IStatus resultStatus;
-
   private final IResultMeta[] m_selectedResults;
 
   private final IContainer m_scenarioFolder;
@@ -150,10 +148,12 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
           lLog.log( status );
         }
 
+        final ICalcUnitResultMeta calcunitMeta = ResultMeta1d2dHelper.getCalcUnitResultMeta( stepResult );
+
         ResultManager resultManager = null;
         try
         {
-          resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog, ResultMeta1d2dHelper.getCalcUnitResultMeta( stepResult ) );
+          resultManager = new ResultManager( actResult, fileObjSWANResult, m_modelProvider, m_geoLog );
         }
         catch( final CoreException e )
         {
@@ -170,7 +170,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
           return StatusUtilities.statusFromThrowable( e1 );
         }
 
-        final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean );
+        final ResultProcessingOperation processingOperation = new ResultProcessingOperation( resultManager, bean, calcunitMeta );
 
         IStatus resultStatus = processingOperation.execute( monitor );
         // if anything happened during the processing, restore the original results db from disk
