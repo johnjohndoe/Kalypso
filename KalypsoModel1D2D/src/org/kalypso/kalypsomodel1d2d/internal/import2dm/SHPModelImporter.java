@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,15 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.conv;
+package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
 import java.io.File;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.EmptyGMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.feature.CustomFeatureType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -57,6 +59,7 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.SurfacePolygonZShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -65,9 +68,8 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
 /**
  * @author Thomas Jung
  */
-public class SHPModelImporter implements IDiscModelImporter
+class SHPModelImporter implements ISmsConversionTarget
 {
-
   private final File m_file;
 
   private final GMLWorkspace m_workspace;
@@ -86,38 +88,25 @@ public class SHPModelImporter implements IDiscModelImporter
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-//    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE ); //$NON-NLS-1$
-//    final IMarshallingTypeHandler intTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_INTEGER ); //$NON-NLS-1$
-//    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-//    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-//    final IValuePropertyType intType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), intTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-//    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
     final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType };
-    m_shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
+    m_shapeFT = new CustomFeatureType( new EmptyGMLSchema(), shapeTypeQName, properties, Feature.QNAME_FEATURE );
 
     m_shapeRootFeature = ShapeSerializer.createWorkspaceRootFeature( m_shapeFT, ShapeConst.SHAPE_TYPE_POLYGONZ );
     m_workspace = m_shapeRootFeature.getWorkspace();
     m_shapeParentRelation = (IRelationType) m_shapeRootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IDiscModelImporter#addElement(org.kalypsodeegree.model.geometry.GM_SurfacePatch)
-   */
-  @SuppressWarnings("unchecked")
   @Override
-  public void addElement( final GM_Surface surface )
+  public void addElement( final GM_Surface<GM_SurfacePatch> surface )
   {
     try
     {
-// final double aDouble = i * Math.PI;
-//    final String aString = "Item Number: " + i; //$NON-NLS-1$
-// final GM_Point aPoint = GeometryFactory.createGM_Point( i * 4.3, i * 2.1, crs );
       m_count++;
       final Object[] data = new Object[] { surface };
       final Feature feature = FeatureFactory.createFeature( m_shapeRootFeature, m_shapeParentRelation, "Feature_" + m_count, m_shapeFT, data ); //$NON-NLS-1$
@@ -130,9 +119,6 @@ public class SHPModelImporter implements IDiscModelImporter
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IDiscModelImporter#finish()
-   */
   @Override
   public void finish( )
   {
@@ -146,7 +132,5 @@ public class SHPModelImporter implements IDiscModelImporter
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
   }
-
 }

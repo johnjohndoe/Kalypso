@@ -14,7 +14,7 @@ import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 public interface IRMA10SModelElementHandler
 {
   /**
-   * Invoqued to signal the start the reading process
+   * Invoked to signal the start the reading process
    */
   void start( );
 
@@ -48,13 +48,13 @@ public interface IRMA10SModelElementHandler
    * @param id
    *          ID of the edge
    * @param node1ID
-   *          ID of the upsided node of the edge
+   *          ID of the upside node of the edge
    * @param node2ID
-   *          ID of the downsided node of the edge
+   *          ID of the downside node of the edge
    * @param elementLeftID
    *          ID of the left-sided element of the edge
    * @param elementRigthID
-   *          ID of the rigth-sided element of the edge
+   *          ID of the right-sided element of the edge
    * @param middleNodeID
    *          ID of the mid-side node of the edge (created while calculation) or -1 if there is non yet
    */
@@ -62,19 +62,19 @@ public interface IRMA10SModelElementHandler
 
   // LineID, ID
   /**
-   * Invoqued by the reader to signal that an element has been read and parsed
+   * Invoked by the reader to signal that an element has been read and parsed
    */
   void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber );
 
   // LineID, ID
   /**
-   * Invoqued by the reader to signal that a result (VA) has been read and parsed
+   * Invoked by the reader to signal that a result (VA) has been read and parsed
    */
   void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel );
 
   // LineID, ID
   /**
-   * Invoqued by the reader to signal that a result (VO, GA, GO) has been read and parsed
+   * Invoked by the reader to signal that a result (VO, GA, GO) has been read and parsed
    */
   void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines );
 

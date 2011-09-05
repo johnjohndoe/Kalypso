@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,31 +36,32 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.conv;
+package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Thomas Jung
+ * @author Gernot Belger
  */
-public class DiscModelImporter implements IDiscModelImporter
+class DiscModelImporter implements ISmsConversionTarget
 {
-  private CommandableWorkspace m_workspace;
-
   private final File m_file;
+
+  private DiscretisationModelInserter m_inserter;
 
   public DiscModelImporter( final File outputFile )
   {
@@ -68,8 +69,11 @@ public class DiscModelImporter implements IDiscModelImporter
     try
     {
       // TODO: get workspace from outside
-      m_workspace = new CommandableWorkspace( FeatureFactory.createGMLWorkspace( IFEDiscretisationModel1d2d.QNAME, null, null ) );
-      // TODO: dispose the commandableworkspace
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IFEDiscretisationModel1d2d.QNAME, null, null );
+      final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( workspace );
+
+      final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) workspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+      m_inserter = new DiscretisationModelInserter( cmdWorkspace, model );
     }
     catch( final GMLSchemaException e )
     {
@@ -77,34 +81,21 @@ public class DiscModelImporter implements IDiscModelImporter
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IDiscModelImporter#addElement(org.kalypsodeegree.model.geometry.GM_SurfacePatch)
-   */
   @Override
-  public void addElement( final GM_Surface surface )
+  public void addElement( final GM_Surface<GM_SurfacePatch> surface )
   {
-    // add elements to workspace
-    try
-    {
-      final Feature parentFeature = m_workspace.getRootFeature();
-      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
-      ElementGeometryHelper.createFE1D2DfromSurface( m_workspace, discModel, surface );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    m_inserter.addElement( surface );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IDiscModelImporter#finish()
-   */
   @Override
   public void finish( )
   {
+    m_inserter.commitChanges();
+
     try
     {
-      GmlSerializer.serializeWorkspace( m_file, m_workspace, "UTF-8" ); //$NON-NLS-1$
+      final IFEDiscretisationModel1d2d model = m_inserter.getModel();
+      GmlSerializer.serializeWorkspace( m_file, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -112,10 +103,8 @@ public class DiscModelImporter implements IDiscModelImporter
     }
     catch( final GmlSerializeException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    // write workspace into file
   }
 
 }
