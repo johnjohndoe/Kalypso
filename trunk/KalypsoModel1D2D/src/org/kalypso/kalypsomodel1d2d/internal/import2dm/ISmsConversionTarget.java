@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,18 +36,19 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.conv;
+package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @author Thomas Jung
  */
-public interface IDiscModelImporter
+interface ISmsConversionTarget
 {
-  void addElement( GM_Surface surface );
+  void addElement( GM_Surface<GM_SurfacePatch> surface );
 
   void finish( );
 }
