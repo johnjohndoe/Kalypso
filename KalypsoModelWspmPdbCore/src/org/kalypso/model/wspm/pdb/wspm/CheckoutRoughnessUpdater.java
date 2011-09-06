@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
+import java.awt.Color;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 
@@ -69,6 +72,7 @@ public class CheckoutRoughnessUpdater
     updateKst();
     updateKs();
     updateComment();
+    updateColor();
 
     // TODO: we have no equivalent for the following properties
     // roughness.getSource();
@@ -118,6 +122,22 @@ public class CheckoutRoughnessUpdater
       return;
 
     m_roughnessClass.setComment( comment );
+    m_changed = true;
+  }
+
+  private void updateColor( )
+  {
+    final String colorAsString = m_roughness.getColor();
+    if( StringUtils.isEmpty( colorAsString ) )
+      return;
+    final Color color = Color.decode( colorAsString );
+    final RGB oldRGB = m_roughnessClass.getColor();
+    final Color oldColor = new Color( oldRGB.red, oldRGB.green, oldRGB.blue );
+    if( ObjectUtils.equals( color, oldColor ) )
+      return;
+
+    final RGB newRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
+    m_roughnessClass.setColor( newRGB );
     m_changed = true;
   }
 }
