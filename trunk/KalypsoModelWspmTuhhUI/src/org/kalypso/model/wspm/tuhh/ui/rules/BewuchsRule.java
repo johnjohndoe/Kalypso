@@ -160,7 +160,7 @@ public class BewuchsRule extends AbstractValidatorRule
       final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
       final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
       final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
-      if( ax.isNaN() || ay.isNaN() || dp.isNaN() || ax < 0 || ay < 0 || dp < 0 )
+      if( ax.isNaN() || ay.isNaN() || dp.isNaN())
       {
         // displays only first error
         if( hasErrors )
@@ -172,6 +172,19 @@ public class BewuchsRule extends AbstractValidatorRule
         final String stationFormatted = String.format( Messages.getString( "BewuchsRule.0" ), profil.getStation() ); //$NON-NLS-1$
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
       }
+      else if( ax < 0 || ay < 0 || dp < 0 )
+      {
+     // displays only first error
+        if( hasErrors )
+        {
+          continue;
+        }
+
+        hasErrors = true;
+        final String stationFormatted = String.format( Messages.getString( "BewuchsRule.0" ), profil.getStation() ); //$NON-NLS-1$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.8" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      }
       else
       {
         if( ax + ay + dp != 0.0 )
@@ -180,15 +193,15 @@ public class BewuchsRule extends AbstractValidatorRule
             final StringBuffer stringBuffer = new StringBuffer();
             if( ax == 0.0 )
             {
-              stringBuffer.append( "aX, " ); //$NON-NLS-1$
+              stringBuffer.append( "aX" ); //$NON-NLS-1$
             }
             if( ay == 0.0 )
             {
-              stringBuffer.append( "aY, " ); //$NON-NLS-1$
+              stringBuffer.append(stringBuffer.length()==0? "aY":", aY" ); //$NON-NLS-1$
             }
             if( dp == 0.0 )
             {
-              stringBuffer.append( "dP" ); //$NON-NLS-1$
+              stringBuffer.append(stringBuffer.length()==0? "dP":", dp"  ); //$NON-NLS-1$
             }
 
             final String text = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9", stringBuffer.toString() ); //$NON-NLS-1$
