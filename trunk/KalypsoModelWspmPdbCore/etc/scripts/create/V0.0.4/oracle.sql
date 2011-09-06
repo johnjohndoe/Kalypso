@@ -1022,6 +1022,62 @@ UPDATE INFO set value='updating 0.0.3 to 0.0.4'  where key ='Version';
  update vegetation set label= 'Bäume, mehrjährig', description='Bäume, mehrjährig' where name ='14';
 
 
+-- set default colors for vegetation and roughness
+update vegetation set color='#FF0000' where name ='-1';
+update vegetation set color='#00FFFF' where name ='1';
+update vegetation set color='#00CED1' where name ='2';
+update vegetation set color='#FFE1FF' where name ='3';
+update vegetation set color='#EE7AE9' where name ='4';
+update vegetation set color='#B452CD' where name ='5';
+update vegetation set color='#8FBC8F' where name ='6';
+update vegetation set color='#3CB357' where name ='7';
+update vegetation set color='#006400' where name ='8';
+update vegetation set color='#7CFC00' where name ='11';
+update vegetation set color='#00CD00' where name ='12';
+update vegetation set color='#CCCC00' where name ='13';
+update vegetation set color='#999900' where name ='14';
+
+-- natürl. Gewässer
+update roughness set color='#FF0000' where name ='-1';
+update roughness set color='#FFB90F' where name ='1';
+update roughness set color='#FF8247' where name ='2';
+update roughness set color='#EEE685' where name ='3';
+update roughness set color='#EEEE00' where name ='4';
+update roughness set color='#EEAD0E' where name ='5';
+update roughness set color='#EE7942' where name ='6';
+update roughness set color='#CDC673' where name ='7';
+update roughness set color='#CDCD00' where name ='8';
+update roughness set color='#CD950C' where name ='9';
+update roughness set color='#CD6839' where name ='10';
+update roughness set color='#8B864E' where name ='11';
+update roughness set color='#8B8B00' where name ='12';
+update roughness set color='#8B670B' where name ='13';
+update roughness set color='#8B4726' where name ='14';
+-- 
+update roughness set color='#FCFCFC' where name ='20';
+update roughness set color='#EAEAEA' where name ='21';
+update roughness set color='#D8D8D8' where name ='22';
+update roughness set color='#C6C6C6' where name ='23';
+update roughness set color='#B4B4B4' where name ='24';
+update roughness set color='#A2A2A2' where name ='25';
+update roughness set color='#909090' where name ='26';
+update roughness set color='#7E7E7E' where name ='27';
+update roughness set color='#6C6C6C' where name ='28';
+update roughness set color='#5A5A5A' where name ='29';
+update roughness set color='#484848' where name ='30';
+update roughness set color='#363636' where name ='31';
+update roughness set color='#242424' where name ='32';
+-- Vorländer
+update roughness set color='#CCFF99' where name ='50';
+update roughness set color='#98FB98' where name ='51';
+update roughness set color='#00FF7F' where name ='52';
+update roughness set color='#7FFF00' where name ='53';
+update roughness set color='#32CD32' where name ='54';
+update roughness set color='#00FA9A' where name ='55';
+update roughness set color='#9ACD32' where name ='56';
+update roughness set color='#228B22' where name ='57';
+update roughness set color='#006400' where name ='58';
+
 
 -- 
 ALTER TABLE Document DROP CONSTRAINT "Document Name UK" CASCADE;
