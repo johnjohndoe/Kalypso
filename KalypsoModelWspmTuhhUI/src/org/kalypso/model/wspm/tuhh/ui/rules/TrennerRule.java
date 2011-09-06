@@ -119,7 +119,7 @@ public class TrennerRule extends AbstractValidatorRule
       case 1:
       {
         // FIXME: resolution
-        final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.1", label ); //$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.0", label ); //$NON-NLS-1$
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, profile );
         return false;
       }
@@ -176,7 +176,7 @@ public class TrennerRule extends AbstractValidatorRule
     }
     if( xright < left || xright > right )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.6", toValidate[0].getComponent().getName() ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule.4", toValidate[0].getComponent().getName() ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }
