@@ -12900,7 +12900,7 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </wspm:profileMember>
    <wspm:profileMember>
     <prof:Profile gml:id="Profile1313743681815703">
-     <gml:description>Paramezter prüfen</gml:description>
+     <gml:description>Parameter prüfen</gml:description>
      <gml:name>Fehler-Durchlass</gml:name>
      <om:time xmlns:om="http://www.opengis.net/om"/>
      <om:procedure xmlns:om="http://www.opengis.net/om"/>
