@@ -1,0 +1,38 @@
+ 0.08333333333333333
+n       Temperatur                 .tmp
+n       Niederschlag               .pre
+n       Schnee                     .sch
+n       Bodenfeuchte               .bof
+n       Bodenspeicher              .bsp
+n       Grundwasserstand           .gws
+j       Gesamtabfluss Knoten       .qgs
+j       Gesamtabfluss TG           .qgg
+n       nat. Oberflaechenabfluss   .qna
+n       Interflow                  .qif
+n       Abfluss vers. Flaechen     .qvs
+n       Basisabfluss               .qbs
+n       Kluftgrundw1               .qt1
+n       Kluftgrundw                .qtg
+n       Grundwasserabfluss         .qgw
+n       Kapil.Aufstieg/Perkolation .kap
+n       Evapotranspiration         .vet
+n       Ausgabe Hydrotope          .hyd
+n       Abflussbilanz              .bil
+n       Statistische Abflusswerte  .nmq
+n       Speicherinhalt             .spi
+n       Speicherueberlauf          .sup
+j       Gründach Überlauf          .qgu
+j       Gründach Drainrohr         .qgr
+j       Überlauf Mulden-Rigolen    .que
+j       Drainrohr Mulden-Rigolen   .qmr
+j       Überlauf Mulden            .mul
+4504
+4502
+4505
+4506
+4501
+4500
+4503
+99999
+99999
+99999
