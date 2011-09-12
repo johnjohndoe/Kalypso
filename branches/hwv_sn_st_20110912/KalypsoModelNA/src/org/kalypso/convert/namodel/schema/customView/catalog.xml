@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<!--
+		<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:FloodExtrapolationPolygon:sld:default" uri="FloodExtrapolationPolygon.sld" />
+	-->
+
+<!-- 
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:Swale:featureview:default" uri="CustomFeatureView.Swale.gft" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:SwaleInfiltrationDitch:featureview:default" uri="CustomFeatureView.SwaleInfiltrationDitch.gft" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:GreenRoof:featureview:default" uri="CustomFeatureView.GreenRoof.gft" />
+ -->
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:Swale:uiproperties:default" uri="common.properties" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:SwaleInfiltrationDitch:uiproperties:default" uri="common.properties" />
+	<catalog:system systemId="urn:ogc:gml:featuretype:http___sourceforge.kalypso.org_schemata_hydrology_suds:GreenRoof:uiproperties:default" uri="common.properties" />
+	<!--
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:TinReference:swtimage:default"
+		uri="org.kalypso.model.flood.TinReference.gif" />
+
+	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.flood:RunoffEvent:swtimage:default"
+		uri="org.kalypso.model.flood.RunoffEvent.gif" />
+-->
+
+</catalog:catalog>
+
