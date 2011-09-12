@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Provide schema elements RMA·Kalypso based 1d 2d final element model
+
+		@author Patrice Congo, Stefan Kurzbach
+	-->
+<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" />
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
+
+	<!--
+		==================================================================
+		discretisation model
+		===================================================================
+	-->
+	<!-- Property -->
+	<xs:element name="discretisationModel"
+		type="wb1d2d:DiscretisationModel1D2DPropertyType" />
+	<xs:complexType name="DiscretisationModel1D2DPropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:DiscretisationModel" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- DiscretisationModel root element -->
+	<xs:element name="DiscretisationModel" type="wb1d2d:DiscretisationModelType_V2"
+		substitutionGroup="simBase:_FEDiscretisationModel" />
+	<xs:complexType name="DiscretisationModelType_V2">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:DiscretisationModelType_V1">
+				<xs:sequence>
+					<xs:element name="mesh" type="wb1d2d:MeshPropertyType" />
+					<xs:element ref="wb1d2d:complexElement" minOccurs="1"
+						maxOccurs="unbounded" />
+					<xs:element ref="wb1d2d:continuityLine" minOccurs="1"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="MeshPropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:Mesh" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<xs:element name="Mesh" type="wb1d2d:MeshType" substitutionGroup="gml:_Feature" />
+	<xs:complexType name="MeshType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="polyhedralSurfaceMember" type="wb1d2d:PolyhedralSurfacePropertyType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PolyhedralSurfacePropertyType">
+		<xs:sequence>
+			<xs:element ref="gml:PolyhedralSurface" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="DiscretisationModelType_V1">
+		<xs:complexContent>
+			<xs:extension base="simBase:FEAbstractDiscretisationModelType">
+				<xs:sequence>
+					<!-- element deprecated in V2 -->
+					<xs:element ref="wb1d2d:element" minOccurs="0"
+						maxOccurs="unbounded" />
+					<!-- edge deprecated in V2 -->
+					<xs:element ref="wb1d2d:edge" minOccurs="0" maxOccurs="unbounded" />
+					<!-- node deprecated in V2 -->
+					<xs:element ref="wb1d2d:node" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="element" type="wb1d2d:ElementPropertyType_V1" />
+	<xs:complexType name="ElementPropertyType_V1">
+		<xs:sequence>
+			<xs:element ref="gml:_Feature" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--
+		=================================================================
+		complex elements
+		=================================================================
+	-->
+	<!-- property -->
+	<xs:element name="complexElement" type="wb1d2d:ComplexElementPropertyType" />
+	<xs:complexType name="ComplexElementPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property type for defining complex elements
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="wb1d2d:ComplexElement" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- ComplexElement (abstract) -->
+	<xs:element name="ComplexElement" type="wb1d2d:ComplexElementType"
+		substitutionGroup="gml:_Feature" abstract="true" />
+	<xs:complexType name="ComplexElementType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Base type for elements which group elements,
+				forming a
+				meaning full concept
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- CalculationUnit (abstract) -->
+	<xs:element name="CalculationUnit" type="wb1d2d:CalculationUnitType"
+		substitutionGroup="wb1d2d:ComplexElement" abstract="true" />
+	<xs:complexType name="CalculationUnitType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:ComplexElementType">
+				<xs:sequence>
+					<!--
+						TODO: change min- and max-Occurs to 0 to allow only refernced
+						elements.
+					-->
+					<xs:element ref="wb1d2d:element" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- CalculationUnit1D -->
+	<xs:element name="CalculationUnit1D" type="wb1d2d:CalculationUnitType1D"
+		substitutionGroup="wb1d2d:CalculationUnit" />
+	<xs:complexType name="CalculationUnitType1D">
+		<xs:annotation>
+			<xs:documentation>
+				1D calculation unit with 1D elements only
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:CalculationUnitType">
+				<xs:sequence>
+					<xs:element name="interpolationPolynomeCount" type="xs:nonNegativeInteger"
+						default="0" nillable="false">
+						<xs:annotation>
+							<xs:documentation>
+								Interpolation
+
+								Anzahl der zu interpolierenden
+								Stützstellen pro 1D-Element
+								
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- CalculationUnit2D -->
+	<xs:element name="CalculationUnit2D" type="wb1d2d:CalculationUnitType2D"
+		substitutionGroup="wb1d2d:CalculationUnit" />
+	<xs:complexType name="CalculationUnitType2D">
+		<xs:annotation>
+			<xs:documentation>
+				2D calculation unit with 2D elements only
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:CalculationUnitType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- CalculationUnit1D2D -->
+	<xs:element name="CalculationUnit1D2D" type="wb1d2d:CalculationUnitType1D2D"
+		substitutionGroup="wb1d2d:CalculationUnit" />
+	<xs:complexType name="CalculationUnitType1D2D">
+		<xs:annotation>
+			<xs:documentation>
+				calculation unit with subunits only
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:CoupledCalculationUnitType">
+				<xs:sequence>
+					<!--
+						TODO: change min- and max-Occurs to 0 to allow only referenced
+						calculation units.
+					-->
+					<xs:element ref="wb1d2d:calculationUnit" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoupledCalculationUnitType">
+		<xs:annotation>
+			<xs:documentation>
+				calculation unit with subunits only
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:CalculationUnitType">
+				<xs:sequence>
+					<xs:element name="CoupledSimulation" type="xs:boolean"
+						default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Gekoppelte Berechnung
+								Gekoppelte Berechnung
+							</xs:documentation>
+							<xs:documentation>
+								Coupled Simulation
+								Coupled Simulation
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- calculationUnit property -->
+	<xs:element name="calculationUnit" type="wb1d2d:CalculationUnitPropertyType" />
+	<xs:complexType name="CalculationUnitPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Property type for referencing calculation units
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="wb1d2d:CalculationUnit" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- _TransitionElement -->
+	<xs:element name="TransitionElement" type="wb1d2d:TransitionElementType"
+		substitutionGroup="wb1d2d:ComplexElement" />
+	<xs:complexType name="TransitionElementType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
+					kapp:property="wb1d2d:geometry" kapp:valueType="gml:Polygon"
+					kapp:isVirtual="true" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction base="wb1d2d:ComplexElementType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:continuityLine" minOccurs="2"
+						maxOccurs="2" />
+					<xs:element name="transitionType" default="1D2D">
+						<xs:annotation>
+							<xs:documentation>
+								Transition type:
+
+								Transition element type (1D to
+								2D, or 2D to 1D)
+								
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="1D2D">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[1D to 2D transition]]>
+											<![CDATA[1D to 2D transition element type]]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="2D1D">
+									<xs:annotation>
+										<xs:documentation>
+											<![CDATA[2D to 1D transition]]>
+											<![CDATA[2D to 1D transition element type]]>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- JunctionElement -->
+	<xs:element name="JunctionElement" type="wb1d2d:JunctionElementType"
+		substitutionGroup="wb1d2d:ComplexElement" />
+	<xs:complexType name="JunctionElementType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
+					kapp:property="wb1d2d:geometry" kapp:valueType="gml:Polygon"
+					kapp:isVirtual="true" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction base="wb1d2d:ComplexElementType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:continuityLine1D" minOccurs="2"
+						maxOccurs="8" />
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- continuityLine1D property -->
+	<xs:element name="continuityLine1D" type="wb1d2d:ContinuityLinePropertyType" />
+	<xs:complexType name="ContinuityLine1DPropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:ContinuityLine1D" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--
+		=================================================================
+		elements
+		=================================================================
+	-->
+	<!-- Element (abstract) -->
+	<xs:element name="Element" type="wb1d2d:ElementType"
+		substitutionGroup="gml:_Feature" abstract="true" />
+	<xs:complexType name="ElementType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Base type for all 1d 2d elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:elementContainer" minOccurs="0"
+						maxOccurs="unbounded" />
+					<xs:element name="roughnessClsID" type="xs:string" />
+					<xs:element name="roughnessStyle" type="xs:string" />
+					<xs:element name="correction_ks" type="xs:double" />
+					<xs:element name="correction_axay" type="xs:double" />
+					<xs:element name="correction_dp" type="xs:double" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- elementContainer property -->
+	<xs:element name="elementContainer" type="wb1d2d:ElementContainerPropertyType" />
+	<xs:complexType name="ElementContainerPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Associates an element to the complex element
+				containing
+				it.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!--
+				TODO: change min- and max-Occurs to 0 to allow only refernced nodes.
+			-->
+			<xs:element ref="wb1d2d:ComplexElement" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- PolyElement -->
+	<xs:element name="PolyElement" type="wb1d2d:PolyElementType"
+		substitutionGroup="wb1d2d:Element" />
+	<xs:complexType name="PolyElementType">
+		<xs:annotation>
+			<xs:documentation>
+				A PolyElement is defined by 3 or 4 edges. The edges
+				must
+				build a closed curve.
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
+					kapp:property="wb1d2d:geometry" kapp:valueType="gml:Polygon"
+					kapp:isVirtual="true" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:ElementType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:directedEdge" minOccurs="3"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Element1D -->
+	<xs:element name="Element1D" type="wb1d2d:Element1DType"
+		substitutionGroup="wb1d2d:Element" />
+	<xs:complexType name="Element1DType">
+		<xs:annotation>
+			<xs:documentation>
+				Basic 1D elements in a finite element network. It
+				just
+				wraps an edge.
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
+					kapp:property="wb1d2d:geometry" kapp:valueType="gml:LineString"
+					kapp:isVirtual="true" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:ElementType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:directedEdge" minOccurs="1"
+						maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--
+		====================================================================
+		edges
+		====================================================================
+	-->
+	<!-- edge property -->
+	<xs:element name="edge" type="wb1d2d:EdgePropertyType" />
+	<!--
+		directedEdge property, copy of wb1d2d:edge (above) for backwards
+		compatibility
+	-->
+	<xs:element name="directedEdge" type="wb1d2d:EdgePropertyType" />
+	<xs:complexType name="EdgePropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:Edge" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- Edge -->
+	<xs:element name="Edge" type="wb1d2d:EdgeType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+	<xs:complexType name="EdgeType">
+		<xs:annotation>
+			<xs:documentation>
+				Edge in a finite element network. It is defined by
+				2
+				nodes and possibly a middle node.
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
+					kapp:property="wb1d2d:geometry" kapp:isVirtual="true"
+					kapp:valueType="gml:LineString" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<!-- @deprecated -->
+					<xs:element ref="wb1d2d:edgeInv" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element ref="wb1d2d:directedNode" minOccurs="2"
+						maxOccurs="2" />
+					<xs:element ref="wb1d2d:middleNode" minOccurs="0"
+						maxOccurs="1" />
+					<xs:element ref="wb1d2d:edgeContainer" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- @deprecated edgeInv property-->
+	<xs:element name="edgeInv" type="wb1d2d:EdgeInvPropertyType"></xs:element>
+	<xs:complexType name="EdgeInvPropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:EdgeInv" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<xs:element name="EdgeInv" type="wb1d2d:EdgeInvType"
+		substitutionGroup="wb1d2d:Edge" />
+	<xs:complexType name="EdgeInvType">
+		<xs:complexContent>
+			<xs:restriction base="wb1d2d:EdgeType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:edge" minOccurs="1" maxOccurs="1" />
+					<xs:element ref="wb1d2d:edgeContainer" minOccurs="0"
+						maxOccurs="unbounded" />
+					<!-- from feature -->
+					<xs:element ref="gml:boundedBy" minOccurs="0" />
+					<xs:element ref="gml:location" minOccurs="0" />
+					<xs:group ref="gml:StandardObjectProperties" />
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- directedNode property -->
+	<xs:element name="directedNode" type="wb1d2d:DirectedNodePropertyType">
+	</xs:element>
+	<xs:complexType name="DirectedNodePropertyType">
+		<xs:sequence>
+			<!--
+				TODO: change min- and max-Occurs to 0 to allow only refernced nodes.
+			-->
+			<xs:element ref="wb1d2d:Node" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="orientation" type="gml:SignType"
+			default="+" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- middleNode property -->
+	<xs:element name="middleNode" type="wb1d2d:MiddleNodePropertyType" />
+	<xs:complexType name="MiddleNodePropertyType">
+		<xs:sequence>
+			<!--
+				TODO: change min- and max-Occurs to 0 to allow only refernced nodes.
+			-->
+			<xs:element ref="wb1d2d:MiddleNode" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- MiddleNode -->
+	<xs:element name="MiddleNode" type="wb1d2d:MiddleNodeType"
+		substitutionGroup="wb1d2d:Node">
+		<xs:annotation>
+			<xs:documentation>
+				Represents a middle node in a 1d 2d finite element
+				network.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="MiddleNodeType">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:NodeType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- edgeContainer property -->
+	<xs:element name="edgeContainer" type="wb1d2d:EdgeContainerPropertyType">
+	</xs:element>
+	<xs:complexType name="EdgeContainerPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				Associates elements to the element the contains,
+				edges
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!--
+				TODO: change min- and max-Occurs to 0 to allow only refernced nodes.
+			-->
+			<xs:element ref="wb1d2d:Element" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--
+		================================================================ nodes
+		==================================================================
+	-->
+	<!-- node property -->
+	<xs:element name="node" type="wb1d2d:NodePropertyType" />
+	<xs:complexType name="NodePropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:Node" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- Node -->
+	<xs:element name="Node" type="wb1d2d:NodeType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation>
+				Represents a node in a finite element network.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="NodeType">
+		<xs:annotation>
+			<xs:documentation>
+				The type for nodes in a finite element network.
+				Such a
+				node has a point geometry and a links to a node
+				container which
+				are the edges containing this node.
+			</xs:documentation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeElevationAvailabilityInfoFunction"
+					kapp:property="wb1d2d:hasElevation" kapp:isVirtual="true"
+					kapp:valueType="xs:boolean" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="gml:pointProperty" minOccurs="1"
+						maxOccurs="1" />
+					<xs:element ref="wb1d2d:nodeContainer" minOccurs="1"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- nodeContainer property -->
+	<xs:element name="nodeContainer" type="wb1d2d:NodeContainerPropertyType" />
+	<xs:complexType name="NodeContainerPropertyType">
+		<xs:annotation>
+			<xs:documentation>
+				References the egdes containing this node.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!--
+				TODO: change min- and max-Occurs to 0 to allow only refernced nodes.
+			-->
+			<xs:element ref="wb1d2d:Edge" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!--
+		================================================================
+		continuity lines
+		==================================================================
+	-->
+	<!-- property -->
+	<xs:element name="continuityLine" type="wb1d2d:ContinuityLinePropertyType" />
+	<xs:complexType name="ContinuityLinePropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:Line" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- Line (abstract, substitutes _Feature) -->
+	<xs:element name="Line" type="wb1d2d:LineType"
+		substitutionGroup="gml:_Feature" abstract="true" />
+	<xs:complexType name="LineType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="geometry" type="gml:LineStringPropertyType" />
+					<!-- references to containing complex elements -->
+					<xs:element ref="wb1d2d:elementContainer" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ContinuityLine1D (substitutes Line) -->
+	<xs:element name="ContinuityLine1D" type="wb1d2d:ContinuityLine1DType"
+		substitutionGroup="wb1d2d:Line" />
+	<xs:complexType name="ContinuityLine1DType">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:LineType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:node" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ContinuityLine2D (substitutes Line) -->
+	<xs:element name="ContinuityLine2D" type="wb1d2d:ContinuityLine2DType"
+		substitutionGroup="wb1d2d:Line" />
+	<xs:complexType name="ContinuityLine2DType">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:LineType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:node" minOccurs="2" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>
