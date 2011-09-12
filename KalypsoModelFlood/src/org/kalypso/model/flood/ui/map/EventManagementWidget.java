@@ -103,8 +103,8 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.StatusAndDelegateLabelProvider;
@@ -142,9 +142,9 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
-import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapLabelProvider;
@@ -154,7 +154,7 @@ import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
@@ -481,7 +481,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     final PolygonColorMap colorMap = findColorMap( runoffEventTheme );
 
-    final IFeatureBindingCollection<ITinReference> tins = runoffEvent.getTins();
+    final IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
 
     // get min / max of the selected runoff event
     BigDecimal event_min = new BigDecimal( Double.MAX_VALUE );
@@ -574,7 +574,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     for( final IKalypsoStyle style : styles )
     {
-      if( style instanceof IKalypsoUserStyle && ((IKalypsoUserStyle) style).getName().equals( name ) )
+      if( (style instanceof IKalypsoUserStyle) && ((IKalypsoUserStyle) style).getName().equals( name ) )
         return (IKalypsoUserStyle) style;
     }
 
@@ -646,14 +646,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
     else
     {
-      viewer.setInput( m_model.getWorkspace() );
+      viewer.setInput( m_model.getFeature().getWorkspace() );
 
       final GMLXPathSegment segment = GMLXPathSegment.forQName( IFloodModel.QNAME );
       final GMLXPath pathToModel = new GMLXPath( segment );
       final GMLXPath rootPath = new GMLXPath( pathToModel, IFloodModel.QNAME_PROP_EVENT_MEMBER );
       gmlcp.setRootPath( rootPath );
 
-      final IFeatureBindingCollection<IRunoffEvent> events = m_model.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> events = m_model.getEvents();
       if( events.size() > 0 )
       {
         m_eventViewer.setSelection( new StructuredSelection( events.get( 0 ) ), true );
@@ -991,7 +991,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     /* Show dialog to user and import tins afterwards */
     final ImportTinOperation operation = new ImportTinOperation( m_dataProvider, runoffEvent.getTins(), getMapPanel() );
     final GmlSourceChooserWizard wizard = new GmlSourceChooserWizard( provider, operation );
-    final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), getClass().getName() );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), getClass().getName() );
     wizard.setDialogSettings( dialogSettings );
     wizard.setWindowTitle( windowTitle );
 
@@ -1097,16 +1097,16 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
           if( adaptedObject instanceof ITinReference )
           {
-            paintEnvelope( g, ((ITinReference) adaptedObject).getEnvelope() );
+            paintEnvelope( g, ((ITinReference) adaptedObject).getFeature().getEnvelope() );
           }
           else if( adaptedObject instanceof IRunoffEvent )
           {
-            final IFeatureBindingCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
-            paintEnvelope( g, tins.getBoundingBox() );
+            final IFeatureWrapperCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
+            paintEnvelope( g, tins.getWrappedList().getBoundingBox() );
 
             for( final ITinReference tinReference : tins )
             {
-              paintEnvelope( g, tinReference.getEnvelope() );
+              paintEnvelope( g, tinReference.getFeature().getEnvelope() );
             }
           }
 
@@ -1175,12 +1175,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     if( adaptedObject instanceof ITinReference )
     {
-      return ((ITinReference) adaptedObject).getEnvelope();
+      return ((ITinReference) adaptedObject).getFeature().getEnvelope();
     }
 
     if( adaptedObject instanceof IRunoffEvent )
     {
-      return ((IRunoffEvent) adaptedObject).getTins().getBoundingBox();
+      return ((IRunoffEvent) adaptedObject).getTins().getWrappedList().getBoundingBox();
     }
 
     return null;
@@ -1272,7 +1272,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
               final Feature parent = feature.getOwner().getOwner();
               if( parent != null )
               {
-                if( parent.getId().equals( event.getId() ) )
+                if( parent.getId().equals( event.getGmlID() ) )
                 {
                   final String name = kalypsoTheme.getLabel();
 

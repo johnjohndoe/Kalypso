@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
@@ -75,7 +75,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeContentProvider
 {
-  private static final Object THE_ELEMENT = Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.0" ); //$NON-NLS-1$
+  private static final Object THE_ELEMENT = Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.0"); //$NON-NLS-1$
 
   private final FileChooserDelegateOpen m_fileDelegate = new FileChooserDelegateOpen();
 
@@ -127,18 +127,18 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     panel.setLayout( new GridLayout() );
 
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.9" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.9") ); //$NON-NLS-1$
 
     final Group fileControl = m_fileChooserGroup.createGroup( panel, SWT.NONE );
     fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fileControl.setText( Messages.getString( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.10" ) ); //$NON-NLS-1$
+    fileControl.setText( Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.10") ); //$NON-NLS-1$
 
     m_crsPanel = new CRSSelectionPanel( panel, SWT.NONE );
     m_crsPanel.setSelectedCRS( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     // Set dialog settings at the end, so update is correctly done for all controls
-    final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), "externalWspFileImport" ); //$NON-NLS-1$
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), "externalWspFileImport" ); //$NON-NLS-1$
     m_fileChooserGroup.setDialogSettings( dialogSettings );
   }
 
@@ -212,6 +212,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
 
     // TODO: should notifiy dialog that page is not complete
   }
+
 
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)

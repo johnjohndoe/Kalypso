@@ -61,7 +61,7 @@ import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -77,7 +77,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
 {
   private IGmlSource[] m_sources;
 
-  private final IFeatureBindingCollection<ITinReference> m_tins;
+  private final IFeatureWrapperCollection<ITinReference> m_tins;
 
   private final SzenarioDataProvider m_provider;
 
@@ -88,7 +88,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
    *            After importing, the exctent of this mapPanel will be set to the bounding box of the imported tins. May
    *            be <code>null</code>.
    */
-  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureBindingCollection<ITinReference> tins, final IMapPanel mapPanel )
+  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureWrapperCollection<ITinReference> tins, final IMapPanel mapPanel )
   {
     m_provider = provider;
     m_tins = tins;
@@ -129,12 +129,12 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
       tinRef.setSourceType( typeForSource( source ) );
 
       tinRefs[i] = tinRef;
-      changedFeatures[i] = tinRef;
+      changedFeatures[i] = tinRef.getFeature();
     }
     ProgressUtilities.worked( progress, 20 );
 
     /* post command for events stuff... */
-    final Feature parentFeature = m_tins.getParentFeature();
+    final Feature parentFeature = m_tins.getFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     final ModellEvent modelEvent = new FeatureStructureChangeModellEvent( workspace, parentFeature, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
     workspace.fireModellEvent( modelEvent );

@@ -84,7 +84,7 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.simulation.ui.calccase.simulation.SimulationFactory;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -112,7 +112,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
-      final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
 
       /* Get the map */
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -185,7 +185,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
 
   // TODO this is REALLY ugly. We need to send the gml-ids to process via a wps input, not by tweaking the model-data
   // itself. Also need for another costly save of the (eventually) very big model.
-  private void markEventsForProvessing( final IFeatureBindingCollection<IRunoffEvent> events, final IRunoffEvent[] eventsToProcess )
+  private void markEventsForProvessing( final IFeatureWrapperCollection<IRunoffEvent> events, final IRunoffEvent[] eventsToProcess )
   {
     for( final IRunoffEvent runoffEvent : events )
       runoffEvent.setMarkedForProcessing( false );
