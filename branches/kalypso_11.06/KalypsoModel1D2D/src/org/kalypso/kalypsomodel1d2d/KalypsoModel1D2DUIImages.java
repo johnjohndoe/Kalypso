@@ -66,6 +66,7 @@ public class KalypsoModel1D2DUIImages
     HYDROGRAPH_REMOVE("icons/elcl16/hydrograph_delete.gif"), //$NON-NLS-1$
     HYDROGRAPH_JUMP_TO("icons/elcl16/nav_go.gif"), //$NON-NLS-1$
     HYDROGRAPH_EXPORT("icons/elcl16/hydrograph_export.gif"), //$NON-NLS-1$
+    HYDROGRAPH_IMPORT("icons/elcl16/hydrograph_import.gif"), //$NON-NLS-1$
     HYDROGRAPH_COLLECTION_ADD("icons/elcl16/add.gif"), //$NON-NLS-1$
     HYDROGRAPH_COLLECTION_REMOVE("icons/elcl16/remove.gif"), //$NON-NLS-1$
     HYDROGRAPH_COLLECTION_PROCESS("icons/elcl16/hydro_process.gif"), //$NON-NLS-1$

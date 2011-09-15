@@ -68,17 +68,20 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
   @Override
   protected IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
+    /*
+     *moved to HydrographUtils
+     *
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
 
-    /* set the observation components */
     HydrographUtils.setHydrographComponents( newFeature );
 
     final IHydrograph hydrograph = (IHydrograph) newFeature.getAdapter( IHydrograph.class );
     hydrograph.setName( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ) ); //$NON-NLS-1$
     hydrograph.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) ); //$NON-NLS-1$
-
-    return hydrograph;
+    */
+    
+    return HydrographUtils.createNewHydrographFeature( workspace, parentFeature, parentRelation, Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1" ) );
   }
 
   /**
