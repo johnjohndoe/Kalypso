@@ -51,7 +51,7 @@ public class ExportHydrographWizard extends Wizard
 
   private final static String SINGLE_FILE_NAME_PREFIX = "all_hydrographs_exptt_"; //$NON-NLS-1$
 
-  private static final int HEADER_COLS_COUNT = 8;
+  private static int HEADER_COLS_COUNT = 8;
 
   private static final String COL_POS = "[x y]"; //$NON-NLS-1$
 
@@ -130,13 +130,16 @@ public class ExportHydrographWizard extends Wizard
       final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
       final IComponent depthComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
       final IComponent velocityComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
+      final IComponent velocityDirComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY_DIRECTION );
       final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
       final IComponent waveHsigComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
       final IComponent wavePerComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER );
       final IComponent waveDirComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DIR );
-      m_componentsOrdered = new IComponent[] { dateComp, waterlevelComp, depthComp, velocityComp, dischargeComp, waveHsigComp, wavePerComp, waveDirComp };
+      m_componentsOrdered = new IComponent[] { dateComp, waterlevelComp, depthComp, velocityComp, velocityDirComp, dischargeComp, waveHsigComp, wavePerComp, waveDirComp };
 
+      HEADER_COLS_COUNT = m_componentsOrdered.length;
+      
       if( m_exportHydrographWizardPage.getsSeparator() != null )
       {
         m_textSep = m_exportHydrographWizardPage.getsSeparator().getText().trim();
@@ -168,22 +171,23 @@ public class ExportHydrographWizard extends Wizard
       if( !m_exportHydrographWizardPage.getBtnCheckButton_1().getSelection() )
       {
         m_setExclusion.add( 3 );
+        m_setExclusion.add( 4 );
       }
       if( !m_exportHydrographWizardPage.getBtnCheckButton_2().getSelection() )
       {
-        m_setExclusion.add( 4 );
+        m_setExclusion.add( 5 );
       }
       if( !m_exportHydrographWizardPage.getBtnCheckButton_3().getSelection() )
       {
-        m_setExclusion.add( 5 );
+        m_setExclusion.add( 6 );
       }
       if( !m_exportHydrographWizardPage.getBtnCheckButton_4().getSelection() )
       {
-        m_setExclusion.add( 6 );
+        m_setExclusion.add( 7 );
       }
       if( !m_exportHydrographWizardPage.getBtnCheckButton_5().getSelection() )
       {
-        m_setExclusion.add( 7 );
+        m_setExclusion.add( 8 );
       }
       if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() )
       {

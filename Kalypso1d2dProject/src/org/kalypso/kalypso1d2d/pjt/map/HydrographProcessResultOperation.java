@@ -47,6 +47,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -233,6 +234,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
     final IComponent depthComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
     final IComponent velocityComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
+    final IComponent velocityDirComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY_DIRECTION );
     final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
     final IComponent waveHsigComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
@@ -251,7 +253,11 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       final Double waterlevel = nodeResult.getWaterlevel();
       final Double discharge = nodeResult.getDischarge();
       final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
-
+      final List< Double > velocityList = nodeResult.getVelocity();
+      double velocityDir = 0;
+      if( !( velocityList == null || velocityList.size() != 2 ) )
+        velocityDir = GeometryUtilities.directionFromVector( velocityList.get( 0 ), velocityList.get( 1 ) );
+      
       final Double lDoubleHsig = nodeResult.getWaveHsig();
       final Double lDoublePer = nodeResult.getWavePeriod();
       final Double lDoubleDir = nodeResult.getWaveDirection();
@@ -263,8 +269,8 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( velocityDirComp, new BigDecimal( velocityDir ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       if( discharge != null )
-
         newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
       else
         newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );

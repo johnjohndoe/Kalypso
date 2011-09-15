@@ -190,6 +190,14 @@ public class NodeResultHelper
     midsideNode.setWaterlevel( waterlevel );
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
+//    double waveDirectionDown = nodeDown.getWaveDirection();
+//    double waveDirectionUp = nodeUp.getWaveDirection();
+//    if( waveDirectionDown > 180 || waveDirectionDown < -180 ){
+//      
+//    }
+    midsideNode.setWaveDirection( 0 );
+    midsideNode.setWaveHsig( 0 );
+    midsideNode.setWavePeriod( 0 );
     midsideNode.setDepth( depth );
   }
 
