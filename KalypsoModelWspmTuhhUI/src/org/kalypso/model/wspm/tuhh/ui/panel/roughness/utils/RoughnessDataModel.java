@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
@@ -108,6 +109,9 @@ public class RoughnessDataModel extends AbstractModelObject
       final String rightFloodplainClassId = ProfileFlowzones.findRightFloodplainClass( profile, component );
 
       final IWspmClassification classification = WspmClassifications.getClassification( profile );
+      if( Objects.isNull( classification ) )
+        return;
+
       m_leftFloodplainClass = classification.findRoughnessClass( leftFloodplainClassId );
       m_riverTubeClass = classification.findRoughnessClass( riverTubeClassId );
       m_rightFloodplainClass = classification.findRoughnessClass( rightFloodplainClassId );

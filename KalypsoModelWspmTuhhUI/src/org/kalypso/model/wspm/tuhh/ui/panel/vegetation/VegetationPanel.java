@@ -62,7 +62,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPageListener;
@@ -176,7 +175,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
       return;
 
     final Group group = new Group( parent, SWT.NULL );
-    group.setLayout( Layouts.createGridLayout( 2 ) );
+    group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     group.setText( Messages.getString( "VegetationPanel.4" ) ); //$NON-NLS-1$
 
@@ -210,6 +209,7 @@ public class VegetationPanel extends AbstractProfilView implements IElementPageL
       }
     } );
 
+    toolkit.adapt( group );
     group.layout();
     parent.layout();
   }
