@@ -15946,4 +15946,9 @@ null 366.683 false none 0.32 1.0 1.0 0.08 773957.402 3929169.011
    </tuhh:calcPolynomesMember>
   </tuhh:CalculationReibConstWspmTuhhSteadyState>
  </wspm:calculationMember>
+ <wspmClasses:classificationMember xmlns:wspmClasses="org.kalypso.model.wspm.classifications">
+  <wspmClasses:WspmClassification gml:id="WspmClassification1316085144541608">
+   <gml:name>Beispielklassen</gml:name>
+  </wspmClasses:WspmClassification>
+ </wspmClasses:classificationMember>
 </WspmProject>
