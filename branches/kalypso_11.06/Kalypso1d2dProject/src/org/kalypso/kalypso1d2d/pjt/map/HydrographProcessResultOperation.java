@@ -253,11 +253,15 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       final Double waterlevel = nodeResult.getWaterlevel();
       final Double discharge = nodeResult.getDischarge();
       final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
-      final List< Double > velocityList = nodeResult.getVelocity();
+      final List<Double> velocityList = nodeResult.getVelocity();
       double velocityDir = 0;
-      if( !( velocityList == null || velocityList.size() != 2 ) )
+      if( !(velocityList == null || velocityList.size() != 2) )
         velocityDir = GeometryUtilities.directionFromVector( velocityList.get( 0 ), velocityList.get( 1 ) );
-      
+      if( Double.isNaN( velocityDir ) )
+      {
+        velocityDir = 0;
+      }
+
       final Double lDoubleHsig = nodeResult.getWaveHsig();
       final Double lDoublePer = nodeResult.getWavePeriod();
       final Double lDoubleDir = nodeResult.getWaveDirection();
