@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.deegree.io.dbaseapi.DBaseException;
 import org.deegree.io.shpapi.shape_new.ShapeFile;
 import org.deegree.io.shpapi.shape_new.ShapeFileReader;
 import org.deegree.model.feature.FeatureCollection;
@@ -23,7 +20,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
@@ -31,19 +27,12 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -112,7 +101,7 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
             continue;
           }
           GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
-          lListNewHydroFeatures.add( (Feature) createHydrograph( hydroPositionFromElement, lf.getId(), lf.getDescription() ) );
+          lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, lf.getId(), lf.getDescription() ).getFeature() );
         }
         postCommand( lListNewHydroFeatures.toArray( new Feature[ lListNewHydroFeatures.size() ] ) );
     }
@@ -182,11 +171,13 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
     }
     catch( FileNotFoundException e )
     {
+      m_errMsg += e.getMessage();
       e.printStackTrace();
       return false;
     }
     catch( IOException e )
     {
+      m_errMsg += e.getMessage();
       e.printStackTrace();
       return false;
     }
