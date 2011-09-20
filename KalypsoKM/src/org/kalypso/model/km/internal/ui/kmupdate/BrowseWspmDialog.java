@@ -45,6 +45,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.IShellProvider;
@@ -55,6 +56,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.java.lang.Arrays;
+import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultContentProvider;
@@ -68,25 +71,17 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultQIntervalNode;
  */
 public class BrowseWspmDialog extends Dialog
 {
-  /**
-   * The root nodes.
-   */
-  private IWspmResultNode[] m_rootNodes;
+  private final IWspmResultNode[] m_rootNodes;
+
+  private IWspmResultNode m_selectedNode;
 
   /**
-   * The selected node.
-   */
-  protected IWspmResultNode m_selectedNode;
-
-  /**
-   * The constructor.
-   * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param rootNodes
    *          The root nodes.
    */
-  public BrowseWspmDialog( Shell parentShell, IWspmResultNode[] rootNodes )
+  public BrowseWspmDialog( final Shell parentShell, final IWspmResultNode[] rootNodes )
   {
     super( parentShell );
 
@@ -94,80 +89,88 @@ public class BrowseWspmDialog extends Dialog
   }
 
   /**
-   * The constructor.
-   * 
    * @param parentShell
    *          Object that returns the current parent shell.
    * @param rootNodes
    *          The root nodes.
    */
-  public BrowseWspmDialog( IShellProvider parentShell, IWspmResultNode[] rootNodes )
+  public BrowseWspmDialog( final IShellProvider parentShell, final IWspmResultNode[] rootNodes )
   {
     super( parentShell );
 
     m_rootNodes = rootNodes;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected boolean isResizable( )
+  {
+    return true;
+  }
+
+  @Override
+  protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( Messages.getString("BrowseWspmDialog_0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "BrowseWspmDialog_0" ) ); //$NON-NLS-1$
 
     /* Create the main composite. */
-    Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
-    GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 400;
     mainData.widthHint = 400;
     main.setLayoutData( mainData );
 
     /* Create a tree viewer. */
-    TreeViewer treeViewer = new TreeViewer( main, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER );
+    final TreeViewer treeViewer = new TreeViewer( main, SWT.SINGLE | SWT.BORDER );
     treeViewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     WspmResultContentProvider.initTreeViewer( treeViewer );
-    treeViewer.setContentProvider( new WspmResultContentProvider() );
-    treeViewer.setLabelProvider( new WspmResultLabelProvider( treeViewer ) );
-    treeViewer.addFilter( new WspmResultViewerFilter() );
-    if( m_rootNodes != null )
+
+    if( Arrays.isEmpty( m_rootNodes ) )
+    {
+      treeViewer.setContentProvider( new ArrayTreeContentProvider() );
+      treeViewer.setLabelProvider( new LabelProvider() );
+      treeViewer.setInput( new String[] { "<no WSPM projects found>" } );
+    }
+    else
+    {
+      treeViewer.setContentProvider( new WspmResultContentProvider() );
+      treeViewer.setLabelProvider( new WspmResultLabelProvider( treeViewer ) );
+      treeViewer.addFilter( new WspmResultViewerFilter() );
       treeViewer.setInput( m_rootNodes );
+    }
 
     /* Add a listener. */
     treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      /**
-       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-       */
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        ISelection selection = event.getSelection();
+        final ISelection selection = event.getSelection();
         if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
           return;
 
-        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-        Object firstElement = structuredSelection.getFirstElement();
-        if( !(firstElement instanceof IWspmResultNode) )
-          return;
-
-        m_selectedNode = (IWspmResultNode) firstElement;
-
-        /* Check, if the dialog is allowed to be completed. */
-        checkDialogComplete();
+        handleSelectionChanged( (IStructuredSelection) selection );
       }
     } );
 
     return main;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-   */
+  protected void handleSelectionChanged( final IStructuredSelection selection )
+  {
+    final Object firstElement = selection.getFirstElement();
+    if( !(firstElement instanceof IWspmResultNode) )
+      return;
+
+    m_selectedNode = (IWspmResultNode) firstElement;
+
+    /* Check, if the dialog is allowed to be completed. */
+    checkDialogComplete();
+  }
+
   @Override
-  protected void createButtonsForButtonBar( Composite parent )
+  protected void createButtonsForButtonBar( final Composite parent )
   {
     super.createButtonsForButtonBar( parent );
 
@@ -203,7 +206,7 @@ public class BrowseWspmDialog extends Dialog
   protected void checkDialogComplete( )
   {
     /* Get the OK button. */
-    Button okButton = getButton( IDialogConstants.OK_ID );
+    final Button okButton = getButton( IDialogConstants.OK_ID );
 
     /* First of all, it should be allowed to complete. */
     okButton.setEnabled( true );
