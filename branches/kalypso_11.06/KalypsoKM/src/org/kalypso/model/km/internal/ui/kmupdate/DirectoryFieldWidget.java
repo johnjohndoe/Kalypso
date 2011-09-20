@@ -69,7 +69,7 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultQIntervalNode;
 
 /**
- * FIXME: remove this. Use databinding, we do not need all this terible overhead.
+ * FIXME: remove this. Use databinding, we do not need all this terrible overhead.
  * 
  * @author Andreas Doemming (original)
  * @author Holger Albert (modified)
@@ -176,7 +176,7 @@ public class DirectoryFieldWidget implements ISelectionProvider
       final IStatus status = RunnableContextHelper.execute( m_context, true, false, operation );
       m_rootNodes = operation.getNodes();
       if( !status.isOK() )
-        new StatusDialog( m_context.getShell(), status, Messages.getString("DirectoryFieldWidget.2") ); //$NON-NLS-1$
+        new StatusDialog( m_context.getShell(), status, Messages.getString( "DirectoryFieldWidget.2" ) ).open(); //$NON-NLS-1$
     }
 
     return m_rootNodes;

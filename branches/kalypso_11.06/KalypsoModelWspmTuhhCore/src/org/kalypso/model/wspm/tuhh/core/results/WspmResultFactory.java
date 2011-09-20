@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,7 @@ public final class WspmResultFactory
    * 
    * @return The root nodes.
    */
-  public static IWspmResultNode[] createRootNodes( final IProgressMonitor monitor ) throws Exception
+  public static IWspmResultNode[] createRootNodes( final IProgressMonitor monitor )
   {
     final List<IWspmResultNode> rootNodes = new ArrayList<IWspmResultNode>();
 
@@ -117,29 +118,9 @@ public final class WspmResultFactory
 
     for( final IProject project : projects )
     {
-      if( !project.isOpen() )
-      {
-        continue;
-      }
-
-      final IFile wspmFile = project.getFile( IWspmTuhhConstants.FILE_WSPM_GMV );
-      if( !wspmFile.exists() )
-      {
-        continue;
-      }
-
-      final IFile modelFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
-      if( !modelFile.exists() )
-      {
-        continue;
-      }
-
-      final URL modelURL = ResourceUtilities.createURL( modelFile );
-      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
-      final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
-
-      final IWspmResultNode rootNode = createResultNode( null, tuhhWspmProject );
-      rootNodes.add( new WspmResultEclipseNode( project, (WspmResultProjectNode) rootNode ) );
+      final IWspmResultNode rootNode = createRootNode( project );
+      if( rootNode != null )
+        rootNodes.add( new WspmResultEclipseNode( project, (WspmResultProjectNode) rootNode ) );
 
       monitor.worked( 1 );
     }
@@ -147,5 +128,39 @@ public final class WspmResultFactory
     monitor.done();
 
     return rootNodes.toArray( new IWspmResultNode[] {} );
+  }
+
+  private static IWspmResultNode createRootNode( final IProject project )
+  {
+    if( !project.isOpen() )
+      return null;
+
+    final IFile wspmFile = project.getFile( IWspmTuhhConstants.FILE_WSPM_GMV );
+    if( !wspmFile.exists() )
+      return null;
+
+    final IFile modelFile = project.getFile( IWspmTuhhConstants.FILE_MODELL_GML );
+    if( !modelFile.exists() )
+      return null;
+
+    try
+    {
+      final URL modelURL = ResourceUtilities.createURL( modelFile );
+      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
+      final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
+
+      return createResultNode( null, tuhhWspmProject );
+    }
+    catch( final MalformedURLException e )
+    {
+      // TODO: better error handling needed
+      e.printStackTrace();
+      return null;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
