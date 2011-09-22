@@ -248,7 +248,7 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
           lIntPosColumnNr = tryToParseHeaderFromKalypsoExport( nextLine );
         }
         lIntCounter++;  
-        if( lIntPosColumnNr == -1 ){
+        if( lIntPosColumnNr != -1 ){
           continue;
         }
         
