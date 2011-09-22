@@ -796,14 +796,14 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
     
-    final ImportHydrographWizard importProfileWizard = new ImportHydrographWizard( m_hydrographs, m_theme, discModel );
+    final ImportHydrographWizard importHydrographWizard = new ImportHydrographWizard( m_hydrographs, m_theme, discModel );
 
     Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();;
 
-    final WizardDialog2 dialog = new WizardDialog2( shell, importProfileWizard );
+    final WizardDialog2 dialog = new WizardDialog2( shell, importHydrographWizard );
     dialog.setRememberSize( true );
     dialog.open();
-    final String errMsg = importProfileWizard.getErrMsg();
+    final String errMsg = importHydrographWizard.getErrMsg();
     if( errMsg != null && errMsg != "" ){
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()

@@ -41,10 +41,6 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
 {
-//  private final static String PROPERTY_MAX_PERC_RATE = Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ); //$NON-NLS-1$
-
-//  private final static String PROPERTY_GW_FACTOR = Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.14" ); //$NON-NLS-1$
-
   private ImportHydrographWizardPage m_wizardPage;
   
   private final int m_grabRadius = 10;
@@ -57,9 +53,15 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
 
   private File inFile = null;
 
-  String m_errMsg = "";
+  String m_errMsg = ""; //$NON-NLS-1$
 
-  private char m_separator = ';';
+  private char m_defaultSeparator = ';';
+  
+  private char m_separator = m_defaultSeparator;
+
+//  private final String m_strPosColumnName = "[x y]"; //$NON-NLS-1$
+
+//  private final String m_strSuffixExport;
 
   public ImportHydrographWizard( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme hydroTheme, final IFEDiscretisationModel1d2d discModel )
   {
@@ -68,8 +70,7 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
     m_hydrographCollection = hydrographCollection;
     m_hydroTheme = hydroTheme;
     
-//    final String[] properties = new String[] { PROPERTY_MAX_PERC_RATE, PROPERTY_GW_FACTOR };
-    m_wizardPage = new ImportHydrographWizardPage( "ImportHydrographsPage" ); //$NON-NLS-1$
+    m_wizardPage = new ImportHydrographWizardPage( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.0" ) ); //$NON-NLS-1$
     
     m_wizardPage.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.2" ) ); //$NON-NLS-1$
     
@@ -101,6 +102,9 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
             continue;
           }
           GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
+          if( hydroPositionFromElement == null ){
+            continue;
+          }
           lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, lf.getId(), lf.getDescription() ).getFeature() );
         }
         postCommand( lListNewHydroFeatures.toArray( new Feature[ lListNewHydroFeatures.size() ] ) );
@@ -125,17 +129,53 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
     if( inFile.getName().endsWith( ".shp" ) ){ //$NON-NLS-1$
       bDone = doImportFromShape();
     }
-    else if( inFile.getName().endsWith( ".txt" ) || inFile.getName().endsWith( ".csv" ) ){ //$NON-NLS-1$
+    else if( inFile.getName().endsWith( ".csv" ) ){ //$NON-NLS-1$ 
+      m_separator = getSeparatorAsChar( m_wizardPage.getsSeparator() );
       bDone = doImportFromCsv();
+    }
+    else if(inFile.getName().endsWith( ".txt" ) ){ //$NON-NLS-1$
+      m_separator = getSeparatorAsChar( m_wizardPage.getsSeparator() );
+      bDone = doImportFromTxt();
     }
    
     if( !bDone ){
       return showErrorMsg( IStatus.CANCEL );
     }
-    else if( m_errMsg != null && m_errMsg != "" ){
+    else if( m_errMsg != null && m_errMsg != "" ){ //$NON-NLS-1$
       return showErrorMsg( Status.WARNING );
     }
     return bDone;
+  }
+
+  private char getSeparatorAsChar( final String separator )
+  {
+    if( separator != null )
+    {
+      String lStrSep = separator.trim();
+      if( lStrSep.charAt( 0 ) == '\\' )
+      {
+        if( lStrSep.charAt( 1 ) == 't' )
+        {
+          return '\t'; 
+        }
+        else if( lStrSep.charAt( 1 ) == '0' )
+        {
+          return '\0'; 
+        }
+        else if( lStrSep.charAt( 1 ) == 'r' )
+        {
+          return '\r'; 
+        }
+        else if( lStrSep.charAt( 1 ) == 'n' )
+        {
+          return '\n'; 
+        }
+      }
+      else if( lStrSep.length() == 1 ){
+        return lStrSep.charAt( 0 );
+      }
+    }
+    return m_defaultSeparator;
   }
 
   private boolean doImportFromCsv( )
@@ -156,15 +196,19 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
           lDoubleY = NumberUtils.parseDouble( lStrY );
         }
         catch (NumberFormatException e) {
-          e.printStackTrace();
+          m_errMsg += e.getMessage();
+//          e.printStackTrace();
           continue;
         }
         final String name = nextLine[2];
-        String description = "";
+        String description = ""; //$NON-NLS-1$
         if( nextLine.length  == 4 ){
           description = nextLine[2];
         }
         GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
+        if( hydroPositionFromElement == null ){
+          continue;
+        }
         lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, name, description ).getFeature() );
       }
       postCommand( lListNewHydroFeatures.toArray( new Feature[ lListNewHydroFeatures.size() ] ) );
@@ -183,12 +227,99 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
     }
     return true;
   }
+  
+  private boolean doImportFromTxt( )
+  {
+    List< Feature > lListNewHydroFeatures = new ArrayList< Feature >();
+    try
+    {
+      final CSVReader readerTimeSeries = new CSVReader( new FileReader( inFile ), m_separator  );
+      String[] nextLine;
+      int lIntCounter = 0;
+      int lIntPosColumnNr = -1; 
+      String name = inFile.getName().substring( 0, inFile.getName().length() - 4 );
+      int lIntExportSuffixPos = inFile.getName().indexOf( ExportHydrographWizard.EXPORT_FILE_NAME_SUFFIX );
+      if( lIntExportSuffixPos > -1 ){
+        name = inFile.getName().substring( 0, lIntExportSuffixPos );
+      }
+      while( (nextLine = readerTimeSeries.readNext()) != null )
+      {
+        if( lIntCounter == 0 ){
+          lIntPosColumnNr = tryToParseHeaderFromKalypsoExport( nextLine );
+        }
+        lIntCounter++;  
+        if( lIntPosColumnNr == -1 ){
+          continue;
+        }
+        
+        final String lStrXY = nextLine[ lIntPosColumnNr ];
+        double lDoubleX; 
+        double lDoubleY; 
+        try{
+          int lPosSepLocal = lStrXY.indexOf( ' ' );
+          lDoubleX = NumberUtils.parseDouble( lStrXY.substring( 0, lPosSepLocal ) );
+          lDoubleY = NumberUtils.parseDouble( lStrXY.substring( lPosSepLocal + 1 ) );
+        }
+        catch (NumberFormatException e) {
+          m_errMsg += e.getMessage();
+//          e.printStackTrace();
+          continue;
+        }
+        String description = ""; //$NON-NLS-1$
+        if( nextLine.length  == 4 ){
+          description = nextLine[2];
+        }
+        GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
+        if( hydroPositionFromElement == null ){
+          continue;
+        }
+        if( lIntCounter > 0 ){
+          name = name + "_" + lIntCounter;
+        }
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, name, description ).getFeature() );
+        
+      }
+      postCommand( lListNewHydroFeatures.toArray( new Feature[ lListNewHydroFeatures.size() ] ) );
+    }
+    catch( FileNotFoundException e )
+    {
+      m_errMsg += e.getMessage();
+      e.printStackTrace();
+      return false;
+    }
+    catch( IOException e )
+    {
+      m_errMsg += e.getMessage();
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   *
+   */
+  private int tryToParseHeaderFromKalypsoExport( final String[] nextLine )
+  {
+    for( int i = 0; i < nextLine.length; i++ )
+    {
+      if( ExportHydrographWizard.COL_POS_NAME.equalsIgnoreCase( nextLine[ i ] ) ){
+        System.out.println( nextLine [ i ] );
+        return i;
+      }
+    }
+    return -1;
+  }
 
   private GM_Position checkPositionOfNewHydrograph( final double lDoubleX, final double lDoubleY )
   {
     GM_Point gm_pos = GeometryFactory.createGM_Point( lDoubleX, lDoubleY, m_wizardPage.getSelectedCRS() );
     IFE1D2DNode node = m_discModel.findNode( gm_pos, m_grabRadius );
     if( node == null ){
+      return null;
+    }
+    IHydrograph existingHydrograph = m_hydrographCollection.findHydrograph( node.getPoint().getPosition(), 0.01 );
+    if( existingHydrograph != null ){
       return null;
     }
     return node.getPoint().getPosition();
@@ -208,6 +339,8 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
           lStatus = Status.OK_STATUS;
         }
         ErrorDialog.openError( shell, "Import Hydrographs Warnings", m_errMsg, lStatus ); //$NON-NLS-1$
+//        ErrorDialog.openError( shell, "sdsds", Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.AbstractEditHydrographWidget.0" ), status ); //$NON-NLS-1$
+ 
       }
     } );
     return true;
@@ -216,11 +349,7 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
   private IHydrograph createHydrograph( final GM_Position hydroPositionFromElement, final String name, final String description ){
 
     if( hydroPositionFromElement == null || m_hydrographCollection == null ){
-      m_errMsg += "cannot find element for creation of hydrograph" + " cannot find any element on target position";
-      return null;
-    }
-    IHydrograph existingHydrograph = m_hydrographCollection.findHydrograph( hydroPositionFromElement, 0.0 );
-    if( existingHydrograph != null ){
+      m_errMsg += Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.4" );//"";
       return null;
     }
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
@@ -261,7 +390,7 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
       }
       catch( final Throwable e )
       {
-        m_errMsg += Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.3" + e.getMessage() );
+        m_errMsg += Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.3" + e.getMessage() );//$NON-NLS-1$
       }
       
     }
@@ -293,8 +422,6 @@ public class ImportHydrographWizard  extends Wizard implements IWorkbenchWizard
   @Override
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    // TODO Auto-generated method stub
-    
   }
 
   public String getErrMsg( )
