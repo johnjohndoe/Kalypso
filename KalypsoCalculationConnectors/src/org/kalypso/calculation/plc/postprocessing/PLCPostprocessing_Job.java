@@ -62,6 +62,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
   {
     try
     {
+      new File( tmpdir, "doNotDelete.txt" ).createNewFile();
       final File riskStatusQuoRasterModelFile = FileUtils.toFile( (URL) inputProvider.getInputForID( "riskStatusQuoRasterDataModel" ) );
       if( riskStatusQuoRasterModelFile.exists() )
       {
