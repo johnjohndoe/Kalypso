@@ -1,61 +1,47 @@
 package org.kalypso.kalypso1d2d.pjt.map;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.shape.FileMode;
-import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
 
 public class ImportHydrographWizardPage extends WizardPage
 {
-//  protected static final String DATA_PROPERTY = "property"; //$NON-NLS-1$
-
-//  private final Map<String, ComboViewer> m_propertyViewers = new HashMap<String, ComboViewer>();
-
-//  private final String[] m_properties;
-
   private FileChooserGroup m_shapeChooser;
+
+  Text m_sSeparator;
 
   private CRSSelectionPanel m_crsPanel;
 
   private String m_selectedCRS;
+
+//  private boolean m_boolValidateSeparator;
 
   public ImportHydrographWizardPage( final String pageName )
   {
     super( pageName );
 
     setImageDescriptor( ImageProvider.IMAGE_WIZBAN_IMPORT );
-    setTitle( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.0" ) ); //$NON-NLS-1$
-
-//    m_properties = properties;
+    setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -74,13 +60,13 @@ public class ImportHydrographWizardPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    final FileChooserDelegateOpen shapeChooser = new FileChooserDelegateOpen();
-    shapeChooser.addFilter( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" ), "*.shp" ); //$NON-NLS-1$ //$NON-NLS-2$
-    shapeChooser.addFilter( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" ), "*.txt" ); //$NON-NLS-1$ //$NON-NLS-2$
-    shapeChooser.addFilter( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" ), "*.csv" ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_shapeChooser = new FileChooserGroup( shapeChooser );
+    final FileChooserDelegateOpen fileChooser = new FileChooserDelegateOpen();
+    fileChooser.addFilter( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.1" ), "*.shp" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.addFilter( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.2" ), "*.txt" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileChooser.addFilter( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.3" ), "*.csv" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_shapeChooser = new FileChooserGroup( fileChooser );
     m_shapeChooser.setDialogSettings( getDialogSettings() );
-    m_shapeChooser.setLabel( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.2" ) ); //$NON-NLS-1$
+    m_shapeChooser.setLabel( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.4" ) ); //$NON-NLS-1$
     m_shapeChooser.createControlsInGrid( container );
     m_shapeChooser.addFileChangedListener( new FileChangedListener()
     {
@@ -91,7 +77,7 @@ public class ImportHydrographWizardPage extends WizardPage
       }
     } );
 
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.3" ) ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.5" ) ); //$NON-NLS-1$
 
     final Composite crsContainer = new Composite( container, SWT.NONE );
     crsContainer.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
@@ -106,6 +92,32 @@ public class ImportHydrographWizardPage extends WizardPage
       }
     } );
 
+    Label lblSeparator = new Label( container, SWT.NONE );
+    lblSeparator.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false, 1, 1 ) );
+    lblSeparator.setText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographExportWizard.15" ) ); //$NON-NLS-1$ 
+
+    m_sSeparator = new Text( container, SWT.BORDER );
+    m_sSeparator.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false, 1, 1 ) );
+    m_sSeparator.setSize( 30, 21 );
+    m_sSeparator.setText( ";" ); //$NON-NLS-1$
+    final Color lBackColor = m_sSeparator.getBackground();
+    final Color lRedColor =  m_sSeparator.getDisplay().getSystemColor( SWT.COLOR_RED );
+    m_sSeparator.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( ModifyEvent arg0 )
+      {
+        if( m_sSeparator.getText().length() > 1 && !( m_sSeparator.getText().equals( "\\t" ) || m_sSeparator.getText().equals( "\\n" ) || m_sSeparator.getText().equals( "\\r" ) || m_sSeparator.getText().equals( "\\0" ) ) ){ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          m_sSeparator.setToolTipText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographExportWizard.16" ) ); //$NON-NLS-1$ 
+          m_sSeparator.setBackground( lRedColor );
+        }
+        else{
+          m_sSeparator.setToolTipText( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographExportWizard.17" ) ); //$NON-NLS-1$ 
+          m_sSeparator.setBackground( lBackColor );
+        }
+      }
+    } );
+
     setPageComplete( m_shapeChooser.getFile() != null );
 
     setControl( container );
@@ -113,6 +125,18 @@ public class ImportHydrographWizardPage extends WizardPage
 
   protected void handleShapeFileChanged( final File file )
   {
+    if( file == null ){
+      return;
+    }
+    if( file.getName() != null && ( file.getName().toLowerCase().endsWith( "csv" ) || file.getName().toLowerCase().endsWith( "txt" ) ) ){
+      m_sSeparator.setEnabled( true );
+//      m_boolValidateSeparator = true;
+    }
+    else{
+      m_sSeparator.setEnabled( false );
+//      m_boolValidateSeparator = false; 
+    }
+     
     validatePage();
 
     // FIXME: introduce '<none selected>' entry; page is only complete, if all entries have been selected
@@ -197,7 +221,7 @@ public class ImportHydrographWizardPage extends WizardPage
 
     m_selectedCRS = m_crsPanel.getSelectedCRS();
     if( m_selectedCRS == null )
-      return new MessageProvider( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.5" ), ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.ImportWizardPage.6" ), ERROR ); //$NON-NLS-1$
 
     return shapeMessage;
   }
@@ -206,18 +230,15 @@ public class ImportHydrographWizardPage extends WizardPage
   {
     return m_shapeChooser.getFile();
   }
-/*
-  public String getProperty( final String propertyName )
-  {
-    final ComboViewer comboViewer = m_propertyViewers.get( propertyName );
-    if( comboViewer == null )
-      return null;
 
-    return (String) comboViewer.getControl().getData( DATA_PROPERTY );
-  }
-*/
   public String getSelectedCRS( )
   {
     return m_selectedCRS;
   }
+
+  public String getsSeparator( )
+  {
+    return m_sSeparator.getText();
+  }
+  
 }

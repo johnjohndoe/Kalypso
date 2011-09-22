@@ -39,6 +39,11 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 public class ExportHydrographWizard extends Wizard
 {
+  public static final String EXPORT_FILE_NAME_SUFFIX = "_exptt_"; //$NON-NLS-1$
+
+  public static final String COL_POS_NAME = "[x y]"; //$NON-NLS-1$
+
+  
   private static final String NO_VALUE = "#NV"; //$NON-NLS-1$
 
   private Set<Integer> m_setExclusion = new HashSet<Integer>();
@@ -52,8 +57,6 @@ public class ExportHydrographWizard extends Wizard
   private final static String SINGLE_FILE_NAME_PREFIX = "all_hydrographs_exptt_"; //$NON-NLS-1$
 
   private static int HEADER_COLS_COUNT = 8;
-
-  private static final String COL_POS = "[x y]"; //$NON-NLS-1$
 
   ExportHydrographWizardPage m_exportHydrographWizardPage;
 
@@ -253,7 +256,7 @@ public class ExportHydrographWizard extends Wizard
       selectedHydrograph = (IHydrograph) (lListHydrographs.get( lCountHydrographs )).getAdapter( IHydrograph.class );
       m_geoPosition = selectedHydrograph.getLocation();
       Date lDateNow = new Date();
-      String lStrFileName = /* "hydrograph_" + */selectedHydrograph.getName().replace( " ", "_" ) + "_Nr_" + lCountHydrographs + "_exptt_" + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      String lStrFileName = /* "hydrograph_" + */selectedHydrograph.getName().replace( " ", "_" ) + "_Nr_" + lCountHydrographs + EXPORT_FILE_NAME_SUFFIX + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       if( m_exportHydrographWizardPage.getRadioSingleFile().getSelection() )
       {
         lStrFileName = SINGLE_FILE_NAME_PREFIX + m_dateTimeFormatFileName.format( lDateNow ) + ".txt"; //$NON-NLS-1$
@@ -469,7 +472,7 @@ public class ExportHydrographWizard extends Wizard
     {
       if( i == 1 )
       {
-        formatter.format( "%s%s", COL_POS, m_textSep ); //$NON-NLS-1$
+        formatter.format( "%s%s", COL_POS_NAME, m_textSep ); //$NON-NLS-1$
       }
       if( m_setExclusion.contains( i ) )
       {
