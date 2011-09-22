@@ -120,7 +120,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
     }
     catch( final Exception e )
     {
-      throw new SimulationException( e.getLocalizedMessage() );
+      throw new SimulationException( "Problem bei der Berechnung der Überflutungsdifferenzen", e );
     }
   }
 
@@ -156,7 +156,7 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
         if( highestReturnPeriod < returnPeriod )
           highestReturnPeriod = returnPeriod;
       }
-      
+
       // select representative HQ collection (highest HQ)
       IAnnualCoverageCollection collection1_HQ100 = null;
       IAnnualCoverageCollection collection2_HQ100 = null;
