@@ -99,7 +99,7 @@ public class ImportHydrographWizardPage extends WizardPage
     m_sSeparator = new Text( container, SWT.BORDER );
     m_sSeparator.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false, 1, 1 ) );
     m_sSeparator.setSize( 30, 21 );
-    m_sSeparator.setText( ";" ); //$NON-NLS-1$
+    m_sSeparator.setText( "\\t" ); //$NON-NLS-1$
     final Color lBackColor = m_sSeparator.getBackground();
     final Color lRedColor =  m_sSeparator.getDisplay().getSystemColor( SWT.COLOR_RED );
     m_sSeparator.addModifyListener( new ModifyListener()
