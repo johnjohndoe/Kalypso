@@ -93,16 +93,16 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
     IHydrograph nearest = null;
     for( final Feature feature : foundFeatures )
     {
-      final IHydrograph curNode = (IHydrograph) feature.getAdapter( IHydrograph.class );
+      final IHydrograph curHydro = (IHydrograph) feature.getAdapter( IHydrograph.class );
 
-      GM_Object location = curNode.getLocation();
-      if( curNode instanceof GM_Point )
+      GM_Object location = curHydro.getLocation();
+      if( location instanceof GM_Point )
       {
         GM_Point point = (GM_Point) location;
         final double curDist = position.getDistance( point.getPosition() );
         if( min > curDist )
         {
-          nearest = curNode;
+          nearest = curHydro;
           min = curDist;
         }
       }
