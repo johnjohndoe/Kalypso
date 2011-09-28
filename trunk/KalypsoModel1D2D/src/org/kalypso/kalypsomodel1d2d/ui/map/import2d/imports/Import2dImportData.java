@@ -38,42 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.internal.import2dm;
+package org.kalypso.kalypsomodel1d2d.ui.map.import2d.imports;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.kalypso.commons.databinding.swt.FileAndHistoryData;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Gernot Belger
  */
-public class SmsConverter
+public class Import2dImportData extends FileAndHistoryData
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  public static final String PROPERTY_SRS = "srs"; //$NON-NLS-1$
 
-  private final ISMSModel m_model;
+  private String m_srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-  public SmsConverter( final ISMSModel model )
+  public Import2dImportData( )
   {
-    m_model = model;
+    super( "importData" ); //$NON-NLS-1$
   }
 
-  public void addTarget( final ISmsConversionTarget target )
+  @Override
+  public void init( final IDialogSettings settings )
   {
-    m_targets.add( target );
+    super.init( settings );
+
+    m_srs = DialogSettingsUtils.getString( settings, PROPERTY_SRS, m_srs );
   }
 
-  public void execute( )
+  @Override
+  public void storeSettings( final IDialogSettings settings )
   {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
+    super.storeSettings( settings );
 
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
+    settings.put( PROPERTY_SRS, m_srs );
+  }
+
+  public String getSrs( )
+  {
+    return m_srs;
+  }
+
+  public void setSrs( final String srs )
+  {
+    final Object oldValue = m_srs;
+
+    m_srs = srs;
+
+    firePropertyChange( PROPERTY_SRS, oldValue, srs );
   }
 }

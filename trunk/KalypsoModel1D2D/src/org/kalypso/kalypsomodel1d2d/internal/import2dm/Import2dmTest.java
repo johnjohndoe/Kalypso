@@ -9,6 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * @author Thomas Jung
@@ -20,11 +21,12 @@ public class Import2dmTest
   {
     /* Coordinate system of the 2DM file */
     final String sourceSRS = "EPSG:31467"; //$NON-NLS-1$
+    final int sourceSrid = JTSAdapter.toSrid( sourceSRS );
 
     final List<File> inputFiles = new ArrayList<File>();
 
-    inputFiles.add( new File( "G:\\Projekte\\2DM\\dgmkorr.2dm" ) ); //$NON-NLS-1$
-    // inputFiles.add( new File( "G:\\Projekte\\2DM\\testhw99.2dm" ) ); //$NON-NLS-1$
+    //    inputFiles.add( new File( "G:\\Projekte\\2DM\\dgmkorr.2dm" ) ); //$NON-NLS-1$
+    inputFiles.add( new File( "G:\\Projekte\\2DM\\testhw99.2dm" ) ); //$NON-NLS-1$
 
     final File[] input = inputFiles.toArray( new File[inputFiles.size()] );
 
@@ -44,18 +46,18 @@ public class Import2dmTest
     {
       final File inputFile = input[j];
 
-      final ISMSModel model2dm = new SmsModel( sourceSRS );
-      final SMSParser parser = new SMSParser( model2dm );
+      final SMSParser parser = new SMSParser( sourceSrid );
 
       final URL url =  inputFile.toURI().toURL();
       final IStatus parseStatus = parser.parse( url, new NullProgressMonitor() );
 
       System.out.println( parseStatus );
 
-      final SmsConverter converter = new SmsConverter( model2dm );
+      final ISMSModel model = parser.getModel();
+      final SmsConverter converter = new SmsConverter( model );
 
       final File outputGmlFile = new File( outgml[j] );
-      converter.addTarget( new DiscModelImporter( outputGmlFile ) );
+      converter.addTarget( new SmsDicretisationModelTarget( outputGmlFile ) );
 
       // final File outputShpFile = new File( outshp[j] );
       // converter.addTarget( new SHPModelImporter( outputShpFile ) );

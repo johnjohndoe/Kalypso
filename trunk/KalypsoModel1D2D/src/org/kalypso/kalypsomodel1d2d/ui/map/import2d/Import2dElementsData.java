@@ -38,42 +38,48 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.internal.import2dm;
+package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.kalypsomodel1d2d.internal.import2dm.IPolygonWithName;
 
 /**
+ * Data modle for {@link Import2dElementsWidget}
+ *
  * @author Gernot Belger
  */
-public class SmsConverter
+public class Import2dElementsData extends AbstractModelObject
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  public static final String PROPERTY_ANALYSIS_ENABLED = "analysisEnabled"; //$NON-NLS-1$
 
-  private final ISMSModel m_model;
+  private IPolygonWithName[] m_elements;
 
-  public SmsConverter( final ISMSModel model )
+  private final Import2dDataset m_statistics = new Import2dDataset();
+
+  public Import2dDataset getStatistics( )
   {
-    m_model = model;
+    return m_statistics;
   }
 
-  public void addTarget( final ISmsConversionTarget target )
+  public void setElements( final IPolygonWithName[] elements, final IStatus readStatus )
   {
-    m_targets.add( target );
+    final Object oldAnalysisEnabled = getAnalysisEnabled();
+
+    m_elements = elements;
+
+    if( m_elements == null )
+      m_statistics.setElementCount( 0 );
+    else
+      m_statistics.setElementCount( m_elements.length );
+
+    m_statistics.setLastReadStatus( readStatus );
+
+    firePropertyChange( PROPERTY_ANALYSIS_ENABLED, oldAnalysisEnabled, getAnalysisEnabled() );
   }
 
-  public void execute( )
+  public boolean getAnalysisEnabled( )
   {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
-
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
+    return m_statistics.getElementCount() > 0;
   }
 }

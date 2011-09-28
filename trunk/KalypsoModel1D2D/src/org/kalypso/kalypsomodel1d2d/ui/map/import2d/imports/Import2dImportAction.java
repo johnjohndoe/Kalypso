@@ -38,42 +38,42 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.internal.import2dm;
+package org.kalypso.kalypsomodel1d2d.ui.map.import2d.imports;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.ui.map.import2d.Import2dElementsData;
 
 /**
  * @author Gernot Belger
  */
-public class SmsConverter
+public class Import2dImportAction extends Action
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  private final Import2dElementsData m_data;
 
-  private final ISMSModel m_model;
-
-  public SmsConverter( final ISMSModel model )
+  public Import2dImportAction( final Import2dElementsData data )
   {
-    m_model = model;
+    m_data = data;
+
+    setText( "Import elements from file..." );
+    setToolTipText( "Add elements from an external file to the working set of elements" );
+
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.IMPORT_2D_ELEMENTS ) );
   }
 
-  public void addTarget( final ISmsConversionTarget target )
+  @Override
+  public void runWithEvent( final Event event )
   {
-    m_targets.add( target );
-  }
-
-  public void execute( )
-  {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
-
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
+    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final Wizard wizard = new Import2dImportWizard( m_data );
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
   }
 }

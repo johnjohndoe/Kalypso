@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.tools.refinement.RefinementUtils;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 class SmsElement
 {
@@ -55,28 +51,31 @@ class SmsElement
 
   private final ISMSModel m_model;
 
-  public SmsElement( final ISMSModel model, final Integer[] nodeIds )
+  private final int m_id;
+
+  public SmsElement( final ISMSModel model, final int id, final Integer[] nodeIds )
   {
     m_model = model;
+    m_id = id;
     m_nodeIds = nodeIds;
   }
 
-  public GM_Surface<GM_SurfacePatch> toSurface( ) throws GM_Exception
+  public IPolygonWithName toSurface( )
   {
-    final Collection<GM_Position> posList = new ArrayList<GM_Position>();
-
-    for( final Integer nodeId : m_nodeIds )
+    final Coordinate[] coordinates = new Coordinate[m_nodeIds.length + 1];
+    for( int i = 0; i < m_nodeIds.length; i++ )
     {
-      final GM_Position nodePos = m_model.getNode( nodeId );
-      posList.add( nodePos );
+      coordinates[i] = m_model.getNode( m_nodeIds[i] );
     }
+    coordinates[m_nodeIds.length] = m_model.getNode( m_nodeIds[0] );
 
-    final GM_Position firstNode = m_model.getNode( m_nodeIds[0] );
-    posList.add( firstNode );
+    final int srid = m_model.getSrid();
 
-    final String srs = m_model.getSrs();
+    final GeometryFactory gf = m_model.getGeometryFactory();
+    final LinearRing shell = gf.createLinearRing( coordinates );
+    final Polygon polygon = gf.createPolygon( shell, null );
+    polygon.setSRID( srid );
 
-    final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
-    return RefinementUtils.getSurface( poses, srs );
+    return new PolygonWithName( Integer.toString( m_id ), polygon );
   }
 }

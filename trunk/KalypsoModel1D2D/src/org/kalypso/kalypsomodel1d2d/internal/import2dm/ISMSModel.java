@@ -2,20 +2,20 @@ package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.geometry.GM_Position;
-
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * The handler interface for RMA·Kalypso model element. Class implementing this interface can be set to handle parsing
  * events from a {@link IRMA10SModelReader}
- * 
+ *
  * @author Thomas Jung
  */
-interface ISMSModel
+public interface ISMSModel
 {
   /**
    * Invoked by the reader to signal that an node has been read and parsed
-   * 
+   *
    * @param the
    *          complete line read
    * @param id
@@ -34,7 +34,7 @@ interface ISMSModel
    */
   void addElement( String lineString, int id, Integer[] nodeIds, int rougthnessClassID );
 
-  GM_Position getNode( Integer nodeId );
+  Coordinate getNode( Integer nodeId );
 
   /**
    * Returns a (unmodifiable) list of all elements of this model.
@@ -44,5 +44,7 @@ interface ISMSModel
   /**
    * Returns the coordinate systems all elements and nodes of this model are in.
    */
-  String getSrs( );
+  int getSrid( );
+
+  GeometryFactory getGeometryFactory( );
 }

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
@@ -93,21 +93,10 @@ public class ElementGeometryHelper
 
   private static final DateFormat m_DF = new SimpleDateFormat( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0" ) ); //$NON-NLS-1$
 
-  // /**
-  // * wrapper for {@link createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace,
-  // final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points, final int
-  // pIntPointsCount ) }
-  // * with additional points counter, 0 means not bounded.
-  // */
-  // public static Feature createAdd2dElement( final CompositeCommand command, final CommandableWorkspace
-  // workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
-  // {
-  // return createAdd2dElement( command, workspace, parentFeature, discModel, points, points.size() );
-  // }
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
-   * 
+   *
    * @param command
    *          the {@link CompositeCommand} to be filled
    * @param workspace
@@ -166,7 +155,7 @@ public class ElementGeometryHelper
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
-   * 
+   *
    * @param command
    *          the {@link CompositeCommand} to be filled
    * @param workspace
@@ -194,7 +183,7 @@ public class ElementGeometryHelper
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     /* Build new nodes */
-    final IFE1D2DNode[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
+    final IFE1D2DNode< ? >[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
 
     /* Build one new edge for the 1d element */
     final IFE1D2DEdge[] edges = buildNewEdges( 1, command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
@@ -215,8 +204,7 @@ public class ElementGeometryHelper
     command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
   }
 
-  @SuppressWarnings("unchecked")
-  public static final void addNodeContainerCommand( final IFE1D2DNode node0, final IFE1D2DNode node1, final IPropertyType propertyType, final IFE1D2DEdge edge, final List<FeatureChange> changes )
+  public static final void addNodeContainerCommand( final IFE1D2DNode< ? > node0, final IFE1D2DNode< ? > node1, final IPropertyType propertyType, final IFE1D2DEdge edge, final List<FeatureChange> changes )
   {
     final Feature edgeFeature = edge;
     final Feature node0Feature = node0;
@@ -228,7 +216,6 @@ public class ElementGeometryHelper
     changes.add( change1 );
   }
 
-  @SuppressWarnings("unchecked")
   public static final void addEdgeContainerCommand( final IFE1D2DEdge[] edges, final IPropertyType propertyType, final IFE1D2DElement element, final List<FeatureChange> changes )
   {
     final Feature elementFeature = element;
@@ -247,7 +234,7 @@ public class ElementGeometryHelper
    * {@link CompositeCommand} with the {@link AddFeatureCommand}s for the new nodes. Via a given search distance it is
    * checked, if there are already existing {@link IFE1D2DNode}s in the neighborhood. If this is the case,no new nodes
    * will be generated.
-   * 
+   *
    * @param points
    *          the points
    * @param command
@@ -321,7 +308,6 @@ public class ElementGeometryHelper
         newEdge.setNodes( node0, node1 );
         edges[i] = newEdge;
         final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge, null, false );
-
         command.addCommand( addEdgeCommand );
 
         ElementGeometryHelper.addNodeContainerCommand( node0, node1, nodeContainerPT, newEdge, changes );
@@ -441,7 +427,7 @@ public class ElementGeometryHelper
     // create the nodes
     final List<GM_Point> nodes = new ArrayList<GM_Point>();
 
-    // TODO: handle snapping on neigboring nodes => quadrangles to triangles
+    // TODO: handle snapping on neighboring nodes => quadrangles to triangles
     for( int i = 0; i < poses.length - 1; i++ )
       nodes.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], crs ) );
 

@@ -42,38 +42,28 @@ package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
+ * @author Thomas Jung
  * @author Gernot Belger
  */
-public class SmsConverter
+public class SmsCollectorTarget implements ISmsConversionTarget
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  private final Collection<IPolygonWithName> m_polygons = new ArrayList<IPolygonWithName>();
 
-  private final ISMSModel m_model;
-
-  public SmsConverter( final ISMSModel model )
+  @Override
+  public void addElement( final IPolygonWithName surface )
   {
-    m_model = model;
+    m_polygons.add( surface );
   }
 
-  public void addTarget( final ISmsConversionTarget target )
+  @Override
+  public void finish( )
   {
-    m_targets.add( target );
   }
 
-  public void execute( )
+  public IPolygonWithName[] getElements( )
   {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
-
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
+    return m_polygons.toArray( new IPolygonWithName[m_polygons.size()] );
   }
 }
