@@ -58,11 +58,11 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.SurfacePolygonZShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -103,11 +103,13 @@ class SHPModelImporter implements ISmsConversionTarget
   }
 
   @Override
-  public void addElement( final GM_Surface<GM_SurfacePatch> surface )
+  public void addElement( final IPolygonWithName item )
   {
     try
     {
       m_count++;
+
+      final GM_Object surface = JTSAdapter.wrapWithSrid( item.getPolygon() );
       final Object[] data = new Object[] { surface };
       final Feature feature = FeatureFactory.createFeature( m_shapeRootFeature, m_shapeParentRelation, "Feature_" + m_count, m_shapeFT, data ); //$NON-NLS-1$
       m_workspace.addFeatureAsComposition( m_shapeRootFeature, m_shapeParentRelation, -1, feature );

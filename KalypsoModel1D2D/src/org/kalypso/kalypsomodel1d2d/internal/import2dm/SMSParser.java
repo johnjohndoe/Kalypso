@@ -66,10 +66,10 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 
 /**
  * Provides algorithm to convert from a SMS model to a 1d2d discretisation model
- * 
+ *
  * @author Thomas Jung
  */
-class SMSParser
+public class SMSParser
 {
   private final IStatusCollector m_stati = new StatusCollector( KalypsoModel1D2DPlugin.PLUGIN_ID );
 
@@ -79,9 +79,9 @@ class SMSParser
 
   private static final Pattern ELEMENT_LINE_PATTERN_E4Q = Pattern.compile( "E4Q\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
 
-  public SMSParser( final ISMSModel model2dm )
+  public SMSParser( final int srid )
   {
-    m_model = model2dm;
+    m_model = new SmsModel( srid );
   }
 
   public IStatus parse( final URL url, final IProgressMonitor monitor ) throws IOException
@@ -222,4 +222,8 @@ class SMSParser
     m_stati.add( severity, msg );
   }
 
+  public ISMSModel getModel( )
+  {
+    return m_model;
+  }
 }

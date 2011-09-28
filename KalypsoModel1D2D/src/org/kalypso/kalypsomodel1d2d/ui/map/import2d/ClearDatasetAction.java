@@ -38,42 +38,42 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.internal.import2dm;
+package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 
 /**
  * @author Gernot Belger
  */
-public class SmsConverter
+public class ClearDatasetAction extends Action
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  private final Import2dElementsData m_data;
 
-  private final ISMSModel m_model;
-
-  public SmsConverter( final ISMSModel model )
+  public ClearDatasetAction( final Import2dElementsData data )
   {
-    m_model = model;
+    m_data = data;
+
+    setText( "Clear Dataset" );
+    setToolTipText( "Clears all elements from the dataset" );
+
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    setImageDescriptor( imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.DELETE ) );
   }
 
-  public void addTarget( final ISmsConversionTarget target )
+  @Override
+  public void runWithEvent( final Event event )
   {
-    m_targets.add( target );
-  }
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-  public void execute( )
-  {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
+    if( !MessageDialog.openConfirm( shell, getText(), "Clear all elements from the dataset?" ) )
+      return;
 
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
+    m_data.setElements( null, null );
   }
 }

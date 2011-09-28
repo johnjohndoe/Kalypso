@@ -46,41 +46,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * @author Thomas Jung
  */
 class SmsModel implements ISMSModel
 {
+  private final GeometryFactory m_geometryFactory = new GeometryFactory();
+
   private final List<SmsElement> m_elementList = new ArrayList<SmsElement>();
 
-  final Map<Integer, GM_Position> m_nodeMap = new HashMap<Integer, GM_Position>();
+  final Map<Integer, Coordinate> m_nodeMap = new HashMap<Integer, Coordinate>();
 
-  private final String m_srs;
+  private final int m_srid;
 
-  public SmsModel( final String srs )
+
+  public SmsModel( final int srid )
   {
-    m_srs = srs;
+    m_srid = srid;
   }
 
   @Override
   public void addElement( final String lineString, final int id, final Integer[] nodeIds, final int roughnessClassID )
   {
-    final SmsElement data = new SmsElement( this, nodeIds );
+    final SmsElement data = new SmsElement( this, id, nodeIds );
     m_elementList.add( data );
   }
 
   @Override
   public void addNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
-    final GM_Position position = GeometryFactory.createGM_Position( easting, northing, elevation );
+    final Coordinate position = new Coordinate( easting, northing, elevation );
     m_nodeMap.put( id, position );
   }
 
   @Override
-  public GM_Position getNode( final Integer nodeId )
+  public Coordinate getNode( final Integer nodeId )
   {
     return m_nodeMap.get( nodeId );
   }
@@ -92,8 +95,14 @@ class SmsModel implements ISMSModel
   }
 
   @Override
-  public String getSrs( )
+  public int getSrid( )
   {
-    return m_srs;
+    return m_srid;
+  }
+
+  @Override
+  public GeometryFactory getGeometryFactory( )
+  {
+    return m_geometryFactory;
   }
 }

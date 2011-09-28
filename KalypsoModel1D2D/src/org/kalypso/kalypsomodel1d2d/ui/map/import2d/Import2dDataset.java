@@ -38,42 +38,49 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.internal.import2dm;
+package org.kalypso.kalypsomodel1d2d.ui.map.import2d;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.util.AbstractModelObject;
 
 /**
  * @author Gernot Belger
  */
-public class SmsConverter
+public class Import2dDataset extends AbstractModelObject
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  public static final String PROPERTY_ELEMENT_COUNT = "elementCount"; //$NON-NLS-1$
 
-  private final ISMSModel m_model;
+  public static final String PROPERTY_LAST_READ_STATUS = "lastReadStatus"; //$NON-NLS-1$
 
-  public SmsConverter( final ISMSModel model )
+  private int m_elementCount;
+
+  private IStatus m_readStatus;
+
+  public void setElementCount( final int length )
   {
-    m_model = model;
+    final Object oldValue = m_elementCount;
+
+    m_elementCount = length;
+
+    firePropertyChange( PROPERTY_ELEMENT_COUNT, oldValue, length );
   }
 
-  public void addTarget( final ISmsConversionTarget target )
+  public int getElementCount( )
   {
-    m_targets.add( target );
+    return m_elementCount;
   }
 
-  public void execute( )
+  public IStatus getLastReadStatus( )
   {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
+    return m_readStatus;
+  }
 
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
+  public void setLastReadStatus( final IStatus readStatus )
+  {
+    final Object oldValue = m_readStatus;
+
+    m_readStatus = readStatus;
+
+    firePropertyChange( PROPERTY_LAST_READ_STATUS, oldValue, readStatus );
   }
 }

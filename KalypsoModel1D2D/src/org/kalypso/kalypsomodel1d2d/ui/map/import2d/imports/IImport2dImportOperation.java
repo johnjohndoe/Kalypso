@@ -38,42 +38,16 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.internal.import2dm;
+package org.kalypso.kalypsomodel1d2d.ui.map.import2d.imports;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * @author Gernot Belger
  */
-public class SmsConverter
+public interface IImport2dImportOperation extends ICoreRunnableWithProgress
 {
-  private final Collection<ISmsConversionTarget> m_targets = new ArrayList<ISmsConversionTarget>();
+  String getFilterName( );
 
-  private final ISMSModel m_model;
-
-  public SmsConverter( final ISMSModel model )
-  {
-    m_model = model;
-  }
-
-  public void addTarget( final ISmsConversionTarget target )
-  {
-    m_targets.add( target );
-  }
-
-  public void execute( )
-  {
-    final List<SmsElement> elements = m_model.getElementList();
-    for( final SmsElement element : elements )
-    {
-      final IPolygonWithName surface = element.toSurface();
-      for( final ISmsConversionTarget importer : m_targets )
-        importer.addElement( surface );
-    }
-
-    for( final ISmsConversionTarget target : m_targets )
-      target.finish();
-  }
+  String getFilterExtension( );
 }

@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.internal.import2dm;
 
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-
 /**
  * @author Thomas Jung
  */
 interface ISmsConversionTarget
 {
-  void addElement( GM_Surface<GM_SurfacePatch> surface );
+  void addElement( IPolygonWithName surface );
 
   void finish( );
 }
