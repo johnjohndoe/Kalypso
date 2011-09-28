@@ -257,7 +257,7 @@ public class MergeTrianglesWidget extends AbstractWidget
       try
       {
         final Symbolizer symbolizer = m_warning == null ? createGoodSymbolizer() : createBadSymbolizer();
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( m_currentEdge.getFeature(), symbolizer );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( m_currentEdge.getFeature(), symbolizer, null );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
       catch( final Exception e )
