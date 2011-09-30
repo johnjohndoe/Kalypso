@@ -279,8 +279,16 @@ public class CrossSectionConverter
 
     // TODO: add vegetation class component
     // setValue( record, IWspmConstants.POINT_PROPERTY_, point.getVegetation() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point.getVegetationAx().doubleValue() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point.getVegetationAy().doubleValue() );
-    setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point.getVegetationDp().doubleValue() );
+    final BigDecimal vegetationAx = point.getVegetationAx();
+    if( vegetationAx != null )
+      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, vegetationAx.doubleValue() );
+
+    final BigDecimal vegetationAy = point.getVegetationAy();
+    if( vegetationAy != null )
+      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, vegetationAy.doubleValue() );
+
+    final BigDecimal vegetationDp = point.getVegetationDp();
+    if( vegetationDp != null )
+      setValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, vegetationDp.doubleValue() );
   }
 }
