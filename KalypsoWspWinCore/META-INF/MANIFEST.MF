@@ -10,4 +10,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.wspwin.core,
  org.kalypso.wspwin.core.prf,
  org.kalypso.wspwin.core.prf.datablock
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

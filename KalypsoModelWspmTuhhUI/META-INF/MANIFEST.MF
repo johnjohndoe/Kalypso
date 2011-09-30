@@ -34,4 +34,4 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.junit;resolution:=optional,
  org.kalypso.featureview
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
