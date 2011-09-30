@@ -37,4 +37,4 @@ Export-Package: org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.roughness,
  org.kalypso.ui.wizards.results
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

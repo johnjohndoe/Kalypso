@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.ui,
  org.kalypso.model.wspm.schema
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.connector.fm_rm,
  org.kalypso.calculation.connector.na_wspm,
