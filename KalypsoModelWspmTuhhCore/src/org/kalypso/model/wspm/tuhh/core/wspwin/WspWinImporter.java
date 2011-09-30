@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -310,8 +311,12 @@ public final class WspWinImporter
     final IProfil[] profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
 
     ProfileFeatureFactory.toFeature( profile[0], prof );
-    /* Set state as default name for profile. */
-    prof.setName( bean.getStateName() );
+
+    /* Set filename as profile name in order to make it unique */
+    prof.setName( FilenameUtils.removeExtension( fileName ) );
+
+    /* Set state as default description for profile. */
+    prof.setDescription( bean.getStateName() );
 
     /* Only add profile if no error occurs */
     knownProfiles.put( fileName, prof );
