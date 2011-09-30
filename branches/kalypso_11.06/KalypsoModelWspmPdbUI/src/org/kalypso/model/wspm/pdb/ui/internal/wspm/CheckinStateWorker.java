@@ -102,8 +102,10 @@ public class CheckinStateWorker implements ICheckInWorker
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
-      final String name = segment.getProfileMember().getName();
+      final String segmentName = segment.getProfileMember().getName();
       final BigDecimal station = segment.getStation();
+
+      final String name = CheckinStateOperation.createCrossSectionName( segmentName, station );
 
       if( StringUtils.isEmpty( name ) )
       {

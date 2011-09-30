@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -66,12 +65,11 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -182,7 +180,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     /* Data from profile */
     final BigDecimal station = getStation( feature );
     section.setStation( station );
-    final String name = profil.getName();
+    final String name = CheckinStateOperation.createCrossSectionName( profil.getName(), station );
 
     /* Check for uniqueness of profile name */
     if( !m_sectionNames.addUniqueName( name ) )
@@ -253,7 +251,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     final Set<CrossSectionPart> parts = new HashSet<CrossSectionPart>();
 
     /* Extract profile line */
-    final CrossSectionPart pPart = builtPart( profil, profilSRS, IWspmConstants.POINT_PROPERTY_HOEHE, IGafConstants.KZ_CATEGORY_PROFILE );
+    final CrossSectionPart pPart = builtPart( profil, profilSRS, new PPPartBuilder( profil ) );
     if( !isBlank( pPart ) )
     {
       parts.add( pPart );
@@ -261,15 +259,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
     }
 
     /* Extract building parts */
-    final CrossSectionPart ukPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_UK );
+    final CrossSectionPart ukPart = builtPart( profil, profilSRS, new UKPartBuilder() );
     if( !isBlank( ukPart ) )
       parts.add( ukPart );
 
-    final CrossSectionPart okPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okPart = builtPart( profil, profilSRS, new OKPartBuilder() );
     if( !isBlank( okPart ) )
       parts.add( okPart );
 
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, new OKPartBuilder() );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
@@ -297,12 +295,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return part.getPoints().isEmpty();
   }
 
-  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final String mainComponentID, final String category ) throws PdbConnectException
+  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID );
+    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, partBuilder );
     partOperation.execute();
     final CrossSectionPart part = partOperation.getPart();
-    part.setCategory( category );
+    part.setCategory( partBuilder.getCategory() );
     return part;
   }
 
