@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
@@ -85,8 +84,6 @@ public class CheckinPartOperation
 
   private final String m_profilSRS;
 
-  private final String m_heightComponentID;
-
   private final Coefficients m_coefficients;
 
   private final GafCodes m_gafCodes;
@@ -95,15 +92,17 @@ public class CheckinPartOperation
 
   private final IGeoTransformer m_transformer;
 
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID )
+  private final IPartBuilder m_partBuilder;
+
+  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final IPartBuilder partBuilder )
   {
+    m_partBuilder = partBuilder;
     m_coefficients = stateOperation.getCoefficients();
     m_gafCodes = stateOperation.getGafCodes();
     m_geometryFactory = stateOperation.getGeometryFactory();
     m_transformer = stateOperation.getTransformer();
     m_profil = profil;
     m_profilSRS = profilSRS;
-    m_heightComponentID = mainComponentID;
   }
 
   public CrossSectionPart getPart( )
@@ -116,6 +115,8 @@ public class CheckinPartOperation
     // Name must be unique within each part
     final PDBNameGenerator nameGenerator = new PDBNameGenerator();
 
+    final String heightComponentID = m_partBuilder.getHeightComponent();
+
     final IRecord[] records = m_profil.getPoints();
     final List<Coordinate> lineCrds = new ArrayList<Coordinate>( records.length );
     for( int i = 0; i < records.length; i++ )
@@ -125,11 +126,14 @@ public class CheckinPartOperation
       final String name = getStringValue( record, IWspmConstants.POINT_PROPERTY_ID, StringUtils.EMPTY );
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
       final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
-      final BigDecimal height = getDecimalValue( record, m_heightComponentID, null );
-      final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
-      final String hyk = toHyk( code );
+      final BigDecimal height = getDecimalValue( record, heightComponentID, null );
 
-      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, m_heightComponentID );
+      final String profileCode = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, null );
+      final String pdbCode = guessCode( profileCode, records, i );
+
+      final String hyk = toHyk( pdbCode );
+
+      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, heightComponentID );
       final com.vividsolutions.jts.geom.Point location = toPoint( loc );
 
       // FIXME: use real roughness
@@ -155,7 +159,7 @@ public class CheckinPartOperation
       point.setDescription( comment );
       point.setWidth( width );
       point.setHeight( height );
-      point.setCode( code );
+      point.setCode( pdbCode );
       point.setHyk( hyk );
       point.setLocation( location );
 
@@ -184,6 +188,17 @@ public class CheckinPartOperation
       final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[size] ) );
       m_part.setLine( line );
     }
+  }
+
+  private String guessCode( final String code, final IRecord[] records, final int i )
+  {
+    // TODO: not perfekt, if markers or similar have changed, we should also guess the code again
+    // else this information gets lost
+    if( !StringUtils.isBlank( code ))
+      return code;
+
+    /* Guess default code on per builder base */
+    return m_partBuilder.guessCode( records, i );
   }
 
   private String toHyk( final String code )
@@ -244,5 +259,4 @@ public class CheckinPartOperation
       throw new PdbConnectException( CheckinStatePdbOperation.STR_FAILED_TO_CONVERT_GEOMETRY, e );
     }
   }
-
 }
