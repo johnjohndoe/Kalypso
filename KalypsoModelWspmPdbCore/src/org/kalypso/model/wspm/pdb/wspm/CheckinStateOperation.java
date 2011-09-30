@@ -41,11 +41,13 @@
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -177,5 +179,18 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     }
 
     return profiles.toArray( new IProfileFeature[profiles.size()] );
+  }
+
+  /** Creates the name for the cross section in the database. Uses profile name, or station if name is empty. */
+  public static String createCrossSectionName( final String name, final BigDecimal station )
+  {
+    if( !StringUtils.isEmpty( name ) )
+      return name;
+
+    /* Fall back to station as name */
+    if( station == null )
+      return StringUtils.EMPTY;
+
+    return String.format( "%.4f", station );
   }
 }
