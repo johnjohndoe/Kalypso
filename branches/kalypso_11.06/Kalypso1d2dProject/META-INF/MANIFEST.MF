@@ -31,7 +31,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.module,
  org.kalypso.ui.observationimport
 Bundle-ActivationPolicy: lazy
-Export-Package: org.kalypso.ui.wizards.imports.baseMap,
+Export-Package: org.kalypso.kalypso1d2d.extension,
+ org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,
  org.kalypso.ui.wizards.imports.observation,
  org.kalypso.ui.wizards.imports.roughness,

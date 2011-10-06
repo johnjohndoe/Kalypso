@@ -51,6 +51,7 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -284,14 +285,15 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 // this is where the name of the result folder is actually set
                 final ICalcUnitResultMeta calcUnitMeta = processingOperation.getCalcUnitMeta();
                 final String calcUnitId = calcUnitMeta.getCalcUnit();
-                List< String > lListResultsToRemove = new ArrayList<String>();
+                List<String> lListResultsToRemove = new ArrayList<String>();
                 lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
-                if( lListResultsToRemove.size() == 0 ){
+                if( lListResultsToRemove.size() == 0 )
+                {
                   lListResultsToRemove.add( stepResult.getGmlID() );
                 }
                 lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getGmlID() );
 
-                final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[ lListResultsToRemove.size() ] );
+                final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[lListResultsToRemove.size()] );
 
                 final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
                 // remove temporary unzipped swan data
@@ -300,7 +302,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                   final FileObject unzippedSwanFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "." //$NON-NLS-1$
                       + ISimulation1D2DConstants.SIM_SWAN_MAT_RESULT_EXT );
                   final FileObject unzippedShiftFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
-                  final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE  + "_out.tab" ); //$NON-NLS-1$
+                  final FileObject unzippedTabFile = VFSUtilities.getNewManager().resolveFile( processingOperation.getOutputDir(), ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE + "_out.tab" ); //$NON-NLS-1$
                   unzippedSwanFile.delete();
                   unzippedShiftFile.delete();
                   unzippedTabFile.delete();
@@ -310,20 +312,36 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                   lLog.log( StatusUtilities.statusFromThrowable( e ) );
                 }
                 final IFolder unitFolder = scenarioFolder.getFolder( unitFolderRelativePath );
-                final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder, Status.OK_STATUS, m_modelProvider, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove ); // processingOperation.getOriginalStepsToDelete()
+                final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder.getLocation().toFile(), Status.OK_STATUS, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove );
                 dataOperation.setBoolRemoveRawResult( false );
                 resultStatus = dataOperation.execute( monitor );
+                try
+                {
+                  unitFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+                  ((ICommandPoster) m_modelProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+                  m_modelProvider.saveModel( IScenarioResultMeta.class.getName(), monitor );
+                }
+                catch( final CoreException e )
+                {
+                  // ignore
+                }
+                catch( final InvocationTargetException e )
+                {
+                  resultStatus = StatusUtilities.statusFromThrowable( e );
+                }
               }
             }
           }
           return resultStatus;
         }
 
-        private List< String > removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )
+        private List<String> removeAllOthersStepWithDate( final List<String> lListResultsToRemove, final String stepId )
         {
-          final List< String > lListRes = new ArrayList<String>();
-          for( final String lId: lListResultsToRemove ){
-            if( lId.equals( stepId ) ){
+          final List<String> lListRes = new ArrayList<String>();
+          for( final String lId : lListResultsToRemove )
+          {
+            if( lId.equals( stepId ) )
+            {
               lListRes.add( lId );
               break;
             }
