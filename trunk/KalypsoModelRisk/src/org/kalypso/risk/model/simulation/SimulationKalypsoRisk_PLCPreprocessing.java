@@ -96,19 +96,16 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
         final File actualRasterFolderInput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEINPUT ) );
         final File actualRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RASTERFOLDERSOURCEOUTPUT ) );
         final List<String> folders = new ArrayList<String>();
-        folders.add( "PLC" ); //$NON-NLS-1$
-        folders.add( "PLC/statusQuo" ); //$NON-NLS-1$
-        folders.add( "PLC/statusQuo/raster" ); //$NON-NLS-1$
-        //folders.add( "PLC/statusQuo/raster/input" ); //$NON-NLS-1$
-        //folders.add( "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
-        folders.add( "PLC/difference" ); //$NON-NLS-1$
-        folders.add( "PLC/difference/raster" ); //$NON-NLS-1$
-        folders.add( "PLC/difference/raster/output" ); //$NON-NLS-1$
-        folders.add( "PLC/final" ); //$NON-NLS-1$
-        folders.add( "PLC/final/rrm" ); //$NON-NLS-1$
-        folders.add( "PLC/final/risk" ); //$NON-NLS-1$
-        folders.add( "PLC/final/risk/raster" ); //$NON-NLS-1$
-        folders.add( "PLC/final/risk/raster/output" ); //$NON-NLS-1$
+        folders.add( "statusQuo" ); //$NON-NLS-1$
+        folders.add( "statusQuo/raster" ); //$NON-NLS-1$
+        folders.add( "difference" ); //$NON-NLS-1$
+        folders.add( "difference/raster" ); //$NON-NLS-1$
+        folders.add( "difference/raster/output" ); //$NON-NLS-1$
+        folders.add( "final" ); //$NON-NLS-1$
+        folders.add( "final/rrm" ); //$NON-NLS-1$
+        folders.add( "final/risk" ); //$NON-NLS-1$
+        folders.add( "final/risk/raster" ); //$NON-NLS-1$
+        folders.add( "final/risk/raster/output" ); //$NON-NLS-1$
         for( final String folder : folders )
         {
           final File f = new File( tmpdir, folder );
@@ -116,10 +113,10 @@ public class SimulationKalypsoRisk_PLCPreprocessing implements ISimulation
           final File d = new File( f, "control.ctl" ); //$NON-NLS-1$
           d.createNewFile();
         }
-        final File differenceModelFolder = new File( tmpdir, "PLC/difference" ); //$NON-NLS-1$
-        final File statusQuoModelFolder = new File( tmpdir, "PLC/statusQuo" ); //$NON-NLS-1$
-        final File statusQuoRasterFolderInput = new File( tmpdir, "PLC/statusQuo/raster/input" ); //$NON-NLS-1$
-        final File statusQuoRasterFolderOutput = new File( tmpdir, "PLC/statusQuo/raster/output" ); //$NON-NLS-1$
+        final File differenceModelFolder = new File( tmpdir, "difference" ); //$NON-NLS-1$
+        final File statusQuoModelFolder = new File( tmpdir, "statusQuo" ); //$NON-NLS-1$
+        final File statusQuoRasterFolderInput = new File( tmpdir, "statusQuo/raster/input" ); //$NON-NLS-1$
+        final File statusQuoRasterFolderOutput = new File( tmpdir, "statusQuo/raster/output" ); //$NON-NLS-1$
         if( actualRasterFolderInput.exists() )
         {
           FileUtils.moveDirectory( actualRasterFolderInput, statusQuoRasterFolderInput );
