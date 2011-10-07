@@ -467,7 +467,10 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean getHasWindDrag( )
   {
-    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG );
+    final Boolean property = getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG, Boolean.class );
+    if( property == null )
+      return false;
+    return property;
   }
 
   @Override

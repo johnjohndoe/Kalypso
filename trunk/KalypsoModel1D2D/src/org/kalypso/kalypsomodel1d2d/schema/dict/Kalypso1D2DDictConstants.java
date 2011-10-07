@@ -75,6 +75,8 @@ public interface Kalypso1D2DDictConstants
 
   public static final String DICT_COMPONENT_VELOCITY = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity"; //$NON-NLS-1$
 
+  public static final String DICT_COMPONENT_VELOCITY_DIRECTION = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#VelocityDirection"; //$NON-NLS-1$
+
   public static final String DICT_COMPONENT_MAX_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityX"; //$NON-NLS-1$
 
   public static final String DICT_COMPONENT_MAX_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityY"; //$NON-NLS-1$

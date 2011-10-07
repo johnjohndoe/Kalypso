@@ -772,6 +772,10 @@
           simulationClass="org.kalypso.kalypsomodel1d2d.sim.PreRMAKalypso"
           typeID="org.kalypso.simulation.rma.preRMAKalypso">
     </simulation>
+    <simulation
+          simulationClass="org.kalypso.kalypsomodel1d2d.sim.PostRMAKalypso"
+          typeID="org.kalypso.simulation.rma.postRMAKalypso">
+    </simulation>
   </extension>
   <extension point="org.kalypso.simulation.core.simulation">
     <simulation simulationClass="org.kalypso.kalypsomodel1d2d.sim.SWANKalypsoSimulation" typeID="org.kalypso.model1d2d.swan" />

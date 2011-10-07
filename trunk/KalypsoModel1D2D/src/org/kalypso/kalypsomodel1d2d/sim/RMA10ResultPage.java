@@ -49,8 +49,10 @@ import java.util.List;
 
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -548,7 +550,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     if( m_resultStatus.isOK() )
     {
       // processing finished without problems, prepare the data-operation
-      final ResultManagerOperation dataOperation = new ResultManagerOperation( m_resultManager, m_unitFolder, m_simulationStatus, m_caseDataProvider, processingOperation.getOutputDir(), processingOperation.getCalcUnitMeta(), processingOperation.getOriginalStepsToDelete() );
+      final ResultManagerOperation dataOperation = new ResultManagerOperation( m_resultManager, m_unitFolder.getLocation().toFile(), m_simulationStatus, processingOperation.getOutputDir(), processingOperation.getCalcUnitMeta(), processingOperation.getOriginalStepsToDelete() );
 
       if( container instanceof WizardDialog2 )
       {
@@ -558,6 +560,20 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
       else
       {
         m_resultStatus = RunnableContextHelper.execute( container, true, false, dataOperation );
+      }
+      try
+      {
+        m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
+        m_caseDataProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
+      }
+      catch( final CoreException e )
+      {
+        // ignore
+      }
+      catch( final InvocationTargetException e )
+      {
+        m_resultStatus = StatusUtilities.statusFromThrowable( e );
       }
     }
 
