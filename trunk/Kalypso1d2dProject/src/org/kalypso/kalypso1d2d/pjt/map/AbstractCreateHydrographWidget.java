@@ -207,7 +207,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
-    if( m_modelElement == null || m_hydrographCollection == null )
+    if( m_modelElement == null || m_hydrographCollection == null || m_existingHydrograph != null )
       return;
 
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
