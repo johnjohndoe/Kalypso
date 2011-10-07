@@ -195,7 +195,11 @@ public class RMAKalypsoSimulation implements ISimulation
 
       try
       {
-        resultEater.addResult( OUTPUT_RESULTS, new URI( sandboxDirectory ) ); //$NON-NLS-1$
+        final URI resultURI = new URI( sandboxDirectory );
+        if( resultURI.getScheme().equals( "file" ) ) //$NON-NLS-1$
+          resultEater.addResult( OUTPUT_RESULTS, new File( resultURI ) );
+        else
+          resultEater.addResult( OUTPUT_RESULTS, resultURI );
       }
       catch( final URISyntaxException e )
       {

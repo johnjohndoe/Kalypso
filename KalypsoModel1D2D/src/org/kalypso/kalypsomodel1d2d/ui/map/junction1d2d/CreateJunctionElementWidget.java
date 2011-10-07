@@ -51,6 +51,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -85,9 +86,9 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
 
   public CreateJunctionElementWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.4") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.4" ) ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
@@ -107,7 +108,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.5") + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.5" ) + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -140,7 +141,11 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
       if( theme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
-        final QName qName = ft.getFeatureType().getQName();
+        final IFeatureType featureType = ft.getFeatureType();
+        if( featureType == null )
+          continue;
+
+        final QName qName = featureType.getQName();
         if( qName.equals( IFELine.QNAME ) )
         {
           final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];

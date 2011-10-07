@@ -135,7 +135,7 @@ public class ExecutePreRMAKalypso
       // for getting WPS input list relative to scenario
       final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
-      final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, m_modelInput );
+      final SimulationDelegate delegate = new SimulationDelegate( PreRMAKalypso.ID, scenarioFolder, m_modelInput );
       delegate.init();
 
       final ProcessDescriptionType processDescription = m_wpsRequest.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
