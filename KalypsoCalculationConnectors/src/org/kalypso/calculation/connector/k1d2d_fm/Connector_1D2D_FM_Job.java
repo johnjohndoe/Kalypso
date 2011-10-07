@@ -1,24 +1,21 @@
-package org.kalypso.calculation.connector.wspm_fm;
+package org.kalypso.calculation.connector.k1d2d_fm;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Date;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Path;
-import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_WSPM_FM;
 import org.kalypso.calculation.connector.utils.Connectors;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.AbstractInternalStatusJob;
 import org.kalypso.simulation.core.ISimulation;
@@ -37,9 +34,21 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
-public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements ISimulation
+public class Connector_1D2D_FM_Job extends AbstractInternalStatusJob implements ISimulation
 {
-  public Connector_WSPM_FM_Job( )
+  public static final String INPUT_WATER_SURFACE_TIN = "waterSurfaceTin"; //$NON-NLS-1$
+
+  public static final String INPUT_RETURN_PERIOD = "returnPeriod"; //$NON-NLS-1$
+
+  public static final String INPUT_FLOOD_MODEL = "floodModel"; //$NON-NLS-1$
+
+  public static final String INPUT_DELETE_EXISTING_EVENTS = "OPT_DeleteExistingRunoffEvents"; //$NON-NLS-1$
+
+  public static final String OUTPUT_FLOOD_MODEL = "floodModel"; //$NON-NLS-1$
+
+  public static final String ID = "KalypsoModelConnector_1D2D_FM"; //$NON-NLS-1$
+
+  public Connector_1D2D_FM_Job( )
   {
   }
 
@@ -52,30 +61,17 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-
-    final GMLWorkspace wspmTinFile = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.WSPM_TinFile.name() );
-    final GMLWorkspace wspmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.WSPM_Model.name() );
-    final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.FM_Model.name() );
-
-    final IRunOffEvent runOffEvent = Connectors.findRunOffEvent( wspmModel, inputProvider );
-    if( Objects.isNull( runOffEvent ) )
-      throw new SimulationException( "Undefined WSPM runoff event ID specified." );
-
-    final boolean deleteExistingRunoffEvents = deleteRunOffEvents( inputProvider );
-
-    Integer returnPeriod = runOffEvent.getAnnuality();
-    if( returnPeriod == null )
-    {
-      // TODO: throw an Exception here?
-      returnPeriod = 1;
-    }
-
     try
     {
+      final GMLWorkspace tinFile = Connectors.getWorkspace( inputProvider, INPUT_WATER_SURFACE_TIN );
+      final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, INPUT_FLOOD_MODEL );
+
+      final boolean deleteExistingRunoffEvents = deleteRunOffEvents( inputProvider );
+      final int returnPeriod = Integer.parseInt( (String) inputProvider.getInputForID( INPUT_RETURN_PERIOD ) );
 
       final File fmOutputFile = File.createTempFile( "outTempFM", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$ 
 
-      final Feature wspmTinRootFeature = wspmTinFile.getRootFeature();
+      final Feature tinRootFeature = tinFile.getRootFeature();
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
       final IFeatureBindingCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
       if( deleteExistingRunoffEvents )
@@ -94,7 +90,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       final String dataPath = String.format( "HQ%d", returnPeriod ); //$NON-NLS-1$
       final IRunoffEvent newRunoffEvent = floodModelEvents.addNew( IRunoffEvent.QNAME );
       newRunoffEvent.setName( newRunoffEvent.getId() );
-      newRunoffEvent.setDataPath( new Path( newRunoffEvent.getId() ) );
+      newRunoffEvent.setDataPath( new Path( dataPath ) );
       newRunoffEvent.setReturnPeriod( returnPeriod );
       newRunoffEvent.setMarkedForProcessing( true );
 
@@ -107,9 +103,8 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
         polygon.getEvents().addRef( newRunoffEvent );
       }
       final ITinReference tinReference = newRunoffEvent.getTins().addNew( ITinReference.QNAME );
-      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
-      final XMLGregorianCalendar date = (XMLGregorianCalendar) wspmTinRootFeature.getProperty( new QName( IWspmConstants.NS_WSPMCOMMONS, "date" ) ); //$NON-NLS-1$
-      final GMLXPath sourceFeaturePath = new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", wspmTinFile.getNamespaceContext() ); //$NON-NLS-1$
+      final GM_TriangulatedSurface triangulatedSurface = (GM_TriangulatedSurface) tinRootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ) ); //$NON-NLS-1$
+      final GMLXPath sourceFeaturePath = new GMLXPath( "TinResult/triangulatedSurfaceMember", tinFile.getNamespaceContext() ); //$NON-NLS-1$
 
       double min = Double.MAX_VALUE;
       double max = -Double.MAX_VALUE;
@@ -127,30 +122,30 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
         }
       }
 
-      tinReference.setName( NamedFeatureHelper.getName( wspmTinRootFeature ) );
-      tinReference.setDescription( NamedFeatureHelper.getDescription( wspmTinRootFeature ) );
+      tinReference.setName( NamedFeatureHelper.getName( tinRootFeature ) );
+      tinReference.setDescription( NamedFeatureHelper.getDescription( tinRootFeature ) );
       tinReference.setTin( triangulatedSurface );
       tinReference.setMax( BigDecimal.valueOf( max ) );
       tinReference.setMin( BigDecimal.valueOf( min ) );
       tinReference.setSourceFeaturePath( sourceFeaturePath );
-      tinReference.setSourceLocation( Connectors.getURL( inputProvider, MODELSPEC_CONNECTOR_WSPM_FM.WSPM_TinFile.name() ) );
-      tinReference.setUpdateDate( date.toGregorianCalendar().getTime() );
+      tinReference.setSourceLocation( Connectors.getURL( inputProvider, INPUT_WATER_SURFACE_TIN ) );
+      tinReference.setUpdateDate( new Date() );
       tinReference.setSourceType( SOURCETYPE.gml );
       GmlSerializer.serializeWorkspace( fmOutputFile, fmModel, "UTF-8" ); //$NON-NLS-1$
       setStatus( STATUS.OK, "Success" );
-      resultEater.addResult( MODELSPEC_CONNECTOR_WSPM_FM.FM_Model.name(), fmOutputFile );
+      resultEater.addResult( OUTPUT_FLOOD_MODEL, fmOutputFile );
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Problem bei der Übertragung der Wasserspiegellage von KalypsoWSPM zu KalypsoFlood", e );
+      throw new SimulationException( "Problem bei der Übertragung der Wasserspiegellage von Kalypso1D2D zu KalypsoFlood", e );
     }
   }
 
   private boolean deleteRunOffEvents( final ISimulationDataProvider inputProvider ) throws SimulationException
   {
-    if( inputProvider.hasID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ) )
+    if( inputProvider.hasID( INPUT_DELETE_EXISTING_EVENTS ) )
     {
-      final String pathString = inputProvider.getInputForID( MODELSPEC_CONNECTOR_WSPM_FM.OPT_DeleteExistingRunoffEvents.name() ).toString();
+      final String pathString = inputProvider.getInputForID( INPUT_DELETE_EXISTING_EVENTS ).toString();
       return Boolean.parseBoolean( pathString.substring( pathString.lastIndexOf( "/" ) + 1 ) ); //$NON-NLS-1$
     }
 
