@@ -13,6 +13,7 @@
   <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11897777681390">
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
+   <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#VelocityDirection"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround"/>
    <swe:component xmlns:swe="http://www.opengis.net/swe" xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel"/>
    <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation"/>

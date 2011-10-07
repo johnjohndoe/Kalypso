@@ -225,7 +225,7 @@ public class ReevaluateResultOperation implements ICoreRunnableWithProgress
             lLog.log( StatusUtilities.statusFromThrowable( e ) );
           }
           final IFolder unitFolder = m_scenarioFolder.getFolder( unitFolderRelativePath );
-          final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder, Status.OK_STATUS, m_modelProvider, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove ); // processingOperation.getOriginalStepsToDelete()
+          final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder.getLocation().toFile(), Status.OK_STATUS, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove );
           dataOperation.setBoolRemoveRawResult( false );
           resultStatus = dataOperation.execute( monitor );
         }
