@@ -109,7 +109,7 @@ public class KMChannelElement
     final IStatus status = RunnableContextHelper.execute( context, true, false, operation );
     m_profileSet = operation.getProfileSet();
     if( !status.isOK() )
-      new StatusDialog( context.getShell(), status, Messages.getString("KMChannelElement.0") ); //$NON-NLS-1$
+      new StatusDialog( context.getShell(), status, Messages.getString( "KMChannelElement.0" ) ).open(); //$NON-NLS-1$
 
     updateProfileList();
   }

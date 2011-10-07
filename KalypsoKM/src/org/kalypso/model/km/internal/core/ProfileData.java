@@ -79,13 +79,17 @@ public class ProfileData
   {
     final double length = getLength();
 
-    double adjustedLength;
-    if( Double.isNaN( length ) )
-      adjustedLength = lengthFactor;
-    else
-      adjustedLength = length * lengthFactor;
+    final double adjustedLength = getAdjustedLength( lengthFactor, length );
 
     return new KMValue( adjustedLength, m_rows[indexQfrom], m_rows[indexQto] );
+  }
+
+  protected double getAdjustedLength( final double lengthFactor, final double length )
+  {
+    if( Double.isNaN( length ) )
+      return lengthFactor;
+
+    return length * lengthFactor;
   }
 
   public String isValidForKalypso( )
@@ -118,7 +122,6 @@ public class ProfileData
 
     return null;
   }
-
 
   public double findQBordvoll( )
   {
