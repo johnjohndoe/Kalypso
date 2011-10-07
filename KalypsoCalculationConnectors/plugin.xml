@@ -23,6 +23,10 @@
             typeID="KalypsoModelConnector_WSPM_FM">
       </simulation>
       <simulation
+            simulationClass="org.kalypso.calculation.connector.k1d2d_fm.Connector_1D2D_FM_Job"
+            typeID="KalypsoModelConnector_1D2D_FM">
+      </simulation>
+      <simulation
             simulationClass="org.kalypso.calculation.connector.fm_rm.Connector_FM_RM_Job"
             typeID="KalypsoModelConnector_FM_RM">
       </simulation>

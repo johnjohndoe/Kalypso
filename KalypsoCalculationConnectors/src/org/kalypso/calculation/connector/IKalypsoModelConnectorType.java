@@ -52,7 +52,6 @@ public interface IKalypsoModelConnectorType
     WSPM_Model,
     WSPM_RunoffEventID,
     FM_Model,
-    FM_EventsFolder,
     WSPM_TinFile,
     OPT_DeleteExistingRunoffEvents,
     WSPM_TinReference;

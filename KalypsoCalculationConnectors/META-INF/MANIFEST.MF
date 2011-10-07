@@ -18,11 +18,13 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.model.wspm.core,
  org.kalypso.afgui,
  org.kalypso.ui,
- org.kalypso.model.wspm.schema
+ org.kalypso.model.wspm.schema,
+ org.kalypso.model1d2d;bundle-version="11.6.2";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.connector.fm_rm,
+ org.kalypso.calculation.connector.k1d2d_fm,
  org.kalypso.calculation.connector.na_wspm,
  org.kalypso.calculation.connector.wspm_fm,
  org.kalypso.calculation.plc.postprocessing.binding
