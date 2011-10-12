@@ -534,7 +534,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     if( area == null )
     {
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getGmlID(), station.doubleValue() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getNodeID(), station.doubleValue() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
     }
 
