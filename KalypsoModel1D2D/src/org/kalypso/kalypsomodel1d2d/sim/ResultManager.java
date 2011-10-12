@@ -366,9 +366,9 @@ public class ResultManager implements ISimulation1D2DConstants
       if( filename != null && filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       {
         resultFileName = filename;
-        if( file.toString().contains( "steady" ) ) //$NON-NLS-1$
+        if( file.toString().startsWith( STEADY_PREFIX ) ) //$NON-NLS-1$
           stepDate = STEADY_DATE;
-        else if( file.toString().contains( "maxi" ) ) //$NON-NLS-1$
+        else if( file.toString().startsWith( MAXI_PREFIX ) ) //$NON-NLS-1$
           stepDate = MAXI_DATE;
         else
           stepDate = ResultMeta1d2dHelper.resolveDateFromResultStep( file );
@@ -400,14 +400,13 @@ public class ResultManager implements ISimulation1D2DConstants
       final String outDirName;
 
       if( stepDate == STEADY_DATE )
-        outDirName = "steady"; //$NON-NLS-1$
+        outDirName = STEADY_PREFIX;
       else if( stepDate == MAXI_DATE )
-        outDirName = "maxi"; //$NON-NLS-1$
+        outDirName = MAXI_PREFIX;
       else
       {
         final SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
         outDirName = ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
-        //        outDirName = String.format( ResultMeta1d2dHelper.TIME_STEP_PREFIX + "%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tS_%1$ts_%1$tZ", stepDate ); //$NON-NLS-1$
       }
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
@@ -431,13 +430,13 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private Date findStepDate( final IControlModel1D2D controlModel, final String resultFileName )
   {
-    if( resultFileName.startsWith( "steady" ) ) //$NON-NLS-1$
+    if( resultFileName.startsWith( STEADY_PREFIX ) )
       return STEADY_DATE;
 
-    if( resultFileName.startsWith( "maxi" ) ) //$NON-NLS-1$
+    if( resultFileName.startsWith( MAXI_PREFIX ) )
       return MAXI_DATE;
 
-    if( resultFileName.startsWith( "mini" ) || resultFileName.startsWith( "model" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( resultFileName.startsWith( MINI_PREFIX ) || resultFileName.startsWith( MODEL_PREFIX ) )
       return null;
 
     final int index = resultFileName.length();
@@ -581,7 +580,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ICalcUnitResultMeta getCalcUnitMeta( )
   {
-    return m_calcUnitMeta ;
+    return m_calcUnitMeta;
   }
 
 }
