@@ -3,16 +3,20 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.OutputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
@@ -47,6 +51,8 @@ public class PostRMAKalypso implements ISimulation
 
   public static final String INPUT_SCENARIO_RESULT_META = "scenarioResultMeta"; //$NON-NLS-1$
 
+  public static final String INPUT_SINGLE_RESULT_DATE = "singleResultDate"; //$NON-NLS-1$
+
   public static final String OUTPUT_SCENARIO_RESULT_META = "scenarioResultMeta"; //$NON-NLS-1$
 
   public static final String OUTPUT_RESULTS = "results"; //$NON-NLS-1$
@@ -56,6 +62,8 @@ public class PostRMAKalypso implements ISimulation
   public static final String ID = "org.kalypso.simulation.rma.postRMAKalypso"; //$NON-NLS-1$
 
   private GeoLog m_geoLog;
+
+  public static DateFormat DATE_FORMAT = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP ); //$NON-NLS-1$
 
   @Override
   public URL getSpezifikation( )
@@ -102,14 +110,20 @@ public class PostRMAKalypso implements ISimulation
       final URL scenarioResultMetaURL = (URL) inputProvider.getInputForID( INPUT_SCENARIO_RESULT_META );
       final GMLWorkspace scenarioResultMetaWorkspace = GmlSerializer.createGMLWorkspace( scenarioResultMetaURL, null );
       final IScenarioResultMeta scenarioResultMeta = (IScenarioResultMeta) scenarioResultMetaWorkspace.getRootFeature().getAdapter( IScenarioResultMeta.class );
-
       final ResultManager resultManager = new ResultManager( resultDirRMA, null, discModel, controlModel, flowRelationshipModel, scenarioResultMeta, m_geoLog );
 
       final ProcessResultsBean bean = new ProcessResultsBean();
       bean.deleteAll = true;
       bean.deleteFollowers = true;
       bean.evaluateFullResults = true;
-      bean.userCalculatedSteps = resultManager.findCalculatedSteps();
+
+      if( inputProvider.hasID( INPUT_SINGLE_RESULT_DATE ) )
+      {
+        final Date singleResultDate = DATE_FORMAT.parse( (String) inputProvider.getInputForID( INPUT_SINGLE_RESULT_DATE ) );
+        bean.userCalculatedSteps = new Date[] { singleResultDate };
+      }
+      else
+        bean.userCalculatedSteps = resultManager.findCalculatedSteps();
 
       resultManager.setStepsToProcess( bean.userCalculatedSteps, resultManager.getControlModel() );
 
