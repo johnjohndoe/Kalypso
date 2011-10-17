@@ -254,6 +254,7 @@ public class RMAKalypsoSimulation implements ISimulation
         final String errorMessage = new String( content, charset );
         final IStatus status = StatusUtilities.createErrorStatus( errorMessage );
         progressMonitor.done( status );
+        throw new CoreException( status );
       }
     }
     catch( final ProcessTimeoutException e )
