@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 14.07.2011 11:52:27 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Vegetation" table="VEGETATION">
+        <composite-id name="id" class="VegetationId">
+            <key-property name="pointKind" type="string">
+                <column name="POINT_KIND" length="50" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="pointKind" class="PointKind" update="false" insert="false" fetch="select">
+            <column name="POINT_KIND" length="50" not-null="true" />
+        </many-to-one>
+        <property name="dp" type="big_decimal">
+            <column name="DP" precision="8" scale="3" not-null="true">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="ax" type="big_decimal">
+            <column name="AX" precision="8" scale="3" not-null="true">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="ay" type="big_decimal">
+            <column name="AY" precision="8" scale="3" not-null="true">
+                <comment>[m]</comment>
+            </column>
+        </property>
+        <property name="label" type="string">
+            <column name="LABEL" length="100" />
+        </property>
+        <property name="source" type="string">
+            <column name="SOURCE">
+                <comment>Angabe einer Literaturstelle</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" />
+        </property>
+        <set name="points" table="POINT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VEGETATION_POINT_KIND" length="50" />
+                <column name="VEGETATION" length="50" />
+            </key>
+            <one-to-many class="Point" />
+        </set>
+    </class>
+</hibernate-mapping>

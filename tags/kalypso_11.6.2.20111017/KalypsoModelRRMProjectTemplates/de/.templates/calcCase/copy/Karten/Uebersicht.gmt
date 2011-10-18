@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns1="obstableview.template.kalypso.org" name="Uebersicht">
+    <mapv:layers active="ID_0">
+        <mapv:layer visible="true" name="Knoten" featurePath="NodeCollectionMember/nodeMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_node:rule:rule_Ort</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Virtuelle Stränge" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Kalinin-Miljukov Stränge" featurePath="ChannelCollectionMember/channelMember[KMChannel]" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="RHB Stränge" featurePath="ChannelCollectionMember/channelMember[StorageChannel]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Teilgebiete" featurePath="CatchmentCollectionMember/catchmentMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="../calcCase.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>

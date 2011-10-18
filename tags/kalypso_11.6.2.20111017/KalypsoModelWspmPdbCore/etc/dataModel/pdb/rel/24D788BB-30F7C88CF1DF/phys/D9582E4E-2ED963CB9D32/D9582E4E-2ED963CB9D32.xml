@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<StorageDesignOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.StorageDesignOraclev10g" name="Oracle Database 10g" id="C90E3FA5-5ED2-1DC1-FD1F-D90B24BB68D8">
+   <createdBy>thuel</createdBy>
+   <createdTime>2011-07-11 10:01:06 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-07-11 10:01:53 UTC</changedTime>
+   <ownerDesignName>pdb</ownerDesignName>
+</StorageDesignOraclev10g>
