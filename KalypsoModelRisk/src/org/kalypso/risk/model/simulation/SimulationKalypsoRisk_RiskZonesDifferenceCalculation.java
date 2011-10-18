@@ -153,7 +153,7 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
     {
       /* remove existing (invalid) coverages from the model */
       final ICoverageCollection outputCoverages = rasterModelOutput.getRiskZonesCoverage();
-      IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
+      final IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
       for( final ICoverage coverage : outputCoveragesList )
         CoverageManagementHelper.deleteGridFile( coverage );
 
@@ -162,8 +162,8 @@ public class SimulationKalypsoRisk_RiskZonesDifferenceCalculation implements ISi
       final ICoverageCollection inputCoverages1 = rasterModelInput1.getRiskZonesCoverage();
       final ICoverageCollection inputCoverages2 = rasterModelInput2.getRiskZonesCoverage();
 
-      IFeatureBindingCollection<ICoverage> inputCoverages1List = inputCoverages1.getCoverages();
-      IFeatureBindingCollection<ICoverage> inputCoverages2List = inputCoverages2.getCoverages();
+      final IFeatureBindingCollection<ICoverage> inputCoverages1List = inputCoverages1.getCoverages();
+      final IFeatureBindingCollection<ICoverage> inputCoverages2List = inputCoverages2.getCoverages();
       if( inputCoverages1List.size() != inputCoverages2List.size() )
         return;
 
