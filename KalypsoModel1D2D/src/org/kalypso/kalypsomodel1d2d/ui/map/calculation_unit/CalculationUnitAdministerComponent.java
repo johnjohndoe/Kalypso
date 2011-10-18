@@ -55,15 +55,15 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.ogc.gml.map.widgets.IWidgetWithStrategy;
 
 
 /**
  * @author Madanagopal
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class CalculationUnitAdministerComponent
 {
@@ -102,7 +102,7 @@ public class CalculationUnitAdministerComponent
       public void widgetSelected( final SelectionEvent e )
       {
         final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setDelegate( new AddRemoveElementToCalcUnitWidget( dataModel ) );
+        widgetWithStrategy.setStrategy( new AddRemoveElementToCalcUnitWidget( dataModel ) );
       }
     } );
 
@@ -116,7 +116,7 @@ public class CalculationUnitAdministerComponent
       public void widgetSelected( final SelectionEvent e )
       {
         final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setDelegate( new AddRemoveContinuityLineToCalcUnitWidget( dataModel ) );
+        widgetWithStrategy.setStrategy( new AddRemoveContinuityLineToCalcUnitWidget( dataModel ) );
       }
     } );
 
@@ -130,10 +130,10 @@ public class CalculationUnitAdministerComponent
       public void widgetSelected( final SelectionEvent e )
       {
         final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setDelegate( new AddRemoveBoundaryConditionToCalcUnitWidget( dataModel ) );
+        widgetWithStrategy.setStrategy( new AddRemoveBoundaryConditionToCalcUnitWidget( dataModel ) );
       }
     } );
-
+    
 //    final Button btnAddRemoveWindSystems = new Button( rootComposite, SWT.PUSH );
 //    btnAddRemoveWindSystems.setImage( IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS.createImage() );
 //    DisposeButtonImageListener.hookToButton( btnAddRemoveWindSystems );
@@ -151,6 +151,7 @@ public class CalculationUnitAdministerComponent
     btnAddRemoveElements.setEnabled( false );
     btnAddRemoveContinuityLines.setEnabled( false );
     btnAddRemoveBoundaryConditions.setEnabled( false );
+//    btnAddRemoveWindSystems.setEnabled( false );
 
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {

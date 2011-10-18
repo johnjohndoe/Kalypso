@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,7 +57,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.observation.IObservation;
@@ -81,17 +81,17 @@ public class CheckoutWaterlevelWorker
   {
     final Event[] events = m_mapping.getEvents();
 
-    monitor.beginTask( Messages.getString( "CheckoutWaterlevelWorker.0" ), events.length ); //$NON-NLS-1$
+    monitor.beginTask( "Reading water levels from database", events.length );
 
     try
     {
       for( final Event event : events )
       {
-        monitor.subTask( String.format( Messages.getString( "CheckoutWaterlevelWorker.1" ), event.getName() ) ); //$NON-NLS-1$
+        monitor.subTask( String.format( "Converting %s", event.getName() ) );
 
         final Object wspmObject = m_mapping.getWaterlevel( event );
         final Feature newWspmObject = createOrReplaceEvent( event, wspmObject );
-        m_mapping.addAddedFeatures( newWspmObject );
+        m_mapping.addChangedFeatures( newWspmObject );
 
         ProgressUtilities.worked( monitor, 1 );
       }
@@ -127,7 +127,7 @@ public class CheckoutWaterlevelWorker
 
     if( wspmObject instanceof TuhhCalculation )
       // FIXME
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
     return null;
   }
@@ -195,6 +195,6 @@ public class CheckoutWaterlevelWorker
   private Feature insertCalculation( final Event event, final WspmWaterBody wspmWater )
   {
     // FIXME
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

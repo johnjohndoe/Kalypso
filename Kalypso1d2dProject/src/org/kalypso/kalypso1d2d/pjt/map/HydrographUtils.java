@@ -90,6 +90,7 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -100,7 +101,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class HydrographUtils
 {
-  public static GM_Position getHydroPositionFromElement( final Feature modelElement )
+  public static GM_Position getHydroPositionFromElement( final IFeatureWrapper2 modelElement )
   {
     try
     {
@@ -130,7 +131,7 @@ public class HydrographUtils
 
     // set a name
     final String hydrographName = calcUnitResult.getName();
-    hydrographFeature.setName( hydrographName );
+    newHydrograph.setName( hydrographName );
 
     setResultPaths( newHydrograph, calcUnitResult, DOCUMENTTYPE.nodes );
 

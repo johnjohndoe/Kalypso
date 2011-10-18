@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class DocumentsStationProvider extends ColumnLabelProvider
 {
@@ -71,8 +72,7 @@ public class DocumentsStationProvider extends ColumnLabelProvider
   {
     if( element instanceof Document )
     {
-      final DocumentInfo info = m_documentData.getInfo( (Document) element );
-      final BigDecimal station = info.getStation();
+      final BigDecimal station = m_documentData.getStation( (Document) element );
       if( station == null )
         return station;
 

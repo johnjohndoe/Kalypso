@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -379,7 +379,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
   private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles ) throws GMLSchemaException, InvocationTargetException
   {
-    final IFeatureProviderFactory factory = flowRel.getWorkspace().getFeatureProviderFactory();
+    final IFeatureProviderFactory factory = flowRel.getFeature().getWorkspace().getFeatureProviderFactory();
 
     // Create empty project with one calculation and one reach
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
@@ -447,7 +447,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
   public static void copyTeschkeData( final ITeschkeFlowRelation flowRel, final QIntervallResult qresult ) throws Exception
   {
-    final Feature feature = flowRel;
+    final Feature feature = flowRel.getFeature();
     final Feature flowRelParentFeature = feature;
     final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
     final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
@@ -478,7 +478,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
   public static void copyBuildingData( final IBuildingFlowRelation buildingRelation, final QIntervallResult qresult )
   {
     /* copy building parameter from one observation to the other */
-    final Feature buildingFeature = buildingRelation;
+    final Feature buildingFeature = buildingRelation.getFeature();
     final GMLWorkspace buildingWorkspace = buildingFeature.getWorkspace();
     final IObservation<TupleResult> buildingObservation = buildingRelation.getBuildingObservation();
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );

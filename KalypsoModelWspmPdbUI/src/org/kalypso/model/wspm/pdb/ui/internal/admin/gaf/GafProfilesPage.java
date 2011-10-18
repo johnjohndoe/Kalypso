@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
@@ -50,7 +50,9 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
@@ -67,7 +69,6 @@ import org.kalypso.commons.databinding.conversion.FileToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFileConverter;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
-import org.kalypso.commons.databinding.swt.GroupTextProperty;
 import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
 import org.kalypso.commons.databinding.validation.FileCannotWriteValidator;
 import org.kalypso.commons.databinding.validation.FileShouldNotBeDirectoryValidator;
@@ -75,13 +76,12 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.core.status.StatusTableViewer;
-import org.kalypso.core.status.StatusViewerValue;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -92,11 +92,9 @@ public class GafProfilesPage extends WizardPage
 
   private TableViewer m_profileViewer;
 
+  private StatusComposite m_logView;
+
   private DatabindingWizardPage m_binding;
-
-  private StatusTableViewer m_logViewer;
-
-  private Group m_logPanel;
 
   protected GafProfilesPage( final String pageName, final ImportGafData data )
   {
@@ -104,8 +102,8 @@ public class GafProfilesPage extends WizardPage
 
     m_data = data;
 
-    setTitle( Messages.getString( "GafProfilesPage.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "GafProfilesPage.1" ) ); //$NON-NLS-1$
+    setTitle( "GAF Inhalt" );
+    setDescription( "The following cross sections have been read from the gaf file." );
   }
 
   @Override
@@ -121,27 +119,17 @@ public class GafProfilesPage extends WizardPage
     createLogView( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSaveLogControl( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    final StatusViewerValue targetStatus = new StatusViewerValue( m_logViewer );
-    final IViewerObservableValue modelStatus = ViewersObservables.observeSinglePostSelection( m_profileViewer );
-    final DataBinder statusBinder = new DataBinder( targetStatus, modelStatus );
-    statusBinder.setModelToTargetConverter( new GafProfileToStatusConverter() );
-    m_binding.bindValue( statusBinder );
-
-    final ISWTObservableValue targetDetailsLabel = new GroupTextProperty().observe( m_logPanel );
-    final DataBinder detailsBinder = new DataBinder( targetDetailsLabel, modelStatus );
-    detailsBinder.setModelToTargetConverter( new GafProfileToDetailsLabelConverter() );
-    m_binding.bindValue( detailsBinder );
+    final StatusCompositeValue target = new StatusCompositeValue( m_logView );
+    final IViewerObservableValue model = ViewersObservables.observeSinglePostSelection( m_profileViewer );
+    final DataBinder binder = new DataBinder( target, model );
+    binder.setModelToTargetConverter( new GafProfileToStatusConverter() );
+    m_binding.bindValue( binder );
   }
 
   private Control createProfileTable( final Composite parent )
   {
-    final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString( "GafProfilesPage.2" ) ); //$NON-NLS-1$
-    GridLayoutFactory.swtDefaults().applyTo( group );
-
-    m_profileViewer = new TableViewer( group, SWT.BORDER | SWT.FULL_SELECTION );
+    m_profileViewer = new TableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
     m_profileViewer.setContentProvider( new ArrayContentProvider() );
-    m_profileViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Table table = m_profileViewer.getTable();
     table.setHeaderVisible( true );
@@ -151,7 +139,7 @@ public class GafProfilesPage extends WizardPage
     ColumnViewerUtil.createEmptyColumn( m_profileViewer ).setLabelProvider( new ColumnLabelProvider() );
 
     final TableViewerColumn stationColumn = new TableViewerColumn( m_profileViewer, SWT.NONE );
-    stationColumn.getColumn().setText( Messages.getString( "GafProfilesPage.3" ) ); //$NON-NLS-1$
+    stationColumn.getColumn().setText( "Station [m]" );
     stationColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
 
@@ -160,7 +148,16 @@ public class GafProfilesPage extends WizardPage
 
     ColumnViewerSorter.registerSorter( stationColumn, new StationViewerSorter() );
 
-    return group;
+    m_profileViewer.addOpenListener( new IOpenListener()
+    {
+      @Override
+      public void open( final OpenEvent event )
+      {
+        handleShowProfileStatus( (IStructuredSelection) event.getSelection() );
+      }
+    } );
+
+    return table;
   }
 
   protected void handleShowProfileStatus( final IStructuredSelection selection )
@@ -170,20 +167,22 @@ public class GafProfilesPage extends WizardPage
       return;
 
     final IStatus status = ((GafProfile) firstElement).getStatus();
-    final StatusDialog statusTableDialog = new StatusDialog( getShell(), status, Messages.getString( "GafProfilesPage.4" ) ); //$NON-NLS-1$
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), status, "Details" );
     statusTableDialog.open();
   }
 
   private Control createLogView( final Composite parent )
   {
-    m_logPanel = new Group( parent, SWT.NONE );
-    m_logPanel.setText( Messages.getString( "GafProfilesPage.5" ) ); //$NON-NLS-1$
-    GridLayoutFactory.swtDefaults().applyTo( m_logPanel );
+    final Group panel = new Group( parent, SWT.NONE );
+    panel.setText( "Details" );
+    GridLayoutFactory.swtDefaults().applyTo( panel );
 
-    m_logViewer = new StatusTableViewer( m_logPanel, SWT.BORDER | SWT.FULL_SELECTION );
-    m_logViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    // TODO: instead directly insert status table -> see StatusDialog
 
-    return m_logPanel;
+    m_logView = new StatusComposite( panel, StatusComposite.DETAILS | StatusComposite.HIDE_DETAILS_IF_DISABLED );
+    m_logView.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, true ) );
+
+    return panel;
   }
 
   private Composite createSaveLogControl( final Composite parent )
@@ -191,16 +190,16 @@ public class GafProfilesPage extends WizardPage
     final Group panel = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
     panel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    panel.setText( Messages.getString( "GafProfilesPage.6" ) ); //$NON-NLS-1$
+    panel.setText( "Save Log File" );
 
     final Text fileField = new Text( panel, SWT.BORDER | SWT.SINGLE );
     fileField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fileField.setMessage( Messages.getString( "GafProfilesPage.7" ) ); //$NON-NLS-1$
+    fileField.setMessage( "<Path to Log File>" );
 
     final Button fileButton = new Button( panel, SWT.PUSH );
     fileButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     // FIXME: move string to common place
-    fileButton.setText( Messages.getString( "GafProfilesPage.8" ) ); //$NON-NLS-1$
+    fileButton.setText( "Browse..." );
 
     /* field binding */
     final ISWTObservableValue target = SWTObservables.observeText( fileField, SWT.Modify );
@@ -210,7 +209,7 @@ public class GafProfilesPage extends WizardPage
     binder.setTargetToModelConverter( new StringToFileConverter() );
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, Messages.getString( "GafProfilesPage.9" ) ) ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.INFO, "Log file will not be saved" ) );
     binder.addTargetAfterConvertValidator( new FileShouldNotBeDirectoryValidator() );
     binder.addTargetAfterConvertValidator( new FileCannotWriteValidator() );
     binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
@@ -218,8 +217,8 @@ public class GafProfilesPage extends WizardPage
     m_binding.bindValue( binder );
 
     /* Button binding */
-    final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, Messages.getString( "GafProfilesPage.10" ), SWT.SAVE ); //$NON-NLS-1$
-    fileListener.addFilter( Messages.getString( "GafProfilesPage.11" ), "*.log" ); //$NON-NLS-1$//$NON-NLS-2$
+    final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, "Save Log File", SWT.SAVE );
+    fileListener.addFilter( "Log Files", "*.log" ); //$NON-NLS-2$
     fileListener.addAllFilter();
     fileButton.addSelectionListener( fileListener );
 
@@ -234,11 +233,11 @@ public class GafProfilesPage extends WizardPage
     final GafProfiles profiles = m_data.getGafProfiles();
 
     m_profileViewer.getControl().setEnabled( profiles != null );
-    m_logViewer.setInput( null );
+    m_logView.setStatus( null );
 
     if( profiles == null )
     {
-      setErrorMessage( Messages.getString( "GafProfilesPage.12" ) ); //$NON-NLS-1$
+      setErrorMessage( "Failed to read GAF file" );
       setPageComplete( false );
       m_profileViewer.setInput( null );
     }

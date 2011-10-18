@@ -51,7 +51,8 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -61,14 +62,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.conv.results.test.NodeResultsHandler2DTest;
-import org.kalypso.kalypsomodel1d2d.sim.ProcessResult2DOperation;
+import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -107,9 +107,11 @@ public class VeloDiff2DTest extends TestCase
         subtrahentSurfaces[i] = getSurfaces( outputDir2, resultTypes[i] );
       }
 
-      final RMA10S2GmlConv converter = new RMA10S2GmlConv( null );
+      final RMA10S2GmlConv converter = new RMA10S2GmlConv();
+      IRMA10SModelElementHandler handler;
 
-      final IRMA10SModelElementHandler handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, resultTypes, differenceType );
+      handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, resultTypes, differenceType );
+
       converter.setRMA10SModelElementHandler( handler );
 
       converter.parse( is );
@@ -129,12 +131,12 @@ public class VeloDiff2DTest extends TestCase
   private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ProcessResult2DOperation job1 = new ProcessResult2DOperation( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-    job1.execute( new NullProgressMonitor() );
+    final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+    job1.run( new NullProgressMonitor() );
 
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ProcessResult2DOperation job2 = new ProcessResult2DOperation( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-    job2.execute( new NullProgressMonitor() );
+    final ProcessResultsJob job2 = new ProcessResultsJob( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
+    job2.run( new NullProgressMonitor() );
   }
 
   public void testLoadResults( ) throws Exception

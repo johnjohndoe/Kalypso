@@ -81,11 +81,6 @@ a timeseries for each catchment area.]]></documentation>
               <documentation xml:lang="en"><![CDATA[The time interval for which to create rainfall from this generator.]]></documentation>
             </annotation>
           </element>
-          <element name="model" type="string">
-            <annotation>
-              <documentation xml:lang="en"><![CDATA[The model, if available, for which to create rainfall from this generator.]]></documentation>
-            </annotation>
-          </element>
         </sequence>
       </extension>
     </complexContent>

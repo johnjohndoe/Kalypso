@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
@@ -87,7 +87,7 @@ public class PdbSettingsRegistry
     if( OracleSettings.TYPE.equals( type ) )
       return new OracleSettings();
 
-    final String message = String.format( "Unknown connection type: %s", type ); //$NON-NLS-1$
+    final String message = String.format( "Unknown connection type: %s", type );
     final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
     return new ErrorSettings( status );
   }

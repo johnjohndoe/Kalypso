@@ -52,7 +52,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,8 +64,8 @@ public class TestDocumentBaseAction extends Action
   {
     m_modelBase = modelBase;
 
-    setText( Messages.getString( "TestDocumentBaseAction.0" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString( "TestDocumentBaseAction.1" ) ); //$NON-NLS-1$
+    setText( "Test" );
+    setToolTipText( "Opens the base location in a browser" );
 
     m_modelBase.addValueChangeListener( new IValueChangeListener()
     {

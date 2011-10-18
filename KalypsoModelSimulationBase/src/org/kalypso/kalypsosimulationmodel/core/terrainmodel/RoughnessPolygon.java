@@ -7,7 +7,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.i18n.Messages;
@@ -16,8 +15,8 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -25,9 +24,8 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * 
  * @author Dejan Antanaskovic, Patrice Congo
  */
-public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
+public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnessPolygon
 {
-
   public static final QName SIM_BASE_F_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
@@ -35,9 +33,28 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   // TODO: not a good place, move to constant in 1d2d
   public static final String DATA_LOCATION = "/.metadata/roughness.gml"; //$NON-NLS-1$
 
-  public RoughnessPolygon( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  /**
+   * Create a RoughnessPolygon object base on an existing feature
+   * 
+   * @param feature
+   * @throws IllegalArgumentException
+   *           if feature is null and not of the appopriate type
+   */
+  public RoughnessPolygon( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, SIM_BASE_F_ROUGHNESS_POLYGON );
+  }
+
+  /**
+   * Creates a new RoughnessPolygon for the passed workspace. If the workspace has root element of the type
+   * RoughnessPolynomCollection than the a new Roughness polygon should be created and added to that one otherwise an
+   * illegal argument exception should be thrown
+   * 
+   * @param workspace
+   */
+  public RoughnessPolygon( final Feature parentFeature, final QName linkPropQName )
+  {
+    super( FeatureHelper.resolveLink( parentFeature, linkPropQName ), SIM_BASE_F_ROUGHNESS_POLYGON );
   }
 
   /*
@@ -48,7 +65,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public GM_Surface< ? > getSurface( )
   {
-    final GM_Object defaultGeometryProperty = getDefaultGeometryPropertyValue();
+    final GM_Object defaultGeometryProperty = getFeature().getDefaultGeometryPropertyValue();
     if( defaultGeometryProperty instanceof GM_Surface< ? > )
       return (GM_Surface< ? >) defaultGeometryProperty;
     return null;
@@ -62,7 +79,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public String getRoughnessStyle( )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final Object style = feature.getProperty( IRoughnessPolygon.PROP_ROUGHNESS_STYLE );
     if( style instanceof String )
     {
@@ -83,7 +100,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   {
     Assert.throwIAEOnNull( surface, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
 
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final IPropertyType geometryProperty = feature.getFeatureType().getDefaultGeometryProperty();
     // final IPropertyType geometryProperty = feature.getFeatureType().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
     feature.setProperty( geometryProperty, surface );
@@ -97,33 +114,31 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   {
     try
     {
-      final IRoughnessCls rCls = FeatureHelper.resolveLink( this, IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, IRoughnessCls.class );
+      final IRoughnessCls rCls = FeatureHelper.resolveLink( getFeature(), IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, IRoughnessCls.class );
       return rCls;
     }
     catch( final IllegalStateException e )
     {
       // If this happens, it is because xlink is broken (possible after deleting class from roughness database)
-      setProperty( IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, null );
+      getFeature().setProperty( IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, null );
       return null;
     }
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setRoughnessClassMember(org.kalypso.gmlschema.property.relation.RelationType)
+   */
   @Override
-  public void setRoughnessClass( final IRoughnessCls reference ) throws IllegalArgumentException
+  public void setRoughnessClassMember( final Feature linkedFeature ) throws IllegalArgumentException
   {
-    if( reference == null )
-      setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, null );
-    else
-    {
-      final XLinkedFeature_Impl xlink = RoughnessPolygon.createClassLink( this, reference );
-      setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, xlink );
-    }
+    final Feature feature = getFeature();
+    feature.setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
   }
 
   @Override
   public String toString( )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final StringBuffer buf = new StringBuffer( 128 );
     buf.append( "RoughnessPolygon" ); //$NON-NLS-1$
     final String id = feature.getId();
@@ -201,7 +216,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public Double getCorrectionParameterAxAy( )
   {
-    return (Double) getProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY );
+    return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY );
   }
 
   /**
@@ -210,7 +225,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public Double getCorrectionParameterDP( )
   {
-    return (Double) getProperty( IRoughnessPolygon.PROP_CORRECTION_DP );
+    return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_DP );
   }
 
   /**
@@ -219,7 +234,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public Double getCorrectionParameterKS( )
   {
-    return (Double) getProperty( IRoughnessPolygon.PROP_CORRECTION_KS );
+    return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_KS );
   }
 
   /**
@@ -228,7 +243,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public void setCorrectionParameterAxAy( final double value )
   {
-    setProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY, value );
+    getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY, value );
   }
 
   /**
@@ -237,7 +252,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public void setCorrectionParameterDP( final double value )
   {
-    setProperty( IRoughnessPolygon.PROP_CORRECTION_DP, value );
+    getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_DP, value );
   }
 
   /**
@@ -246,7 +261,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public void setCorrectionParameterKS( final double value )
   {
-    setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
+    getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
   }
 
   /**
@@ -255,9 +270,9 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
   @Override
   public FeatureChange[] resetRoughnessClassMemberXLink( )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
 
-    setRoughnessClass( null );
+    setRoughnessClassMember( null );
     feature.setProperty( PROP_ROUGHNESS_STYLE, null );
 
     final IFeatureType featureType = feature.getFeatureType();

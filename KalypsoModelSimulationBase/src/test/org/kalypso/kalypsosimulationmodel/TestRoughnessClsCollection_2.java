@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,10 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -58,18 +57,28 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class TestRoughnessClsCollection_2 extends TestCase
 {
-  public void testWorkspaceLoad( ) throws MalformedURLException, Exception
+  public void testWorkspaceLoad( )
   {
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "data/roughness.gml" ), null ); //$NON-NLS-1$
+
+    GMLWorkspace workspace = null;
+
+    try
+    {
+      workspace = GmlSerializer.createGMLWorkspace( new URL( "data/roughness.gml" ), null ); //$NON-NLS-1$
+    }
+    catch( final Throwable th )
+    {
+      fail( TestUtils.getStackTraceAsString( th ) );
+    }
 
     final Feature root = workspace.getRootFeature();
-    final RoughnessClsCollection roughnessClsList = (RoughnessClsCollection) root;
-    final Iterator<IRoughnessCls> itr = roughnessClsList.getRoughnessClasses().iterator();
+    final RoughnessClsCollection roughnessClsList = new RoughnessClsCollection( root );
+    final Iterator<IRoughnessCls> itr = roughnessClsList.iterator();
 
     while( itr.hasNext() )
     {
       final IRoughnessCls ir = itr.next();
-      System.out.println( ir.getId() );
+      System.out.println( ir.getGmlID() );
     }
 
     // assertEquals( "ColName1", rcc.getName() );

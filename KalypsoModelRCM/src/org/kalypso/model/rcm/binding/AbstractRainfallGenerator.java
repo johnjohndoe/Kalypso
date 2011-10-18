@@ -42,7 +42,6 @@ package org.kalypso.model.rcm.binding;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -57,41 +56,14 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
 {
   private static final QName PROPERTY_PERIOD = new QName( UrlCatalogRcm.NS_RCM, "period" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_MODEL = new QName( UrlCatalogRcm.NS_RCM, "model" ); //$NON-NLS-1$
-
   protected AbstractRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#getPeriod()
-   */
-  @Override
-  public org.kalypso.model.rcm.internal.binding.DateRange getPeriod( )
-  {
-    return getProperty( PROPERTY_PERIOD, org.kalypso.model.rcm.internal.binding.DateRange.class );
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#getPeriod(org.kalypso.commons.tokenreplace.IStringResolver)
-   */
   @Override
   public DateRange getPeriod( final IStringResolver variables )
   {
     return getProperty( PROPERTY_PERIOD, org.kalypso.model.rcm.internal.binding.DateRange.class ).asDateRange( variables );
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#getModels()
-   */
-  @Override
-  public String[] getModels( )
-  {
-    String property = getProperty( PROPERTY_MODEL, String.class );
-    if( property == null || property.length() == 0 )
-      return new String[] {};
-
-    return StringUtils.split( property, ";" );
   }
 }

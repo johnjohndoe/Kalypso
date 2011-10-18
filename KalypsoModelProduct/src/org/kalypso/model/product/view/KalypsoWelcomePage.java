@@ -72,17 +72,15 @@ import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.module.IKalypsoModule;
-import org.kalypso.module.welcome.IKalypsoWelcomePage;
-import org.kalypso.module.welcome.ModulePageComposite;
-import org.kalypso.module.welcome.WelcomePageComposite;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
+import org.kalypso.project.database.client.ui.composites.ModulePageComposite;
+import org.kalypso.project.database.client.ui.composites.WelcomePageComposite;
 
 /**
  * @author Dirk Kuch
  */
 public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 {
-  public static final String PART_ID = "org.kalypso.model.product.introID"; //$NON-NLS-1$
-
   private static final String KALYPSO_WEB_PAGE = "http://kalypso.sourceforge.net/";
 
   private static final Image IMG_BACKGROUND = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/background.gif" ) ); //$NON-NLS-1$
@@ -111,7 +109,6 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
     m_form = toolkit.createScrolledForm( parent );
     final Composite body = m_form.getBody();
-
     body.setBackgroundImage( IMG_BACKGROUND );
     body.setBackgroundMode( SWT.INHERIT_FORCE );
     body.setLayout( new GridLayout() );
@@ -123,12 +120,12 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
     m_contentArea.setLayout( new GridLayout() );
     m_contentArea.setLayoutData( layoutData );
 
-    updateControl();
+    update();
 
     m_form.reflow( false );
   }
 
-  public void updateControl( )
+  public void update( )
   {
     if( m_contentArea.isDisposed() )
       return;
@@ -206,14 +203,9 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       public void mouseUp( final MouseEvent e )
       {
         final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-// helpSystem.displayHelp( "org.kalypso.KalypsoManualRisk.KalypsoRisikoDatenladen" );
         helpSystem.displayHelp();
       }
     } );
-
-// PlatformUI.getWorkbench().getHelpSystem().setHelp( footer, "org.kalypso.KalypsoManualRisk.KalypsoRisikoDatenladen" );
-// PlatformUI.getWorkbench().getHelpSystem().setHelp( m_contentArea,
-// "org.kalypso.KalypsoManualRisk.KalypsoRisikoDatenladen" );
 
     footer.addContentArea( footerHelpContent );
 
@@ -322,7 +314,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        updateControl();
+        update();
         return Status.OK_STATUS;
       }
     }.schedule();

@@ -7,14 +7,14 @@
             category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
             class="org.kalypso.model.wspm.pdb.ui.internal.preferences.WspmPdbPreferencePage"
             id="WspmPdbPreferencePage"
-            name="%page.name">
+            name="Cross Section Database">
       </page>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <category
             id="org.kalypso.model.wspm.pdb.ui.viewCategory"
-            name="%category.name"
+            name="Cross Section Database"
             parentCategory="org.kalypso.ui.kalypso">
       </category>
       <view
@@ -23,7 +23,7 @@
             class="org.kalypso.model.wspm.pdb.ui.internal.content.PdbView"
             icon="icons/pdb.gif"
             id="PdbView"
-            name="%view.name"
+            name="Profildatenbank"
             restorable="true">
       </view>
    </extension>
@@ -42,12 +42,12 @@
          point="org.eclipse.ui.commands">
       <category
             id="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory"
-            name="%category.name.0">
+            name="Cross Sections Map Commands">
       </category>
       <command
             categoryId="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles"
-            name="%command.name">
+            name="Select Cross Sections">
       </command>
    </extension>
 
@@ -105,9 +105,9 @@
   <extension point="org.eclipse.ui.commands">
      <command
            categoryId="org.kalypso.ogc.gml.gmltree.category"
-           description="%command.description"
+           description="Uploads WSPM data into the cross section database as a new state"
            id="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb"
-           name="%command.name.0"/>
+           name="Upload Data into Cross Section Database"/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinPdb" icon="icons/checkinState.gif"/>
@@ -140,22 +140,22 @@
     </menuContribution>
   </extension>
   <extension point="org.kalypso.ui.exportWizards">
-      <category id="pdbWizardsCategory" name="%category.name.1"/>
+      <category id="pdbWizardsCategory" name="Cross Section Database"/>
      <wizard
            category="exportWizards/profileExportWizards"
            class="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
            icon="icons/exportLocalAsWspm.gif"
            id="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport"
-           name="%org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport.name">
-           <description>%org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport.description</description>
+           name="KalypsoWSPM">
+           <description>Exports the local project data as KalypsoWSPM project.</description>
      </wizard>
       <wizard
           id="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
           class="org.kalypso.model.wspm.pdb.ui.internal.wspm.CheckinWspmWizard"
           icon="icons/wspmLight.gif"
           category="pdbWizardsCategory"
-          name="%wizard.name.0">
-          <description>%wizard.description.0</description>
+          name="Cross Section Database">
+          <description>Export data into a Kalypso cross section database.</description>
       </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -252,29 +252,29 @@
   </extension>
   
   <extension point="org.kalypso.ui.importWizards">
-      <category id="pdbWizardsCategory" name="%category.name.2"/>
+      <category id="pdbWizardsCategory" name="Cross Section Database"/>
       <wizard
             category="pdbWizardsCategory"
             class="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
             icon="icons/state.gif"
             id="org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.ImportGafWizard"
-            name="%wizard.name.1">
-        <description>%wizard.description.1</description>
+            name="Gewässerkundliches Austauschformat (GAF)">
+        <description>Imports a new state from a GAF file</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="%wizard.name.2" icon="icons/waterBody.gif">
-        <description>%wizard.description.2</description>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="Water Bodies (Shape)" icon="icons/waterBody.gif">
+        <description>Imports or updates water bodies from a shape file</description>
       </wizard>
-      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="%wizard.name.3" icon="icons/event.gif">
-        <description>%wizard.description.3</description>
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="Water Levels (Shape)" icon="icons/event.gif">
+        <description>Imports or updates water bodies from a shape file</description>
       </wizard>
       <wizard
             category="pdbWizardsCategory"
             class="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard"
             icon="icons/attachment.png"
             id="org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsWizard"
-            name="%wizard.name.4">
+            name="Attachments">
          <description>
-            %wizard.description.4
+            Attaches external documents (images, drawings, ...) to cross sections.
          </description>
       </wizard>
       
@@ -283,8 +283,8 @@
           class="org.kalypso.model.wspm.pdb.ui.internal.checkout.CheckoutWspmWizard"
           icon="icons/wspmLight.gif"
           category="pdbWizardsCategory"
-          name="%wizard.name.5">
-          <description>%wizard.description.5</description>
+          name="Cross Section Database">
+          <description>Import data from a Kalypso cross section database.</description>
       </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -361,20 +361,20 @@
   
   <!-- Commands on PDB elements -->
   <extension point="org.eclipse.ui.commands">
-     <category id="pdbCommands" name="%category.name.3"/>
-     <command categoryId="pdbCommands" description="%command.description.0" id="org.kalypso.model.wspm.pdb.ui.command.editElement" name="%command.name.1"/>
-     <command categoryId="pdbCommands" description="%command.description.1" id="org.kalypso.model.wspm.pdb.ui.command.removeElement" name="%command.name.2"/>
+     <category id="pdbCommands" name="PDB Commands"/>
+     <command categoryId="pdbCommands" description="Edit the properties of the selected element" id="org.kalypso.model.wspm.pdb.ui.command.editElement" name="Edit..."/>
+     <command categoryId="pdbCommands" description="Remove the selected element" id="org.kalypso.model.wspm.pdb.ui.command.removeElement" name="Remove..."/>
      <command
            categoryId="pdbCommands"
-           description="%command.description.2"
+           description="Creates a new water body and adds it to the database"
            id="org.kalypso.model.wspm.pdb.ui.command.addWaterBody"
-           name="%command.name.3">
+           name="Create Water Bdoy">
      </command>
      <command
            categoryId="pdbCommands"
-           description="%command.description.3"
+           description="Download the selected items into the local workspace."
            id="org.kalypso.model.wspm.pdb.ui.command.download"
-           name="%command.name.4">
+           name="Download">
      </command>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
@@ -460,18 +460,5 @@
            properties="hasRole"
            type="org.eclipse.ui.IWorkbenchWindow">
      </propertyTester>
-  </extension>
-  <extension
-        point="org.eclipse.help.toc">
-     <toc
-           file="$nl$/toc.xml"
-           primary="true">
-     </toc>
-  </extension>
-  <extension
-        point="org.eclipse.help.contexts">
-     <contexts
-           file="$nl$/contexts.xml">
-     </contexts>
   </extension>   
 </plugin>

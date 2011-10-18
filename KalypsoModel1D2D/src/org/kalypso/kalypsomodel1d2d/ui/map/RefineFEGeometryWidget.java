@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -385,7 +386,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       final CommandableWorkspace workspace = m_theme.getWorkspace();
 
       /* Initialize elements needed for edges and elements */
-      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) workspace.getRootFeature();
+      final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
       // add remove element command
       final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
@@ -409,8 +410,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
         e.printStackTrace();
       }
 
-      discModel.getElements().removeAll( elementsToRemove );
-      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel,
+      discModel.getElements().removeAllAtOnce( elementsToRemove );
+      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(),
       // elementsToRemove.toArray( new Feature[ elementsToRemove.size() ] ),
       // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
       m_nodesNameConversionMap.clear();
@@ -429,7 +430,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
       if( lListAdded.size() > 0 )
       {
-        FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         workspace.fireModellEvent( changeEvent );
         Logger.getLogger( RefineFEGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
       }
@@ -457,12 +458,12 @@ public class RefineFEGeometryWidget extends AbstractWidget
       lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
 
       final IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
-      lListRes.add( element2d );
+      lListRes.add( element2d.getFeature() );
       for( final IFE1D2DEdge lEdge : lListEdges )
       {
         // add edge to element and element to edge
-        final String elementId = element2d.getId();
-        element2d.addEdge( lEdge.getId() );
+        final String elementId = element2d.getGmlID();
+        element2d.addEdge( lEdge.getGmlID() );
         lEdge.addContainer( elementId );
       }
     }
@@ -497,7 +498,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
           return new ArrayList<Feature>();
         }
         m_nodesNameConversionMap.put( lPoint.getPosition(), actNode );
-        lListRes.add( actNode );
+        lListRes.add( actNode.getFeature() );
       }
 
       if( iCountNodes > 0 )
@@ -511,10 +512,10 @@ public class RefineFEGeometryWidget extends AbstractWidget
         else
         {
           edge = FE1D2DEdge.createFromModel( discModel, lastNode, actNode );
-          lListRes.add( edge );
+          lListRes.add( edge.getFeature() );
         }
         lListEdges.add( edge );
-        // final String gmlID = edge.getId();
+        // final String gmlID = edge.getGmlID();
       }
       iCountNodes++;
       lastNode = actNode;

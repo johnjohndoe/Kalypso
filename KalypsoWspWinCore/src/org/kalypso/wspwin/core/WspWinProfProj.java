@@ -56,7 +56,7 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**

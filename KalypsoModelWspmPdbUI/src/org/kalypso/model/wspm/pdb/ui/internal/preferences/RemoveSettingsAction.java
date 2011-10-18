@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -53,7 +52,7 @@ class RemoveSettingsAction extends SettingsAction
 {
   public RemoveSettingsAction( final WspmPdbPreferencePage page )
   {
-    super( Messages.getString( "RemoveSettingsAction.0" ), page ); //$NON-NLS-1$
+    super( "Remove", page );
   }
 
   @Override
@@ -67,8 +66,8 @@ class RemoveSettingsAction extends SettingsAction
   {
     Assert.isNotNull( settings );
 
-    final String msg = String.format( Messages.getString( "RemoveSettingsAction.1" ), settings.getName() ); //$NON-NLS-1$
-    if( !MessageDialog.openConfirm( shell, Messages.getString( "RemoveSettingsAction.2" ), msg ) ) //$NON-NLS-1$
+    final String msg = String.format( "Remove connection '%s'", settings.getName() );
+    if( !MessageDialog.openConfirm( shell, "Remove connection", msg ) )
       return;
 
     getPage().removeItem( settings );

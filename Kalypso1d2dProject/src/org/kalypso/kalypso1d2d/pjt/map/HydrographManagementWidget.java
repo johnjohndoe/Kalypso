@@ -47,8 +47,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +141,6 @@ import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -393,12 +390,10 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        try
-        {
+        try{
           handleListSelectionChanged( parent, hydrographInfoGroup, featureComposite, event );
         }
-        catch( final Exception e )
-        {
+        catch (final Exception e) {
           e.printStackTrace();
         }
       }
@@ -415,12 +410,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     initializeThemeCombo();
 
-    if( m_hydrographs != null )
-    {
-      final IFeatureBindingCollection<IHydrograph> hydrographs = m_hydrographs.getHydrographs();
-      if( hydrographs != null && hydrographs.size() > 0 )
-        m_hydrographViewer.setSelection( new StructuredSelection( hydrographs.get( 0 ) ) );
-    }
+    if( m_hydrographs != null && m_hydrographs.size() > 0 )
+      m_hydrographViewer.setSelection( new StructuredSelection( m_hydrographs.get( 0 ) ) );
 
     final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     panel.setSize( size );
@@ -591,8 +582,11 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   protected void handleThemeComboSelected( final SelectionChangedEvent event )
   {
+    setHydrographs( null, null );
+
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     final Object firstElement = selection.getFirstElement();
+
     if( firstElement instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
@@ -601,12 +595,9 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       if( hydrographsFeature != null )
         setHydrographs( (IHydrographCollection) hydrographsFeature.getAdapter( IHydrographCollection.class ), ft );
     }
-    else
-      setHydrographs( null, null );
   }
 
-  @SuppressWarnings("unchecked")
-  private void setHydrographs( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme theme )
+  private void setHydrographs( final IHydrographCollection hydrographs, final IKalypsoFeatureTheme theme )
   {
     // remove listener
     if( m_theme != null )
@@ -617,14 +608,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       workspace.removeModellListener( m_modellistener );
       m_theme = null;
     }
-    m_hydrographs = hydrographCollection;
-
-    final List<IHydrograph> hydrographs;
-    if( m_hydrographs == null )
-      hydrographs = Collections.EMPTY_LIST;
-    else
-      hydrographs = m_hydrographs.getHydrographs();
-
+    m_hydrographs = hydrographs;
     m_theme = theme;
 
     // add listener
@@ -695,7 +679,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
     if( m_selectedHydrograph != null )
     {
-      featureComposite.setFeature( m_selectedHydrograph );
+      featureComposite.setFeature( m_selectedHydrograph.getFeature() );
       featureComposite.createControl( hydrographInfoGroup, SWT.NONE );
       parent.layout( true, true );
     }
@@ -798,8 +782,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     // set wizard
     final IWizard exportProfileWizard = new ExportHydrographWizard( m_hydrographs, m_selectedHydrograph );
 
-    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    ;
+    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
     dialog.setRememberSize( true );
@@ -940,8 +923,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         return hydrograph.getName();
       }
     } );
-    if( m_hydrographs != null)
-      viewer.setInput( m_hydrographs.getHydrographs() );
+    viewer.setInput( m_hydrographs );
 
   }
 

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -57,11 +57,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
@@ -82,7 +81,7 @@ public class CheckoutPdbHandler extends AbstractHandler
 
     if( selection.isEmpty() )
     {
-      final String message = Messages.getString( "CheckoutPdbHandler.0" ); //$NON-NLS-1$
+      final String message = "Please select at least one item in the tree.";
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }
@@ -101,12 +100,7 @@ public class CheckoutPdbHandler extends AbstractHandler
     wizard.setWindowTitle( commandName );
 
     final IDialogSettings settings = wizard.getDialogSettings();
-    final IStatus initStatus = data.init( shell, commandName, settings, connection );
-    if( !initStatus.isOK() )
-    {
-      new StatusDialog( shell, initStatus, commandName ).open();
-      return null;
-    }
+    data.init( shell, commandName, settings, connection );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
@@ -141,6 +135,6 @@ public class CheckoutPdbHandler extends AbstractHandler
     } );
 
     if( !saveStatus.isOK() )
-      new StatusDialog( shell, saveStatus, windowTitle ).open();
+      new StatusDialog2( shell, saveStatus, windowTitle ).open();
   }
 }

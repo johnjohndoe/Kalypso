@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -74,14 +73,14 @@ public class CheckoutWaterBodyWorker
     {
       final WaterBody[] waterBodies = m_mapping.getWaterBodies();
 
-      monitor.beginTask( Messages.getString( "CheckoutWaterBodyWorker.0" ), waterBodies.length ); //$NON-NLS-1$
+      monitor.beginTask( "Reading water bodies from database", waterBodies.length );
 
       for( final WaterBody waterBody : waterBodies )
       {
         final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
         final WspmWaterBody newWspmWater = updateOrCreateWspmWaterBody( waterBody, wspmWater );
         m_mapping.set( waterBody, newWspmWater );
-        m_mapping.addAddedFeatures( newWspmWater );
+        m_mapping.addChangedFeatures( newWspmWater );
 
         monitor.worked( 1 );
       }

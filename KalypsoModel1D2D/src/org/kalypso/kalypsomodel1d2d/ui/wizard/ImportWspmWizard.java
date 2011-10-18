@@ -57,7 +57,7 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -88,6 +88,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitite
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
@@ -127,6 +128,7 @@ import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -178,7 +180,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     /* Only show calculation node */
-    final GMLXPath projectPath = new GMLXPath( TuhhWspmProject.QN_TYPE );
+    final GMLXPath projectPath = new GMLXPath( TuhhWspmProject.QNAME );
     final GMLXPath calculationsPath = new GMLXPath( projectPath, TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
     m_wspmGmlPage.setRootPath( calculationsPath );
 
@@ -333,7 +335,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
   private IRiverProfileNetwork findExistingNetwork( final IRiverProfileNetworkCollection profNetworkColl, final TuhhReach reach )
   {
     final String reachName = reach.getName();
-    for( final IRiverProfileNetwork riverProfileNetwork : profNetworkColl.getRiverProfileNetworks() )
+    for( final IRiverProfileNetwork riverProfileNetwork : profNetworkColl )
     {
       final String networkName = riverProfileNetwork.getName();
       if( ObjectUtils.equals( reachName, networkName ) )
@@ -363,7 +365,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
       final QIntervallResultCollection qResultCollection = (QIntervallResultCollection) qresultsWorkspace.getRootFeature();
 
-      final Feature flowRelParentFeature = flowRelModel;
+      final Feature flowRelParentFeature = flowRelModel.getFeature();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
       final IFeatureBindingCollection<QIntervallResult> resultList = qResultCollection.getQIntervalls();
@@ -415,7 +417,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           flowRel.setName( qresult.getName() );
           flowRel.setDescription( qresult.getDescription() );
 
-          addedFeatures.add( flowRel );
+          addedFeatures.add( flowRel.getFeature() );
         }
       }
 
@@ -466,7 +468,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IBuildingFlowRelation buildingRelation;
     if( existingRelation == null )
-      buildingRelation = flowRelModel.getFlowRelationsShips().addNew( buildingQName, IBuildingFlowRelation.class );
+      buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
     else
       buildingRelation = existingRelation;
 
@@ -494,7 +496,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private static GM_Point replaceNodeWithElement( final IFE1D2DNode node ) throws CoreException
   {
-    final GMLWorkspace workspace = node.getWorkspace();
+    final GMLWorkspace workspace = node.getFeature().getWorkspace();
     final IFEDiscretisationModel1d2d model1d2d = DiscretisationModelUtils.modelForItem( node );
 
     final IFE1D2DElement[] elements = node.getElements();
@@ -508,8 +510,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
     try
     {
       /* delete elements (and associated edges) */
-      final Feature feature0 = elements[0];
-      final Feature feature1 = elements[1];
+      final Feature feature0 = elements[0].getFeature();
+      final Feature feature1 = elements[1].getFeature();
       final EasyFeatureWrapper[] toDelete = new EasyFeatureWrapper[] { new EasyFeatureWrapper( null, feature0 ), new EasyFeatureWrapper( null, feature1 ) };
 
       final ChangeDiscretiationModelCommand elementDeleteCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
@@ -552,8 +554,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
     Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Get some common variables */
-    final IFeatureBindingCollection<IFE1D2DElement> discElements = discretisationModel.getElements();
-    final IFeatureBindingCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
+    final IFeatureWrapperCollection<IFE1D2DElement> discElements = discretisationModel.getElements();
+    final IFeatureWrapperCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
 
     /* add complex-element to model: Automatically create a calculation unit 1d */
 
@@ -599,7 +601,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       {
         /* add new node */
         node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-        addedFeatures.add( node );
+        addedFeatures.add( node.getFeature() );
 
         node.setName( "" ); //$NON-NLS-1$
         final String desc = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.18" + profileMember.getDescription() ); //$NON-NLS-1$
@@ -629,7 +631,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
             final List<IFE1D2DNode> nodes = ((IElement1D) element).getNodes();
             if( nodes == null )
             {
-              System.out.println( element.getId() );
+              System.out.println( element.getGmlID() );
               continue;
             }
             if( nodes != null )
@@ -648,22 +650,22 @@ public class ImportWspmWizard extends Wizard implements IWizard
         {
           /* Create an edge between lastNode and node */
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
-          addedFeatures.add( edge );
+          addedFeatures.add( edge.getFeature() );
 
-          edge.addNode( lastNode.getId() );
-          edge.addNode( node.getId() );
+          edge.addNode( lastNode.getGmlID() );
+          edge.addNode( node.getGmlID() );
 
-          lastNode.addContainer( edge.getId() );
-          node.addContainer( edge.getId() );
+          lastNode.addContainer( edge.getGmlID() );
+          node.addContainer( edge.getGmlID() );
 
-          edge.invalidEnvelope();
+          edge.getFeature().invalidEnvelope();
 
           edgeList.add( edge );
 
           /* Create corresponding element */
           final IElement1D element1d = discretisationModel.getElements().addNew( IElement1D.QNAME, IElement1D.class );
 
-          addedFeatures.add( element1d );
+          addedFeatures.add( element1d.getFeature() );
 
           element1d.setEdge( edge );
         }
@@ -677,7 +679,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
 
-    final Feature discModelFeature = discretisationModel;
+    final Feature discModelFeature = discretisationModel.getFeature();
     final GMLWorkspace workspace = discModelFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModelFeature, addedFeatureArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
@@ -694,14 +696,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IRiverProfileNetwork network;
     if( existingNetwork == null )
-      network = networkCollection.getRiverProfileNetworks().addNew( IRiverProfileNetwork.QNAME );
+      network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
     else
     {
       network = existingNetwork;
-      network.getProfiles().clear();
+      network.clear();
     }
 
-    final Feature networkFeature = network;
+    final Feature networkFeature = network.getFeature();
 
     /* Set user friendly name and description */
     final URL reachContext = reach.getWorkspace().getContext();
@@ -731,8 +733,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     // We fire the add event, even if the network was not added, this should be enough to refresh anything with is
     // related to it...
-    final GMLWorkspace workspace = network.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network, networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final GMLWorkspace workspace = network.getFeature().getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network.getFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     return result;
   }

@@ -45,7 +45,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -88,17 +88,17 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements ICommand
   @SuppressWarnings( { "unchecked", "unchecked" })
   public void process( ) throws Exception
   {
-    final IFeatureBindingCollection subUnits = m_parentCalculationUnit.getChangedSubUnits();
+    final IFeatureWrapperCollection subUnits = m_parentCalculationUnit.getChangedSubUnits();
     for( final ICalculationUnit ele : m_calculationUnitsToRemove )
-      subUnits.remove( ele );
+      subUnits.removeAllRefs( ele );
 
     // fire change
     final Feature[] changedFeatures = new Feature[m_calculationUnitsToRemove.length];
     for( int i = 0; i < changedFeatures.length; i++ )
-      changedFeatures[i] = m_calculationUnitsToRemove[i];
+      changedFeatures[i] = m_calculationUnitsToRemove[i].getFeature();
 
-    final GMLWorkspace workspace = m_parentCalculationUnit.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalculationUnit, changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    final GMLWorkspace workspace = m_parentCalculationUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_parentCalculationUnit.getFeature(), changedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
   }
 

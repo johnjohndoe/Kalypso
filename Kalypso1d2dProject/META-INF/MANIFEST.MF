@@ -38,4 +38,4 @@ Export-Package: org.kalypso.kalypso1d2d.extension,
  org.kalypso.ui.wizards.imports.roughness,
  org.kalypso.ui.wizards.results
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

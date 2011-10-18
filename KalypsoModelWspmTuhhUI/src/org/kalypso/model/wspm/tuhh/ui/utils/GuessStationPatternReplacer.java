@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.utils;
 
@@ -44,13 +44,12 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.patternreplace.PatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -104,18 +103,18 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
    */
   public static Pattern asSearchPattern( final String searchPattern )
   {
-    final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String generalPattern = searchPattern.replaceAll( "\\Q<station>\\E", ".*" ); //$NON-NLS-1$
     return Pattern.compile( generalPattern, Pattern.CASE_INSENSITIVE );
   }
 
   public static String getSearchRegex( final String stationPattern ) throws CoreException
   {
-    final String token = String.format( "<%s>", GuessStationPattern.TOKEN ); //$NON-NLS-1$
+    final String token = String.format( "<%s>", GuessStationPattern.TOKEN );
 
     final int countMatches = StringUtils.countMatches( stationPattern, token );
     if( countMatches != 1 )
     {
-      final String msg = String.format( Messages.getString("GuessStationPatternReplacer.2"), stationPattern ); //$NON-NLS-1$
+      final String msg = String.format( "Invalid pattern: '%s'", stationPattern );
       throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), msg ) );
     }
 
@@ -129,7 +128,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
     if( stationPattern.startsWith( token ) )
       return token + asRegex( stationPattern.substring( token.length() ) );
 
-    final String[] split = stationPattern.split( "\\Q" + token + "\\E" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String[] split = StringUtils.split( stationPattern, token );
     return asRegex( split[0] ) + token + asRegex( split[1] );
   }
 
@@ -148,8 +147,8 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
       else
       {
         appendEscaped( builder, pattern.substring( i, index ) );
-        builder.append( ".*?" ); //$NON-NLS-1$
-        i = index;
+        builder.append( ".*?" );
+        i = index + 1;
       }
     }
 
@@ -161,7 +160,7 @@ public class GuessStationPatternReplacer extends PatternInputReplacer<GuessStati
     if( text.isEmpty() )
       return;
 
-    builder.append( "\\Q" ).append( text ).append( "\\E" ); //$NON-NLS-1$ //$NON-NLS-2$
+    builder.append( "\\Q" ).append( text ).append( "\\E" );
   }
 
 }

@@ -70,6 +70,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -97,12 +98,12 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private IFeatureSelectionManager m_selectionManager;
 
-  private final Feature m_parentModelElement;
+  private final IFeatureWrapper2 m_parentModelElement;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature parentModelElement )
+  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 parentModelElement )
   {
     m_descriptors = descriptors;
     m_workspace = workspace;

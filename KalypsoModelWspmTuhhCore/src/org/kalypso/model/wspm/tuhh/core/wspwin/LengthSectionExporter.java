@@ -46,7 +46,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LengthSectionMapping;
 import org.kalypso.observation.IObservation;

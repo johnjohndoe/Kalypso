@@ -66,27 +66,6 @@ public class DateRange extends Feature_Impl implements IDateRange
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IDateRange#getFrom()
-   */
-  @Override
-  public String getFrom( )
-  {
-    return getProperty( PROPERTY_FROM, String.class );
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IDateRange#getTo()
-   */
-  @Override
-  public String getTo( )
-  {
-    return getProperty( PROPERTY_TO, String.class );
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IDateRange#asDateRange(org.kalypso.commons.tokenreplace.IStringResolver)
-   */
   @Override
   public org.kalypso.ogc.sensor.DateRange asDateRange( final IStringResolver variables )
   {

@@ -45,27 +45,27 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
  */
 public class TerrainModel extends VersionedModel implements ITerrainModel
 {
-  public TerrainModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
 
   public static final QName SIM_BASE_PROP_TERRAIN_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModelSystem" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<IRoughnessLayer> m_roughnessLayers = new FeatureBindingCollection<IRoughnessLayer>( this, IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
+  private final IFeatureWrapperCollection<IRoughnessLayer> m_roughnessLayers = new FeatureWrapperCollection<IRoughnessLayer>( getFeature(), IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
+
+  public TerrainModel( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME_TERRAIN_MODEL );
+
+  }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerainModel#getRiverProfileNetworkCollection()
@@ -73,7 +73,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
   @Override
   public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( )
   {
-    final Feature feature = (Feature) getProperty( QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER );
+    final Feature feature = (Feature) getFeature().getProperty( QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER );
     if( feature == null )
       return null;
 
@@ -98,13 +98,13 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
   @Override
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer )
   {
-    return new RoughnessPolygonCollection( roughnessLayer );
+    return new RoughnessPolygonCollection( roughnessLayer.getFeature(), IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
   }
 
   @Override
   public ITerrainElevationModelSystem getTerrainElevationModelSystem( )
   {
-    final Feature feature = (Feature) getProperty( SIM_BASE_PROP_TERRAIN_ELE_SYS );
+    final Feature feature = (Feature) getFeature().getProperty( SIM_BASE_PROP_TERRAIN_ELE_SYS );
 
     if( feature == null )
     {
@@ -120,7 +120,7 @@ public class TerrainModel extends VersionedModel implements ITerrainModel
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection()
    */
   @Override
-  public IFeatureBindingCollection<IRoughnessLayer> getRoughnessLayerCollection( )
+  public IFeatureWrapperCollection<IRoughnessLayer> getRoughnessLayerCollection( )
   {
     return m_roughnessLayers;
     // return new RoughnessLayerCollection( ((FeatureList) getFeature().getProperty(

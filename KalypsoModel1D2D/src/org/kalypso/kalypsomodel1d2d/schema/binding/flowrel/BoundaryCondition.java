@@ -46,8 +46,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -60,30 +58,30 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
  */
 public class BoundaryCondition extends FlowRelationship implements IBoundaryCondition
 {
-  
   private IObservation<TupleResult> m_observation;
   
   private BOUNDARY_TYPE m_boundType = null;
 
   public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" ); //$NON-NLS-1$
 
-  public BoundaryCondition( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public BoundaryCondition( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IBoundaryCondition.QNAME );
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getTimeserie1DFeature()
    */
   private Feature getTimeserieFeature( )
   {
-    return (Feature) getProperty( QNAME_P_OBSERVATION );
+    return (Feature) getFeature().getProperty( QNAME_P_OBSERVATION );
   }
 
   /**
@@ -100,13 +98,13 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
         || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ))
         || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )) )
     {
-      setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) ); //$NON-NLS-1$
+      getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) ); //$NON-NLS-1$
       setHasDirection( true );
     }
     else 
     {
-      setProperty( QNAME_P_DIRECTION, null );
-      setProperty( QNAME_P_HASDIRECTION, null );
+      getFeature().setProperty( QNAME_P_DIRECTION, null );
+      getFeature().setProperty( QNAME_P_HASDIRECTION, null );
     }
 
     if( (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
@@ -120,8 +118,8 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     if( valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG ) ){
       m_boundType = BOUNDARY_TYPE.WavesBoundary;
       componentUrns = new String[] { domainComponentUrn, valueComponentUrn, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DIR, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DD };
-      setProperty( QNAME_P_DIRECTION, null );
-      setProperty( QNAME_P_HASDIRECTION, null );
+      getFeature().setProperty( QNAME_P_DIRECTION, null );
+      getFeature().setProperty( QNAME_P_HASDIRECTION, null );
     }
     else{
       m_boundType = BOUNDARY_TYPE.HydroBoundary;
@@ -171,7 +169,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public String getStationaryCondition( )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final Object property = feature.getProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND );
     if( property instanceof Double )
     {
@@ -197,7 +195,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setStationaryCondition(java.lang.String)
    */
-  @Override
   public void setStationaryCondition( final String statCond )
   {
 //    Double dValue;
@@ -209,7 +206,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
 //    {   
 //      dValue = Double.valueOf( statCond );
 //    }
-    final Feature feature = this;
+    final Feature feature = getFeature();
     feature.setProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND, statCond.trim() );
   }
 
@@ -219,14 +216,14 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public BigInteger getDirection( )
   {
-    return (BigInteger) getProperty( QNAME_P_DIRECTION );
+    return (BigInteger) getFeature().getProperty( QNAME_P_DIRECTION );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setParentElement(org.kalypsodeegree.model.feature.binding.Feature)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setParentElement(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @SuppressWarnings("unchecked")
-  public void setParentElement( final Feature parentElement )
+  public void setParentElement( final IFeatureWrapper2 parentElement )
   {
     if( parentElement == null )
       return;
@@ -240,8 +237,8 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       parentType = IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D;
     if( parentType != null )
     {
-      setProperty( IBoundaryCondition.PROP_PARENT_TYPE, parentType );
-      setProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT, parentElement.getId() );
+      getFeature().setProperty( IBoundaryCondition.PROP_PARENT_TYPE, parentType );
+      getFeature().setProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT, parentElement.getGmlID() );
     }
     // TODO consider what to do if parentElement is something else
   }
@@ -252,7 +249,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public String getParentElementID( )
   {
-    return getProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT ).toString();
+    return getFeature().getProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT ).toString();
   }
 
   /**
@@ -261,7 +258,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public String getTypeByLocation( )
   {
-    return getProperty( IBoundaryCondition.PROP_PARENT_TYPE ).toString();
+    return getFeature().getProperty( IBoundaryCondition.PROP_PARENT_TYPE ).toString();
   }
 
   /**
@@ -271,7 +268,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public List<String> getParentCalculationUnitIDs( )
   {
-    return (List<String>) getProperty( PROP_PARENT_CALCULATION_UNIT );
+    return (List<String>) getFeature().getProperty( PROP_PARENT_CALCULATION_UNIT );
   }
 
   /**
@@ -296,7 +293,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public Boolean isAbsolute( )
   {
-    return (Boolean) getProperty( QNAME_P_ISABSOLUTE );
+    return (Boolean) getFeature().getProperty( QNAME_P_ISABSOLUTE );
   }
 
   /**
@@ -305,7 +302,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public void setIsAbsolute( final Boolean value )
   {
-    setProperty( QNAME_P_ISABSOLUTE, value );
+    getFeature().setProperty( QNAME_P_ISABSOLUTE, value );
   }
 
   /**
@@ -314,10 +311,10 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public Boolean hasDirection( )
   {
-    // if( getProperty( QNAME_P_HASDIRECTION ) == null )
+    // if( getFeature().getProperty( QNAME_P_HASDIRECTION ) == null )
     // return false;
 
-    return (Boolean) getProperty( QNAME_P_HASDIRECTION );
+    return (Boolean) getFeature().getProperty( QNAME_P_HASDIRECTION );
   }
 
   /**
@@ -326,7 +323,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public void setHasDirection( final Boolean value )
   {
-    setProperty( QNAME_P_HASDIRECTION, value );
+    getFeature().setProperty( QNAME_P_HASDIRECTION, value );
 
   }
 
@@ -336,9 +333,9 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public double getInflowVelocity( )
   {
-    final boolean hasDirection = (Boolean) getProperty( QNAME_P_HASDIRECTION );
+    final boolean hasDirection = (Boolean) getFeature().getProperty( QNAME_P_HASDIRECTION );
     if( hasDirection )
-      return (Double) getProperty( QNAME_P_INFLOWVELOCITY );
+      return (Double) getFeature().getProperty( QNAME_P_INFLOWVELOCITY );
     else
       return 0.0;
 
@@ -350,7 +347,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public void setDirection( final BigInteger value )
   {
-    setProperty( QNAME_P_DIRECTION, value );
+    getFeature().setProperty( QNAME_P_DIRECTION, value );
 
   }
 
@@ -360,7 +357,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public void setInflowVelocity( double value )
   {
-    setProperty( QNAME_P_INFLOWVELOCITY, value );
+    getFeature().setProperty( QNAME_P_INFLOWVELOCITY, value );
   }
 
   /**

@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.pdb.ui.internal.preferences;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,7 +60,7 @@ class EditSettingsWizard extends Wizard
     m_page = page;
     m_clonedSettings = settings.copy();
 
-    setWindowTitle( Messages.getString( "EditSettingsWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Edit Connection Settings" );
     setNeedsProgressMonitor( true );
 
     addPage( new SettingsPage( "connectionPage", m_clonedSettings ) ); //$NON-NLS-1$

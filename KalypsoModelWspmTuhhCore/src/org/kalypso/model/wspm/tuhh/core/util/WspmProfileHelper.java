@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinEventPdbOperation;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -70,7 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckInEventOperation implements ICoreRunnableWithProgress
 {
-  static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString( "CheckInEventOperation.0" ); //$NON-NLS-1$
+  static final String STR_FAILED_TO_WRITE_TO_DATABASE = "Failed to write to database";
 
   private final CheckInEventData<WspmFixation> m_data;
 
@@ -82,7 +81,7 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "CheckInEventOperation.1" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( "Upload cross sections into database", 100 );
 
     Session session = null;
 
@@ -119,7 +118,7 @@ public class CheckInEventOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Operation failed", e );
       throw new CoreException( status );
     }
     finally

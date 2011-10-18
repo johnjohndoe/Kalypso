@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,37 +36,25 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
-import org.kalypso.model.wspm.pdb.connect.command.GetCoefficients;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -79,9 +67,9 @@ public class CheckoutPdbData extends AbstractModelObject
   /** Choice what shall be removed from the local data. */
   public enum RemoveStrategy
   {
-    keepAll(Messages.getString( "CheckoutPdbData.0" )), //$NON-NLS-1$
-    keepWaterBodies(Messages.getString( "CheckoutPdbData.1" )), //$NON-NLS-1$
-    removeAll(Messages.getString( "CheckoutPdbData.2" )); //$NON-NLS-1$
+    keepAll("Keep everything"),
+    keepWaterBodies("Only keep water bodies"),
+    removeAll("Remove everything");
 
     private final String m_label;
 
@@ -111,50 +99,23 @@ public class CheckoutPdbData extends AbstractModelObject
 
   private IPdbConnection m_connection;
 
-  private Coefficients m_coefficients;
-
-  private GafCodes m_codes;
-
-  public IStatus init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
+  public void init( final Shell shell, final String windowTitle, final IDialogSettings settings, final IPdbConnection connection )
   {
-    try
-    {
-      closeConnection();
+    closeConnection();
 
-      m_connection = connection;
-      m_documentBase = findDocumentBase( shell, windowTitle, connection );
+    m_connection = connection;
+    m_documentBase = findDocumentBase( shell, windowTitle, connection );
 
-      m_coefficients = loadCoefficients( connection );
-      m_codes = new GafCodes();
-
-      if( settings != null )
-      {
-        // TODO?
-      }
-
-      return Status.OK_STATUS;
-    }
-    catch( final InvocationTargetException e )
-    {
-      return StatusUtilities.statusFromThrowable( e );
-    }
-    catch( final IOException e )
-    {
-      return StatusUtilities.statusFromThrowable( e );
-    }
-  }
-
-  private Coefficients loadCoefficients( final IPdbConnection connection ) throws InvocationTargetException
-  {
-    final GetCoefficients operation = new GetCoefficients( IGafConstants.POINT_KIND_GAF );
-    new ExecutorRunnable( connection, operation ).execute( new NullProgressMonitor() );
-    return operation.getCoefficients();
+    if( settings == null )
+      return;
   }
 
   public void store( final IDialogSettings settings )
   {
     if( settings == null )
       return;
+    // TODO Auto-generated method stub
+
   }
 
   private URI findDocumentBase( final Shell shell, final String commandName, final IPdbConnection connection )
@@ -169,7 +130,7 @@ public class CheckoutPdbData extends AbstractModelObject
     {
       e.printStackTrace();
 
-      final String STR_ATTACHMENTS_DISABLED = Messages.getString( "CheckoutPdbData.3" ); //$NON-NLS-1$
+      final String STR_ATTACHMENTS_DISABLED = "Downloading attachments will not work.";
       new StatusDialog2( shell, e.getStatus(), commandName, STR_ATTACHMENTS_DISABLED ).open();
 
       return null;
@@ -236,15 +197,5 @@ public class CheckoutPdbData extends AbstractModelObject
   {
     if( m_connection != null )
       PdbUtils.closeQuietly( m_connection );
-  }
-
-  public Coefficients getCoefficients( )
-  {
-    return m_coefficients;
-  }
-
-  public GafCodes getCodes( )
-  {
-    return m_codes;
   }
 }

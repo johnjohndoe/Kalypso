@@ -40,20 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
-
 /**
  * @author Gernot Belger
  */
 public interface WaterlevelFixationStrings
 {
-  String STATION = Messages.getString( "WaterlevelFixationStrings.0" ); //$NON-NLS-1$
+  String STATION = "Station [m]";
 
-  String WATERLEVEL = Messages.getString( "WaterlevelFixationStrings.1" ); //$NON-NLS-1$
+  String WATERLEVEL = "Water Level [mNN]";
 
-  String DISCHARGE = Messages.getString( "WaterlevelFixationStrings.2" ); //$NON-NLS-1$
+  String DISCHARGE = "Discharge [m³/s]";
 
-  String MEASUREMENT = Messages.getString( "WaterlevelFixationStrings.3" ); //$NON-NLS-1$
+  String MEASUREMENT = "Measurement";
 
-  String DESCRIPTION = Messages.getString( "WaterlevelFixationStrings.4" ); //$NON-NLS-1$
+  String DESCRIPTION = "Description";
 }

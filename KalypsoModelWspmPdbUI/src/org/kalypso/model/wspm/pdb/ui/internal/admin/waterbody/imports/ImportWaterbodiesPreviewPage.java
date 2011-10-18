@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
@@ -72,10 +72,9 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -95,8 +94,8 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
   {
     super( pageName );
 
-    setTitle( Messages.getString( "ImportWaterbodiesPreviewPage.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "ImportWaterbodiesPreviewPage.1" ) ); //$NON-NLS-1$
+    setTitle( "Preview" );
+    setDescription( "Select the water bodies to import." );
 
     m_data = data;
   }
@@ -126,7 +125,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
     WaterBodyViewer.createRankColumn( m_viewer );
 
     final TableViewerColumn validColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    validColumn.getColumn().setText( Messages.getString( "ImportWaterbodiesPreviewPage.2" ) ); //$NON-NLS-1$
+    validColumn.getColumn().setText( "Status" );
     validColumn.getColumn().setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( validColumn.getColumn() );
     ColumnViewerSorter.registerSorter( validColumn, new ViewerComparator() );
@@ -180,7 +179,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
     final Composite panel = new Composite( parent, SWT.NONE );
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
 
-    new Label( panel, SWT.NONE ).setText( Messages.getString( "ImportWaterbodiesPreviewPage.3" ) ); //$NON-NLS-1$
+    new Label( panel, SWT.NONE ).setText( "Existing elements:" );
 
     final ComboViewer viewer = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     viewer.setLabelProvider( new LabelProvider() );
@@ -207,7 +206,7 @@ public class ImportWaterbodiesPreviewPage extends WizardPage implements IUpdatea
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, Messages.getString( "ImportWaterbodiesPreviewPage.4" ) ).open(); //$NON-NLS-1$
+      new StatusDialog2( getShell(), status, "Load Shape" ).open();
 
     return operation.getWaterBodies();
   }

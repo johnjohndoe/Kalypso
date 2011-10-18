@@ -61,8 +61,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
-import org.kalypso.model.rcm.util.IRainfallConfigurator;
-import org.kalypso.model.rcm.util.RainfallExtensionUtilities;
 
 /**
  * This task generates rainfall for catchment areas.
@@ -141,8 +139,6 @@ public class RainfallGenerationTask extends Task
       }
       final IStringResolver variables = new PropertiesStringResolver( properties, "${", "}" );
 
-      updateRcmGml( variables );
-
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( m_rcmUrl, variables );
       return operation.execute( monitor );
     }
@@ -177,11 +173,5 @@ public class RainfallGenerationTask extends Task
       return Project.MSG_WARN;
 
     return Project.MSG_WARN;
-  }
-
-  private void updateRcmGml( IStringResolver variables ) throws CoreException
-  {
-    IRainfallConfigurator configurator = RainfallExtensionUtilities.createRainfallConfigurator( RainfallExtensionUtilities.RAINFALL_CONFIGURATOR_ID );
-    configurator.updateRcmGml( m_rcmUrl, variables );
   }
 }

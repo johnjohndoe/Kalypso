@@ -47,7 +47,6 @@ import java.awt.Rectangle;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -69,7 +68,7 @@ public class SelectPdbProfilesWidget extends SelectFeatureWidget
 
   public SelectPdbProfilesWidget( )
   {
-    super( Messages.getString( "SelectPdbProfilesWidget.0" ), Messages.getString( "SelectPdbProfilesWidget.1" ), QNAMES_TO_SELECT, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Select Cross Section", "Select Cross Sections in the Map", QNAMES_TO_SELECT, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );
   }
 
   @Override

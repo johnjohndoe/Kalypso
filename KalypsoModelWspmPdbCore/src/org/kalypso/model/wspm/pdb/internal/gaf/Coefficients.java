@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
@@ -100,15 +100,5 @@ public class Coefficients
   public Vegetation[] getAllVegetation( )
   {
     return m_vegetationInfo.getAllCoefficients();
-  }
-
-  public Vegetation getUnknownVegetation( )
-  {
-    return getVegetation( UNKNOWN_VEGETATION );
-  }
-
-  public Roughness getUnknownRoughness( )
-  {
-    return getRoughness( UNKNOWN_ROUGHNESS );
   }
 }

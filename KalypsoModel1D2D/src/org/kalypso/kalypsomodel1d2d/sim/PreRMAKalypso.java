@@ -6,7 +6,8 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -14,7 +15,6 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -47,7 +47,7 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -147,10 +147,10 @@ public class PreRMAKalypso implements ISimulation
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
         if( calculationUnit instanceof ICalculationUnit1D2D )
         {
-          final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = ((ICalculationUnit1D2D) calculationUnit).getChangedSubUnits();
+          final IFeatureWrapperCollection<ICalculationUnit> changedSubUnits = ((ICalculationUnit1D2D) calculationUnit).getChangedSubUnits();
           for( final ICalculationUnit subUnit : changedSubUnits )
           {
-            if( subUnit.getId().equals( calcUnitID ) )
+            if( subUnit.getGmlID().equals( calcUnitID ) )
               calculationUnit = subUnit;
           }
         }
@@ -173,22 +173,19 @@ public class PreRMAKalypso implements ISimulation
       }
 
       IRoughnessClsCollection roughnessModel = null;
-      try
-      {
+      try{
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
       }
-      catch( Exception e )
-      {
+      catch (Exception e) {
         // TODO: handle exception
       }
-      if( roughnessModel == null )
-      {
+      if( roughnessModel == null ){
         final URL roughnessURL = (URL) inputProvider.getInputForID( INPUT_ROUGHNESS );
         final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
         roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
       }
-
+      
       IWindModel windModel = null;
       try
       {
@@ -236,7 +233,7 @@ public class PreRMAKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString( "PreRMAKalypso.1" ), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("PreRMAKalypso.1"), e ); //$NON-NLS-1$
     }
     finally
     {

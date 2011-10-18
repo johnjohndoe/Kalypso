@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,7 +60,7 @@ public class UniqueWaterBodyLabelValidator extends TypedValidator<String>
 
   public UniqueWaterBodyLabelValidator( final WaterBody[] existingWaterbodies, final String ignoreLabel )
   {
-    super( String.class, IStatus.WARNING, Messages.getString( "UniqueWaterBodyLabelValidator_0" ) ); //$NON-NLS-1$
+    super( String.class, IStatus.WARNING, "A waterbody with the same name already exists" );
 
     m_ignoreLabel = ignoreLabel;
 

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.oracle;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
@@ -69,7 +69,7 @@ public class OracleSettings extends HibernateSettings
 
   public OracleSettings( )
   {
-    super( "Oracle" ); //$NON-NLS-1$
+    super( "Oracle" );
   }
 
   public OracleSettings( final String name, final OracleSettings settings )
@@ -116,7 +116,7 @@ public class OracleSettings extends HibernateSettings
     if( PROPERTY_NAME.equals( property ) )
       return "Oracle"; //$NON-NLS-1$
 
-    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) ); //$NON-NLS-1$
+    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
   }
 
   public void setHost( final String host )

@@ -40,16 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.wind;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * Interface to be implemented by class representing a substitute of simBase:_WindDataModel
+ * Interface to be implemented by class representing 
+ * a substitute of simBase:_WindDataModel
  * 
- * 
+ *
  */
-public interface IWindDataModel extends Feature, IWindDataProvider
+public interface IWindDataModel extends IFeatureWrapper2, IWindDataProvider
 {
 
   IWindDataModelSystem getWindDataModelSystem( );
-
+  
 }

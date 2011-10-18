@@ -20,7 +20,7 @@ import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -71,7 +71,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     {
       monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.7" ) ); //$NON-NLS-1$
 
-      final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection().getLandusePolygonCollection();
+      final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection();
 
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
@@ -98,8 +98,8 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
       /* creating landuse polygons */
       final List<Feature> createdFeatures = RiskLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
-      final GMLWorkspace workspace = m_vectorModel.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getParentFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = m_vectorModel.getFeature().getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
       return Status.OK_STATUS;
     }

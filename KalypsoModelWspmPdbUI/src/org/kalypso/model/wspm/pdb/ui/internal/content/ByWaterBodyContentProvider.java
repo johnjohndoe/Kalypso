@@ -42,12 +42,11 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -66,7 +65,7 @@ public class ByWaterBodyContentProvider implements ITreeContentProvider
       if( !ArrayUtils.isEmpty( allChildren ) )
         return allChildren;
       else
-        return new String[] { Messages.getString( "ByWaterBodyContentProvider.0" ) }; //$NON-NLS-1$
+        return new String[] { "<Empty Database>" };
     }
 
     if( inputElement instanceof Object[] )

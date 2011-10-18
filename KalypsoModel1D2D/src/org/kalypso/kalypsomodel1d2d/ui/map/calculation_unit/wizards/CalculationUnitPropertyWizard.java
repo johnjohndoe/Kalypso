@@ -44,7 +44,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -67,7 +67,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromC
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Madanagopal
@@ -112,7 +112,7 @@ public class CalculationUnitPropertyWizard extends Wizard
       try
       {
         final ICommandManager commandManager = m_dataModel.getData( ICommandManager.class, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-        final Feature calcUnitFeature = m_parentCalcUnit;
+        final Feature calcUnitFeature = m_parentCalcUnit.getFeature();
 
         final String newName = m_wizardPage.getChangedName();
         if( !ObjectUtils.equals( m_parentCalcUnit.getName(), newName ) )
@@ -138,7 +138,7 @@ public class CalculationUnitPropertyWizard extends Wizard
         if( m_parentCalcUnit instanceof ICalculationUnit1D2D )
         {
           final ICalculationUnit1D2D calcUnit1D2D = (ICalculationUnit1D2D) m_parentCalcUnit;
-          final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1D2D.getChangedSubUnits();
+          final IFeatureWrapperCollection<ICalculationUnit> subUnits = calcUnit1D2D.getChangedSubUnits();
 
           final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( subUnits.toArray( new ICalculationUnit[subUnits.size()] ), calcUnit1D2D );
           final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( newSubUnits, calcUnit1D2D );
@@ -217,7 +217,7 @@ public class CalculationUnitPropertyWizard extends Wizard
     // --------------------------------------------------------------------------------
     final List<IFELine> currentUnitContinuityLines = currentUnit.getContinuityLines();
     final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = model.getComplexElements();
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model.getComplexElements();
 
     // get all transition elements from the discretisation model
     final List<ITransitionElement> allTransitionElements = new ArrayList<ITransitionElement>();

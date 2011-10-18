@@ -69,7 +69,6 @@ import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
 import org.kalypso.model.wspm.pdb.gaf.ImportGafData;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -90,8 +89,8 @@ public class GafOptionsPage extends WizardPage
 
     m_data = data;
 
-    setTitle( Messages.getString( "GafOptionsPage.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "GafOptionsPage.1" ) ); //$NON-NLS-1$
+    setTitle( "Import Options" );
+    setDescription( "Configure options for the gaf import on this page." );
   }
 
   @Override
@@ -115,7 +114,7 @@ public class GafOptionsPage extends WizardPage
   private void createReadStatusControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString( "GafOptionsPage.2" ) ); //$NON-NLS-1$
+    group.setText( "File Info" );
     group.setLayout( new FillLayout() );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     m_readStatusComposite = new StatusComposite( group, StatusComposite.DETAILS );
@@ -143,11 +142,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownCodes();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString( "GafOptionsPage.3" ) ); //$NON-NLS-1$
+    group.setText( "Unknown Codes" );
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString( "GafOptionsPage.4" ) ); //$NON-NLS-1$
+      createOkCodeControl( group, "No unknown codes found" );
       return;
     }
 
@@ -155,7 +154,7 @@ public class GafOptionsPage extends WizardPage
 
     for( final String code : unknownCodes )
     {
-      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) ); //$NON-NLS-1$
+      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) );
 
       final IObservableValue model = new CodeObservableValue( checker, code );
       createCodeMappingCombo( group, availableCodes, model );
@@ -168,11 +167,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownHyks();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString( "GafOptionsPage.6" ) ); //$NON-NLS-1$
+    group.setText( "Unknown HYK" );
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString( "GafOptionsPage.7" ) ); //$NON-NLS-1$
+      createOkCodeControl( group, "No unknown hyk codes found" );
       return;
     }
 
@@ -180,7 +179,7 @@ public class GafOptionsPage extends WizardPage
 
     for( final String code : unknownCodes )
     {
-      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) ); //$NON-NLS-1$
+      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) );
 
       final IObservableValue model = new HykObservableValue( checker, code );
       createCodeMappingCombo( group, availableCodes, model );
@@ -193,11 +192,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownRoughnes();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString( "GafOptionsPage.9" ) ); //$NON-NLS-1$
+    group.setText( "Unknown Roughnes Classes" );
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString( "GafOptionsPage.10" ) ); //$NON-NLS-1$
+      createOkCodeControl( group, "No unknown roughnes classes found" );
       return;
     }
 
@@ -205,7 +204,7 @@ public class GafOptionsPage extends WizardPage
 
     for( final String code : unknownCodes )
     {
-      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) ); //$NON-NLS-1$
+      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) );
 
       final IObservableValue model = new RoughnessObservableValue( checker, code );
       createCodeMappingCombo( group, availableCodes, model );
@@ -218,11 +217,11 @@ public class GafOptionsPage extends WizardPage
     final String[] unknownCodes = checker.getUnknownVegetation();
 
     final Group group = createUnknownGroup( parent );
-    group.setText( Messages.getString( "GafOptionsPage.12" ) ); //$NON-NLS-1$
+    group.setText( "Unknown Vegetation Classes" );
 
     if( unknownCodes.length == 0 )
     {
-      createOkCodeControl( group, Messages.getString( "GafOptionsPage.13" ) ); //$NON-NLS-1$
+      createOkCodeControl( group, "No unknown vegetation classes found" );
       return;
     }
 
@@ -230,7 +229,7 @@ public class GafOptionsPage extends WizardPage
 
     for( final String code : unknownCodes )
     {
-      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) ); //$NON-NLS-1$
+      new Label( group, SWT.NONE ).setText( String.format( "\"%s\" = ", code ) );
 
       final IObservableValue model = new VegetationObservableValue( checker, code );
       createCodeMappingCombo( group, availableVegetation, model );
@@ -258,7 +257,7 @@ public class GafOptionsPage extends WizardPage
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
 
     final DataBinder dataBinder = new DataBinder( target, model );
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<Object>( Object.class, IStatus.ERROR, Messages.getString( "GafOptionsPage.15" ) ) ); //$NON-NLS-1$
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<Object>( Object.class, IStatus.ERROR, "Not all unknown codes have been be assigned" ) );
 
     m_binding.bindValue( dataBinder );
   }

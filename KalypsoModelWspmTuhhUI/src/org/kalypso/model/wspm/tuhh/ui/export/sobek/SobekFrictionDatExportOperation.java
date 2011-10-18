@@ -43,9 +43,8 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
@@ -166,7 +165,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
   {
     final String roughnessId = getInfo().getRoughnessID();
 
-    final int widthIndex = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    final int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     final int roughnessIndex = profil.indexOfProperty( roughnessId );
     // FIXME: throw exception instead and collect stati and show them to user
     if( roughnessIndex == -1 )
@@ -183,8 +182,7 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
 
       final double width1 = getRecordValue( widthIndex, point1 );
       final double width2 = getRecordValue( widthIndex, point2 );
-
-      final double roughness = getRoughness( profil, roughnessIndex, point1 );
+      final double roughness = getRecordValue( roughnessIndex, point1 );
 
       if( from <= width1 && from <= width2 && width1 <= to && width2 <= to )
       {
@@ -201,15 +199,6 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     return friction;
   }
 
-  private double getRoughness( final IProfil profile, final int roughnessIndex, final IRecord point )
-  {
-    final double plainValue = getRecordValue( roughnessIndex, point );
-    if( !getInfo().getPreferRoughnessClasses() )
-      return plainValue;
-
-    return WspmClassifications.findRoughnessValue( profile, point, profile.hasPointProperty( getInfo().getRoughnessID() ), plainValue );
-  }
-
   private double getRecordValue( final int componentIndex, final IRecord point )
   {
     final Object value = point.getValue( componentIndex );
@@ -222,10 +211,10 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
   private FrictionType getFrictionType( )
   {
     final String roughnessId = getInfo().getRoughnessID();
-    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( roughnessId ) )
+    if( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS.equals( roughnessId ) )
       return FrictionType.White_Colebrook;
 
-    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( roughnessId ) )
+    if( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST.equals( roughnessId ) )
       return FrictionType.Strickler_Ks;
 
     return FrictionType.unknown1;

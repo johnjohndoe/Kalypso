@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafProfile;
 import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -99,7 +98,7 @@ public class Gaf2Db implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "Gaf2Db.0" ); //$NON-NLS-1$
+    return "Import gaf data";
   }
 
   @Override
@@ -108,24 +107,25 @@ public class Gaf2Db implements IPdbOperation
     try
     {
       final GafProfile[] profiles = m_profiles.getProfiles();
-      m_monitor.beginTask( Messages.getString( "Gaf2Db.1" ), profiles.length ); //$NON-NLS-1$
+      m_monitor.beginTask( "Importing cross sections into database", profiles.length );
 
       addState( session, m_state );
       commitWaterLevel( session );
 
       for( final GafProfile profile : profiles )
       {
-        m_monitor.subTask( String.format( Messages.getString( "Gaf2Db.2" ), profile.getStation() ) ); //$NON-NLS-1$
+        m_monitor.subTask( String.format( "converting cross section %s", profile.getStation() ) );
         commitProfile( session, m_dbType, profile );
         m_monitor.worked( 1 );
       }
 
-      m_monitor.subTask( Messages.getString( "Gaf2Db.3" ) ); //$NON-NLS-1$
+
+      m_monitor.subTask( "writing data into database" );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString( "Gaf2Db.4" ), e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to write data into database", e );
     }
   }
 
@@ -239,21 +239,14 @@ public class Gaf2Db implements IPdbOperation
 
     final Roughness roughness = gafPoint.getRoughnessClass();
     point.setRoughness( roughness );
-    // REMARK: we do not resolve the values here, because a set values means 'overwritten'
-    // point.setRoughnessKstValue( roughness.getKstValue() );
-    // point.setRoughnessKValue( roughness.getKValue() );
+    point.setRoughnessKstValue( roughness.getKstValue() );
+    point.setRoughnessKValue( roughness.getKValue() );
 
     final Vegetation vegetation = gafPoint.getVegetationClass();
-    if( vegetation == null )
-    {
-      System.out.println();
-    }
-
     point.setVegetation( vegetation );
-    // REMARK: we do not resolve the values here, because a set values means 'overwritten'
-    // point.setVegetationAx( vegetation.getAx() );
-    // point.setVegetationAy( vegetation.getAy() );
-    // point.setVegetationDp( vegetation.getDp() );
+    point.setVegetationAx( vegetation.getAx() );
+    point.setVegetationAy( vegetation.getAy() );
+    point.setVegetationDp( vegetation.getDp() );
 
     session.save( point );
   }

@@ -55,7 +55,7 @@ public class WspmPdbCorePlugin extends Plugin implements BundleActivator
 {
   public final static String PLUGIN_ID = "org.kalypso.model.wspm.pdb.core"; //$NON-NLS-1$
 
-  private static final String SECURE_SETTINGS_NODE = "wspmPdbCore.connections"; //$NON-NLS-1$
+  private static final String SECURE_SETTINGS_NODE = "wspmPdbCore.connections";
 
   /* This instance */
   private static WspmPdbCorePlugin plugin;

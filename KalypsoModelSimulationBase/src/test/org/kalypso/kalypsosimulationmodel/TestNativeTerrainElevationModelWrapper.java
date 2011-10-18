@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
@@ -52,36 +52,57 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Madanagopal
  * @author Patrice Congo
- * 
+ *
  */
 public class TestNativeTerrainElevationModelWrapper extends TestCase
 {
-  public void testWorkspaceLoad( ) throws Exception
-  {
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( TestWorkspaces.URL_NATIVE_TEM_WRAPPER, null );
-    final Feature rcFeature = workspace.getRootFeature();
-    final NativeTerrainElevationModelWrapper emWrapper = (NativeTerrainElevationModelWrapper) rcFeature;
 
-    for( int i = 0; i < 10; i++ )
+    public void testWorkspaceLoad()
     {
-      for( int j = 0; j < 10; j++ )
-      {
-        final double x = 5 * i + 1 + 13;
-        final double y = 5 * (9 - j) + 1 + 154;
-        if( i == j )
+            
+        GMLWorkspace workspace=null;
+        
+        try
         {
-          final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-          final double ele = emWrapper.getElevation( curPoint );
-          assertEquals( "i=" + i + " j=" + j + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
+            workspace=
+                GmlSerializer.createGMLWorkspace( 
+                                TestWorkspaces.URL_NATIVE_TEM_WRAPPER, 
+                                null );
+            Feature rcFeature=workspace.getRootFeature();
+            NativeTerrainElevationModelWrapper emWrapper=
+              new NativeTerrainElevationModelWrapper(rcFeature);
+            
+            for(int i=0;i<10;i++)
+            {
+              for(int j=0;j<10;j++)
+              {
+                double x=5*i+1+13;
+                double y=5*(9-j)+1+154;
+                if(i==j)
+                {
+                  GM_Point curPoint = 
+                    GeometryFactory.createGM_Point( 
+                      x, y, TestWorkspaces.getGaussKrueger() );
+                  double ele=emWrapper.getElevation( curPoint  );
+                  assertEquals(
+                      "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                  
+                }
+                else
+                {
+                  GM_Point curPoint = 
+                    GeometryFactory.createGM_Point( 
+                      x,y, TestWorkspaces.getGaussKrueger() );
+                  double ele=emWrapper.getElevation( curPoint  );
+                  assertEquals(
+                      "i="+i+" j="+j+" ele="+ele,Double.NaN,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
+              }
+            }
         }
-        else
+        catch(Throwable th)
         {
-          final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-          final double ele = emWrapper.getElevation( curPoint );
-          assertEquals( "i=" + i + " j=" + j + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            fail(TestUtils.getStackTraceAsString(th));
         }
-      }
     }
-  }
 }

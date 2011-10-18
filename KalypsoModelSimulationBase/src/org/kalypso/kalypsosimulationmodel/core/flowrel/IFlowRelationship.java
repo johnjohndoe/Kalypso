@@ -43,13 +43,13 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
  */
-public interface IFlowRelationship extends Feature
+public interface IFlowRelationship extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "_FlowRelationship" ); //$NON-NLS-1$
 

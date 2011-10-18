@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventData;
 import org.kalypso.model.wspm.pdb.wspm.CheckInEventOperation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -94,7 +93,7 @@ public class CheckInEventWorker implements ICheckInWorker
 
   static String formatMissingWaterBody( final String waterCode, final String waterName )
   {
-    return String.format( Messages.getString( "CheckInEventWorker.0" ), waterName, waterCode ); //$NON-NLS-1$
+    return String.format( "Water body '%s' with code '%s' does not exist in the database.%nPlease change the code to an existing river code.", waterName, waterCode );
   }
 
   @Override

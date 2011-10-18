@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.gaf;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,7 +62,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
@@ -76,7 +76,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.state.IStatesProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.ChooseWaterPage;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStatesProvider, IGenericWizard
 {
@@ -97,6 +96,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
 
   private AddWaterLevelPage m_waterLevelPage;
 
+
   private IConnectionViewer m_viewer;
 
   public ImportGafWizard( )
@@ -105,7 +105,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
 
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ImportGafWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Import GAF" );
   }
 
   @Override
@@ -121,7 +121,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   {
     try
     {
-      monitor.beginTask( Messages.getString( "ImportGafWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
       m_data.initFromDb();
       m_data.init( getDialogSettings() );
       return Status.OK_STATUS;
@@ -146,7 +146,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     final IObservableValue waterValue = BeansObservables.observeValue( m_data, ImportGafData.PROPERTY_WATER_BODY );
 
     final ChooseWaterPage waterPage = new ChooseWaterPage( "waterBody", connection, waterValue ); //$NON-NLS-1$
-    waterPage.setDescription( Messages.getString( "ImportGafWizard.2" ) ); //$NON-NLS-1$
+    waterPage.setDescription( "Choose the water body into which the profiles will be imported" );
     addPage( waterPage );
 
     m_optionsPage = new GafOptionsPage( "options", m_data ); //$NON-NLS-1$
@@ -189,21 +189,15 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
   }
 
   @Override
-  public boolean performCancel( )
-  {
-    storeSettings();
-
-    return super.performCancel();
-  }
-
-  @Override
   public boolean performFinish( )
   {
     final ImportGafOperation operation = new ImportGafOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    new StatusDialog( getShell(), result, getWindowTitle() ).open();
+    new StatusDialog2( getShell(), result, getWindowTitle() ).open();
 
-    storeSettings();
+    final IDialogSettings settings = getDialogSettings();
+    if( settings != null )
+      m_data.store( settings );
 
     if( result.matches( IStatus.ERROR ) )
       return false;
@@ -216,13 +210,6 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
     return true;
   }
 
-  private void storeSettings( )
-  {
-    final IDialogSettings settings = getDialogSettings();
-    if( settings != null )
-      m_data.store( settings );
-  }
-
   protected void handlePageChanged( final Object selectedPage )
   {
     if( selectedPage == m_optionsPage )
@@ -230,7 +217,7 @@ public class ImportGafWizard extends Wizard implements IWorkbenchWizard, IStates
       final ReadGafOperation operation = new ReadGafOperation( m_data );
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       if( !status.isOK() )
-        new StatusDialog( getShell(), status, getWindowTitle() ).open();
+        new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
       m_optionsPage.updateControl();
     }

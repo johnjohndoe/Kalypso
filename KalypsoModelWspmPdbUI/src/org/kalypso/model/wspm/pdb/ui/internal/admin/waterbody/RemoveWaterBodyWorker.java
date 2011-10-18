@@ -48,7 +48,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IRemoveWorker;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +64,7 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString( "RemoveWaterBodyWorker.0" ); //$NON-NLS-1$
+    return "Remove Water Body";
   }
 
   @Override
@@ -73,7 +72,7 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
   {
     final String name = m_selectedItem.getName();
 
-    final boolean hasData = hasData();
+    final boolean hasData = hasData(  );
     if( hasData )
     {
       /* show dialog with states/cross-sections -> water cannot be removed */
@@ -82,7 +81,7 @@ public class RemoveWaterBodyWorker implements IRemoveWorker
       return false;
     }
 
-    final String message = String.format( Messages.getString( "RemoveWaterBodyWorker.1" ), m_selectedItem.getLabel(), name ); //$NON-NLS-1$
+    final String message = String.format( "Remove waterbody: %s (%s)? This operation cannot be undone.", m_selectedItem.getLabel(), name );
     return MessageDialog.openConfirm( shell, getWindowTitle(), message );
   }
 

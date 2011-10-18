@@ -74,7 +74,6 @@ import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.connect.PDBRole;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -115,7 +114,7 @@ public class PdbInfoDialog extends TitleAreaDialog
   {
     super.configureShell( newShell );
 
-    newShell.setText( Messages.getString( "PdbInfoDialog.0" ) ); //$NON-NLS-1$
+    newShell.setText( "Connection Info" );
   }
 
   @Override
@@ -132,8 +131,8 @@ public class PdbInfoDialog extends TitleAreaDialog
     createInfoGroup( area );
 
     final String name = m_connection.getLabel();
-    setTitle( String.format( Messages.getString( "PdbInfoDialog.1" ), name ) ); //$NON-NLS-1$
-    setMessage( Messages.getString( "PdbInfoDialog.2" ) ); //$NON-NLS-1$
+    setTitle( String.format( "Connection: '%s'", name ) );
+    setMessage( "Shows information about the currently connected database." );
 
     return area;
   }
@@ -141,7 +140,7 @@ public class PdbInfoDialog extends TitleAreaDialog
   private void createConnectionGroup( final Composite area )
   {
     final Section group = m_toolkit.createSection( area, Section.TITLE_BAR );
-    group.setText( Messages.getString( "PdbInfoDialog.3" ) ); //$NON-NLS-1$
+    group.setText( "Connection Settings" );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final IPdbSettings settings = m_connection.getSettings();
@@ -169,13 +168,13 @@ public class PdbInfoDialog extends TitleAreaDialog
   {
     final Section group = m_toolkit.createSection( parent, Section.TITLE_BAR );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( Messages.getString( "PdbInfoDialog.4" ) ); //$NON-NLS-1$
+    group.setText( "Database Rights" );
 
     final Composite panel = m_toolkit.createComposite( group );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
     group.setClient( panel );
 
-    m_toolkit.createLabel( panel, Messages.getString( "PdbInfoDialog.5" ) ); //$NON-NLS-1$
+    m_toolkit.createLabel( panel, "Role" );
 
     final PDBRole role = m_connection.getRole();
     final Text field = m_toolkit.createText( panel, role.toString(), SWT.SINGLE );
@@ -186,7 +185,7 @@ public class PdbInfoDialog extends TitleAreaDialog
   private void createInfoGroup( final Composite area )
   {
     final Section group = m_toolkit.createSection( area, Section.TITLE_BAR );
-    group.setText( Messages.getString( "PdbInfoDialog.6" ) ); //$NON-NLS-1$
+    group.setText( "Database Info" );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Control infoControl = createInfoTable( group );
@@ -204,7 +203,7 @@ public class PdbInfoDialog extends TitleAreaDialog
 
     final ViewerColumn keyColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem keyItem = new ViewerColumnItem( keyColumn );
-    keyItem.setText( Messages.getString( "PdbInfoDialog.7" ) ); //$NON-NLS-1$
+    keyItem.setText( "Key" );
     keyItem.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( keyItem.getColumn() );
     keyColumn.setLabelProvider( new PdbInfoKeyProvider() );
@@ -213,7 +212,7 @@ public class PdbInfoDialog extends TitleAreaDialog
 
     final ViewerColumn valueColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem valueItem = new ViewerColumnItem( valueColumn );
-    valueItem.setText( Messages.getString( "PdbInfoDialog.8" ) ); //$NON-NLS-1$
+    valueItem.setText( "Value" );
     valueItem.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( valueItem.getColumn() );
     valueColumn.setLabelProvider( new PdbInfoValueProvider() );

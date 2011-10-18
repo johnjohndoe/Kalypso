@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.wind;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * Default implementation for {@link IWindDataModel}
@@ -50,12 +51,11 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * @author ig
  * 
  */
-public abstract class WindDataModel extends Feature_Impl implements IWindDataModel
+public abstract class WindDataModel extends AbstractFeatureBinder implements IWindDataModel
 {
-
-  public WindDataModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public WindDataModel( final Feature featureToBind, final QName qNameToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qNameToBind );
   }
- 
+
 }

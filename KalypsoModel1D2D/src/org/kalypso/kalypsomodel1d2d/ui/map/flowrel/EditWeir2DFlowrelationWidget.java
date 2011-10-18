@@ -83,6 +83,7 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -107,7 +108,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
 
   int m_grabRadius = 10;
 
-  private Feature m_modelElement;
+  private IFeatureWrapper2 m_modelElement;
 
   IKalypsoFeatureTheme[] m_themes;
 
@@ -171,7 +172,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
 
-        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement, surface, symb );
+        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement.getFeature(), surface, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
     }
@@ -202,19 +203,19 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
         final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
         final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius  );
-        final Feature lFoundPolyElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
+        final IFeatureWrapper2 lFoundPolyElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
 
         if( lFoundPolyElement == null )
         {
           mapPanel.repaintMap();
           return;
         }
-        final Feature lFoundFlowRel = FlowRelationUtilitites.findBuildingElement2D( ( IPolyElement ) lFoundPolyElement, m_flowRelModel );
+        final IFeatureWrapper2 lFoundFlowRel = FlowRelationUtilitites.findBuildingElement2D( ( IPolyElement ) lFoundPolyElement, m_flowRelModel );
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
         selectionManager.clear();
 
         final List< Feature > lListToSelect = new ArrayList< Feature >();
-        lListToSelect.add( lFoundFlowRel );
+        lListToSelect.add( lFoundFlowRel.getFeature() );
 
         changeSelection( selectionManager, lListToSelect, m_themes, false, false );
         mapPanel.repaintMap();
@@ -370,7 +371,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   ////      final List<IFlowRelationship> flowRels = new ArrayList<IFlowRelationship>( features.length );
   ////      for( final EasyFeatureWrapper feature : features )
   ////      {
-  ////        final IFlowRelationship adapter = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+  ////        final IFlowRelationship adapter = (IFlowRelationship) feature.getFeature().getAdapter( IFlowRelationship.class );
   ////        if( adapter != null )
   ////          flowRels.add( adapter );
   ////      }
@@ -404,14 +405,14 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
   }
 
 
-  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
-    final Feature lFoundElement2d = discModel.find2DElement( currentPos, grabDistance );
+    final IFeatureWrapper2 lFoundElement2d = discModel.find2DElement( currentPos, grabDistance );
     if( lFoundElement2d == null )
     {
       return null;
     }
-    final Feature lBuildingExisting = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lFoundElement2d, m_flowRelModel );
+    final IFeatureWrapper2 lBuildingExisting = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lFoundElement2d, m_flowRelModel );
     if( lBuildingExisting != null )
     {
       return lFoundElement2d;

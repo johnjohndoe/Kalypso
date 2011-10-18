@@ -48,8 +48,6 @@ import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBa
 import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
@@ -60,7 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * {@link Feature_Impl} based, default implementation for {@link IStaticModel1D2D}
+ * {@link AbstractFeatureBinder} based, default implementation for {@link IStaticModel1D2D}
  *
  * @author Patrice Congo
  *
@@ -68,12 +66,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
 {
 
-  public StaticModel1D2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public final static QName WB1D2D_F_STATIC_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" ); //$NON-NLS-1$
+
+  public StaticModel1D2D( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    this( featureToBind, StaticModel1D2D.WB1D2D_F_STATIC_MODEL );
   }
 
-  public final static QName WB1D2D_F_STATIC_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" ); //$NON-NLS-1$
+  public StaticModel1D2D( final Feature featureToBind, final QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getDiscretisationModel()
@@ -110,7 +113,7 @@ public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
 
   private final <T extends IModel> T getSubModel( final QName propertyQName, final Class<T> adapterTargetClass )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final T subModel = FeatureHelper.resolveLink( feature, propertyQName, adapterTargetClass );
     return subModel;
   }

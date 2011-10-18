@@ -42,24 +42,40 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
-public abstract class FELine extends Feature_Impl implements IFELine
+public abstract class FELine extends AbstractFeatureBinder implements IFELine
 {
-  protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<IFE1D2DNode>( this, IFE1D2DNode.class, PROP_NODES );
-  
-  private final IFeatureBindingCollection<IFE1D2DComplexElement> m_containers = new FeatureBindingCollection<IFE1D2DComplexElement>( this, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
+  protected final FeatureWrapperCollection<IFE1D2DNode> m_nodes;
 
-  public FELine( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  private final FeatureWrapperCollection m_containers;
+
+  public FELine( final Feature featureToBind, final QName featureQName )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, featureQName );
+
+    Object prop = featureToBind.getProperty( IFELine.PROP_NODES );
+    if( prop == null )
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFELine.QNAME, IFELine.PROP_NODES, IFE1D2DNode.class );
+    else
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, IFELine.PROP_NODES );
+    prop = featureToBind.getProperty( IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    if( prop == null )
+      // TODO remove this stuff
+      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
+    else
+      m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DComplexElement.class, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    m_containers.addSecondaryWrapper( ICalculationUnit1D2D.class );
+    m_containers.addSecondaryWrapper( ICalculationUnit1D.class );
+    m_containers.addSecondaryWrapper( ICalculationUnit2D.class );
   }
 
   /**
@@ -70,7 +86,7 @@ public abstract class FELine extends Feature_Impl implements IFELine
 
   protected void setGeometry( GM_Object value )
   {
-    setProperty( IFELine.PROP_GEOMETRY, value );
+    getFeature().setProperty( IFELine.PROP_GEOMETRY, value );
   }
 
   @Override
@@ -83,7 +99,7 @@ public abstract class FELine extends Feature_Impl implements IFELine
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#getContainers()
    */
   @Override
-  public IFeatureBindingCollection<IFE1D2DComplexElement> getContainers( )
+  public IFeatureWrapperCollection getContainers( )
   {
     return m_containers;
   }
@@ -94,6 +110,6 @@ public abstract class FELine extends Feature_Impl implements IFELine
   @Override
   public GM_Curve getGeometry( )
   {
-    return (GM_Curve) getProperty( IFELine.PROP_GEOMETRY );
+    return (GM_Curve) getFeature().getProperty( IFELine.PROP_GEOMETRY );
   }
 }

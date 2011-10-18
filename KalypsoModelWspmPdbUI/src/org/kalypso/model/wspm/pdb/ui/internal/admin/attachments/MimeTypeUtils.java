@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Gernot Belger

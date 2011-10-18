@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect;
 
@@ -68,14 +68,13 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.db.mapping.VegetationId;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public abstract class HibernateConnection<SETTINGS extends HibernateSettings> implements IPdbConnection
 {
-  private static final String SPATIAL_DIALECT = "hibernate.spatial.dialect"; //$NON-NLS-1$
+  protected static final String SPATIAL_DIALECT = "hibernate.spatial.dialect"; //$NON-NLS-1$
 
   private PdbInfo m_info = null;
 
@@ -222,10 +221,15 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     {
       operation.run();
     }
+    catch( final HibernateException e )
+    {
+      e.printStackTrace();
+      throw new PdbConnectException( "Failed to open connection to PDB", e );
+    }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString( "HibernateConnection.0" ), e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to open connection to PDB", e );
     }
   }
 
@@ -251,7 +255,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString( "HibernateConnection.1" ), e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to close connection to PDB", e );
     }
     finally
     {
@@ -263,7 +267,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
   public Session openSession( ) throws PdbConnectException
   {
     if( !isConnected() )
-      throw new PdbConnectException( Messages.getString( "HibernateConnection.2" ) ); //$NON-NLS-1$
+      throw new PdbConnectException( "PDB not connected" );
 
     try
     {
@@ -272,7 +276,7 @@ public abstract class HibernateConnection<SETTINGS extends HibernateSettings> im
     catch( final HibernateException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString( "HibernateConnection.3" ), e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to open db session", e );
     }
   }
 

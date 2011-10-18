@@ -6,5 +6,5 @@ Bundle-Version: 11.6.2.qualifier
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.help
 Export-Package: org.kalypso.KalypsoManualWSPM.help
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: library.jar

@@ -52,8 +52,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
@@ -232,7 +232,7 @@ public class WspWinProjectWriter
       final IProfil profil = entry.getValue();
       final File outPrfFile = new File( profDir, filename );
 
-      final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, prfCount, m_roughnessType );
+      final WspWinProfileWriter profileWriter = new WspWinProfileWriter( profil, m_roughnessType, prfCount );
       profileWriter.write( outPrfFile );
     }
 

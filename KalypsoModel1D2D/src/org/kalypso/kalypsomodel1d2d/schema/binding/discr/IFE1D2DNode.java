@@ -48,7 +48,8 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -57,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * 
  */
-public interface IFE1D2DNode<CT extends IFENetItem> extends IFENetItem
+public interface IFE1D2DNode<CT extends IFENetItem> extends IFeatureWrapper2 /* <CT> */
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" ); //$NON-NLS-1$
 
@@ -112,8 +113,8 @@ public interface IFE1D2DNode<CT extends IFENetItem> extends IFENetItem
   /**
    * Get the containers of this node, typically edges
    * 
-   * @return the containers of this node as {@link IFeatureBindingCollection}
+   * @return the containers of this node as {@link IFeatureWrapperCollection}
    */
-  public IFeatureBindingCollection<CT> getContainers( );
+  public IFeatureWrapperCollection<CT> getContainers( );
 
 }

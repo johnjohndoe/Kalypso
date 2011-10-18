@@ -52,7 +52,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -63,7 +63,7 @@ public class ApplyElevationHelper
   @SuppressWarnings("unchecked")
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
-    final IFeatureBindingCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
+    final IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
     if( elevationModels == null )
     {
       return;

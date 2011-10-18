@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,10 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.product.application;
 
-import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
@@ -95,13 +94,13 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     return new RestrictedActionBarAdvisor( configurer );
   }
 
+  /**
+   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#postWindowCreate()
+   */
   @Override
   public void postWindowCreate( )
   {
     super.postWindowCreate();
-
-    // hide Help button in JFace dialogs -> we need to reactivate per dialog
-    TrayDialog.setDialogHelpAvailable( false );
 
     /* If we are restricted, close all other perspectives now and open only the default one */
     if( m_restrictedAccess )

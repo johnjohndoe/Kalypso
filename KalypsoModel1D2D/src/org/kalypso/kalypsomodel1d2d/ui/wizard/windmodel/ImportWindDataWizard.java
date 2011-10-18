@@ -143,12 +143,12 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
 
       getContainer().run( true, true, new IRunnableWithProgress()
       {
-        @Override
+        @SuppressWarnings("deprecation")
         public void run( final IProgressMonitor monitor ) throws InvocationTargetException, IllegalArgumentException
         {
           try
           {
-            final GMLWorkspace workspace = m_windModel.getWorkspace();
+            final GMLWorkspace workspace = m_windModel.getFeature().getWorkspace();
 
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
             final File srcFile = getUTF_DecodedFile( sourcePath.toFile() );
@@ -160,7 +160,7 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
               throw new Exception( Messages.getString("ImportWindDataWizard.0") ); //$NON-NLS-1$
             }
 
-            final IWindDataModelSystem lWindDataModelSystem = WindDataModelSystem.createWindSystemForWindModel( ImportWindDataWizard.this.m_windModel, lWindDataConverter.getGridDescriptor(), strFileName, strFileDescription );
+            IWindDataModelSystem lWindDataModelSystem = new WindDataModelSystem( ImportWindDataWizard.this.m_windModel, lWindDataConverter.getGridDescriptor(), strFileName, strFileDescription );
 
             List<IWindDataWrapper> lListImportedDataFiles = lWindDataConverter.getCollectionWindDataProviders();
             m_modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
@@ -170,7 +170,7 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
               URL lUrlNewInternalWindDataFile = lActWindDataProvider.getDataFileURL();
               String nativeTEMRelPath = modelFolderFile.toURI().relativize( lUrlNewInternalWindDataFile.toURI() ).toString(); //$NON-NLS-1$
 
-              final IWindDataModel lWindDataModel = NativeWindDataModelWrapper.createFeatureForTEMSystem( lWindDataModelSystem, nativeTEMRelPath, lActWindDataProvider.getDateStep() );
+              final IWindDataModel lWindDataModel = new NativeWindDataModelWrapper( lWindDataModelSystem, nativeTEMRelPath, lActWindDataProvider.getDateStep() );
 
               final String name = lUrlNewInternalWindDataFile.getFile();
               if( !"".equals( strFileName ) )//$NON-NLS-1$
@@ -186,8 +186,8 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
               {
                 lWindDataModel.setCoordinateSystem( selectedCoordinateSystem );
               }
-              final Feature temFeature = lWindDataModel;
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, lWindDataModelSystem, temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              final Feature temFeature = lWindDataModel.getFeature();
+              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, lWindDataModelSystem.getFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
             // TODO check why saving thow pool does not work

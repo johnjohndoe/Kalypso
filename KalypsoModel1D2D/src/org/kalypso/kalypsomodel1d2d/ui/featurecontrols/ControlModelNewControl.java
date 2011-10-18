@@ -98,7 +98,7 @@ public class ControlModelNewControl extends AbstractFeatureControl
         final Object property = parentFeature.getProperty( getFeatureTypeProperty() );
         if( property instanceof XLinkedFeature_Impl  )
         {
-          final Feature f = ((XLinkedFeature_Impl) property);
+          final Feature f = ((XLinkedFeature_Impl) property).getFeature();
           final IRelationType relationType = f.getParentRelation();
           final CommandableWorkspace commandableWorkspace = new CommandableWorkspace(parentFeature.getWorkspace());
           final int pos = 0;

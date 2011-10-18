@@ -50,7 +50,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Info;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.osgi.framework.Version;
 
 /**
@@ -71,7 +70,7 @@ public class PdbInfo
 {
   public static final int UNKNOWN_SRID = -1;
 
-  public static final Version CURRENT_VERSION = new Version( "0.0.4" ); //$NON-NLS-1$
+  public static final Version CURRENT_VERSION = new Version( "0.0.3" ); //$NON-NLS-1$
 
   public final static String PROPERTY_VERSION = "Version"; //$NON-NLS-1$
 
@@ -128,7 +127,7 @@ public class PdbInfo
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "PdbInfo.0" ), e ); //$NON-NLS-1$
+      m_status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, "Failed to load 'Info' table from database. Database might not exist yet.", e );
     }
     finally
     {
@@ -170,7 +169,7 @@ public class PdbInfo
     final String documentServer = getDocumentServer();
     if( StringUtils.isBlank( documentServer ) )
     {
-      final String message = String.format( Messages.getString( "PdbInfo.1" ) ); //$NON-NLS-1$
+      final String message = String.format( "Base url the document server is empty" );
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message );
       throw new CoreException( status );
     }
@@ -183,7 +182,7 @@ public class PdbInfo
     {
       e.printStackTrace();
 
-      final String message = String.format( Messages.getString( "PdbInfo.2" ), documentServer ); //$NON-NLS-1$
+      final String message = String.format( "Illegal base url of the document server: '%s'", documentServer );
       final IStatus status = new Status( IStatus.WARNING, WspmPdbCorePlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

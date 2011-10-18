@@ -29,6 +29,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -77,7 +78,7 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
 
       final Feature wspmTinRootFeature = wspmTinFile.getRootFeature();
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
-      final IFeatureBindingCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
       if( deleteExistingRunoffEvents )
       {
         for( final IRunoffEvent event : floodModelEvents )
@@ -93,8 +94,8 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
       }
       final String dataPath = String.format( "HQ%d", returnPeriod ); //$NON-NLS-1$
       final IRunoffEvent newRunoffEvent = floodModelEvents.addNew( IRunoffEvent.QNAME );
-      newRunoffEvent.setName( newRunoffEvent.getId() );
-      newRunoffEvent.setDataPath( new Path( newRunoffEvent.getId() ) );
+      newRunoffEvent.setName( newRunoffEvent.getGmlID() );
+      newRunoffEvent.setDataPath( new Path( dataPath ) );
       newRunoffEvent.setReturnPeriod( returnPeriod );
       newRunoffEvent.setMarkedForProcessing( true );
 

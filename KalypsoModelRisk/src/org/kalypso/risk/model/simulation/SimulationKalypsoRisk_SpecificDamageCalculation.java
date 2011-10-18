@@ -81,6 +81,7 @@ import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
@@ -171,7 +172,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   private void doDamagePotentialCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final int importantDigits, final IProgressMonitor monitor ) throws SimulationException
   {
     final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterModel.getSpecificDamageCoverageCollection();
-    final IFeatureBindingCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection().getLandusePolygonCollection();
+    final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )

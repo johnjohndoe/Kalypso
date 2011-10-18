@@ -47,7 +47,6 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterlevelFixation;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,7 +66,7 @@ public class SaveEventOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "SaveEventOperation.0" ); //$NON-NLS-1$
+    return "Saveevent";
   }
 
   @Override

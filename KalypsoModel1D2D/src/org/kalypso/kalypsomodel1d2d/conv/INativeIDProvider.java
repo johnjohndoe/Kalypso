@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Implementer of this interface can provides native(RMA·Kalypso) IDs given a feature wrapper.
@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface INativeIDProvider
 {
-  public int getConversionID( final Feature feature );
+  public int getConversionID( final IFeatureWrapper2 feature );
 
   public int getConversionID( final String featureGmlID );
 }

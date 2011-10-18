@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -97,32 +97,32 @@ public interface IFEDiscretisationModel1d2d extends IModel
   /**
    * To get the complex element that this discretisation model contains
    * 
-   * @return the complex elements this discretisation model contains as {@link IFeatureBindingCollection}
+   * @return the complex elements this discretisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureBindingCollection<IFE1D2DComplexElement> getComplexElements( );
+  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( );
 
   /**
    * Gets the element this discretisation model contains
    * 
-   * @return the elements of this discretisation model as {@link IFeatureBindingCollection}
+   * @return the elements of this discretisation model as {@link IFeatureWrapperCollection}
    */
-  public IFeatureBindingCollection<IFE1D2DElement> getElements( );
+  public IFeatureWrapperCollection<IFE1D2DElement> getElements( );
 
   /**
    * To get the edges this feature wrapper contains s
    * 
-   * @return the edges that this discetisation model contains as {@link IFeatureBindingCollection}
+   * @return the edges that this discetisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureBindingCollection<IFE1D2DEdge> getEdges( );
+  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
 
   /**
    * gets the nodes this discretisation model contains.
    * 
-   * @return the nodes that this discretisation model contains as {@link IFeatureBindingCollection}
+   * @return the nodes that this discretisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureBindingCollection<IFE1D2DNode> getNodes( );
+  public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 
-  public IFeatureBindingCollection<IFELine> getContinuityLines( );
+  public IFeatureWrapperCollection<IFELine> getContinuityLines( );
 
   /**
    * Finds the node nearest to the given position, within the search rectangle
@@ -147,7 +147,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
    *          the width of the search re
    * @param alreadyExists
    *          if not null and not empty a boolean is set at position 0 which indicates with true that a node already
-   *          exists and false otherwise
+   *          exists and fals otherwise
    * @return the created or found node
    * 
    */

@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -61,8 +62,8 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   private char m_defaultSeparator = ';';
 
   private char m_separator = m_defaultSeparator;
-
-  private Set<String> m_setNewCreatedNames = new HashSet<String>();
+  
+  private Set< String > m_setNewCreatedNames = new HashSet< String >();
 
   public ImportHydrographWizard( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme hydroTheme, final IFEDiscretisationModel1d2d discModel )
   {
@@ -76,7 +77,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     m_wizardPage.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.2" ) ); //$NON-NLS-1$
 
     m_discModel = discModel;
-
+    
     addPage( m_wizardPage );
   }
 
@@ -110,8 +111,8 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
         {
           continue;
         }
-        String lStrName = getNextName( lf.getId() );
-        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, lStrName, lf.getDescription() ) );
+        String lStrName = getNextName( lf.getId() ); 
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, lStrName, lf.getDescription() ).getFeature() );
       }
       postCommand( lListNewHydroFeatures.toArray( new Feature[lListNewHydroFeatures.size()] ) );
     }
@@ -221,7 +222,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
         {
           continue;
         }
-        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, name, description ) );
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, name, description ).getFeature() );
       }
       postCommand( lListNewHydroFeatures.toArray( new Feature[lListNewHydroFeatures.size()] ) );
     }
@@ -258,7 +259,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
       }
       while( (nextLine = readerTimeSeries.readNext()) != null )
       {
-        // System.out.println( Arrays.asList( nextLine ) );
+//        System.out.println( Arrays.asList( nextLine ) );
         if( nextLine.length == 0 || (nextLine.length == 1 && "".equals( nextLine[0].trim() )) ) { //$NON-NLS-1$
           continue;
         }
@@ -295,7 +296,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
         }
         String nameAct = getNextName( name );
 
-        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, nameAct, description ) );
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, nameAct, description ).getFeature() );
         lIntCounter++;
 
       }
@@ -317,14 +318,13 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   }
 
   private String getNextName( final String name )
-  {
-    if( !nameExists( name ) )
-    {
+  { 
+    if( !nameExists( name ) ){
       m_setNewCreatedNames.add( name );
       return name;
     }
     String lStrNameRes = name;
-    int lIntAmountExistingHydro = m_hydrographCollection.getHydrographs().size();
+    int lIntAmountExistingHydro = m_hydrographCollection.size();
     do
     {
       lStrNameRes = name + "_" + (lIntAmountExistingHydro++); //$NON-NLS-1$
@@ -335,14 +335,13 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   }
 
   boolean nameExists( final String name )
-  {
+  { 
     if( name == null )
       return true;
-    if( m_setNewCreatedNames.contains( name ) )
-    {
+    if( m_setNewCreatedNames.contains( name ) ){
       return true;
     }
-    for( Iterator iterator = m_hydrographCollection.getHydrographs().iterator(); iterator.hasNext(); )
+    for( Iterator iterator = m_hydrographCollection.iterator(); iterator.hasNext(); )
     {
       IHydrograph type = (IHydrograph) iterator.next();
       if( type.getName().trim().equalsIgnoreCase( name.trim() ) )
@@ -415,8 +414,8 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     }
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
 
-    final Feature parentFeature = m_hydrographCollection;
-    final IRelationType parentRelation = m_hydrographCollection.getHydrographs().getFeatureList().getPropertyType();
+    final Feature parentFeature = m_hydrographCollection.getFeature();
+    final IRelationType parentRelation = m_hydrographCollection.getWrappedList().getParentFeatureTypeProperty();
     final IHydrograph hydro = HydrographUtils.createNewHydrographFeature( workspace, parentFeature, parentRelation, name, description );
 
     if( hydro == null )
@@ -439,8 +438,8 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     /* Post it as an commands */
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
     final IFeatureSelectionManager selectionManager = m_hydroTheme.getSelectionManager();
-    final Feature parentFeature = m_hydrographCollection;
-    final IRelationType parentRelation = m_hydrographCollection.getHydrographs().getFeatureList().getPropertyType();
+    final Feature parentFeature = m_hydrographCollection.getFeature();
+    final IRelationType parentRelation = m_hydrographCollection.getWrappedList().getParentFeatureTypeProperty();
 
     final Display display = PlatformUI.getWorkbench().getDisplay();
     for( final Feature lf : newHydroFeatures )

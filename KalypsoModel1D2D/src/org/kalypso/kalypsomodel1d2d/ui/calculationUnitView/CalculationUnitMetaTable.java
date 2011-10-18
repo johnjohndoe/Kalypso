@@ -100,8 +100,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -136,9 +136,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         }
         else
         {
-          if( firstElement instanceof Feature )
+          if( firstElement instanceof IFeatureWrapper2 )
           {
-            final Feature firstElementWrapper = (Feature) firstElement;
+            final IFeatureWrapper2 firstElementWrapper = (IFeatureWrapper2) firstElement;
             setCurrentSelection( firstElementWrapper );
           }
         }
@@ -205,7 +205,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     } );
 
     final IFEDiscretisationModel1d2d discModel = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final GMLWorkspace workspace = discModel.getWorkspace();
+    final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
       @Override
@@ -424,7 +424,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
 
         /* find calc model */
-        final ICalcUnitResultMeta calcUnitResultMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnitToDel.getId() );
+        final ICalcUnitResultMeta calcUnitResultMeta = scenarioResultMeta.findCalcUnitMetaResult( calcUnitToDel.getGmlID() );
         if( calcUnitResultMeta != null )
         {
           /* there are results */
@@ -511,14 +511,14 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     mapPanel.setBoundingBox( boundingBox );
   }
 
-  private void setCurrentSelection( final Feature firstElement )
+  private void setCurrentSelection( final IFeatureWrapper2 firstElement )
   {
     m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
   }
 
-  protected Feature getCurrentSelection( )
+  protected IFeatureWrapper2 getCurrentSelection( )
   {
-    return (Feature) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    return (IFeatureWrapper2) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
 
   public KeyBasedDataModel getDataModel( )
@@ -547,7 +547,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         {
           tableViewer.setInput( input );
         }
-        final Feature currentSelection = getCurrentSelection();
+        final IFeatureWrapper2 currentSelection = getCurrentSelection();
         updateOnNewSelection( display, tableViewer, currentSelection );
       }
     };
@@ -563,7 +563,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       public void run( )
       {
         tableViewer.refresh();
-        final boolean isEnabled = currentSelection instanceof Feature;
+        final boolean isEnabled = currentSelection instanceof IFeatureWrapper2;
         if( m_btnDeleteCalcUnit != null )
         {
           m_btnDeleteCalcUnit.setEnabled( isEnabled );

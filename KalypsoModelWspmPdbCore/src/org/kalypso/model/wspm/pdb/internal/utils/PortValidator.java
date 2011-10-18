@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.utils;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -55,7 +54,7 @@ public class PortValidator extends TypedValidator<String>
 
   public PortValidator( final int defaultPort )
   {
-    super( String.class, IStatus.ERROR, Messages.getString( "PortValidator.0" ) ); //$NON-NLS-1$
+    super( String.class, IStatus.ERROR, "Invalid port" );
 
     m_defaultPort = defaultPort;
   }
@@ -64,19 +63,19 @@ public class PortValidator extends TypedValidator<String>
   protected IStatus doValidate( final String value )
   {
     if( StringUtils.isBlank( value ) )
-      return ValidationStatus.info( String.format( Messages.getString( "PortValidator.1" ), m_defaultPort ) ); //$NON-NLS-1$
+      return ValidationStatus.info( String.format( "Using default port (%s)", m_defaultPort ) );
 
     try
     {
       final int port = Integer.parseInt( value );
       if( port <= 0 || port > 9999 )
-        return ValidationStatus.error( Messages.getString( "PortValidator.2" ) ); //$NON-NLS-1$
+        return ValidationStatus.error( "Port must be an integer between 1 and 9999" );
 
       return ValidationStatus.ok();
     }
     catch( final NumberFormatException e )
     {
-      return ValidationStatus.error( Messages.getString( "PortValidator.3" ) ); //$NON-NLS-1$
+      return ValidationStatus.error( "Port must be an integer" );
     }
   }
 }

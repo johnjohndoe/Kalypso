@@ -69,7 +69,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Madanagopal
@@ -137,7 +137,7 @@ public class ElevationModelSystemEditorComponent extends Composite
     } );
 
     final ITerrainElevationModelSystem elevationModelSystem = m_dataModel.getElevationModelSystem();
-    final IFeatureBindingCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
+    final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
     m_elevationViewer.setInput( terrainElevationModels );
 
     return elevationTable;
@@ -149,7 +149,7 @@ public class ElevationModelSystemEditorComponent extends Composite
     final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
 
     column.setResizable( false );
-    column.setText( Messages.getString( "ElevationModelSystemEditorComponent_0" ) ); //$NON-NLS-1$
+    column.setText( Messages.getString("ElevationModelSystemEditorComponent_0") ); //$NON-NLS-1$
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     nameColumn.setLabelProvider( new ElevationListNameProvider() );
     ColumnViewerSorter.registerSorter( nameColumn, new ViewerComparator() );
@@ -161,7 +161,7 @@ public class ElevationModelSystemEditorComponent extends Composite
     final ViewerColumnItem column = new ViewerColumnItem( descriptionColumn );
 
     column.setResizable( false );
-    column.setText( Messages.getString( "ElevationModelSystemEditorComponent_1" ) ); //$NON-NLS-1$
+    column.setText( Messages.getString("ElevationModelSystemEditorComponent_1") ); //$NON-NLS-1$
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     descriptionColumn.setLabelProvider( new ElevationListDescriptionProvider() );
     ColumnViewerSorter.registerSorter( descriptionColumn, new ViewerComparator() );

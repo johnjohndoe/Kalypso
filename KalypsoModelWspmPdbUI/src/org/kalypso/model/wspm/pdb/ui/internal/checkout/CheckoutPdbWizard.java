@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
@@ -76,7 +76,7 @@ public class CheckoutPdbWizard extends Wizard
     final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_data );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     return !status.matches( IStatus.ERROR );
   }

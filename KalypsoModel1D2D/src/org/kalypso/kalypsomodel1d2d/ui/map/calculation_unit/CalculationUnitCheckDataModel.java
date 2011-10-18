@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Madanagopal
@@ -52,30 +52,30 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 public class CalculationUnitCheckDataModel
 {
   
-  IFeatureBindingCollection<IBoundaryCondition> boundaryConditions;
-  IFeatureBindingCollection<IContinuityLine2D> continuityLine2Ds;
+  IFeatureWrapperCollection<IBoundaryCondition> boundaryConditions;
+  IFeatureWrapperCollection<IContinuityLine2D> continuityLine2Ds;
   IControlModel1D2D controlModel;
   
   public CalculationUnitCheckDataModel( )
   {
   }
 
-  public IFeatureBindingCollection<IBoundaryCondition> getBoundaryConditions( )
+  public IFeatureWrapperCollection<IBoundaryCondition> getBoundaryConditions( )
   {
     return boundaryConditions;
   }
 
-  public void setBoundaryConditions( IFeatureBindingCollection<IBoundaryCondition> boundaryConditions )
+  public void setBoundaryConditions( IFeatureWrapperCollection<IBoundaryCondition> boundaryConditions )
   {
     this.boundaryConditions = boundaryConditions;
   }
 
-  public IFeatureBindingCollection<IContinuityLine2D> getBoundaryLines( )
+  public IFeatureWrapperCollection<IContinuityLine2D> getBoundaryLines( )
   {
     return continuityLine2Ds;
   }
 
-  public void setBoundaryLines( IFeatureBindingCollection<IContinuityLine2D> continuityLine2Ds )
+  public void setBoundaryLines( IFeatureWrapperCollection<IContinuityLine2D> continuityLine2Ds )
   {
     this.continuityLine2Ds = continuityLine2Ds;
   }

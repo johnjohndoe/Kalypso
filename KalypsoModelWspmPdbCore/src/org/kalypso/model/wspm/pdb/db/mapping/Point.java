@@ -47,8 +47,6 @@ public class Point implements java.io.Serializable
 
   private BigDecimal m_roughnessKstValue;
 
-  private BigDecimal m_roughnessFactor;
-
   private BigDecimal m_vegetationDp;
 
   private BigDecimal m_vegetationAx;
@@ -69,7 +67,7 @@ public class Point implements java.io.Serializable
     m_consecutiveNum = consecutiveNum;
   }
 
-  public Point( final BigDecimal id, final CrossSectionPart crossSectionPart, final Roughness roughness, final Vegetation vegetation, final String name, final com.vividsolutions.jts.geom.Point location, final long consecutiveNum, final String code, final String hyk, final BigDecimal width, final BigDecimal height, final BigDecimal roughnessKValue, final BigDecimal roughnessKstValue, final BigDecimal vegetationDp, final BigDecimal vegetationAx, final BigDecimal vegetationAy, final String description, final BigDecimal roughnessFactor )
+  public Point( final BigDecimal id, final CrossSectionPart crossSectionPart, final Roughness roughness, final Vegetation vegetation, final String name, final com.vividsolutions.jts.geom.Point location, final long consecutiveNum, final String code, final String hyk, final BigDecimal width, final BigDecimal height, final BigDecimal roughnessKValue, final BigDecimal roughnessKstValue, final BigDecimal vegetationDp, final BigDecimal vegetationAx, final BigDecimal vegetationAy, final String description )
   {
     m_id = id;
     m_crossSectionPart = crossSectionPart;
@@ -84,7 +82,6 @@ public class Point implements java.io.Serializable
     m_height = height;
     m_roughnessKValue = roughnessKValue;
     m_roughnessKstValue = roughnessKstValue;
-    m_roughnessFactor = roughnessFactor;
     m_vegetationDp = vegetationDp;
     m_vegetationAx = vegetationAx;
     m_vegetationAy = vegetationAy;
@@ -238,17 +235,6 @@ public class Point implements java.io.Serializable
   public void setRoughnessKstValue( final BigDecimal roughnessKstValue )
   {
     m_roughnessKstValue = roughnessKstValue;
-  }
-
-  @Column(name = "roughness_factor", precision = 8, scale = 5)
-  public BigDecimal getRoughnessFactor( )
-  {
-    return m_roughnessFactor;
-  }
-
-  public void setRoughnessFactor( final BigDecimal roughnessFactor )
-  {
-    m_roughnessFactor = roughnessFactor;
   }
 
   @Column(name = "vegetation_dp", precision = 8, scale = 3)

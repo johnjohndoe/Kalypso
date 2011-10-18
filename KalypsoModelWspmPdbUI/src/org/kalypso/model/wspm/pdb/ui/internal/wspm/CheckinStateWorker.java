@@ -47,7 +47,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -59,7 +59,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateData;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -103,19 +102,21 @@ public class CheckinStateWorker implements ICheckInWorker
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
-      final String name = segment.getProfileMember().getName();
+      final String segmentName = segment.getProfileMember().getName();
       final BigDecimal station = segment.getStation();
+
+      final String name = CheckinStateOperation.createCrossSectionName( segmentName, station );
 
       if( StringUtils.isEmpty( name ) )
       {
-        final String message = String.format( Messages.getString( "CheckinStateWorker.0" ), station ); //$NON-NLS-1$
+        final String message = String.format( "Cross section at km %s has no name.%nOnly cross sections with a name can be uploaded into the database.", station );
         return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
       }
 
       if( profileNames.containsKey( name ) )
       {
         final BigDecimal otherStation = profileNames.get( name );
-        final String message = String.format( Messages.getString( "CheckinStateWorker.1" ), station, otherStation, name ); //$NON-NLS-1$
+        final String message = String.format( "Cross sections at km %s and %s have the same name: '%s'%nNames must be unique in the database.", station, otherStation, name );
         return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
       }
 

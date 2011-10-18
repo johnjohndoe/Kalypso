@@ -51,7 +51,7 @@ public class GuessStationPattern extends AbstractPatternInput<GuessStationContex
 
   public GuessStationPattern( )
   {
-    super( TOKEN, "Station" ); //$NON-NLS-1$
+    super( TOKEN, "Station" );
   }
 
   @Override

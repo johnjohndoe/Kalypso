@@ -138,7 +138,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws GMLSchemaException
   {
-    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QN_TYPE, context, factory );
+    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QNAME, context, factory );
     final Feature rootFeature = projectWorkspace.getRootFeature();
     return (TuhhWspmProject) rootFeature;
   }

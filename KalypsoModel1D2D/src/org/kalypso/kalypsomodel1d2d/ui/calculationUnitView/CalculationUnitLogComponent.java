@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -63,7 +65,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.core.status.StatusViewer;
+import org.kalypso.core.status.StatusLabelProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -124,10 +126,9 @@ public class CalculationUnitLogComponent
     final GridData tableGridData = new GridData( SWT.FILL, SWT.END, true, true );
     table.setLayoutData( tableGridData );
 
-    // FIXME: probably we can replace all this by the StatusTableViewer
-    StatusViewer.addSeverityColumn( logTableViewer );
-    StatusViewer.addMessageColumn( logTableViewer );
-    StatusViewer.addTimeColumn( logTableViewer );
+    StatusLabelProvider.addSeverityColumn( logTableViewer );
+    StatusLabelProvider.addMessageColumn( logTableViewer );
+    StatusLabelProvider.addTimeColumn( logTableViewer );
 
     logTableViewer.setContentProvider( new ArrayContentProvider() );
     logTableViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -168,7 +169,7 @@ public class CalculationUnitLogComponent
       {
         if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) && newValue instanceof ICalculationUnit )
         {
-          final IStatusCollection list = findGeoStatusCollection( (ICalculationUnit) newValue );
+          final List<IGeoStatus> list = findGeoStatusCollection( (ICalculationUnit) newValue );
           if( list == null || list.isEmpty() )
           {
             table.setVisible( false );
@@ -223,14 +224,14 @@ public class CalculationUnitLogComponent
     }
   }
 
-  protected IStatusCollection findGeoStatusCollection( final ICalculationUnit calcUnit )
+  protected List<IGeoStatus> findGeoStatusCollection( final ICalculationUnit calcUnit )
   {
     try
     {
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_dataModel.getData( ICaseDataProvider.class, ICommonKeys.KEY_DATA_PROVIDER );
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IScenarioResultMeta scenarioMeta = dataProvider.getModel( IScenarioResultMeta.class );
-      final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );
+      final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
       if( calcUnitMeta == null )
         return null;
 
@@ -240,7 +241,7 @@ public class CalculationUnitLogComponent
         return null;
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( logResource ), null );
-      return (IStatusCollection) workspace.getRootFeature().getAdapter( IStatusCollection.class );
+      return (List<IGeoStatus>) workspace.getRootFeature().getAdapter( IStatusCollection.class );
     }
     catch( final Throwable e )
     {

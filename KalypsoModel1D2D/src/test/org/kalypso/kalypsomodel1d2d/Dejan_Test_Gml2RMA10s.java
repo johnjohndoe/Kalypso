@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsomodel1d2d;
 
@@ -51,19 +51,23 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationMod
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+import test.org.kalypso.kalypsosimulationmodel.TestUtils;
+
 /**
  * @author antanas
  * 
  */
 public class Dejan_Test_Gml2RMA10s extends TestCase
 {
+  private URL test_RMA10sModelURL;
+
   private URL test_discretisationModelURL;
 
   private final String test_CoordinateSystem = TestWorkspaces.CS_KEY_GAUSS_KRUEGER;
 
   private void init( ) throws MalformedURLException
   {
-    //URL test_RMA10sModelURL = new URL( "file:/F:/_ECLIPSE/modell1D_OUTPUT.2d" ); //$NON-NLS-1$
+    test_RMA10sModelURL = new URL( "file:/F:/_ECLIPSE/modell1D_OUTPUT.2d" ); //$NON-NLS-1$
     // test_discretisationModelURL = new URL( "file:/D:/working/discretisation.gml" );
     test_discretisationModelURL = new URL( "file:/F:/_ECLIPSE/discretisation.gml" ); //$NON-NLS-1$
   }
@@ -72,18 +76,34 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
    * Test method for
    * {@link org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv#Gml2RMA10SConv(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d, java.io.OutputStream, org.kalypso.kalypsomodel1d2d.conv.IPositionProvider, org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)}.
    */
-  public final void testGml2RMA10SConv( ) throws Exception
+  public final void testGml2RMA10SConv( ) throws MalformedURLException
   {
     init();
+    GMLWorkspace workspace = null;
 
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( test_discretisationModelURL, null );
+    try
+    {
+      workspace = GmlSerializer.createGMLWorkspace( test_discretisationModelURL, null );
+      // workspace = TestWorkspaces.loadGMLWorkspace( test_discretisationModelURL, test_schemaLocation );
+    }
+    catch( Exception e )
+    {
+      fail( TestUtils.getStackTraceAsString( e ) );
+    }
 
-    final FE1D2DDiscretisationModel sourceModel = (FE1D2DDiscretisationModel) workspace.getRootFeature();
+    FE1D2DDiscretisationModel sourceModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
-    final IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
-    // Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
-    // converter.toRMA10sModel();
-    // converter.sysout();
-    // converter.write();
+    try
+    {
+      IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
+      // Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
+      // converter.toRMA10sModel();
+      // converter.sysout();
+      // converter.write();
+    }
+    catch( Throwable th )
+    {
+      fail( TestUtils.getStackTraceAsString( th ) );
+    }
   }
 }

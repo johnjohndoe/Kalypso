@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,7 +54,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.parser.SobekModelParser;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -74,7 +73,7 @@ public class SobekImportOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString("SobekImportOperation.0"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( "Converting SOBEK data to WSPM", 100 );
 
     try
     {

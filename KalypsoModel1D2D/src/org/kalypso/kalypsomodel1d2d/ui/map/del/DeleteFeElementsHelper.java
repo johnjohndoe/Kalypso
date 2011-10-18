@@ -87,7 +87,8 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -121,7 +122,7 @@ public class DeleteFeElementsHelper
 
       // make a list of all the nodes contained by all the continuity lines
       final List<IFE1D2DNode> clNodes = new ArrayList<IFE1D2DNode>();
-      final IFeatureBindingCollection<IFELine> continuityLines = discretisationModel.getContinuityLines();
+      final IFeatureWrapperCollection<IFELine> continuityLines = discretisationModel.getContinuityLines();
       for( final IFELine line : continuityLines )
         clNodes.addAll( line.getNodes() ); // usually lines are not overlapped so there is no need to check if some of
       // the nodes are already in the list
@@ -149,7 +150,7 @@ public class DeleteFeElementsHelper
             }
             if( element instanceof IElement1D )
             {
-              final IFeatureBindingCollection containers = node.getContainers();
+              final IFeatureWrapperCollection containers = node.getContainers();
               int numberOfEdgeContainers = 0;
               for( final Object container : containers )
                 if( container instanceof IFE1D2DEdge ) // container can be also a line
@@ -200,10 +201,10 @@ public class DeleteFeElementsHelper
       changedFeatureList.addAll( ((DeletePolyElementCmd) deleteCmdPolyElement).getChangedFeatureList() );
       changedFeatureList.addAll( ((DeleteElement1DCmd) deleteCmd1dElement).getChangedFeatureList() );
 
-      final Feature distFeature = discretisationModel;
+      final Feature distFeature = discretisationModel.getFeature();
 
       final Feature[] deletedFeatures = changedFeatureList.toArray( new Feature[changedFeatureList.size()] );
-      final GMLWorkspace discWorkspace = discretisationModel.getWorkspace();
+      final GMLWorkspace discWorkspace = discretisationModel.getFeature().getWorkspace();
       final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( discWorkspace, distFeature, deletedFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
       discWorkspace.fireModellEvent( event );
     }
@@ -224,13 +225,13 @@ public class DeleteFeElementsHelper
     // IFlowRelationshipModel.class );
     //
     final IFE1D2DElement lElement = (IFE1D2DElement) pParentToRemoveFrom.getFeature().getAdapter( IFE1D2DElement.class );
-    List<Feature> lBuildingElements = new ArrayList<Feature>();
+    List<IFeatureWrapper2> lBuildingElements = new ArrayList<IFeatureWrapper2>();
     if( lElement instanceof IPolyElement )
       lBuildingElements.add( FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lElement, lFlowRelCollection ) );
     else if( lElement instanceof IElement1D )
       lBuildingElements.addAll( FlowRelationUtilitites.findBuildingElements1D( (IElement1D) lElement, lFlowRelCollection ) );
 
-    for( final Feature lBuildingElement : lBuildingElements )
+    for( final IFeatureWrapper2 lBuildingElement : lBuildingElements )
     {
       Feature lBuildingFeature = null;
       if( lBuildingElement != null )
@@ -240,7 +241,7 @@ public class DeleteFeElementsHelper
 
         final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.14" ) ); //$NON-NLS-1$
         {
-          lBuildingFeature = lBuildingElement;
+          lBuildingFeature = lBuildingElement.getFeature();
           selectionManager.changeSelection( new Feature[] { lBuildingFeature }, new EasyFeatureWrapper[] {} );
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( lBuildingFeature );
@@ -271,7 +272,7 @@ public class DeleteFeElementsHelper
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
       final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
 
-      final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = discretisationModel.getComplexElements();
+      final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = discretisationModel.getComplexElements();
       for( final IFE1D2DComplexElement complexElement : complexElements )
       {
         if( complexElement instanceof ITransitionElement )
@@ -281,7 +282,7 @@ public class DeleteFeElementsHelper
           for( final IFELine line : continuityLines )
           {
             for( final EasyFeatureWrapper element : selected )
-              if( line.getId().equals( element.getFeature().getId() ) )
+              if( line.getGmlID().equals( element.getFeature().getId() ) )
               {
                 SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.24" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.25" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
@@ -296,7 +297,7 @@ public class DeleteFeElementsHelper
           for( final IFELine line : continuityLines )
           {
             for( final EasyFeatureWrapper element : selected )
-              if( line.getId().equals( element.getFeature().getId() ) )
+              if( line.getGmlID().equals( element.getFeature().getId() ) )
               {
                 SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.26" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.27" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
@@ -308,7 +309,7 @@ public class DeleteFeElementsHelper
       final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.13" ) ); //$NON-NLS-1$
 
       // check for boundary conditions on the continuity lines
-      final FeatureList wrappedList = flowRelationshipModel.getFlowRelationsShips().getFeatureList();
+      final FeatureList wrappedList = flowRelationshipModel.getWrappedList();
       for( final Object object : wrappedList )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) object).getAdapter( IBoundaryCondition.class );

@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -109,7 +109,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
     final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
     // this is where the name of the result folder is actually set
-    final String calcUnitId = controlModel.getCalculationUnit().getId();
+    final String calcUnitId = controlModel.getCalculationUnit().getGmlID();
     final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
     m_unitFolder = scenarioFolder.getFolder( unitFolderRelativePath );
 
@@ -374,7 +374,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       /* Close and save the geo log */
       m_geoLog.close();
       final IStatusCollection statusCollection = m_geoLog.getStatusCollection();
-      final GMLWorkspace workspace = statusCollection.getWorkspace();
+      final GMLWorkspace workspace = statusCollection.getFeature().getWorkspace();
       // REMARK: we directly save the log into the unit-folder, as the results already where moved from the output
       // directory
       // REMARK2: the calc unit meta may be not set, but the simulation log is written anyway... Probably we should

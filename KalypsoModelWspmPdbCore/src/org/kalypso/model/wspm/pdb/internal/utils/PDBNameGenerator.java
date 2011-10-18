@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.internal.utils;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Generator for name when uploading gaf data into db.<br/>
@@ -57,16 +57,18 @@ public class PDBNameGenerator
 
   public String createUniqueName( final String protoName )
   {
-    if( !m_names.contains( protoName ) )
+    if( !StringUtils.isBlank( protoName ) && !m_names.contains( protoName ) )
     {
       m_names.add( protoName );
       return protoName;
     }
 
+    final String formatName = StringUtils.isBlank( protoName ) ? StringUtils.EMPTY : protoName;
+
     /* Maxmimum of 99 section with the same station (else something is wrong) */
     for( int i = 0; i < 999; i++ )
     {
-      final String name = String.format( "%s_%d", protoName, i ); //$NON-NLS-1$
+      final String name = String.format( "%s_%d", formatName, i ); //$NON-NLS-1$
       if( !m_names.contains( name ) )
       {
         m_names.add( name );
@@ -74,7 +76,7 @@ public class PDBNameGenerator
       }
     }
 
-    final String message = String.format( Messages.getString( "PDBNameGenerator.0" ), protoName ); //$NON-NLS-1$
+    final String message = String.format( "More than 999 cross section have the same station(%s). Unable to create unique cross section name.", protoName );
     throw new IllegalArgumentException( message );
   }
 

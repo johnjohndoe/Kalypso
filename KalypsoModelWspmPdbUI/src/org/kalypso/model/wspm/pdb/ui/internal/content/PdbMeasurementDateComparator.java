@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.wspm.pdb.db.mapping.State;

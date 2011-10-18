@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
+Bundle-Name: KalypsoModelWspmPdb
 Bundle-SymbolicName: org.kalypso.model.wspm.pdb.core;singleton:=true
-Bundle-Version: 11.6.1.qualifier
+Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: http://sourceforge.net/projects/kalypso/
 Require-Bundle: org.eclipse.core.runtime,
  org.junit;resolution:=optional,
  org.eclipse.ui,
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.hibernate;visibility:=reexport,
  org.kalypso.model.wspm.core;visibility:=reexport,
  org.kalypso.model.wspm.tuhh.core;visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.pdb,
  org.kalypso.model.wspm.pdb.connect,

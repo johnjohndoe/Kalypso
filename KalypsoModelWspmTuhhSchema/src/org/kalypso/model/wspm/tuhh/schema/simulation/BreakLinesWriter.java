@@ -48,8 +48,8 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.math.NumberRange;
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -172,7 +172,7 @@ public class BreakLinesWriter implements IWspmConstants
           ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp ); //$NON-NLS-1$
 
           // Interpolate triangles between two adjacent curves and add them to the triangulated surface
-          final GM_Position[] polygonPosesOpen = ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
+          final GM_Position[] polygonPosesOpen = (GM_Position[]) ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
           final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPosesOpen );
           for( final GM_Position[] triangle : triangles )
           {

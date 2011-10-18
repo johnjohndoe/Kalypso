@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
@@ -74,7 +74,7 @@ class ElevationModelMoveSelectionAction extends Action
       final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof ITerrainElevationModel )
       {
-        final IFeatureBindingCollection<ITerrainElevationModel> elevationModels = m_dataModel.getTerrainElevationModels();
+        final IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = m_dataModel.getTerrainElevationModels();
         if( elevationModels == null )
           return;
 

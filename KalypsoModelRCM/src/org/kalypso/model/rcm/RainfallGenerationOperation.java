@@ -47,13 +47,10 @@ import java.net.URL;
 
 import javax.xml.namespace.NamespaceContext;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.tokenreplace.IStringResolver;
@@ -179,6 +176,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
   {
     final GMLWorkspace rcmWorkspace = GmlSerializer.createGMLWorkspace( m_rcmLocation, null );
 
+
     final Feature rootFeature = rcmWorkspace.getRootFeature();
     if( !(rootFeature instanceof IRainfallCatchmentModel) )
     {
@@ -207,10 +205,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       if( logLocation == null )
         return null;
 
-      IFile logFile = ResourceUtilities.findFileFromURL( logLocation );
-      if( logFile == null )
-        logFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation( new Path( FileUtils.toFile( logLocation ).getAbsolutePath() ) );
-
+      final IFile logFile = ResourceUtilities.findFileFromURL( logLocation );
       if( logFile == null )
         return null;
 
@@ -246,10 +241,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
         final IObservation filteredObs = ZmlFactory.decorateObservation( obs, targetFilter, null );
         final IRequest request = new ObservationRequest( period );
         final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
-        File file = ResourceUtilities.findJavaFileFromURL( location );
-        if( file == null )
-          file = FileUtils.toFile( location );
-
+        final File file = ResourceUtilities.findJavaFileFromURL( location );
         ZmlFactory.writeToFile( filteredObs, file, request );
       }
     }

@@ -51,7 +51,6 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -90,7 +89,7 @@ public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
       final WaterBody water = (WaterBody) element;
       final String name = water.getName();
       if( m_names.contains( name ) )
-        return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "WaterBodyImportStatusLabelProvider.0" ) ); //$NON-NLS-1$
+        return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, "Element exists" );
 
       // TODO: rather create combined status? Column will be too big...
 

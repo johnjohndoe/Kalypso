@@ -44,18 +44,14 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -63,14 +59,14 @@ import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.results.ResultManager1d2dWizard;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
-
 /**
  * @author Thomas Jung
  */
 public class ResultDataManagerHandler extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -89,27 +85,17 @@ public class ResultDataManagerHandler extends AbstractHandler
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final IKalypsoLayerModell mapModel = (IKalypsoLayerModell) mapPanel.getMapModell();
+    // Open wizard on that map!
+    final ResultManager1d2dWizard managerWizard = new ResultManager1d2dWizard();
+    managerWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
+    managerWizard.setCommandTarget( commandTarget );
+    managerWizard.setMapModel( (IKalypsoLayerModell) mapPanel.getMapModell() );
 
-    final ICaseDataProvider<IModel> modelProvider = (ICaseDataProvider<IModel>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    try
-    {
-      // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
-
-      final ResultManager1d2dWizard managerWizard = new ResultManager1d2dWizard( mapModel, commandTarget, resultModel, modelProvider );
-
-      final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, managerWizard );
-      if( wizardDialog2.open() == Window.OK )
-        return Status.OK_STATUS;
-
-    }
-    catch( final CoreException e )
-    {
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.3" ), Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizard.4" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
+    final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, managerWizard );
+    if( wizardDialog2.open() == Window.OK )
+      return Status.OK_STATUS;
 
     return Status.CANCEL_STATUS;
   }
+
 }

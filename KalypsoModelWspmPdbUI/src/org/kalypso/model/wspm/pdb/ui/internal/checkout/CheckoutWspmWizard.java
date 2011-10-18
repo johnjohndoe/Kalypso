@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.checkout;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -57,11 +56,10 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.forms.IMessage;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.ConnectionChooserData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbData;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutPdbOperation;
@@ -96,7 +94,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
   public CheckoutWspmWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "CheckoutWspmWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Import" );
   }
 
   @Override
@@ -159,7 +157,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
     final CheckoutPdbOperation operation = new CheckoutPdbOperation( m_checkoutData );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     return !status.matches( IStatus.ERROR );
   }
@@ -183,31 +181,20 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
   {
     final IPdbSettings settings = m_settingsData.getSettings();
 
-    final IStatus result = doConnectAndInitData( settings );
-    if( !result.isOK() )
+    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    if( result.isOK() )
+    {
+      final IPdbConnection connection = operation.getConnection();
+      m_checkoutData.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
+      m_contentPage.setConnection( connection );
+    }
+    else
     {
       event.doit = false;
       final IMessage message = MessageUtilitites.convertStatus( result );
       ((WizardPage) event.getCurrentPage()).setMessage( message.getMessage(), message.getMessageType() );
     }
-  }
-
-  private IStatus doConnectAndInitData( final IPdbSettings settings )
-  {
-    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
-    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-
-    if( !result.isOK() )
-      return result;
-
-    final IPdbConnection connection = operation.getConnection();
-    final IStatus initStatus = m_checkoutData.init( getShell(), getWindowTitle(), getDialogSettings(), connection );
-    if( !initStatus.isOK() )
-      return initStatus;
-
-    m_contentPage.setConnection( connection );
-
-    return Status.OK_STATUS;
   }
 
   private void doSelectContent( final PageChangingEvent event )

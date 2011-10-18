@@ -50,6 +50,9 @@ public class ImportWspmRestartWizard extends Wizard
 {
   private ImportWspmRestartPage m_importWspmRestartPage;
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
   @Override
   public void addPages( )
   {
@@ -62,6 +65,9 @@ public class ImportWspmRestartWizard extends Wizard
     return m_importWspmRestartPage.getLengthSection();
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {

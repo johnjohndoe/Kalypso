@@ -1,6 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <oracle.dbtools.crest.model.design.datatypes.DataTypesDesign>
-   <object objectType="DistinctType" objectID="836798AC-5A06-51A2-94D7-E5EDF6CFF68B" name="Color" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="B3BBFFC0-261E-2785-8C3A-A260662720FD" name="Description" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="06BBC0AF-44E8-E1D3-844F-E68A8A8BE333" name="Discharge" seqName="seg_0"/>
    <object objectType="DistinctType" objectID="5C17ED4F-09D6-10E4-79AC-987B6168561A" name="FileName" seqName="seg_0"/>

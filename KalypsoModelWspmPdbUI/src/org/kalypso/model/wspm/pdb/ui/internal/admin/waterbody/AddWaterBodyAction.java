@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
@@ -48,14 +48,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.jface.action.UpdateableAction;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.Executor;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -82,7 +81,7 @@ public class AddWaterBodyAction extends UpdateableAction
     final WaterBody newWaterBody = new WaterBody();
 
     final EditWaterBodyWizard wizard = new EditWaterBodyWizard( m_viewer.getExistingWaterbodies(), newWaterBody, Mode.NEW );
-    wizard.setWindowTitle( Messages.getString( "AddWaterBodyAction.0" ) ); //$NON-NLS-1$
+    wizard.setWindowTitle( "Create New Water Body" );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() == Window.OK )
@@ -97,7 +96,7 @@ public class AddWaterBodyAction extends UpdateableAction
       {
         e.printStackTrace();
         final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
-        new StatusDialog( shell, status, wizard.getWindowTitle() ).open();
+        new StatusDialog2( shell, status, wizard.getWindowTitle() ).open();
       }
     }
   }

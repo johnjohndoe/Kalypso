@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
@@ -61,14 +61,13 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 
 /**
@@ -93,7 +92,7 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard,
 
   public ImportWaterBodiesWizard( )
   {
-    setWindowTitle( Messages.getString( "ImportWaterBodiesWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Import Water Bodies" );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
     setNeedsProgressMonitor( true );
   }
@@ -108,8 +107,8 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard,
 
     m_data = new ImportWaterBodiesData( connection );
 
-    m_shapeFilePage = new SelectShapeFilePage( "selectPage", Messages.getString( "ImportWaterBodiesWizard.1" ), WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_shapeFilePage.setDescription( Messages.getString( "ImportWaterBodiesWizard.2" ) ); //$NON-NLS-1$
+    m_shapeFilePage = new SelectShapeFilePage( "selectPage", "Select Shape File", WspmPdbUiImages.IMG_WIZBAN_IMPORT_WIZ ); //$NON-NLS-1$
+    m_shapeFilePage.setDescription( "Select the shape file of river lines on this page." );
     addPage( m_shapeFilePage );
 
     addPage( new ImportWaterbodiesSelectAttributesPage( "selectAttributes", m_data ) ); //$NON-NLS-1$
@@ -121,7 +120,7 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard,
   {
     try
     {
-      monitor.beginTask( Messages.getString( "ImportWaterBodiesWizard.3" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      monitor.beginTask( "Initalizing wizard...", IProgressMonitor.UNKNOWN );
       m_data.init( getDialogSettings() );
       return Status.OK_STATUS;
     }
@@ -178,7 +177,7 @@ public class ImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard,
     final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, m_data );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     /* Select new element in tree */
     final ElementSelector selector = new ElementSelector();

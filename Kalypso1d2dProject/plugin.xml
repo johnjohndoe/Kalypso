@@ -33,7 +33,7 @@
 
 	<extension
        point="org.eclipse.ui.newWizards">
-		<category 
+		<category
             id="org.kalypso.wizard.Create1d2dpjt"
             name="%org.kalypso.wizard.Create1d2dpjt.name"
 			description="%org.kalypso.wizard.Create1d2dpjt.description"
@@ -95,7 +95,7 @@
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             name="Observation load"/>
         <wizard
-              class="org.kalypso.kalypso1d2d.internal.bce2d.imports.Import2dWizard"
+              class="org.kalypso.wizards.import1d2d.Import2dWizard"
               icon="icons/elcl16/1d2d_edit_protocol_view.gif"
               id="org.kalypso.wizards.import1d2d.ImportWizard"
               name="Import 1D2D"
@@ -151,21 +151,6 @@
                commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap"/>
 
  	 <!--*** 2D-editing handlers ***-->
- 	      <!-- FIXME: remove for now -->
- 	      <!--
-	     <handler
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DImport">
-           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-	           <parameter
-	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                 value="org.kalypso.kalypsomodel1d2d.ui.map.import2d.Import2dElementsWidget"/>
-	           <parameter
-	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-	                 value="org.kalypso.model1d2d"/>
-           </class>
-	     </handler>
-	     -->
-
 	     <handler
 	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">

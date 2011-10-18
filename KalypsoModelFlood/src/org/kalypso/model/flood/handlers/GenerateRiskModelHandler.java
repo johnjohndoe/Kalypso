@@ -35,6 +35,7 @@ import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -74,7 +75,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
 
       // get all events
-      final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
 
       // ask user which events to process
       final IRunoffEvent[] selectedEvents = FloodModelHelper.askUserForEvents( shell, events );

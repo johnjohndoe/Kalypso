@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface for classes representing the simBase:TerrainElevationModelSystem.
@@ -61,5 +61,5 @@ public interface ITerrainElevationModelSystem extends ITerrainElevationModel
    * To get all terrain elevation model in that system
    * @return all the terrain elevation model in this elevation model system
    */
-  public IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels();
+  public IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels();
 }

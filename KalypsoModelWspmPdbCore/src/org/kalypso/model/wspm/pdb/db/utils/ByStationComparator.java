@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.pdb.db.utils;
 import java.math.BigDecimal;
 import java.util.Comparator;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 
 /**

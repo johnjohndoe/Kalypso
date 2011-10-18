@@ -85,7 +85,7 @@ public class ResultLSTinSldFile extends AbstractResultLSFile
   @Override
   public String getTitle( )
   {
-    return Messages.getString( "ResultLSTinSldFile_0" ); //$NON-NLS-1$
+    return Messages.getString("ResultLSTinSldFile_0"); //$NON-NLS-1$
   }
 
   /**

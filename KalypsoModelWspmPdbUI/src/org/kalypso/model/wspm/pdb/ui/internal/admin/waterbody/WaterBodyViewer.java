@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.PdbNameComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -120,7 +119,7 @@ public class WaterBodyViewer
     final ViewerColumn gknColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( gknColumn );
 
-    column.setText( Messages.getString( "WaterBodyViewer.0" ) ); //$NON-NLS-1$
+    column.setText( "GKZ" );
     column.setToolTipText( WaterBodyStrings.STR_GEWÄSSERKENNZIFFER );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
@@ -137,7 +136,7 @@ public class WaterBodyViewer
     final ViewerColumn rankColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.CENTER );
     final ViewerColumnItem column = new ViewerColumnItem( rankColumn );
 
-    column.setText( Messages.getString( "WaterBodyViewer.1" ) ); //$NON-NLS-1$
+    column.setText( "Rank" );
     column.setResizable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
     rankColumn.setLabelProvider( new WaterBodyRankLabelProvider() );

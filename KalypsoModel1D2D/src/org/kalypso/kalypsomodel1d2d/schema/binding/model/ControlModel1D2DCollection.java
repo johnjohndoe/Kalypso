@@ -47,13 +47,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -65,26 +63,20 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * @author Dejan Antanaskovic
  * 
  */
-public class ControlModel1D2DCollection extends Feature_Impl implements IControlModel1D2DCollection
+public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
-
-  private final FeatureBindingCollection<IControlModel1D2D> m_controlModels = new FeatureBindingCollection<IControlModel1D2D>( this, IControlModel1D2D.class, WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
-
   public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" ); //$NON-NLS-1$
-
   public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" ); //$NON-NLS-1$
-
   public final static QName WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" ); //$NON-NLS-1$
 
-  public ControlModel1D2DCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public ControlModel1D2DCollection( final Feature featureCol )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    this( featureCol, IControlModel1D2D.class, ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
   }
 
-  @Override
-  public FeatureBindingCollection<IControlModel1D2D> getControlModels( )
+  public ControlModel1D2DCollection( final Feature featureCol, final Class<IControlModel1D2D> fwClass, final QName featureMemberProp )
   {
-    return m_controlModels;
+    super( featureCol, fwClass, featureMemberProp );
   }
 
   /**
@@ -93,10 +85,10 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
   @Override
   public void setActiveControlModel( final IControlModel1D2D newControlModel )
   {
-    setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getId() );
+    getFeature().setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       /* post empty command in order to make pool dirty. */
@@ -114,8 +106,8 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
   @Override
   public IControlModel1D2D getActiveControlModel( )
   {
-    final Object activeModelID = getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL );
-    final Feature feature = FeatureHelper.getFeature( getWorkspace(), activeModelID );
+    final Object activeModelID = getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, Object.class );
+    final Feature feature = FeatureHelper.getFeature( getFeature().getWorkspace(), activeModelID );
     if( feature == null )
       return null;
 

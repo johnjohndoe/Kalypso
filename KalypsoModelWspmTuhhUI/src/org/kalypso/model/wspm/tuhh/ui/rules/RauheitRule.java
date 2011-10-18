@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -70,12 +69,11 @@ public class RauheitRule extends AbstractValidatorRule
       return;
 
     final String stationId = String.format( "km %.4f", profil.getStation() );//$NON-NLS-1$
-    final IComponent pointPropKS = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-    final IComponent pointPropKST = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
-    final IComponent propertyClazz = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    if( Objects.allNull( pointPropKS, pointPropKST, propertyClazz ) )
+    final IComponent pointPropKS = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent pointPropKST = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    if( pointPropKS == null && pointPropKST == null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, "", new DelRoughnessResolution( new String[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST }, null ) ); //$NON-NLS-1$//$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, "", new DelRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST }, null ) ); //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 
@@ -107,15 +105,7 @@ public class RauheitRule extends AbstractValidatorRule
       if( value.isNaN() || value <= 0.0 )
       {
         final String prefix = showLabel ? pointProp.getName() + ": " : StringUtils.EMPTY; //$NON-NLS-1$
-        final String message;
-        if( value.isNaN() )
-        {
-          message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ); //$NON-NLS-1$
-        }
-        else
-        {
-          message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1" ); //$NON-NLS-1$
-        }
+        final String message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0" ); //$NON-NLS-1$
 
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, profil.indexOfPoint( point ), pointProp.getId() ); //$NON-NLS-1$ //$NON-NLS-2$
         return;

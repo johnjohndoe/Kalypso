@@ -47,8 +47,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -289,9 +289,9 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
                 lListResultsToRemove.addAll( Arrays.asList( processingOperation.getOriginalStepsToDelete() ) );
                 if( lListResultsToRemove.size() == 0 )
                 {
-                  lListResultsToRemove.add( stepResult.getId() );
+                  lListResultsToRemove.add( stepResult.getGmlID() );
                 }
-                lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getId() );
+                lListResultsToRemove = removeAllOthersStepWithDate( lListResultsToRemove, stepResult.getGmlID() );
 
                 final String[] lResultsToRemove = lListResultsToRemove.toArray( new String[lListResultsToRemove.size()] );
 

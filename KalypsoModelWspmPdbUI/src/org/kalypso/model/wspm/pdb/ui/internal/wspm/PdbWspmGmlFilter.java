@@ -110,7 +110,7 @@ public class PdbWspmGmlFilter extends ViewerFilter
     {
       final Feature feature = (Feature) element;
       final IRelationType parentRelation = feature.getParentRelation();
-      if( parentRelation == null )
+      if( parentRelation == null)
         return null;
 
       return parentRelation.getQName();
@@ -118,7 +118,7 @@ public class PdbWspmGmlFilter extends ViewerFilter
 
     if( element instanceof LinkedFeatureElement )
     {
-      final LinkedFeatureElement linkedElement = (LinkedFeatureElement) element;
+      final LinkedFeatureElement linkedElement =  (LinkedFeatureElement) element;
       return linkedElement.getParentElement().getPropertyType().getQName();
     }
 

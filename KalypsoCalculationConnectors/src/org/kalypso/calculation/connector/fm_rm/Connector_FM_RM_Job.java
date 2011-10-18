@@ -32,6 +32,7 @@ import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -67,7 +68,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter( IFloodModel.class );
       final IRasterDataModel riskRasterDataModel = (IRasterDataModel) rmModel.getRootFeature().getAdapter( IRasterDataModel.class );
 
-      final IFeatureBindingCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
       final IFeatureBindingCollection<IAnnualCoverageCollection> riskWaterlevelCoverageCollection = riskRasterDataModel.getWaterlevelCoverageCollection();
       riskWaterlevelCoverageCollection.clear();
       for( final IRunoffEvent runoffEvent : floodModelEvents )

@@ -69,6 +69,7 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -87,7 +88,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
   private IFEDiscretisationModel1d2d m_discModel = null;
 
   /* The current element (node, conti-line, 1d-element, ...) of the disc-model under the cursor. */
-  private Feature m_modelElement = null;
+  private IFeatureWrapper2 m_modelElement = null;
 
   private IHydrograph m_existingHydrograph;
 
@@ -224,8 +225,8 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
-        final Feature parentFeature = m_hydrographCollection;
-        final IRelationType parentRelation = (IRelationType) parentFeature.getFeatureType().getProperty( IHydrographCollection.QNAME_PROP_HYDROGRAPH_MEMBER );
+        final Feature parentFeature = m_hydrographCollection.getFeature();
+        final IRelationType parentRelation = m_hydrographCollection.getWrappedList().getParentFeatureTypeProperty();
         final IHydrograph hydro = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
         if( hydro == null )
@@ -239,7 +240,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
         /* Post it as an command */
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, hydro, selectionManager, true, true );
+        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, hydro.getFeature(), selectionManager, true, true );
         try
         {
           workspace.postCommand( command );
@@ -279,11 +280,11 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
    * 
    * @return The new object, if null, nothing happens..
    */
-  protected abstract IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement );
+  protected abstract IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement );
 
   /**
    * @param grabDistance
    *          The grab distance in world (=geo) coordinates.
    */
-  protected abstract Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
+  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
 }

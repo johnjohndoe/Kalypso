@@ -147,7 +147,7 @@
 					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 					<gft:gridLayout numColumns="1" />
 
-					<gft:group text="%controlModel.gft.steady_group" style="SWT.NONE">
+					<gft:group property="c1d2d:_steady" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="false"  />
 						<gft:gridLayout numColumns="3" />
 						<gft:checkbox enabled="true" property="c1d2d:_steady" style="SWT.NONE">
@@ -211,7 +211,7 @@
 						</gft:validatorlabel>
 					</gft:group>
 
-					<gft:group property="%controlModel.gft.unsteady_group" style="SWT.NONE">
+					<gft:group property="c1d2d:_unsteady" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
 						<gft:gridLayout numColumns="3" />
 						<gft:checkbox enabled="true" property="c1d2d:_unsteady" style="SWT.NONE">

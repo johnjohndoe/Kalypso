@@ -42,19 +42,17 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigDecimal;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlowRelation
 {
-
-  public KingFlowRelation( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public KingFlowRelation( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IKingFlowRelation.QNAME );
   }
 
   /**
@@ -63,7 +61,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   @Override
   public BigDecimal getWidth( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_WIDTH );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_WIDTH );
   }
 
   /**
@@ -72,7 +70,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   @Override
   public BigDecimal getBankSlopeLeft( )
   {
-    final BigDecimal slopeLeft = (BigDecimal) (getProperty( QNAME_PROP_SS1 ));
+    final BigDecimal slopeLeft = (BigDecimal) (getFeature().getProperty( QNAME_PROP_SS1 ));
     if( slopeLeft == null )
       return new BigDecimal( 0.0 );
 
@@ -85,7 +83,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   @Override
   public BigDecimal getBankSlopeRight( )
   {
-    final BigDecimal slopeRight = (BigDecimal) (getProperty( QNAME_PROP_SS2 ));
+    final BigDecimal slopeRight = (BigDecimal) (getFeature().getProperty( QNAME_PROP_SS2 ));
     if( slopeRight == null )
     {
       return new BigDecimal( 0.0 );
@@ -99,7 +97,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   @Override
   public BigDecimal getHeightStorage( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_WSS );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_WSS );
   }
 
   /**
@@ -108,7 +106,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   @Override
   public BigDecimal getSlopeStorage( )
   {
-    final BigDecimal slopeStorage = (BigDecimal) (getProperty( QNAME_PROP_WIDBS ));
+    final BigDecimal slopeStorage = (BigDecimal) (getFeature().getProperty( QNAME_PROP_WIDBS ));
     if( slopeStorage == null )
     {
       return new BigDecimal( 0.0 );
@@ -123,7 +121,7 @@ public class KingFlowRelation extends AbstractFlowRelation1D implements IKingFlo
   @Override
   public BigDecimal getWidthStorage( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_WIDS );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_WIDS );
   }
 
   /**

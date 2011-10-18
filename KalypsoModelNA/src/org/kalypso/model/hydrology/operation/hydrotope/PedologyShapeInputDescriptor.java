@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -109,7 +110,7 @@ public class PedologyShapeInputDescriptor implements InputDescriptor
       if( property instanceof GM_MultiSurface )
         return (GM_MultiSurface) property;
 
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {

@@ -1,6 +1,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;

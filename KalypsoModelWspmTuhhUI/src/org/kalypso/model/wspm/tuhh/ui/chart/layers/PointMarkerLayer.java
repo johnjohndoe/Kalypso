@@ -42,11 +42,11 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.awt.geom.Point2D;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -55,11 +55,11 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
@@ -101,7 +101,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
-    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) );
+    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyleHover() );
@@ -144,7 +144,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
         continue;
       }
 
-      if( devider.getComponent().getId().equals( getTargetComponent().getId() ) )
+      if( devider.getId().getId().equals( getTargetComponent().getId() ) )
       {
         moveDevider( devider, newPoint );
       }
@@ -247,10 +247,10 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
   private boolean movesOnSameDeviderType( final IProfilPointMarker devider, final IProfilPointMarker[] targetDeviders )
   {
-    final String id = devider.getComponent().getId();
+    final String id = devider.getId().getId();
     for( final IProfilPointMarker marker : targetDeviders )
     {
-      final String targetId = marker.getComponent().getId();
+      final String targetId = marker.getId().getId();
       if( ObjectUtils.equals( id, targetId ) )
         return true;
     }
@@ -291,7 +291,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
       final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
       final Point p1 = new Point( screenX, bottom );
       final Point p2 = new Point( screenX, top );

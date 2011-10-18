@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.patternreplace.IPatternInput;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;

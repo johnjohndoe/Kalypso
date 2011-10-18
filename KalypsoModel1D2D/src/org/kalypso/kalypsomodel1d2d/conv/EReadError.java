@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,25 +36,25 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
 /**
- * Error key for RMA·Kalypso model reader
+ * Error key for RMA·Kalypso model reader  
  * @author Patrice Congo
+ *
  */
 public enum EReadError
 {
-  /**
-   * Signal that the minimal line length is violated
-   */
-  LINE_TOO_SHORT,
-
-  /**
-   * Signals that the a line section contain the bad data format.
-   * E.g. a double where and integer is expected
-   * 
-   */
-  ILLEGAL_SECTION
+   /**
+    * Signal that the minimal line length is violated
+    */
+   LINE_TOO_SHORT,
+   /**
+    * Signals that the a line section contain the bad data format.
+    * E.g. a double where and integer is expected
+    * 
+    */
+   ILLEGAL_SECTION
 }

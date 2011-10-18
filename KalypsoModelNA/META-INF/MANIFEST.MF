@@ -15,7 +15,7 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.eclipse.wst.xml.core;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.binding,
  org.kalypso.model.hydrology.binding.initialValues,

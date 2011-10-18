@@ -44,16 +44,15 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public class EditStatePage extends WizardPage
 {
-  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = Messages.getString( "EditStatePage.0" ); //$NON-NLS-1$
+  public static final String STR_ENTER_THE_PROPERTIES_OF_THE_FRESHLY_CREATED_STATE = "Enter the properties of the freshly created state";
 
-  public static final String STR_ENTER_STATE_PROPERTIES = Messages.getString( "EditStatePage.1" ); //$NON-NLS-1$
+  public static final String STR_ENTER_STATE_PROPERTIES = "Enter State Properties";
 
   public enum Mode
   {

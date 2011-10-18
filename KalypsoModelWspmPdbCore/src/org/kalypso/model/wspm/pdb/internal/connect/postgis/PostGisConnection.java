@@ -105,7 +105,7 @@ public class PostGisConnection extends HibernateConnection<PostgisSettings>
 
     try
     {
-      final String statement = String.format( "select count(*) from information_schema.applicable_roles where upper(role_name)='%s'", PDBRole.fadmin.getName() ); //$NON-NLS-1$
+      final String statement = String.format( "select count(*) from information_schema.applicable_roles where upper(role_name)='%s'", PDBRole.fadmin.getName() );
 
       final SQLQuery query = session.createSQLQuery( statement );
       final List< ? > result = query.list();

@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -91,7 +92,7 @@ public class ErrorSettings extends AbstractSettings
   public IPdbConnection createConnection( )
   {
     // Connection not possible
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   @Override

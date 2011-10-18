@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -159,7 +159,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
     progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.7" ) ); //$NON-NLS-1$
 
-    // final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );
+    // final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
 
     /* If no results available yet, nothing to do. */
     if( m_calcUnitMeta == null )
@@ -197,7 +197,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     {
       FileUtils.forceMkdir( m_unitFolder );
 
-      VFSUtilities.moveContents( outputDir, m_unitFolder );
+      FileUtilities.moveContents( outputDir, m_unitFolder );
       ProgressUtilities.worked( progress, 70 );
 
       /* Output dir should now be empty, so there is no sense in keeping it */

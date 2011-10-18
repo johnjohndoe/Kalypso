@@ -44,6 +44,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.deegree.framework.util.Pair;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataWrapper;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -100,7 +101,7 @@ public class WindDataGenericGridConverter implements IWindDataWrapper// IWindDat
     // TODO: what to do? replace descriptor?
     if( m_gridDescriptor != null && m_gridDescriptor.getCoordinateSystem().equals( coordinateSystem ) )
     {
-      throw new UnsupportedOperationException( "cannot reset actual coordinate system..." ); //$NON-NLS-1$
+      throw new NotImplementedException( "cannot reset actual coordinate system..." ); //$NON-NLS-1$
     }
   }
 

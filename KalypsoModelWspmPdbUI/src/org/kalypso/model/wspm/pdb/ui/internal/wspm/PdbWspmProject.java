@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
@@ -60,10 +60,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IPdbWspmProject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -100,7 +99,7 @@ public class PdbWspmProject implements IPdbWspmProject
 
   static final String WSPM_PROJECT_NAME = "PDBWspmData"; //$NON-NLS-1$
 
-  static final String STR_SAVE_LOCAL_DATA_TITLE = Messages.getString( "PdbWspmProject.0" ); //$NON-NLS-1$
+  static final String STR_SAVE_LOCAL_DATA_TITLE = "Save Local Data";
 
   private final IFeaturesProviderListener m_modelListener = new IFeaturesProviderListener()
   {
@@ -234,7 +233,7 @@ public class PdbWspmProject implements IPdbWspmProject
     final FindReachThemesVisitor findReachesVisitor = new FindReachThemesVisitor();
     mapModell.accept( findReachesVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "PdbWspmProject.1" ) ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( "Add reach themes" );
 
     final TuhhWspmProject project = getWspmProject();
     final IFeatureBindingCollection<WspmWaterBody> waterBodies = project.getWaterBodies();
@@ -246,28 +245,28 @@ public class PdbWspmProject implements IPdbWspmProject
     for( final IKalypsoTheme theme : obsoleteThemes )
       compositeCommand.addCommand( new RemoveThemeCommand( mapModell, theme, true ) );
 
-        /* Add necessary themes */
-        for( final WspmWaterBody waterBody : waterBodies )
+    /* Add necessary themes */
+    for( final WspmWaterBody waterBody : waterBodies )
+    {
+      final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
+      for( final WspmReach reach : reaches )
+      {
+        final String reachGmlID = reach.getId();
+        if( !findReachesVisitor.hasReachTheme( reachGmlID ) )
         {
-          final IFeatureBindingCollection<WspmReach> reaches = waterBody.getReaches();
-          for( final WspmReach reach : reaches )
-          {
-            final String reachGmlID = reach.getId();
-            if( !findReachesVisitor.hasReachTheme( reachGmlID ) )
-            {
-              final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
-              if( newTheme != null )
-                compositeCommand.addCommand( newTheme );
-            }
-          }
+          final AddThemeCommand newTheme = addReachTheme( mapModell, reach );
+          if( newTheme != null )
+            compositeCommand.addCommand( newTheme );
         }
+      }
+    }
 
-        if( compositeCommand.getCommands().length == 0 )
-          return;
+    if( compositeCommand.getCommands().length == 0 )
+      return;
 
-        mapView.postCommand( compositeCommand, null );
+    mapView.postCommand( compositeCommand, null );
 
-        mapView.doSave( new NullProgressMonitor() );
+    mapView.doSave( new NullProgressMonitor() );
   }
 
   private AddThemeCommand addReachTheme( final GisTemplateMapModell mapModell, final WspmReach reach )
@@ -331,7 +330,7 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    final String message = Messages.getString( "PdbWspmProject.2" ); //$NON-NLS-1$
+    final String message = "Local WSPM data has been modified. Save changes?";
     final String[] buttonLabels = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
     final MessageDialog dialog = new MessageDialog( shell, STR_SAVE_LOCAL_DATA_TITLE, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttonLabels, 0 );
     final int result = dialog.open();
@@ -348,7 +347,7 @@ public class PdbWspmProject implements IPdbWspmProject
         }
       };
 
-      return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, Messages.getString( "PdbWspmProject.3" ) ); //$NON-NLS-1$
+      return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, "Failed to save local data" );
     }
     else if( result == 1 )
       return true;
@@ -374,7 +373,7 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    final String message = Messages.getString( "PdbWspmProject.4" ); //$NON-NLS-1$
+    final String message = "Local WSPM data must be saved before this operation. Continue?";
     final boolean result = MessageDialog.openConfirm( shell, STR_SAVE_LOCAL_DATA_TITLE, message );
     if( !result )
       return false;
@@ -389,7 +388,7 @@ public class PdbWspmProject implements IPdbWspmProject
       }
     };
 
-    return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, Messages.getString( "PdbWspmProject.5" ) ); //$NON-NLS-1$
+    return busyCursorWhile( operation, STR_SAVE_LOCAL_DATA_TITLE, "Failed to save local data" );
   }
 
   private boolean busyCursorWhile( final ICoreRunnableWithProgress operation, final String title, final String errorMessage )
@@ -400,7 +399,7 @@ public class PdbWspmProject implements IPdbWspmProject
       return true;
 
     final Shell shell = m_window.getShell();
-    new StatusDialog( shell, status, title ).open();
+    new StatusDialog2( shell, status, title );
     /* Do not close workbench on error */
     return false;
   }

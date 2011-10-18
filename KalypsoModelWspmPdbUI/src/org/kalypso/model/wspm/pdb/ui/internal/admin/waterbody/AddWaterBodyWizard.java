@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.connect.command.SaveObjectOperation;
@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.EditWaterBodyPage.Mode;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -69,7 +68,7 @@ public class AddWaterBodyWizard extends Wizard
     m_existingWaterbodies = existingWaterBodies;
     m_viewer = viewer;
 
-    setWindowTitle( Messages.getString( "AddWaterBodyAction.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Create New Water Body" );
     setNeedsProgressMonitor( true );
   }
 
@@ -88,7 +87,7 @@ public class AddWaterBodyWizard extends Wizard
     final ExecutorRunnable runnable = new ExecutorRunnable( connection, operation );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, runnable );
     if( !result.isOK() )
-      new StatusDialog( getShell(), result, getWindowTitle() ).open();
+      new StatusDialog2( getShell(), result, getWindowTitle() ).open();
 
     final ElementSelector selector = new ElementSelector();
     selector.addWaterBodyName( m_waterBody.getName() );

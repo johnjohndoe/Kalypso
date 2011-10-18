@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -55,14 +55,13 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * @author Gernot Belger
- */
+ */ 
 public class CheckinStateData
 {
   private final State m_state = new State();
@@ -93,7 +92,7 @@ public class CheckinStateData
     m_state.setName( reach.getName() );
     m_state.setDescription( reach.getDescription() );
     m_state.setIsstatezero( State.ZERO_STATE_OFF );
-    m_state.setSource( Messages.getString( "CheckInEventData_0" ) ); //$NON-NLS-1$
+    m_state.setSource( "WSPM Local Data" );
   }
 
   public void init( final IPdbConnection connection ) throws PdbConnectException, CoreException

@@ -43,8 +43,8 @@ package org.kalypso.model.flood.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * @author Thomas Jung
  * 
  */
-public interface IFloodPolygon extends Feature
+public interface IFloodPolygon extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "AbstractFloodPolygon" ); //$NON-NLS-1$
 
@@ -67,5 +67,5 @@ public interface IFloodPolygon extends Feature
 
   public GM_Surface<GM_SurfacePatch> getArea( );
 
-  public IFeatureBindingCollection<IRunoffEvent> getEvents( );
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( );
 }

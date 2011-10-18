@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.gaf.GafPointCheck;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.transformation.transformer.JTSTransformer;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -130,7 +129,7 @@ public class GafPoint
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_stati.add( IStatus.ERROR, Messages.getString( "GafPoint.0" ), e ); //$NON-NLS-1$
+      m_stati.add( IStatus.ERROR, "Failed to parse geometry", e );
       return null;
     }
   }
@@ -139,12 +138,12 @@ public class GafPoint
   {
     if( Double.isNaN( position.x ) || Double.isNaN( position.y ) )
     {
-      m_stati.add( IStatus.WARNING, Messages.getString( "GafPoint.1" ) ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, "Geometry is missing" );
       return false;
     }
 
     if( Double.isNaN( position.z ) || Double.isNaN( position.y ) )
-      m_stati.add( IStatus.WARNING, Messages.getString( "GafPoint.2" ) ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, "Height is missing" );
 
     return true;
   }

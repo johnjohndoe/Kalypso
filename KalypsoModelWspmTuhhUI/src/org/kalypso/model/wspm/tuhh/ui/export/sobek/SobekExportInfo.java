@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
@@ -77,8 +77,6 @@ public class SobekExportInfo
 
   private static final String SETTING_ROUGHNESS = "roughnessId"; //$NON-NLS-1$
 
-  private static final String SETTING_ROUGHNESS_CLASSES = "preferRoughnessClasses"; //$NON-NLS-1$
-
   private static final String SETTING_ROUGHNESS_ZONES = "zones"; //$NON-NLS-1$
 
   private static final String SETTINGS_PROFILE_EXPORT_FLOW_ZONE = "profileExportFlowZone"; //$NON-NLS-1$
@@ -104,8 +102,6 @@ public class SobekExportInfo
   private boolean m_exportBuildings = true;
 
   private String m_roughnessId = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
-
-  private boolean m_preferRoughnessClasses = false;
 
   private IFlowZoneType[] m_roughnessZoneTypes = new IFlowZoneType[0];
 
@@ -174,11 +170,6 @@ public class SobekExportInfo
     return m_roughnessId;
   }
 
-  public Boolean getPreferRoughnessClasses( )
-  {
-    return m_preferRoughnessClasses;
-  }
-
   public IFlowZoneType[] getRoughnessZoneTypes( )
   {
     return m_roughnessZoneTypes;
@@ -238,13 +229,6 @@ public class SobekExportInfo
   public void setRoughnessID( final String roughnessId )
   {
     m_roughnessId = roughnessId;
-
-    saveSettings();
-  }
-
-  public void setPreferRoughnessClasses( final boolean preferRoughnessClasses )
-  {
-    m_preferRoughnessClasses = preferRoughnessClasses;
 
     saveSettings();
   }
@@ -345,7 +329,6 @@ public class SobekExportInfo
     m_settings.put( SETTINGS_NAME_PATTERN, m_namePattern );
     m_settings.put( SETTINGS_PROFILE_EXPORT_FLOW_ZONE, m_flowZone );
     m_settings.put( SETTING_ROUGHNESS, m_roughnessId );
-    m_settings.put( SETTING_ROUGHNESS_CLASSES, m_preferRoughnessClasses );
 
     final String[] zoneNames = new String[m_roughnessZoneTypes.length];
     for( int i = 0; i < zoneNames.length; i++ )

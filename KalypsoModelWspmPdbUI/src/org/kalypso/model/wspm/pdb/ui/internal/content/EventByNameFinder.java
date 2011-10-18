@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 
 /**
  * @author Gernot Belger
+ *
  */
 class EventByNameFinder implements IWaterBodyTreeVisitor
 {

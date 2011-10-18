@@ -135,15 +135,15 @@ public class ModelGeometryBuilder
 
     // FIXME: we must make sure that the envelope is updated when the location of the nodes
     // or the coordinate system has changed.
-    // Sadly we cannot call edge.setEnvelopesUpdated();
+    // Sadly we cannot call edge.getFeature().setEnvelopesUpdated();
     // here, as this calls getEnvelope immediately
 
     // This does not work, but is would be necessary
-    // final GM_Envelope envelope = edge.getEnvelope();
+    // final GM_Envelope envelope = edge.getFeature().getEnvelope();
     // final String envCrs = envelope.getCoordinateSystem();
     // final String curveCrs = curve.getCoordinateSystem();
     // if( curveCrs != null && !curveCrs.equals( envCrs ) )
-    // edge.setEnvelopesUpdated();
+    // edge.getFeature().setEnvelopesUpdated();
 
     return curve;
   }

@@ -43,8 +43,8 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -443,6 +443,8 @@ public class KMViewer
 
     updateControls();
   }
+
+
 
   public void setInput( final String label, final KMChannelElement element, final boolean force )
   {

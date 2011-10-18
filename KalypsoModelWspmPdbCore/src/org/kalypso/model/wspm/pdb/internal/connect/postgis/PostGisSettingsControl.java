@@ -61,7 +61,6 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 import org.kalypso.model.wspm.pdb.internal.connect.SettingsPropertyValue;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
@@ -96,7 +95,7 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
     final StringBlankValidator usernameValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
     createPropertyControl( "Username", SWT.NONE, PostgisSettings.PROPERTY_USERNAME, usernameValidator ); //$NON-NLS-1$
 
-    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, Messages.getString( "PostGisSettingsControl_0" ) ); //$NON-NLS-1$
+    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, "Password field is empty" );
     createPropertyControl( "Password", SWT.PASSWORD, PostgisSettings.PROPERTY_PASSWORD, warningValidator ); //$NON-NLS-1$
   }
 
@@ -106,7 +105,7 @@ class PostGisSettingsControl extends Composite implements IPdbSettingsControl
 
     final Text field = new Text( this, SWT.BORDER | style );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( Messages.getString( "PostGisSettingsControl_1" ) ); //$NON-NLS-1$
+    field.setMessage( "<Empty>" );
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
     for( final IValidator validator : validators )

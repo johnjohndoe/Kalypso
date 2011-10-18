@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -44,10 +44,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -57,8 +54,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
@@ -81,17 +76,13 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class CheckinPartOperation
 {
-// private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
-
-  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+  private static final BigDecimal VEGETATION_0 = new BigDecimal( 0 );
 
   private final CrossSectionPart m_part = new CrossSectionPart();
 
   private final IProfil m_profil;
 
   private final String m_profilSRS;
-
-  private final String m_heightComponentID;
 
   private final Coefficients m_coefficients;
 
@@ -101,21 +92,17 @@ public class CheckinPartOperation
 
   private final IGeoTransformer m_transformer;
 
-  private final String m_category;
+  private final IPartBuilder m_partBuilder;
 
-  private final ClassChecker m_classChcker;
-
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID, final String category, final ClassChecker classChcker )
+  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final IPartBuilder partBuilder )
   {
-    m_category = category;
-    m_classChcker = classChcker;
+    m_partBuilder = partBuilder;
     m_coefficients = stateOperation.getCoefficients();
     m_gafCodes = stateOperation.getGafCodes();
     m_geometryFactory = stateOperation.getGeometryFactory();
     m_transformer = stateOperation.getTransformer();
     m_profil = profil;
     m_profilSRS = profilSRS;
-    m_heightComponentID = mainComponentID;
   }
 
   public CrossSectionPart getPart( )
@@ -123,10 +110,12 @@ public class CheckinPartOperation
     return m_part;
   }
 
-  public IStatus execute( ) throws PdbConnectException
+  public void execute( ) throws PdbConnectException
   {
     // Name must be unique within each part
     final PDBNameGenerator nameGenerator = new PDBNameGenerator();
+
+    final String heightComponentID = m_partBuilder.getHeightComponent();
 
     final IRecord[] records = m_profil.getPoints();
     final List<Coordinate> lineCrds = new ArrayList<Coordinate>( records.length );
@@ -137,34 +126,31 @@ public class CheckinPartOperation
       final String name = getStringValue( record, IWspmConstants.POINT_PROPERTY_ID, StringUtils.EMPTY );
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
       final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
-      final BigDecimal height = getDecimalValue( record, m_heightComponentID, null );
-      // FIMXE: check code
-      final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
+      final BigDecimal height = getDecimalValue( record, heightComponentID, null );
 
-      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, m_heightComponentID );
+      final String profileCode = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, null );
+      final String pdbCode = guessCode( profileCode, records, i );
+
+      final String hyk = toHyk( pdbCode );
+
+      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, heightComponentID );
       final com.vividsolutions.jts.geom.Point location = toPoint( loc );
 
-      // FIMXE: check class
-      final String roughnessClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_ROUGHNESS_CLASS, null );
+      // FIXME: use real roughness
+      final Roughness roughness = m_coefficients.getRoughnessOrUnknown( null );
       final BigDecimal kstValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, null );
       final BigDecimal kValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, null );
 
-      // FIMXE: check class
-      final String vegetationClassId = getStringValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_CLASS, null );
-      final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, null );
-      final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, null );
-      final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, null );
+      // FIXME: use real vegetation
+      final Vegetation vegetation = m_coefficients.getVegetationOrUnknown( null );
+      final BigDecimal axValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, VEGETATION_0 );
+      final BigDecimal ayValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, VEGETATION_0 );
+      final BigDecimal dpValue = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, VEGETATION_0 );
 
       /* Not all point may pass */
       // TODO: allow point without geometry?
       if( height == null )
         continue;
-
-      final Roughness roughness = toRoughness( roughnessClassId );
-      final Vegetation vegetation = toVegetation( vegetationClassId );
-      final GafCode gafCode = toGafCode( code );
-
-      final String hyk = toHyk( gafCode.getCode() );
 
       /* Keep old point name if possible, else create a new unique one */
       final String uniquePointName = nameGenerator.createUniqueName( name );
@@ -173,7 +159,7 @@ public class CheckinPartOperation
       point.setDescription( comment );
       point.setWidth( width );
       point.setHeight( height );
-      point.setCode( gafCode.getCode() );
+      point.setCode( pdbCode );
       point.setHyk( hyk );
       point.setLocation( location );
 
@@ -193,70 +179,28 @@ public class CheckinPartOperation
     }
 
     final int size = lineCrds.size();
-    if( size != 1 )
+    if( size == 1 )
+    {
+      System.out.println( "oups" );
+    }
+    else
     {
       final LineString line = m_geometryFactory.createLineString( lineCrds.toArray( new Coordinate[size] ) );
       m_part.setLine( line );
     }
-
-    final double station = m_profil.getStation();
-    final String warning = String.format( "Cross section km %.4f, part '%s'", station, m_category );
-    return m_stati.asMultiStatusOrOK( warning );
   }
 
-  private GafCode toGafCode( final String code )
+  private String guessCode( final String code, final IRecord[] records, final int i )
   {
-    final GafCode defaultCode = m_gafCodes.getDefaultCode( m_category );
-    if( StringUtils.isBlank( code ) )
-      return defaultCode;
+    // TODO: not perfekt, if markers or similar have changed, we should also guess the code again
+    // else this information gets lost
+    if( !StringUtils.isBlank( code ))
+      return code;
 
-    final GafCode gc = m_gafCodes.getCode( code );
-    if( gc == null )
-    {
-      m_stati.add( IStatus.WARNING, "Unknown GAF code '%s'. Using code '%s' instead.", null, code, defaultCode.getCode() );
-      return defaultCode;
-    }
-
-    return gc;
+    /* Guess default code on per builder base */
+    return m_partBuilder.guessCode( records, i );
   }
 
-  private Vegetation toVegetation( final String vegetationClassId )
-  {
-    if( StringUtils.isBlank( vegetationClassId ) )
-      return m_coefficients.getUnknownVegetation();
-
-    final Vegetation vegetation = m_coefficients.getVegetation( vegetationClassId );
-    if( vegetation == null )
-    {
-      final Vegetation unknownVegetation = m_coefficients.getUnknownVegetation();
-      m_stati.add( IStatus.WARNING, "Unknown vegetation class '%s'. Using class '%s' instead.", null, vegetationClassId, unknownVegetation.getLabel() );
-      return unknownVegetation;
-    }
-
-    m_classChcker.addVegetation( vegetation );
-
-    return vegetation;
-  }
-
-  private Roughness toRoughness( final String roughnessClassId )
-  {
-    if( StringUtils.isBlank( roughnessClassId ) )
-      return m_coefficients.getUnknownRoughness();
-
-    final Roughness roughness = m_coefficients.getRoughness( roughnessClassId );
-    if( roughness == null )
-    {
-      final Roughness unknownRoughness = m_coefficients.getUnknownRoughness();
-      m_stati.add( IStatus.WARNING, "Unknown roughness class '%s'. Using class '%s' instead.", null, roughnessClassId, unknownRoughness.getLabel() );
-      return unknownRoughness;
-    }
-
-    m_classChcker.addRoughness( roughness );
-
-    return roughness;
-  }
-
-  // FIXME: alternatively, set codes according to markers
   private String toHyk( final String code )
   {
     /* Just check if it is an existing code */

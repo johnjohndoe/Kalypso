@@ -46,8 +46,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;

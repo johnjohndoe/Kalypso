@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.gaf.WaterlevelComposite;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.IEditEventPageData;
 
 /**
@@ -68,8 +67,8 @@ public class EditEventPage extends WizardPage
     m_data = data;
     m_ignoreOwnName = ignoreOwnName;
 
-    setTitle( Messages.getString( "EditEventPage.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "EditEventPage.1" ) ); //$NON-NLS-1$
+    setTitle( "Edit Event Properties" );
+    setDescription( "Change the properties of the edited event." );
   }
 
   @Override

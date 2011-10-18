@@ -41,7 +41,7 @@
 package org.kalypso.kalypso1d2d.extension;
 
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.module.AbstractKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.pages.welcome.AbstractKalypsoModuleWelcomePageFrame;
 
 /**
  * @author Dirk Kuch

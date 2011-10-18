@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-17 15:19:37 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-08-31 12:15:34 UTC</changedTime>
+   <changedTime>2011-07-13 13:37:40 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Points PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -150,6 +150,19 @@
          <dataTypePrecision>8</dataTypePrecision>
          <dataTypeScale>4</dataTypeScale>
       </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Roughness_Point_Kind" id="243A2C9E-74C3-47F6-E580-BAB0A5D3AEC4">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 07:29:17 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-20 12:58:57 UTC</changedTime>
+         <generatorID>3207525A-2929-5519-E668-13612FB51C2F</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <referedAttribute>7231709D-BDB4-2093-C436-83D7D7B0F325</referedAttribute>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+      </Attribute>
       <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Roughness_K_Value" id="319D6A89-0BC9-CCF9-845C-12D3E81A5E71">
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-18 07:15:01 UTC</createdTime>
@@ -179,19 +192,6 @@
          <logicalDatatype>LOGDT019</logicalDatatype>
          <dataTypePrecision>8</dataTypePrecision>
          <dataTypeScale>1</dataTypeScale>
-      </Attribute>
-      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Roughness_Factor" id="B9C06994-BBFC-7F2E-942D-B61AF3D62FFB">
-         <createdBy>thuel</createdBy>
-         <createdTime>2011-08-31 12:14:01 UTC</createdTime>
-         <changedBy>thuel</changedBy>
-         <changedTime>2011-08-31 12:15:34 UTC</changedTime>
-         <commentInRDBMS>factor to apply to roughness value</commentInRDBMS>
-         <ownerDesignName>pdb</ownerDesignName>
-         <nullsAllowed>true</nullsAllowed>
-         <use>1</use>
-         <logicalDatatype>LOGDT019</logicalDatatype>
-         <dataTypePrecision>8</dataTypePrecision>
-         <dataTypeScale>5</dataTypeScale>
       </Attribute>
       <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Vegetation_Dp" id="44004A2D-8A51-1FC6-25D7-8C1E61F9A6C3">
          <createdBy>thuel2</createdBy>
@@ -250,32 +250,6 @@
          <logicalDatatype>LOGDT024</logicalDatatype>
          <dataTypeSize>255</dataTypeSize>
       </Attribute>
-      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Roughness_Point_Kind" id="243A2C9E-74C3-47F6-E580-BAB0A5D3AEC4">
-         <createdBy>thuel2</createdBy>
-         <createdTime>2011-05-18 07:29:17 UTC</createdTime>
-         <changedBy>thuel2</changedBy>
-         <changedTime>2011-05-20 12:58:57 UTC</changedTime>
-         <generatorID>3207525A-2929-5519-E668-13612FB51C2F</generatorID>
-         <ownerDesignName>pdb</ownerDesignName>
-         <nullsAllowed>true</nullsAllowed>
-         <referedAttribute>7231709D-BDB4-2093-C436-83D7D7B0F325</referedAttribute>
-         <use>1</use>
-         <logicalDatatype>LOGDT024</logicalDatatype>
-         <dataTypeSize>50</dataTypeSize>
-      </Attribute>
-      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Roughness" id="A5BD157F-8B1D-9E83-C3D7-04281AF74997">
-         <createdBy>thuel2</createdBy>
-         <createdTime>2011-05-18 15:33:11 UTC</createdTime>
-         <changedBy>thuel2</changedBy>
-         <changedTime>2011-05-20 12:56:24 UTC</changedTime>
-         <generatorID>3207525A-2929-5519-E668-13612FB51C2F</generatorID>
-         <ownerDesignName>pdb</ownerDesignName>
-         <nullsAllowed>true</nullsAllowed>
-         <referedAttribute>B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6</referedAttribute>
-         <use>1</use>
-         <logicalDatatype>LOGDT024</logicalDatatype>
-         <dataTypeSize>50</dataTypeSize>
-      </Attribute>
       <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Vegetation_Point_Kind" id="85CD01C0-3EE9-6672-BF20-22FE8D276BD6">
          <createdBy>thuel2</createdBy>
          <createdTime>2011-05-18 15:32:38 UTC</createdTime>
@@ -298,6 +272,19 @@
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
          <referedAttribute>B709771A-3D20-70B4-F0FC-949B0564DA69</referedAttribute>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>50</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Roughness" id="A5BD157F-8B1D-9E83-C3D7-04281AF74997">
+         <createdBy>thuel2</createdBy>
+         <createdTime>2011-05-18 15:33:11 UTC</createdTime>
+         <changedBy>thuel2</changedBy>
+         <changedTime>2011-05-20 12:56:24 UTC</changedTime>
+         <generatorID>3207525A-2929-5519-E668-13612FB51C2F</generatorID>
+         <ownerDesignName>pdb</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <referedAttribute>B55455A0-3297-3DDE-9B5D-2B9C69E0E8B6</referedAttribute>
          <use>1</use>
          <logicalDatatype>LOGDT024</logicalDatatype>
          <dataTypeSize>50</dataTypeSize>

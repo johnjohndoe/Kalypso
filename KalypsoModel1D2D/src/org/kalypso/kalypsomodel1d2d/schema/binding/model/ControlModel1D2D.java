@@ -52,7 +52,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.afgui.model.Util;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
@@ -65,10 +64,10 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -77,14 +76,9 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * @author Dejan Antanaskovic
  * 
  */
-public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
+public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
-  public ControlModel1D2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-
-  private final IFeatureBindingCollection<IRestartInfo> m_restartInfos = new FeatureBindingCollection<IRestartInfo>( this, IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
+  private final IFeatureWrapperCollection<IRestartInfo> m_restartInfos = new FeatureWrapperCollection<IRestartInfo>( getFeature(), IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
 
   public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" ); //$NON-NLS-1$
 
@@ -122,9 +116,9 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_CHI = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CHI" ); //$NON-NLS-1$
+  public final static QName WB1D2DCONTROL_PROP_CHI = new QName (UrlCatalog1D2D.MODEL_1D2DControl_NS, "CHI"); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_HASWINDDRAG = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "HASWINDDRAG" ); //$NON-NLS-1$
+  public final static QName WB1D2DCONTROL_PROP_HASWINDDRAG = new QName (UrlCatalog1D2D.MODEL_1D2DControl_NS, "HASWINDDRAG"); //$NON-NLS-1$
 
   public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" ); //$NON-NLS-1$
 
@@ -200,6 +194,16 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 
   public final static QName WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "SWANInputAdditionalCmds" ); //$NON-NLS-1$
 
+  public ControlModel1D2D( final Feature featureToBind )
+  {
+    this( featureToBind, ControlModel1D2D.WB1D2DCONTROL_F_MODEL );
+  }
+
+  public ControlModel1D2D( final Feature featureToBind, final QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getTimeSteps()
    */
@@ -209,7 +213,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     try
     {
-      final Feature feature = this;
+      final Feature feature = getFeature();
       final Object property = feature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
       return (IObservation<TupleResult>) ((Feature) property).getAdapter( IObservation.class );
     }
@@ -223,7 +227,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getIDNOPT( )
   {
-    return (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
+    return (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDNOPT );
   }
 
   /**
@@ -232,7 +236,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getVersion( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION );
   }
 
   @Override
@@ -259,35 +263,35 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getIcpu( )
   {
-    final Integer propertyValue = (Integer) getProperty( WB1D2DCONTROL_PROP_ICPU );
+    final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_ICPU );
     return propertyValue != null ? propertyValue : 0;
   }
 
   @Override
   public Integer getMFW( )
   {
-    final Integer propertyValue = (Integer) getProperty( WB1D2DCONTROL_PROP_MFW );
+    final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_MFW );
     return propertyValue != null ? propertyValue : 0;
   }
 
   @Override
   public Integer getBUFFSIZ( )
   {
-    final Integer propertyValue = (Integer) getProperty( WB1D2DCONTROL_PROP_BUFFSIZ );
+    final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_BUFFSIZ );
     return propertyValue != null ? propertyValue : 0;
   }
 
   @Override
   public boolean getPercentCheck( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_PERCENT_CHECK );
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_PERCENT_CHECK );
     return propertyValue != null ? propertyValue : false;
   }
 
   @Override
   public boolean getRestart( )
   {
-    return ((Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
+    return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
   @Override
@@ -299,7 +303,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public XMLGregorianCalendar getStartCalendar( )
   {
-    return (XMLGregorianCalendar) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STARTSIM );
+    return (XMLGregorianCalendar) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STARTSIM );
   }
 
   @Override
@@ -318,77 +322,77 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getIEDSW( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IEDSW );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IEDSW );
     return property != null ? property : 0;
   }
 
   @Override
   public Double getTBFACT( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getTBFACT_ESCUDIER( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT_ESCUDIER );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT_ESCUDIER );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getTBMIN( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBMIN );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBMIN );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getOMEGA( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_OMEGA );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_OMEGA );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getELEV( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_ELEV );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_ELEV );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getUDIR( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UDIR );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UDIR );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getUNOM( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNOM );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNOM );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getHMIN( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HMIN );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HMIN );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getDSET( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSET );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSET );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getDSETD( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSETD );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DSETD );
     return property != null ? property : 0.0;
   }
 
@@ -397,7 +401,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     if( !isSteadySelected() )
       return 0;
-    Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITI );
+    Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITI );
     if( property == null )
       property = 0;
     return property;
@@ -408,7 +412,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     if( !isUnsteadySelected() )
       return 0;
-    Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITN );
+    Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_NITN );
     if( property == null )
       property = 0;
     return property;
@@ -426,108 +430,112 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Double getCONV_1( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_1 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_1 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getCONV_2( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_2 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_2 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getCONV_3( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_3 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CONV_3 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Integer getIDRPT( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDRPT );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_IDRPT );
     return property != null ? property : 0;
   }
 
   @Override
   public Double getDRFACT( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DRFACT );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_DRFACT );
     return property != null ? property : 0.0;
   }
 
   @Override
   public boolean getVegeta( )
   {
-    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
+    final Boolean vegeta = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VEGETA );
+    if( vegeta == null )
+      return false;
+
+    return vegeta;
   }
 
   @Override
   public boolean getHasWindDrag( )
   {
-    final Boolean property = getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG, Boolean.class );
-    if( property == null )
+    final Boolean hasWindDrag = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_HASWINDDRAG );
+    if( hasWindDrag == null )
       return false;
-    return property;
+
+    return hasWindDrag;
   }
 
   @Override
   public Double getChi( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CHI );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_CHI );
     return property != null ? property : 0.0;
   }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getBeient()
    */
   @Override
   public boolean getBeient( )
   {
-    final Object property = getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_BEIENT );
+    final Object property = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_BEIENT );
     return property != null ? (Boolean) property : false;
   }
 
   @Override
   public boolean getFixedMarshBottom( )
   {
-    return (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM );
+    final Object property = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_FIXEDMARSHBOTTOM );
+    return property != null ? (Boolean) property : false;
   }
-
   @Override
   public Double getAC1( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC1 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC1 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getAC2( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC2 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC2 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getAC3( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC3 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getAC4( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC4 );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_AC4 );
     return property != null ? property : 0.0;
   }
 
   @Override
   public Double getMarshFrictionFactor( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONFACTOR );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONFACTOR );
     return property != null ? property : 20.0;
   }
 
@@ -537,10 +545,9 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getMarshFrictionDistr( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONDISTR );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_MARSHFRICTIONDISTR);
     return property != null ? property : 2;
   }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
@@ -549,15 +556,15 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     try
     {
-      final Feature wrappedFeature = calUnit;
-      final Feature parentFeature = this;// control to link to
+      final Feature wrappedFeature = calUnit.getFeature();
+      final Feature parentFeature = getFeature();// control to link to
       final IPropertyType property = parentFeature.getFeatureType().getProperty( ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
 
-      final GMLWorkspace workspace = calUnit.getWorkspace();
+      final GMLWorkspace workspace = calUnit.getFeature().getWorkspace();
       final URL context = workspace.getContext();
       final File filee = new File( FileLocator.resolve( context ).getFile() );
       final String name = filee.getName();// new java.io.File( uri ).getName();
-      final XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getId(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() ); //$NON-NLS-1$
+      final XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getGmlID(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() ); //$NON-NLS-1$
       parentFeature.setProperty( property, linkedFeature );
     }
     catch( final Exception e )
@@ -584,7 +591,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
       // hacking by getting the feature id and returning
       // the one id the control workspace with the same id
       // this will only work in the same scenario context
-      final Feature resolveLink = FeatureHelper.resolveLink( this, ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
+      final Feature resolveLink = FeatureHelper.resolveLink( this.getFeature(), ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
       if( !(resolveLink instanceof XLinkedFeature_Impl) )
       {
         throw e;
@@ -595,7 +602,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
       {
         throw e;
       }
-      final GMLWorkspace modelWorkspace = model.getWorkspace();
+      final GMLWorkspace modelWorkspace = model.getFeature().getWorkspace();
       final Feature calUnitFeature = modelWorkspace.getFeature( featureId );
       if( calUnitFeature == null )
       {
@@ -612,7 +619,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Double get_P_BOTTOM( )
   {
-    final Double property = (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_P_BOTTOM );
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_P_BOTTOM );
     return property != null ? property : 0.0;
   }
 
@@ -623,7 +630,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String get_RelaxationsFactor( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
 
   // /**
@@ -631,20 +638,20 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   // */
   // public Double get_RelaxationsFactor( )
   // {
-  // return (Double) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
+  // return (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   // }
 
   @Override
   public boolean isSteadySelected( )
   {
-    final Boolean property = (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
+    final Boolean property = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 
   @Override
   public boolean isUnsteadySelected( )
   {
-    final Boolean property = (Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
+    final Boolean property = (Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
   }
 
@@ -663,7 +670,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean calculateSWAN( )
   {
-    final Object swan = getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN );
+    final Object swan = getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN );
     if( swan == null )
       return false;
     return ((Boolean) swan).booleanValue();
@@ -675,21 +682,21 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getVersionSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_VERSION_SWAN );
   }
 
   @Override
   public boolean isRestartAfterSWAN( )
   {
-    // TODO: implement coupled restart, if somebody will really need it... :)
-    // try
-    // {
-    // return ((Boolean) getProperty( ControlModel1D2D.WB1D2DCONTROL_F_RESTART_MODEL_SWAN ));
-    // }
-    // catch( Exception e )
-    // {
-    // return false;
-    // }
+    //TODO: implement coupled restart, if somebody will really need it... :)
+    //    try
+    //    {
+    //      return ((Boolean) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_F_RESTART_MODEL_SWAN ));
+    //    }
+    //    catch( Exception e )
+    //    {
+    //      return false;
+    //    }
     return false;
   }
 
@@ -699,7 +706,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public void setCalculateSWAN( final boolean doCalculateSWAN )
   {
-    setProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN, doCalculateSWAN );
+    getFeature().setProperty( ControlModel1D2D.WB1D2DCONTROL_F_MODEL_SWAN, doCalculateSWAN );
   }
 
   /**
@@ -708,7 +715,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getINITialValuesSWAN( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValues );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValues );
     return property != null ? property : 0;
   }
 
@@ -718,7 +725,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getINITialValuesParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValuesPar );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INITialValuesPar );
   }
 
   /**
@@ -727,7 +734,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public Integer getAlgBoundarySWAN( )
   {
-    final Integer property = (Integer) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_ALG );
+    final Integer property = (Integer) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_SWAN_BOUNDARY_ALG );
     return property != null ? property : 0;
   }
 
@@ -737,7 +744,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isInCartCoordSWAN( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_SWAN_COORD_CART );
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_SWAN_COORD_CART );
     return propertyValue != null ? propertyValue : false;
   }
 
@@ -747,7 +754,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isConstantWindSWAN( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_SWAN_ConstantWind );
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_SWAN_ConstantWind );
     return propertyValue != null ? propertyValue : false;
   }
 
@@ -757,7 +764,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public boolean isWindGEN3SWAN( )
   {
-    final Boolean propertyValue = (Boolean) getProperty( WB1D2DCONTROL_PROP_SWAN_GEN3 );
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_SWAN_GEN3 );
     return propertyValue != null ? propertyValue : false;
   }
 
@@ -767,7 +774,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getConstantWindParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_ConstantWindPar );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_ConstantWindPar );
   }
 
   /**
@@ -776,7 +783,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getAdditionalResultsParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_AdditionalResultsPar );
   }
 
   /**
@@ -785,7 +792,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getAdditionalSimParSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_ADDITIONAL_COMMANDS );
   }
 
   /**
@@ -794,7 +801,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   @Override
   public String getInputFileAdditionalCoordSWAN( )
   {
-    return (String) getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
+    return (String) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_SWAN_INPUT_COORD_FILE );
   }
 
 }

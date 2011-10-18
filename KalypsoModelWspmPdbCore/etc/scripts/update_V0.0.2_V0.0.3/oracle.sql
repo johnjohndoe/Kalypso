@@ -1,11 +1,11 @@
--- Version setzen auf "creating" oder "updating"
+-- Version setzen auf "creating" oder "updateing"
 UPDATE INFO set value='updateing 0.0.2 to 0.0.3'  where key ='Version';
 
 GRANT SELECT ON CROSS_SECTION TO PDB_USER;
 GRANT SELECT ON CROSS_SECTION_PART TO PDB_USER;
 GRANT SELECT ON EVENT TO PDB_USER;
 GRANT SELECT ON INFO TO PDB_USER;
-GRANT SELECT ON POINT TO PDB_USER; 
+GRANT SELECT ON POINT TO PDB_USER;
 GRANT SELECT ON POINT_KIND TO PDB_USER;
 GRANT SELECT ON ROUGHNESS TO PDB_USER;
 GRANT SELECT ON STATE TO PDB_USER;
@@ -47,6 +47,6 @@ INSERT INTO INFO("KEY", "VALUE") VALUES ('srsMinZ', '-1000.0');
 INSERT INTO INFO("KEY", "VALUE") VALUES ('srsMaxZ', '10000.0');
 INSERT INTO INFO("KEY", "VALUE") VALUES ('srsTolZ', '0.0005');
 
--- Version endgÃ¼ltig setzen
+-- Version endgültig setzen
 UPDATE INFO set value='0.0.3'  where key ='Version';
 commit;

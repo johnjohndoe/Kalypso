@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wizards.export2d;
 
@@ -50,13 +50,13 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.kalypso1d2d.internal.bce2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.I2DMeshConverter;
 import org.kalypso.kalypsomodel1d2d.conv.MeshConverterFactory;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -72,7 +72,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
   private final boolean m_exportMiddleNodes;
 
-  public Export2dMeshRunnable( final File exportFile, final String selectedExtension, final boolean exportRoughness, final boolean exportMiddleNodes )
+  public Export2dMeshRunnable( File exportFile, String selectedExtension, boolean exportRoughness, boolean exportMiddleNodes )
   {
     m_exportFile = exportFile;
     m_selectedExtension = selectedExtension;
@@ -81,7 +81,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.wizards.export2d.Export2dMeshRunnable.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
@@ -89,20 +89,20 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
     final IRoughnessClsCollection roughnessModel = m_exportRoughness ? dataProvider.getModel( IRoughnessClsCollection.class ) : null;
-
+     
     try
-    {
-      final I2DMeshConverter converter = MeshConverterFactory.getConverter( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ), m_selectedExtension );
+    {      
+      final I2DMeshConverter converter = ( new MeshConverterFactory()) .getConverter( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ), m_selectedExtension );      
       converter.writeMesh( m_exportFile );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       throw new InvocationTargetException( e );
-    }
-
+    }   
+    
     monitor.done();
-
+    
     return Status.OK_STATUS;
   }
 }

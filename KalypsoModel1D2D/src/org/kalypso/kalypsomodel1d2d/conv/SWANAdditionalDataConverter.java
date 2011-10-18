@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.results.SimpleNodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;

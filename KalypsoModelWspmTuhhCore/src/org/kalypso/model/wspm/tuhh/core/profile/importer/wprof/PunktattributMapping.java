@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * @author Gernot Belger

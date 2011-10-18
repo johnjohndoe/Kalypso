@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -63,7 +62,7 @@ public class DeleteEventOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString( "DeleteEventOperation.0" ), m_name ); //$NON-NLS-1$
+    return String.format( "Delete Event '%s'", m_name );
   }
 
   @Override

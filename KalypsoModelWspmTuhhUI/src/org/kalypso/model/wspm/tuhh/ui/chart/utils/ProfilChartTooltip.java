@@ -46,7 +46,7 @@ import java.util.List;
 
 import org.apache.commons.collections.KeyValue;
 import org.apache.commons.collections.keyvalue.DefaultKeyValue;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Helper for chart layers that formats tooltips in a general way.<br/>

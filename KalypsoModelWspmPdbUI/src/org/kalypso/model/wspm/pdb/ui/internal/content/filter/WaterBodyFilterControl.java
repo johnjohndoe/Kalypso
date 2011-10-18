@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content.filter;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -59,7 +59,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * Helper that allow to search for specific water bodies.
@@ -117,7 +116,7 @@ public class WaterBodyFilterControl extends Composite
   {
     final Text gknField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     gknField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    gknField.setMessage( Messages.getString( "WaterBodyFilterControl_0" ) ); //$NON-NLS-1$
+    gknField.setMessage( "Search Gewässerkennziffer" );
     gknField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( gknField );
@@ -136,7 +135,7 @@ public class WaterBodyFilterControl extends Composite
   {
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    nameField.setMessage( Messages.getString( "WaterBodyFilterControl_1" ) ); //$NON-NLS-1$
+    nameField.setMessage( "Search Name" );
     nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( nameField );

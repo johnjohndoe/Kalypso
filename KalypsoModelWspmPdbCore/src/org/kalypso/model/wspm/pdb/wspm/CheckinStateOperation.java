@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,16 +36,18 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,7 +65,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinStatePdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -77,7 +78,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckinStateOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = Messages.getString( "CheckInEventOperation.0" ); //$NON-NLS-1$
+  private static final String STR_FAILED_TO_WRITE_TO_DATABASE = "Failed to write to database";
 
   private final CheckinStateData m_data;
 
@@ -89,7 +90,7 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "CheckinStateOperation.1" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( "Upload cross sections into database", 100 );
 
     final IProfileFeature[] profiles = findProfiles();
 
@@ -110,13 +111,10 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
 
       final CheckinStatePdbOperation operation = new CheckinStatePdbOperation( gafCodes, coefficients, waterBodies, state, profiles, dbSrs, documentBase, new SubProgressMonitor( monitor, 90 ) );
       new Executor( session, operation ).execute();
-      final IStatus status = operation.getStatus();
 
       session.close();
 
       updateReach( state );
-
-      return status;
     }
     catch( final HibernateException e )
     {
@@ -133,19 +131,21 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     catch( final IOException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "CheckinStateOperation.2" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to initialize GAF codes", e );
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Operation failed", e );
       throw new CoreException( status );
     }
     finally
     {
       monitor.done();
     }
+
+    return Status.OK_STATUS;
   }
 
   /**
@@ -179,5 +179,18 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     }
 
     return profiles.toArray( new IProfileFeature[profiles.size()] );
+  }
+
+  /** Creates the name for the cross section in the database. Uses profile name, or station if name is empty. */
+  public static String createCrossSectionName( final String name, final BigDecimal station )
+  {
+    if( !StringUtils.isEmpty( name ) )
+      return name;
+
+    /* Fall back to station as name */
+    if( station == null )
+      return StringUtils.EMPTY;
+
+    return String.format( "%.4f", station );
   }
 }

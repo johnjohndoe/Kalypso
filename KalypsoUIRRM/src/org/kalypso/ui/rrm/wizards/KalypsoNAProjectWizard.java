@@ -51,8 +51,9 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -404,7 +405,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
         return channels.addNew( IStorageChannel.FEATURE_STORAGE_CHANNEL, fid );
 
       case 3:
-        throw new UnsupportedOperationException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
+        throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
 
       default:
         throw new IllegalArgumentException( String.format( Messages.getString( "KalypsoNAProjectWizard_7" ), channelType ) ); //$NON-NLS-1$

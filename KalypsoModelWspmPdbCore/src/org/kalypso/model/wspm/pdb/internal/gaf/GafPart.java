@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -103,7 +102,7 @@ public class GafPart
     // TODO: we should provide log messages here...
     if( cs.length < 2 )
     {
-      m_stati.add( IStatus.WARNING, Messages.getString( "GafPart_0" ) ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, "Not enough points to create geometry" );
       return createEmptyGeometry( dbType );
     }
 
@@ -140,8 +139,8 @@ public class GafPart
 
   public IStatus getStatus( )
   {
-    final String message = String.format( Messages.getString( "GafPart_1" ), getKind() ); //$NON-NLS-1$
-    final String okMessage = String.format( Messages.getString( "GafPart_2" ), getKind() ); //$NON-NLS-1$
+    final String message = String.format( "Part '%s' has warnings/errors", getKind() );
+    final String okMessage = String.format( "Part '%s': OK", getKind() );
     return m_stati.asMultiStatusOrOK( message, okMessage );
   }
 }

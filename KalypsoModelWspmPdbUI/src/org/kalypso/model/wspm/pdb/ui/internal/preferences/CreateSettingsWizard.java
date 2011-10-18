@@ -45,7 +45,6 @@ import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -77,7 +76,7 @@ class CreateSettingsWizard extends Wizard
 
     m_connectionPage = new SettingsPage( "connection", null ); //$NON-NLS-1$
 
-    setWindowTitle( Messages.getString( "CreateSettingsWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Create New Connection Settings" );
     setNeedsProgressMonitor( true );
 
     addPage( m_typePage );

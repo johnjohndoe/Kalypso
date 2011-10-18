@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -105,7 +106,7 @@ public class GeoLog implements IGeoLog
   @Override
   public void close( )
   {
-    m_statusCollection.getWorkspace().dispose();
+    m_statusCollection.getFeature().getWorkspace().dispose();
   }
 
   /**
@@ -128,7 +129,14 @@ public class GeoLog implements IGeoLog
     final Date now = new Date();
 
     // create status into workspace
-    final IGeoStatus newStatus = m_statusCollection.createGeoStatus( severity, m_pluginId, code, message, t, location, now );
+    final IGeoStatus newStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
+    newStatus.setTime( now );
+    newStatus.setSeverity( severity );
+    newStatus.setMessage( message );
+    newStatus.setCode( code );
+    newStatus.setPlugin( m_pluginId );
+    newStatus.setLocation( location );
+    newStatus.setException( t );
 
     logOthers( now, newStatus );
 
@@ -161,19 +169,28 @@ public class GeoLog implements IGeoLog
   /**
    * (Recursively) adds a new status to the given collection and copies all properties from the given status.
    */
-  private IGeoStatus addAndCloneStatus( final Date time, final IStatus status, final IStatusCollection collection )
+  private IGeoStatus addAndCloneStatus( final Date time, final IStatus status, final IFeatureWrapperCollection<IGeoStatus> collection )
   {
+    final IGeoStatus newStatus = collection.addNew( IGeoStatus.QNAME );
+
     final int severity = status.getSeverity();
+
     final String message = status.getMessage();
     final int code = status.getCode();
     final GM_Object location = status instanceof IGeoStatus ? ((IGeoStatus) status).getLocation() : null;
     final Throwable t = status.getException();
 
-    final IGeoStatus newStatus = m_statusCollection.createGeoStatus( severity, m_pluginId, code, message, t, location, time );
+    newStatus.setTime( time );
+    newStatus.setSeverity( severity );
+    newStatus.setMessage( message );
+    newStatus.setCode( code );
+    newStatus.setPlugin( m_pluginId );
+    newStatus.setLocation( location );
+    newStatus.setException( t );
 
     final IStatus[] children = status.getChildren();
     for( final IStatus child : children )
-      addAndCloneStatus( time, child, collection );
+      addAndCloneStatus( time, child, newStatus );
 
     return newStatus;
   }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -51,13 +51,9 @@ import javax.activation.MimeType;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -69,14 +65,11 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -97,9 +90,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public class CheckinStatePdbOperation implements IPdbOperation
 {
-  static final String STR_FAILED_TO_CONVERT_GEOMETRY = Messages.getString( "CheckinStatePdbOperation.0" ); //$NON-NLS-1$
-
-  private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
+  static final String STR_FAILED_TO_CONVERT_GEOMETRY = "Failed to convert geometry";
 
   private final Map<String, WaterBody> m_waterBodies = new HashMap<String, WaterBody>();
 
@@ -121,8 +112,6 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private final URI m_documentBase;
 
-  private final ClassChecker m_classChecker;
-
   /**
    * @param dbSrs
    *          The coordinate system of the database
@@ -131,15 +120,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
   {
     m_gafCodes = gafCodes;
     m_coefficients = coefficients;
-    m_classChecker = new ClassChecker( profiles );
     m_state = state;
     m_profiles = profiles;
     m_documentBase = documentBase;
 
     for( final WaterBody waterBody : waterBodies )
-    {
       m_waterBodies.put( waterBody.getName(), waterBody );
-    }
 
     m_monitor = monitor;
 
@@ -152,36 +138,27 @@ public class CheckinStatePdbOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "CheckinStateOperation.1" ); //$NON-NLS-1$
+    return "Upload cross sections into database";
   }
 
   @Override
   public void execute( final Session session ) throws PdbConnectException
   {
-    m_monitor.beginTask( Messages.getString( "CheckinStatePdbOperation.2" ), 10 + m_profiles.length ); //$NON-NLS-1$
+    m_monitor.beginTask( "Uploading new state into database", 10 + m_profiles.length );
 
-    m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.3" ) ); //$NON-NLS-1$
+    m_monitor.subTask( "saving state..." );
     Gaf2Db.addState( session, m_state );
     m_monitor.worked( 10 );
 
     for( final IProfileFeature feature : m_profiles )
     {
       final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-      m_monitor.subTask( String.format( Messages.getString( "CheckinStatePdbOperation.4" ), label ) ); //$NON-NLS-1$
+      m_monitor.subTask( String.format( "saving profile '%s'...", label ) );
       uploadProfile( session, feature );
       m_monitor.worked( 1 );
     }
 
-    final IStatus classStatus = m_classChecker.execute();
-    if( !classStatus.isOK() )
-      m_stati.add( classStatus );
-
-    m_monitor.subTask( Messages.getString( "CheckinStatePdbOperation.5" ) ); //$NON-NLS-1$
-  }
-
-  public IStatus getStatus( )
-  {
-    return m_stati.asMultiStatusOrOK( "Warnings occured during check-in" );
+    m_monitor.subTask( "transferring data into database..." );
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException
@@ -203,12 +180,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
     /* Data from profile */
     final BigDecimal station = getStation( feature );
     section.setStation( station );
-    final String name = profil.getName();
+    final String name = CheckinStateOperation.createCrossSectionName( profil.getName(), station );
 
     /* Check for uniqueness of profile name */
     if( !m_sectionNames.addUniqueName( name ) )
     {
-      final String message = String.format( Messages.getString( "CheckinStatePdbOperation.6" ), station, name ); //$NON-NLS-1$
+      final String message = String.format( "Name of profile (station %s) is not unique within the state: %s", station, name );
       throw new PdbConnectException( message );
     }
 
@@ -274,7 +251,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     final Set<CrossSectionPart> parts = new HashSet<CrossSectionPart>();
 
     /* Extract profile line */
-    final CrossSectionPart pPart = builtPart( profil, profilSRS, IWspmConstants.POINT_PROPERTY_HOEHE, IGafConstants.KZ_CATEGORY_PROFILE );
+    final CrossSectionPart pPart = builtPart( profil, profilSRS, new PPPartBuilder( profil ) );
     if( !isBlank( pPart ) )
     {
       parts.add( pPart );
@@ -282,24 +259,22 @@ public class CheckinStatePdbOperation implements IPdbOperation
     }
 
     /* Extract building parts */
-    final CrossSectionPart ukPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_UK );
+    final CrossSectionPart ukPart = builtPart( profil, profilSRS, new UKPartBuilder() );
     if( !isBlank( ukPart ) )
       parts.add( ukPart );
 
-    final CrossSectionPart okPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okPart = builtPart( profil, profilSRS, new OKPartBuilder() );
     if( !isBlank( okPart ) )
       parts.add( okPart );
 
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, new OKPartBuilder() );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
     /* extract extra parts */
     final CrossSectionPart[] additionalParts = createAdditionalParts();
     for( final CrossSectionPart additionalPart : additionalParts )
-    {
       parts.add( additionalPart );
-    }
 
     final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
     for( final CrossSectionPart part : parts )
@@ -320,16 +295,12 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return part.getPoints().isEmpty();
   }
 
-  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final String mainComponentID, final String category ) throws PdbConnectException
+  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID, category, m_classChecker );
-
-    final IStatus result = partOperation.execute();
-    if( !result.isOK() )
-      m_stati.add( result );
-
+    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, partBuilder );
+    partOperation.execute();
     final CrossSectionPart part = partOperation.getPart();
-    part.setCategory( category );
+    part.setCategory( partBuilder.getCategory() );
     return part;
   }
 
@@ -380,12 +351,9 @@ public class CheckinStatePdbOperation implements IPdbOperation
       document.setMimetype( mimeType == null ? null : mimeType.toString() );
       document.setName( asName( uri ) );
       // document.setShotdirection( null );
+      document.setState( m_state );
       // document.setViewangle( null );
-
-      // REMARK: we set state + water body to null here: this is a profile document!
-      // I.e. if the profile is removed, also this document will be destroyed which is ok.
-      document.setState( null );
-      document.setWaterBody( null );
+      document.setWaterBody( section.getWaterBody() );
 
       session.save( document );
     }
@@ -396,7 +364,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     // FIXME: not perfect... but probably unique enough for now
     final String unencoded = URIUtil.toUnencodedString( uri );
     final String filename = FilenameUtils.getName( unencoded );
-    return m_state.getName() + "/" + filename; //$NON-NLS-1$
+    return m_state.getName() + "/" + filename;
   }
 
   /**
