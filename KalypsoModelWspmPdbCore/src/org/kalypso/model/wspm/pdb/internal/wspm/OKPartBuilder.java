@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -50,6 +49,13 @@ import org.kalypso.observation.result.IRecord;
  */
 public class OKPartBuilder implements IPartBuilder
 {
+  private final String m_okComponentID;
+
+  public OKPartBuilder( final String okComponentID )
+  {
+    m_okComponentID = okComponentID;
+  }
+
   @Override
   public String getCategory( )
   {
@@ -59,7 +65,7 @@ public class OKPartBuilder implements IPartBuilder
   @Override
   public String getHeightComponent( )
   {
-    return IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE;
+    return m_okComponentID;
   }
 
   @Override

@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -263,11 +264,13 @@ public class CheckinStatePdbOperation implements IPdbOperation
     if( !isBlank( ukPart ) )
       parts.add( ukPart );
 
-    final CrossSectionPart okPart = builtPart( profil, profilSRS, new OKPartBuilder() );
+    final OKPartBuilder okBridgeBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    final CrossSectionPart okPart = builtPart( profil, profilSRS, okBridgeBuilder );
     if( !isBlank( okPart ) )
       parts.add( okPart );
 
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, new OKPartBuilder() );
+    final OKPartBuilder weirBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, weirBuilder );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
