@@ -51,6 +51,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
@@ -70,6 +71,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -289,10 +291,15 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( connection == null )
       return null;
 
-    final PdbUpdater checker = new PdbUpdater( connection, getSite().getShell() );
+    final Shell shell = getSite().getShell();
+    final PdbUpdater checker = new PdbUpdater( connection, shell );
     final IStatus checkResult = checker.execute();
     if( checkResult.isOK() )
       return connection;
+
+    /* Problem: set status and show dialog */
+    setStatus( checkResult );
+    new StatusDialog( shell, checkResult, "Open Connection" ).open();
 
     PdbUtils.closeQuietly( connection );
     return null;
