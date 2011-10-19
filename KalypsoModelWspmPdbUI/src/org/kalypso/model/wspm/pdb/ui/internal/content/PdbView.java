@@ -294,11 +294,12 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final Shell shell = getSite().getShell();
     final PdbUpdater checker = new PdbUpdater( connection, shell );
     final IStatus checkResult = checker.execute();
+    setStatus( checkResult );
+
     if( checkResult.isOK() )
       return connection;
 
     /* Problem: set status and show dialog */
-    setStatus( checkResult );
     new StatusDialog( shell, checkResult, "Open Connection" ).open();
 
     PdbUtils.closeQuietly( connection );
