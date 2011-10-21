@@ -129,7 +129,7 @@ public class RiskLanduseHelper
       final List<Feature> dataMemberList = (List<Feature>) feature.getProperty( propDataMember );
       for( final Feature featureMember : dataMemberList )
       {
-        final List<String> nameList = ((List<String>) featureMember.getProperty( propName ));
+        final List<String> nameList = (List<String>) featureMember.getProperty( propName );
         if( nameList != null && nameList.size() > 0 )
         {
           if( !nameList.get( 0 ).equals( landuseClassName ) )
@@ -246,7 +246,7 @@ public class RiskLanduseHelper
           final List<Feature> dataMemberList = (List<Feature>) assetFeatureClass.getProperty( propDataMember );
           for( final Feature featureMember : dataMemberList )
           {
-            final List<String> nameList = ((List<String>) featureMember.getProperty( propName ));
+            final List<String> nameList = (List<String>) featureMember.getProperty( propName );
             if( nameList != null && nameList.size() > 0 )
             {
               final String landuseClassName = nameList.get( 0 );
@@ -294,7 +294,7 @@ public class RiskLanduseHelper
           final List<Feature> dataMemberList = (List<Feature>) damageFeatureClass.getProperty( propDataMember );
           for( final Feature featureMember : dataMemberList )
           {
-            final List<String> nameList = ((List<String>) featureMember.getProperty( propName ));
+            final List<String> nameList = (List<String>) featureMember.getProperty( propName );
             if( nameList != null && nameList.size() > 0 )
             {
               final String name = nameList.get( 0 );
