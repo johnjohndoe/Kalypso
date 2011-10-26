@@ -50,6 +50,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.ant.core.AntCorePlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,12 +58,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.commons.tokenreplace.PropertiesStringResolver;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
+import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.util.IRainfallConfigurator;
 import org.kalypso.model.rcm.util.RainfallExtensionUtilities;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.utils.log.GeoStatusLog;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This task generates rainfall for catchment areas.
@@ -181,7 +187,40 @@ public class RainfallGenerationTask extends Task
 
   private void updateRcmGml( IStringResolver variables ) throws CoreException
   {
-    IRainfallConfigurator configurator = RainfallExtensionUtilities.createRainfallConfigurator( RainfallExtensionUtilities.RAINFALL_CONFIGURATOR_ID );
-    configurator.updateRcmGml( m_rcmUrl, variables );
+    try
+    {
+      IRainfallConfigurator configurator = RainfallExtensionUtilities.createRainfallConfigurator( RainfallExtensionUtilities.RAINFALL_CONFIGURATOR_ID );
+      configurator.updateRcmGml( m_rcmUrl, variables );
+    }
+    catch( CoreException ex )
+    {
+      if( m_rcmUrl != null )
+        logMessage( ex );
+
+      throw ex;
+    }
+  }
+
+  private void logMessage( CoreException ex )
+  {
+    try
+    {
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_rcmUrl, null );
+      final IRainfallCatchmentModel rcmModel = (IRainfallCatchmentModel) workspace.getRootFeature();
+      String logPath = rcmModel.getLogPath();
+      URL context = workspace.getContext();
+      URL url = new URL( context, logPath );
+      IFile member = ResourceUtilities.findFileFromURL( url );
+      if( member != null )
+      {
+        GeoStatusLog log = new GeoStatusLog( member.getLocation().toFile() );
+        log.log( ex.getStatus() );
+        log.serialize();
+      }
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }
