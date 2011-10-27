@@ -8,11 +8,8 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public class LengthSectionRunOffLayer extends TupleResultLineLayer
 {
@@ -20,35 +17,28 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionRunOffLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionRunOffLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet)
   {
-    super( provider, data, lineStyle, pointStyle );
+    super( provider, data, styleSet );
 
   }
 
   @Override
   public void paint( final GC gc )
   {
-    if( m_data == null )
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    if( valueData == null )
       return;
 
     final List<Point> path = new ArrayList<Point>();
 
-    m_data.open();
+    valueData.open();
 
-    final Object[] domainValues = m_data.getDomainValues();
-    final Object[] targetValues = m_data.getTargetValues();
+    final Object[] domainValues = valueData.getDomainValues();
+    final Object[] targetValues = valueData.getTargetValues();
 
     if( domainValues.length > 0 && targetValues.length > 0 )
     {
-      final IAxis domainAxis = getDomainAxis();
-      final IAxis targetAxis = getTargetAxis();
-      final IDataOperator dopDomain = domainAxis.getDataOperator( domainAxis.getDataClass() );
-      final IDataOperator dopTarget = targetAxis.getDataOperator( targetAxis.getDataClass() );
-
-      if( dopDomain == null || dopTarget == null )
-        return;
-
       for( int i = 0; i < domainValues.length; i++ )
       {
         final Object domainValue = domainValues[i];
@@ -58,18 +48,18 @@ public class LengthSectionRunOffLayer extends TupleResultLineLayer
         // in that case
         if( domainValue != null && targetValue != null )
         {
-          final Point screen = getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValue ), dopTarget.logicalToNumeric( targetValue ) );
+          final Point screen = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
           path.add( screen );
-          if( i < domainValues.length - 1 && ((Number) targetValue).doubleValue() != ((Number) targetValues[i + 1]).doubleValue() )
+          if( i < domainValues.length - 1 && domainValues[i + 1] != null && targetValues[i + 1] != null )
           {
-            path.add( getCoordinateMapper().numericToScreen( dopDomain.logicalToNumeric( domainValues[i + 1] ), dopTarget.logicalToNumeric( targetValue ) ) );
+            final Point next = getCoordinateMapper().logicalToScreen( domainValues[i + 1], targetValues[i + 1] );
+            if( next.y != screen.y )
+              path.add( new Point( next.x, screen.y ) );
           }
         }
       }
     }
-
-    drawLine( gc, path );
-    drawPoints( gc, path );
+    paint( gc, path.toArray( new Point[] {} ) );
   }
 
 }

@@ -231,7 +231,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
   }
@@ -240,7 +240,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return rangeForComponent( m_valueComponent );
   }

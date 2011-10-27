@@ -13,11 +13,10 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
@@ -27,18 +26,19 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionWeirLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionWeirLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
-    super( provider, data, lineStyle, pointStyle );
+    super( provider, data, styleSet );
 
   }
 
   @Override
   public EditInfo getHover( final Point pos )
   {
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( !isVisible() )
       return null;
-    for( int i = 0; i < m_data.getDomainValues().length; i++ )
+    for( int i = 0; i < valueData.getDomainValues().length; i++ )
     {
       final Rectangle hover = getScreenRect( i );
       if( hover != null && hover.contains( pos ) )
@@ -50,7 +50,8 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   @Override
   protected final String getTooltip( final int index )
   {
-    final TupleResult tr = m_data.getObservation().getResult();
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    final TupleResult tr = valueData.getObservation().getResult();
     final IRecord rec = tr.get( index );
     final int targetOKComponentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK );
     final int commentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT );
@@ -65,15 +66,16 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
   @Override
   public void paint( final GC gc )
   {
-    if( m_data == null )
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    if( valueData == null )
       return;
-    m_data.open();
+    valueData.open();
 
-    final PointFigure pf = getPointFigure();
-    final IPointStyle ps = pf.getStyle();
+    final IPointStyle ps = getPointStyle();
+
     final FullRectangleFigure rf = new FullRectangleFigure();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
-    for( int i = 0; i < m_data.getObservation().getResult().size(); i++ )
+    for( int i = 0; i < valueData.getObservation().getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
       if( rect != null )
@@ -86,7 +88,8 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
 
   private Rectangle getScreenRect( final int i )
   {
-    final TupleResult result = m_data.getObservation().getResult();
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    final TupleResult result = valueData.getObservation().getResult();
     final IRecord record = result.get( i );
     final Double oK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK, record );
     final Double sT = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );

@@ -109,7 +109,8 @@ public class VerticalLineLayer extends AbstractLineLayer
       final Integer yMin = targetAxis.numericToScreen( numericRange.getMin() );
       final Integer yMax = targetAxis.numericToScreen( numericRange.getMax() );
 
-      final PolylineFigure polylineFigure = getPolylineFigure();
+      final PolylineFigure polylineFigure = new PolylineFigure();
+      polylineFigure.setStyle( (ILineStyle) getStyleSet().getStyle( "line_style" ) );
       polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
       polylineFigure.paint( gc );
     }
@@ -119,7 +120,7 @@ public class VerticalLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     return new DataRange<Number>( m_points[0].doubleValue() - 0.1, m_points[0].doubleValue() + 0.1 );
   }
