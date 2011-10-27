@@ -119,7 +119,7 @@ public class KingLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     final BigDecimal width = m_data.getKingRelation().getWidth();
     final BigDecimal widthStorage = m_data.getKingRelation().getWidthStorage();
@@ -163,7 +163,7 @@ public class KingLayer extends AbstractChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> range )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > range )
   {
     // TODO Auto-generated method stub
     return null;

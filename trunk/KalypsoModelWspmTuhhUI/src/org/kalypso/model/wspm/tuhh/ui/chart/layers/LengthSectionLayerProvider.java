@@ -44,19 +44,16 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider;
 
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Gernot Belger
  */
-public class LengthSectionLayerProvider extends AbstractLayerProvider
+public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
 {
   // FIXME: bad design!
   // There should be exactly one layer provider per layer implementation
@@ -67,44 +64,25 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final IParameterContainer parameterContainer = getParameterContainer();
-
-    final String targetComponentName = parameterContainer.getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
     final IStyleSet styleSet = getStyleSet();
+    final String layerId = getId();
 
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK.equals( targetComponentName ) )
-      return new LengthSectionBridgeLayer( this, getDataContainer(), styleSet.getStyle( "line", ILineStyle.class ), styleSet.getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( "Bridge".equals( layerId ) )
+      return new LengthSectionBridgeLayer( this, getDataContainer(), styleSet );
 
-    // FIXME: still used in this way?
-    if( IWspmConstants.LENGTH_SECTION_THEME_BUILDINGS.equals( targetComponentName ) )
-    {
-      final String buildingType = parameterContainer.getParameterValue( "buildingType", null ); //$NON-NLS-1$
-      final ILineStyle lineStyle = styleSet.getStyle( "buildingLine", ILineStyle.class ); //$NON-NLS-1$
-      final IPointStyle pointStyle = styleSet.getStyle( "buildingPoint", IPointStyle.class ); //$NON-NLS-1$
+    if( "Weir".equals( layerId ) )
+      return new LengthSectionWeirLayer( this, getDataContainer(), styleSet );
 
-      if( "bridge".equals( buildingType ) ) //$NON-NLS-1$
-        return new LengthSectionBridgeLayer( this, getDataContainer( parameterContainer, IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK ), lineStyle, pointStyle );
-      if( "weir".equals( buildingType ) ) //$NON-NLS-1$
-        return new LengthSectionWeirLayer( this, getDataContainer( parameterContainer, IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK ), lineStyle, pointStyle );
-      if( "culvert".equals( buildingType ) )//$NON-NLS-1$
-        return new LengthSectionCulvertLayer( this, getDataContainer( parameterContainer, IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN ), lineStyle, pointStyle );
+    if( "Culvert".equals( layerId ) )
+      return new LengthSectionCulvertLayer( this, getDataContainer(), styleSet );
 
-      throw new IllegalStateException( "Unknown building type: " + buildingType );//$NON-NLS-1$
-    }
+    if( "runOff".equals( layerId ) )
+      return new LengthSectionRunOffLayer( this, getDataContainer(), styleSet );
 
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_WEIR_OK.equals( targetComponentName ) )
-      return new LengthSectionWeirLayer( this, getDataContainer(), styleSet.getStyle( "line", ILineStyle.class ), styleSet.getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( "soil".equals( layerId ) )
+      return new LengthSectionSoilLayer( this, getDataContainer(), styleSet );
 
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN.equals( targetComponentName ) )
-      return new LengthSectionCulvertLayer( this, getDataContainer(), styleSet.getStyle( "line", ILineStyle.class ), styleSet.getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF.equals( targetComponentName ) )
-      return new LengthSectionRunOffLayer( this, getDataContainer(), styleSet.getStyle( "line", ILineStyle.class ), styleSet.getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    if( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND.equals( targetComponentName ) )
-      return new LengthSectionSoilLayer( this, getDataContainer(), styleSet.getStyle( "line", ILineStyle.class ), styleSet.getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return new TupleResultLineLayer( this, getDataContainer(), styleSet.getStyle( "line", ILineStyle.class ), styleSet.getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new TupleResultLineLayer( this, getDataContainer(), styleSet );
   }
 
   /**

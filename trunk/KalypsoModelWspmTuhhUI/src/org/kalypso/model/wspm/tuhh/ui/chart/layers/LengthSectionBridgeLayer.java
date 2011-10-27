@@ -15,41 +15,42 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
-  public LengthSectionBridgeLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionBridgeLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
-    super( provider, data, lineStyle, pointStyle );
+    super( provider, data, styleSet );
   }
 
   @Override
   public void paint( final GC gc )
   {
-    if( m_data == null )
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    if( valueData == null )
       return;
 
-    m_data.open();
-    final IObservation<TupleResult> obs = m_data.getObservation();
+    valueData.open();
+    final IObservation<TupleResult> obs = valueData.getObservation();
     if( obs == null )
       return;
-    final PointFigure pf = getPointFigure();
-    final IPointStyle ps = pf.getStyle();
     final FullRectangleFigure rf = new FullRectangleFigure();
+    final IPointStyle ps = getPointStyle();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
     for( int i = 0; i < obs.getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
       if( rect != null )
       {
+        if( rect.width < 1 )
+          rect.width = 1;
         rf.setRectangle( rect );
         rf.paint( gc );
       }
@@ -59,7 +60,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   @Override
   protected final String getTooltip( final int index )
   {
-    final TupleResult tr = m_data.getObservation().getResult();
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    final TupleResult tr = valueData.getObservation().getResult();
     final IRecord rec = tr.get( index );
 
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
@@ -96,9 +98,10 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( !isVisible() )
       return null;
-    for( int i = 0; i < m_data.getDomainValues().length; i++ )
+    for( int i = 0; i < valueData.getDomainValues().length; i++ )
     {
       final Rectangle hover = getScreenRect( i );
       if( hover != null && hover.contains( pos ) )
@@ -109,7 +112,8 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
 
   private Rectangle getScreenRect( final int i )
   {
-    final TupleResult result = m_data.getObservation().getResult();
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    final TupleResult result = valueData.getObservation().getResult();
     final IRecord record = result.get( i );
 
     final Double uK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );

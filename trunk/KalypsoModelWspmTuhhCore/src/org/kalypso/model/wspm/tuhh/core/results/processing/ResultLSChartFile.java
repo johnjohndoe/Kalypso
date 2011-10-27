@@ -43,8 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.results.processing;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.lang.Objects;
@@ -55,14 +53,10 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
-import de.openali.odysseus.chart.factory.layer.Layers;
-import de.openali.odysseus.chart.factory.provider.Providers;
 import de.openali.odysseus.chartconfig.x020.AlignmentType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
 import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.LayerType;
-import de.openali.odysseus.chartconfig.x020.ProviderType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
@@ -73,6 +67,10 @@ public class ResultLSChartFile extends AbstractResultLSFile
   static final String TOKEN_GMLFILENAME = "%GMLFILENAME%"; //$NON-NLS-1$
 
   static final String TOKEN_ROOT_ID = "%ROOT_ID%"; //$NON-NLS-1$
+
+  static final String TOKEN_MODELL_GML = "%MODELL_GML%"; //$NON-NLS-1$
+
+  static final String TOKEN_MODELL_OBS_ID = "%MODELL_OBS_ID%"; //$NON-NLS-1$
 
   private final String m_dataFilename;
 
@@ -124,6 +122,9 @@ public class ResultLSChartFile extends AbstractResultLSFile
     final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" ); //$NON-NLS-1$
     String kodContentReplaced = kodContent.replaceAll( TOKEN_GMLFILENAME, m_dataFilename );
     kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_ROOT_ID, m_rootId );
+    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_GML, "./../../../modell.gml" );
+    final Feature fixation = getWaterLevelFixationMember();
+    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_OBS_ID, Objects.isNull( fixation ) ? "" : fixation.getId() );
 
     final InputStream inputStream = IOUtils.toInputStream( kodContentReplaced, "UTF-8" ); //$NON-NLS-1$
     final ChartConfigurationLoader ccl = new ChartConfigurationLoader( inputStream );
@@ -139,29 +140,29 @@ public class ResultLSChartFile extends AbstractResultLSFile
     t1.setStringValue( String.format( Messages.getString( "ResultLengthSection.2" ), m_chartTitle ) ); //$NON-NLS-1$
     chart.setTitleArray( new TitleType[] { t1 } ); //$NON-NLS-1$
 
-    updateFixationLayer( chart );
+    // updateFixationLayer( chart );
     updateAxes( chart );
 
     ccl.getChartConfigurationDocument().save( outputFile );
   }
 
-  private void updateFixationLayer( final ChartType chart )
-  {
-    final LayerType[] layers = findFixationLayers( chart );
-
-    final Feature fixation = getWaterLevelFixationMember();
-
-    for( final LayerType layer : layers )
-    {
-      if( Objects.isNull( fixation ) )
-        Layers.remove( chart.getLayers(), layer );
-      else
-      {
-        final ProviderType provider = layer.getProvider();
-        Providers.updateParameter( provider, "observationId", fixation.getId() ); //$NON-NLS-1$
-      }
-    }
-  }
+//  private void updateFixationLayer( final ChartType chart )
+//  {
+//    final LayerType[] layers = findFixationLayers( chart );
+//
+//    final Feature fixation = getWaterLevelFixationMember();
+//
+//    for( final LayerType layer : layers )
+//    {
+//      if( Objects.isNull( fixation ) )
+//        Layers.remove( chart.getLayers(), layer );
+//      else
+//      {
+//        final ProviderType provider = layer.getProvider();
+//        Providers.updateParameter( provider, "observationId", fixation.getId() ); //$NON-NLS-1$
+//      }
+//    }
+//  }
 
   private Feature getWaterLevelFixationMember( )
   {
@@ -172,21 +173,21 @@ public class ResultLSChartFile extends AbstractResultLSFile
     return calc.getLinkedWaterLevelFixation();
   }
 
-  private LayerType[] findFixationLayers( final ChartType chart )
-  {
-    final Set<LayerType> found = new LinkedHashSet<LayerType>();
-
-    final LayerType[] layers = chart.getLayers().getLayerArray();
-    for( final LayerType layer : layers )
-    {
-      if( "WspFixation".equals( layer.getId() ) ) //$NON-NLS-1$
-      {
-        found.add( layer );
-      }
-    }
-
-    return found.toArray( new LayerType[] {} );
-  }
+//  private LayerType[] findFixationLayers( final ChartType chart )
+//  {
+//    final Set<LayerType> found = new LinkedHashSet<LayerType>();
+//
+//    final LayerType[] layers = chart.getLayers().getLayerArray();
+//    for( final LayerType layer : layers )
+//    {
+//      if( "WspFixation".equals( layer.getId() ) ) //$NON-NLS-1$
+//      {
+//        found.add( layer );
+//      }
+//    }
+//
+//    return found.toArray( new LayerType[] {} );
+//  }
 
   private void updateAxes( final ChartType chart )
   {

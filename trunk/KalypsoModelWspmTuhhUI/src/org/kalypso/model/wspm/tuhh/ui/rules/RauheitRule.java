@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -75,7 +74,7 @@ public class RauheitRule extends AbstractValidatorRule
     final IComponent propertyClazz = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
     if( Objects.allNull( pointPropKS, pointPropKST, propertyClazz ) )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, "", new DelRoughnessResolution( new String[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST }, null ) ); //$NON-NLS-1$//$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, ""); //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 

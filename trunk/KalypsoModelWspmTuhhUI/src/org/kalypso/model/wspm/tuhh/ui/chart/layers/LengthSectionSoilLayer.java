@@ -9,8 +9,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public class LengthSectionSoilLayer extends TupleResultLineLayer
 {
@@ -18,16 +17,16 @@ public class LengthSectionSoilLayer extends TupleResultLineLayer
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
    */
 
-  public LengthSectionSoilLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public LengthSectionSoilLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet)
   {
-
-    super( provider, data, lineStyle, pointStyle );
+    super( provider, data,styleSet );
   }
 
   @Override
   protected final String getTooltip( final int index )
   {
-    final TupleResult tr = m_data.getObservation().getResult();
+    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
+    final TupleResult tr = valueData.getObservation().getResult();
     final IRecord rec = tr.get( index );
     final int soilIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
     final int commentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT );
@@ -36,10 +35,12 @@ public class LengthSectionSoilLayer extends TupleResultLineLayer
     final String stationComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( stationIndex ) );
     final Double dn = ProfilUtil.getDoubleValueFor( soilIndex, rec );
     final Double ds = ProfilUtil.getDoubleValueFor( stationIndex, rec );
-    final Object s = rec.getValue( commentIndex );
-    if( s == null )
-      return String.format( "%-12s %.4f%n%-12s %.4f", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn } );//$NON-NLS-1$
-    return String.format( "%-12s %.4f%n%-12s %.4f%n%s", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn, s } );//$NON-NLS-1$
+    if( commentIndex > 0 && rec.getValue( commentIndex ) != null )
+    {
+      return String.format( "%-12s %.4f%n%-12s %.4f%n%s", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn, rec.getValue( commentIndex ) } );//$NON-NLS-1$
+
+    }
+    return String.format( "%-12s %.4f%n%-12s %.4f", new Object[] { stationComponentLabel, ds, targetOKComponentLabel, dn } );//$NON-NLS-1$
 
   }
 
