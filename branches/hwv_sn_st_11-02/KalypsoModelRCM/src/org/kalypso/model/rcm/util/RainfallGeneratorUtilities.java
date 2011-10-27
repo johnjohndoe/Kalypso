@@ -203,7 +203,8 @@ public final class RainfallGeneratorUtilities
     final MetadataList metadata = new MetadataList();
     // TODO: copy other properties as well?
     final String timestep = firstMetadataList.getProperty( MetadataHelper.MD_TIMESTEP );
-    metadata.setProperty( MetadataHelper.MD_TIMESTEP, timestep );
+    if( timestep != null )
+      metadata.setProperty( MetadataHelper.MD_TIMESTEP, timestep );
 
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
