@@ -213,7 +213,7 @@ public final class RainfallGeneratorUtilities
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();
   }
 
-  private static String findTimeStep( IObservation[] observations )
+  public static String findTimeStep( IObservation[] observations )
   {
     /* A bit of a hack: Search all observations for a valid timestep. */
     for( IObservation observation : observations )
