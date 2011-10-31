@@ -53,8 +53,6 @@ public class FloodModel extends UnversionedModel implements IFloodModel
 {
   private final FeatureWrapperCollection<IFloodPolygon> m_polygones;
 
-  private final ICoverageCollection m_coverages;
-
   private final FeatureWrapperCollection<IRunoffEvent> m_events;
 
   public FloodModel( final Feature featureToBind )
@@ -63,9 +61,6 @@ public class FloodModel extends UnversionedModel implements IFloodModel
 
     m_polygones = new FeatureWrapperCollection<IFloodPolygon>( featureToBind, IFloodPolygon.class, QNAME_PROP_POLYGONE_MEMBER );
     m_events = new FeatureWrapperCollection<IRunoffEvent>( featureToBind, IRunoffEvent.class, QNAME_PROP_EVENT_MEMBER );
-
-    final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_COVERAGES_MEMBER );
-    m_coverages = (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }
 
   /**
@@ -83,7 +78,12 @@ public class FloodModel extends UnversionedModel implements IFloodModel
   @Override
   public ICoverageCollection getTerrainModel( )
   {
-    return m_coverages;
+    final Feature coveragesFeature = (Feature) getFeature().getProperty( QNAME_PROP_COVERAGES_MEMBER );
+    if( coveragesFeature != null )
+    {
+      return (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
+    }
+    return null;
   }
 
   /**
