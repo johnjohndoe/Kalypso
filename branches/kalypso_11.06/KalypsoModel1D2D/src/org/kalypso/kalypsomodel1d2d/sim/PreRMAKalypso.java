@@ -29,9 +29,9 @@ import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter;
 import org.kalypso.kalypsomodel1d2d.conv.wind.RMA10WindDataWriter;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
@@ -47,7 +47,6 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -122,7 +121,7 @@ public class PreRMAKalypso implements ISimulation
       final URL controlUrl = (URL) inputProvider.getInputForID( INPUT_CONTROL );
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlUrl, null );
       final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
-      final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
+      final IControlModel1D2DCollection controlModel1d2dCollection = controlModelGroup.getModel1D2DCollection();
 
       IFEDiscretisationModel1d2d discretisationModel = null;
       try
@@ -141,17 +140,19 @@ public class PreRMAKalypso implements ISimulation
       }
 
       // specified calculation unit overrides control model calc unit
+      IControlModel1D2D controlModel = controlModel1d2dCollection.getActiveControlModel();
       ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
       if( inputProvider.hasID( INPUT_CALCULATION_UNIT_ID ) )
       {
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
-        if( calculationUnit instanceof ICalculationUnit1D2D )
+        for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection )
         {
-          final IFeatureWrapperCollection<ICalculationUnit> changedSubUnits = ((ICalculationUnit1D2D) calculationUnit).getChangedSubUnits();
-          for( final ICalculationUnit subUnit : changedSubUnits )
+          final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
+          if( existingCalculationUnit.getGmlID().equals( calcUnitID ) )
           {
-            if( subUnit.getGmlID().equals( calcUnitID ) )
-              calculationUnit = subUnit;
+            controlModel = existingControlModel;
+            calculationUnit = existingControlModel.getCalculationUnit();
+            break;
           }
         }
       }
@@ -173,19 +174,22 @@ public class PreRMAKalypso implements ISimulation
       }
 
       IRoughnessClsCollection roughnessModel = null;
-      try{
+      try
+      {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
       }
-      catch (Exception e) {
+      catch( Exception e )
+      {
         // TODO: handle exception
       }
-      if( roughnessModel == null ){
+      if( roughnessModel == null )
+      {
         final URL roughnessURL = (URL) inputProvider.getInputForID( INPUT_ROUGHNESS );
         final GMLWorkspace roughnessWorkspace = GmlSerializer.createGMLWorkspace( roughnessURL, null );
         roughnessModel = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
       }
-      
+
       IWindModel windModel = null;
       try
       {
@@ -233,7 +237,7 @@ public class PreRMAKalypso implements ISimulation
     }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString("PreRMAKalypso.1"), e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "PreRMAKalypso.1" ), e ); //$NON-NLS-1$
     }
     finally
     {
