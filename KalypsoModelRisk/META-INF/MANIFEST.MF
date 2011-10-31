@@ -7,17 +7,16 @@ Bundle-Activator: org.kalypso.risk.plugin.KalypsoRiskPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.ui.addlayer,
- org.kalypso.afgui,
  org.kalypso.ModelSimulationBase,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.ui,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
  org.kalypso.project.database.client,
- org.kalypso.module,
  org.junit;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.risk.extension,
+ org.kalypso.risk.i18n,
  org.kalypso.risk.model.actions.dataImport.waterdepth,
  org.kalypso.risk.model.operation,
  org.kalypso.risk.model.schema,
@@ -25,5 +24,6 @@ Export-Package: org.kalypso.risk.extension,
  org.kalypso.risk.model.simulation,
  org.kalypso.risk.model.utils,
  org.kalypso.risk.plugin,
+ org.kalypso.risk.preferences,
  org.kalypso.risk.widget
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
