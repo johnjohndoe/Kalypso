@@ -138,7 +138,8 @@ public class PostRMAKalypso implements ISimulation
         // this is where the name of the result folder is actually set
         final ICalcUnitResultMeta calcUnitMeta = processingOperation.getCalcUnitMeta();
         final String calcUnitId = calcUnitMeta.getCalcUnit();
-        final String[] lResultsToRemove = processingOperation.getOriginalStepsToDelete();
+        // TODO this causes a problem if called with an uninitialized workspace
+        final String[] lResultsToRemove = {}; // processingOperation.getOriginalStepsToDelete();
 
         final File unitFolder = new File( tmpdir, "results/" + calcUnitId ); //$NON-NLS-1$
         final ResultManagerOperation dataOperation = new ResultManagerOperation( resultManager, unitFolder, Status.OK_STATUS, processingOperation.getOutputDir(), calcUnitMeta, lResultsToRemove );
