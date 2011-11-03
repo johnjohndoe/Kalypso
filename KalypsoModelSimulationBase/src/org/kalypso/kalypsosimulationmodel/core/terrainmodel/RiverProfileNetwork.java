@@ -40,23 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
  */
-public class RiverProfileNetwork extends Feature_Impl implements IRiverProfileNetwork
+public class RiverProfileNetwork extends FeatureWrapperCollection<IProfileFeature> implements IRiverProfileNetwork
 {
-  final IFeatureBindingCollection<IProfileFeature> m_profiles = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_PROP_RIVER_PROFILE );
-
-  public RiverProfileNetwork( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RiverProfileNetwork( final Feature feature )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( feature, IProfileFeature.class, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
   }
 
   /**
@@ -79,9 +74,4 @@ public class RiverProfileNetwork extends Feature_Impl implements IRiverProfileNe
     return null;
   }
 
-  @Override
-  public IFeatureBindingCollection<IProfileFeature> getProfiles( )
-  {
-    return m_profiles;
-  }
 }

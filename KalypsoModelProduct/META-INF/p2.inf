@@ -1,3 +1,0 @@
-instructions.configure=\
-  addRepository(type:0,name:Kalypso,location:http${#58}//netcologne.dl.sourceforge.net/project/kalypso/Kalypso/update-site/stable/);\
-  addRepository(type:1,,name:Kalypso,location:http${#58}//netcologne.dl.sourceforge.net/project/kalypso/Kalypso/update-site/stable/);

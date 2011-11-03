@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,9 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
-
-import java.io.IOException;
 
 import junit.framework.TestCase;
 
@@ -56,31 +54,40 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class TestASCTerrainElevationProvider extends TestCase
 {
-  public void testLoadSmallAscFile( ) throws IllegalArgumentException, IOException
+
+  public void testLoadSmallAscFile( )
   {
-    final ASCTerrainElevationModel ascModel = new ASCTerrainElevationModel( TestWorkspaces.URL_SMALL_ASC );
-
-    for( int i = 0; i < 10; i++ )
+    try
     {
-      for( int j = 0; j < 10; j++ )
-      {
-        final double jFlip = 9 - j;
-        final double x = 5 * i + 1 + 13;
-        final double y = 5 * jFlip + 1 + 154;
-        if( i == j )
-        {
-          final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-          final double ele = ascModel.getElevation( curPoint );
-          assertEquals( "i=" + i + " j=" + j + "jFlip" + jFlip + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      final ASCTerrainElevationModel ascModel = new ASCTerrainElevationModel( TestWorkspaces.URL_SMALL_ASC );
 
-        }
-        else
+      for( int i = 0; i < 10; i++ )
+      {
+        for( int j = 0; j < 10; j++ )
         {
-          final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
-          final double ele = ascModel.getElevation( curPoint );
-          assertEquals( "i=" + i + " j=" + j + "jFlip" + (9 - j) + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          final double jFlip = 9 - j;
+          final double x = 5 * i + 1 + 13;
+          final double y = 5 * jFlip + 1 + 154;
+          if( i == j )
+          {
+            final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+            final double ele = ascModel.getElevation( curPoint );
+            assertEquals( "i=" + i + " j=" + j + "jFlip" + jFlip + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+          }
+          else
+          {
+            final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+            final double ele = ascModel.getElevation( curPoint );
+            assertEquals( "i=" + i + " j=" + j + "jFlip" + (9 - j) + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+          }
         }
       }
+
+    }
+    catch( final Throwable th )
+    {
+      fail( TestUtils.getStackTraceAsString( th ) );
     }
   }
 }

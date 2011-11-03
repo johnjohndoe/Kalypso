@@ -44,36 +44,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.afgui.model.IModel;
-import org.kalypso.afgui.model.UnversionedModel;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
  */
-public class FlowRelationshipModel extends UnversionedModel implements IFlowRelationshipModel
+public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelationship> implements IFlowRelationshipModel
 {
-  private IFeatureBindingCollection<IFlowRelationship> m_flowRelationsShips = new FeatureBindingCollection<IFlowRelationship>( this, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
-
-  public FlowRelationshipModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FlowRelationshipModel( final Feature featureCol )
   {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-  
-  @Override
-  public IFeatureBindingCollection<IFlowRelationship> getFlowRelationsShips( )
-  {
-    return m_flowRelationsShips;
+    super( featureCol, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
   }
 
   /**
@@ -179,7 +166,7 @@ public class FlowRelationshipModel extends UnversionedModel implements IFlowRela
   // ATTENTION: this method returns possibly MUCH more features than expected
   private List<Feature> findFeatures( final GM_Position position, final double searchRectWidth )
   {
-    final FeatureList nodeList = m_flowRelationsShips.getFeatureList();
+    final FeatureList nodeList = getWrappedList();
     final double posX = position.getX();
     final double posY = position.getY();
     final double searchWidthHalf = searchRectWidth / 2;
@@ -189,5 +176,14 @@ public class FlowRelationshipModel extends UnversionedModel implements IFlowRela
     final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos, null );
 
     return nodeList.query( reqEnvelope, null );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.modeling.IModel#getVersion()
+   */
+  @Override
+  public String getVersion( )
+  {
+    return IModel.NO_VERSION;
   }
 }

@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * Default implementation for {@link ITerrainElevationModel}
@@ -51,12 +52,11 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * @author Madanagopal
  * 
  */
-public abstract class TerrainElevationModel extends Feature_Impl implements ITerrainElevationModel
+public abstract class TerrainElevationModel extends AbstractFeatureBinder implements ITerrainElevationModel
 {
-
-  public TerrainElevationModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public TerrainElevationModel( final Feature featureToBind, final QName qNameToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qNameToBind );
   }
 
 }

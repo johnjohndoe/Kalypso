@@ -2,7 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.util.List;
 
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -12,7 +12,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  */
-public interface IRoughnessPolygonCollection extends IFeatureBindingCollection<IRoughnessPolygon>
+public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<IRoughnessPolygon>
 {
   /**
    * Selects all roughness polygons containing this point. Since the point may be on the border, there might be several

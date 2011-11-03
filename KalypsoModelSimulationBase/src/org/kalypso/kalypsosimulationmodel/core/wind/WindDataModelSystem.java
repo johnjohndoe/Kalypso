@@ -43,16 +43,14 @@ package org.kalypso.kalypsosimulationmodel.core.wind;
 import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.Util;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -60,58 +58,109 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author ig
  */
-public class WindDataModelSystem extends Feature_Impl implements IWindDataModelSystem
+public class WindDataModelSystem extends AbstractFeatureBinder implements IWindDataModelSystem
 {
-  public WindDataModelSystem( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  private GM_Point m_gmPointOrigin;
 
-  private final IFeatureBindingCollection<IWindDataModel> m_windModels = new FeatureBindingCollection<IWindDataModel>( this, IWindDataModel.class, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_MODEL );
+  private double m_doubleCellXLen;
+
+  private double m_doubleCellYLen;
+
+  private int m_intColumns;
+
+  private int m_intRows;
+
+  private Integer m_intOrder = -1;
+
+  private String m_strCrs;
+
+  private final IFeatureWrapperCollection<IWindDataModel> m_windModels;
 
   private RectifiedGridDomain m_gridDescriptor;
+
+
+  /**
+   * Creates a {@link WindDataModelSystem} object binding the given feature. the given feature must be substitutable to
+   * simBase:WindDataModelSystem
+   * 
+   * @throws IllegalArgumentException
+   *           if featureToBind is null or not substitutable to simBase:WindDataModel
+   */
+  public WindDataModelSystem( final Feature featureToBind ) throws IllegalArgumentException
+  {
+    super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS );
+    m_windModels = new FeatureWrapperCollection<IWindDataModel>( featureToBind, IWindDataModel.class, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_MODEL );
+    try
+    {
+
+      m_strCrs = (String) featureToBind.getProperty( QNAME_PROP_CRS );
+
+      Double lDoubleOriginX = (Double) featureToBind.getProperty( QNAME_PROP_ORIGIN_X );
+      Double lDoubleOriginY = (Double) featureToBind.getProperty( QNAME_PROP_ORIGIN_Y );
+
+      m_gmPointOrigin = GeometryFactory.createGM_Point( lDoubleOriginX, lDoubleOriginY, m_strCrs );
+
+      m_doubleCellXLen = (Double) featureToBind.getProperty( QNAME_PROP_CELL_X_LEN );
+
+      m_doubleCellYLen = (Double) featureToBind.getProperty( QNAME_PROP_CELL_Y_LEN );
+
+      m_intColumns = (Integer) featureToBind.getProperty( QNAME_PROP_COLUMNS );
+
+      m_intRows = (Integer) featureToBind.getProperty( QNAME_PROP_ROWS );
+
+      m_intOrder = (Integer) featureToBind.getProperty( QNAME_PROP_ORDER );
+    }
+    catch( Exception e )
+    {
+    }
+  }
+
+  public WindDataModelSystem( final IWindModel pWindModel, final RectifiedGridDomain pGridDescriptor, final String strModelSystemName, final String strFileDescription ) throws Exception
+  {
+    this( createWindSystemForWindModel( pWindModel, pGridDescriptor, strModelSystemName, strFileDescription ) );
+  }
 
   /**
    * Creates or return a new feature for the given wind model
    */
-  public static final IWindDataModelSystem createWindSystemForWindModel( final IWindModel pWindModel, final RectifiedGridDomain pGridDescriptor, final String strModelSystemName, final String strFileDescription ) throws Exception
+  private static final Feature createWindSystemForWindModel( final IWindModel pWindModel, final RectifiedGridDomain pGridDescriptor, final String strModelSystemName, final String strFileDescription ) throws Exception
   {
     String lStrCoordinateSystem = pGridDescriptor.getCoordinateSystem();
     Double lDoubleOriginX = pGridDescriptor.getOrigin( lStrCoordinateSystem ).getPosition().getX();
     Double lDoubleOriginY = pGridDescriptor.getOrigin( lStrCoordinateSystem ).getPosition().getY();
 
-    final Feature parentFeature = pWindModel;
+    final Feature parentFeature = pWindModel.getFeature();
 
-    final IFeatureBindingCollection<IWindDataModelSystem> lWindDataModelSystem = pWindModel.getWindDataModelSystems();
+    final IFeatureWrapperCollection<IWindDataModelSystem> lWindDataModelSystem = pWindModel.getWindDataModelSystems();
     int lIntOrder = lWindDataModelSystem.size();
     Feature lFeature = null;
     try
     {
-      lFeature = lWindDataModelSystem.getParentFeature();
+      lFeature = lWindDataModelSystem.getFeature();
     }
     catch( Exception e )
     {
     }
     if( lFeature != null && lFeature.getName().equalsIgnoreCase( strModelSystemName ) )
     {
-      return (IWindDataModelSystem) lFeature;
+      return lFeature;
     }
     else
     {
-      lFeature = Util.createFeatureAsProperty( parentFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_WIND_ELE_SYS, SIM_BASE_F_WIND_ELE_SYS, new Object[] {
+      lFeature = Util.createFeatureAsProperty( parentFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS, new Object[] {
           lDoubleOriginX, lDoubleOriginY, pGridDescriptor.getNumColumns(), pGridDescriptor.getNumRows(), pGridDescriptor.getOffsetX( lStrCoordinateSystem ),
-          pGridDescriptor.getOffsetY( lStrCoordinateSystem ), lStrCoordinateSystem, strFileDescription, lIntOrder }, new QName[] { QNAME_PROP_ORIGIN_X, QNAME_PROP_ORIGIN_Y, QNAME_PROP_COLUMNS,
-          QNAME_PROP_ROWS, QNAME_PROP_CELL_X_LEN, QNAME_PROP_CELL_Y_LEN, QNAME_PROP_CRS, Feature.QN_DESCRIPTION, QNAME_PROP_ORDER } );
+          pGridDescriptor.getOffsetY( lStrCoordinateSystem ), lStrCoordinateSystem, strFileDescription, lIntOrder }, new QName[] { QNAME_PROP_ORIGIN_X, QNAME_PROP_ORIGIN_Y, QNAME_PROP_COLUMNS, QNAME_PROP_ROWS,
+          QNAME_PROP_CELL_X_LEN, QNAME_PROP_CELL_Y_LEN, QNAME_PROP_CRS, Feature.QN_DESCRIPTION, QNAME_PROP_ORDER } );
       FeatureHelper.addProperty( lFeature, Feature.QN_NAME, strModelSystemName );
     }
-    return (IWindDataModelSystem) lFeature;
+    return lFeature;
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem#getWindDataModels()
    */
   @Override
-  public IFeatureBindingCollection<IWindDataModel> getWindDataModels( )
+  public IFeatureWrapperCollection<IWindDataModel> getWindDataModels( )
   {
     return m_windModels;
   }
@@ -124,37 +173,9 @@ public class WindDataModelSystem extends Feature_Impl implements IWindDataModelS
   {
     if( m_gridDescriptor == null )
     {
-      m_gridDescriptor = NativeWindDataModelHelper.createGridDescriptor( getOrigin(), getColumns(), getRows(), getCellXLen(), getCellYLen() );
+      m_gridDescriptor = NativeWindDataModelHelper.createGridDescriptor( m_gmPointOrigin, m_intColumns, m_intRows, m_doubleCellXLen, m_doubleCellYLen );
     }
     return m_gridDescriptor;
-  }
-
-  private GM_Point getOrigin( )
-  {
-    final String strCrs = (String) getProperty( QNAME_PROP_CRS );
-    Double lDoubleOriginX = (Double) getProperty( QNAME_PROP_ORIGIN_X );
-    Double lDoubleOriginY = (Double) getProperty( QNAME_PROP_ORIGIN_Y );
-    return GeometryFactory.createGM_Point( lDoubleOriginX, lDoubleOriginY, strCrs );
-  }
-
-  private double getCellXLen( )
-  {
-    return (Double) getProperty( QNAME_PROP_CELL_X_LEN );
-  }
-
-  private double getCellYLen( )
-  {
-    return (Double) getProperty( QNAME_PROP_CELL_Y_LEN );
-  }
-
-  private int getColumns( )
-  {
-    return (Integer) getProperty( QNAME_PROP_COLUMNS );
-  }
-
-  private int getRows( )
-  {
-    return (Integer) getProperty( QNAME_PROP_ROWS );
   }
 
   /**
@@ -163,7 +184,7 @@ public class WindDataModelSystem extends Feature_Impl implements IWindDataModelS
   @Override
   public int getOrder( )
   {
-    return (Integer) getProperty( QNAME_PROP_ORDER );
+    return m_intOrder;
   }
 
   /**
@@ -172,7 +193,8 @@ public class WindDataModelSystem extends Feature_Impl implements IWindDataModelS
   @Override
   public void setOrder( int pOrder )
   {
-    setProperty( QNAME_PROP_ORDER, pOrder );
+    this.getFeature().setProperty( QNAME_PROP_ORDER, pOrder );
   }
-
+  
+  
 }

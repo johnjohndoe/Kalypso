@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,15 +36,15 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsosimulationmodel;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -73,7 +73,7 @@ public class TestTerrainModelWithElevation extends TestCase
 
       assertNull( Messages.getString( "TestTerrainModelWithElevation.0" ), itrModel.getTerrainElevationModelSystem() ); //$NON-NLS-1$
 
-      final ITerrainElevationModelSystem itrEleSystem =  itrModel.getTerrainElevationModelSystem() ;
+      final ITerrainElevationModelSystem itrEleSystem = new TerrainElevationModelSystem( itrModel );
 
       for( int i = 0; i < 10; i++ )
       {
@@ -99,7 +99,7 @@ public class TestTerrainModelWithElevation extends TestCase
     }
     catch( final Exception e )
     {
-      fail( ExceptionUtils.getStackTrace( e ) );
+      fail( TestUtils.getStackTraceAsString( e ) );
     }
 
   }
