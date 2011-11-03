@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:par="http://www.tuhh.de/parameter" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org"
+  xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/parameter" elementFormDefault="qualified" version="0.8">
+  
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="obslink.zml.kalypso.org" />
+  <import namespace="inline.zml.kalypso.org" />
+
+  <element name="Parameter" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="snowMember" type="par:SnowMemberType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="soilLayerMember" type="par:SoilLayerMemberType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="soiltypeMember" type="par:SoiltypeMemberType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="landuseMember" type="par:LanduseMemberType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="idealLandUseMember" type="par:IdealLandUseMemberType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="sealingMember" type="par:SealingMemberType" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <!--___Snow_________________________________________________ -->
+  <complexType name="SnowMemberType">
+    <sequence>
+      <element ref="par:Snow" />
+    </sequence>
+  </complexType>
+  
+  <element name="Snow" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <!--
+              (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+            -->
+            <element name="xwwo" default="0.2">
+              <simpleType>
+                <restriction base="double">
+                  <minInclusive value="0.0" />
+                  <maxInclusive value="1.0" />
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="xwwmax" default="0.45">
+              <simpleType>
+                <restriction base="double">
+                  <minInclusive value="0.0" />
+                  <maxInclusive value="1.0" />
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="xsnotem" default="0.25">
+              <simpleType>
+                <restriction base="double">
+                  <minInclusive value="0.0" />
+                  <maxInclusive value="1.0" />
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="xsnorad" default="0.35">
+              <simpleType>
+                <restriction base="double">
+                  <minInclusive value="0.0" />
+                  <maxInclusive value="1.0" />
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="xh0" default="0.0">
+              <simpleType>
+                <restriction base="double">
+                  <minInclusive value="0.0" />
+                </restriction>
+              </simpleType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  
+  <!--___Nutzung_________________________________________________ -->
+  <complexType name="LanduseMemberType">
+    <sequence>
+      <element ref="par:Landuse" />
+    </sequence>
+  </complexType>
+  
+  <element name="Landuse" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <!--
+              (texttyp,a20)(xwwo,*)_(xwwmax,*)_(xsnotem,*)_(xsnorad,*)_(xh0,*)
+            -->
+            <element name="idealLandUsePeriodLink" type="par:IdealLandUseLinkType" />
+            <element name="sealingLink" type="par:SealingLinkType" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  
+  <!--___Bodenart_________________________________________________ -->
+  <complexType name="SoilLayerLinkType">
+    <sequence>
+      <!-- Set maxOccurs to 0, so only links are allowed: we get Combo-Boxes in UI -->
+      <element ref="par:SoilLayer" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+  </complexType>
+
+  <complexType name="SoilLayerMemberType">
+    <sequence>
+      <element ref="par:SoilLayer"/>
+    </sequence>
+  </complexType>
+
+  <element name="SoilLayer" type="par:SoilLayerType" substitutionGroup="gml:_Feature" />
+  <complexType name="SoilLayerType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <!--
+            (typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
+          -->
+          <!-- JH: wird in na-modell nicht verwendet -->
+          <element name="typkap" type="string" minOccurs="0" maxOccurs="1" />
+          <element name="typwp">
+            <simpleType>
+              <restriction base="double">
+                <minExclusive value="0.0" />
+                <maxInclusive value="100.0" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="typfk">
+            <simpleType>
+              <restriction base="double">
+                <minExclusive value="0.0" />
+                <maxInclusive value="100.0" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="typbfm">
+            <simpleType>
+              <restriction base="double">
+                <minExclusive value="0.0" />
+                <maxInclusive value="100.0" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="typkf">
+            <simpleType>
+              <restriction base="double">
+                <minExclusive value="0.0" />
+                <maxInclusive value="10000.0" />
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="typbf0" default="0.75">
+            <simpleType>
+              <restriction base="double">
+                <minInclusive value="0.0" />
+                <maxInclusive value="1.0" />
+              </restriction>
+            </simpleType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!--___VegetationCollection_________________________________________________ -->
+  <complexType name="IdealLandUseMemberType">
+    <sequence>
+      <element ref="par:IdealLandUse" />
+    </sequence>
+  </complexType>
+  <complexType name="IdealLandUseLinkType">
+    <sequence>
+      <element ref="par:IdealLandUse" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+  </complexType>
+  
+  <element name="IdealLandUse" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="idealLandUseZML" type="zmlinline:ZmlInlineIdealKcWtLaiType" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <!--___SealingClassCollection_________________________________________________ -->
+  <complexType name="SealingMemberType">
+    <sequence>
+      <element ref="par:Sealing" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="SealingLinkType">
+    <sequence>
+      <element ref="par:Sealing" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+  </complexType>
+
+  <element name="Sealing" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="m_vers">
+              <simpleType>
+                <restriction base="double">
+                  <minInclusive value="0.0" />
+                  <maxInclusive value="1.0" />
+                </restriction>
+              </simpleType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+  
+  <!--___Bodentyp_________________________________________________ -->
+  <complexType name="SoiltypeMemberType">
+    <sequence>
+      <element ref="par:Soiltype" />
+    </sequence>
+  </complexType>
+  
+  <element name="Soiltype" type="par:SoiltypeType" substitutionGroup="gml:_Feature" />
+  <complexType name="SoiltypeType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <!--
+            (text,a)
+            (text6,a10)(ianz,i4)
+            (char3,a8)(xtief,*)_(xret,*)
+            (char3,a8)(xtief,*)_(xret,*)
+            (char3,a8)(xtief,*)_(xret,*)
+          -->
+          <!--ist in name schon drin!!! -->
+          <element name="soilLayerParameterMember" type="par:SoilLayerParameterMemberType" maxOccurs="unbounded" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  
+  <!--BodArt Parameter -->
+  <complexType name="SoilLayerParameterMemberType">
+    <sequence>
+      <element ref="par:SoilLayerParameter" />
+    </sequence>
+  </complexType>
+  
+  <element name="SoilLayerParameter" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="soilLayerLink" type="par:SoilLayerLinkType" />
+            <!--TODO: Link prüfen -->
+            <element name="xtief" type="double" />
+            <element name="xret" type="boolean" default="false" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
