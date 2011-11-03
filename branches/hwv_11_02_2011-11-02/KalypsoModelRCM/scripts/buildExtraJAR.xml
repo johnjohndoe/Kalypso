@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.core.resources" default="main" basedir="..">
+
+	<!-- This scripts build the lib/anttaks.jar for developement. 
+		It is NOT used for the deployment, there the settings in the build.properties 
+		are configured to build this jar file.
+	-->
+
+	<import file="../../KalypsoBuild/common-binding/buildExtraAntJAR.xml" />
+
+	<target name="main" depends="init">
+		<path id="build.classpath">
+			<dirset dir="${basedir}/..">
+				<include name="EclipsePlatformContributions/build/bin" />
+				<include name="EclipseRCPContributions/build/bin" />
+				<include name="JavaApiContributions/build/bin" />
+				<include name="KalypsoDeegree/build/bin" />
+				<include name="KalypsoCore/build/bin" />
+				<include name="KalypsoCommons/build/bin" />
+				<include name="KalypsoModelRCM/build/bin" />
+				<include name="KalypsoGMLSchema/build/bin" />
+			</dirset>
+			<fileset dir="${eclipse.home}">
+				<include name="plugins/org.eclipse.equinox.common*.jar" />
+				<include name="plugins/org.eclipse.core.runtime*.jar" />
+				<include name="plugins/org.eclipse.core.jobs*.jar" />
+				<include name="plugins/org.eclipse.ant.core*.jar" />
+				<include name="plugins/org.eclipse.core.resources*.jar" />
+				<include name="plugins/org.eclipse.ui.workbench*.jar" />
+			</fileset>
+		</path>
+
+		<antcall target="buildAntJar" />
+	</target>
+	
+</project>
