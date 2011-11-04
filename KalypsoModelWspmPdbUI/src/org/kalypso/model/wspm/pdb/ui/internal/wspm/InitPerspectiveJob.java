@@ -75,8 +75,8 @@ import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
-import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
 
 /**
  * @author Gernot Belger

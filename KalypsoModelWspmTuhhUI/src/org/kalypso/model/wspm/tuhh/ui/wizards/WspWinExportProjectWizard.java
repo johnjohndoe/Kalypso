@@ -52,8 +52,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
-import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectOperation;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectData;
+import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportProjectOperation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 

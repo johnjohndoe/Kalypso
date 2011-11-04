@@ -11,8 +11,6 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewWspmProjectWizard;
-import org.kalypso.module.IKalypsoModuleProjectOpenAction;
-import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;

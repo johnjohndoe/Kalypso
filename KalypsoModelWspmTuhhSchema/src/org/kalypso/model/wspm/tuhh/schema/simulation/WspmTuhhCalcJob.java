@@ -68,7 +68,6 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypso.wspwin.core.WspWinHelper;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;

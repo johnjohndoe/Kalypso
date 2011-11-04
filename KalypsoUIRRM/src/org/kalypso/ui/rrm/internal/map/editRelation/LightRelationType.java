@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ui.editor.gmleditor.command.AddRelationCommand;
-import org.kalypso.ui.editor.gmleditor.command.RemoveRelationCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand;
 import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 

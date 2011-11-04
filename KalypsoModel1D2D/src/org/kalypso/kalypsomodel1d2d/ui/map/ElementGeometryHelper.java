@@ -66,7 +66,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -96,7 +96,7 @@ public class ElementGeometryHelper
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
-   *
+   * 
    * @param command
    *          the {@link CompositeCommand} to be filled
    * @param workspace
@@ -155,7 +155,7 @@ public class ElementGeometryHelper
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
-   *
+   * 
    * @param command
    *          the {@link CompositeCommand} to be filled
    * @param workspace
@@ -234,7 +234,7 @@ public class ElementGeometryHelper
    * {@link CompositeCommand} with the {@link AddFeatureCommand}s for the new nodes. Via a given search distance it is
    * checked, if there are already existing {@link IFE1D2DNode}s in the neighborhood. If this is the case,no new nodes
    * will be generated.
-   *
+   * 
    * @param points
    *          the points
    * @param command

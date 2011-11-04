@@ -41,6 +41,7 @@
 package org.kalypso.model.km.internal.core;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,7 +66,7 @@ import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -228,14 +229,14 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     m_commands.addCommand( command );
   }
 
-  private IStatus writeValue( final KMChannel kmChannel, final IKMValue value, final int index )
+  private IStatus writeValue( final KMChannel channel, final IKMValue value, final int index )
   {
     final IStatusCollector valueLog = new StatusCollector( KMPlugin.getID() );
 
-    final IFeatureType kmParamFT = m_workspace.getGMLSchema().getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
-    final IRelationType kmParamRT = (IRelationType) kmChannel.getFeatureType().getProperty( KMChannel.MEMBER_PARAMETER );
+    final IFeatureType featureType = m_workspace.getGMLSchema().getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
+    final IRelationType parameterType = (IRelationType) channel.getFeatureType().getProperty( KMChannel.MEMBER_PARAMETER );
 
-    final AddFeatureCommand addCommand = new AddFeatureCommand( m_workspace, kmParamFT, kmChannel, kmParamRT, -1, -1 );
+    final AddFeatureCommand addCommand = new AddFeatureCommand( m_workspace, featureType, channel, parameterType, -1, new HashMap<IPropertyType, Object>(), null, -1 );
     m_commands.addCommand( addCommand );
 
     final double k = roundValue( value.getK(), 4 );
@@ -258,12 +259,12 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final double alpha = roundValue( value.getAlpha(), 3 );
     validate( alpha, Messages.getString( "KMUpdateOperation_11" ), valueLog ); //$NON-NLS-1$
 
-    addCommand.setProperty( KMParameter.PROP_QRK, qSum );
-    addCommand.setProperty( KMParameter.PROP_RKF, k );
-    addCommand.setProperty( KMParameter.PROP_RNF, nValid );
-    addCommand.setProperty( KMParameter.PROP_RKV, kForeland );
-    addCommand.setProperty( KMParameter.PROP_RNV, nForelandValid );
-    addCommand.setProperty( KMParameter.PROP_C, alpha );
+    addCommand.addProperty( KMParameter.PROP_QRK, qSum );
+    addCommand.addProperty( KMParameter.PROP_RKF, k );
+    addCommand.addProperty( KMParameter.PROP_RNF, nValid );
+    addCommand.addProperty( KMParameter.PROP_RKV, kForeland );
+    addCommand.addProperty( KMParameter.PROP_RNV, nForelandValid );
+    addCommand.addProperty( KMParameter.PROP_C, alpha );
 
     final String msg = String.format( "%d. %s", index + 1, value );//$NON-NLS-1$
     return valueLog.asMultiStatus( msg );

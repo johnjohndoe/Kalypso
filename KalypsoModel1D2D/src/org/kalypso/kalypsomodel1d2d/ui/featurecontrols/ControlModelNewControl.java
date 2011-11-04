@@ -51,7 +51,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -84,7 +84,7 @@ public class ControlModelNewControl extends AbstractFeatureControl
   {
     m_button = new Button( parent, style );
 
-    m_button.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControl.0") ); //$NON-NLS-1$
+    m_button.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControl.0" ) ); //$NON-NLS-1$
 
     m_button.addSelectionListener( new SelectionAdapter()
     {
@@ -96,20 +96,22 @@ public class ControlModelNewControl extends AbstractFeatureControl
       {
         final Feature parentFeature = getFeature();
         final Object property = parentFeature.getProperty( getFeatureTypeProperty() );
-        if( property instanceof XLinkedFeature_Impl  )
+        if( property instanceof XLinkedFeature_Impl )
         {
-          final Feature f = ((XLinkedFeature_Impl) property);
+          final Feature f = (XLinkedFeature_Impl) property;
           final IRelationType relationType = f.getParentRelation();
-          final CommandableWorkspace commandableWorkspace = new CommandableWorkspace(parentFeature.getWorkspace());
+          final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( parentFeature.getWorkspace() );
           final int pos = 0;
-          final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, f.getFeatureType(),parentFeature, relationType, pos, null, null, -1 );
+          final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, f.getFeatureType(), parentFeature, relationType, pos, null, null, -1 );
           try
           {
             commandableWorkspace.postCommand( command );
-            //            KalypsoGisPlugin.getDefault().getPool().saveObject( parentFeature.getWorkspace(), new NullProgressMonitor() );
-            //            final FeatureChange change = new FeatureChange(commandableWorkspace.getRootFeature(), parentFeature.getParentRelation(), parentFeature);
-            //            final FeatureChange[] changes = new FeatureChange[] {change};
-            //            fireFeatureChange( changes );
+            // KalypsoGisPlugin.getDefault().getPool().saveObject( parentFeature.getWorkspace(), new
+            // NullProgressMonitor() );
+            // final FeatureChange change = new FeatureChange(commandableWorkspace.getRootFeature(),
+            // parentFeature.getParentRelation(), parentFeature);
+            // final FeatureChange[] changes = new FeatureChange[] {change};
+            // fireFeatureChange( changes );
           }
           catch( final Exception e1 )
           {

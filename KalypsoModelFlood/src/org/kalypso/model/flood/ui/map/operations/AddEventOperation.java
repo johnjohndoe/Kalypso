@@ -34,7 +34,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -247,7 +247,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
 
-      final String infoFormat = String.format( Messages.getString("org.kalypso.model.flood.ui.map.operations.AddEventOperation.2"), event.getName() ); //$NON-NLS-1$
+      final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.2" ), event.getName() ); //$NON-NLS-1$
       final String infoValue = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=" + infoFormat; //$NON-NLS-1$
       layerPropertyThemeInfoId.setValue( infoValue );
 
