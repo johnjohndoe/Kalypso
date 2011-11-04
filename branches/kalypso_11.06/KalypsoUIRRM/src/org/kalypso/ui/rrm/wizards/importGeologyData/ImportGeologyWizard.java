@@ -48,9 +48,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -124,26 +126,49 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
 
     final GMLWorkspace workspace = output.getWorkspace();
     final IFile geologyFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
-    try
+    final IFile parameterFile = geologyFile.getParent().getFile( new Path( "parameter.gml" ) ); //$NON-NLS-1$
+    if( parameterFile.exists() )
     {
-      // call importer
-      final GeologyImportOperation op = new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
-      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-      new StatusDialog( getShell(), execute, getWindowTitle() ).open();
-      if( execute.matches( IStatus.ERROR ) )
-        return false;
+      try
+      {
+        // call importer
+        final GeologyImportOperation op = new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
+        final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
+        new StatusDialog( getShell(), execute, getWindowTitle() ).open();
+        if( execute.matches( IStatus.ERROR ) )
+          return false;
 
-      final File outputFile = geologyFile.getLocation().toFile();
-      GmlSerializer.serializeWorkspace( outputFile, workspace, CharEncoding.UTF_8 );
-      geologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+        final File outputFile = geologyFile.getLocation().toFile();
+        GmlSerializer.serializeWorkspace( outputFile, workspace, CharEncoding.UTF_8 );
+        geologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+      }
+      catch( final Exception e )
+      {
+        Display.getDefault().asyncExec( new Runnable()
+        {
+          @Override
+          public void run( )
+          {
+            MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+          }
+        } );
+        return false;
+      }
     }
-    catch( final Exception e )
+    else
     {
-      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
-      return false;
+      {
+        Display.getDefault().asyncExec( new Runnable()
+        {
+          @Override
+          public void run( )
+          {
+            MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
+        } );
+      }
     }
     return true;
-
   }
 
 }
