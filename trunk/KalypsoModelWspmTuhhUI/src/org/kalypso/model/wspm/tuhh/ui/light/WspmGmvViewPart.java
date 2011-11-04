@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.light;
 
 import org.eclipse.jface.action.MenuManager;
-import org.kalypso.ui.editor.gmleditor.part.GmvViewPart;
+import org.kalypso.ui.editor.gmleditor.ui.GmvViewPart;
 
 /**
  * Shows the local data of the PDB: a single fixed wspm project.

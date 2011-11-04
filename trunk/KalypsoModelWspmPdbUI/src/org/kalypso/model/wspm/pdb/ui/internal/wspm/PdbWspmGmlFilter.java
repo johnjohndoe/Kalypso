@@ -52,8 +52,8 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.part.LinkedFeatureElement;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.ui.LinkedFeatureElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 

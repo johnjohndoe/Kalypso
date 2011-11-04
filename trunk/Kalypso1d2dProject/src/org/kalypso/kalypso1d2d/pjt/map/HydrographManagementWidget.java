@@ -47,7 +47,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;

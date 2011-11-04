@@ -46,7 +46,6 @@ import org.kalypso.afgui.model.IModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**

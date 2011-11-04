@@ -278,7 +278,7 @@ public class SLDHelper
         final Color color = rgb == null ? Color.WHITE : new Color( rgb.red, rgb.green, rgb.blue );
         final double quantity = styledFeature.getOrdinalNumber();
         final String featureName = styledFeature.getName();
-        final String label = (featureName == null || featureName.length() == 0) ? Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.2" ) : featureName; //$NON-NLS-1$
+        final String label = featureName == null || featureName.length() == 0 ? Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.2" ) : featureName; //$NON-NLS-1$
         final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, DEFAULT_RASTER_FILLOPACITY, quantity, label );
         colorMap.put( new Double( quantity ), colorMapEntry );
       }

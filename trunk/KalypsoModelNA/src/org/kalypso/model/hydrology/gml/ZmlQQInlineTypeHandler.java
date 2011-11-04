@@ -71,11 +71,11 @@ public class ZmlQQInlineTypeHandler extends ZmlInlineTypeHandler
 
   public static IAxis createRHBdischargeAxis( )
   {
-    return TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF_RHB, true );
+    return TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF_RHB, true );
   }
 
   public static IAxis createDischargeAxis( )
   {
-    return TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF );
+    return TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF );
   }
 }

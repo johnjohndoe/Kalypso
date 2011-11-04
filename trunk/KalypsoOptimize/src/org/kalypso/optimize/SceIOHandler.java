@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.kalypso.optimize.errorfunctions.ErrorFunctionFactory;
 import org.kalypso.optimize.errorfunctions.IErrorFunktion;
 import org.kalypso.optimizer.AutoCalibration;
@@ -99,9 +100,15 @@ public class SceIOHandler
     {
       m_logger = logger;
 
-      final SortedMap<Date, Double> measuersTS = job.getMeasuredTimeSeries();
+      final SortedMap<Date, Double> measuredTS = job.getMeasuredTimeSeries();
 
-      m_errorFunction = ErrorFunctionFactory.createErrorFunction( measuersTS, calibration );
+      if( CollectionUtils.isEmpty( measuredTS.entrySet() ) )
+      {
+        // FIXME: what to do: we cannot optimize
+        // Should return with one normal calculation
+      }
+
+      m_errorFunction = ErrorFunctionFactory.createErrorFunction( measuredTS, calibration );
 
       final List<Parameter> parameterList = calibration.getParameterlist().getParameter();
       m_parameterConf = parameterList.toArray( new Parameter[parameterList.size()] );
@@ -109,6 +116,7 @@ public class SceIOHandler
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new SimulationException( "Fehler beim Initialisieren der Optimierung", e );
     }
   }

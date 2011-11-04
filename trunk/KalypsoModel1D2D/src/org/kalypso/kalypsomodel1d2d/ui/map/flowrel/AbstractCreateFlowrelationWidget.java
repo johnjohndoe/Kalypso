@@ -77,7 +77,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -151,7 +151,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.0") ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.0" ) ); //$NON-NLS-1$
 
     m_flowTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
     if( m_flowTheme == null )
@@ -354,7 +354,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.1"), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.1" ), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -387,18 +387,20 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
   /**
    * Really create the new object.
-   *
+   * 
    * @return The new object, if null, nothing happens..
    */
   protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement );
 
   /**
    * @param grabDistance
-   *            The grab distance in world (=geo) coordinates.
+   *          The grab distance in world (=geo) coordinates.
    */
   @SuppressWarnings("unchecked")
-  //  protected abstract Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
-  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance ){
+  // protected abstract Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final
+  // GM_Point currentPos, final double grabDistance );
+  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  {
     final Feature lFoundElement = discModel.find1DElement( currentPos, grabDistance );
     if( lFoundElement == null )
     {
@@ -421,7 +423,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
     if( node != null )
     {
-      if( FlowRelationUtilitites.findBuildingElementFromPosition( node.getPoint(), m_flowRelCollection ) != null ) 
+      if( FlowRelationUtilitites.findBuildingElementFromPosition( node.getPoint(), m_flowRelCollection ) != null )
         return null;
       final IFE1D2DElement[] elements = node.getElements();
       for( final IFE1D2DElement element : elements )

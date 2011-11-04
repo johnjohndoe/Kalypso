@@ -73,8 +73,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.GmltreeHandlerUtils;
-import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.util.command.GmltreeHandlerUtils;
 
 /**
  * @author Gernot Belger
@@ -93,7 +93,7 @@ public class CheckinPdbHandler extends AbstractHandler
     final IPdbConnection connection = PdbUiUtils.getConnectionChecked( window );
 
     final CommandableWorkspace workspace = gmlViewer.getWorkspace();
-    final IStructuredSelection selection = gmlViewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection) gmlViewer.getSelection();
 
     /* Ask user to save project and do nothing on cancel */
     final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );

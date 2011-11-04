@@ -345,7 +345,11 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       final IObservation observation = linkMeasuredTS.loadObservation();
 
       final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_DATE );
-      final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_RUNOFF );
+      final IAxis qAxis = ObservationUtilities.findAxisByTypeNoEx( observation.getAxes(), ITimeseriesConstants.TYPE_RUNOFF );
+
+      if( qAxis == null )
+        return result;
+
       final ITupleModel values = observation.getValues( null );
       for( int i = 0; i < values.size(); i++ )
       {

@@ -67,7 +67,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -78,9 +78,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to create new calculation unit
- *
+ * 
  * @author Patrice Congo
- *
+ * 
  */
 public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
@@ -111,17 +111,17 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   *
+   * 
    * @param cuFeatureQName
-   *            the q-name of the calculation unit to create
+   *          the q-name of the calculation unit to create
    * @param model1d2d
-   *            the model that should hold the new calculation unit
+   *          the model that should hold the new calculation unit
    * @param name
-   *            a name for the calculation unit if one has to be set or null
+   *          a name for the calculation unit if one has to be set or null
    * @param description
-   *            text describing the calculation unit or null
+   *          text describing the calculation unit or null
    * @throws IllegalArgumentException
-   *             if cuFeatureQName or model1d2d is null
+   *           if cuFeatureQName or model1d2d is null
    */
   public CreateCalculationUnitCmd( final QName calcUnitFeatureQName, final IFEDiscretisationModel1d2d model1d2d, final String name, final String decription )
   {
@@ -197,11 +197,11 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   *
+   * 
    * @param calculationUnit
-   *            the added or removed calculation unit
+   *          the added or removed calculation unit
    * @param added
-   *            true if the calculation unit was added false otherwise
+   *          true if the calculation unit was added false otherwise
    */
   private final void fireProcessChanges( final ICalculationUnit calculationUnit, final boolean added )
   {
@@ -304,12 +304,12 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           *
-           *
-           *
-           * IPhenomenon phenomenon = new
-           * DictionaryPhenomenon("urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D",
-           * "", ""); obs.setPhenomenon( phenomenon );
+           * 
+           * 
+           * 
+           * IPhenomenon phenomenon = new DictionaryPhenomenon(
+           * "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", "", "");
+           * obs.setPhenomenon( phenomenon );
            */
 
           final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME,
