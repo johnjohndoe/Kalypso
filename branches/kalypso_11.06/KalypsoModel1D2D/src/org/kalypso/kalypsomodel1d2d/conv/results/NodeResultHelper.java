@@ -190,11 +190,11 @@ public class NodeResultHelper
     midsideNode.setWaterlevel( waterlevel );
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
-//    double waveDirectionDown = nodeDown.getWaveDirection();
-//    double waveDirectionUp = nodeUp.getWaveDirection();
-//    if( waveDirectionDown > 180 || waveDirectionDown < -180 ){
-//      
-//    }
+    //    double waveDirectionDown = nodeDown.getWaveDirection();
+    //    double waveDirectionUp = nodeUp.getWaveDirection();
+    //    if( waveDirectionDown > 180 || waveDirectionDown < -180 ){
+    //      
+    //    }
     midsideNode.setWaveDirection( 0 );
     midsideNode.setWaveHsig( 0 );
     midsideNode.setWavePeriod( 0 );
@@ -290,24 +290,6 @@ public class NodeResultHelper
     return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
-  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final String crs ) throws Exception, GM_Exception
-  {
-    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
-    IProfil cutProfile = null;
-
-    if( points != null )
-    {
-      if( points.length > 1 )
-      {
-        cutProfile = WspmProfileHelper.cutIProfile( profil, points[0], points[points.length - 1] );
-      }
-    }
-
-    // final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
-    final GM_Curve curve = ProfilUtil.getLine( cutProfile, crs );
-    return curve;
-  }
-
   /**
    * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
    * x-coordinates (x2-x1) = dx12.
@@ -362,7 +344,7 @@ public class NodeResultHelper
 
       boundaryProfil.addPoint( point );
     }
-    return cutProfileAtWaterlevel( waterlevel, boundaryProfil, crs );
+    return WspmProfileHelper.cutProfileAtWaterlevel( waterlevel, boundaryProfil, crs );
 
   }
 
@@ -410,8 +392,8 @@ public class NodeResultHelper
     Map<String, Object> mapStep = m_stepStyleSettings.get( stepDate.toLowerCase() );
     if( mapStep == null )
     {
-        mapStep = createMapStyle();
-        m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
+      mapStep = createMapStyle();
+      m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
     }
     return mapStep;
   }
@@ -430,7 +412,7 @@ public class NodeResultHelper
       m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
     }
   }
-  
+
   private static Map<String, Map<String, Object>> createMapStep( final String styleType )
   {
     final Map<String, Map<String, Object>> mapStep = new HashMap<String, Map<String, Object>>();
@@ -445,12 +427,11 @@ public class NodeResultHelper
     fillMapStyleWithDefaults( mapStyle );
     return mapStyle;
   }
-  
+
   private static void fillMapStyleWithDefaults( final Map<String, Object> mapStyle )
   {
-    for( int i = 0; i < NodeStyleTypes.length; i++ )
+    for( final String key : NodeStyleTypes )
     {
-      String key = NodeStyleTypes[i];
       mapStyle.put( COLOR_MIN_PREFIX + key.toLowerCase(), DEFAULT_COLOR_MIN );
       mapStyle.put( COLOR_MAX_PREFIX + key.toLowerCase(), DEFAULT_COLOR_MAX );
       mapStyle.put( VALUE_MIN_PREFIX + key.toLowerCase(), 0. );
@@ -475,7 +456,7 @@ public class NodeResultHelper
     else
     {
       mapStep = createMapStep( styleType );
-      Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
+      final Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
       mapStyle.put( key.toLowerCase(), value );
       m_styleSettings.put( stepDate.toLowerCase(), mapStep );
     }
