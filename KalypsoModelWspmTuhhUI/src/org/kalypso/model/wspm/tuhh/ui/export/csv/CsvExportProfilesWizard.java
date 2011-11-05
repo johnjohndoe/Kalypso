@@ -148,7 +148,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     throw new IllegalArgumentException();
   }
 
-  private IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final OUTPUT_TYPE type )
+  private static IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final OUTPUT_TYPE type )
   {
     final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
 
