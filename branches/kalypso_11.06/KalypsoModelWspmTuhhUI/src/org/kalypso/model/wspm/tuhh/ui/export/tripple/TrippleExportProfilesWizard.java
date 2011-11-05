@@ -58,6 +58,8 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kimwerner
@@ -106,14 +108,19 @@ public class TrippleExportProfilesWizard extends ExportProfilesWizard
 
   private AbstractCsvWriter createWriter( )
   {
+    final IComponent rwComp = ComponentUtilities.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hwComp = ComponentUtilities.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent heightComp = ComponentUtilities.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+
     final String rwPattern = String.format( "<Component:%s>", IWspmConstants.POINT_PROPERTY_RECHTSWERT ); //$NON-NLS-1$
     final String hwPattern = String.format( "<Component:%s>", IWspmConstants.POINT_PROPERTY_HOCHWERT ); //$NON-NLS-1$
     final String heightPattern = String.format( "<Component:%s>", IWspmConstants.POINT_PROPERTY_HOEHE ); //$NON-NLS-1$
 
-    final IProfileExportColumn rw = new PatternReplacementColumn( "rw", rwPattern );
-    final IProfileExportColumn hw = new PatternReplacementColumn( "hw", hwPattern );
-    final IProfileExportColumn height = new PatternReplacementColumn( "height", heightPattern );
-    final IProfileExportColumn[] columns = new IProfileExportColumn[] { rw, hw, height };
+    final PatternReplacementColumn station = new PatternReplacementColumn( Messages.getString( "CsvExportColumnsPage_5" ), "<Station>" ); //$NON-NLS-1$//$NON-NLS-2$
+    final IProfileExportColumn rw = new PatternReplacementColumn( rwComp.getName(), rwPattern );
+    final IProfileExportColumn hw = new PatternReplacementColumn( hwComp.getName(), hwPattern );
+    final IProfileExportColumn height = new PatternReplacementColumn( heightComp.getName(), heightPattern );
+    final IProfileExportColumn[] columns = new IProfileExportColumn[] { station, rw, hw, height };
 
     return new CsvPointsWriter( columns );
   }
