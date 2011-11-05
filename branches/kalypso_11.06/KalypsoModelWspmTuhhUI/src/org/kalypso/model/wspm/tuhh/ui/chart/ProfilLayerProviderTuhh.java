@@ -465,7 +465,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final CoordinateMapper cm = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
     final IWspLayerData wspLayerData = new TuhhResultDataProvider( result, "activeIds" ); //$NON-NLS-1$
 
-    return new WspLayer( profile, IWspmConstants.LAYER_WASSERSPIEGEL, m_styleProvider, wspLayerData, false, cm );
+    return new WspLayer( profile, IWspmConstants.LAYER_WASSERSPIEGEL, m_styleProvider, wspLayerData, cm );
   }
 
   private IProfilChartLayer createWspFixationLayer( final IProfil profile, final IWspmResultNode result )
@@ -473,7 +473,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     final CoordinateMapper cm = new CoordinateMapper( m_domainAxis, m_targetAxisLeft );
     final IWspLayerData data = new TuhhResultDataProvider( result, "activeFixationIds" ); //$NON-NLS-1$
 
-    return new WspFixationLayer( profile, IWspmConstants.LAYER_WASSERSPIEGEL_FIXIERUNG, m_styleProvider, data, false, cm );
+    return new WspFixationLayer( profile, IWspmConstants.LAYER_WASSERSPIEGEL_FIXIERUNG, m_styleProvider, data, cm );
   }
 
   /**
