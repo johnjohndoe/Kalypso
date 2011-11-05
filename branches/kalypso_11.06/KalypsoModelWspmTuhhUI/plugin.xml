@@ -423,6 +423,10 @@
               commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference"
               style="toggle">
         </command>
+        <command
+              commandId="org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker"
+              style="toggle">
+        </command>
      </menuContribution>
   </extension>
   <extension
@@ -433,12 +437,22 @@
            id="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference"
            name="%command.name.8">
      </command>
+     <command
+           categoryId="org.kalypso.chart.ui.commands.category"
+           description="%org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker.description"
+           id="org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker"
+           name="%org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker.name">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.handlers">
      <handler
            class="org.kalypso.model.wspm.tuhh.ui.actions.ToggleKeepChannelRoughnessHandler"
            commandId="org.kalypso.model.wspm.ui.commands.toggleKeepChannelRoughnessPreference">
+     </handler>
+     <handler
+           class="org.kalypso.model.wspm.tuhh.ui.actions.ToggleRestrictWaterlevelToMarkerHandler"
+           commandId="org.kalypso.model.wspm.ui.commands.toggleWaterlevelRestrictionMarker">
      </handler>
   </extension>
   <extension point="org.eclipse.ui.views">
@@ -800,6 +814,15 @@
               properties="isLengthSection"
               type="de.openali.odysseus.chart.framework.view.IChartComposite">
         </propertyTester>
+     </extension>
+     <extension
+           point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.kalypso.ui.preferences.KalypsoPreferencePage/org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
+              class="org.kalypso.model.wspm.tuhh.ui.internal.preferences.WspmTuhhUiPreferencePage"
+              id="KalypsoModelWspmTuhhUIPreferencePage"
+              name="Allgemein Eigenschaften">
+        </page>
      </extension>
      
 </plugin>
