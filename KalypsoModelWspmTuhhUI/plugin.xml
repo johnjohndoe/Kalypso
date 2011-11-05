@@ -600,6 +600,14 @@
         </wizard>
         <wizard
               category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard"
+              icon="icons/elcl16/export_csv.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.name">
+           <description>%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
