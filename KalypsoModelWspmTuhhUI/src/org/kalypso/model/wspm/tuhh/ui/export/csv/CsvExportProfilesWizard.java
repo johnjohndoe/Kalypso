@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.AbstractCsvWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.CsvPointsWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.CsvProfilesWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
-import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.export.ProfileExportUtils;
 import org.kalypso.model.wspm.tuhh.core.profile.export.ResultProfileInterpolator;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
@@ -76,6 +75,8 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private static final String EXTENSION = "csv"; //$NON-NLS-1$
 
+  private final CsvExportData m_data = new CsvExportData();
+
   private ExportFileChooserPage m_profileFileChooserPage;
 
   private CsvExportColumnsPage m_columnsPage;
@@ -90,9 +91,13 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   {
     super.init( workbench, selection );
 
+    m_data.init( getDialogSettings() );
+
     setShowResultInterpolationSettings( true );
 
-    /* Export file */
+    // FIXME: replace next page with file chooser stuff
+//    addPage( new CsvExportFilePage( "csvExportFilePaege", m_data ) ); //$NON-NLS-1$
+
     final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
     delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
 
@@ -110,6 +115,8 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
+    m_data.storeSettings( getDialogSettings() );
+
     m_columnsPage.saveConfiguration();
 
     final File file = m_profileFileChooserPage.getFile();
@@ -157,15 +164,15 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
       columns.add( column );
     }
 
-    if( type == OUTPUT_TYPE.point )
-    {
-      // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
-      for( final IComponent comp : components )
-      {
-        final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
-        columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
-      }
-    }
+// if( type == OUTPUT_TYPE.point )
+// {
+// // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
+// for( final IComponent comp : components )
+// {
+//        final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
+// columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
+// }
+// }
 
     return columns.toArray( new IProfileExportColumn[columns.size()] );
   }
