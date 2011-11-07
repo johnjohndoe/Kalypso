@@ -66,11 +66,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchWizard
 {
-  protected static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString( "ExportProfilesWizard_0" ); //$NON-NLS-1$
+  public static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString( "ExportProfilesWizard_0" ); //$NON-NLS-1$
 
-  protected static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString( "ExportProfilesWizard_1" ); //$NON-NLS-1$
+  public static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString( "ExportProfilesWizard_1" ); //$NON-NLS-1$
 
-  protected static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString( "ExportProfilesWizard_2" ); //$NON-NLS-1$
+  public static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString( "ExportProfilesWizard_2" ); //$NON-NLS-1$
 
   private ProfilesChooserPage m_profileChooserPage;
 
@@ -100,7 +100,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   /**
    * The minimal number of profiles that the user needs to select. <code>1</code> by default.<br/>
    * Overwrite to change.
-   * 
+   *
    * @return <code>1</code>.
    */
   protected int getMinimumSelectionCount( )
