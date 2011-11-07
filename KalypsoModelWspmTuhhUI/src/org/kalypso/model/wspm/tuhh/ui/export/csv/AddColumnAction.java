@@ -64,13 +64,9 @@ public class AddColumnAction extends Action
     setImageDescriptor( image );
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
   @Override
   public void run( )
   {
     m_columnsComposite.addEmptyColumn();
   }
-
 }
