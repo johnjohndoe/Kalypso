@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export;
 
+import java.util.Locale;
+
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
@@ -49,6 +51,14 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
  */
 public interface IProfileExportColumn
 {
+  /**
+   * Overwrites the {@link Locale} used for formatting. If not set, the default {@link Locale} is used.
+   * 
+   * @param locale
+   *          If <code>null</code>, the default {@link Locale} is used
+   */
+  void setLocale( Locale locale );
+
   String getHeader( );
 
   Object getValue( final IProfilePatternData data );

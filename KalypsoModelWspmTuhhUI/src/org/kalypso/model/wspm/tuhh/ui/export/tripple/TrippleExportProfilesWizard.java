@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.export.tripple;
 
 import java.io.File;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,13 +63,17 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
 public class TrippleExportProfilesWizard extends ExportProfilesWizard
 {
+  /** Tripple is ',' separated */
+  private static final String TOKEN_SEPARATOR = ","; //$NON-NLS-1$
+
   private static final String FILTER_LABEL = Messages.getString( "TrippleExportProfilesWizard_0" ); //$NON-NLS-1$
 
   private static final String EXTENSION = "txt"; //$NON-NLS-1$
+
 
   private ExportFileChooserPage m_profileFileChooserPage;
 
@@ -122,6 +127,12 @@ public class TrippleExportProfilesWizard extends ExportProfilesWizard
     final IProfileExportColumn height = new PatternReplacementColumn( heightComp.getName(), heightPattern );
     final IProfileExportColumn[] columns = new IProfileExportColumn[] { station, rw, hw, height };
 
-    return new CsvPointsWriter( columns );
+    /* Using US Local, in order to format numbers with '.', which is standard for tripple */
+    final Locale usLocale = Locale.US;
+
+    for( final IProfileExportColumn column : columns )
+      column.setLocale( usLocale );
+
+    return new CsvPointsWriter( columns, TOKEN_SEPARATOR );
   }
 }
