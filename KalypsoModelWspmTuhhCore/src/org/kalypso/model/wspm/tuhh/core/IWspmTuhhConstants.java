@@ -204,7 +204,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
    * the layer store their colors themselves in the
    * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
    */
-
   String FILE_WSPTIN = "WspTin.gml";//$NON-NLS-1$
 
   String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$

@@ -39,7 +39,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
   }
 
   @Override
-  public double searchValue( final Object element, final BigDecimal station ) throws Exception
+  public double searchValue( final Object element, final BigDecimal station )
   {
     if( element instanceof TuhhResultDataElement )
     {
@@ -51,7 +51,7 @@ public final class TuhhResultDataProvider implements IWspLayerData
   }
 
   @Override
-  public Object getInput( ) throws Exception
+  public Object getInput( )
   {
     return m_results;
   }
@@ -84,13 +84,13 @@ public final class TuhhResultDataProvider implements IWspLayerData
   }
 
   @Override
-  public TuhhResultDataElement[] getActiveElements( ) throws Exception
+  public TuhhResultDataElement[] getActiveElements( )
   {
     return m_activeElements.toArray( new TuhhResultDataElement[m_activeElements.size()] );
   }
 
   @Override
-  public void activateElements( final Object[] elements ) throws Exception
+  public void activateElements( final Object[] elements )
   {
     m_activeElements.clear();
 
