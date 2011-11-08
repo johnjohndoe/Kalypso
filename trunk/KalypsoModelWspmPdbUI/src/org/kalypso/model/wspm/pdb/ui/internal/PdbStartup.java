@@ -150,6 +150,12 @@ public class PdbStartup implements IStartup
       return;
     }
 
+    if( status.matches( IStatus.ERROR ) )
+    {
+      PlatformUI.getWorkbench().close();
+      return;
+    }
+
     WspmPdbUiPlugin.getDefault().setWspmProject( wspmProject );
 
     PdbView.updateView( window );

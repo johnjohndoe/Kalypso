@@ -67,7 +67,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalculation
 {
-
   public TuhhCalculation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

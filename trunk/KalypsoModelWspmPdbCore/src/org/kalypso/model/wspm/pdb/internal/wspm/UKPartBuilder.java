@@ -38,38 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
+package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
+import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteEventOperation implements IPdbOperation
+public class UKPartBuilder implements IPartBuilder
 {
-  private final String m_name;
-
-  public DeleteEventOperation( final String name )
+  @Override
+  public String getCategory( )
   {
-    m_name = name;
+    return IGafConstants.KZ_CATEGORY_UK;
   }
 
   @Override
-  public String getLabel( )
+  public String getHeightComponent( )
   {
-    return String.format( "Delete Event '%s'", m_name );
+    return IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE;
   }
 
   @Override
-  public void execute( final Session session ) throws PdbConnectException
+  public String guessCode( final IRecord[] records, final int i )
   {
-    final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
-    final Object elementToDelete = EventUtils.findEventByName( existingEvents, m_name );
-    session.delete( elementToDelete );
+    if( i == 0 )
+      return IGafConstants.CODE_UKAN;
+
+    if( i == records.length - 1 )
+      return IGafConstants.CODE_UKEN;
+
+    return IGafConstants.CODE_UKPP;
   }
 }

@@ -38,38 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.pdb.ui.internal.admin.event;
+package org.kalypso.model.wspm.pdb.internal.wspm;
 
-import org.hibernate.Session;
-import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
-import org.kalypso.model.wspm.pdb.db.mapping.Event;
-import org.kalypso.model.wspm.pdb.db.utils.EventUtils;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteEventOperation implements IPdbOperation
+public interface IPartBuilder
 {
-  private final String m_name;
+  String getCategory( );
 
-  public DeleteEventOperation( final String name )
-  {
-    m_name = name;
-  }
+  String getHeightComponent( );
 
-  @Override
-  public String getLabel( )
-  {
-    return String.format( "Delete Event '%s'", m_name );
-  }
-
-  @Override
-  public void execute( final Session session ) throws PdbConnectException
-  {
-    final Event[] existingEvents = GetPdbList.getArray( session, Event.class );
-    final Object elementToDelete = EventUtils.findEventByName( existingEvents, m_name );
-    session.delete( elementToDelete );
-  }
+  String guessCode( IRecord[] records, int i );
 }
