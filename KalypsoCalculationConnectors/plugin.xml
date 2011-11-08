@@ -34,6 +34,18 @@
             simulationClass="org.kalypso.calculation.plc.postprocessing.PLCPostprocessing_Job"
             typeID="KalypsoPLC_Postprocessing">
       </simulation>
+      <simulation
+            simulationClass="org.kalypso.calculation.plc.postprocessing.InundationDifferenceSimulation"
+            typeID="KalypsoRisk_InnundationDifferenceCalculation">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.calculation.plc.postprocessing.RiskZonesDifferenceSimulation"
+            typeID="KalypsoRisk_RiskZonesDifferenceCalculation">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.calculation.plc.postprocessing.PLCPreprocessingSimulation"
+            typeID="KalypsoRisk_PLCPreprocessing">
+      </simulation>
    </extension>
    <extension
          point="org.kalypso.deegree.featureBinding">
