@@ -285,11 +285,13 @@ public class CheckinStatePdbOperation implements IPdbOperation
     if( !isBlank( ukPart ) )
       parts.add( ukPart );
 
-    final CrossSectionPart okPart = builtPart( profil, profilSRS, new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
+    final OKPartBuilder okBridgeBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    final CrossSectionPart okPart = builtPart( profil, profilSRS, okBridgeBuilder );
     if( !isBlank( okPart ) )
       parts.add( okPart );
 
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
+    final OKPartBuilder weirBuilder = new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, weirBuilder );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
