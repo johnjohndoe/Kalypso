@@ -57,18 +57,16 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="krrdm:AnnualCoverageCollection"
-					minOccurs="0" maxOccurs="1" />
+					minOccurs="1" maxOccurs="1" />
 			</xs:sequence>
-			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="specificDamageCoverageCollection">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="krrdm:AnnualCoverageCollection"
-					minOccurs="0" maxOccurs="1" />
+					minOccurs="1" maxOccurs="1" />
 			</xs:sequence>
-			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="AnnualCoverageCollection" type="krrdm:AnnualCoverageCollectionType"
