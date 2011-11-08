@@ -29,9 +29,9 @@ import org.kalypso.kalypsomodel1d2d.conv.wind.IWindDataWriter;
 import org.kalypso.kalypsomodel1d2d.conv.wind.RMA10WindDataWriter;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
@@ -47,12 +47,11 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Convert from GML to RMAKalypso format
- * 
+ *
  * @author kurzbach
  */
 public class PreRMAKalypso implements ISimulation
@@ -112,8 +111,8 @@ public class PreRMAKalypso implements ISimulation
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
-    OutputStream logOS = null;
-    OutputStream errorOS = null;
+    final OutputStream logOS = null;
+    final OutputStream errorOS = null;
     FileSystemManagerWrapper manager = null;
     try
     {
@@ -122,7 +121,7 @@ public class PreRMAKalypso implements ISimulation
       final URL controlUrl = (URL) inputProvider.getInputForID( INPUT_CONTROL );
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlUrl, null );
       final IControlModelGroup controlModelGroup = (IControlModelGroup) controlWorkspace.getRootFeature().getAdapter( IControlModelGroup.class );
-      final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
+      final IControlModel1D2DCollection controlModel1d2dCollection = controlModelGroup.getModel1D2DCollection();
 
       IFEDiscretisationModel1d2d discretisationModel = null;
       try
@@ -130,7 +129,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( discretisationModel == null )
@@ -141,17 +140,19 @@ public class PreRMAKalypso implements ISimulation
       }
 
       // specified calculation unit overrides control model calc unit
+      IControlModel1D2D controlModel = controlModel1d2dCollection.getActiveControlModel();
       ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
       if( inputProvider.hasID( INPUT_CALCULATION_UNIT_ID ) )
       {
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
-        if( calculationUnit instanceof ICalculationUnit1D2D )
+        for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection.getControlModels() )
         {
-          final IFeatureBindingCollection<ICalculationUnit> changedSubUnits = ((ICalculationUnit1D2D) calculationUnit).getChangedSubUnits();
-          for( final ICalculationUnit subUnit : changedSubUnits )
+          final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
+          if( existingCalculationUnit.getId().equals( calcUnitID ) )
           {
-            if( subUnit.getId().equals( calcUnitID ) )
-              calculationUnit = subUnit;
+            controlModel = existingControlModel;
+            calculationUnit = existingControlModel.getCalculationUnit();
+            break;
           }
         }
       }
@@ -162,7 +163,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( flowRelationshipModel == null )
@@ -178,7 +179,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // TODO: handle exception
       }
@@ -195,7 +196,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         windModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
       }
       if( windModel == null )
@@ -296,7 +297,7 @@ public class PreRMAKalypso implements ISimulation
       /* Wind File */
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.16" ) ); //$NON-NLS-1$
       progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.17" ) ); //$NON-NLS-1$
-      GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
+      final GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
       final IWindDataWriter lRMA10WindWriter = new RMA10WindDataWriter( workingDir, lGmEnvelope, controlConverter.getListDateSteps(), windRelationshipModel.getWindDataModelSystems() );
       lRMA10WindWriter.setWindDataModel( windRelationshipModel );
       lRMA10WindWriter.write( controlModel.isConstantWindSWAN() );

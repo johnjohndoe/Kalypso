@@ -6,6 +6,7 @@
 	<input id="mesh" type="xs:anyURI" description="mesh gml-file" />
 	<input id="flowRelationships" type="xs:anyURI" description="flow relationships gml-file" />
 	<input id="scenarioResultMeta" type="xs:anyURI" description="scenario results metadata gml-file" />
+	<input id="singleResultDate" type="xs:string" description="single result to be processed" optional="true" />
 
     <output id="scenarioResultMeta" type="xs:anyURI" description="updated scenario results metadata gml-file" />
 	<output id="results" type="xs:anyURI" description="calculation unit results directory" />
