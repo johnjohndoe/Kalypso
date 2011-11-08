@@ -297,7 +297,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     }
   }
 
-  private final void changeCoverageFilePathPrefix( final ICoverage coverage, final String prefix )
+  private void changeCoverageFilePathPrefix( final ICoverage coverage, final String prefix )
   {
     if( coverage instanceof RectifiedGridCoverage )
     {
