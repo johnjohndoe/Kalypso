@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -149,17 +150,32 @@ public class ImportLanduseWizard extends Wizard implements IWorkbenchWizard
         final File outputFile = landuseFile.getLocation().toFile();
         GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, CharEncoding.UTF_8 );
         landuseFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
-
-        return true;
       }
       catch( final Exception e )
       {
-        MessageDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage() ); //$NON-NLS-1$
+        Display.getDefault().asyncExec( new Runnable()
+        {
+          @Override
+          public void run( )
+          {
+            MessageDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage() );
+          }
+        } );
         return false;
       }
     }
+    else
+    {
+      Display.getDefault().asyncExec( new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+      } );
+    }
     return true;
-
   }
 
 }
