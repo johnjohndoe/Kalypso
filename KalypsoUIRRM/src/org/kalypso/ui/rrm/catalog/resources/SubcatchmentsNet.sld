@@ -108,8 +108,8 @@
 		</LineSymbolizer>
 	</Rule>
 	<Rule>
-		<Name>rule_link_izkn</Name>
-		<Title>%rule_link_izkn_title</Title>
+		<Name>rule_link_izkn_vers</Name>
+		<Title>%rule_link_izkn_vers_title</Title>
 		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_izkn_vers</ogc:PropertyName>
@@ -117,9 +117,31 @@
 			<Stroke>
 				<CssParameter name="stroke-width">2.0</CssParameter>
 				<CssParameter name="stroke-dashoffset">0.0</CssParameter>
-				<CssParameter name="stroke-dasharray">1.0,1.0</CssParameter>
+				<CssParameter name="stroke-dasharray">10.0,10.0</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke">#008040</CssParameter>
+				<CssParameter name="stroke-linejoin">mitre</CssParameter>
+				<CssParameter name="stroke-linecap">square</CssParameter>
+                <CssParameter name="stroke-arrow-type">line</CssParameter>
+                <CssParameter name="stroke-arrow-widget">open</CssParameter>
+                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
+                <CssParameter name="stroke-arrow-size">35</CssParameter>
+			</Stroke>
+		</LineSymbolizer>
+	</Rule>
+	<Rule>
+		<Name>rule_link_izkn</Name>
+		<Title>%rule_link_izkn_title</Title>
+		<LineSymbolizer>
+			<Geometry>
+				<ogc:PropertyName>link_izkn</ogc:PropertyName>
+			</Geometry>
+			<Stroke>
+				<CssParameter name="stroke-width">2.0</CssParameter>
+				<CssParameter name="stroke-dashoffset">0.0</CssParameter>
+				<CssParameter name="stroke-dasharray">10.0,10.0</CssParameter>
+				<CssParameter name="stroke-opacity">1.0</CssParameter>
+				<CssParameter name="stroke">#800040</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-linecap">square</CssParameter>
                 <CssParameter name="stroke-arrow-type">line</CssParameter>
