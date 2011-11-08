@@ -105,7 +105,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
- * 
+ *
  * @author Gernot Belger
  */
 public class ResultManager implements ISimulation1D2DConstants
@@ -315,7 +315,7 @@ public class ResultManager implements ISimulation1D2DConstants
         final String lStrTmpLine = lInDataStream.readLine().trim();
         ++lIntLinesCounter;
         if( lStrTmpLine.startsWith( "%" ) ) { //$NON-NLS-1$
-          lFormatter.format( "%s\n", lStrTmpLine ); //$NON-NLS-1$ 
+          lFormatter.format( "%s\n", lStrTmpLine ); //$NON-NLS-1$
           continue;
         }
         final StringTokenizer lStrTokenizer = new StringTokenizer( lStrTmpLine, " " ); //$NON-NLS-1$
@@ -369,9 +369,9 @@ public class ResultManager implements ISimulation1D2DConstants
       if( filename != null && filename.endsWith( ".2d.zip" ) ) //$NON-NLS-1$
       {
         resultFileName = filename;
-        if( file.toString().contains( "steady" ) ) //$NON-NLS-1$
+        if( file.toString().startsWith( STEADY_PREFIX ) ) //$NON-NLS-1$
           stepDate = STEADY_DATE;
-        else if( file.toString().contains( "maxi" ) ) //$NON-NLS-1$
+        else if( file.toString().startsWith( MAXI_PREFIX ) ) //$NON-NLS-1$
           stepDate = MAXI_DATE;
         else
           stepDate = ResultMeta1d2dHelper.resolveDateFromResultStep( file );
@@ -425,10 +425,10 @@ public class ResultManager implements ISimulation1D2DConstants
   public static String createOutDirName( final Date stepDate )
   {
     if( stepDate == STEADY_DATE )
-      return "steady"; //$NON-NLS-1$
+      return STEADY_PREFIX;
 
     if( stepDate == MAXI_DATE )
-      return "maxi"; //$NON-NLS-1$
+      return MAXI_PREFIX;
 
     final SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
     return ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
@@ -456,13 +456,13 @@ public class ResultManager implements ISimulation1D2DConstants
   {
     final String filename = file.getName().getBaseName();
 
-    if( filename.contains( "steady" ) ) //$NON-NLS-1$
+    if( filename.startsWith( STEADY_PREFIX ) )
       return STEADY_DATE;
 
-    if( filename.contains( "maxi" ) ) //$NON-NLS-1$
+    if( filename.startsWith( MAXI_PREFIX ) )
       return MAXI_DATE;
 
-    if( filename.contains( "mini" ) || filename.contains( "model" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( filename.startsWith( MINI_PREFIX ) || filename.startsWith( MODEL_PREFIX ) )
       return null;
 
     // check if the given result file is already compressed
