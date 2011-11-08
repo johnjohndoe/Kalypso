@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -57,7 +57,6 @@ import org.hibernate.Session;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -69,13 +68,13 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.Gaf2Db;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
+import org.kalypso.model.wspm.pdb.wspm.CheckinStateOperation;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -203,7 +202,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     /* Data from profile */
     final BigDecimal station = getStation( feature );
     section.setStation( station );
-    final String name = profil.getName();
+    final String name = CheckinStateOperation.createCrossSectionName( profil.getName(), station );
 
     /* Check for uniqueness of profile name */
     if( !m_sectionNames.addUniqueName( name ) )
@@ -274,7 +273,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
     final Set<CrossSectionPart> parts = new HashSet<CrossSectionPart>();
 
     /* Extract profile line */
-    final CrossSectionPart pPart = builtPart( profil, profilSRS, IWspmConstants.POINT_PROPERTY_HOEHE, IGafConstants.KZ_CATEGORY_PROFILE );
+    final CrossSectionPart pPart = builtPart( profil, profilSRS, new PPPartBuilder( profil ) );
     if( !isBlank( pPart ) )
     {
       parts.add( pPart );
@@ -282,15 +281,15 @@ public class CheckinStatePdbOperation implements IPdbOperation
     }
 
     /* Extract building parts */
-    final CrossSectionPart ukPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_UK );
+    final CrossSectionPart ukPart = builtPart( profil, profilSRS, new UKPartBuilder() );
     if( !isBlank( ukPart ) )
       parts.add( ukPart );
 
-    final CrossSectionPart okPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okPart = builtPart( profil, profilSRS, new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
     if( !isBlank( okPart ) )
       parts.add( okPart );
 
-    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, IGafConstants.KZ_CATEGORY_OK );
+    final CrossSectionPart okWeirPart = builtPart( profil, profilSRS, new OKPartBuilder( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
     if( !isBlank( okWeirPart ) )
       parts.add( okWeirPart );
 
@@ -320,16 +319,16 @@ public class CheckinStatePdbOperation implements IPdbOperation
     return part.getPoints().isEmpty();
   }
 
-  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final String mainComponentID, final String category ) throws PdbConnectException
+  private CrossSectionPart builtPart( final IProfil profil, final String profilSRS, final IPartBuilder partBuilder ) throws PdbConnectException
   {
-    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, mainComponentID, category, m_classChecker );
+    final CheckinPartOperation partOperation = new CheckinPartOperation( this, profil, profilSRS, partBuilder, m_classChecker );
 
     final IStatus result = partOperation.execute();
     if( !result.isOK() )
       m_stati.add( result );
 
     final CrossSectionPart part = partOperation.getPart();
-    part.setCategory( category );
+    part.setCategory( partBuilder.getCategory() );
     return part;
   }
 

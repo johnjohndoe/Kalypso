@@ -191,10 +191,4 @@ public class CheckoutWaterlevelWorker
     wspFixation.saveObservation( obs );
     return wspFixation;
   }
-
-  private Feature insertCalculation( final Event event, final WspmWaterBody wspmWater )
-  {
-    // FIXME
-    throw new UnsupportedOperationException();
-  }
 }

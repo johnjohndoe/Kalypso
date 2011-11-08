@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Point;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.gaf.GafCode;
-import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
@@ -76,7 +75,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * Translates a {@link org.kalypso.model.wspm.core.profil.IProfil} to a
  * {@link org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart}.
- * 
+ *
  * @author Gernot Belger
  */
 public class CheckinPartOperation
@@ -91,8 +90,6 @@ public class CheckinPartOperation
 
   private final String m_profilSRS;
 
-  private final String m_heightComponentID;
-
   private final Coefficients m_coefficients;
 
   private final GafCodes m_gafCodes;
@@ -101,21 +98,20 @@ public class CheckinPartOperation
 
   private final IGeoTransformer m_transformer;
 
-  private final String m_category;
+  private final IPartBuilder m_partBuilder;
 
   private final ClassChecker m_classChcker;
 
-  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final String mainComponentID, final String category, final ClassChecker classChcker )
+  public CheckinPartOperation( final CheckinStatePdbOperation stateOperation, final IProfil profil, final String profilSRS, final IPartBuilder partBuilder, final ClassChecker classChcker )
   {
-    m_category = category;
     m_classChcker = classChcker;
+    m_partBuilder = partBuilder;
     m_coefficients = stateOperation.getCoefficients();
     m_gafCodes = stateOperation.getGafCodes();
     m_geometryFactory = stateOperation.getGeometryFactory();
     m_transformer = stateOperation.getTransformer();
     m_profil = profil;
     m_profilSRS = profilSRS;
-    m_heightComponentID = mainComponentID;
   }
 
   public CrossSectionPart getPart( )
@@ -128,6 +124,8 @@ public class CheckinPartOperation
     // Name must be unique within each part
     final PDBNameGenerator nameGenerator = new PDBNameGenerator();
 
+    final String heightComponentID = m_partBuilder.getHeightComponent();
+
     final IRecord[] records = m_profil.getPoints();
     final List<Coordinate> lineCrds = new ArrayList<Coordinate>( records.length );
     for( int i = 0; i < records.length; i++ )
@@ -137,11 +135,18 @@ public class CheckinPartOperation
       final String name = getStringValue( record, IWspmConstants.POINT_PROPERTY_ID, StringUtils.EMPTY );
       final String comment = getStringValue( record, IWspmConstants.POINT_PROPERTY_COMMENT, StringUtils.EMPTY );
       final BigDecimal width = getDecimalValue( record, IWspmConstants.POINT_PROPERTY_BREITE, null );
-      final BigDecimal height = getDecimalValue( record, m_heightComponentID, null );
-      // FIMXE: check code
-      final String code = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, IGafConstants.CODE_PP );
+      final BigDecimal height = getDecimalValue( record, heightComponentID, null );
 
-      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, m_heightComponentID );
+      final String profileCode = getStringValue( record, IWspmConstants.POINT_PROPERTY_CODE, null );
+
+      // final GafCode gafCode = toGafCode( profileCode );
+
+      final String pdbCode = guessCode( profileCode, records, i );
+
+      final String hyk = toHyk( pdbCode );
+
+
+      final GM_Point loc = WspmGeometryUtilities.createLocation( m_profil, record, m_profilSRS, heightComponentID );
       final com.vividsolutions.jts.geom.Point location = toPoint( loc );
 
       // FIMXE: check class
@@ -162,9 +167,6 @@ public class CheckinPartOperation
 
       final Roughness roughness = toRoughness( roughnessClassId );
       final Vegetation vegetation = toVegetation( vegetationClassId );
-      final GafCode gafCode = toGafCode( code );
-
-      final String hyk = toHyk( gafCode.getCode() );
 
       /* Keep old point name if possible, else create a new unique one */
       final String uniquePointName = nameGenerator.createUniqueName( name );
@@ -173,7 +175,7 @@ public class CheckinPartOperation
       point.setDescription( comment );
       point.setWidth( width );
       point.setHeight( height );
-      point.setCode( gafCode.getCode() );
+      point.setCode( pdbCode );
       point.setHyk( hyk );
       point.setLocation( location );
 
@@ -200,24 +202,8 @@ public class CheckinPartOperation
     }
 
     final double station = m_profil.getStation();
-    final String warning = String.format( "Cross section km %.4f, part '%s'", station, m_category );
+    final String warning = String.format( "Cross section km %.4f, part '%s'", station, m_partBuilder.getCategory() );
     return m_stati.asMultiStatusOrOK( warning );
-  }
-
-  private GafCode toGafCode( final String code )
-  {
-    final GafCode defaultCode = m_gafCodes.getDefaultCode( m_category );
-    if( StringUtils.isBlank( code ) )
-      return defaultCode;
-
-    final GafCode gc = m_gafCodes.getCode( code );
-    if( gc == null )
-    {
-      m_stati.add( IStatus.WARNING, "Unknown GAF code '%s'. Using code '%s' instead.", null, code, defaultCode.getCode() );
-      return defaultCode;
-    }
-
-    return gc;
   }
 
   private Vegetation toVegetation( final String vegetationClassId )
@@ -256,7 +242,17 @@ public class CheckinPartOperation
     return roughness;
   }
 
-  // FIXME: alternatively, set codes according to markers
+  private String guessCode( final String code, final IRecord[] records, final int i )
+  {
+    // TODO: not perfekt, if markers or similar have changed, we should also guess the code again
+    // else this information gets lost
+    if( !StringUtils.isBlank( code ))
+      return code;
+
+    /* Guess default code on per builder base */
+    return m_partBuilder.guessCode( records, i );
+  }
+
   private String toHyk( final String code )
   {
     /* Just check if it is an existing code */
