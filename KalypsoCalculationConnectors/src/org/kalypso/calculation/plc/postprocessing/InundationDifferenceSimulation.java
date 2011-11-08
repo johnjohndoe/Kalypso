@@ -73,13 +73,13 @@ public class InundationDifferenceSimulation implements ISimulation
 {
   public static final String ID = "KalypsoRisk_InnundationDifferenceCalculation"; //$NON-NLS-1$
 
-  public final static String RASTER_MODEL_1 = "RASTER_MODEL_1"; //$NON-NLS-1$
+  public static final String RASTER_MODEL_1 = "RASTER_MODEL_1"; //$NON-NLS-1$
 
-  public final static String RASTER_MODEL_2 = "RASTER_MODEL_2"; //$NON-NLS-1$
+  public static final String RASTER_MODEL_2 = "RASTER_MODEL_2"; //$NON-NLS-1$
 
-  public final static String OUTPUT_RASTER_MODEL = "OUTPUT_RASTER_MODEL"; //$NON-NLS-1$
+  public static final String OUTPUT_RASTER_MODEL = "OUTPUT_RASTER_MODEL"; //$NON-NLS-1$
 
-  public final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
+  public static final String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -90,10 +90,6 @@ public class InundationDifferenceSimulation implements ISimulation
     return getClass().getResource( "resources/Specification_InnundationDifferenceCalculation.xml" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {

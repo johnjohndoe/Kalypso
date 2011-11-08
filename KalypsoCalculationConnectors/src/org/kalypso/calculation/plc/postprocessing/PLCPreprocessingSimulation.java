@@ -60,15 +60,20 @@ public class PLCPreprocessingSimulation implements ISimulation
 {
   public static final String ID = "KalypsoRisk_PLCPreprocessing"; //$NON-NLS-1$
 
-  public final static String INPUT_RISK_MODEL = "RasterModel"; //$NON-NLS-1$
+  /**
+   * representative wspm calc case
+   */
+  public static final String INPUT_WSPM_MODEL = "WspmModel"; ////$NON-NLS-1$ 
 
-  public final static String INPUT_RISK_RESULT_FOLDER = "RasterFolderSourceOutput"; //$NON-NLS-1$
+  public static final String INPUT_FLOOD_MODEL = "FloodModel"; //$NON-NLS-1$
 
-  public final static String INPUT_FLOOD_MODEL = "FloodModel"; //$NON-NLS-1$
+  public static final String INPUT_FLOOD_RESULT_FOLDER = "FloodResultFolder"; //$NON-NLS-1$
 
-  public final static String INPUT_FLOOD_RESULT_FOLDER = "FloodResultFolder"; //$NON-NLS-1$
+  public static final String INPUT_RISK_MODEL = "RasterModel"; //$NON-NLS-1$
 
-  public final static String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
+  public static final String INPUT_RISK_RESULT_FOLDER = "RasterFolderSourceOutput"; //$NON-NLS-1$
+
+  public static final String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
 
   public static final String STATUS_QUO_FOLDER_NAME = "statusQuo"; //$NON-NLS-1$
 
@@ -81,10 +86,6 @@ public class PLCPreprocessingSimulation implements ISimulation
     return getClass().getResource( "resources/Specification_PLCPreprocessing.xml" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -103,27 +104,9 @@ public class PLCPreprocessingSimulation implements ISimulation
 
       final File statusQuoFolder = new File( tmpdir, STATUS_QUO_FOLDER_NAME ); //$NON-NLS-1$
 
-      // move risk outputs to status quo
-      if( inputProvider.hasID( INPUT_RISK_MODEL ) )
-      {
-        final File actualRasterModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_MODEL ) );
-        FileUtils.copyFileToDirectory( actualRasterModel, statusQuoFolder );
-
-        final File actualRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_RESULT_FOLDER ) );
-        final File statusQuoRasterFolderOutput = new File( statusQuoFolder, "raster/output" ); //$NON-NLS-1$
-        FileUtils.moveDirectory( actualRasterFolderOutput, statusQuoRasterFolderOutput );
-      }
-
-      // move flood outputs to status quo
-      if( inputProvider.hasID( INPUT_FLOOD_MODEL ) )
-      {
-        final File actualFloodModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_MODEL ) );
-        FileUtils.copyFileToDirectory( actualFloodModel, new File( statusQuoFolder, "models" ) ); //$NON-NLS-1$
-
-        final File actualFloodResults = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_RESULT_FOLDER ) );
-        final File statusQuoFloodResults = new File( statusQuoFolder, "events" ); //$NON-NLS-1$
-        FileUtils.moveDirectory( actualFloodResults, statusQuoFloodResults );
-      }
+      doWspmModel( inputProvider, statusQuoFolder );
+      doFloodModel( inputProvider, statusQuoFolder );
+      doRiskModel( inputProvider, statusQuoFolder );
 
     }
     catch( final IOException e )
@@ -132,6 +115,47 @@ public class PLCPreprocessingSimulation implements ISimulation
     }
 
     resultEater.addResult( OUTPUT_FOLDER, tmpdir );
+  }
+
+  private void doWspmModel( final ISimulationDataProvider inputProvider, final File statusQuoFolder ) throws SimulationException, IOException
+  {
+    if( !inputProvider.hasID( INPUT_WSPM_MODEL ) )
+      return;
+
+    final File actualWspmModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_WSPM_MODEL ) );
+    FileUtils.copyDirectoryToDirectory( actualWspmModel, new File( statusQuoFolder, "wspm" ) ); //$NON-NLS-1$
+  }
+
+  /**
+   * move flood outputs to status quo
+   */
+  private void doFloodModel( final ISimulationDataProvider inputProvider, final File statusQuoFolder ) throws SimulationException, IOException
+  {
+    if( !inputProvider.hasID( INPUT_FLOOD_MODEL ) )
+      return;
+
+    final File actualFloodModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_MODEL ) );
+    FileUtils.copyFileToDirectory( actualFloodModel, new File( statusQuoFolder, "models" ) ); //$NON-NLS-1$
+
+    final File actualFloodResults = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_FLOOD_RESULT_FOLDER ) );
+    final File statusQuoFloodResults = new File( statusQuoFolder, "events" ); //$NON-NLS-1$
+    FileUtils.moveDirectory( actualFloodResults, statusQuoFloodResults );
+  }
+
+  /**
+   * move risk outputs to status quo
+   */
+  private void doRiskModel( final ISimulationDataProvider inputProvider, final File statusQuoFolder ) throws SimulationException, IOException
+  {
+    if( !inputProvider.hasID( INPUT_RISK_MODEL ) )
+      return;
+
+    final File actualRasterModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_MODEL ) );
+    FileUtils.copyFileToDirectory( actualRasterModel, statusQuoFolder );
+
+    final File actualRasterFolderOutput = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_RISK_RESULT_FOLDER ) );
+    final File statusQuoRasterFolderOutput = new File( statusQuoFolder, "raster/output" ); //$NON-NLS-1$
+    FileUtils.moveDirectory( actualRasterFolderOutput, statusQuoRasterFolderOutput );
   }
 
 }
