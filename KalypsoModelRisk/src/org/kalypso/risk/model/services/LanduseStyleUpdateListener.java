@@ -61,9 +61,6 @@ public class LanduseStyleUpdateListener implements IResourceChangeListener
 {
   private LanduseStyleUpdateService m_jobStyleUpdate;
 
-  /**
-   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-   */
   @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
