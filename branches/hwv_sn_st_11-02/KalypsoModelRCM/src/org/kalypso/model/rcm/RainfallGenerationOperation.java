@@ -250,6 +250,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
         if( file == null )
           file = FileUtils.toFile( location );
 
+        file.getParentFile().mkdirs();
         ZmlFactory.writeToFile( filteredObs, file, request );
       }
     }
@@ -266,8 +267,6 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
     final NamespaceContext namespaceResolver = targetDefinition.getWorkspace().getNamespaceContext();
     final GMLXPath observationXPath = new GMLXPath( observationPath, namespaceResolver );
-
-// final FeaturePath featurePath = new FeaturePath( m_catchmentObservationPath );
 
     final TimeseriesLinkType[] links = new TimeseriesLinkType[catchments.length];
 
