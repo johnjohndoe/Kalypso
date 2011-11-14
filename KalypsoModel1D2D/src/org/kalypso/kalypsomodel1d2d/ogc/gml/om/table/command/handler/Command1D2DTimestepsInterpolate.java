@@ -65,12 +65,11 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * Pastes the contents of the clipboard to the TupleResult
@@ -117,7 +116,7 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.6" ) ); //$NON-NLS-1$
     }
     final int index = m_tupleResult.indexOf( m_selection.getFirstElement() );
-//  changed to string to allow more flexible expansion of "Relaxation Factor"
+    // changed to string to allow more flexible expansion of "Relaxation Factor"
     final String relaxationFactor = (String) m_tupleResult.get( index ).getValue( 2 );
 
     final Command1D2DTimestepsInterpolationWizard wizard = new Command1D2DTimestepsInterpolationWizard( this, relaxationFactor );
@@ -137,13 +136,13 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
     return null;
   }
 
-  public void doInterpolate( final INTERPOLATION_METHOD interpolationMethod, final int numberOfSteps, final long timeInterval, final String relaxationFactor )
+  public void doInterpolate( final INTERPOLATION_METHOD interpolationMethod, final int numberOfSteps, final long timeInterval, final String relaxationFactor ) throws IndexOutOfBoundsException
   {
     m_resultRecords.clear();
 
     final Object firstInSelection = m_selection.getFirstElement();
     Object lastInSelection = firstInSelection;
-    final Iterator iterator = m_selection.iterator();
+    final Iterator< ? > iterator = m_selection.iterator();
     while( iterator.hasNext() )
       lastInSelection = iterator.next();
     final int firstIndex = m_tupleResult.indexOf( firstInSelection );
@@ -173,8 +172,8 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
       calendar.setTimeInMillis( currentTimeMillis );
       final IRecord record = m_tupleResult.createRecord();
       record.setValue( 0, new BigInteger( "0" ) ); //$NON-NLS-1$
-      record.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-//    changed to string to allow more flexible expansion of "Relaxation Factor"
+      record.setValue( 1, DateUtilities.toXMLGregorianCalendar( calendar ) );
+      // changed to string to allow more flexible expansion of "Relaxation Factor"
       record.setValue( 2, new String( relaxationFactor ) );
       m_resultRecords.add( record );
     }
