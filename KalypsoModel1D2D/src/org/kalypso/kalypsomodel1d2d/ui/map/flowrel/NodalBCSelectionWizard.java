@@ -210,7 +210,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           try
           {
             m_workspace.postCommand( command );
-
           }
           catch( final Throwable e )
           {
