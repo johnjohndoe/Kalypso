@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -195,5 +196,11 @@ public class TuhhProfil extends AbstractProfil
       return null;
 
     return new ProfilDevider( component, record );
+  }
+
+  @Override
+  public void accept( final IObservationVisitor visitor )
+  {
+    throw new UnsupportedOperationException();
   }
 }
