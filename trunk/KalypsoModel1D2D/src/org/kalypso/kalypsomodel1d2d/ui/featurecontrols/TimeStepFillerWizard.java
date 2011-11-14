@@ -62,8 +62,6 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
 /**
  * @author madanago
  */
@@ -92,7 +90,7 @@ public class TimeStepFillerWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    //clear currently present result list
+    // clear currently present result list
     m_result.clear();
     // get components of time step definition list
     final IComponent[] components = m_result.getComponents();
@@ -113,7 +111,7 @@ public class TimeStepFillerWizard extends Wizard
     {
       final IRecord record = m_result.createRecord();
       record.setValue( m_result.indexOfComponent( ordinalNumberComponent ), new BigInteger( Integer.toString( ordinalNumber++ ) ) );
-      record.setValue( m_result.indexOfComponent( timeComponent ), new XMLGregorianCalendarImpl( calendarFrom ) );
+      record.setValue( m_result.indexOfComponent( timeComponent ), DateUtilities.toXMLGregorianCalendar( calendarFrom ) );
       record.setValue( m_result.indexOfComponent( relaxFactorComponent ), m_timeStepFillerWizardPage.getUnderRelaxationFactorValue() );
       calendarFrom.add( m_timeStepFillerWizardPage.getField(), m_timeStepFillerWizardPage.getTimeSteps() );
       records.add( record );
@@ -126,7 +124,7 @@ public class TimeStepFillerWizard extends Wizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard.2") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard.2" ) ); //$NON-NLS-1$
 
     if( m_result.size() == 0 )
       m_timeStepFillerWizardPage = new TimeStepFillerWizardPage();
@@ -143,7 +141,7 @@ public class TimeStepFillerWizard extends Wizard
 
       final Date startDate = DateUtilities.toDate( (XMLGregorianCalendar) startRecord.getValue( indexOfTimeComponent ) );
       final Date endDate = DateUtilities.toDate( (XMLGregorianCalendar) endRecord.getValue( indexOfTimeComponent ) );
-//    changed to string to allow more flexible expansion of "Relaxation Factor"
+      // changed to string to allow more flexible expansion of "Relaxation Factor"
       final String uRelFactor = (String) startRecord.getValue( indexOfURelComponent );
       int timeStep = 60;
       if( m_result.size() > 1 )

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -88,8 +89,6 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
-
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * Constructs a simple timeserie with a time column and a value column.
@@ -360,7 +359,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#fillObservation(org.kalypso.observation.IObservation)
    */
   @Override
-  public void fillObservation( final IObservation<TupleResult> obs )
+  public void fillObservation( final IObservation<TupleResult> obs ) throws InvocationTargetException
   {
     final TupleResult result = obs.getResult();
 
@@ -381,7 +380,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     while( !calendarFrom.after( calendarTo ) )
     {
       final IRecord record = result.createRecord();
-      record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
+      record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( calendarFrom ) );
 
       // TODO: interpolate value
       final BigDecimal value = interpolateValue( calendarFrom );
