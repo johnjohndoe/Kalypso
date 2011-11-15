@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.util;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -238,7 +240,24 @@ public class ProfileInterpolation
   private Double[] getWidths( final IProfil profil )
   {
     final IRecord[] points = getInterpolationPoints( profil );
-    return ProfilUtil.getValuesFor( points, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
+
+    final IRecord[] veryGoodPoints = filterNullHeights( profil, points );
+
+    return ProfilUtil.getValuesFor( veryGoodPoints, IWspmConstants.POINT_PROPERTY_BREITE, Double.class, true );
+  }
+
+  private IRecord[] filterNullHeights( final IProfil profil, final IRecord[] points )
+  {
+    final int heightComponent = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    final Collection<IRecord> goodPoints = new ArrayList<IRecord>( points.length );
+    for( final IRecord record : points )
+    {
+      if( record.getValue( heightComponent ) != null )
+        goodPoints.add( record );
+    }
+
+    return goodPoints.toArray( new IRecord[goodPoints.size()] );
   }
 
   protected IRecord[] getInterpolationPoints( final IProfil profil )
