@@ -703,6 +703,13 @@
                 </reference>
            </enablement>
         </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard">
            <enablement>
                 <reference
