@@ -133,7 +133,8 @@ public class InterpolationWizard extends Wizard implements IWorkbenchWizard
   {
     try
     {
-      final IProfil previousProfile = interpolationData.getPreviousProfile().getProfil();
+      final IProfileFeature previousProfileFeature = interpolationData.getPreviousProfile();
+      final IProfil previousProfile = previousProfileFeature.getProfil();
       final IProfil nextProfile = interpolationData.getNextProfile().getProfil();
       final BigDecimal newStation = interpolationData.getNewStation();
       final boolean onlyRiverChannel = interpolationData.getOnlyChannel();
@@ -141,7 +142,8 @@ public class InterpolationWizard extends Wizard implements IWorkbenchWizard
       final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile, nextProfile, onlyRiverChannel );
       final IProfil newProfile = interpolation.interpolate( newStation, previousProfile.getType() );
 
-      ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach );
+      /* TODO we should select this new feature... but in order to this, we need access to the selection provider */
+      /* final Feature featureForSelection = */ProfileUiUtils.addNewProfileAndFireEvents( newProfile, waterBody, reach, previousProfileFeature );
     }
     catch( final Exception e )
     {

@@ -10,7 +10,6 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.grid.RichCoverageCollection;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -82,11 +81,11 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
     final WspmWaterBody water = ProfileUiUtils.findWaterbody( parentFeature );
     final TuhhReach reach = ProfileUiUtils.findReach( parentFeature );
 
-    final IProfileFeature profileFeature = ProfileUiUtils.addNewProfileAndFireEvents( profile, water, reach );
+    final Feature featureForSelection = ProfileUiUtils.addNewProfileAndFireEvents( profile, water, reach, null );
     workspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, profileFeature ) } );
+    selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( workspace, featureForSelection ) } );
   }
 
   private IProfil createProfile( final RichCoverageCollection richCoverages, final GM_Curve curve, final String profileType ) throws Exception
