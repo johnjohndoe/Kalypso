@@ -76,5 +76,15 @@
 				</Styles>
 			</DerivedLayer>
 		</Layers>
+		<Mappers>
+			<Axis id="Station_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Label>Station [km]</Label>
+				<Direction>%DIRECTIONUPSTREAM%</Direction>
+				<Position>BOTTOM</Position>
+				<PreferredAdjustment before="1" range="98" after="1" />
+				<RendererRef ref="NumberAxisRenderer" />
+			</Axis>
+		</Mappers>
 	</Chart>
 </ChartConfiguration>

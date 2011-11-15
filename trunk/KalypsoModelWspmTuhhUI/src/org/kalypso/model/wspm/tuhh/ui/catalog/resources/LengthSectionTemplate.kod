@@ -1,5 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
 	<Chart id="lengthSectionStyles">
 		<Title></Title>
 		<Description></Description>
