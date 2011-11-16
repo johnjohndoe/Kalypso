@@ -268,6 +268,10 @@ public final class WspWinImporter
         {
           final String msg = Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.19", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation ); //$NON-NLS-1$
           log.add( IStatus.WARNING, msg );
+
+          // FIXME: bad: probably the station of the profproj.txt is rounded, so we are using the worse number here. We
+          // should instead use the station with the most significant digits.
+
           profile.setBigStation( new BigDecimal( bean.getStation() ) );
         }
       }
