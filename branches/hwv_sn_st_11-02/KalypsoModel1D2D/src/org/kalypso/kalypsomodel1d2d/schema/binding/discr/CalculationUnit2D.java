@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
 public class CalculationUnit2D extends CalculationUnit implements ICalculationUnit2D
 {
   public CalculationUnit2D( final Feature featureToBind )
@@ -73,7 +72,7 @@ public class CalculationUnit2D extends CalculationUnit implements ICalculationUn
   {
     boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0" ) ); //$NON-NLS-1$
     return super.addElementAsRef( element );
   }
 

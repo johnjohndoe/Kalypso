@@ -99,7 +99,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private GM_Envelope m_gmExistingEnvelope;
 
-  private Set< Integer > m_setNotInsertedNodes;
+  private Set<Integer> m_setNotInsertedNodes;
 
   private static boolean[] NOT_CREATED = new boolean[1];
 
@@ -108,7 +108,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_model = model;
     m_workspace = model.getFeature().getWorkspace();
     m_positionProvider = positionProvider;
-    m_setNotInsertedNodes = new HashSet< Integer >();
+    m_setNotInsertedNodes = new HashSet<Integer>();
     try
     {
       m_gmExistingEnvelope = m_model.getNodes().getBoundingBox();
@@ -135,17 +135,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final Feature[] lElementsToRemove = getElementsWithoutGeometry();
     final Feature[] lAllElements = m_model.getElements().getWrappedList().toFeatures();
-   
+
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), lAllElements, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    
+
     removeElements( lElementsToRemove );
   }
 
   private void removeElements( Feature[] elementsToRemove )
   {
     final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( m_model );
-    
-    
+
     for( final Feature feature : elementsToRemove )
     {
       if( feature != null )
@@ -165,16 +164,18 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     {
       e.printStackTrace();
     }
-    
+
     m_model.getElements().removeAllAtOnce( Arrays.asList( elementsToRemove ) );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getFeature(), elementsToRemove, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
-  
+
   private Feature[] getElementsWithoutGeometry( )
   {
-    Set< Feature > lSetToRemove = new HashSet< Feature >();
-    for( final IFE1D2DElement lElement: m_model.getElements() ){
-      if( lElement instanceof IPolyElement ){
+    Set<Feature> lSetToRemove = new HashSet<Feature>();
+    for( final IFE1D2DElement lElement : m_model.getElements() )
+    {
+      if( lElement instanceof IPolyElement )
+      {
         final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) lElement).getGeometry();
         if( eleGeom == null )
         {
@@ -182,7 +183,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         }
       }
     }
-    return lSetToRemove.toArray( new Feature[ lSetToRemove.size() ] );
+    return lSetToRemove.toArray( new Feature[lSetToRemove.size()] );
   }
 
   /**
@@ -190,19 +191,22 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      int, int)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
     final IFE1D2DNode node1 = getNode( node1ID );
     final IFE1D2DNode node2 = getNode( node2ID );
-    if( node1 == null ){
-      if( !m_setNotInsertedNodes.contains( node1ID ) ){
+    if( node1 == null )
+    {
+      if( !m_setNotInsertedNodes.contains( node1ID ) )
+      {
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.0", node1ID, id ) ); //$NON-NLS-1$
       }
       return;
     }
-    if( node2 == null ){
-      if( !m_setNotInsertedNodes.contains( node2ID ) ){
+    if( node2 == null )
+    {
+      if( !m_setNotInsertedNodes.contains( node2ID ) )
+      {
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.1", node1ID, id ) ); //$NON-NLS-1$
       }
       return;
@@ -245,7 +249,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private final void maybeAddEdgeToElement( final int rmaID, final IFE1D2DEdge edge )
   {
     final String edgeId = edge.getGmlID();
-    
+
     IFeatureWrapperCollection lContainers = edge.getContainers();
     int iCountPolyElements = 0;
     for( int i = 0; i < lContainers.size(); ++i )
@@ -355,7 +359,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       // this means that in .2d file several nodes with different IDs have the same coords!
       // What to do?
       // For the moment, we will assume that it is the same node
-      Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.3", node.getPoint().toString() )); //$NON-NLS-1$
+      Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.3", node.getPoint().toString() ) ); //$NON-NLS-1$
       return;
     }
 
@@ -363,15 +367,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     node = m_model.findNode( nodeLocation, 0.01 );
     if( node == null )
     {
-      if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( nodeLocation.getPosition() ) ){
-         IPolyElement lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
-         if( lFoundElement != null )
-         {
-           //do not insert nodes that are placed on existing model(overlapped elements) 
-           m_setNotInsertedNodes.add( id );
-           Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "removed node ", nodeLocation.toString() ); //$NON-NLS-1$
-           return;
-         }
+      if( m_gmExistingEnvelope != null && m_gmExistingEnvelope.contains( nodeLocation.getPosition() ) )
+      {
+        IPolyElement lFoundElement = m_model.find2DElement( nodeLocation, 0.01 );
+        if( lFoundElement != null )
+        {
+          // do not insert nodes that are placed on existing model(overlapped elements)
+          m_setNotInsertedNodes.add( id );
+          Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "removed node ", nodeLocation.toString() ); //$NON-NLS-1$
+          return;
+        }
       }
       // new node, create
       node = m_model.createNode( nodeLocation, -1, NOT_CREATED );

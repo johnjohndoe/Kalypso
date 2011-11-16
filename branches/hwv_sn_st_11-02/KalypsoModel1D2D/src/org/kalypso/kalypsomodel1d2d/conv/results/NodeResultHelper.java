@@ -109,6 +109,7 @@ public class NodeResultHelper
   public static final String NODE_TYPE = "Node"; //$NON-NLS-1$
 
   private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<String, Map<String, Map<String, Object>>>();
+
   private static Map<String, Map<String, Object>> m_stepStyleSettings = new HashMap<String, Map<String, Object>>();
 
   public static final String[] NodeStyleTypes = new String[] { VELO_TYPE, WATERLEVEL_TYPE, DEPTH_TYPE, WAVE_HSIG_TYPE, WAVE_PERIOD_TYPE, WAVE_DIRECTION_TYPE };
@@ -364,7 +365,6 @@ public class NodeResultHelper
     return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
-  @SuppressWarnings("unchecked")
   public static GM_Point[] getLinePoints( final IContinuityLine2D continuityLine2D )
   {
     final List<IFE1D2DNode> nodes = continuityLine2D.getNodes();
@@ -383,7 +383,8 @@ public class NodeResultHelper
     if( mapStep != null )
     {
       Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
-      if( mapStyle == null ){
+      if( mapStyle == null )
+      {
         mapStyle = createMapStyle();
         mapStep.put( styleType.toLowerCase(), mapStyle );
       }
@@ -402,8 +403,8 @@ public class NodeResultHelper
     Map<String, Object> mapStep = m_stepStyleSettings.get( stepDate.toLowerCase() );
     if( mapStep == null )
     {
-        mapStep = createMapStyle();
-        m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
+      mapStep = createMapStyle();
+      m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
     }
     return mapStep;
   }
@@ -422,7 +423,7 @@ public class NodeResultHelper
       m_stepStyleSettings.put( stepDate.toLowerCase(), mapStep );
     }
   }
-  
+
   private static Map<String, Map<String, Object>> createMapStep( final String styleType )
   {
     final Map<String, Map<String, Object>> mapStep = new HashMap<String, Map<String, Object>>();
@@ -437,7 +438,7 @@ public class NodeResultHelper
     fillMapStyleWithDefaults( mapStyle );
     return mapStyle;
   }
-  
+
   private static void fillMapStyleWithDefaults( final Map<String, Object> mapStyle )
   {
     for( int i = 0; i < NodeStyleTypes.length; i++ )

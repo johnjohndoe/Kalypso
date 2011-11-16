@@ -72,7 +72,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * @author ig
  */
-@SuppressWarnings("unchecked")
 public class SimpleNodeResultsHandler implements IRMA10SModelElementHandler
 {
 

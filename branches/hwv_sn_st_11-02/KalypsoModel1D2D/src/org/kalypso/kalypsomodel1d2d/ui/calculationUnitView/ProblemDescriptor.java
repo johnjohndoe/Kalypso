@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Madanagopal
  */
-@SuppressWarnings("unchecked")
 public class ProblemDescriptor implements IProblem
 {
   private String m_messageDescription;

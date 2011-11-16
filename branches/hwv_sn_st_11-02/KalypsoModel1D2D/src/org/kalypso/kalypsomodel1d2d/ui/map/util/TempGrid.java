@@ -520,7 +520,6 @@ public class TempGrid
     }
   }
 
-  @SuppressWarnings("unchecked")
   private IStatus checkElements( )
   {
     if( m_nodeTheme == null )

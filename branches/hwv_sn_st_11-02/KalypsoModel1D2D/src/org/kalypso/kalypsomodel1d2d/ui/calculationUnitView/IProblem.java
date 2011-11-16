@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Madanagopal
  */
-@SuppressWarnings("unchecked")
 public interface IProblem
 {
   public void setName( String name );

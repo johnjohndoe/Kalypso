@@ -208,7 +208,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -249,7 +248,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     super.keyPressed( e );
   }
 
-  @SuppressWarnings("unchecked")
   private final void paintElevationDataTooltip( final Graphics g, final Point p )
   {
     final Color color = g.getColor();
@@ -341,7 +339,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void paint( final Graphics g )
   {
@@ -365,7 +362,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     m_toolTipRendererDesc.paintToolTip( new Point( 5, bounds.height - 5 ), g2, bounds );
   }
 
-  @SuppressWarnings("unchecked")
   private void paintSelecetedNodes( final Graphics2D g2, final List<IFE1D2DNode> selectedNodeList )
   {
     final IMapPanel panel = m_dataModel.getMapPanel();

@@ -86,16 +86,16 @@ public class SHPModelImporter implements IDiscModelImporter
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-//    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE ); //$NON-NLS-1$
-//    final IMarshallingTypeHandler intTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_INTEGER ); //$NON-NLS-1$
-//    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
+    //    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE ); //$NON-NLS-1$
+    //    final IMarshallingTypeHandler intTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_INTEGER ); //$NON-NLS-1$
+    //    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-//    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-//    final IValuePropertyType intType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), intTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-//    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    //    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    //    final IValuePropertyType intType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), intTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    //    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
     final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType };
@@ -109,15 +109,14 @@ public class SHPModelImporter implements IDiscModelImporter
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IDiscModelImporter#addElement(org.kalypsodeegree.model.geometry.GM_SurfacePatch)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void addElement( final GM_Surface surface )
   {
     try
     {
-// final double aDouble = i * Math.PI;
-//    final String aString = "Item Number: " + i; //$NON-NLS-1$
-// final GM_Point aPoint = GeometryFactory.createGM_Point( i * 4.3, i * 2.1, crs );
+      // final double aDouble = i * Math.PI;
+      //    final String aString = "Item Number: " + i; //$NON-NLS-1$
+      // final GM_Point aPoint = GeometryFactory.createGM_Point( i * 4.3, i * 2.1, crs );
       m_count++;
       final Object[] data = new Object[] { surface };
       final Feature feature = FeatureFactory.createFeature( m_shapeRootFeature, m_shapeParentRelation, "Feature_" + m_count, m_shapeFT, data ); //$NON-NLS-1$

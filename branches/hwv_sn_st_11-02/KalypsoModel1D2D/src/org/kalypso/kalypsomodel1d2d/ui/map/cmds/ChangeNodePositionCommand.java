@@ -57,14 +57,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
- *
- *
+ * 
+ * 
  * @author Patrice Congo
  */
 @SuppressWarnings("deprecation")
 public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 {
-  @SuppressWarnings("unchecked")
   private final IFE1D2DNode m_node;
 
   private final GM_Point m_newPosition;
@@ -108,7 +107,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -193,7 +192,6 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
   @Override
-  @SuppressWarnings("deprecation")
   @Deprecated
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
@@ -207,7 +205,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer();
-    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.1") ); //$NON-NLS-1$
+    buf.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.1" ) ); //$NON-NLS-1$
     buf.append( m_node );
     buf.append( ']' );
     return buf.toString();
