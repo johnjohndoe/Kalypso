@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.Minutes;
 import org.joda.time.Period;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -93,7 +94,7 @@ public class TimeseriesExtender
     m_dateAxis = AxisUtils.findDateAxis( m_axisList );
     if( m_dateAxis == null )
     {
-      final String msg = String.format( Messages.getString("TimeseriesExtender_0"), href ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "TimeseriesExtender_0" ), href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( status );
     }
@@ -103,12 +104,9 @@ public class TimeseriesExtender
   public void checkSize( ) throws CoreException, SensorException
   {
     final int size = m_sourceValues.size();
-    if( size == 0 )
-      return;
-
-    if( size == 1 )
+    if( size < 2 )
     {
-      final String msg = String.format( Messages.getString("TimeseriesExtender_1"), m_href ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "TimeseriesExtender_1" ), m_href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       throw new CoreException( status );
     }
@@ -143,7 +141,7 @@ public class TimeseriesExtender
     return createAddedStatus();
   }
 
-  private IStatus createAddedStatus(  )
+  private IStatus createAddedStatus( )
   {
     switch( m_addCounter )
     {
@@ -161,24 +159,44 @@ public class TimeseriesExtender
 
       default:
       {
-        final String msg = String.format( Messages.getString("TimeseriesExtender_3"), m_href, m_addCounter ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "TimeseriesExtender_3" ), m_href, m_addCounter ); //$NON-NLS-1$
         return new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), msg );
       }
     }
   }
 
-  private Period findStepping( ) throws SensorException
+  private Period findStepping( ) throws SensorException, CoreException
   {
     // REMARK: we determine the stepping solely on the first two dates. This is a bit dangerous....
     final Date firstDate = (Date) m_sourceValues.get( 0, m_dateAxis );
     final Date secondDate = (Date) m_sourceValues.get( 1, m_dateAxis );
 
+    if( firstDate == null || secondDate == null )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Missing date values in timeseries. Unable to determine stepping." );
+      throw new CoreException( status );
+    }
+
     final DateTime firstDateTime = new DateTime( firstDate );
     final DateTime secondDateTime = new DateTime( secondDate );
 
-    // FIXME: we probably need to sometimes round values?
+    final Period period = new Period( firstDateTime, secondDateTime );
+    final Period normalizedPeriod = period.normalizedStandard();
 
-    return new Period( firstDateTime, secondDateTime );
+    final Minutes minutes = normalizedPeriod.toStandardMinutes();
+    if( minutes.getMinutes() == 0 )
+    {
+      final Status status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Empty stepping, cannot proceed." );
+      throw new CoreException( status );
+    }
+
+    if( period.equals( Period.ZERO ) )
+    {
+      final Status status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Empty stepping, cannot proceed." );
+      throw new CoreException( status );
+    }
+
+    return normalizedPeriod;
   }
 
   private void extendStart( final DateTime startSimulation ) throws SensorException, CoreException
@@ -189,11 +207,23 @@ public class TimeseriesExtender
   }
 
   /* Reverse search for suitable start date. */
-  private DateTime findStartDate( final DateTime sourceValuesStart, final DateTime startSimulation )
+  private DateTime findStartDate( final DateTime sourceValuesStart, final DateTime startSimulation ) throws CoreException
   {
+    int timeout = 1000000;
+
     DateTime currentTime = sourceValuesStart;
     while( currentTime.isAfter( startSimulation ) )
+    {
+      if( m_stepping.equals( Period.ZERO ) )
+        throw new IllegalStateException();
+
       currentTime = currentTime.minus( m_stepping );
+
+      timeout--;
+
+      if( timeout <= 0 )
+        throw new CoreException( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Too many timesteps..." ) );
+    }
 
     return currentTime;
   }
