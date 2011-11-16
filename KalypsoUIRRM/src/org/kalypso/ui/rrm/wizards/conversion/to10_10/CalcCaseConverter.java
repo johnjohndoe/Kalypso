@@ -49,12 +49,14 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -364,7 +366,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    * This is necessary, as the newer calculatin core versions throw a severe error, if the calculatin span is not
    * completely covered.
    */
-  private void extendTimeseries( ) throws Exception
+  private void extendTimeseries( ) throws CoreException
   {
     if( m_data.getMetaControl().isUsePrecipitationForm() )
     {
@@ -385,7 +387,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     getLog().add( log );
   }
 
-  private Interval getSimulationRange( )
+  private Interval getSimulationRange( ) throws CoreException
   {
     /* Read calculation time span */
     final NAControl metaControl = m_data.getMetaControl();
@@ -397,6 +399,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     DateTime start = new DateTime( simulationStart );
     DateTime end = new DateTime( simulationEnd );
+
+    if( end.isBefore( start ) )
+    {
+      final String startString = start.toString( DateTimeFormat.mediumDateTime() );
+      final String endString = end.toString( DateTimeFormat.mediumDateTime() );
+      final String message = String.format( "Simulationsende (%s) liegt vor Simulationsstart (%s). Zeitreihenkorrektur nicht möglich.", endString, startString );
+      throw new CoreException( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message ) );
+    }
 
     /*
      * HACK: really hacky: the newer calc core versions need bigger timeseries than their actual simulation range (1
@@ -411,6 +421,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   }
 
   // FIXME: move to na utils
+  // FIXME: we can probably use Period.toStandardizedPeriod() instead
   /**
    * Hacky: we need a period depending on the actual meaning of the timestep (is it days, hours, or minutes)?<br/>
    * If we just use minutes, we get problems with step years/minutes and so on....
