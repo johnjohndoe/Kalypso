@@ -40,18 +40,20 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Provides the mechanism to create automaticaly fem element within a grid
- *
+ * 
  * @author Patrice Congo
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this );
-//  private GridWidgetFace m_gridWidgetFace;
+
+  // private GridWidgetFace m_gridWidgetFace;
 
   private Point m_currentPoint = null;
 
   final GridPointCollector m_gridPointCollector = new GridPointCollector();
-//  GridPointCollector m_gridPointCollector ;
+
+  // GridPointCollector m_gridPointCollector ;
 
   private boolean isActivated = false;
 
@@ -69,7 +71,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   private boolean m_snappingActive = true;
 
-  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
@@ -81,8 +82,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public CreateGridWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-//    m_gridWidgetFace = new GridWidgetFace( this );
-//    m_gridPointCollector = new GridPointCollector();
+    // m_gridWidgetFace = new GridWidgetFace( this );
+    // m_gridPointCollector = new GridPointCollector();
   }
 
   /**
@@ -97,8 +98,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
-//    m_gridWidgetFace = new GridWidgetFace( this );
-//    m_gridPointCollector = new GridPointCollector();
+    // m_gridWidgetFace = new GridWidgetFace( this );
+    // m_gridPointCollector = new GridPointCollector();
     // find the right themes to edit i.e. the discretisation model
     if( isActivated == false )
     {
@@ -125,7 +126,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     m_gridPointCollector.reset( targetCrs );
   }
 
-  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -142,7 +142,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     return newNode;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -167,7 +166,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -222,7 +220,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void dragged( final Point p )
   {
@@ -474,7 +471,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       }
     };
     final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-    if( status.equals( Status.OK_STATUS ) ){
+    if( status.equals( Status.OK_STATUS ) )
+    {
       try
       {
         workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$

@@ -95,7 +95,7 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, "", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
@@ -104,7 +104,6 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {
     // TODO: disable/enable according to dirty state of layer; this is tricky, as it is hard to find the layer here...

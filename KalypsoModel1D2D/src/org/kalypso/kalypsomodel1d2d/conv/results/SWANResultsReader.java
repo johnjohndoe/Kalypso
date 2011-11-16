@@ -303,7 +303,6 @@ public class SWANResultsReader
    * 
    * @return List<Double>
    */
-  @SuppressWarnings("unchecked")
   private static List<Double> getValuesAsList( final MLArray pMLArray ) throws Exception
   {
     List<Double> lListRes = new ArrayList<Double>();

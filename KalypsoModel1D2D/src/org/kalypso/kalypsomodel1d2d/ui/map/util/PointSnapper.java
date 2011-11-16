@@ -128,7 +128,6 @@ public class PointSnapper
     }
   }
 
-  @SuppressWarnings("unchecked")
   public IFE1D2DNode getSnapNode( )
   {
     return m_snapNode;

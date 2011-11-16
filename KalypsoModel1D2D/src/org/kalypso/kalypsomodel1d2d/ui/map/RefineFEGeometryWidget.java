@@ -352,7 +352,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       super.keyPressed( e );
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+  @SuppressWarnings({ "unchecked", "deprecation" })
   private void convertRefinementToModel( )
   {
     if( m_objects == null )
@@ -425,7 +425,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     return refineList;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({ "unchecked" })
   private List<GM_Point> getCentroids( final GM_Object[] objects )
   {
     final List<GM_Point> centroidList = new ArrayList<GM_Point>();

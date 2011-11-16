@@ -93,7 +93,7 @@ public class AssignNodeElevationFaceComponent
 {
   /**
    * @author Thomas Jung
-   *
+   * 
    */
   private final class ICellModifierImplementation implements ICellModifier
   {
@@ -367,7 +367,6 @@ public class AssignNodeElevationFaceComponent
     m_dataModel.addKeyBasedDataChangeListener( modelChangeListener );
   }
 
-  @SuppressWarnings("unchecked")
   private void guiCreateSelectRegion( final Composite cComposite )
   {
     FormData regionFormData;
@@ -545,7 +544,6 @@ public class AssignNodeElevationFaceComponent
     m_nodeElevationViewer.setCellModifier( m_cellModifier );
   }
 
-  @SuppressWarnings("unchecked")
   private final void applyElevation( ) throws Exception
   {
     final ISelection selection = m_nodeElevationViewer.getSelection();

@@ -126,7 +126,6 @@ public class ElementGeometryHelper
    * @param points
    *          the {@link GM_Point} list
    */
-  @SuppressWarnings("unchecked")
   public static IFeatureWrapper2 createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
 
   {
@@ -213,7 +212,7 @@ public class ElementGeometryHelper
 
     final IElement1D newElement = new Element1D( eleFeature );
     newElement.setEdge( edges[0] );
-// final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
+    // final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
 
     final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
     command.addCommand( addElementCommand );
@@ -221,7 +220,6 @@ public class ElementGeometryHelper
     command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
   }
 
-  @SuppressWarnings("unchecked")
   public static final void addNodeContainerCommand( final IFE1D2DNode node0, final IFE1D2DNode node1, final IPropertyType propertyType, final IFE1D2DEdge edge, final List<FeatureChange> changes )
   {
     final Feature edgeFeature = edge.getFeature();
@@ -234,7 +232,6 @@ public class ElementGeometryHelper
     changes.add( change1 );
   }
 
-  @SuppressWarnings("unchecked")
   public static final void addEdgeContainerCommand( final IFE1D2DEdge[] edges, final IPropertyType propertyType, final IFE1D2DElement element, final List<FeatureChange> changes )
   {
     final Feature elementFeature = element.getFeature();
@@ -263,7 +260,6 @@ public class ElementGeometryHelper
    * @param discModel
    * @param searchDistance
    */
-  @SuppressWarnings("unchecked")
   public static IFE1D2DNode[] buildNewNodes( final List<GM_Point> points, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IFEDiscretisationModel1d2d discModel, final double searchDistance )
   {
     /* Build new nodes */
@@ -308,7 +304,6 @@ public class ElementGeometryHelper
     return nodes;
   }
 
-  @SuppressWarnings("unchecked")
   public static IFE1D2DEdge[] buildNewEdges( final int numOfEdges, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentEdgeProperty, final IPropertyType nodeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<FeatureChange> changes, final IFE1D2DNode[] nodes )
   {
     /* Build new edges */

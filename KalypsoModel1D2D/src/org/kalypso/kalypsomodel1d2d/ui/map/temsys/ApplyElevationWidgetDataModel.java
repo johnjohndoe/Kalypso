@@ -86,13 +86,12 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public static final String NODE_THEME = "_NODE_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
-    SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
+      SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
 
   private final boolean m_ignoreMapSelection = false;
 
   private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
-  @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> m_selectedNodeList;
 
   @SuppressWarnings("unchecked")
@@ -180,7 +179,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   }
 
-  @SuppressWarnings("unchecked")
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
   {
     setData( SELECTED_NODE_KEY, selectedNode, false );
@@ -254,27 +252,26 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
       return elevationModelSystem.getTerrainElevationModels();
   }
 
-  @SuppressWarnings("unchecked")
   public void setSelectedNodeList( final List<IFE1D2DNode> selectionNodeList )
   {
     m_selectedNodeList = selectionNodeList;
   }
 
-  @SuppressWarnings("unchecked")
   public List<IFE1D2DNode> getSelectedNodeList( )
   {
     return m_selectedNodeList;
   }
 
-  public void saveModels() throws CoreException{
-    //    try
-    //    {
+  public void saveModels( ) throws CoreException
+  {
+    // try
+    // {
     m_dataProvider.saveModel( new NullProgressMonitor() );
-    //    }
-    //    catch( CoreException e )
-    //    {
-    //      e.printStackTrace();
-    //    }
+    // }
+    // catch( CoreException e )
+    // {
+    // e.printStackTrace();
+    // }
   }
 
 }

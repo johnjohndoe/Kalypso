@@ -47,19 +47,16 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   private IFEDiscretisationModel1d2d m_discModel = null;
 
   /* The current node of the disc-model under the cursor. */
-  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_currentNode = null;
 
   private Point m_currentMapPoint;
 
   private PointSnapper m_pointSnapper;
 
-  @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> m_nodeList = null;
 
   private QName m_lineType = null;
 
-  @SuppressWarnings("unchecked")
   public CreateFEContinuityLineWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -102,7 +99,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -152,7 +148,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
   }
 
-  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -232,7 +227,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     createBoundaryLine();
   }
 
-  @SuppressWarnings("unchecked")
   private boolean checkFor1DContiLine( )
   {
     final IFE1D2DNode node = m_nodeList.get( 0 );

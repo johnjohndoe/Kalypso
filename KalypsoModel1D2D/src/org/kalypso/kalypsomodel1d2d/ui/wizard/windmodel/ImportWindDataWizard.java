@@ -111,7 +111,6 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
    * @param selection
    *          the current object selection
    */
-  @SuppressWarnings("unchecked")
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     initialSelection = selection;

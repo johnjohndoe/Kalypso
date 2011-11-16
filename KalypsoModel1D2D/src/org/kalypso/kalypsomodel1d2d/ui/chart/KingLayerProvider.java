@@ -62,7 +62,6 @@ public class KingLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
 
@@ -72,11 +71,11 @@ public class KingLayerProvider extends AbstractLayerProvider
 
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     if( featureKey == null )
-      throw new ConfigurationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.0") ); //$NON-NLS-1$
+      throw new ConfigurationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.0" ) ); //$NON-NLS-1$
 
     final Feature kingFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     if( kingFeature == null )
-      throw new ConfigurationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2", featureKey) ); //$NON-NLS-1$
+      throw new ConfigurationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2", featureKey ) ); //$NON-NLS-1$
 
     KingDataContainer data = new KingDataContainer( kingFeature );
 

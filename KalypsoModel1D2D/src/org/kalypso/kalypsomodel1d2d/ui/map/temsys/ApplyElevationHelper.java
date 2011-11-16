@@ -60,7 +60,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public class ApplyElevationHelper
 {
-  @SuppressWarnings("unchecked")
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
     final IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
@@ -114,7 +113,8 @@ public class ApplyElevationHelper
             changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
             changePosCmd.process();
             compositeCommand.addCommand( changePosCmd, null );
-            if( !Double.isNaN( elevation  ) ){
+            if( !Double.isNaN( elevation ) )
+            {
               lListNodesToAssign.remove( node );
             }
           }
@@ -134,7 +134,6 @@ public class ApplyElevationHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static IFE1D2DNode[] getAllNonElevationNodes( final ApplyElevationWidgetDataModel dataModel )
   {
     final List<IFE1D2DNode> allNodes = dataModel.getDiscretisationModel().getNodes();

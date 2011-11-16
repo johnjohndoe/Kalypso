@@ -22,7 +22,6 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked")
 public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFunction
 {
 

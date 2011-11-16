@@ -230,71 +230,73 @@ public class FlowRelationUtilitites
 
     return null;
   }
-  
-  private static List< IFlowRelationship > findFlowrelationshipsForPosition( final GM_Position pPosition, final IFlowRelationshipModel model ){
-    List< IFlowRelationship > lListRes = new ArrayList<IFlowRelationship>();
-    
-    final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
-    
+
+  private static List<IFlowRelationship> findFlowrelationshipsForPosition( final GM_Position pPosition, final IFlowRelationshipModel model )
+  {
+    List<IFlowRelationship> lListRes = new ArrayList<IFlowRelationship>();
+
+    // final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
+
     final IFlowRelationship[] flowRels = model.findFlowrelationships( pPosition, 0.01 );
-    for( final IFlowRelationship flowRel: flowRels ){
-      if( flowRel instanceof IFlowRelationship )
-        lListRes.add( ( IFlowRelationship) flowRel );
-    }
-    
+    for( final IFlowRelationship flowRel : flowRels )
+      lListRes.add( flowRel );
+
     return lListRes;
   }
-  
+
   /**
    * Checks if a 1D-Element has an associated Buildings-Flow-Relation. returns set with found buildings
    */
-  public static Set< IFlowRelationship > findBuildingElements1D( final IElement1D element, final IFlowRelationshipModel model )
+  public static Set<IFlowRelationship> findBuildingElements1D( final IElement1D element, final IFlowRelationshipModel model )
   {
-    Set< IFlowRelationship > lSetRes = new HashSet<IFlowRelationship>();
-    List< GM_Position > lListPositions = new ArrayList<GM_Position>();
+    Set<IFlowRelationship> lSetRes = new HashSet<IFlowRelationship>();
+    List<GM_Position> lListPositions = new ArrayList<GM_Position>();
     final List nodes = element.getNodes();
-    
-    if( nodes.size() < 2 ){
+
+    if( nodes.size() < 2 )
+    {
       lListPositions.add( getFlowPositionFromElement( element ) );
     }
-    else{
-      lListPositions.add( ( ( IFE1D2DNode )nodes.get( 0 ) ).getPoint().getPosition() );
-      lListPositions.add( ( ( IFE1D2DNode) nodes.get( 1 ) ).getPoint().getPosition() );
+    else
+    {
+      lListPositions.add( ((IFE1D2DNode) nodes.get( 0 )).getPoint().getPosition() );
+      lListPositions.add( ((IFE1D2DNode) nodes.get( 1 )).getPoint().getPosition() );
     }
-    
-    for( final GM_Position lPos: lListPositions ){
+
+    for( final GM_Position lPos : lListPositions )
+    {
       lSetRes.addAll( findFlowrelationshipsForPosition( lPos, model ) );
     }
     return lSetRes;
   }
-  
+
   /**
    * Checks if a 2D-Element has an associated Building-Flow-Relation.
    */
   public static IBuildingFlowRelation2D findBuildingElement2D( final IPolyElement element, final IFlowRelationshipModel model )
   {
     final GM_Position flowPosition = getFlowPositionFromElement( element );
-    
+
     final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IBuildingFlowRelation2D.class };
-    
+
     final IFlowRelationship lFlowRel = model.findFlowrelationship( flowPosition, 0.02, flowRelationTypes );
     if( lFlowRel instanceof IBuildingFlowRelation2D )
       return (IBuildingFlowRelation2D) lFlowRel;
-    
+
     return null;
   }
-  
+
   /**
    * Checks if on given position is an associated Building-Flow-Relation.
    */
   public static IFeatureWrapper2 findBuildingElementFromPosition( final GM_Point pPoint, final IFlowRelationshipModel model )
   {
     final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelation2D.class, IFlowRelation1D.class };
-    
+
     final IFlowRelationship lFlowRel = model.findFlowrelationship( pPoint.getPosition(), 0.02, flowRelationTypes );
     if( lFlowRel != null )
       return lFlowRel;
-    
+
     return null;
   }
 
@@ -348,43 +350,40 @@ public class FlowRelationUtilitites
 
   /**
    * this function decides what node is the upstream node from given nodes:
-   *    
-   *    0Node ----- 1Node
-   *      |     ^     |
-   *      |     |    -+--> v1
-   *      |     |     |
-   *    3Node --|-- 2Node
-   *           v2
-   * in this case is the "3Node" the upstream node and the result will be 2(position in the given list).
-   * Important is that the 0-3 and 1-2 edges are the side edges 
-   *
+   * 
+   * 0Node ----- 1Node | ^ | | | -+--> v1 | | | 3Node --|-- 2Node v2 in this case is the "3Node" the upstream node and
+   * the result will be 2(position in the given list). Important is that the 0-3 and 1-2 edges are the side edges
+   * 
    */
-  public static int findUpstreamNodePolyWeirPositionInNodesRing( final IFlowRelationship pBuilding, final List< IFE1D2DNode > pListNodes, int pIntDirectionOfEdges )
+  public static int findUpstreamNodePolyWeirPositionInNodesRing( final IFlowRelationship pBuilding, final List<IFE1D2DNode> pListNodes, int pIntDirectionOfEdges )
   {
-    if( !( pBuilding instanceof IBuildingFlowRelation2D ) )
-      return -1; 
-      
+    if( !(pBuilding instanceof IBuildingFlowRelation2D) )
+      return -1;
+
     int lIntSizeListElementNodes = pListNodes.size();
-    int lIntDirectionGrad = ( ( IBuildingFlowRelation2D )pBuilding ).getDirection() % 360;
-    
-    double lDoubleXVectorRight = ( pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getX() ) / 2;
-    double lDoubleYVectorRight = ( pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getY() ) / 2;
-    double lDoubleXVectorLeft = ( pListNodes.get( 0 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getX() ) / 2;
-    double lDoubleYVectorLeft = ( pListNodes.get( 0 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getY() ) / 2;
- 
+    int lIntDirectionGrad = ((IBuildingFlowRelation2D) pBuilding).getDirection() % 360;
+
+    double lDoubleXVectorRight = (pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getX()) / 2;
+    double lDoubleYVectorRight = (pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getY()) / 2;
+    double lDoubleXVectorLeft = (pListNodes.get( 0 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getX()) / 2;
+    double lDoubleYVectorLeft = (pListNodes.get( 0 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getY()) / 2;
+
     double lDoubleXWeirDirectionVector = lDoubleXVectorRight - lDoubleXVectorLeft;
     double lDoubleYWeirDirectionVector = lDoubleYVectorRight - lDoubleYVectorLeft;
-    
-//    double lDoubleAngleInBetweenACOS = Math.acos( lDoubleXWeir / Math.sqrt( lDoubleXWeir * lDoubleXWeir + lDoubleYWeir * lDoubleYWeir ) ) * 180 / Math.PI;
-    double lDoubleAngleInBetweenATAN = ( Math.atan2( lDoubleYWeirDirectionVector, lDoubleXWeirDirectionVector ) - Math.atan2( 0, 1 ) ) * 180 / Math.PI;
-    
-    int lIntDiff = Math.abs( ( lIntDirectionGrad - ( ( int )lDoubleAngleInBetweenATAN ) ) % 360 );
 
-    if( lIntDiff < 180 ){
-      return pIntDirectionOfEdges == 1? 3: 1;
+    // double lDoubleAngleInBetweenACOS = Math.acos( lDoubleXWeir / Math.sqrt( lDoubleXWeir * lDoubleXWeir +
+    // lDoubleYWeir * lDoubleYWeir ) ) * 180 / Math.PI;
+    double lDoubleAngleInBetweenATAN = (Math.atan2( lDoubleYWeirDirectionVector, lDoubleXWeirDirectionVector ) - Math.atan2( 0, 1 )) * 180 / Math.PI;
+
+    int lIntDiff = Math.abs( (lIntDirectionGrad - ((int) lDoubleAngleInBetweenATAN)) % 360 );
+
+    if( lIntDiff < 180 )
+    {
+      return pIntDirectionOfEdges == 1 ? 3 : 1;
     }
-    else if( lIntDiff > 180 ){
-      return pIntDirectionOfEdges == 1? 1: 3;
+    else if( lIntDiff > 180 )
+    {
+      return pIntDirectionOfEdges == 1 ? 1 : 3;
     }
     return -1;
   }

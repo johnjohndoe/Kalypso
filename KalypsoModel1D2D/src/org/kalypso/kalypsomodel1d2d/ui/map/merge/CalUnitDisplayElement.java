@@ -174,7 +174,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
   {
     if( m_calculationUnit == null )
