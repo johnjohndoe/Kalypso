@@ -583,4 +583,19 @@ public class ResultManager implements ISimulation1D2DConstants
     return m_calcUnitMeta;
   }
 
+  public static String getFolderForDate( final Date stepDate )
+  {
+    final String stepResultFolder;
+    if( stepDate.equals( ISimulation1D2DConstants.STEADY_DATE ) )
+      stepResultFolder = ISimulation1D2DConstants.STEADY_PREFIX;
+    else if( stepDate.equals( ISimulation1D2DConstants.MAXI_DATE ) )
+      stepResultFolder = ISimulation1D2DConstants.MAXI_PREFIX;
+    else
+    {
+      final SimpleDateFormat timeFormatter = new SimpleDateFormat( ResultMeta1d2dHelper.FULL_DATE_TIME_FORMAT_RESULT_STEP );
+      stepResultFolder = ResultMeta1d2dHelper.TIME_STEP_PREFIX + timeFormatter.format( stepDate );
+    }
+    return stepResultFolder;
+  }
+
 }
