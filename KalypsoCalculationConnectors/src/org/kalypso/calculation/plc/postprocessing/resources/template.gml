@@ -18,4 +18,7 @@
  <cchainres:riskDifferenceCoverageCollection>
   <cov:CoverageCollection gml:id="CoverageCollection12541413788594"/>
  </cchainres:riskDifferenceCoverageCollection>
+ <cchainres:lengthSectionResultCollection>
+  <cchainres:LengthSectionResultCollection gml:id="LengthSectionResultCollection13216097004211"/>
+ </cchainres:lengthSectionResultCollection>
 </cchainres:ScenarioResults>

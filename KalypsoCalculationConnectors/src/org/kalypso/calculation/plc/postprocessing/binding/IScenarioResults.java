@@ -50,21 +50,33 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public interface IScenarioResults extends Feature
 {
-  String POSTPROCESSING_NAMESPACE = "org.kalypso.calculation.plc.postprocessing"; //$NON-NLS-1$
+  public static final String POSTPROCESSING_NAMESPACE = "org.kalypso.calculation.plc.postprocessing"; //$NON-NLS-1$
 
-  QName QN_TYPE = new QName( POSTPROCESSING_NAMESPACE, "ScenarioResults" ); //$NON-NLS-1$
+  public static final QName QN_TYPE = new QName( POSTPROCESSING_NAMESPACE, "ScenarioResults" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_INUNDATION_STATUS_QUO_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "inundationStatusQuoCoverageCollection" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_INUNDATION_STATUS_QUO_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "inundationStatusQuoCoverageCollection" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_INUNDATION_CALCULATED_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "inundationCalculatedCoverageCollection" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_INUNDATION_CALCULATED_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "inundationCalculatedCoverageCollection" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_INUNDATION_DIFFERENCES_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "inundationDifferenceCoverageCollection" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_INUNDATION_DIFFERENCES_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "inundationDifferenceCoverageCollection" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_RISK_STATUS_QUO_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "riskStatusQuoCoverageCollection" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_RISK_STATUS_QUO_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "riskStatusQuoCoverageCollection" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_RISK_CALCULATED_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "riskCalculatedCoverageCollection" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_RISK_CALCULATED_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "riskCalculatedCoverageCollection" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_RISK_DIFFERENCES_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "riskDifferenceCoverageCollection" ); //$NON-NLS-1$
+  public static final QName QN_PROPERTY_RISK_DIFFERENCES_COVERAGES = new QName( POSTPROCESSING_NAMESPACE, "riskDifferenceCoverageCollection" ); //$NON-NLS-1$
+  
+  public static final QName QN_PROPERTY_LENGTH_SECTION_RESULT_COLLECTION = new QName( POSTPROCESSING_NAMESPACE, "lengthSectionResultCollection" ); //$NON-NLS-1$
+
+  public static final QName QN_PROPERTY_LENGTH_SECTION_RESULT_MEMBER = new QName( POSTPROCESSING_NAMESPACE, "lengthSectionResultMember" ); //$NON-NLS-1$
+  
+  public static final QName QN_TYPE_RESULT_MEMBER = new QName( POSTPROCESSING_NAMESPACE, "ResultMember" ); //$NON-NLS-1$
+  
+  public static final QName QN_PROPERTY_STATUS_QUO_MEMBER = new QName( POSTPROCESSING_NAMESPACE, "statusQuo" ); //$NON-NLS-1$
+  
+  public static final QName QN_PROPERTY_CALCULATED_MEMBER = new QName( POSTPROCESSING_NAMESPACE, "calculated" ); //$NON-NLS-1$
+  
+  public static final QName QN_PROPERTY_DIFFERENCE_MEMBER = new QName( POSTPROCESSING_NAMESPACE, "difference" ); //$NON-NLS-1$
 
   ICoverageCollection getInundationStatusQuoCoverages( );
 
