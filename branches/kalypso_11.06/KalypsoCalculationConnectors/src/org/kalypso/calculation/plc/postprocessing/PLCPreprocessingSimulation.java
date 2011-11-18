@@ -43,8 +43,6 @@ package org.kalypso.calculation.plc.postprocessing;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.simulation.core.ISimulation;
@@ -63,14 +61,31 @@ public class PLCPreprocessingSimulation implements ISimulation
   /**
    * representative wspm calc case
    */
-  public static final String INPUT_WSPM_MODEL = "WspmModel"; ////$NON-NLS-1$ 
+  public static final String INPUT_WSPM_MODEL = "WspmModel"; ////$NON-NLS-1$
 
+  /**
+   * 1d2d calculation unit folder
+   */
+  public static final String INPUT_1D2D_MODEL = "1D2DModel"; ////$NON-NLS-1$
+
+  /**
+   * flood model gml file
+   */
   public static final String INPUT_FLOOD_MODEL = "FloodModel"; //$NON-NLS-1$
 
+  /**
+   * flood model results folder
+   */
   public static final String INPUT_FLOOD_RESULT_FOLDER = "FloodResultFolder"; //$NON-NLS-1$
 
+  /**
+   * risk model gml file
+   */
   public static final String INPUT_RISK_MODEL = "RasterModel"; //$NON-NLS-1$
 
+  /**
+   * risk model results folder
+   */
   public static final String INPUT_RISK_RESULT_FOLDER = "RasterFolderSourceOutput"; //$NON-NLS-1$
 
   public static final String OUTPUT_FOLDER = "OutputFolder"; //$NON-NLS-1$
@@ -91,22 +106,12 @@ public class PLCPreprocessingSimulation implements ISimulation
   {
     try
     {
-      // create final folders
-      final List<String> folders = new ArrayList<String>();
-      folders.add( "final/rrm" ); //$NON-NLS-1$
-      folders.add( "final/flood/events" ); //$NON-NLS-1$
-      folders.add( "final/risk/raster/output" ); //$NON-NLS-1$
-      for( final String folder : folders )
-      {
-        final File f = new File( tmpdir, folder );
-        f.mkdirs();
-      }
+      final File statusQuoFolder = new File( tmpdir, STATUS_QUO_FOLDER_NAME );
 
-      final File statusQuoFolder = new File( tmpdir, STATUS_QUO_FOLDER_NAME ); //$NON-NLS-1$
-
-      doWspmModel( inputProvider, statusQuoFolder );
-      doFloodModel( inputProvider, statusQuoFolder );
-      doRiskModel( inputProvider, statusQuoFolder );
+      doWspmModel( inputProvider, new File( statusQuoFolder, "wspm" ) ); //$NON-NLS-1$
+      do1D2DModel( inputProvider, new File( statusQuoFolder, "1d2d" ) );//$NON-NLS-1$
+      doFloodModel( inputProvider, new File( statusQuoFolder, "flood" ) );//$NON-NLS-1$
+      doRiskModel( inputProvider, new File( statusQuoFolder, "risk" ) );//$NON-NLS-1$
 
     }
     catch( final IOException e )
@@ -123,7 +128,17 @@ public class PLCPreprocessingSimulation implements ISimulation
       return;
 
     final File actualWspmModel = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_WSPM_MODEL ) );
-    FileUtils.copyDirectoryToDirectory( actualWspmModel, new File( statusQuoFolder, "wspm" ) ); //$NON-NLS-1$
+    FileUtils.copyDirectoryToDirectory( actualWspmModel, statusQuoFolder );
+  }
+
+  private void do1D2DModel( final ISimulationDataProvider inputProvider, final File statusQuoFolder ) throws SimulationException, IOException
+  {
+    if( !inputProvider.hasID( INPUT_1D2D_MODEL ) )
+      return;
+
+    final File actual1d2dCalcUnitFolder = FileUtils.toFile( (URL) inputProvider.getInputForID( INPUT_1D2D_MODEL ) );
+    // FileUtils.moveDirectory( actual1d2dCalcUnitFolder, statusQuoFolder ) );
+    FileUtils.copyDirectory( actual1d2dCalcUnitFolder, statusQuoFolder );
   }
 
   /**
