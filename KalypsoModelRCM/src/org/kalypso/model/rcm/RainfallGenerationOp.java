@@ -51,6 +51,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.joda.time.Duration;
+import org.joda.time.Period;
 import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -209,7 +211,7 @@ public class RainfallGenerationOp
     return new SimpleObservation( href, name, metadataList, clonedValues );
   }
 
-  private IObservation[] combineObservations( )
+  private IObservation[] combineObservations( ) throws CoreException
   {
     final IObservation[] result = new IObservation[m_results.length];
     for( int i = 0; i < result.length; i++ )
@@ -267,7 +269,7 @@ public class RainfallGenerationOp
   /**
    * Combines a list of observations into a single one.
    */
-  public static IObservation combineObservations( final List<IObservation> observations )
+  public static IObservation combineObservations( final List<IObservation> observations ) throws CoreException
   {
     try
     {
@@ -279,15 +281,18 @@ public class RainfallGenerationOp
       final ForecastFilter fc = new ForecastFilter();
 
       final IObservation[] combine = observations.toArray( new IObservation[] {} );
+
+      checkCombinedTimestep( combine );
+
       fc.initFilter( combine, combine[0], null );
 
       /* Clone and set the timestep. */
       final IObservation clonedObservation = ObservationHelper.clone( fc, null );
-      MetadataList metadataList = clonedObservation.getMetadataList();
-      String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
+      final MetadataList metadataList = clonedObservation.getMetadataList();
+      final String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
       if( timestep == null )
       {
-        String bestGuess = RainfallGeneratorUtilities.findTimeStep( combine );
+        final String bestGuess = RainfallGeneratorUtilities.findTimeStep( combine );
         metadataList.setProperty( MetadataHelper.MD_TIMESTEP, bestGuess );
       }
 
@@ -299,6 +304,41 @@ public class RainfallGenerationOp
     }
 
     return null;
+  }
+
+  /**
+   * Check if all timeseries that get combined here have the same timestep<br/>
+   * Necessary, because the timestep of the combined timeseries is the timestep of the first timseries.
+   */
+  private static void checkCombinedTimestep( final IObservation[] observations ) throws CoreException
+  {
+
+    Period combinedTimestep = null;
+
+    for( final IObservation observation : observations )
+    {
+      final Period currentTimestep = MetadataHelper.getTimestep( observation.getMetadataList() );
+
+      if( currentTimestep == null )
+      {
+        final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "All timeseries involved in rainfall generation must have a timestep." );
+        throw new CoreException( status );
+      }
+
+      if( combinedTimestep != null )
+      {
+        final Duration currentDuration = currentTimestep.toStandardDuration();
+        final Duration combinedDuration = combinedTimestep.toStandardDuration();
+        if( !currentDuration.equals( combinedDuration ) )
+        {
+          final String message = String.format( "All timeseries involed in rainfall generation must have the same timestep. Found: %s and %s", combinedTimestep, currentTimestep );
+          final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message );
+          throw new CoreException( status );
+        }
+      }
+
+      combinedTimestep = currentTimestep;
+    }
   }
 
   /**
