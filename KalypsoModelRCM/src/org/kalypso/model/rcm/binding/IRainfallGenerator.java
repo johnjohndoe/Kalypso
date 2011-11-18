@@ -75,11 +75,4 @@ public interface IRainfallGenerator extends Feature
    * @return The period.
    */
   public DateRange getPeriod( IStringResolver variables );
-
-  /**
-   * This function returns the models this generator handles.
-   * 
-   * @return The models.
-   */
-  public String[] getModels( );
 }
