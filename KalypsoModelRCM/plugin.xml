@@ -2,6 +2,11 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="rainfallConfigurator" name="rainfallConfigurator" schema="schema/rainfallConfigurator.exsd"/>
+   <extension point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <nextCatalog catalog="etc/schema/catalog.xml"/>
+      </catalogContribution>
+   </extension>
    <extension
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
