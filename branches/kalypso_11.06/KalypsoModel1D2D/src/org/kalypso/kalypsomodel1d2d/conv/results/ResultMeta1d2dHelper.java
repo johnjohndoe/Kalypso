@@ -94,9 +94,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
-import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -218,10 +217,10 @@ public class ResultMeta1d2dHelper
         {
           resource.delete( true, new NullProgressMonitor() );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
-          IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
-          WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } ); //$NON-NLS-1$
+          final IOFileFilter lNoDirFilter = FalseFileFilter.INSTANCE;
+          final WildcardFileFilter lFilter = new WildcardFileFilter( new String[] { "*" } ); //$NON-NLS-1$
           final Collection< ? > files = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lNoDirFilter );
           for( final Object lFile : files )
           {
@@ -229,7 +228,7 @@ public class ResultMeta1d2dHelper
               FileUtils.deleteQuietly( (File) lFile );
           }
 
-          IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
+          final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
           final Collection< ? > dirs = FileUtils.listFiles( resource.getLocation().toFile(), lFilter, lDirFilter );
           for( final Object lDir : dirs )
           {
@@ -238,7 +237,7 @@ public class ResultMeta1d2dHelper
               {
                 FileUtils.deleteDirectory( (File) lDir );
               }
-              catch( IOException e1 )
+              catch( final IOException e1 )
               {
                 e1.printStackTrace();
               }
@@ -265,7 +264,7 @@ public class ResultMeta1d2dHelper
                 children[i].delete();
               }
             }
-            catch( MalformedURLException e )
+            catch( final MalformedURLException e )
             {
               e.printStackTrace();
             }
@@ -518,10 +517,10 @@ public class ResultMeta1d2dHelper
     switch( stepMeta.getStepType() )
     {
       case steady:
-        return toDelete.contains( ResultManager.STEADY_DATE );
+        return toDelete.contains( ISimulation1D2DConstants.STEADY_DATE );
 
       case maximum:
-        return toDelete.contains( ResultManager.MAXI_DATE );
+        return toDelete.contains( ISimulation1D2DConstants.MAXI_DATE );
 
       case unsteady:
         final Date stepTime = stepMeta.getStepTime();
@@ -549,11 +548,11 @@ public class ResultMeta1d2dHelper
         switch( stepMeta.getStepType() )
         {
           case steady:
-            dates.add( ResultManager.STEADY_DATE );
+            dates.add( ISimulation1D2DConstants.STEADY_DATE );
             break;
 
           case maximum:
-            dates.add( ResultManager.MAXI_DATE );
+            dates.add( ISimulation1D2DConstants.MAXI_DATE );
             break;
           case unsteady:
             final Date stepTime = stepMeta.getStepTime();
@@ -583,11 +582,11 @@ public class ResultMeta1d2dHelper
         switch( stepMeta.getStepType() )
         {
           case steady:
-            l_date = ResultManager.STEADY_DATE;
+            l_date = ISimulation1D2DConstants.STEADY_DATE;
             break;
 
           case maximum:
-            l_date = ResultManager.MAXI_DATE;
+            l_date = ISimulation1D2DConstants.MAXI_DATE;
             break;
           case unsteady:
             final Date stepTime = stepMeta.getStepTime();
@@ -660,10 +659,10 @@ public class ResultMeta1d2dHelper
   public static String getNodeResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta, final String strType )
   {
     return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR
-        + stepResult.getFeature().getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
+        + stepResult.getFeature().getProperty( IStepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
   }
 
-  public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  public static String getIsolineResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
   {
     return docResult.getName()
         + STR_THEME_NAME_SEPARATOR
@@ -681,7 +680,7 @@ public class ResultMeta1d2dHelper
   //    return docResult.getName() + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10" ) + calcUnitMeta.getName(); //$NON-NLS-1$
   // }
 
-  public static String getIsoareaResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  public static String getIsoareaResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
   {
     return docResult.getName()
         + STR_THEME_NAME_SEPARATOR
@@ -698,13 +697,13 @@ public class ResultMeta1d2dHelper
     {
       lDateRes = interpreteDateFromURL( pFileResult.getParent().getURL() );
     }
-    catch( FileSystemException e0 )
+    catch( final FileSystemException e0 )
     {
       try
       {
         lDateRes = interpreteRMA10TimeLine( findFirstSpecifiedLine2dFile( pFileResult, "DA" ) ); //$NON-NLS-1$
       }
-      catch( IOException e1 )
+      catch( final IOException e1 )
       {
       }
     }
@@ -720,26 +719,26 @@ public class ResultMeta1d2dHelper
   {
     try
     {
-      String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
-      String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
-      SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
-      SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
-      int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
+      final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP;
+      final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP;
+      final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
+      final SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
+      final int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
       // Date lDateRes = lSimpleDateFormat.parse( url.toExternalForm().substring( indexOfStepDate, indexOfStepDate +
       // lStrTimeFormat.length() ) );
       Date lDateRes = null;
-      String dateString = url.toExternalForm().substring( indexOfStepDate );
+      final String dateString = url.toExternalForm().substring( indexOfStepDate );
       try
       {
         lDateRes = lSimpleDateFormatFull.parse( dateString );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         lDateRes = lSimpleDateFormat.parse( dateString );
       }
       return lDateRes;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -771,14 +770,14 @@ public class ResultMeta1d2dHelper
         calendar.set( year, 0, 1 );
 
         BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
-        BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
+        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
         if( wholeHours.intValue() > 1 )
         {
           wholeHours = new BigDecimal( wholeHours.intValue() - 1 );
         }
         calendar.add( Calendar.HOUR, wholeHours.intValue() );
         calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
-        boolean lBoolLeapYear = DateUtilities.isLeapYear( calendar );
+        final boolean lBoolLeapYear = DateUtilities.isLeapYear( calendar );
         if( lBoolLeapYear && calendar.get( Calendar.DAY_OF_YEAR ) > 59 )
         {
           calendar.clear();
@@ -813,11 +812,11 @@ public class ResultMeta1d2dHelper
     }
 
     String lStrRes = "";//$NON-NLS-1$
-    String lStrParam = linePrefix.trim().toUpperCase();
-    InputStream lInStream = FileUtilities.getInputStreamFromFileObject( file );
+    final String lStrParam = linePrefix.trim().toUpperCase();
+    final InputStream lInStream = FileUtilities.getInputStreamFromFileObject( file );
 
-    Reader lReader = new InputStreamReader( lInStream );
-    BufferedReader lBufferedReader = new BufferedReader( lReader );
+    final Reader lReader = new InputStreamReader( lInStream );
+    final BufferedReader lBufferedReader = new BufferedReader( lReader );
     try
     {
       while( true )
@@ -889,7 +888,7 @@ public class ResultMeta1d2dHelper
       if( child instanceof IStepResultMeta )
       {
         final IStepResultMeta stepMeta = (IStepResultMeta) child;
-        IPath lRes = getSavedSWANRawResultData( stepMeta );
+        final IPath lRes = getSavedSWANRawResultData( stepMeta );
         if( lRes != null )
         {
           return lRes;
@@ -906,12 +905,12 @@ public class ResultMeta1d2dHelper
   {
     int iCount = 0;
     String lNewName = ""; //$NON-NLS-1$
-    StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() );
+    final StringTokenizer lStrTokenizer = new StringTokenizer( oldThemeName.trim(), STR_THEME_NAME_SEPARATOR.trim() );
     while( lStrTokenizer.hasMoreTokens() )
     {
       if( iCount++ != 1 )
       {
-        lNewName += (lStrTokenizer.nextToken()); 
+        lNewName += (lStrTokenizer.nextToken());
       }
       else
       {
@@ -934,8 +933,8 @@ public class ResultMeta1d2dHelper
     if( sldFileName == null || "".equals( sldFileName ) || strType == null || "".equals( strType ) ) { //$NON-NLS-1$ //$NON-NLS-2$
       return ""; //$NON-NLS-1$ 
     }
-    int beginIndex = sldFileName.toLowerCase().indexOf( strType.toLowerCase() ) + strType.length();
-    int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$ 
+    final int beginIndex = sldFileName.toLowerCase().indexOf( strType.toLowerCase() ) + strType.length();
+    final int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$ 
     return sldFileName.substring( beginIndex, endIndex );
   }
 
@@ -966,7 +965,7 @@ public class ResultMeta1d2dHelper
         }
       }
     }
-    
+
     return false;
   }
 
@@ -981,7 +980,7 @@ public class ResultMeta1d2dHelper
     }
     return false;
   }
-  
+
   /**
    * gets the CalcUnitResultMeta as the papa of all steps
    */
