@@ -45,7 +45,6 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
@@ -74,7 +73,7 @@ public class VerticalLineLayerProvider extends AbstractLayerProvider
     if( propertyName == null )
       return null;
 
-    final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
+    final Feature baseFeature = (Feature) getModel().getData( featureKey );
     if( baseFeature == null )
       return null;
 
