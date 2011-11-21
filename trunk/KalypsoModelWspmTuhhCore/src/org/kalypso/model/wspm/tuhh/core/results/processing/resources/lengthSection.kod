@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
 	<Chart id="ls">
-		<Title />
+		<Title  horizontalTextAnchor="CENTER" insetBottom="5">%CHART_TITLE%</Title>
 		<Description />
 		<Layers>
 			<DerivedLayer id="soil">
@@ -148,7 +148,7 @@
 			<Axis id="Station_Axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Station [km]</Label>
-				<Direction>NEGATIVE</Direction>
+				<Direction>%AXIS_DIRECTION%</Direction>
 				<Position>BOTTOM</Position>
 				<PreferredAdjustment before="1" range="98" after="1" />
 				<RendererRef ref="NumberAxisRenderer" />
