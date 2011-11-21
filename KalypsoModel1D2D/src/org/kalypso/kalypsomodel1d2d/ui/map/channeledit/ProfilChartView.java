@@ -83,7 +83,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 @Deprecated
 public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
-  private IChartComposite m_chartComposite = null;
+  private ChartImageComposite m_chartComposite = null;
 
   private IProfilLayerProvider m_layerProvider;
 
@@ -114,7 +114,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     m_chartComposite = new ChartImageComposite( parent, SWT.BORDER, new ChartModel(), new RGB( 255, 255, 255 ) );
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     // gD.exclude = true;
-    m_chartComposite.getPlot().setLayoutData( gD );
+    m_chartComposite.setLayoutData( gD );
     m_chartComposite.getChartModel().getBehaviour().setHideUnusedAxes( false );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
@@ -131,13 +131,13 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
     updateLayer();
 
-    return m_chartComposite.getPlot();
+    return m_chartComposite;
   }
 
   public void dispose( )
   {
-    if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
-      m_chartComposite.getPlot().dispose();
+    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      m_chartComposite.dispose();
   }
 
   private void fireProfilChanged( final IProfil old )
@@ -293,11 +293,11 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    final IChartComposite chart = m_chartComposite;
-    if( chart == null || chart.getPlot().isDisposed() )
+    final ChartImageComposite chart = m_chartComposite;
+    if( chart == null || chart.isDisposed() )
       return;
 
-    chart.getPlot().getDisplay().syncExec( new Runnable()
+    chart.getDisplay().syncExec( new Runnable()
     {
       @Override
       public void run( )
@@ -321,15 +321,15 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   protected void redrawChart( )
   {
-    final IChartComposite chart = m_chartComposite;
-    if( chart != null && !chart.getPlot().isDisposed() )
-      chart.getPlot().getDisplay().syncExec( new Runnable()
+    final ChartImageComposite chart = m_chartComposite;
+    if( chart != null && !chart.isDisposed() )
+      chart.getDisplay().syncExec( new Runnable()
       {
 
         @Override
         public void run( )
         {
-          chart.getPlot().redraw();
+          chart.redraw();
         }
       } );
   }
@@ -363,18 +363,18 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     m_profile = profil;
     if( m_profile == null )
     {
-      ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = true;
+      ((GridData) m_chartComposite.getLayoutData()).exclude = true;
       m_chartComposite.getChartModel().getSettings().setTitle( "<No Profile Selected>", ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
 
     }
     else
     {
-      if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
+      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
       {
         m_profile.addProfilListener( this );
 
         m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString("ProfilChartView_0"), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
-        ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = false;
+        ((GridData) m_chartComposite.getLayoutData()).exclude = false;
         updateLayer();
       }
     }
@@ -441,7 +441,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       restoreStateVisible( lm, visibility );
       restoreStateActive( lm, activeLayerId );
       //
-      // m_chartComposite.getPlot().invalidate( lm.getLayers() );
+      // m_chartComposite.invalidate( lm.getLayers() );
     }
 
   }
