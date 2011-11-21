@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -176,48 +177,55 @@ public class DataCenterTuppleModel implements ITupleModel
     {
       final int index = i;
 
-      visitor.visit( new ITupleModelValueContainer()
+      try
       {
-        @Override
-        public int getIndex( )
+        visitor.visit( new ITupleModelValueContainer()
         {
-          return index;
-        }
+          @Override
+          public int getIndex( )
+          {
+            return index;
+          }
 
-        @Override
-        public Object get( final IAxis axis )
-        {
-          if( AxisUtils.isDateAxis( axis ) )
-            return m_tupples[index].getDate();
-          else if( AxisUtils.isStatusAxis( axis ) )
-            return m_tupples[index].getStatus();
+          @Override
+          public Object get( final IAxis axis )
+          {
+            if( AxisUtils.isDateAxis( axis ) )
+              return m_tupples[index].getDate();
+            else if( AxisUtils.isStatusAxis( axis ) )
+              return m_tupples[index].getStatus();
 
-          return m_tupples[index].getValue();
-        }
+            return m_tupples[index].getValue();
+          }
 
-        @Override
-        public boolean hasAxis( final String... types )
-        {
-          return true;
-        }
+          @Override
+          public boolean hasAxis( final String... types )
+          {
+            return true;
+          }
 
-        @Override
-        public IAxis[] getAxes( )
-        {
-          return DataCenterTuppleModel.this.getAxes();
-        }
+          @Override
+          public IAxis[] getAxes( )
+          {
+            return DataCenterTuppleModel.this.getAxes();
+          }
 
-        @Override
-        public void set( final IAxis axis, final Object value )
-        {
-          if( AxisUtils.isDateAxis( axis ) )
-            m_tupples[index].setDate( (Date) value );
-          else if( AxisUtils.isStatusAxis( axis ) )
-            m_tupples[index].setStatus( (String) value );
+          @Override
+          public void set( final IAxis axis, final Object value )
+          {
+            if( AxisUtils.isDateAxis( axis ) )
+              m_tupples[index].setDate( (Date) value );
+            else if( AxisUtils.isStatusAxis( axis ) )
+              m_tupples[index].setStatus( (String) value );
 
-          m_tupples[index].setValue( ((Number) value).doubleValue() );
-        }
-      } );
+            m_tupples[index].setValue( ((Number) value).doubleValue() );
+          }
+        } );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
     }
 
   }
