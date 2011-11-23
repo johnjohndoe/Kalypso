@@ -44,8 +44,8 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider;
 
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -53,7 +53,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 /**
  * @author Gernot Belger
  */
-public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
+public class LengthSectionLayerProvider extends AbstractLayerProvider
 {
   // FIXME: bad design!
   // There should be exactly one layer provider per layer implementation
