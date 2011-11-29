@@ -117,7 +117,7 @@ public class GafProfile implements IGafConstants
           return;
 
         final String message = String.format( "Part '%s': gaps between points of this part", kind );
-        m_stati.add( IStatus.WARNING, message );
+        m_stati.add( IStatus.INFO, message );
       }
     }
   }
@@ -166,7 +166,8 @@ public class GafProfile implements IGafConstants
 
       final String okMessage = String.format( "Cross Section '%s': OK", getStation() );
       final String message = String.format( "Cross Section '%s': Warnings/Errors", getStation() );
-      return m_stati.asMultiStatusOrOK( message, okMessage );
+      m_status = m_stati.asMultiStatusOrOK( message, okMessage );
+      return m_status;
     }
 
     return m_status;
