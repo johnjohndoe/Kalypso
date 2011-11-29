@@ -61,6 +61,8 @@ import org.apache.sanselan.formats.tiff.TiffImageMetadata;
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.image.ExifUtils;
+import org.kalypso.commons.java.activation.MimeTypeFinder;
+import org.kalypso.commons.java.activation.MimeTypeUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
