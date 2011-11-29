@@ -41,7 +41,10 @@
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
 import java.net.URI;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
@@ -149,7 +152,14 @@ public class CheckoutCrossSectionsWorker
   private void convertDocuments( final CrossSection section, final IProfileFeature profile )
   {
     final Set<Document> documents = section.getDocuments();
-    for( final Document document : documents )
+
+    // Sort documents, so pictures come first.
+    // Avoids, that the user looks at a warning when looking at a cross section first time
+    final Comparator<Document> documentComparator = new DocumentPictureComparator();
+    final SortedSet<Document> sortedDocuments = new TreeSet<Document>( documentComparator );
+    sortedDocuments.addAll( documents );
+
+    for( final Document document : sortedDocuments )
     {
       final String documentPath = document.getFilename();
       final URI documentURL = org.eclipse.core.runtime.URIUtil.append( m_documentBase, documentPath );
