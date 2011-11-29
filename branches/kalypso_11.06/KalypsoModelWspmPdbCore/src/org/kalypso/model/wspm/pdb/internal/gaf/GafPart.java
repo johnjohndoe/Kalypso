@@ -85,7 +85,7 @@ public class GafPart
     m_points.add( point );
   }
 
-  public Geometry getLine( final String dbType ) throws Exception
+  public Geometry getLine( final String dbType )
   {
     final Collection<Coordinate> crds = new ArrayList<Coordinate>();
 
@@ -126,7 +126,7 @@ public class GafPart
    */
   private Geometry createEmptyGeometry( final String dbType )
   {
-    if( dbType.contains( "Oracle" ) ) //$NON-NLS-1$
+    if( dbType != null && dbType.contains( "Oracle" ) ) //$NON-NLS-1$
       return null;
 
     return m_geometryFactory.createLineString( (Coordinate[]) null );

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.gaf;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -155,7 +156,7 @@ public class Gaf2Db implements IPdbOperation
       {
         final PDBNameGenerator pointNameGenerator = new PDBNameGenerator();
         final GafPoint gafPoint = points[j];
-        commitPoint( session, csPart, gafPoint, j, pointNameGenerator );
+        commitPoint( gafPart, session, csPart, gafPoint, j, pointNameGenerator );
       }
 
       addWaterlevels( session, profile, gafPart );
@@ -214,7 +215,7 @@ public class Gaf2Db implements IPdbOperation
     return csPart;
   }
 
-  private void commitPoint( final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator ) throws Exception
+  private void commitPoint( final GafPart gafPart, final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator )
   {
     final Point point = new Point();
 
@@ -225,17 +226,22 @@ public class Gaf2Db implements IPdbOperation
 
     /* Using pointID from gaf, but force it to be unique within each part */
     final String name = nameGenerator.createUniqueName( gafPoint.getPointId() );
+
+    final com.vividsolutions.jts.geom.Point location = gafPoint.getPoint();
+    final BigDecimal width = getOrCalculatePoint( gafPart, gafPoint );
+
+    /* Write data into db point */
     point.setName( name );
 
     point.setDescription( StringUtils.EMPTY );
 
     point.setConsecutiveNum( index );
     point.setHeight( gafPoint.getHeight() );
-    point.setWidth( gafPoint.getWidth() );
+    point.setWidth( width );
     point.setHyk( hyk.getHyk() );
     point.setCode( code.getCode() );
 
-    point.setLocation( gafPoint.getPoint() );
+    point.setLocation( location );
 
     final Roughness roughness = gafPoint.getRoughnessClass();
     point.setRoughness( roughness );
@@ -251,7 +257,25 @@ public class Gaf2Db implements IPdbOperation
     session.save( point );
   }
 
-  private void addWaterlevels( final Session session, final GafProfile profile, final GafPart part ) throws Exception
+  private BigDecimal getOrCalculatePoint( final GafPart gafPart, final GafPoint gafPoint )
+  {
+    final BigDecimal width = gafPoint.getWidth();
+    if( width != null )
+      return width;
+
+    final com.vividsolutions.jts.geom.Point location = gafPoint.getPoint();
+
+    final GafPoint startPoint = gafPart.getPoints()[0];
+    final com.vividsolutions.jts.geom.Point startLocation = startPoint.getPoint();
+
+    if( location == null || startLocation == null )
+      return null;
+
+    final double distance = location.distance( startLocation );
+    return new BigDecimal( distance ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+  }
+
+  private void addWaterlevels( final Session session, final GafProfile profile, final GafPart part )
   {
     if( m_waterlevelEvent == null )
       return;
