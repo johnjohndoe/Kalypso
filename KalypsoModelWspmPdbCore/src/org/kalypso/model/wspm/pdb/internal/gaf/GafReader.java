@@ -168,7 +168,7 @@ public class GafReader
 
     final BigDecimal station = asDecimal( items[0], "Station" );
     final String pointId = asString( tokens[1] );
-    final BigDecimal width = asDecimal( items[2], "Width" );
+    final BigDecimal width = asDecimalOrNull( items[2], "Width" );
     final BigDecimal height = asDecimal( items[3], "Height" );
     final String code = asString( tokens[4] ).toUpperCase();
     final String roughnessClass = asString( tokens[5] );
@@ -218,6 +218,21 @@ public class GafReader
 
   private BigDecimal asDecimal( final Object item, final String label ) throws CoreException
   {
+    if( item instanceof BigDecimal )
+      return (BigDecimal) item;
+
+    final String message = String.format( "Field '%s' is not a number", label );
+    throw failLine( IStatus.ERROR, message );
+  }
+
+  private BigDecimal asDecimalOrNull( final Object item, final String label ) throws CoreException
+  {
+    if( item == null )
+      return null;
+
+    if( item instanceof String && StringUtils.isBlank( (String) item ) )
+      return null;
+
     if( item instanceof BigDecimal )
       return (BigDecimal) item;
 
