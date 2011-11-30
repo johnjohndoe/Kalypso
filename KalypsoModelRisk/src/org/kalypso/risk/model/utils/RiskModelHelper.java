@@ -193,7 +193,7 @@ public class RiskModelHelper
 
     final int returnPeriod = sourceCoverageCollection.getReturnPeriod();
 
-    IFeatureBindingCollection<ICoverage> coverages = sourceCoverageCollection.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coverages = sourceCoverageCollection.getCoverages();
     for( int i = 0; i < coverages.size(); i++ )
     {
       final ICoverage inputCoverage = coverages.get( i );
@@ -229,7 +229,7 @@ public class RiskModelHelper
               final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
               /* Transform query position into the cs of the polygons. */
-              IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
+              final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
               final GM_Position position = geoTransformer.transform( positionAt, inputGrid.getSourceCRS() );
 
               /* This list has some unknown cs. */
@@ -420,7 +420,7 @@ public class RiskModelHelper
   {
     try
     {
-      IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
       for( int i = 0; i < coverages.size(); i++ )
       {
         final ICoverage inputCoverage = coverages.get( i );
@@ -459,7 +459,7 @@ public class RiskModelHelper
                 final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
                 /* Transform query position into the cs of the polygons. */
-                IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
+                final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
                 final GM_Position position = geoTransformer.transform( positionAt, inputGrid.getSourceCRS() );
 
                 /* This list has some unknown cs. */
@@ -594,8 +594,8 @@ public class RiskModelHelper
       if( collection.getReturnPeriod().equals( returnPeriod ) )
         index = i;
     }
-    return index;
 
+    return index;
   }
 
   private static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
@@ -775,7 +775,7 @@ public class RiskModelHelper
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
 
-    final String failedToLoadRiskMsg = String.format( Messages.getString("RiskModelHelper.0") ); //$NON-NLS-1$
+    final String failedToLoadRiskMsg = String.format( Messages.getString( "RiskModelHelper.0" ) ); //$NON-NLS-1$
     final IStatus failedToLoadRiskStatus = new Status( IStatus.ERROR, PluginUtilities.id( KalypsoRiskPlugin.getDefault() ), failedToLoadRiskMsg );
     if( !riskDataProvider.waitForModelToLoad( IRasterDataModel.class.getName(), 5 * 1000 ) )
       throw new CoreException( failedToLoadRiskStatus );
@@ -811,7 +811,7 @@ public class RiskModelHelper
       createdFeatures.add( annualCoverageCollection );
 
       int coverageCount = 0;
-      IFeatureBindingCollection<ICoverage> coverages = grids[i].getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages = grids[i].getCoverages();
       for( final ICoverage coverage : coverages )
       {
         final String subtaks = Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17", names[i], coverageCount + 1, coverages.size() ); //$NON-NLS-1$
