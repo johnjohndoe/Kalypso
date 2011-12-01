@@ -2,43 +2,43 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.to10_10;
+package org.kalypso.ui.rrm.wizards.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -69,21 +69,19 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   public CalcCasesConverter( final File sourceDir, final File targetDir, final String chosenExe )
   {
-    super( Messages.getString("CalcCasesConverter_0") ); //$NON-NLS-1$
+    super( Messages.getString( "CalcCasesConverter_0" ) ); //$NON-NLS-1$
+
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
     m_chosenExe = chosenExe;
   }
 
-  /**
-   * @see org.kalypso.ui.rrm.wizards.conversion.AbstractLoggingOperation#doExecute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
   {
     try
     {
-      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("CalcCasesConverter_1"), 101 ); //$NON-NLS-1$
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "CalcCasesConverter_1" ), 101 ); //$NON-NLS-1$
 
       final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_sourceDir );
       final File[] calcCases = walker.execute();
@@ -96,14 +94,14 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         final File sourceDir = calcCases[i];
         final String calcCaseName = sourceDir.getName();
 
-        progress.subTask( String.format( Messages.getString("CalcCasesConverter_2"), calcCaseName, i + 1, calcCases.length ) ); //$NON-NLS-1$
+        progress.subTask( String.format( Messages.getString( "CalcCasesConverter_2" ), calcCaseName, i + 1, calcCases.length ) ); //$NON-NLS-1$
         final File targetDir = determineTargetDir( sourceDir );
 
         try
         {
           prepareCalcCase( targetDir );
 
-          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, m_targetDir, targetDir, m_chosenExe );
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
         }
@@ -111,7 +109,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           final IStatus status = ce.getStatus();
           if( status.matches( IStatus.CANCEL ) )
-            throw new InterruptedException( Messages.getString("CalcCasesConverter_3") ); //$NON-NLS-1$
+            throw new InterruptedException( Messages.getString( "CalcCasesConverter_3" ) ); //$NON-NLS-1$
 
           getLog().add( status );
         }
@@ -147,15 +145,14 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     final IPath currentPath = Path.fromOSString( directory.getAbsolutePath() );
 
     // If we are inside the 'Rechenvarianten', keep this relative order.
-    // If we are outside, we move it into 'rechenvariante/Andere' in the target.
+    // If we are outside, we move it into 'Rechenvarianten/Andere' in the target.
     IPath targetRelativePath;
     if( calcCaseSourcePath.isPrefixOf( currentPath ) )
       targetRelativePath = currentPath.makeRelativeTo( calcCaseSourcePath );
     else
-      targetRelativePath = new Path( Messages.getString("CalcCasesConverter_6") ).append( calcCaseSourcePath.makeRelativeTo( basePath ) ); //$NON-NLS-1$
+      targetRelativePath = new Path( Messages.getString( "CalcCasesConverter_6" ) ).append( calcCaseSourcePath.makeRelativeTo( basePath ) ); //$NON-NLS-1$
 
-    final IPath calcCaseTargetPath = new Path( m_targetDir.getAbsolutePath() ).append( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    final IPath calcCaseTargetPath = new Path( m_targetDir.getAbsolutePath() ).append( INaProjectConstants.PATH_RECHENVARIANTEN );
     return calcCaseTargetPath.append( targetRelativePath ).toFile();
   }
-
 }
