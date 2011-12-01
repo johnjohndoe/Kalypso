@@ -5,14 +5,16 @@
          point="org.kalypso.contribs.eclipseplatform.projectTemplate">
       <project
             category="org.kalypso.model.rrm.templateProjects"
-            data="/en/"
+            data="/"
             description="%project.en.description"
+            id="en"
             label="%project.en.label">
       </project>
       <project
             category="org.kalypso.model.rrm.templateProjects"
-            data="/de/"
+            data="/"
             description="%project.de.description"
+            id="de"
             label="%project.de.label">
       </project>
    </extension>
