@@ -13,5 +13,8 @@
 	</buildSpec>
 	<natures>
         <nature>org.eclipse.pde.PluginNature</nature>
+        <nature>org.kalypso.simulation.ui.ModelNature</nature>
+        <nature>de.renew.workflow.connector.WorkflowProjectNature</nature>
+        <nature>org.kalypso.afgui.ScenarioHandlingProjectNature</nature>	
 	</natures>
 </projectDescription>
