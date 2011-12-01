@@ -5,16 +5,20 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.afgui.wizards.ProjectConversionWizard;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.module.INewProjectHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.module.welcome.SpecialImportProjectAction;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 
 public class KalypsoModuleRRM extends AbstractKalypsoModule
@@ -96,7 +100,7 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
       }
     };
 
-    actions.add( new SpecialImportProjectAction( Messages.getString("KalypsoModuleRRM_0"), provider ) ); //$NON-NLS-1$
+    actions.add( new SpecialImportProjectAction( Messages.getString( "KalypsoModuleRRM_0" ), provider ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -105,14 +109,19 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
     return new KalypsoRRMOpenAction();
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#acceptProject(org.eclipse.core.resources.IProject)
-   */
   @Override
   public boolean acceptProject( final IProject project )
   {
-    final IFile file = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
-    return file.exists();
+    final IPath basisScenarioPath = new Path( INaProjectConstants.FOLDER_BASIS );
+
+    final IFile hydrotopFile = project.getFile( basisScenarioPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) ); //$NON-NLS-1$
+
+    return hydrotopFile.exists();
   }
 
+  @Override
+  public INewProjectHandler getNewProjectHandler( )
+  {
+    return new KalypsoRrmNewProjectHandler();
+  }
 }
