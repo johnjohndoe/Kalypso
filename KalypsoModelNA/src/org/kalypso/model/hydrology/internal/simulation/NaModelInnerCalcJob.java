@@ -83,8 +83,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     try
     {
       simulation = new NAModelSimulation( m_simDirs, m_data, logger );
-      simulation.runSimulation( monitor );
-      return true;
+      return simulation.runSimulation( monitor );
     }
     catch( final SimulationException se )
     {
@@ -92,7 +91,7 @@ public class NaModelInnerCalcJob implements INaSimulationRunnable
     }
     catch( final OperationCanceledException e )
     {
-      final String msg = Messages.getString( "NaModelInnerCalcJob.0" ); //$NON-NLS-1$
+      final String msg = "Simulation cancelled by user";
       logger.log( Level.INFO, msg );
       monitor.setFinishInfo( IStatus.CANCEL, msg );
       return false;

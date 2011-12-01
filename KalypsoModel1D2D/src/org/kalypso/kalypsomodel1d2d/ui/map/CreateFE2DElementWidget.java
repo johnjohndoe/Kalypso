@@ -11,10 +11,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -24,7 +23,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -65,12 +64,8 @@ public class CreateFE2DElementWidget extends AbstractWidget
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-    // we must have a discretization model theme
-    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DNode.QNAME );
-    if( m_nodeTheme == null )
-      m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DEdge.QNAME );
-    if( m_nodeTheme == null )
-      m_nodeTheme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
+    // we must have the node theme. First node theme gets it
+    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     m_pointSnapper = new PointSnapper( discModel, mapPanel );
 
     reinit();
@@ -215,7 +210,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     try
     {
       final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      Feature lNewParentFeature = null;
+      IFeatureWrapper2 lNewParentFeature = null;
       if( newNode instanceof GM_Point )
       {
         lNewParentFeature = m_builder.addNode( (GM_Point) newNode, command );
@@ -260,7 +255,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     try
     {
       final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-      final Feature lNewParentFeature = m_builder.finish( command );
+      final IFeatureWrapper2 lNewParentFeature = m_builder.finish( command );
       if( command != null && lNewParentFeature != null )
         m_nodeTheme.getWorkspace().postCommand( command );
     }

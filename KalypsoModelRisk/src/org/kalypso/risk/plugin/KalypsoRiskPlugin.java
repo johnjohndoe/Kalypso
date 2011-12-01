@@ -1,10 +1,6 @@
 package org.kalypso.risk.plugin;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -69,23 +65,10 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     m_imageProvider.resetTmpFiles();
 
     // force plug-in to start
-    // Dangerous: do not call this stuff in plugin-start method -> rather start a job to do it...
-    final Job job = new Job( "" )
-    {
-      @Override
-      protected IStatus run( final IProgressMonitor arg0 )
-      {
-        final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-        setSzenarioController( new SzenarioController() );
-        dataProvider.addScenarioDataListener( getSzenarioController() );
-        getSzenarioController().scenarioChanged( dataProvider.getScenario() );
-        return Status.OK_STATUS;
-      }
-    };
-    job.setSystem( true );
-    job.setUser( false );
-    job.setPriority( Job.LONG );
-    job.schedule();
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    m_szenarioController = new SzenarioController();
+    dataProvider.addScenarioDataListener( m_szenarioController );
+    m_szenarioController.scenarioChanged( dataProvider.getScenario() );
   }
 
   /**
@@ -104,7 +87,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
       final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      caseDataProvider.removeScenarioDataListener( getSzenarioController() );
+      caseDataProvider.removeScenarioDataListener( m_szenarioController );
     }
 
     PLUGIN = null;
@@ -123,7 +106,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   {
     return getDefault().m_imageProvider;
   }
-
+  
   public static final int getPreferences_themeInfoPrecision( )
   {
     final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
@@ -131,16 +114,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     if( digits < KalypsoRiskPreferencePage.MIN_RISKTHEMEINFO_PRECISION || digits > KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION )
       digits = KalypsoRiskPreferencePage.DEFAULT_RISKTHEMEINFO_PRECISION;
     return digits;
-  }
-
-  public SzenarioController getSzenarioController( )
-  {
-    return m_szenarioController;
-  }
-
-  protected void setSzenarioController( SzenarioController szenarioController )
-  {
-    m_szenarioController = szenarioController;
   }
 
 }

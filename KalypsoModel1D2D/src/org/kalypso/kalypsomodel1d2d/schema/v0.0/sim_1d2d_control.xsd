@@ -334,31 +334,6 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-                    <xs:element name="HASWINDDRAG" type="xs:boolean" default="false">
-                        <xs:annotation>
-                            <xs:documentation>
-
-                                Berücksichtigung von Windschubspannungen
-
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-					<xs:element name="CHI" type="xs:double" default="0.0005">
-                        <xs:annotation>
-                            <xs:documentation>
-
-                                dichtebereinigter Windsogkoeffizient [-]
-
-
-                                Windsogkoeffizient zur Berechnung der Oberflächenschubspannung
-                                infolge Wind.
-                                Dieser Wert ergibt multipliziert mit der Dichte der Luft den
-                                eigentlichen Windsogkoeffizienten. 
-
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-					
 					<xs:element name="ICPU" type="xs:int" default="0">
 						<xs:annotation>
 							<xs:documentation>
@@ -414,12 +389,12 @@
 								prozentuale Änderungen?
 
 
-								aktiviert: prozentuale
+								gecheckt: prozentuale
 								Änderungen als Kovergenzkriterien verwenden;
 								angegebene Grenzen
 								sind als
 								relative Änderungen (Prozent durch 100) zu verstehen
-								deaktiviert: absolute Änderungen als Konvergenzkriterien verwenden
+								uncheckt: absolute Änderungen als Konvergenzkriterien verwenden
 
 							</xs:documentation>
 						</xs:annotation>
@@ -460,7 +435,7 @@
 									<xs:annotation>
 										<xs:documentation>
 
-											Benutzerdefiniert
+											Eingabewerte nutzen
 											
 										</xs:documentation>
 									</xs:annotation>
@@ -664,7 +639,7 @@
 						<xs:annotation>
 							<xs:documentation>
 
-								Anfangsgeschwindigkeit [m/s]
+								1D-Anfangsgeschwindigkeit [m/s]
 
 							</xs:documentation>
 						</xs:annotation>
@@ -673,9 +648,10 @@
 						<xs:annotation>
 							<xs:documentation>
 
-								Richtung der Anfangsgeschwindigkeit [°]
+								Geschwindigkeitsrichtung [°]
 
 
+								Ungefähre
 								Fließrichtung im
 								Gegenuhrzeigersinn auf die
 								globale
@@ -846,7 +822,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="IDRPT" default="0">
+					<xs:element name="IDRPT" default="1">
 						<xs:annotation>
 							<xs:documentation>
 
@@ -908,117 +884,44 @@
 						</xs:annotation>
 					</xs:element>
 					<!--MP-->
-                    <xs:element name="FIXEDMARSHBOTTOM" type="xs:boolean" default="false">
-                        <xs:annotation>
-                            <xs:documentation>
-                            
-                              true: constant Marsh bottom topography
-                              false: parallel shift coming from original topography
-
-                                
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-
 					<xs:element name="AC1" type="xs:double" default="1.5">
 						<xs:annotation>
 							<xs:documentation>
 
-								Mächtigkeit Marsh-Layer [m]
+								Deaktivierungstiefe [m]
 
 
-								Marsh Layer Mächtigkeit (aktiver Strömungsbereich
-								unter der Geländesohle) 
+								Tiefe unter der
+								Oberfläche zur
+								deaktivierung von Knoten
 								[m]
 								
 							</xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:double">
-                                <xs:minExclusive value="0.00" />
-                            </xs:restriction>
-                        </xs:simpleType>
+						</xs:annotation>
 					</xs:element>
 					<xs:element name="AC2" type="xs:double" default="0.67">
 						<xs:annotation>
 							<xs:documentation>
-								Marsh Übergangszone [m]
+								Übergangstiefe [m]
 
-								Mächtigkeit der Übergangszone zur sukzessiven Anpassung
-								zwischen freiem Abfluss und Marsh-Abfluss [m].
+								Wassertiefe ab der
+								Marsh-Algorithmus
+								aktiviert wird
+								[m].
 								
 							</xs:documentation>
 						</xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:double">
-                                <xs:minInclusive value="0.01" />
-                            </xs:restriction>
-                        </xs:simpleType>
 					</xs:element>
 					<xs:element name="AC3" type="xs:double" default="0.04">
 						<xs:annotation>
 							<xs:documentation>
-								Marsh-Porosität [-]
+								Porosität [-]
 
-								Porosität zur Ermittlung der virtuellen Fließtiefe
-								im Marsh-Bereich [-].
+								Porosität des Marsh-Bodens [-].
 
 							</xs:documentation>
 						</xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:double">
-                                <xs:minExclusive value="0.00" />
-                            </xs:restriction>
-                        </xs:simpleType>
 					</xs:element>
-                    <xs:element name="AC4" type="xs:double" default="0.00">
-                        <xs:annotation>
-                            <xs:documentation>
-                                Absolute Marsh Sohlhöhe [mNN]
-                                
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                    <xs:element name="MARSHFRICTIONFACTOR" type="xs:double" default="20.0">
-                        <xs:annotation>
-                            <xs:documentation>
-                                Marsh Friction Correction Factor [-]
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                    <xs:element name="MARSHFRICTIONDISTR" default="2">
-                        <xs:annotation>
-                            <xs:documentation>
-                                <![CDATA[Reibungsskalierung]]>
-                                <![CDATA[Reibungsskalierung]]>
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:int">
-                                <xs:enumeration value="1">
-                                    <xs:annotation>
-                                        <xs:documentation>
-                                            <![CDATA[linear steigender Fließwiderstand, ohne smoothing]]>
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                                <xs:enumeration value="2">
-                                    <xs:annotation>
-                                        <xs:documentation>
-                                            <![CDATA[linear steigener Fließwiderstand, trigonometrisch angepasst]]>
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                                <xs:enumeration value="3">
-                                    <xs:annotation>
-                                        <xs:documentation>
-                                            <![CDATA[quadratisch steigender Fließwiderstand, trigonometrisch angepasst]]>
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:enumeration>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:element>
 					<!--CV-->
 					<!--TODO: aus vorhandenen Lösungen auswählen...-->
 					<xs:element name="_restart" type="xs:boolean" default="false">

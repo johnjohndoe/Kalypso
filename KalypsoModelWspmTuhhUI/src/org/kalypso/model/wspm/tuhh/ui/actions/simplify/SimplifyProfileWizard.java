@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.actions.simplify;
 
+
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 
@@ -49,22 +51,12 @@ import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IPro
  */
 public class SimplifyProfileWizard extends ManipulateProfileWizard
 {
-  private SimplifyProfilePage m_simplifyPage;
+  private final SimplifyProfilePage m_simplifyPage;
 
-  public SimplifyProfileWizard( )
+  public SimplifyProfileWizard( final ProfileSelection profileSelection )
   {
-    setWindowTitle( Messages.getString( "SimplifyProfileHandler_0" ) ); //$NON-NLS-1$
-  }
+    super( profileSelection, Messages.getString("SimplifyProfileWizard_0") ); //$NON-NLS-1$
 
-  @Override
-  protected String getProfilePageMessage( )
-  {
-    return Messages.getString( "SimplifyProfileWizard_0" ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void addPages( )
-  {
     m_simplifyPage = new SimplifyProfilePage( "simplifyPage" ); //$NON-NLS-1$
 
     addPage( m_simplifyPage );

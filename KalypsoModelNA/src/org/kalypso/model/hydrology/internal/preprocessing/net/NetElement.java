@@ -45,8 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Channel;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypsodeegree.model.feature.Feature;
@@ -182,7 +182,7 @@ public class NetElement
 
     // append upstream node:
     final int upstreamNodeID = upstreamNode == null ? ANFANGSKNOTEN : m_idManager.getAsciiID( upstreamNode );
-    netBuffer.append( String.format( "%8d", upstreamNodeID ) ); //$NON-NLS-1$
+    netBuffer.append( String.format( "%8d", upstreamNodeID ) );
 
     // append downstream node:
     final int downstreamNodeID = m_idManager.getAsciiID( downstreamNode );

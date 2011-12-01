@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
@@ -60,7 +60,7 @@ public interface IPolyElement<CT extends IFE1D2DComplexElement, ET extends IFE1D
 
   public GM_Surface<GM_SurfacePatch> getGeometry( );
 
-  public IFeatureBindingCollection<ET> getEdges( );
+  public IFeatureWrapperCollection<ET> getEdges( );
 
   public void addEdge( final String edgeID );
 

@@ -44,16 +44,16 @@ import java.math.BigDecimal;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.kalypso.commons.validation.AbstractNumberRule;
+import org.kalypso.commons.validation.IMessageCollector;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-public class NoTwoNeighbouringStationsError implements IValidator
+public class NoTwoNeighbouringStationsError extends AbstractNumberRule
 {
   private final SortedMap<BigDecimal, IProfileFeature> m_stations = new TreeMap<BigDecimal, IProfileFeature>();
 
@@ -66,14 +66,23 @@ public class NoTwoNeighbouringStationsError implements IValidator
     }
   }
 
-  private BigDecimal getFirstStation( )
+  /**
+   * @see org.kalypso.commons.validation.AbstractNumberRule#validateNumber(java.lang.Number,
+   *      org.kalypso.commons.validation.IMessageCollector)
+   */
+  @Override
+  protected void validateNumber( final Number value, final IMessageCollector collector )
   {
-    return m_stations.firstKey();
-  }
+    final BigDecimal station = (BigDecimal) value;
+    if( station == null )
+      return;
 
-  private BigDecimal getLastStation( )
-  {
-    return m_stations.lastKey();
+    final IProfileFeature prevProfile = getPreviousProfile( station );
+
+    final IProfileFeature nextProfile = getNextProfile( station );
+
+    if( prevProfile == null || nextProfile == null )
+      collector.addMessage( Messages.getString("NoTwoNeighbouringStationsError_0"), IMessageProvider.ERROR ); //$NON-NLS-1$
   }
 
   public IProfileFeature getPreviousProfile( final BigDecimal station )
@@ -98,29 +107,6 @@ public class NoTwoNeighbouringStationsError implements IValidator
       return null;
 
     return m_stations.get( tailMap.firstKey() );
-  }
-
-  /**
-   * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-   */
-  @Override
-  public IStatus validate( final Object value )
-  {
-    final BigDecimal station = (BigDecimal) value;
-    if( station == null )
-      return ValidationStatus.error( Messages.getString( "NoTwoNeighbouringStationsError.0" ) ); //$NON-NLS-1$
-
-    final IProfileFeature prevProfile = getPreviousProfile( station );
-
-    final IProfileFeature nextProfile = getNextProfile( station );
-
-    if( prevProfile == null || nextProfile == null )
-    {
-      final String msg = Messages.getString( "NoTwoNeighbouringStationsError_0", getFirstStation(), getLastStation() ); //$NON-NLS-1$
-      return ValidationStatus.error( msg );
-    }
-
-    return ValidationStatus.ok();
   }
 
 }

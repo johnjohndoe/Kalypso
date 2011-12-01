@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
 <schema xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/kalypsoNA" elementFormDefault="qualified" version="1.0">
-	<import namespace="http://www.opengis.net/gml"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink"/>
 	<import namespace="obslink.zml.kalypso.org"/>
 	<import namespace="inline.zml.kalypso.org"/>
@@ -58,7 +58,7 @@
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
 					<element name="Ort" type="gml:PointPropertyType"/>
-					<element name="generateResult" type="boolean" default="false" nillable="true"/>
+					<element name="generateResult" type="boolean"/>
 					<element name="downStreamChannelMember" type="na:ChannelLinkType" minOccurs="0"/>
 					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
 					<!-- ZR berechnet, hier wird das Ergebnis gespeichert -->
@@ -76,7 +76,7 @@
                     </element>
 					<!-- ZR Zufluss falls Zufluss vorhanden -->
 					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="syntheticZuflussZR" type="boolean" default="false" nillable="true"/>
+					<element name="syntheticZuflussZR" type="boolean" default="false" />
 					<!-- branching ab hier aktivieren-->
 					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0"/>
 					<element name="riverCode" type="string" />
@@ -87,7 +87,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="qqRelation" type="zmlinline:ZmlInlineQQType" nillable="true"/>
+					<element name="qqRelation" type="zmlinline:ZmlInlineQQType"/>
 					<element name="qqRelatedNode" type="na:NodeLinkType" minOccurs="0" />
 				</sequence>
 			</extension>
@@ -214,7 +214,7 @@
           -->
 					<element name="Ort" type="gml:PolygonPropertyType"/>
 					<element name="entwaesserungsStrangMember" type="na:ChannelLinkType" minOccurs="0"/>
-					<element name="generateResult" type="boolean" default="false" nillable="true"/>
+					<element name="generateResult" type="boolean"/>
 					<!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
 					<element name="flaech" type="long"/>
 					<element name="faktn" default="1.0">
@@ -372,21 +372,10 @@
 					<element name="faktorRetbas" type="double" minOccurs="0"/>
 					<element name="faktorRetgw" type="double" minOccurs="0"/>
 					<element name="faktorRetklu" type="double" minOccurs="0"/>
-					<element ref="na:corrSealing" minOccurs="0"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
-
-	<element name="corrSealing" default="1.0">
-		<simpleType>
-			<restriction base="double">
-				<minInclusive value="0.0" />
-				<maxInclusive value="1.0" />
-			</restriction>
-		</simpleType>
-	</element>
-  
 	<!-- ______________Channels_____________________ -->
 	<complexType name="ChannelCollectionAssociationType">
 		<sequence>
@@ -456,8 +445,8 @@
 					<element name="endkm" type="double" minOccurs="0"/>
 					<element name="KMParameterMember" type="na:KMParameterAssociationType" minOccurs="5" maxOccurs="5"/>
 					<!--    Optimierung   -->
-					<element name="faktorRkf" type="double" minOccurs="1" nillable="true"/>
-					<element name="faktorRnf" type="double" minOccurs="1" nillable="true"/>
+					<element name="faktorRkf" type="double" minOccurs="1"/>
+					<element name="faktorRnf" type="double" minOccurs="1"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -473,17 +462,11 @@
 					<element name="vmax" type="double"/>
 					<element name="vmin" type="double"/>
 					<element name="hvvsqd" type="zmlinline:ZmlInlineWVQType"/>
-					<element name="generateResult" type="boolean" default="false" nillable="true"/>
+					<element name="generateResult" type="boolean"/>
 					<element name="downStreamNodeMember_2nd" type="na:NodeLinkType" minOccurs="0"/>
 					<element name="downStreamNodeMember_3rd" type="na:NodeLinkType" minOccurs="0"/>
-					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty" nillable="true"/>
-					<element name="faktorSeaEvaporation" default="1.0" nillable="true">
-                        <simpleType>
-                            <restriction base="double" >
-                                <minExclusive value="0.0"/>
-                            </restriction>
-                        </simpleType>
-                    </element>
+					<element name="zmlLinkSeaEvaporation" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="faktorSeaEvaporation" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>

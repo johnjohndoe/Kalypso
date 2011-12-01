@@ -47,14 +47,10 @@ import java.util.List;
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffObject;
 import org.kalypso.model.hydrology.internal.postprocessing.BlockTimeSeries;
-import org.kalypso.model.hydrology.internal.postprocessing.ENACoreResultsFormat;
 
 /**
  * @author kuepfer
  */
-
-// FIXME This class is not used anywhere, check if it is needed.
-
 public class BlockTimeSeriesDiffObject implements IDiffObject
 {
   private static final String SEPERATOR = "#"; //$NON-NLS-1$
@@ -63,17 +59,16 @@ public class BlockTimeSeriesDiffObject implements IDiffObject
 
   private final List<String> m_pathes;
 
-  public BlockTimeSeriesDiffObject( final File file, final ENACoreResultsFormat resultsFormat )
+  public BlockTimeSeriesDiffObject( final File file )
   {
-// final BlockTimeSeries series = new BlockTimeSeries();
-    final BlockTimeSeries series = new BlockTimeSeries( resultsFormat );
+    final BlockTimeSeries series = new BlockTimeSeries();
     series.importBlockFile( file );
     m_blockTimeSeries = series;
     final String name = file.getName();
     final String[] keys = m_blockTimeSeries.getKeys();
 
     final List<String> list = new ArrayList<String>();
-    for( final String key : keys )
+    for( String key : keys )
       list.add( name + SEPERATOR + key );
 
     m_pathes = list;

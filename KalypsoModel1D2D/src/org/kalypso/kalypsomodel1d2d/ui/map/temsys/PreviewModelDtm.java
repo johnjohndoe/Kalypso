@@ -44,10 +44,8 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
@@ -61,27 +59,13 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 /**
  * @author Gernot Belger
  */
-class PreviewModelDtm extends Action
+public class PreviewModelDtm
 {
-  private final ApplyElevationWidgetDataModel m_dataModel;
-
-  PreviewModelDtm( final ApplyElevationWidgetDataModel dataModel )
+  public static void showModelDtm( final Shell shell, final IMapPanel mapPanel )
   {
-    m_dataModel = dataModel;
-
-    setText( Messages.getString("PreviewModelDtm.0") ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void runWithEvent( final Event event )
-  {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final IMapPanel mapPanel = m_dataModel.getMapPanel();
-
     final AbstractMapPart mapView = (AbstractMapPart) UtilMap.getMapView();
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-
+    
     final IFile dtmFile = findFile( shell, "models/model_tin.gz" ); //$NON-NLS-1$
     if( dtmFile == null )
       return;
@@ -95,7 +79,7 @@ class PreviewModelDtm extends Action
     dialog.open();
   }
 
-  private IFile findFile( final Shell shell, final String path )
+  private static IFile findFile( final Shell shell, final String path )
   {
     try
     {
@@ -108,7 +92,9 @@ class PreviewModelDtm extends Action
       e.printStackTrace();
       ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.PreviewModelDtm.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.PreviewModelDtm.3"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-
+    
     return null;
   }
+
+
 }

@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -66,7 +66,7 @@ public class CsvSource implements IProfilSource
 {
   private IProfilPointPropertyProvider m_provider = null;
 
-  private final HashMap<String, TupleResult> m_profilesTable = new HashMap<String, TupleResult>();
+  private final HashMap<String, TupleResult> m_ProfilesTable = new HashMap<String, TupleResult>();
 
   private String[] m_columns = null;
 
@@ -81,27 +81,25 @@ public class CsvSource implements IProfilSource
   private IComponent getComponent( final String key )
   {
     if( "BREITE".equalsIgnoreCase( key ) ) //$NON-NLS-1$
-      return m_provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+      return m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     if( "HOEHE".equalsIgnoreCase( key ) ) //$NON-NLS-1$
-      return m_provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+      return m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     else
       return null;
   }
 
   private TupleResult getResult( final String id )
   {
-    if( m_profilesTable.containsKey( id ) )
-      return m_profilesTable.get( id );
+    if( m_ProfilesTable.containsKey( id ) )
+      return m_ProfilesTable.get( id );
     final TupleResult result = new TupleResult();
     for( final String column : m_columns )
     {
       final IComponent component = getComponent( column );
       if( component != null )
-      {
         result.addComponent( component );
-      }
     }
-    m_profilesTable.put( id, result );
+    m_ProfilesTable.put( id, result );
     return result;
   }
 
@@ -110,13 +108,13 @@ public class CsvSource implements IProfilSource
 
     m_columns = tableReader.readNext();
 
-    final int station = getColumnIndex( "STATION" ); //$NON-NLS-1$ 
+    final int m_station = getColumnIndex( "STATION" ); //$NON-NLS-1$
     String[] values = tableReader.readNext();
     while( values != null )
     {
       if( values.length == m_columns.length )
       {
-        final String key = station < 0 ? "-" : values[station]; //$NON-NLS-1$
+        final String key = m_station < 0 ? "-" : values[m_station]; //$NON-NLS-1$
         final TupleResult result = getResult( key );
         final IRecord record = result.createRecord();
 
@@ -124,18 +122,12 @@ public class CsvSource implements IProfilSource
         {
           final int index = result.indexOfComponent( getComponent( m_columns[i] ) );
           if( index < 0 )
-          {
             continue;
-          }
           final Double dbl = NumberUtils.parseQuietDouble( values[i] );
           if( dbl.isNaN() )
-          {
             record.setValue( index, values[i] );
-          }
           else
-          {
             record.setValue( index, dbl );
-          }
         }
         result.add( record );
       }
@@ -153,13 +145,13 @@ public class CsvSource implements IProfilSource
     m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileTyp );
     extractDataBlocks( new CSVReader( reader, ';' ) );
     final ArrayList<IProfil> profiles = new ArrayList<IProfil>();
-    for( final String key : m_profilesTable.keySet() )
+    for( final String key : m_ProfilesTable.keySet() )
     {
       final IProfil profil = ProfilFactory.createProfil( profileTyp );
       if( profil == null )
-        throw new IOException( Messages.getString( "CsvSource_0" ) ); //$NON-NLS-1$
+        throw new IOException( Messages.getString("CsvSource_0") ); //$NON-NLS-1$
 
-      final TupleResult result = m_profilesTable.get( key );
+      final TupleResult result = m_ProfilesTable.get( key );
       profil.setStation( NumberUtils.parseQuietDouble( key ) );
       profil.setResult( result );
       profiles.add( profil );

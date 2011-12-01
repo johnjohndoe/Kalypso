@@ -58,11 +58,11 @@ import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.CatchmentInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.Sealing;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -93,8 +93,11 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
       m_soilTypeNameHash.put( soiltype.getName(), soiltype );
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractCoreFileWriter#writeContent(java.io.PrintWriter)
+   */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
     final String hydrotopeFileTile = Messages.getString( "org.kalypso.convert.namodel.manager.HydrotopManager.2" ); //$NON-NLS-1$ 
     writer.append( hydrotopeFileTile ).append( '\n' );
@@ -111,7 +114,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     }
   }
 
-  private void writeCatchment( final PrintWriter writer, final CatchmentInfo info ) throws NAPreprocessorException
+  private void writeCatchment( final PrintWriter writer, final CatchmentInfo info ) throws SimulationException
   {
     final Catchment catchment = info.getCatchment();
     final List<HydrotopeInfo> hydrotops = info.getHydrotops();
@@ -137,7 +140,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
       writeHydrotope( writer, hydrotopInfo );
   }
 
-  private void writeHydrotope( final PrintWriter writer, final HydrotopeInfo hydrotopInfo ) throws NAPreprocessorException
+  private void writeHydrotope( final PrintWriter writer, final HydrotopeInfo hydrotopInfo ) throws SimulationException
   {
     final IHydrotope hydrotop = hydrotopInfo.getHydrotop();
 
@@ -163,7 +166,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     writer.append( '\n' );
   }
 
-  private String findSoiltypeName( final IHydrotope hydrotop ) throws NAPreprocessorException
+  private String findSoiltypeName( final IHydrotope hydrotop ) throws SimulationException
   {
     final String soilTypeID = hydrotop.getSoilType();
     final Soiltype soiltype = m_parameter.findSoiltypeByID( soilTypeID );
@@ -175,8 +178,8 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     if( soiltypeByName != null )
       return soilTypeID;
 
-    final String msg = String.format( Messages.getString( "HydrotopeWriter.0" ), soilTypeID, hydrotop.getId() ); //$NON-NLS-1$
-    throw new NAPreprocessorException( msg );
+    final String msg = String.format( "Unknown soiltype '%s' in hydrotope '%s'.", soilTypeID, hydrotop.getId() );
+    throw new SimulationException( msg );
   }
 
   private static String formatSudsSealing( final HydrotopeInfo info )
@@ -192,7 +195,7 @@ public class HydrotopeWriter extends AbstractCoreFileWriter
     final String _40 = formatSudsSealing( info.getSudsSealingByType( "40" ) ); //$NON-NLS-1$ 
     final String _41 = formatSudsSealing( info.getSudsSealingByType( "41" ) ); //$NON-NLS-1$ 
 
-    return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", _10, _11, _12, _13, _20, _21, _30, _31, _40, _41 ); //$NON-NLS-1$
+    return String.format( Locale.US, "%s %s %s %s %s %s %s %s %s %s", _10, _11, _12, _13, _20, _21, _30, _31, _40, _41 );
   }
 
   private static String formatSudsSealing( final Sealing info )

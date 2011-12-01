@@ -60,6 +60,7 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -121,6 +122,22 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   }
 
   /**
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
+   */
+  @Override
+  public boolean doesScaleConstraintApply( final double scale )
+  {
+    if( m_decoratedElement != null )
+    {
+      return m_decoratedElement.doesScaleConstraintApply( scale );
+    }
+    else
+    {
+      return true;
+    }
+  }
+
+  /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
    */
   @Override
@@ -128,7 +145,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   {
     if( m_calculationUnit != null )
     {
-      return m_calculationUnit;
+      return m_calculationUnit.getFeature();
     }
     else
     {
@@ -184,7 +201,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
       visibleElements = ((ICalculationUnit1D2D) m_calculationUnit).query( sourceRect );
     else
       visibleElements = m_calculationUnit.getElements().query( sourceRect );
-    for( final Feature element : visibleElements )
+    for( final IFeatureWrapper2 element : visibleElements )
     {
       if( element instanceof IPolyElement )
       {

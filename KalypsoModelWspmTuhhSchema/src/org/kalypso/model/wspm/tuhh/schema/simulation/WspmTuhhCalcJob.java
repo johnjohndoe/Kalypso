@@ -68,6 +68,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.BufferedAndOtherOutputStream;
 import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypso.wspwin.core.WspWinHelper;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -176,7 +177,7 @@ public class WspmTuhhCalcJob implements ISimulation
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modellGmlURL, null );
 
       final Object calcObject = GMLXPathUtilities.query( calcpath, workspace );
-      if( !(calcObject instanceof TuhhCalculation) )
+      if( !(calcObject instanceof Feature) )
       {
         monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.8" ) + calcObject ); //$NON-NLS-1$
         log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.9" ), calcXPath, calcObject ); //$NON-NLS-1$

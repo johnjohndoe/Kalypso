@@ -70,7 +70,7 @@ public class CalculationUnit1D2DLabelProvider extends LabelProvider
       }
       else
       {
-        return ((ICalculationUnit) element).getId();
+        return ((ICalculationUnit) element).getGmlID();
       }
     }
     else

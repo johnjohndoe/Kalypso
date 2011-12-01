@@ -47,13 +47,8 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreatorStrategy;
@@ -62,7 +57,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.SoilOnlyProfileCr
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.TuhhProfileWProfContentHandler;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.WProfImportOperation;
 import org.kalypso.model.wspm.tuhh.core.wprof.BCEShapeWPRofContentProviderFactory;
-import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -70,47 +64,30 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 /**
  * @author Gernot Belger
  */
-public class WProfImportWizard extends Wizard implements IWorkbenchWizard
+public class WProfImportWizard extends Wizard
 {
   private final BCEShapeWPRofContentProviderFactory m_pointFactory = new BCEShapeWPRofContentProviderFactory();
 
-  private TuhhWspmProject m_targetProject;
+  private final TuhhWspmProject m_targetProject;
 
-  private WProfImportFilePage m_wprofFilePage;
+  private final WProfImportFilePage m_wprofFilePage;
 
-  private CommandableWorkspace m_workspace;
+  private final CommandableWorkspace m_workspace;
 
-  private WProfOptionsPage m_wprofMarkerPage;
+  private final WProfOptionsPage m_wprofMarkerPage;
 
-  private WProfPropertyPage m_wprofPropertyPage;
+  private final WProfPropertyPage m_wprofPropertyPage;
 
-  public WProfImportWizard( )
+  public WProfImportWizard( final CommandableWorkspace workspace, final TuhhWspmProject targetProject )
   {
-    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), "tuhhWProfImport" ); //$NON-NLS-1$
-    setDialogSettings( settings );
-
-    setWindowTitle( Messages.getString( "WProfImportWizard_4" ) ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    final WspmTuhhProjectSelection projectSelection = new WspmTuhhProjectSelection( selection );
-    if( !projectSelection.hasProject() )
-      throw new IllegalArgumentException( Messages.getString( "ImportWProfHandler_1" ) ); //$NON-NLS-1$
-
-    final CommandableWorkspace workspace = projectSelection.getWorkspace();
-    final TuhhWspmProject targetProject = projectSelection.getProject();
-
     m_workspace = workspace;
     m_targetProject = targetProject;
 
-    m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", Messages.getString( "WProfImportWizard_0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_wprofFilePage.setDescription( Messages.getString( "WProfImportWizard_1" ) ); //$NON-NLS-1$
+    m_wprofFilePage = new WProfImportFilePage( "wprofFilePage", Messages.getString("WProfImportWizard_0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wprofFilePage.setDescription( Messages.getString("WProfImportWizard_1") ); //$NON-NLS-1$
 
-    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", Messages.getString( "WProfImportWizard_2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_wprofMarkerPage.setDescription( Messages.getString( "WProfImportWizard_3" ) ); //$NON-NLS-1$
+    m_wprofMarkerPage = new WProfOptionsPage( "wprofMarkerPage", Messages.getString("WProfImportWizard_2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wprofMarkerPage.setDescription( Messages.getString("WProfImportWizard_3") ); //$NON-NLS-1$
 
     final WProfProfileStrategyOptions profileStrategyOptions = m_wprofMarkerPage.getProfileStrategyOptions();
     profileStrategyOptions.addStrategy( new ProfileCreatorStrategy() );
@@ -120,11 +97,17 @@ public class WProfImportWizard extends Wizard implements IWorkbenchWizard
     final Properties defaultSpecification = m_pointFactory.getDefaultSpecification();
     m_wprofPropertyPage = new WProfPropertyPage( "wprofPropertyPage", defaultSpecification ); //$NON-NLS-1$
 
+    setWindowTitle( Messages.getString("WProfImportWizard_4") ); //$NON-NLS-1$
+    setNeedsProgressMonitor( true );
+
     addPage( m_wprofFilePage );
     addPage( m_wprofMarkerPage );
     addPage( m_wprofPropertyPage );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
@@ -148,9 +131,7 @@ public class WProfImportWizard extends Wizard implements IWorkbenchWizard
       final String markerID = mappingEntry.getKey();
       final int[] types = mappingEntry.getValue();
       for( final int type : types )
-      {
         handler.addMarkerMapping( markerID, type );
-      }
     }
 
     final Properties specification = m_wprofPropertyPage.getSpecification();
@@ -164,7 +145,7 @@ public class WProfImportWizard extends Wizard implements IWorkbenchWizard
 
     final IWizardContainer container = getContainer();
     final IStatus result = RunnableContextHelper.execute( container, true, true, op );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "WProfImportWizard_5" ), result ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("WProfImportWizard_5"), result ); //$NON-NLS-1$
 
     return !result.matches( IStatus.ERROR );
   }

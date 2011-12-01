@@ -61,10 +61,11 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.timeseries.Ext2Writer;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.RangeFactor;
 import org.kalypso.ogc.sensor.DateRange;
@@ -86,6 +87,10 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class TsFileWriter
 {
+  private final static String FILTER_T = "<filter><intervallFilter amount=\"24\" calendarField=\"HOUR_OF_DAY\" mode=\"intensity\" xmlns=\"filters.zml.kalypso.org\"/></filter>"; //$NON-NLS-1$
+
+  private final static String FILTER_V = FILTER_T;
+
   private final Logger m_logger;
 
   private final URL m_zmlContext;
@@ -130,7 +135,6 @@ public class TsFileWriter
   {
     final Date simulationStart = m_metaControl.getSimulationStart();
     final Date simulationEnd = m_metaControl.getSimulationEnd();
-    final DateRange simulationRange = new DateRange( simulationStart, simulationEnd );
 
     final Catchment[] catchments = channel.findCatchments();
 
@@ -138,18 +142,18 @@ public class TsFileWriter
     {
       try
       {
-        writeCatchmentTimeseries( klimaDir, simulationRange, catchment );
+        writeCatchmentTimeseries( klimaDir, simulationStart, simulationEnd, catchment );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
-        final String message = String.format( Messages.getString("TsFileWriter.0"), catchment.getName() ); //$NON-NLS-1$
+        final String message = String.format( "Fehler beim Schreiben der Zeitreihen für Teilgebiet '%s'", catchment.getName() );
         throw new NAPreprocessorException( message, e );
       }
     }
   }
 
-  private void writeCatchmentTimeseries( final File klimaDir, final DateRange simulationRange, final Catchment catchment ) throws SensorException, IOException
+  private void writeCatchmentTimeseries( final File klimaDir, final Date simulationStart, final Date simulationEnd, final Catchment catchment ) throws SensorException, IOException
   {
     final File targetFileN = m_tsFileManager.getNiederschlagEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
 
@@ -165,11 +169,11 @@ public class TsFileWriter
 
       final TimeseriesLinkType linkT = catchment.getTemperatureLink();
       final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0", simulationRange ); //$NON-NLS-1$
+      writeTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, FILTER_T, "1.0", simulationStart, simulationEnd );
 
       final TimeseriesLinkType linkV = catchment.getEvaporationLink();
       final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, "0.5", simulationRange ); //$NON-NLS-1$
+      writeTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, FILTER_V, "0.5", simulationStart, simulationEnd );
     }
   }
 
@@ -225,7 +229,7 @@ public class TsFileWriter
     return new RangeFactor( forecastRange, forcastFactorN );
   }
 
-  public static final void writeGrapTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter ) throws SensorException, IOException
+  public static final void writeTimeseries( final TSFormat tsFormat, final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
   {
     if( targetFile.exists() )
       return;
@@ -234,24 +238,26 @@ public class TsFileWriter
     if( observation == null )
       return;
 
-    final GrapWriter grapWriter = new GrapWriter( valueAxisType, observation );
     final StringBuffer writer = new StringBuffer();
-    grapWriter.write( writer );
+
+    switch( tsFormat )
+    {
+      case GRAP:
+        final GrapWriter grapWriter = new GrapWriter( valueAxisType, observation );
+        grapWriter.write( writer );
+        break;
+      case EX2:
+      default:
+        final Ext2Writer extWriter = new Ext2Writer( simulationStart, simulationEnd );
+        extWriter.write( observation, valueAxisType, writer, defaultValue );
+        break;
+    }
     FileUtils.writeStringToFile( targetFile, writer.toString() );
   }
 
-  public static final void writeExtTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String defaultValue, final DateRange simulationRange ) throws SensorException, IOException
+  public static final void writeTimeseries( final File targetFile, final TimeseriesLinkType link, final URL zmlContext, final String valueAxisType, final String filter, final String defaultValue, final Date simulationStart, final Date simulationEnd ) throws SensorException, IOException
   {
-    if( targetFile.exists() )
-      return;
-
-    final IObservation observation = loadObservationWithFilter( link, zmlContext, null );
-    if( observation == null )
-      return;
-
-    // TODO: calculate start/end here
-    final Ext2InterpolationWriter writer = new Ext2InterpolationWriter( observation, valueAxisType, defaultValue );
-    writer.write( targetFile, simulationRange );
+    writeTimeseries( TSFormat.EX2, targetFile, link, zmlContext, valueAxisType, filter, defaultValue, simulationStart, simulationEnd );
   }
 
   private static IObservation loadObservationWithFilter( final TimeseriesLinkType link, final URL zmlContext, final String filter ) throws MalformedURLException, SensorException
@@ -292,7 +298,7 @@ public class TsFileWriter
           final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
           for( final Object object : statNParameterList )
           {
-            final Feature fe = (Feature) object;
+            final Catchment fe = (Catchment) object;
             final String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {

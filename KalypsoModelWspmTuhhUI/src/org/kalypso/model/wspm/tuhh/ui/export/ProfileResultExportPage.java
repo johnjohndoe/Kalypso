@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -66,7 +66,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class ProfileResultExportPage extends ValidatingWizardPage
 {
-  private static final String STR_AVAILABLE_RESULTS = Messages.getString( "ProfileResultExportPage_0" ); //$NON-NLS-1$
+  private final String STR_AVAILABLE_RESULTS = Messages.getString("ProfileResultExportPage_0"); //$NON-NLS-1$
 
   private final ProfileExportResultChooser m_resultChooser;
 
@@ -74,26 +74,14 @@ public class ProfileResultExportPage extends ValidatingWizardPage
 
   private boolean m_showComponentChooser = true;
 
-  /**
-   * Same as {@link #ProfileResultExportPage(String, IWspmResultNode, false)}
-   */
   public ProfileResultExportPage( final String pageName, final IWspmResultNode results )
-  {
-    this( pageName, results, false );
-  }
-
-  /**
-   * @param singleSelection
-   *          If <code>true</code>, only one element can be selected.
-   */
-  public ProfileResultExportPage( final String pageName, final IWspmResultNode results, final boolean singleSelection )
   {
     super( pageName );
 
     setTitle( STR_AVAILABLE_RESULTS );
-    setDescription( Messages.getString( "ProfileResultExportPage_1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString("ProfileResultExportPage_1") ); //$NON-NLS-1$
 
-    m_resultChooser = new ProfileExportResultChooser( results, singleSelection );
+    m_resultChooser = new ProfileExportResultChooser( results );
     m_resultChooser.addCheckStateListener( new ICheckStateListener()
     {
       @Override
@@ -104,6 +92,9 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     } );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.ValidatingWizardPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -133,9 +124,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
       sashForm.setWeights( new int[] { 50, 50 } );
     }
     else
-    {
       sashForm.setWeights( new int[] { 100 } );
-    }
 
     return group;
   }
@@ -188,11 +177,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     final IWspmResult[] results = getSelectedResults();
     final WspmResultLengthSection[] sections = new WspmResultLengthSection[results.length];
     for( int i = 0; i < results.length; i++ )
-    {
-      // FIXME: getLengthSection might return null here, wahy?
-      // TODO: waterlevels without ls should not be selectable in the page
       sections[i] = results[i].getLengthSection();
-    }
 
     return sections;
   }
@@ -205,9 +190,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
     for( final IWspmResultNode result : results )
     {
       if( result instanceof IWspmResult )
-      {
         lengthSections.add( (IWspmResult) result );
-      }
     }
 
     return lengthSections.toArray( new IWspmResult[lengthSections.size()] );
@@ -220,7 +203,7 @@ public class ProfileResultExportPage extends ValidatingWizardPage
   protected IMessageProvider validatePage( )
   {
     if( ArrayUtils.isEmpty( getSelectedResults() ) )
-      return new MessageProvider( Messages.getString( "ProfileResultExportPage_2" ), INFORMATION ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString("ProfileResultExportPage_2"), INFORMATION ); //$NON-NLS-1$
 
     return null;
   }

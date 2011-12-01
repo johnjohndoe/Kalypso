@@ -50,7 +50,6 @@ import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.junit.Before;
 import org.junit.Test;
 import org.kalypso.commons.compare.DifferenceDumper;
 import org.kalypso.commons.compare.FileContentAssertDumper;
@@ -58,7 +57,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.compare.FileStructureComparator;
-import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.INaSimulationData;
@@ -76,31 +74,25 @@ public class NaPreprocessingTest
 {
   public NaPreprocessingTest( )
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
-  }
-
-  @Before
-  public void init( )
-  {
-    System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
   }
 
   @Test
   public void testDemoModel( ) throws Exception
   {
-    testRunPreprocessing( "naDemoModel", "resources/demoModel_Langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
+    testRunPreprocessing( "naDemoModel", "resources/demoModel_Langzeit" );
   }
 
   @Test
   public void testDemoModelWithSuds( ) throws Exception
   {
-    testRunPreprocessing( "naDemoModelWithSuds", "resources/demoModel_WithSuds" ); //$NON-NLS-1$ //$NON-NLS-2$
+    testRunPreprocessing( "naDemoModelWithSuds", "resources/demoModel_WithSuds" );
   }
 
   @Test
   public void testWeisseElsterLangzeit( ) throws Exception
   {
-    testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" ); //$NON-NLS-1$ //$NON-NLS-2$
+    testRunPreprocessing( "WeisseElsterLangzeit", "resources/weisseElster_langzeit" );
   }
 
 // @Test
@@ -112,9 +104,9 @@ public class NaPreprocessingTest
 
   private void testRunPreprocessing( final String label, final String baseResourceLocation ) throws Exception
   {
-    final File outputDir = FileUtilities.createNewTempDir( label + "PreprocessingTest" ); //$NON-NLS-1$
-    final File asciiDir = new File( outputDir, "ascii" ); //$NON-NLS-1$
-    final File asciiExpectedDir = new File( outputDir, "asciiExpected" ); //$NON-NLS-1$
+    final File outputDir = FileUtilities.createNewTempDir( label + "PreprocessingTest" );
+    final File asciiDir = new File( outputDir, "ascii" );
+    final File asciiExpectedDir = new File( outputDir, "asciiExpected" );
 
     final NAModelPreprocessor preprocessor = initPreprocessor( baseResourceLocation, asciiDir );
 
@@ -133,8 +125,8 @@ public class NaPreprocessingTest
     final NaAsciiDirs outputDirs = new NaAsciiDirs( asciiDir );
     final Logger logger = Logger.getAnonymousLogger();
 
-    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" ); //$NON-NLS-1$
-    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) ); //$NON-NLS-1$
+    final URL gmlInputZipLocation = getClass().getResource( baseResourceLocation + "/gmlInput.zip" );
+    final URL baseURL = new URL( String.format( "jar:%s!/", gmlInputZipLocation.toExternalForm() ) );
 
     final INaSimulationData simulationData = createDemoModelsimulationData( baseURL );
 
@@ -143,14 +135,14 @@ public class NaPreprocessingTest
 
   private INaSimulationData createDemoModelsimulationData( final URL base ) throws Exception
   {
-    final URL modelUrl = new URL( base, "calcCase.gml" ); //$NON-NLS-1$
-    final URL controlUrl = new URL( base, "expertControl.gml" ); //$NON-NLS-1$
-    final URL metaUrl = new URL( base, ".calculation" ); //$NON-NLS-1$
-    final URL parameterUrl = new URL( base, "calcParameter.gml" ); //$NON-NLS-1$
-    final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" ); //$NON-NLS-1$
-    final URL sudsUrl = checkUrlExists( new URL( base, "suds.gml" ) ); //$NON-NLS-1$
+    final URL modelUrl = new URL( base, "calcCase.gml" );
+    final URL controlUrl = new URL( base, "expertControl.gml" );
+    final URL metaUrl = new URL( base, ".calculation" );
+    final URL parameterUrl = new URL( base, "calcParameter.gml" );
+    final URL hydrotopUrl = new URL( base, "calcHydrotop.gml" );
+    final URL sudsUrl = checkUrlExists( new URL( base, "suds.gml" ) );
     final URL syntNUrl = null;
-    final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) ); //$NON-NLS-1$
+    final URL lzsimUrl = checkUrlExists( new URL( base, "Anfangswerte/lzsim.gml" ) );
 
     return NaSimulationDataFactory.load( modelUrl, controlUrl, metaUrl, parameterUrl, hydrotopUrl, sudsUrl, syntNUrl, lzsimUrl, null, null );
   }
@@ -167,10 +159,7 @@ public class NaPreprocessingTest
   {
     /* Fetch the expected results */
     asciiExpectedDir.mkdir();
-    ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir ); //$NON-NLS-1$
-    // FIXED: make sure this directory always exists, as this will always exist in the results; but we cannot unzip an
-    // empty directory...
-    new File( asciiExpectedDir, "lzsim" ).mkdirs(); //$NON-NLS-1$
+    ZipUtilities.unzip( getClass().getResource( baseResourceLocation + "/expectedAscii.zip" ), asciiExpectedDir );
 
     checkDifferences( asciiExpectedDir, asciiDir );
 
@@ -195,6 +184,6 @@ public class NaPreprocessingTest
     differenceDumper.dumpDifferences();
 
     if( differenceDumper.hasDifferences() )
-      Assert.fail( "Expected ascii files are different from actual ones. See console dump" ); //$NON-NLS-1$
+      Assert.fail( "Expected ascii files are different from actual ones. See console dump" );
   }
 }

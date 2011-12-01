@@ -2,30 +2,27 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCalculationConnectors Plug-in
 Bundle-SymbolicName: org.kalypso.calculation.connectors;singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.calculation.connector.PluginActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.kalypso.deegree,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.ui,
  org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
+ org.kalypso.core,
+ org.kalypso.model.flood,
+ org.kalypso.risk,
+ org.kalypso.NACalcJob,
+ org.kalypso.model.wspm.core,
  org.kalypso.afgui,
- org.kalypso.ui,
- org.kalypso.model.flood;visibility:=reexport,
- org.kalypso.risk;visibility:=reexport,
- org.kalypso.NACalcJob;visibility:=reexport,
- org.kalypso.ModelSimulationBase;visibility:=reexport,
- org.kalypso.model1d2d;visibility:=reexport,
- org.kalypso.model.wspm.tuhh.schema;bundle-version="11.6.3";visibility:=reexport
+ org.kalypso.ui
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.connector.fm_rm,
- org.kalypso.calculation.connector.k1d2d_fm,
  org.kalypso.calculation.connector.na_wspm,
- org.kalypso.calculation.connector.wspm_fm,
- org.kalypso.calculation.plc.postprocessing,
- org.kalypso.calculation.plc.postprocessing.binding
+ org.kalypso.calculation.connector.wspm_fm
 Bundle-ClassPath: .
 Bundle-Vendor: kalypso.sourceforge.net

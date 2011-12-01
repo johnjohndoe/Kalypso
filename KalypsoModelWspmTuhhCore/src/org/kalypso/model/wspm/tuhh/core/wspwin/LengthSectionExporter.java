@@ -46,7 +46,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LengthSectionMapping;
 import org.kalypso.observation.IObservation;
@@ -76,26 +76,18 @@ public class LengthSectionExporter
     for( int i = 0; i < result.getComponents().length; i++ )
     {
       if( i == stationIndex )
-      {
         continue;
-      }
 
       final DataBlockHeader dbh = LengthSectionMapping.createHeader( result.getComponent( i ).getId() );
       if( dbh == null )
-      {
         continue;
-      }
 
       final IDataBlock block = createDataBLock( dbh, result, stationIndex, i );
 
       if( i == posGround )
-      {
         prfwriter.addDataBlock( 0, block );// due restrictions of wspwin-plotter
-      }
       else if( block.getCoordCount() > 0 )
-      {
         prfwriter.addDataBlock( block );
-      }
     }
     return prfwriter;
   }
@@ -122,12 +114,6 @@ public class LengthSectionExporter
   // FIXME: move to helper
   protected Double[][] componentToCoords( final TupleResult result, final int stationIndex, final int componentIndex )
   {
-    // BUGFIX/TRICKY: WspWin Plotter 'always' orders the coordinates by their natural order,
-    // even if we write th coordinates in inverse order (according to the river's flow direction).
-    // We invert the coordinates, if the length section is oriented upstreams (this is according
-    // to the behaviour of wspwin.
-    final double stationDirectionFactor = guessStationDirectionFactor( result, stationIndex );
-
     final Double[][] coords = new Double[2][];
 
     final List<Double> stations = new ArrayList<Double>();
@@ -140,13 +126,7 @@ public class LengthSectionExporter
 
       if( oStation instanceof Number && oVal instanceof Number )
       {
-        final double stationKM = ((Number) oStation).doubleValue();
-
-        // BUGFIX/HACK: the .lng format (i.e. WspWin Plotter) expects length section
-        // stations to be in [m], rather than in [km].
-        final double station = stationKM * 1000.0 * stationDirectionFactor;
-
-        stations.add( station );
+        stations.add( ((Number) oStation).doubleValue() );
         doubles.add( ((Number) oVal).doubleValue() );
       }
     }
@@ -176,23 +156,5 @@ public class LengthSectionExporter
     final DataBlockWriter dbw = extractDataBlocks( obs );
     dbw.store( new PrintWriter( writer ) );
     return true;
-  }
-
-  private double guessStationDirectionFactor( final TupleResult result, final int stationIndex )
-  {
-    /* Ignore if too short */
-    final int recordCount = result.size();
-    if( recordCount < 2 )
-      return 1;
-
-    final Number firstStation = (Number) result.get( 0 ).getValue( stationIndex );
-    final Number lastStation = (Number) result.get( recordCount - 1 ).getValue( stationIndex );
-
-    final int signum = (int) Math.signum( firstStation.doubleValue() - lastStation.doubleValue() );
-    // 0 is forbidden, else the ls will be broken.
-    if( signum == 0 )
-      return 1;
-
-    return signum;
   }
 }

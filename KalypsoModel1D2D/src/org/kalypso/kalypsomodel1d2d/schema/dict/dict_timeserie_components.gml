@@ -25,7 +25,7 @@
 					<st:restriction base="integer">
 						<st:minInclusive value="1" />
 					</st:restriction>
-					<gml:unitOfMeasure uom="-" />
+					<gml:unitOfMeasure uom=" " />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -39,6 +39,7 @@
 			<swe:representation>
 				<swe:SimpleType>
 					<st:restriction base="dateTime" />
+					<gml:unitOfMeasure uom="dict_uom.xml#time" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -230,22 +231,6 @@
 						<st:fractionDigits value="4" />
 					</st:restriction>
 					<gml:unitOfMeasure uom="dict_uom.xml#m/s" />
-				</swe:SimpleType>
-			</swe:representation>
-		</swe:ItemDefinition>
-	</gml:dictionaryEntry>
-	
-	<gml:dictionaryEntry>
-		<swe:ItemDefinition gml:id="VelocityDirection">
-			<gml:description>Geschwindigkeitsrichtung [deg]</gml:description>
-			<gml:name>Geschwindigkeitsrichtung</gml:name>
-			<swe:property xlink:href="#phenomenonVelocityDirection" />
-			<swe:representation>
-				<swe:SimpleType>
-					<st:restriction base="decimal">
-						<st:fractionDigits value="4" />
-					</st:restriction>
-					<gml:unitOfMeasure uom="dict_uom.xml#deg" />
 				</swe:SimpleType>
 			</swe:representation>
 		</swe:ItemDefinition>
@@ -468,13 +453,6 @@
 		<swe:Phenomenon gml:id="phenomenonVelocity">
 			<gml:description>Geschwindigkeit [m/s]</gml:description>
 			<gml:name>Geschwindigkeit</gml:name>
-		</swe:Phenomenon>
-	</gml:dictionaryEntry>
-
-	<gml:dictionaryEntry>
-		<swe:Phenomenon gml:id="phenomenonVelocityDirection">
-			<gml:description>Geschwindigkeitsrichtung [deg]</gml:description>
-			<gml:name>Geschwindigkeitsrichtung</gml:name>
 		</swe:Phenomenon>
 	</gml:dictionaryEntry>
 

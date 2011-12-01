@@ -46,29 +46,22 @@ import org.kalypso.observation.IObservation;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * This result container represents a WSPM result.
- * 
  * @author Gernot Belger
  */
 public class WspmResultContainer extends AbstractWspmResultNode implements IWspmResult
 {
   private WspmResultLengthSection m_lengthSection;
 
-  private final IFile m_file;
+  private final IFile m_lsFile;
 
   private final String m_label;
 
-  public WspmResultContainer( final ITuhhCalculationNode parent, final IFile file, final String label )
+  public WspmResultContainer( final ITuhhCalculationNode parent, final IFile lsFile, final String label )
   {
     super( parent );
 
-    m_file = file;
+    m_lsFile = lsFile;
     m_label = label;
-  }
-
-  public IFile getLengthSectionFile( )
-  {
-    return m_file;
   }
 
   /**
@@ -89,9 +82,6 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
     return m_label;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode#getInternalName()
-   */
   @Override
   protected String getInternalName( )
   {
@@ -104,17 +94,22 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public WspmResultLengthSection getLengthSection( )
   {
+    checkLengthSection();
+
+    return m_lengthSection;
+  }
+
+  private void checkLengthSection( )
+  {
     // Maybe we should check, if the file was modified since...
     if( m_lengthSection == null )
     {
       final TuhhCalculation calculation = getCalculation();
       if( calculation == null )
-        return null;
+        return;
 
-      m_lengthSection = WspmResultLengthSection.create( m_file, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
+      m_lengthSection = WspmResultLengthSection.create( m_lsFile, new GMLXPath( IObservation.QNAME_OBSERVATION ) );
     }
-
-    return m_lengthSection;
   }
 
   /**
@@ -123,7 +118,7 @@ public class WspmResultContainer extends AbstractWspmResultNode implements IWspm
   @Override
   public Object getObject( )
   {
-    return m_file;
+    return m_lsFile;
   }
 
   /**

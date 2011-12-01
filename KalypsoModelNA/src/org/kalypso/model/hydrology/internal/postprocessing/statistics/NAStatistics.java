@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -58,7 +57,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class NAStatistics implements INaStatistics
+public class NAStatistics
 {
   /**
    * Comparator that ensures to write the statistical entries in alphabetical order.
@@ -129,7 +129,7 @@ public class NAStatistics implements INaStatistics
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString( "NAStatistics.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to create statistics: %s", e.getLocalizedMessage() );
       m_logger.severe( msg );
     }
   }
@@ -138,7 +138,7 @@ public class NAStatistics implements INaStatistics
   {
     final IAxis[] resultAxes = createAxes();
     final ITupleModel resultTuppleModel = new SimpleTupleModel( resultAxes, resultValues );
-    return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel ); //$NON-NLS-1$
+    return new SimpleObservation( FILENAME_ZML, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.167" ), new MetadataList(), resultTuppleModel );
   }
 
   private Object[][] gatherData( final File inputDir ) throws SensorException
@@ -175,8 +175,8 @@ public class NAStatistics implements INaStatistics
   private String getResultRelativePath( final File inputDir, final File resultFile )
   {
     final String relativePath = FileUtilities.getRelativePathTo( inputDir, resultFile );
-    final String relativePathWithSlashes = relativePath.replace( '\\', '/' ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( relativePathWithSlashes.startsWith( "/" ) ) //$NON-NLS-1$
+    final String relativePathWithSlashes = relativePath.replace( '\\', '/' );
+    if( relativePathWithSlashes.startsWith( "/" ) )
       return relativePathWithSlashes.substring( 1 );
 
     return relativePathWithSlashes;
@@ -185,10 +185,8 @@ public class NAStatistics implements INaStatistics
   static String getNodeDescription( final Feature feature )
   {
     final String featureDescription = feature.getDescription();
-    // make sure the description is not empty, this will create a problem when parsing the
-    // observation later using StringUtilities.splitString()
     if( StringUtils.isBlank( featureDescription ) )
-      return feature.getName();
+      return "";//$NON-NLS-1$
 
     return featureDescription;
   }
@@ -205,12 +203,12 @@ public class NAStatistics implements INaStatistics
   private IAxis[] createAxes( )
   {
     final List<IAxis> resultAxisList = new ArrayList<IAxis>();
-    resultAxisList.add( new DefaultAxis( AXIS_NODE_ID, ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ 
-    resultAxisList.add( new DefaultAxis( AXIS_STATION, ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ 
-    resultAxisList.add( new DefaultAxis( AXIS_DATE, ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ 
-    resultAxisList.add( new DefaultAxis( AXIS_DISCHARGE, ITimeseriesConstants.TYPE_RUNOFF, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
-    resultAxisList.add( new DefaultAxis( AXIS_PATH, ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ 
-    resultAxisList.add( new DefaultAxis( AXIS_VOLUME, ITimeseriesConstants.TYPE_VOLUME, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "NODE_ID", ITimeseriesConstants.TYPE_NODEID, "", String.class, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "STATION", ITimeseriesConstants.TYPE_PEGEL, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DATE", ITimeseriesConstants.TYPE_DATE, "", Date.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "DISCHARGE", ITimeseriesConstants.TYPE_RUNOFF, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_RUNOFF ), Double.class, false ) ); //$NON-NLS-1$
+    resultAxisList.add( new DefaultAxis( "PATH", ITimeseriesConstants.TYPE_DESCRIPTION, "", String.class, false ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    resultAxisList.add( new DefaultAxis( "VOLUME", ITimeseriesConstants.TYPE_VOLUME, TimeseriesUtils.getUnit( ITimeseriesConstants.TYPE_VOLUME ), Double.class, false ) ); //$NON-NLS-1$
     return resultAxisList.toArray( new IAxis[resultAxisList.size()] );
   }
 
@@ -232,9 +230,7 @@ public class NAStatistics implements INaStatistics
     try
     {
       streamCSV = new FileOutputStream( reportFileCSV );
-      // REMARK/BUGFIX: using the default charset here, because this file is usually intended to be opened with excel
-      // Excel automatically assumes the default charset of the platform
-      writerCSV = new OutputStreamWriter( streamCSV, Charset.defaultCharset().name() );
+      writerCSV = new OutputStreamWriter( streamCSV, "UTF-8" ); //$NON-NLS-1$
       for( int i = 0; i < values.size(); i++ )
       {
         for( int j = 0; j < 6; j++ )
@@ -262,7 +258,7 @@ public class NAStatistics implements INaStatistics
   private String asText( final Object currentElement, final int j )
   {
     if( currentElement == null )
-      return ""; //$NON-NLS-1$
+      return "";
 
     switch( j )
     {
@@ -284,10 +280,10 @@ public class NAStatistics implements INaStatistics
       }
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
-  private Double getDoubleValueFormatted( final Object object )
+  private final Double getDoubleValueFormatted( final Object object )
   {
     if( object == null )
       return null;

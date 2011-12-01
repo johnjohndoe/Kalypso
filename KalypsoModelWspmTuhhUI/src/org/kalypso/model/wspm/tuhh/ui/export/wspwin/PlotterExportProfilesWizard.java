@@ -42,17 +42,10 @@ package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
@@ -62,75 +55,52 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.wspwin.core.Plotter;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 public class PlotterExportProfilesWizard extends ExportProfilesWizard
 {
-  private final PlotterExportData m_data = new PlotterExportData();
+  private final PlotterExportPage m_profileFileChooserPage;
 
-  private PlotterExportPage m_profileFileChooserPage;
+  private final ProfileResultExportPage m_resultPage;
 
-  private ProfileResultExportPage m_resultPage;
-
-  public PlotterExportProfilesWizard( )
+  public PlotterExportProfilesWizard( final ProfileSelection selection )
   {
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
+    super( selection );
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    super.init( workbench, selection );
-
-    final IDialogSettings settings = getDialogSettings();
-    m_data.init( settings );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
-    m_profileFileChooserPage = new PlotterExportPage( dirDelegate, m_data );
-    m_profileFileChooserPage.setTitle( Messages.getString( "PlotterExportProfilesWizard_0" ) ); //$NON-NLS-1$
-    m_profileFileChooserPage.setDescription( Messages.getString( "PlotterExportProfilesWizard_1" ) ); //$NON-NLS-1$
-    m_profileFileChooserPage.setFileGroupText( Messages.getString( "PlotterExportProfilesWizard_2" ) ); //$NON-NLS-1$
+    m_profileFileChooserPage = new PlotterExportPage( dirDelegate );
+    m_profileFileChooserPage.setTitle( Messages.getString("PlotterExportProfilesWizard_0") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setDescription( Messages.getString("PlotterExportProfilesWizard_1") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setFileGroupText( Messages.getString("PlotterExportProfilesWizard_2") ); //$NON-NLS-1$
     addPage( m_profileFileChooserPage );
 
-    final IWspmResultNode results = WspmResultFactory.createResultNode( null, getProfileSelection().getContainer() );
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
     m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     m_resultPage.setShowComponentChooser( false );
     addPage( m_resultPage );
-
-    checkPlotterExe();
   }
 
-  private void checkPlotterExe( )
-  {
-    final UIJob job = new UIJob( StringUtils.EMPTY )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        if( !Plotter.checkPlotterExe( getShell() ) )
-        {
-          MessageDialog.openWarning( getShell(), getWindowTitle(), Messages.getString("PlotterExportProfilesWizard.0") ); //$NON-NLS-1$
-          getShell().close();
-        }
-
-        return Status.OK_STATUS;
-      }
-    };
-    job.schedule();
-  }
-
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard#exportProfiles(org.kalypso.model.wspm.core.gml.IProfileFeature[],
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File tempDir = m_profileFileChooserPage.getFile();
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
+    final boolean doPrint = m_profileFileChooserPage.getDoPrint();
+
     final WspmResultLengthSection[] results = m_resultPage.getSelectedLengthSections();
 
-    final IPrfExporterCallback callback = new PlotterExportWizardCallback( tempDir, filenamePattern, m_data, results );
+    final IPrfExporterCallback callback = new PlotterExportWizardCallback( tempDir, filenamePattern, doPrint, results );
 
     final PrfExporter prfExporter = new PrfExporter( callback );
     final IStatus export = prfExporter.export( profiles, monitor );
     if( !export.isOK() )
       throw new CoreException( export );
   }
+
 }

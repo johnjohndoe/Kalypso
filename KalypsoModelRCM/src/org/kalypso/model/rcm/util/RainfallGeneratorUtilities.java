@@ -51,14 +51,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -121,9 +119,9 @@ public final class RainfallGeneratorUtilities
     return areas;
   }
 
-  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final DateRange range, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
+  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
   {
-    final IRequest request = new ObservationRequest( range );
+    final IRequest request = new ObservationRequest( from, to );
 
     final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
     for( int i = 0; i < ombrometerLinks.length; i++ )
@@ -168,62 +166,43 @@ public final class RainfallGeneratorUtilities
     if( observations.length == 0 )
       return null;
 
-    /* Get some of the metadata from the first observation. */
+    /* Some things of the first observation. */
+
     final IObservation firstObservation = observations[0];
     final MetadataList firstMetadataList = firstObservation.getMetadataList();
-    final String timestep = findTimeStep( observations );
     final String firstStart = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_START );
     final String firstEnde = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE );
 
-    /* Get some of the axis from the first observation. */
-    final ITupleModel firstTuppleModel = firstObservation.getValues( null );
-    final IAxis[] firstAxisList = firstTuppleModel.getAxes();
-    final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
-    final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
-    IAxis firstStatusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( firstAxisList, firstValueAxis );
-    if( firstStatusAxis == null )
-      firstStatusAxis = KalypsoStatusUtils.createStatusAxisFor( firstValueAxis, true );
-
-    // FIXME 1: We still get values from observations with weight 0.0.
-    // FIXME 1: -> We should first filter those out to improve performance.
-    // FIXME 2: For still better performance, we could filter out everything with a weight smaller than some limit.
-    // FIXME 2: To still get 100%, we could share the difference with the remaining obses to their weight.
     final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
 
-    /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tuple model. */
+    final ITupleModel[] tuppleModels = observationValues.toArray( new ITupleModel[observationValues.size()] );
+
+    final ITupleModel firstTuppleModel = firstObservation.getValues( null );
+    final IAxis[] firstAxisList = firstTuppleModel.getAxes();
+
+    final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
+    final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
+
+    IAxis firstStatusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( firstAxisList, firstValueAxis );
+    if( firstStatusAxis == null )
+      firstStatusAxis = KalypsoStatusUtils.createStatusAxisFor( firstValueAxis, true );
+
     final TuppleModelsLinearAdd linearAdd = new TuppleModelsLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
-    final ITupleModel combinedTuppleModel = linearAdd.addWeighted( observationValues.toArray( new ITupleModel[] {} ), weights );
+    final ITupleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
-    /* Copy the metadata. */
-    final MetadataList metadata = new MetadataList();
-    if( timestep != null )
-      metadata.setProperty( MetadataHelper.MD_TIMESTEP, timestep );
-    if( firstStart != null )
-      metadata.setProperty( TimeseriesUtils.MD_VORHERSAGE_START, firstStart );
-    if( firstEnde != null )
-      metadata.setProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE, firstEnde );
-
-    /* Create a new observation. */
-    final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
+    /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tuple model. */
+    final SimpleObservation combinedObservation = new SimpleObservation( "", "", new MetadataList(), combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
+    if( firstStart != null )
+      combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_START, firstStart );
+    if( firstEnde != null )
+      combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE, firstEnde );
 
-    /* Ignore original data sources because rainfall generator combines different data sources. */
+    /**
+     * ignore original data sources because rainfall generator combines different data sources
+     */
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();
-  }
-
-  public static String findTimeStep( IObservation[] observations )
-  {
-    /* A bit of a hack: Search all observations for a valid timestep. */
-    for( IObservation observation : observations )
-    {
-      final MetadataList metadataList = observation.getMetadataList();
-      String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
-      if( timestep != null )
-        return timestep;
-    }
-
-    return null;
   }
 }

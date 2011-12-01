@@ -8,14 +8,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.grid.RichCoverageCollection;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -27,7 +27,11 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
 {
   private final CreateProfileFromDEMWidget m_widget;
 
+  private final CommandableWorkspace m_commandableWorkspace;
+
   private final IMapPanel m_mapPanel;
+
+  private final TuhhReach m_reach;
 
   private final ICoverageCollection m_coverages;
 
@@ -37,18 +41,17 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
 
   private GM_Curve m_curve;
 
-  private final IKalypsoFeatureTheme[] m_profileThemes;
-
-  public AbstractDemProfileJob( final String title, final CreateProfileFromDEMWidget widget, final IMapPanel mapPanel, final ICoverageCollection coverages, final double simplifyDistance, final IKalypsoFeatureTheme[] profileThemes )
+  public AbstractDemProfileJob( final String title, final CreateProfileFromDEMWidget widget, final CommandableWorkspace commandableWorkspace, final IMapPanel mapPanel, final TuhhReach reach, final ICoverageCollection coverages, final double simplifyDistance )
   {
     super( title );
 
     m_widget = widget;
+    m_commandableWorkspace = commandableWorkspace;
     m_mapPanel = mapPanel;
 
+    m_reach = reach;
     m_coverages = coverages;
     m_simplifyDistance = simplifyDistance;
-    m_profileThemes = profileThemes;
 
     m_geoBuilder = new LineGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
   }
@@ -77,7 +80,7 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "AbstractDemProfileJob_0" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("AbstractDemProfileJob_0") ); //$NON-NLS-1$
     }
   }
 
@@ -123,6 +126,10 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
     schedule();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#paint(java.awt.Graphics,
+   *      org.kalypso.ogc.gml.map.IMapPanel, java.awt.Point)
+   */
   @Override
   public void paint( final Graphics g, final IMapPanel mapPanel, final Point currentPoint )
   {
@@ -138,9 +145,14 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
     return m_geoBuilder;
   }
 
-  protected IKalypsoFeatureTheme[] getProfileThemes( )
+  protected final TuhhReach getReach( )
   {
-    return m_profileThemes;
+    return m_reach;
+  }
+
+  protected final CommandableWorkspace getWorkspace( )
+  {
+    return m_commandableWorkspace;
   }
 
   protected final IMapPanel getMapPanel( )
@@ -151,12 +163,5 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
   protected final double getSimplifyDistance( )
   {
     return m_simplifyDistance;
-  }
-
-  public IStatus openNoPointsWarning( )
-  {
-    final String message = Messages.getString("AbstractDemProfileJob.0"); //$NON-NLS-1$
-    MessageDialog.openWarning( getDisplay().getActiveShell(), getLabel(), message );
-    return Status.OK_STATUS;
   }
 }

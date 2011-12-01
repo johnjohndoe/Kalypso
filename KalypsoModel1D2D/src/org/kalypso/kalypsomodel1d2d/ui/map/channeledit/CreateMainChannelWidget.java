@@ -61,7 +61,6 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -213,9 +212,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       return;
 
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
 
-    Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+    Stroke defaultstroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
 
     defaultstroke = symb.getStroke();
 
@@ -232,7 +231,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   private LineSymbolizer getProfilLineSymbolizer( final Color color )
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
     stroke.setWidth( 3 );
     stroke.setStroke( color );
     symb.setStroke( stroke );

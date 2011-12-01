@@ -12,29 +12,33 @@
 
 	<complexType name="KalininMiljukovType">
 		<sequence>
-			<!-- If this element should be processed --> 
-            <element name="enabled" type="boolean"/>
-    
 			<!-- optional word like "elbe" --> 
 			<element name="riverName" type="string" minOccurs="0"/>
 	
 			<!-- start km -->
-			<element name="kmStart" type="decimal" minOccurs="0"/>
+			<element name="kmStart" type="double" minOccurs="0"/>
 
 			<!-- end km --> 
-			<element name="kmEnd" type="decimal" minOccurs="0"/>
+			<element name="kmEnd" type="double" minOccurs="0"/>
 			
 			<!-- path used for dialog -->
-			<element name="file" type="string"/>
+			<element name="path" type="string"/>
+	
+			<!-- pattern used for dialog -->			
+			<element name="filePattern" type="string"/> 
 	
 			<!-- here are the profiles -->
 			<element name="profile" minOccurs="0" maxOccurs="unbounded">
 				<complexType>
+					<sequence>
+						<!-- absolute path to the file -->
+						<element name="file" type="string"/>
+					</sequence>
 					<!-- some profiles may be disabled -->
-					<attribute name="enabled" type="boolean" default="true"/>
+					<attribute name="enabled" type="boolean"/>
 
-					<!-- info of position in m -->
-					<attribute name="station" type="decimal"/>
+					<!-- info of position -->
+					<attribute name="positionKM" type="double"/>
 				</complexType>
 			</element> 
 		</sequence>

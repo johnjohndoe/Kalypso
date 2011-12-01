@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultContentProvider;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLabelProvider;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 
 /**
  * Shows the currently available WSPM results in a tree view and let the user check them.
@@ -72,16 +71,9 @@ public class ProfileExportResultChooser
 
   private final IWspmResultNode m_rootNode;
 
-  private final boolean m_singleSelection;
-
-  /**
-   * @param singleSelection
-   *          If <code>true</code>, only one element can be selected.
-   */
-  public ProfileExportResultChooser( final IWspmResultNode rootNode, final boolean singleSelection )
+  public ProfileExportResultChooser( final IWspmResultNode rootNode )
   {
     m_rootNode = rootNode;
-    m_singleSelection = singleSelection;
   }
 
   public Control createControl( final Composite parent )
@@ -109,8 +101,6 @@ public class ProfileExportResultChooser
           return true;
       }
     } );
-
-    treeViewer.addFilter( new WaterLevelFilter() );
     treeViewer.setInput( m_rootNode );
 
     treeViewer.addCheckStateListener( new ICheckStateListener()
@@ -129,8 +119,6 @@ public class ProfileExportResultChooser
         else
           treeViewer.setChecked( element, true );
 
-        treeViewer.refresh();
-
         fireCheckStateChanged( event );
       }
     } );
@@ -145,9 +133,6 @@ public class ProfileExportResultChooser
 
   protected void addResultNode( final IWspmResultNode node )
   {
-    if( m_singleSelection )
-      m_results.clear();
-
     m_results.add( node );
   }
 

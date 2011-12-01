@@ -51,7 +51,6 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
-import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.shp.SHPException;
@@ -80,9 +79,9 @@ public class SobekShapePoint
     final File shapeFileBase = new File( targetDir, m_baseName );
     final String basePath = shapeFileBase.getAbsolutePath();
 
-    final IDBFField[] fields = new IDBFField[2];
-    fields[0] = new DBFField( "ID", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
-    fields[1] = new DBFField( "NAME", FieldType.C, (short) 128, (short) 0 ); //$NON-NLS-1$
+    final DBFField[] fields = new DBFField[2];
+    fields[0] = new DBFField( "ID", FieldType.C, (short) 128, (short) 0 );
+    fields[1] = new DBFField( "NAME", FieldType.C, (short) 128, (short) 0 );
 
     m_shapeFile = ShapeFile.create( basePath, ShapeType.POINTZ, Charset.defaultCharset(), fields );
   }
@@ -90,9 +89,7 @@ public class SobekShapePoint
   public void close( ) throws IOException
   {
     if( m_shapeFile != null )
-    {
       m_shapeFile.close();
-    }
   }
 
   public void closeQuiet( )
