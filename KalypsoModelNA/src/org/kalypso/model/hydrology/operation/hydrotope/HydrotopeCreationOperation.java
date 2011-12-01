@@ -85,7 +85,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * Creates and writes hydrotops into a 'hydrotop.gml' file from 'modell.gml' (catchments), 'pedologie.gml',
  * 'geologie.gml' and 'landuse.gml'<br/>
  * FIXME: break this code into smaller chunks. Else, no one will every understand how it works....
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class HydrotopeCreationOperation implements IRunnableWithProgress
@@ -156,7 +156,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   /**
    * TODO implements/extends ICoreRunnalbeWithProgress or WorkspaceJob -> run method return status!!!!
-   * 
+   *
    * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
@@ -277,7 +277,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           if( feature instanceof org.kalypso.model.hydrology.binding.model.Catchment )
           {
             final IFeatureType featureType = feature.getFeatureType();
-            final String href = String.format( "modell.gml#%s", feature.getId() ); //$NON-NLS-1$
+            final String href = String.format( ".models/modell.gml#%s", feature.getId() ); //$NON-NLS-1$
             final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
             hydrotop.setCatchmentMember( lnk );
             corrSealing = corrSealing * ((Catchment) feature).getCorrSealing();

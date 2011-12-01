@@ -19,7 +19,7 @@
               <!-- The element reference is still needed however, as it is the HACK of kalypso to determine the type of the referenced feature. Without, any feature would be allowed. -->
               <annotation>
                 <appinfo xmlns:kapp="org.kalypso.appinfo">
-                  <kapp:documentReference>modell.gml</kapp:documentReference>
+                  <kapp:documentReference>.models/modell.gml</kapp:documentReference>
                   <!--
                     IMPORTANT!!!
 
@@ -61,7 +61,7 @@
               <!-- The element reference is still needed however, as it is the HACK of kalypso to determine the type of the referenced feature. Without, any feature would be allowed. -->
               <annotation>
                 <appinfo xmlns:kapp="org.kalypso.appinfo">
-                  <kapp:documentReference>modell.gml</kapp:documentReference>
+                  <kapp:documentReference>.models/modell.gml</kapp:documentReference>
                   <!--
                     IMPORTANT!!!
 
@@ -92,7 +92,7 @@
               <!-- The element reference is still needed however, as it is the HACK of kalypso to determine the type of the referenced feature. Without, any feature would be allowed. -->
               <annotation>
                 <appinfo xmlns:kapp="org.kalypso.appinfo">
-                  <kapp:documentReference>modell.gml</kapp:documentReference>
+                  <kapp:documentReference>.models/modell.gml</kapp:documentReference>
                   <!--
                     IMPORTANT!!!
 
