@@ -77,11 +77,6 @@ public class DoubleDataBlock extends AbstractDataBlock
     super( dbh );
   }
 
-  protected Double[] getValues( )
-  {
-    return m_values;
-  }
-
   /**
    * Muss von allen Implementatoren zuerst aufgerufen werden
    * 
@@ -146,7 +141,7 @@ public class DoubleDataBlock extends AbstractDataBlock
         try
         {
           dblStr = sT.nextToken();
-          m_values[counter] = org.kalypso.contribs.java.lang.NumberUtils.parseDouble( dblStr );
+          m_values[counter] = Double.parseDouble( dblStr );
         }
         catch( final NoSuchElementException e )
         {
@@ -182,7 +177,7 @@ public class DoubleDataBlock extends AbstractDataBlock
   {
     for( int i = 0; i < dbls.length; i++ )
     {
-      pw.write( String.format( Locale.US, "%13.4f", dbls[i] == null ? Double.NaN : dbls[i] ) ); //$NON-NLS-1$
+      pw.write( String.format(Locale.US, "%13.4f", dbls[i] == null ? Double.NaN : dbls[i] ) ); //$NON-NLS-1$
 
       if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
         pw.println();

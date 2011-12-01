@@ -64,7 +64,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -76,12 +75,12 @@ import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -91,23 +90,23 @@ import org.kalypso.observation.result.IRecord;
  */
 public class TrennerPanel extends AbstractProfilView
 {
-  private Text m_fzl;
+  private Text m_fzl_text;
 
-  private Text m_fzr;
+  private Text m_fzr_text;
 
-  private Text m_dbl;
+  private Text m_dbl_text;
 
-  private Text m_dbr;
+  private Text m_dbr_text;
 
-  private Text m_bvl;
+  private Text m_bvl_text;
 
-  private Text m_bvr;
+  private Text m_bvr_text;
 
-  private ComboViewer m_cFzl;
+  private ComboViewer m_fzl_combo;
 
-  private ComboViewer m_cFzr;
+  private ComboViewer m_fzr_combo;
 
-  Button m_bAdd;
+  Button m_bv_add;
 
   private Composite m_panel;
 
@@ -121,9 +120,9 @@ public class TrennerPanel extends AbstractProfilView
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit)
   {
-    final IProfil profil = getProfile();
+    final IProfil profil = getProfil();
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
@@ -137,22 +136,22 @@ public class TrennerPanel extends AbstractProfilView
     fliesszoneGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     toolkit.adapt( fliesszoneGroup );
 
-    m_fzl = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    m_fzl.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_fzl.addModifyListener( doubleModifyListener );
-    m_fzl.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, 0 ) );
+    m_fzl_text = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_fzl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_fzl_text.addModifyListener( doubleModifyListener );
+    m_fzl_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, 0 ) );
 
-    m_fzr = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    m_fzr.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_fzr.addModifyListener( doubleModifyListener );
-    m_fzr.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, 1 ) );
+    m_fzr_text = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_fzr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_fzr_text.addModifyListener( doubleModifyListener );
+    m_fzr_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, 1 ) );
 
-    m_cFzl = new ComboViewer( fliesszoneGroup, SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY );
-    m_cFzl.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    m_cFzl.setContentProvider( new ArrayContentProvider() );
-    m_cFzl.setInput( new Boolean[] { true, false } );
+    m_fzl_combo = new ComboViewer( fliesszoneGroup, SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY );
+    m_fzl_combo.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_fzl_combo.setContentProvider( new ArrayContentProvider() );
+    m_fzl_combo.setInput( new Boolean[] { true, false } );
 
-    m_cFzl.setLabelProvider( new LabelProvider()
+    m_fzl_combo.setLabelProvider( new LabelProvider()
     {
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -160,13 +159,13 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public String getText( final Object element )
       {
-        if( Boolean.TRUE.equals( element ) )
+        if( element.equals( true ) )
           return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.3" ); //$NON-NLS-1$
         return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.4" ); //$NON-NLS-1$
       }
     } );
 
-    m_cFzl.addSelectionChangedListener( new ISelectionChangedListener()
+    m_fzl_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
@@ -188,12 +187,12 @@ public class TrennerPanel extends AbstractProfilView
       }
     } );
 
-    m_cFzr = new ComboViewer( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
-    m_cFzr.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    m_cFzr.setContentProvider( new ArrayContentProvider() );
-    m_cFzr.setInput( new Boolean[] { true, false } );
+    m_fzr_combo = new ComboViewer( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_fzr_combo.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_fzr_combo.setContentProvider( new ArrayContentProvider() );
+    m_fzr_combo.setInput( new Boolean[] { true, false } );
 
-    m_cFzr.setLabelProvider( new LabelProvider()
+    m_fzr_combo.setLabelProvider( new LabelProvider()
     {
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -201,13 +200,13 @@ public class TrennerPanel extends AbstractProfilView
       @Override
       public String getText( final Object element )
       {
-        if( Boolean.TRUE.equals( element ) )
+        if( element.equals( true ) )
           return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.3" ); //$NON-NLS-1$
         return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.4" ); //$NON-NLS-1$
       }
     } );
 
-    m_cFzr.addSelectionChangedListener( new ISelectionChangedListener()
+    m_fzr_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
@@ -229,8 +228,8 @@ public class TrennerPanel extends AbstractProfilView
       }
     } );
 
-    toolkit.adapt( m_cFzr.getCombo() );
-    toolkit.adapt( m_cFzl.getCombo() );
+    toolkit.adapt( m_fzr_combo.getCombo() );
+    toolkit.adapt( m_fzl_combo.getCombo() );
 
     final Group durchstroemteGroup = new Group( m_panel, SWT.NONE );
     durchstroemteGroup.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.9" ) ); //$NON-NLS-1$
@@ -238,15 +237,15 @@ public class TrennerPanel extends AbstractProfilView
     durchstroemteGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     toolkit.adapt( durchstroemteGroup );
 
-    m_dbl = toolkit.createText( durchstroemteGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    m_dbl.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_dbl.addModifyListener( doubleModifyListener );
-    m_dbl.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, 0 ) );
+    m_dbl_text = toolkit.createText( durchstroemteGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_dbl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_dbl_text.addModifyListener( doubleModifyListener );
+    m_dbl_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, 0 ) );
 
-    m_dbr = toolkit.createText( durchstroemteGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    m_dbr.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_dbr.addModifyListener( doubleModifyListener );
-    m_dbr.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, 1 ) );
+    m_dbr_text = toolkit.createText( durchstroemteGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_dbr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_dbr_text.addModifyListener( doubleModifyListener );
+    m_dbr_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, 1 ) );
 
     final Group bordvollGroup = new Group( m_panel, SWT.NONE );
     bordvollGroup.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.10" ) ); //$NON-NLS-1$
@@ -254,20 +253,20 @@ public class TrennerPanel extends AbstractProfilView
     bordvollGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     toolkit.adapt( bordvollGroup );
 
-    m_bAdd = toolkit.createButton( bordvollGroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.11" ), SWT.CHECK ); //$NON-NLS-1$
-    m_bAdd.setSelection( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) != null );
-    final GridData bvAddData = new GridData( GridData.FILL_HORIZONTAL );
-    bvAddData.horizontalSpan = 2;
-    m_bAdd.setLayoutData( bvAddData );
-    m_bAdd.addSelectionListener( new SelectionAdapter()
+    m_bv_add = toolkit.createButton( bordvollGroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.11" ), SWT.CHECK ); //$NON-NLS-1$
+    m_bv_add.setSelection( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) != null );
+    final GridData bv_addData = new GridData( GridData.FILL_HORIZONTAL );
+    bv_addData.horizontalSpan = 2;
+    m_bv_add.setLayoutData( bv_addData );
+    m_bv_add.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final boolean selected = m_bAdd.getSelection();
+        final boolean selected = m_bv_add.getSelection();
         if( selected )
         {
-          final IProfilPointMarker[] dbDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+          final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 
           final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.12" ), profil, true ); //$NON-NLS-1$
 
@@ -282,8 +281,8 @@ public class TrennerPanel extends AbstractProfilView
             final IRecord firstPoint = profilPoints[0];
             final IRecord lastPoint = profilPoints[profilPoints.length - 1];
 
-            final IRecord leftPoint = dbDevs.length > 0 ? dbDevs[0].getPoint() : firstPoint;
-            final IRecord rightPoint = dbDevs.length > 1 ? dbDevs[1].getPoint() : lastPoint;
+            final IRecord leftPoint = db_devs.length > 0 ? db_devs[0].getPoint() : firstPoint;
+            final IRecord rightPoint = db_devs.length > 1 ? db_devs[1].getPoint() : lastPoint;
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, leftPoint ), true ) );
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, rightPoint ), true ) );
             operation.addChange( new ActiveObjectEdit( profil, rightPoint, bordvoll ) );
@@ -301,15 +300,15 @@ public class TrennerPanel extends AbstractProfilView
       }
     } );
 
-    m_bvl = toolkit.createText( bordvollGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    m_bvl.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_bvl.addModifyListener( doubleModifyListener );
-    m_bvl.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, 0 ) );
+    m_bvl_text = toolkit.createText( bordvollGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_bvl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_bvl_text.addModifyListener( doubleModifyListener );
+    m_bvl_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, 0 ) );
 
-    m_bvr = toolkit.createText( bordvollGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    m_bvr.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_bvr.addModifyListener( doubleModifyListener );
-    m_bvr.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, 1 ) );
+    m_bvr_text = toolkit.createText( bordvollGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_bvr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_bvr_text.addModifyListener( doubleModifyListener );
+    m_bvr_text.addFocusListener( new TrennerFocusListener( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, 1 ) );
 
     updateControls();
 
@@ -327,98 +326,82 @@ public class TrennerPanel extends AbstractProfilView
     if( m_panel == null || m_panel.isDisposed() )
       return;
 
-    final IProfil profil = getProfile();
-    final IProfilPointMarker[] tfDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] dbDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    final IProfilPointMarker[] bvDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    final IProfil profil = getProfil();
+    final IProfilPointMarker[] tf_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] bv_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
 
     final boolean hasBV = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) != null;
 
-    if( tfDevs.length > 0 )
+    if( tf_devs.length > 0 )
     {
-      m_fzl.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, tfDevs[0].getPoint() ) ) ); //$NON-NLS-1$
-      final Object intepretedValue = tfDevs[0].getIntepretedValue();
+      m_fzl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, tf_devs[0].getPoint() ) ) ); //$NON-NLS-1$
+      final Object intepretedValue = tf_devs[0].getIntepretedValue();
       if( intepretedValue == null )
-      {
         System.out.println( "null" ); //$NON-NLS-1$
-      }
       else
-      {
-        m_cFzl.setSelection( new StructuredSelection( intepretedValue ) );
-      }
+        m_fzl_combo.setSelection( new StructuredSelection( intepretedValue ) );
     }
     else
     {
-      m_fzl.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
-      m_cFzl.setSelection( new StructuredSelection() );
+      m_fzl_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
+      m_fzl_combo.setSelection( new StructuredSelection() );
     }
 
-    if( tfDevs.length > 1 )
+    if( tf_devs.length > 1 )
     {
-      m_fzr.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, tfDevs[1].getPoint() ) ) ); //$NON-NLS-1$
-      final Object intepretedValue = tfDevs[1].getIntepretedValue();
+      m_fzr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, tf_devs[1].getPoint() ) ) ); //$NON-NLS-1$
+      final Object intepretedValue = tf_devs[1].getIntepretedValue();
       if( intepretedValue == null )
-      {
         System.out.println( "null" ); //$NON-NLS-1$
-      }
       else
-      {
-        m_cFzr.setSelection( new StructuredSelection( intepretedValue ) );
-      }
+        m_fzr_combo.setSelection( new StructuredSelection( intepretedValue ) );
     }
     else
     {
-      m_fzr.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
-      m_cFzr.setSelection( new StructuredSelection() );
+      m_fzr_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
+      m_fzr_combo.setSelection( new StructuredSelection() );
     }
 
-    if( dbDevs.length > 0 )
+    if( db_devs.length > 0 )
+      m_dbl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[0].getPoint() ) ) ); //$NON-NLS-1$
+    else
+      m_dbl_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
+
+    if( db_devs.length > 1 )
+      m_dbr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[1].getPoint() ) ) ); //$NON-NLS-1$
+    else
+      m_dbr_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
+
+    if( bv_devs.length > 0 )
     {
-      m_dbl.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, dbDevs[0].getPoint() ) ) ); //$NON-NLS-1$
+      m_bvl_text.setVisible( true );
+      m_bvr_text.setVisible( true );
+      m_bvl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[0].getPoint() ) ) ); //$NON-NLS-1$
     }
     else
     {
-      m_dbl.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
+      m_bvl_text.setVisible( false );
+      m_bvr_text.setVisible( false );
+      m_bvl_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
     }
 
-    if( dbDevs.length > 1 )
+    if( bv_devs.length > 1 )
     {
-      m_dbr.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, dbDevs[1].getPoint() ) ) ); //$NON-NLS-1$
+      m_bvr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[1].getPoint() ) ) ); //$NON-NLS-1$
     }
     else
     {
-      m_dbr.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
+      m_bvr_text.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
     }
 
-    if( bvDevs.length > 0 )
-    {
-      m_bvl.setVisible( true );
-      m_bvr.setVisible( true );
-      m_bvl.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, bvDevs[0].getPoint() ) ) ); //$NON-NLS-1$
-    }
-    else
-    {
-      m_bvl.setVisible( false );
-      m_bvr.setVisible( false );
-      m_bvl.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
-    }
-
-    if( bvDevs.length > 1 )
-    {
-      m_bvr.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, bvDevs[1].getPoint() ) ) ); //$NON-NLS-1$
-    }
-    else
-    {
-      m_bvr.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15" ) ); //$NON-NLS-1$
-    }
-
-    m_bAdd.setSelection( hasBV );
+    m_bv_add.setSelection( hasBV );
   }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
+    if( hint.isPointPropertiesChanged() || hint.isPointValuesChanged()||hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
@@ -454,9 +437,7 @@ public class TrennerPanel extends AbstractProfilView
     public void focusGained( final FocusEvent e )
     {
       if( e.widget instanceof Text )
-      {
         ((Text) e.widget).selectAll();
-      }
     }
 
     /**
@@ -468,7 +449,7 @@ public class TrennerPanel extends AbstractProfilView
       if( e.widget instanceof Text )
       {
         final Text text = (Text) e.widget;
-        final IProfil profil = getProfile();
+        final IProfil profil = getProfil();
         final double value = NumberUtils.parseQuietDouble( text.getText() );
         final IProfilPointMarker[] devs = profil.getPointMarkerFor( m_component );
         final IComponent type = profil.hasPointProperty( m_component );

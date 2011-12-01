@@ -48,18 +48,15 @@ import java.io.File;
  */
 public class WspWinHelper
 {
+  public static final String DIR_PROF = "prof"; //$NON-NLS-1$
+
   private WspWinHelper( )
   {
     // never instantiate
   }
-
+  
   public static File getProfDir( final File wspwinDirectory )
   {
-    return new File( wspwinDirectory, WspWinFiles.PROF );
-  }
-
-  public static File getDathDir( final File wspwinDirectory )
-  {
-    return new File( wspwinDirectory, WspWinFiles.DATH );
+    return new File( wspwinDirectory, DIR_PROF );
   }
 }

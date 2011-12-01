@@ -71,8 +71,8 @@ public class Interpolator
 
     final Date lowerKey = m_valuesMap.headMap( position ).lastKey();
     final Date upperKey = m_valuesMap.tailMap( position ).firstKey();
-    final double valueLower = m_valuesMap.get( lowerKey );
-    final double valueUpper = m_valuesMap.get( upperKey );
+    double valueLower = m_valuesMap.get( lowerKey );
+    double valueUpper = m_valuesMap.get( upperKey );
 
     return valueLower + (position.getTime() - lowerKey.getTime()) * (valueUpper - valueLower) / (upperKey.getTime() - lowerKey.getTime());
   }

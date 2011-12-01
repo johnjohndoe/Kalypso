@@ -30,7 +30,7 @@
 			</fileset>
 		</path>
 
-		<antcall target="buildAntJar" inheritrefs="true"/>
+		<antcall target="buildAntJar" />
 	</target>
 	
 </project>

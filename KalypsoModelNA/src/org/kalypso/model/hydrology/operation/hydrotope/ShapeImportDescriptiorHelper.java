@@ -43,13 +43,9 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 /**
  * @author Dejan Antanaskovic
  */
-public final class ShapeImportDescriptiorHelper
+public class ShapeImportDescriptiorHelper
 {
-  private ShapeImportDescriptiorHelper( )
-  {
-  }
-
-  public static Double parseAsDouble( final Object value )
+  public final static Double parseAsDouble( final Object value )
   {
     if( value instanceof Number )
       return ((Number) value).doubleValue();

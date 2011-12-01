@@ -44,12 +44,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.gml.ITuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
-import org.kalypso.model.wspm.tuhh.core.results.processing.IResultLSFile;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
@@ -65,7 +64,7 @@ public class WspmTuhhPostProcessor
 
   private static final String TITLE_PATTERN_WATERLEVEL = "<calcname>"; //$NON-NLS-1$
 
-  private static final String LSFILE_PATTERN_WATERLEVEL = IWspmTuhhConstants.FILE_LAENGSSCHNITT_GML;
+  private static final String LSFILE_PATTERN_WATERLEVEL = "Längsschnitt.gml";//$NON-NLS-1$ 
 
   private static final String LSFILE_PATTERN_REIB_CONST = "lengthSection_<runoff>.gml";//$NON-NLS-1$ 
 
@@ -107,7 +106,7 @@ public class WspmTuhhPostProcessor
   private void addResult( final String id, final File file, final String title ) throws SimulationException
   {
     final String message = String.format( "- %s", title ); //$NON-NLS-1$
-    final String error = String.format( Messages.getString( "WspmTuhhPostProcessor.1" ), title ); //$NON-NLS-1$
+    final String error = String.format( Messages.getString("WspmTuhhPostProcessor.1"), title ); //$NON-NLS-1$
 
     // FIXME: what about optional files?
     if( file != null && file.exists() )
@@ -183,11 +182,13 @@ public class WspmTuhhPostProcessor
     if( !lsResult.isOK() )
       m_log.log( false, lsResult.toString() );
 
-    if( lsResult.matches( IStatus.ERROR ) )
+    // TODO: check this error handling
+    if( lsResult.getSeverity() == IStatus.ERROR )
     {
       m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.21" ) ); //$NON-NLS-1$
       m_log.log( false, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.22" ) ); //$NON-NLS-1$
+      return;
     }
 
     if( m_log.checkCanceled() )
@@ -197,12 +198,14 @@ public class WspmTuhhPostProcessor
     if( processedLengthSections.length < 1 )
     {
       m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ), new Object[0] ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ) ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.23" ) ); //$NON-NLS-1$
+      return;
     }
     else if( processedLengthSections.length > 1 )
     {
       m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ), new Object[0] ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ) ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.WspmTuhhCalcJob.24" ) ); //$NON-NLS-1$
+      return;
     }
 
     final ResultLengthSection processedLS = processedLengthSections[0];
@@ -279,22 +282,23 @@ public class WspmTuhhPostProcessor
     if( m_log.checkCanceled() )
       return null;
 
-    m_log.log( true, Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.13" ) ); //$NON-NLS-1$
+    /* *.km files */
+    // TODO: we copy also the *.km files (ok, this is not the best target dir), in order
+    // to use them for Klinin-Miljukov calculation later.
+    // However it would be nice, if the KM import code of KalypsoHydrology could directly read the polynom results (we
+    // probably need to add more data to the polnome files as well).
+    final FileFilter kmFilter = FileFilterUtils.suffixFileFilter( ".km" ); //$NON-NLS-1$
+    final File[] kmFiles = m_profDir.listFiles( kmFilter );
+    final File kmDir = new File( lsOutDir, "km" ); //$NON-NLS-1$
+    for( final File kmFile : kmFiles )
+      FileUtils.moveFileToDirectory( kmFile, kmDir, true );
 
-    final MultipleRunoffReader runoffReader = new MultipleRunoffReader( m_tmpDir, m_profDir, m_calculation, m_log );
-    runoffReader.init();
-    runoffReader.readKM();
+    /* Calculate and fetch Polynomes */
+    if( !processPolynoms )
+      return lsOutDir;
 
-    if( processPolynoms )
-    {
-      final File polynomeTmpDir = new File( m_tmpDir, "polynome" ); //$NON-NLS-1$
-      final PolynomeProcessor processor = new PolynomeProcessor( polynomeTmpDir, m_dathDir, m_calculation, m_log );
-      final File resultDir = processor.processPolynomes();
-      runoffReader.readPolynomeResults( polynomeTmpDir, resultDir, m_log, m_resultEater );
-    }
-
-    runoffReader.createSumComponents();
-    runoffReader.createResult( m_resultEater );
+    final File polynomeTmpDir = new File( m_tmpDir, "polynome" ); //$NON-NLS-1$
+    PolynomeHelper.processPolynomes( polynomeTmpDir, m_dathDir, m_log, 0, m_resultEater, m_calculation );
 
     return lsOutDir;
   }

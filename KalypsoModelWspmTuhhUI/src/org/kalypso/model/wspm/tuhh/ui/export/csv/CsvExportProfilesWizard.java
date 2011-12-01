@@ -46,15 +46,14 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.AbstractCsvWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.CsvPointsWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.CsvProfilesWriter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.export.ProfileExportUtils;
 import org.kalypso.model.wspm.tuhh.core.profile.export.ResultProfileInterpolator;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
@@ -63,6 +62,7 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.csv.CsvExportColumnsPage.OUTPUT_TYPE;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypso.observation.result.IComponent;
 
@@ -75,29 +75,19 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
   private static final String EXTENSION = "csv"; //$NON-NLS-1$
 
-  private final CsvExportData m_data = new CsvExportData();
+  private final ExportFileChooserPage m_profileFileChooserPage;
 
-  private ExportFileChooserPage m_profileFileChooserPage;
+  private final CsvExportColumnsPage m_columnsPage;
 
-  private CsvExportColumnsPage m_columnsPage;
-
-  public CsvExportProfilesWizard( )
+  public CsvExportProfilesWizard( final ProfileSelection selection )
   {
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
+    super( selection );
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    super.init( workbench, selection );
-
-    m_data.init( getDialogSettings() );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     setShowResultInterpolationSettings( true );
 
-    // FIXME: replace next page with file chooser stuff
-//    addPage( new CsvExportFilePage( "csvExportFilePaege", m_data ) ); //$NON-NLS-1$
-
+    /* Export file */
     final FileChooserDelegateSave delegateSave = new FileChooserDelegateSave();
     delegateSave.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
 
@@ -108,22 +98,19 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     addPage( m_profileFileChooserPage );
 
-    m_columnsPage = new CsvExportColumnsPage( getProfileSelection() );
+    m_columnsPage = new CsvExportColumnsPage( selection );
     addPage( m_columnsPage );
   }
 
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
-    m_data.storeSettings( getDialogSettings() );
-
     m_columnsPage.saveConfiguration();
 
     final File file = m_profileFileChooserPage.getFile();
     final IProfileExportColumn[] userDefinedColumns = m_columnsPage.getExportColumns();
     final OUTPUT_TYPE type = m_columnsPage.getType();
 
-    // FIXME: we should check at the same time if for each column the result is ok, else, show a warning message
     final IWspmResult[] results = ProfileExportUtils.findResults( profiles, userDefinedColumns );
 
     final IResultInterpolationSettings resultInterpolationSettings = getResultInterpolationSettings();
@@ -155,24 +142,22 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
     throw new IllegalArgumentException();
   }
 
-  private static IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final OUTPUT_TYPE type )
+  private IProfileExportColumn[] createColumns( final IProfileExportColumn[] userDefinedColumns, final IComponent[] components, final OUTPUT_TYPE type )
   {
     final Collection<IProfileExportColumn> columns = new ArrayList<IProfileExportColumn>();
 
     for( final IProfileExportColumn column : userDefinedColumns )
-    {
       columns.add( column );
-    }
 
-// if( type == OUTPUT_TYPE.point )
-// {
-// // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
-// for( final IComponent comp : components )
-// {
-//        final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
-// columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
-// }
-// }
+    if( type == OUTPUT_TYPE.point )
+    {
+      // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
+      for( final IComponent comp : components )
+      {
+        final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
+        columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
+      }
+    }
 
     return columns.toArray( new IProfileExportColumn[columns.size()] );
   }

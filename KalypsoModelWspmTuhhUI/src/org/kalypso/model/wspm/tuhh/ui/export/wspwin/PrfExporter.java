@@ -74,9 +74,9 @@ public class PrfExporter
   public IStatus export( final IProfileFeature[] profiles, final IProgressMonitor monitor )
   {
     final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-    final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.getString( "PrfExporter_0" ), null ); //$NON-NLS-1$
+    final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.getString("PrfExporter_0"), null ); //$NON-NLS-1$
 
-    monitor.beginTask( Messages.getString( "PrfExporter_1" ), profiles.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("PrfExporter_1"), profiles.length ); //$NON-NLS-1$
 
     for( final IProfileFeature feature : profiles )
     {
@@ -85,12 +85,12 @@ public class PrfExporter
       final double station = profil.getStation();
       final WspmWaterBody water = feature.getWater();
 
-      monitor.subTask( String.format( Messages.getString( "PrfExporter_2" ), profileName, station ) ); //$NON-NLS-1$
+      monitor.subTask( String.format( Messages.getString("PrfExporter_2"), profileName, station ) ); //$NON-NLS-1$
 
       final File file = m_callback.getExportFile( feature, profil );
       if( file.exists() )
       {
-        System.out.println( Messages.getString( "PrfExporter_3" ) + file ); //$NON-NLS-1$
+        System.out.println( Messages.getString("PrfExporter_3") + file ); //$NON-NLS-1$
       }
 
       try
@@ -99,10 +99,6 @@ public class PrfExporter
         final PrfWriter prfWriter = new PrfWriter( profil, waterlevels );
 
         configurePrfWriterWithMetadata( water, profil, prfWriter );
-
-        // WspWin needs the profile number for import. We are using the station in [m] to ao avoid conflicts
-        final int profileNumber = (int) (station * 1000.0);
-        prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_8_BLATTBEZEICHNUNG_2, Integer.toString( profileNumber ) );
 
         prfWriter.write( file );
 
@@ -130,12 +126,11 @@ public class PrfExporter
   public static void configurePrfWriterWithMetadata( final WspmWaterBody water, final IProfil profil, final PrfWriter prfWriter )
   {
     final String profileName = profil.getName();
-    final String profileDescription = profil.getDescription();
     final String riverId = water.getRefNr();
     final String riverDescription = water.getDescription();
+    final String riverDescriptionCleaned = riverDescription.replace( '\n', '-' ).replace( '\r', '-' );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_4_PROJEKTBEZEICHNUNG_1, riverId );
-    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_5_PROJEKTBEZEICHNUNG_2, profileDescription );
-    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescription );
+    prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_6_PROJEKTBEZEICHNUNG_3, riverDescriptionCleaned );
     prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT, profileName );
   }
 }

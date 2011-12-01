@@ -63,8 +63,6 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -72,7 +70,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -81,7 +78,6 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -90,6 +86,7 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -100,7 +97,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  */
 public class HydrographUtils
 {
-  public static GM_Position getHydroPositionFromElement( final Feature modelElement )
+  public static GM_Position getHydroPositionFromElement( final IFeatureWrapper2 modelElement )
   {
     try
     {
@@ -130,7 +127,7 @@ public class HydrographUtils
 
     // set a name
     final String hydrographName = calcUnitResult.getName();
-    hydrographFeature.setName( hydrographName );
+    newHydrograph.setName( hydrographName );
 
     setResultPaths( newHydrograph, calcUnitResult, DOCUMENTTYPE.nodes );
 
@@ -199,23 +196,7 @@ public class HydrographUtils
     }
     return null;
   }
-  
-  public static IHydrograph createNewHydrographFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final String name, final String description )
-  {
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
-    final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
 
-    /* set the observation components */
-    HydrographUtils.setHydrographComponents( newFeature );
-
-    final IHydrograph hydrograph = (IHydrograph) newFeature.getAdapter( IHydrograph.class );
-    hydrograph.setName( name );
-    hydrograph.setDescription( description );
-
-    return hydrograph;
-  }
-  
-  // FIXME: handle saving via pool
   public static Feature createNewHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, GmlSerializeException, IOException, GMLSchemaException
   {
     /* get a path */
@@ -233,7 +214,7 @@ public class HydrographUtils
     final OutputStreamWriter writer = null;
     try
     {
-      final String charset = "UTF-8"; //$NON-NLS-1$
+      final String charset = gmlResultFile.getCharset();
       GmlSerializer.serializeWorkspace( gmlResultFile.getLocation().toFile(), workspace, charset );
       // refresh workspace
       /* update resource folder */
@@ -256,7 +237,6 @@ public class HydrographUtils
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
-    componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY_DIRECTION );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
     componentUrnList.add( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER );

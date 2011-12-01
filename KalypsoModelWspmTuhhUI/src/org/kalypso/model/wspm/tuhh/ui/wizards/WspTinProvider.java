@@ -158,16 +158,12 @@ public class WspTinProvider implements IGmlSourceProvider
       for( final IProject project : projects )
       {
         if( !project.isOpen() )
-        {
           continue;
-        }
 
         // As wspm projects do not have a special nature, we just check for the .gmv file
         final IResource gmvMember = project.findMember( new Path( "WSPM.gmv" ) ); //$NON-NLS-1$
         if( gmvMember != null )
-        {
           result.add( project );
-        }
       }
 
       return result.toArray( new IProject[result.size()] );

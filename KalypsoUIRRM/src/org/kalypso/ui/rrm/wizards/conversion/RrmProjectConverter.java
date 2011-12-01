@@ -64,7 +64,7 @@ import org.osgi.framework.Version;
  */
 public class RrmProjectConverter implements IProjectConverter
 {
-  private final static Version V_10_10 = new Version( 11, 6, 0 );
+  private final static Version V_10_10 = new Version( 10, 10, 0 );
 
   private final File m_sourceDir;
 
@@ -120,17 +120,9 @@ public class RrmProjectConverter implements IProjectConverter
   private IProjectConverter createConverter( final Version targetVersion )
   {
     /* everything that is below 10.10 */
-// if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
+    if( m_sourceVersion == null || m_sourceVersion.compareTo( V_10_10 ) < 0 )
+      return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
 
-    // For the moment, just everything, the converter should work well for all projects.
-    // If we ever need another converter from some version on, we should start to check the version number.
-
-    return new RrmProjectConverterXto10_10( m_sourceDir, m_targetDir, targetVersion );
-
-    // TODO: we should implement a converter for 11.xxx;
-    // First ideas what the converter needs to do (in comparison to the 10.10 converter):
-    // - keep geologie.gml data (gets lost with the old converter)
-
-// return null;
+    return null;
   }
 }

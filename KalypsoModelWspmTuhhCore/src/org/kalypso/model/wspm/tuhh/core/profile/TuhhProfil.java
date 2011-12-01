@@ -43,8 +43,6 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -53,7 +51,6 @@ import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -66,9 +63,9 @@ public class TuhhProfil extends AbstractProfil
 {
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
-  public TuhhProfil( final TupleResult result, final Object source )
+  public TuhhProfil( final TupleResult result )
   {
-    super( PROFIL_TYPE, result, source );
+    super( PROFIL_TYPE, result );
     result.setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 
@@ -82,9 +79,9 @@ public class TuhhProfil extends AbstractProfil
   {
     // TODO: this restriction only exists for buildings! Other objects may occur several times...
     final IProfileObject[] objects = getProfileObjects( IProfileBuilding.class );
-    for( final IProfileObject object : objects )
+    for( final IProfileObject o : objects )
     {
-      removeProfileObject( object );
+      removeProfileObject( o );
     }
 
     return super.addProfileObjects( profileObjects );
@@ -126,9 +123,8 @@ public class TuhhProfil extends AbstractProfil
   public boolean removePoint( final IRecord point )
   {
     final IProfilPointMarker[] markers = getPointMarkerFor( point );
-    if( Arrays.isEmpty( markers ) )
+    if( markers.length == 0 )
       return super.removePoint( point );
-
     return false;
   }
 
@@ -144,9 +140,7 @@ public class TuhhProfil extends AbstractProfil
     {
       final IProfilPointMarker marker = getMarker( component, record );
       if( marker != null )
-      {
         pointMarkers.add( marker );
-      }
     }
     return pointMarkers.toArray( new IProfilPointMarker[] {} );
   }
@@ -167,9 +161,7 @@ public class TuhhProfil extends AbstractProfil
     {
       final IProfilPointMarker marker = getMarker( markerColumn, record );
       if( marker != null )
-      {
         markers.add( marker );
-      }
     }
 
     return markers.toArray( new IProfilPointMarker[] {} );
@@ -180,27 +172,24 @@ public class TuhhProfil extends AbstractProfil
     final int index = indexOfProperty( component );
     if( index < 0 )
       return null;
-
     final Object value = record.getValue( index );
-    if( Objects.isNull( value ) )
+
+    if( value == null )
       return null;
 
-    final String identifier = component.getId();
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( identifier ) && "none".equals( value ) ) //$NON-NLS-1$
+    final String id = component.getId();
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) && "none".equals( value ) ) //$NON-NLS-1$
       return null;
-    else if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( identifier ) && Boolean.FALSE.equals( value ) )
+
+    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( id ) && Boolean.FALSE.equals( value ) )
       return null;
-    else if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( identifier ) && Boolean.FALSE.equals( value ) )
+
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( id ) && Boolean.FALSE.equals( value ) )
       return null;
-    else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( identifier ) && value instanceof Double && ((Double) value).isNaN() )
+
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) && (value instanceof Double) && ((Double) value).isNaN() )
       return null;
 
     return new ProfilDevider( component, record );
-  }
-
-  @Override
-  public void accept( final IObservationVisitor visitor )
-  {
-    throw new UnsupportedOperationException();
   }
 }

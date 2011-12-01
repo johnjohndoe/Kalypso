@@ -17,7 +17,6 @@ import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.postprocessing.Block;
 import org.kalypso.model.hydrology.internal.postprocessing.BlockTimeSeries;
-import org.kalypso.model.hydrology.internal.postprocessing.ENACoreResultsFormat;
 
 /**
  * @author flows
@@ -26,7 +25,7 @@ public class BlockTimeSeriesTest extends TestCase
 {
   public void testBlocktimeSeries( ) throws IOException
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
+    KalypsoCorePlugin.getDefault().getPreferenceStore().setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
 
 //    final Block block = load( "resources/timeseries.dat", "4500" ); //$NON-NLS-1$ //$NON-NLS-2$
     final Block block = load( "resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -69,7 +68,7 @@ public class BlockTimeSeriesTest extends TestCase
   private Block load( final String resource, final String key ) throws IOException
   {
     final TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
-    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( ENACoreResultsFormat.FMT_2_1_AND_OLDER, timeZone );
+    final BlockTimeSeries blockTimeseries = new BlockTimeSeries( timeZone );
     final File tmpFile = File.createTempFile( "block", "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
     tmpFile.deleteOnExit();
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );

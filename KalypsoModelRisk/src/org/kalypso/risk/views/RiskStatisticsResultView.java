@@ -51,7 +51,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.widget.StatisticResultComposite;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -73,7 +73,7 @@ public class RiskStatisticsResultView extends ViewPart
     {
       final IHandlerService handlerService = (IHandlerService) getSite().getService( IHandlerService.class );
       final IEvaluationContext context = handlerService.getCurrentState();
-      final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class.getName(), IRasterizationControlModel.class );
 
       if( model == null )

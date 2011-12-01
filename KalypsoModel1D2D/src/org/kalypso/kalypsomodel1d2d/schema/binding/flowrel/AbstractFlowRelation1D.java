@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
@@ -53,10 +55,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public abstract class AbstractFlowRelation1D extends FlowRelationship implements IFlowRelation1D
 {
-
-  public AbstractFlowRelation1D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public AbstractFlowRelation1D( final Feature featureToBind, final QName qname )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qname );
   }
 
   /**
@@ -78,7 +79,7 @@ public abstract class AbstractFlowRelation1D extends FlowRelationship implements
   @Override
   public void setCalculation( final TuhhCalculation calculation )
   {
-    final Feature flowRelFeature = this;
+    final Feature flowRelFeature = getFeature();
     final GMLWorkspace flowRelworkspace = flowRelFeature.getWorkspace();
     final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( IFlowRelation1D.QNAME );
     final IRelationType calcRT = (IRelationType) flowRelFT.getProperty( IFlowRelation1D.QNAME_PROP_TUHH_CALCULATION );

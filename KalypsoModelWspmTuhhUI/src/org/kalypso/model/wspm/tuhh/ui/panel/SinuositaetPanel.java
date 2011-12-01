@@ -63,13 +63,13 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -84,13 +84,13 @@ public class SinuositaetPanel extends AbstractProfilView
 
   protected Composite m_propPanel;
 
-  protected ComboViewer m_kennung;
+  protected ComboViewer m_KennungCombo;
 
-  protected ComboViewer m_gerinne;
+  protected ComboViewer m_GerinneCombo;
 
-  protected Text m_lf;
+  protected Text m_LFText;
 
-  protected Text m_sn;
+  protected Text m_SNText;
 
   protected final SinuositaetProfileObject m_sinuositaet;
 
@@ -112,13 +112,9 @@ public class SinuositaetPanel extends AbstractProfilView
     m_propPanel = m_toolkit.createComposite( parent );
     m_propPanel.setLayout( new GridLayout( 2, false ) );
     if( m_propPanel == null )
-    {
-      m_toolkit.createText( m_propPanel, Messages.getString( "SinuositaetPanel_0" ) ); //$NON-NLS-1$
-    }
+      m_toolkit.createText( m_propPanel, Messages.getString("SinuositaetPanel_0") ); //$NON-NLS-1$
     else
-    {
       createPropertyPanel();
-    }
     updateControls();
     return m_propPanel;
   }
@@ -130,7 +126,7 @@ public class SinuositaetPanel extends AbstractProfilView
     final IRecord rec = res.size() > 0 ? res.get( 0 ) : null;
     if( rec == null || val.equals( rec.getValue( i ) ) )
       return;
-    final ProfilOperation operation = new ProfilOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( cmp.getDescription(), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectEdit( m_sinuositaet, cmp, val ) );
     new ProfilOperationJob( operation ).schedule();
 
@@ -144,10 +140,10 @@ public class SinuositaetPanel extends AbstractProfilView
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
     final IComponent cmpKen = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_KENNUNG );
     m_toolkit.createLabel( m_propPanel, cmpKen.getName() );
-    m_kennung = new ComboViewer( m_propPanel );
-    m_kennung.setContentProvider( new ArrayContentProvider() );
-    m_kennung.setInput( SINUOSITAET_KENNUNG.values() );
-    m_kennung.addSelectionChangedListener( new ISelectionChangedListener()
+    m_KennungCombo = new ComboViewer( m_propPanel );
+    m_KennungCombo.setContentProvider( new ArrayContentProvider() );
+    m_KennungCombo.setInput( SINUOSITAET_KENNUNG.values() );
+    m_KennungCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       @Override
@@ -160,15 +156,15 @@ public class SinuositaetPanel extends AbstractProfilView
         setValueFor( cmpKen, kenn.name() );
       }
     } );
-    m_kennung.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    m_toolkit.adapt( m_kennung.getCombo() );
+    m_KennungCombo.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
+    m_toolkit.adapt( m_KennungCombo.getCombo() );
 
     final IComponent cmpGer = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_GERINNE_ART );
     m_toolkit.createLabel( m_propPanel, cmpGer.getName() );
-    m_gerinne = new ComboViewer( m_propPanel );
-    m_gerinne.setContentProvider( new ArrayContentProvider() );
-    m_gerinne.setInput( SINUOSITAET_GERINNE_ART.values() );
-    m_gerinne.addSelectionChangedListener( new ISelectionChangedListener()
+    m_GerinneCombo = new ComboViewer( m_propPanel );
+    m_GerinneCombo.setContentProvider( new ArrayContentProvider() );
+    m_GerinneCombo.setInput( SINUOSITAET_GERINNE_ART.values() );
+    m_GerinneCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       @Override
@@ -181,15 +177,15 @@ public class SinuositaetPanel extends AbstractProfilView
         setValueFor( cmpGer, gerA.name() );
       }
     } );
-    m_gerinne.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    m_toolkit.adapt( m_gerinne.getCombo() );
+    m_GerinneCombo.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
+    m_toolkit.adapt( m_GerinneCombo.getCombo() );
 
     final IComponent cmpLF = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_LF );
     m_toolkit.createLabel( m_propPanel, cmpLF.getName() );
-    m_lf = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
-    m_lf.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    m_lf.addModifyListener( doubleModifyListener );
-    m_lf.addFocusListener( new FocusListener()
+    m_LFText = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    m_LFText.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
+    m_LFText.addModifyListener( doubleModifyListener );
+    m_LFText.addFocusListener( new FocusListener()
     {
 
       @Override
@@ -206,19 +202,17 @@ public class SinuositaetPanel extends AbstractProfilView
       public void focusGained( final FocusEvent e )
       {
         if( e.widget instanceof Text )
-        {
           ((Text) e.widget).selectAll();
-        }
 
       }
     } );
 
     final IComponent cmpSN = m_sinuositaet.getObjectProperty( ISinuositaetProfileObject.PROPERTY_SN );
     m_toolkit.createLabel( m_propPanel, cmpSN.getName() );
-    m_sn = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
-    m_sn.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
-    m_sn.addModifyListener( doubleModifyListener );
-    m_sn.addFocusListener( new FocusListener()
+    m_SNText = m_toolkit.createText( m_propPanel, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    m_SNText.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
+    m_SNText.addModifyListener( doubleModifyListener );
+    m_SNText.addFocusListener( new FocusListener()
     {
 
       @Override
@@ -235,9 +229,7 @@ public class SinuositaetPanel extends AbstractProfilView
       public void focusGained( final FocusEvent e )
       {
         if( e.widget instanceof Text )
-        {
           ((Text) e.widget).selectAll();
-        }
       }
     } );
 
@@ -246,10 +238,10 @@ public class SinuositaetPanel extends AbstractProfilView
 
   protected void updateControls( )
   {
-    m_gerinne.setSelection( new StructuredSelection( m_sinuositaet.getGerinneArt() ) );
-    m_kennung.setSelection( new StructuredSelection( m_sinuositaet.getKennung() ) );
-    m_sn.setText( String.format( "%.4f", m_sinuositaet.getSinuositaet() ) ); //$NON-NLS-1$
-    m_lf.setText( String.format( "%.4f", m_sinuositaet.getLf() ) ); //$NON-NLS-1$
+    m_GerinneCombo.setSelection( new StructuredSelection( m_sinuositaet.getGerinneArt() ) );
+    m_KennungCombo.setSelection( new StructuredSelection( m_sinuositaet.getKennung() ) );
+    m_SNText.setText( String.format( "%.4f", m_sinuositaet.getSinuositaet() ) ); //$NON-NLS-1$
+    m_LFText.setText( String.format( "%.4f", m_sinuositaet.getLf() ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -259,7 +251,6 @@ public class SinuositaetPanel extends AbstractProfilView
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
-      {
         control.getDisplay().asyncExec( new Runnable()
         {
           @Override
@@ -268,7 +259,6 @@ public class SinuositaetPanel extends AbstractProfilView
             updateControls();
           }
         } );
-      }
     }
   }
 }

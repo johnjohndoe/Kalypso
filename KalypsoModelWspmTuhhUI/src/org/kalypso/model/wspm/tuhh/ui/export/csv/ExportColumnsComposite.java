@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.csv;
 
@@ -45,13 +45,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -69,23 +66,17 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.commons.patternreplace.PatternAction;
-import org.kalypso.commons.patternreplace.PatternInputReplacer;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
-import org.kalypso.model.wspm.tuhh.core.profile.export.ProfileExportUtils;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Gernot Belger
@@ -102,8 +93,6 @@ public class ExportColumnsComposite
 
   private static final String SETTINGS_PRECISION = "precision"; //$NON-NLS-1$
 
-  private final ProfilePatternInputReplacer m_replacer = ProfilePatternInputReplacer.getINSTANCE();
-
   private final List<PatternReplacementColumn> m_columns;
 
   private ScrolledForm m_form;
@@ -116,20 +105,6 @@ public class ExportColumnsComposite
   {
     m_profileSelection = profileSelection;
     m_columns = new ArrayList<PatternReplacementColumn>( Arrays.asList( columns ) );
-
-    initReplacer();
-  }
-
-  private void initReplacer( )
-  {
-// for( final IComponent comp : components )
-// {
-//      final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
-//
-// m_replacer.addReplacer( null );
-//
-// columns.add( new PatternReplacementColumn( comp.getName(), pattern ) );
-// }
   }
 
   public void setDialogSettings( final IDialogSettings dialogSettings )
@@ -140,7 +115,7 @@ public class ExportColumnsComposite
   public Control createControl( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString( "ExportColumnsComposite_5" ) ); //$NON-NLS-1$
+    group.setText( Messages.getString("ExportColumnsComposite_5") ); //$NON-NLS-1$
     group.setLayout( new FillLayout() );
 
     m_form = new ScrolledForm( group, SWT.V_SCROLL );
@@ -164,9 +139,11 @@ public class ExportColumnsComposite
     final Composite body = m_form.getBody();
     ControlUtils.disposeChildren( body );
 
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
     if( m_columns.size() == 0 )
     {
-      final IStatus status = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "ExportColumnsComposite_6" ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("ExportColumnsComposite_6") ); //$NON-NLS-1$
       new StatusComposite( body, SWT.NONE ).setStatus( status );
     }
     else
@@ -174,19 +151,19 @@ public class ExportColumnsComposite
       /* Header */
       final Label headerLabel = new Label( body, SWT.NONE );
       headerLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      headerLabel.setText( Messages.getString( "ExportColumnsComposite_7" ) ); //$NON-NLS-1$
+      headerLabel.setText( Messages.getString("ExportColumnsComposite_7") ); //$NON-NLS-1$
 
       final Label widthLabel = new Label( body, SWT.NONE );
       widthLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      widthLabel.setText( Messages.getString( "ExportColumnsComposite_8" ) ); //$NON-NLS-1$
+      widthLabel.setText( Messages.getString("ExportColumnsComposite_8") ); //$NON-NLS-1$
 
       final Label precisionLabel = new Label( body, SWT.NONE );
       precisionLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      precisionLabel.setText( Messages.getString( "ExportColumnsComposite_9" ) ); //$NON-NLS-1$
+      precisionLabel.setText( Messages.getString("ExportColumnsComposite_9") ); //$NON-NLS-1$
 
       final Label patternLabel = new Label( body, SWT.NONE );
       patternLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-      patternLabel.setText( Messages.getString( "ExportColumnsComposite_10" ) ); //$NON-NLS-1$
+      patternLabel.setText( Messages.getString("ExportColumnsComposite_10") ); //$NON-NLS-1$
 
       new Label( body, SWT.NONE ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false, 2, 1 ) );
     }
@@ -205,7 +182,7 @@ public class ExportColumnsComposite
       final Text headerText = new Text( body, SWT.SINGLE | SWT.BORDER );
       headerText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       headerText.setText( header );
-      headerText.setMessage( Messages.getString( "ExportColumnsComposite_11" ) ); //$NON-NLS-1$
+      headerText.setMessage( Messages.getString("ExportColumnsComposite_11") ); //$NON-NLS-1$
 
       final Spinner widthSpinner = new Spinner( body, SWT.BORDER );
       widthSpinner.setValues( width, -1, 1000, 0, 1, 10 );
@@ -217,9 +194,10 @@ public class ExportColumnsComposite
       final Text patternText = new Text( body, SWT.SINGLE | SWT.BORDER );
       patternText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       patternText.setText( pattern );
-      patternText.setMessage( Messages.getString( "ExportColumnsComposite_12" ) ); //$NON-NLS-1$
+      patternText.setMessage( Messages.getString("ExportColumnsComposite_12") ); //$NON-NLS-1$
 
-      createPatternMenuButton( body, patternText );
+      final Button patternMenuButton = replacer.createPatternButton( body, patternText );
+      patternMenuButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
       final RemoveColumnAction removeColumnAction = new RemoveColumnAction( column, this );
       final Hyperlink removeButton = ActionHyperlink.createHyperlink( null, body, SWT.PUSH, removeColumnAction );
@@ -254,33 +232,6 @@ public class ExportColumnsComposite
     addResultsHyperlink.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false, 6, 1 ) );
 
     m_form.reflow( true );
-  }
-
-  private void createPatternMenuButton( final Composite parent, final Text patternText )
-  {
-    final Button button = new Button( parent, SWT.ARROW | SWT.LEFT );
-    button.setToolTipText( PatternInputReplacer.STR_INSERT_A_TOKEN_FROM_THE_LIST_OF_AVAILABLE_PATTERNS );
-    button.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-
-    final MenuManager menuManager = m_replacer.createPatternMenu( patternText );
-    menuManager.setRemoveAllWhenShown( false );
-
-    /* Add components */
-    menuManager.add( new Separator() );
-    // FIXME: these columns should be configurable by the user (at least, 'all or nothing')
-    final IProfileFeature[] profiles = m_profileSelection.getProfiles();
-    final IComponent[] components = ProfileExportUtils.getComponents( profiles );
-    for( final IComponent comp : components )
-    {
-      final String pattern = String.format( "<Component:%s>", comp.getId() ); //$NON-NLS-1$
-
-      final String label = comp.getName();
-      final IAction patternAction = new PatternAction( label, pattern, patternText );
-      menuManager.add( patternAction );
-    }
-
-
-    new MenuButton( button, menuManager );
   }
 
   private boolean hasPrecision( final Class< ? > type )
@@ -361,9 +312,7 @@ public class ExportColumnsComposite
       final int width = NumberUtils.parseQuietInt( columnSection.get( SETTINGS_WIDTH ), PatternReplacementColumn.NOT_SET );
       final int precision = NumberUtils.parseQuietInt( columnSection.get( SETTINGS_PRECISION ), PatternReplacementColumn.NOT_SET );
       if( !StringUtils.isBlank( header ) && !StringUtils.isBlank( pattern ) )
-      {
         m_columns.add( new PatternReplacementColumn( header, pattern, width, precision ) );
-      }
     }
 
     updatePanel();

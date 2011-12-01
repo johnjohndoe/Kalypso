@@ -7,36 +7,32 @@ package org.kalypso.model.km.internal.core;
  */
 class KMValue extends AbstractKMValue
 {
-  private final double m_qLowerChannel;
+  private final double m_k;
 
-  private final double m_qUpperChannel;
+  private final double m_n;
 
-  private final double m_qLowerForeland;
+  private final double m_kForeland;
 
-  private final double m_qUpperForeland;
+  private final double m_nForeland;
 
   private final double m_alpha;
 
   private final double m_length;
 
-  private final NKValue m_nkValue;
+  private final double m_q;
 
-  private NKValue m_nkValueForeland;
+  private final double m_qf;
 
-  /**
-   * Calculates the Kalinin-Miljukov parameters for one profile (i.e. the coefficients between two selected discharges)
+  /*
+   * Calculates the Kalinin-Miljukov parameters for one profile (one set per discharge)
    */
   public KMValue( final double length, final Row row1, final Row row2 )
   {
-    m_qLowerChannel = Math.min( row1.getQ(), row2.getQ() );
-    m_qUpperChannel = Math.max( row1.getQ(), row2.getQ() );
+    // Discharge River
+    final double qm = (row1.getQ() + row2.getQ()) / 2d;
 
-    m_qLowerForeland = Math.min( row1.getQforeland(), row2.getQforeland() );
-    m_qUpperForeland = Math.max( row1.getQforeland(), row2.getQforeland() );
-
-    // mean discharges
-    final double qm = (m_qLowerChannel + m_qUpperChannel) / 2d;
-    final double qmForeland = (m_qLowerForeland + m_qUpperForeland) / 2d;
+    // Discharge Forelands
+    final double qmForeland = (row1.getQforeland() + row2.getQforeland()) / 2d;
 
     // Delta Watertable
     final double dh = Math.abs( row2.getHNN() - row1.getHNN() );
@@ -44,46 +40,52 @@ class KMValue extends AbstractKMValue
     // Delta Area River
     final double dA = Math.abs( row2.getArea() - row1.getArea() );
 
-    // Delta Area foreland
+    // Delta Area Forelands
     final double dAForeland = Math.abs( row2.getAreaForeland() - row1.getAreaForeland() );
 
-    // Delta discharge River
-    final double dq = Math.abs( m_qUpperChannel - m_qLowerChannel );
+    // Delta Dischrage River
+    final double dq = Math.abs( row2.getQ() - row1.getQ() );
 
     // Delta Discharge Forelands
-    final double dqForeland = Math.abs( m_qUpperForeland - m_qLowerForeland );
-
+    final double dqForeland = Math.abs( row2.getQforeland() - row1.getQforeland() );
     // Mean Slope
-    // TODO: check: a problem occurs, if the slope is negative (first solution: take the absolute values - because
-    // negative values are very small)
+    // TODO: check: a problem occures, if the slope is negative (first solution: take the absoulute values - because
+    // negative values
+    // are very small)
     final double slope = (Math.abs( row1.getSlope() ) + Math.abs( row2.getSlope() )) / 2d;
 
-    // characteristic length
     final double li = qm * dh / (slope * dq);
 
     // Retention coefficient River
-    // TODO: verify this formula...
     final double ki = (li * dA / dq) / 3600d;
 
     // Number of storages river
     final double n = length / li;
 
-    m_nkValue = new NKValue( n, ki );
-
     final double liForeland = qmForeland * dh / (slope * dqForeland);
-
     if( Double.isInfinite( liForeland ) || Double.isNaN( liForeland ) )
-      m_nkValueForeland = new NKValue( 0, 0 );
+    {
+      m_kForeland = 0;
+      m_nForeland = 0;
+    }
     else
     {
+      // Retention coefficient forlands
       final double kiForeland = (liForeland * dAForeland / dqForeland) / 3600d;
+      // Number of storages forelands
       final double nForeland = length / liForeland;
-      m_nkValueForeland = new NKValue( nForeland, kiForeland );
+
+      m_kForeland = kiForeland;
+      m_nForeland = nForeland;
     }
 
     // Distribution factor
     m_alpha = 1 - qmForeland / (qm + qmForeland);
     m_length = length;
+    m_q = qm;
+    m_qf = qmForeland;
+    m_k = ki;
+    m_n = n;
   }
 
   @Override
@@ -93,27 +95,27 @@ class KMValue extends AbstractKMValue
   }
 
   @Override
-  public double getK( )
-  {
-    return m_nkValue.getK();
-  }
-
-  @Override
-  public double getN( )
-  {
-    return m_nkValue.getN();
-  }
-
-  @Override
   public double getKForeland( )
   {
-    return m_nkValueForeland.getK();
+    return m_kForeland;
   }
 
   @Override
   public double getNForeland( )
   {
-    return m_nkValueForeland.getN();
+    return m_nForeland;
+  }
+
+  @Override
+  public double getK( )
+  {
+    return m_k;
+  }
+
+  @Override
+  public double getN( )
+  {
+    return m_n;
   }
 
   @Override
@@ -123,26 +125,15 @@ class KMValue extends AbstractKMValue
   }
 
   @Override
-  public double getLowerQchannel( )
+  public double getQ( )
   {
-    return m_qLowerChannel;
+    return m_q;
   }
 
   @Override
-  public double getUpperQchannel( )
+  public double getQForeland( )
   {
-    return m_qUpperChannel;
+    return m_qf;
   }
 
-  @Override
-  public double getLowerQforeland( )
-  {
-    return m_qLowerForeland;
-  }
-
-  @Override
-  public double getUpperQforeland( )
-  {
-    return m_qUpperForeland;
-  }
 }

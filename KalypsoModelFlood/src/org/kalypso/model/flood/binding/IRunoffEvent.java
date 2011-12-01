@@ -44,15 +44,15 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Thomas Jung
  * 
  */
-public interface IRunoffEvent extends Feature
+public interface IRunoffEvent extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "RunoffEvent" ); //$NON-NLS-1$
 
@@ -65,21 +65,21 @@ public interface IRunoffEvent extends Feature
   public final static QName QNAME_PROP_MARKEDFORPROCESSING = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "markedForProcessing" ); //$NON-NLS-1$
 
   public final static QName QNAME_PROP_RETURN_PERIOD = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "returnPeriod" ); //$NON-NLS-1$
-
+  
   public ICoverageCollection getResultCoverages( );
 
   public void setResultCoverages( final ICoverageCollection collection );
 
-  public IFeatureBindingCollection<ITinReference> getTins( );
+  public IFeatureWrapperCollection<ITinReference> getTins( );
 
   public IPath getDataPath( );
 
   public void setDataPath( final IPath path );
-
+  
   public Integer getReturnPeriod( );
 
   public void setReturnPeriod( final Integer value );
-
+  
   // TODO bad idea -> add list of IRunoffEvent references to ISimulation.INPUT
   public boolean isMarkedForProcessing( );
 

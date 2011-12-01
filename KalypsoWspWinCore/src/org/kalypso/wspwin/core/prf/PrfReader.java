@@ -41,11 +41,8 @@
 package org.kalypso.wspwin.core.prf;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -53,8 +50,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
@@ -91,7 +87,7 @@ public class PrfReader
     return m_metaMap.get( index );
   }
 
-  private final int getDataSize( final int key, final int size )
+  private final int getDataSize(final int key , final int size )
   {
     if( key == IWspWinConstants.SPEZIALPROFIL_TRAPEZ )
       return 6;
@@ -120,7 +116,6 @@ public class PrfReader
       return IWspWinConstants.DATA_BLOCK_TYPE_DOUBLE;
     else if( key == 0 )
       return IWspWinConstants.DATA_BLOCK_TYPE_COORDINATE;
-
     return IWspWinConstants.DATA_BLOCK_TYPE_UNKNOWN;
   }
 
@@ -158,9 +153,9 @@ public class PrfReader
         if( isValid( dbh ) )
         {
           final int key = dbh.getSpecification( 8 );
-          final int dataBlockType = getDataBlockType( key );
+          final int dataBlockType = getDataBlockType(key);
           final IDataBlock dB = createDataBlock( dbh, dataBlockType );
-          dB.readFromReader( getDataSize( key, pointCount ), br );
+          dB.readFromReader(getDataSize( key, pointCount ), br );
           m_dbs.put( createFirstLine( dbh.getFirstLine() ), dB );
         }
       }
@@ -245,9 +240,9 @@ public class PrfReader
     // TODO: Kim Serializer:MapperFormat Anzahl über 999 Punkte lesen
 
     // 1. Format: Whitespace separated
-    final StringTokenizer sT = string == null ? null : new StringTokenizer( string );
-    final int count = sT == null ? -1 : sT.countTokens() - 1;
-    if( count < 0 || count != Integer.parseInt( sT.nextToken() ) )
+    final StringTokenizer sT = (string == null) ? null : new StringTokenizer( string );
+    final int count = (sT == null) ? -1 : sT.countTokens() - 1;
+    if( (count < 0) || (count != Integer.parseInt( sT.nextToken() )) )
       m_logger.log( Level.SEVERE, Messages.getString( "org.kalypso.wspwin.core.prf.PrfReader.39" ) ); //$NON-NLS-1$
 
     final int[] counts = new int[count];
@@ -291,6 +286,7 @@ public class PrfReader
       textString.trim();
       final String dataString = line.length() > 40 ? line.substring( 40, line.length() ).trim() : ""; //$NON-NLS-1$
       m_metaMap.put( i, new String[] { textString, dataString } );
+
     }
   }
 
@@ -299,24 +295,4 @@ public class PrfReader
     return m_dbs.get( createFirstLine( key.toUpperCase() ) );
   }
 
-  public void read( final File file ) throws IOException
-  {
-    BufferedReader fileReader = null;
-    try
-    {
-      fileReader = new BufferedReader( new FileReader( file ) );
-      readFromReader( fileReader );
-      fileReader.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( fileReader );
-    }
-  }
-
-  public IDataBlock[] getDataBlocks( )
-  {
-    final Collection<IDataBlock> values = m_dbs.values();
-    return values.toArray( new IDataBlock[values.size()] );
-  }
 }

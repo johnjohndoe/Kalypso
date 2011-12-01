@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -78,7 +79,7 @@ public class SinkExporter
     }
     catch( final IOException e )
     {
-      final String message = String.format( Messages.getString( "SinkExporter_0" ) ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString("SinkExporter_0") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -105,15 +106,14 @@ public class SinkExporter
 
   private void writeProfiles( final IProfileFeature[] profileFeatures, final OutputStream os, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    monitor.beginTask( Messages.getString( "SinkExporter_1" ), profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("SinkExporter_1"), profileFeatures.length ); //$NON-NLS-1$
 
-    final IProfil[] profiles = ProfileFeatureSorter.extractProfiles( profileFeatures, monitor );
-// new IProfil[profileFeatures.length];
-// for( int i = 0; i < profiles.length; i++ )
-// {
-// profiles[i] = profileFeatures[i].getProfil();
-// ProgressUtilities.worked( monitor, 1 );
-// }
+    final IProfil[] profiles = new IProfil[profileFeatures.length];
+    for( int i = 0; i < profiles.length; i++ )
+    {
+      profiles[i] = profileFeatures[i].getProfil();
+      ProgressUtilities.worked( monitor, 1 );
+    }
 
     // FIXME: what encoding?
     final OutputStreamWriter writer = new OutputStreamWriter( os );

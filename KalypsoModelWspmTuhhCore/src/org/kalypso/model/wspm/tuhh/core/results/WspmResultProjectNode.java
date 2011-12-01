@@ -46,7 +46,6 @@ import java.util.Collection;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -70,20 +69,16 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
   {
     final Collection<IWspmResultNode> results = new ArrayList<IWspmResultNode>();
 
-    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_project.getWaterBodies();
+    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
     for( final WspmWaterBody waterBody : waterBodies )
-    {
       results.add( new WspmResultWaterNode( this, waterBody ) );
-    }
 
-    final IFeatureBindingCollection<TuhhCalculation> calculations = m_project.getCalculations();
+    final TuhhCalculation[] calculations = m_project.getCalculations();
     for( final TuhhCalculation calculation : calculations )
     {
       final IWspmResultNode node = WspmResultFactory.createCalculationNode( this, calculation );
       if( node != null )
-      {
         results.add( node );
-      }
     }
 
     return results.toArray( new IWspmResultNode[results.size()] );
@@ -95,12 +90,7 @@ public class WspmResultProjectNode extends AbstractWspmResultNode
   @Override
   public String getLabel( )
   {
-
-    final String name = m_project.getName();
-    if( name != null && name.length() > 0 )
-      return name;
-
-    return m_project.getId();
+    return m_project.getName();
   }
 
   @Override

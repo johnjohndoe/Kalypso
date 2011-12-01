@@ -45,12 +45,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import javax.xml.namespace.QName;
+
+import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
@@ -61,50 +63,38 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalculationUnit1D2D
 {
-  public CalculationUnit1D2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  private final IFeatureWrapperCollection<ICalculationUnit> m_subCalculationUnits;
 
-  private final IFeatureBindingCollection<ICalculationUnit> m_subCalculationUnits = new FeatureBindingCollection<ICalculationUnit>( this, ICalculationUnit.class, WB1D2D_PROP_CALC_UNIT );
-
-  private List<IFENetItem> m_virtualElements;
+  private final List<IFENetItem> m_virtualElements;
 
   private Set<String> m_virtualMemberIDs;
 
-  private List<IPolyElement> m_list2DElements = null;
+  private final QName m_qnameToBind;
 
-  private List<IElement1D> m_list1DElements = null;
+  private final QName m_subUnitPropQName;
 
-  private void refreshVirtualElements( )
+  public CalculationUnit1D2D( final Feature featureToBind )
   {
-    if( m_virtualElements != null )
-    {
-      int lIntCountAllElements = 0;
-      for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
-      {
-        lIntCountAllElements += calculationUnit.getElements().size();
-      }
-      if( m_virtualElements.size() == lIntCountAllElements )
-      {
-        return;
-      }
-    }
+    this( featureToBind, ICalculationUnit1D2D.QNAME, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS, ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT, IFENetItem.class );
+  }
+
+  public CalculationUnit1D2D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final QName subUnitPropQName, final Class<IFENetItem> wrapperClass )
+  {
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+    m_qnameToBind = qnameToBind;
+    m_subUnitPropQName = subUnitPropQName;
+    m_subCalculationUnits = Util.get( featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
     m_virtualElements = new ArrayList<IFENetItem>();
     for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       m_virtualElements.addAll( calculationUnit.getElements() );
-
-    calculate1DElements();
-    calculate2DElements();
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D#getSubUnits()
    */
   @Override
-  public IFeatureBindingCollection<ICalculationUnit> getChangedSubUnits( )
+  public IFeatureWrapperCollection<ICalculationUnit> getChangedSubUnits( )
   {
-    refreshVirtualElements();
     return m_subCalculationUnits;
   }
 
@@ -112,10 +102,9 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   {
     if( m_virtualMemberIDs == null )
     {
-      refreshVirtualElements();
       m_virtualMemberIDs = new HashSet<String>();
-      for( final IFENetItem element : m_virtualElements )
-        m_virtualMemberIDs.add( element.getId() );
+      for( final IFeatureWrapper2 element : m_virtualElements )
+        m_virtualMemberIDs.add( element.getGmlID() );
     }
     return m_virtualMemberIDs;
   }
@@ -138,14 +127,14 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#contains(org.kalypsodeegree.model.feature.binding.Feature)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#contains(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @Override
   public boolean contains( final IFENetItem member )
   {
     if( member == null )
       return false;
-    return getVirtualMemberIDs().contains( member.getId() );
+    return getVirtualMemberIDs().contains( member.getGmlID() );
   }
 
   /**
@@ -154,20 +143,11 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   @Override
   public List<IElement1D> getElements1D( )
   {
-    if( m_list1DElements == null )
-    {
-      calculate1DElements();
-    }
-    return m_list1DElements;
-  }
-
-  private void calculate1DElements( )
-  {
-    m_list1DElements = new ArrayList<IElement1D>();
-    for( final IFENetItem element : m_virtualElements )
+    final List<IElement1D> list = new ArrayList<IElement1D>();
+    for( final IFeatureWrapper2 element : m_virtualElements )
       if( element instanceof IElement1D )
-        m_list1DElements.add( (IElement1D) element );
-
+        list.add( (IElement1D) element );
+    return list;
   }
 
   /**
@@ -176,20 +156,11 @@ public class CalculationUnit1D2D extends CoupledCalculationUnit implements ICalc
   @Override
   public List<IPolyElement> getElements2D( )
   {
-    if( m_list2DElements == null )
-    {
-      calculate2DElements();
-    }
-    return m_list2DElements;
-  }
-
-  private void calculate2DElements( )
-  {
-    m_list2DElements = new ArrayList<IPolyElement>();
-    for( final IFENetItem element : m_virtualElements )
+    final List<IPolyElement> list = new ArrayList<IPolyElement>();
+    for( final IFeatureWrapper2 element : m_virtualElements )
       if( element instanceof IPolyElement )
-        m_list2DElements.add( (IPolyElement) element );
-
+        list.add( (IPolyElement) element );
+    return list;
   }
 
   /**

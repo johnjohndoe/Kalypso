@@ -68,7 +68,7 @@
 		_FlowRelationship, AbstractFlowRelationshipType
 		================================================================== -->
 
-	<xs:element name="_FlowRelationship" type="simBase:AbstractFlowRelationshipType" abstract="true" substitutionGroup="gml:_Feature">
+	<xs:element name="_FlowRelationship" type="simBase:AbstractFlowRelationshipType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>Substitution head for all flow relationship elements</xs:documentation>
 		</xs:annotation>
@@ -81,7 +81,18 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="position" type="gml:PointPropertyType"/>
+					<xs:element name="position" type="gml:PointPropertyType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Lage</xs:label>
+								<xs:tooltip>Lage</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Position</xs:label>
+								<xs:tooltip>Lage</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

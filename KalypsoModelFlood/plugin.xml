@@ -152,6 +152,36 @@
       </dataSet>
    </extension>
    <extension
+       id="org.kalypso.core.adapters"
+       name="KalypsoFlood adapter factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.model.flood.binding.KalypsoFloodAdapterFactory">
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodModel">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodPolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodExtrapolationPolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodClipPolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IFloodVolumePolygon">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.IRunoffEvent">
+         </adapter>
+         <adapter
+               type="org.kalypso.model.flood.binding.ITinReference">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
          point="org.eclipse.core.expressions.definitions">
       <definition id="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
          <with variable="activeMapPanel">
@@ -314,32 +344,5 @@
         <image commandId="org.kalypso.model.flood.command.createExtrapolationPolygon" icon="icons/elcl16/create_flood_polygon_extrapolation.gif"/>
         <image commandId="org.kalypso.model.flood.command.createClipPolygon" icon="icons/elcl16/create_flood_polygon_clip.gif"/>
         <image commandId="org.kalypso.model.flood.command.createVolumePolygon" icon="icons/elcl16/create_flood_polygon_volume.gif"/>
-     </extension>
-     <extension
-           point="org.kalypso.deegree.featureBinding">
-        <feature
-              class="org.kalypso.model.flood.binding.FloodClipPolygon"
-              qname="{org.kalypso.model.flood}FloodClipPolygon">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.FloodExtrapolationPolygon"
-              qname="{org.kalypso.model.flood}FloodExtrapolationPolygon">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.FloodVolumePolygon"
-              qname="{org.kalypso.model.flood}FloodVolumePolygon">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.FloodModel"
-              qname="{org.kalypso.model.flood}FloodModel">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.RunoffEvent"
-              qname="{org.kalypso.model.flood}RunoffEvent">
-        </feature>
-        <feature
-              class="org.kalypso.model.flood.binding.TinReference"
-              qname="{org.kalypso.model.flood}TinReference">
-        </feature>
      </extension>
 </plugin>

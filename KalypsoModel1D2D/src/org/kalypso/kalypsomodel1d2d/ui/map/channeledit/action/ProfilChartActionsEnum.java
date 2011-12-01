@@ -40,30 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.action;
 
+import java.util.Collections;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISources;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfilChartView;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 
-import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 public enum ProfilChartActionsEnum
 {
   ZOOM_OUT(
       Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_0" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_1" ), KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
-      ZOOM_IN(
-          Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_2" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_3" ), KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
-          PAN(
-              Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_4" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_5" ), KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
-              EDIT(
-                  Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_6" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_7" ), KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
-                  MAXIMIZE(
-                      Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_8" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_9" ), KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
-                      EXPORT_IMAGE(
-                          Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_10" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_11" ), KalypsoModelWspmUIImages.ID_CHART_SCREENSHOT, null, IAction.AS_PUSH_BUTTON); //$NON-NLS-1$ //$NON-NLS-2$
+  ZOOM_IN(
+      Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_2" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_3" ), KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  PAN(
+      Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_4" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_5" ), KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  EDIT(
+      Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_6" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_7" ), KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  MAXIMIZE(
+      Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_8" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_9" ), KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  EXPORT_IMAGE(
+      Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_10" ), Messages.getString( "org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_11" ), KalypsoModelWspmUIImages.ID_CHART_SCREENSHOT, null, IAction.AS_PUSH_BUTTON); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final String m_label;
 
@@ -137,10 +144,43 @@ public enum ProfilChartActionsEnum
       public void run( )
       {
         if( chartHandler != null )
+          profilView.getPlotDragHandler().activatePlotHandler( chartHandler );
+      }
+    };
+
+    action.setToolTipText( chartAction.getTooltip() );
+    action.setImageDescriptor( chartAction.getEnabledImage() );
+    action.setDisabledImageDescriptor( chartAction.getDisabledImage() );
+
+    return action;
+  }
+
+  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction, final AbstractHandler chartHandler )
+  {
+    final int style = chartAction.getStyle();
+    final String label = chartAction.toString();
+
+    final IAction action = new Action( label, style )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#run()
+       */
+      @Override
+      public void run( )
+      {
+        final EvaluationContext context = new EvaluationContext( null, this );
+        context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, profilView );
+        if( profilView != null && profilView.getChart() != null )
+          context.addVariable( ISources.ACTIVE_SHELL_NAME, profilView.getChart().getPlot().getDisplay().getActiveShell() );
+        final ExecutionEvent event = new ExecutionEvent( null, Collections.EMPTY_MAP, null, context );
+
+        try
         {
-          final IChartComposite chart = profilView.getChartComposite();
-          if( chart != null )
-            chart.getPlotHandler().activatePlotHandler( chartHandler );
+          chartHandler.execute( event );
+        }
+        catch( final ExecutionException e )
+        {
+          throw new RuntimeException( e );
         }
       }
     };

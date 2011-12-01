@@ -64,7 +64,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -170,6 +170,7 @@ public class LzsToGml
     final String fileName = String.format( "we%s.lzs", asciiID ); //$NON-NLS-1$
     final File lzsFile = new File( m_lzsimDir, fileName );
 
+
     FileReader fileReader = null;
     try
     {
@@ -177,9 +178,9 @@ public class LzsToGml
       readLzsFile( fileReader, catchment, iniCatchment );
       fileReader.close();
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
-      m_logger.warning( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", catchment.getName()) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID, catchment.getName() ) ); //$NON-NLS-1$ 
     }
     finally
     {
@@ -247,7 +248,7 @@ public class LzsToGml
             counterHydros = 0;
           }
         }
-          break;
+        break;
 
         case READ_GWSP:
         {
@@ -258,7 +259,7 @@ public class LzsToGml
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb ); //$NON-NLS-1$
           status = CatchmentStatus.SEARCH_HEADER;
         }
-          break;
+        break;
 
         case READ_SNOW:
           final String[] strings = cleanLine.split( " " ); //$NON-NLS-1$

@@ -40,26 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.vividsolutions.jts.geom.TopologyException;
-
 /**
  * @author Dejan Antanaskovic
  */
-public final class PolygonIntersectionHelper
+public class PolygonIntersectionHelper
 {
-  private PolygonIntersectionHelper( )
-  {
-  }
-
   /**
    * Defines how existing features are handled when imported.
    */
@@ -67,67 +57,33 @@ public final class PolygonIntersectionHelper
   {
     /** Delete all existing features */
     CLEAR_OUTPUT,
+    /** Delete all existing features, that intersect with any existing one (produces a warning) */
+    DELETE_INTERSECTING,
+    /** Ignore all imported features, that intersect with any existing one (produces warning) */
+    IGNORE_INTERSECTING,
     /**
-     * existing features are clipped on imported feature's geometry, adds one new feature
+     * from existing features, intersecting imported features are removed;
      */
-    DIFFERENCE,
-    /**
-     * existing features are split by imported feature's geometry and updated with its properties
-     */
-    UPDATE
+    INTERSECT
   }
 
   /**
-   * Creates the difference for the {@link ImportType#DIFFERENCE} import type. Anything not resulting in a surface is
+   * Creates the difference for the {@link ImportType#INTERSECT} import type. Anything not resulting in a surface is
    * ignored.
    */
   public static GM_MultiSurface createDifference( final GM_MultiSurface geometry, final GM_MultiSurface existingGeometry )
   {
     final GM_Object difference = existingGeometry.difference( geometry );
-    return toMultiSurfaceOrNull( difference );
-  }
+    if( difference instanceof GM_MultiSurface )
+      return (GM_MultiSurface) difference;
 
-  /**
-   * Creates the intersection for the {@link ImportType#UPDATE} import type. Anything not resulting in a surface is
-   * ignored.
-   */
-  public static GM_MultiSurface createIntersection( final GM_MultiSurface geometry, final GM_MultiSurface existingGeometry )
-  {
+    if( difference instanceof GM_Surface )
+    {
+      final GM_Surface< ? > surface = (GM_Surface< ? >) difference;
+      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, difference.getCoordinateSystem() );
+    }
 
-    GM_Object intersection;
-    try
-    {
-      intersection = existingGeometry.intersection( geometry );
-    }
-    catch( final TopologyException e )
-    {
-      intersection = geometry.getBuffer( 0.001 ).intersection( existingGeometry.getBuffer( 0.001 ) );
-    }
-    return toMultiSurfaceOrNull( intersection );
-  }
-
-  private static GM_MultiSurface toMultiSurfaceOrNull( final GM_Object geometry )
-  {
-    if( geometry instanceof GM_MultiSurface )
-      return (GM_MultiSurface) geometry;
-    else if( geometry instanceof GM_Surface )
-    {
-      final GM_Surface< ? > surface = (GM_Surface< ? >) geometry;
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, geometry.getCoordinateSystem() );
-    }
-    else if( geometry instanceof GM_MultiPrimitive )
-    {
-      final GM_Object[] all = ((GM_MultiPrimitive) geometry).getAll();
-      final List<GM_Surface< ? >> outputList = new ArrayList<GM_Surface< ? >>( all.length );
-      for( final GM_Object geom : all )
-      {
-        if( geom instanceof GM_Surface )
-        {
-          outputList.add( (GM_Surface< ? >) geom );
-        }
-      }
-      return GeometryFactory.createGM_MultiSurface( outputList.toArray( new GM_Surface< ? >[outputList.size()] ), geometry.getCoordinateSystem() );
-    }
+    /* Ignore all another cases */
     return null;
   }
 }

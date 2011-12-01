@@ -177,7 +177,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
 
     // TODO: at the moment, all parameters are taken from the first flow relation; better: merge?
     final IFlowRelation1D flowRel = flowRels[0];
-    final Feature flowRelFeature = flowRel;
+    final Feature flowRelFeature = flowRel.getFeature();
     final GMLWorkspace flowRelWorkspace = flowRelFeature.getWorkspace();
 
     final TuhhCalculation calculation = flowRel.getCalculation();

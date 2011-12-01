@@ -150,8 +150,6 @@
 			<extension base="wspm:AbstractCalculationType">
 				<sequence>
 					<element ref="tuhh:fliessgesetz" />
-                    <element name="preferRoughnessClasses" type="boolean" default="false" /> 
-                    <element name="preferVegetationClasses" type="boolean" default="false" />
 					<element name="mode" default="WATERLEVEL">
 						<simpleType>
 							<restriction base="string">
@@ -161,8 +159,8 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType" />
-					<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType" />
+					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType"></element>
+					<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType"></element>
 					<!-- TODO: not used at this moment -->
 					<!--
 						element ref="wspm:roughnessDefinitionCollectionMember"
@@ -172,12 +170,11 @@
 						element ref="wspm:vegetationDefinitionCollectionMember"
 						minOccurs="0"/
 					-->
-					<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType" />
-					<element name="startConditionMember" type="tuhh:StartConditionPropertyType" />
+					<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType"></element>
+					<element name="startConditionMember" type="tuhh:StartConditionPropertyType"></element>
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
-					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType" />
-					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType" />
-                    <element name="waterLevelFixationMember" type="runoff:WaterlevelFixationLinkPropertyType" minOccurs="0" maxOccurs="1" />
+					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType"></element>
+					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType"></element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -497,9 +494,9 @@
 								referenced profile-observation.
 							</appinfo>
 							<documentation xml:lang="de">
-								<label>Durchfluss</label>
-								<tooltip>Durchfluss</tooltip>
-								<description>Durchfluss</description>
+								<label>Durchfluß</label>
+								<tooltip>Durchfluß</tooltip>
+								<description>Durchfluß</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Profile throughput location</label>

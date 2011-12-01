@@ -64,6 +64,7 @@ import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydrotopeInfo;
 import org.kalypso.simulation.core.SimulationException;
@@ -75,9 +76,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class LzsimWriter
 {
-  private static final String LZS_FORMAT_STRING = "%s h     1 %s\n   1%9.2f%9.2f\n"; //$NON-NLS-1$
+  private final static String LZS_FORMAT_STRING = "%s h     1 %s\n   1%9.2f%9.2f\n"; //$NON-NLS-1$
 
-  private static final String LZG_FORMAT_STRING = "%s h   1 %s\n   1%9.3f\n"; //$NON-NLS-1$
+  private final static String LZG_FORMAT_STRING = "%s h   1 %s\n   1%9.3f\n"; //$NON-NLS-1$
 
   private final InitialValues m_initialValues;
 
@@ -98,23 +99,21 @@ public class LzsimWriter
     m_logger = logger;
   }
 
-  public void writeLzsimFiles( final File lzsimDir ) throws SimulationException
+  public void writeLzsimFiles( final File lzsimDir ) throws NAPreprocessorException
   {
-// try
-// {
-    doWriteLzsimFiles( lzsimDir );
-// }
-// catch( final Exception e )
-// {
-//      final String msg = String.format( Messages.getString("LzsimWriter.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
-// throw new NAPreprocessorException( msg, e );
-// }
+    try
+    {
+      doWriteLzsimFiles( lzsimDir );
+    }
+    catch( final Exception e )
+    {
+      final String msg = String.format( "Failed to write Kalypso-NA ASCII start condition: %s", e.getLocalizedMessage() );
+      throw new NAPreprocessorException( msg, e );
+    }
   }
 
   private void doWriteLzsimFiles( final File lzsimDir ) throws SimulationException
   {
-    lzsimDir.mkdirs();
-
     if( m_initialValues == null )
     {
       final Date simulationStart = m_metaControl.getSimulationStart();
@@ -122,6 +121,8 @@ public class LzsimWriter
       m_logger.info( msg );
       return;
     }
+
+    lzsimDir.mkdirs();
 
     // Initial value date
     final Date initialDate = m_initialValues.getInitialDate();
@@ -134,7 +135,7 @@ public class LzsimWriter
 
   private void writeLzg( final File lzsimDir, final String iniDate ) throws SimulationException
   {
-    final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = buildChannelHash( m_idManager );
+    final Map<String, org.kalypso.model.hydrology.binding.model.Channel> naChannelHash = buildChannelHash( m_idManager );
 
     // write initial conditions for the strands
     // TODO:write only for strands of the actual calculation
@@ -142,7 +143,7 @@ public class LzsimWriter
     for( final Channel iniChannel : channels )
     {
       final String naChannelID = iniChannel.getNaChannelID();
-      final org.kalypso.model.hydrology.binding.model.channels.Channel naChannel = naChannelHash.get( naChannelID );
+      final org.kalypso.model.hydrology.binding.model.Channel naChannel = naChannelHash.get( naChannelID );
       if( naChannel != null )
       {
         final int asciiChannelID = m_idManager.getAsciiID( naChannel );
@@ -153,12 +154,12 @@ public class LzsimWriter
     }
   }
 
-  private static Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> buildChannelHash( final IDManager idManager )
+  private static Map<String, org.kalypso.model.hydrology.binding.model.Channel> buildChannelHash( final IDManager idManager )
   {
     final List<Feature> allNAChannelFeatures = idManager.getAllFeaturesFromType( IDManager.CHANNEL );
-    final Map<String, org.kalypso.model.hydrology.binding.model.channels.Channel> naChannelHash = new HashMap<String, org.kalypso.model.hydrology.binding.model.channels.Channel>();
+    final Map<String, org.kalypso.model.hydrology.binding.model.Channel> naChannelHash = new HashMap<String, org.kalypso.model.hydrology.binding.model.Channel>();
     for( final Feature feature : allNAChannelFeatures )
-      naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.channels.Channel) feature );
+      naChannelHash.put( feature.getId(), (org.kalypso.model.hydrology.binding.model.Channel) feature );
     return naChannelHash;
   }
 
@@ -171,7 +172,7 @@ public class LzsimWriter
     }
     catch( final IOException e )
     {
-      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.55", iniChannel.getId() ); //$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.55", iniChannel.getId() );
       throw new SimulationException( msg, e );
     }
   }
@@ -219,7 +220,7 @@ public class LzsimWriter
       if( iniCatchment == null )
       {
         // FIXME: better? only log...
-        final String msg = Messages.getString( "LzsimWriter.5", catchment.getName() ); //$NON-NLS-1$
+        final String msg = String.format( "Missing start condition for catchment: %s", catchmentID );
         throw new SimulationException( msg );
       }
       else
@@ -261,13 +262,13 @@ public class LzsimWriter
         for( final Double bof : bofs )
           writer.format( Locale.US, "%7.2f", bof ); //$NON-NLS-1$
 
-        writer.append( "\n" ); //$NON-NLS-1$
+        writer.append( "\n" );
       }
       writer.close();
     }
-    catch( final Throwable e )
+    catch( final IOException e )
     {
-      final String msg = String.format( Messages.getString( "LzsimWriter.7" ), iniCatchment.getNaCatchmentID() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to write initial condition for channel %s", iniCatchment.getNaCatchmentID() );
       throw new SimulationException( msg, e );
     }
     finally
@@ -305,10 +306,7 @@ public class LzsimWriter
       final String naHydrotopID = hydrotop.getId();
 
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
-      if( iniHyd == null )
-      {
-        System.out.println( "oups" ); //$NON-NLS-1$
-      }
+
       iniHydMap.put( localID, iniHyd );
     }
 

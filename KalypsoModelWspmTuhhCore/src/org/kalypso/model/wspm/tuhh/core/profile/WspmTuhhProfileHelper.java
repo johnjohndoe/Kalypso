@@ -55,14 +55,14 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 /**
  * @author kimwerner
  */
-public final class WspmTuhhProfileHelper
+public class WspmTuhhProfileHelper
 {
   private WspmTuhhProfileHelper( )
   {
     // Helperclass, do not instantiate
   }
 
-  public static IProfil copyProfile( final IProfil profile ) throws InvalidObjectException
+  public static final IProfil copyProfile( final IProfil profile ) throws InvalidObjectException
   {
     final ByteArrayOutputStream out = new ByteArrayOutputStream();
     try

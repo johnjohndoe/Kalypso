@@ -53,9 +53,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class Grundwasserabfluss extends AbstractNaModelElement
 {
-  public static final QName FEATURE_GRUNDWASSERABFLUSS = new QName( NS_NAMODELL, "grundwasserabfluss" ); //$NON-NLS-1$
-
-  public static final QName LINK_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
+  private static final QName LINK_NGWZU = new QName( NS_NAMODELL, "ngwzu" ); //$NON-NLS-1$
 
   private static final QName PROP_GWWI = new QName( NS_NAMODELL, "gwwi" ); //$NON-NLS-1$
 

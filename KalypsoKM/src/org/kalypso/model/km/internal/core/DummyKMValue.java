@@ -45,11 +45,11 @@ package org.kalypso.model.km.internal.core;
  */
 class DummyKMValue extends AbstractKMValue
 {
-  private final double m_qLowerChannel;
+  private final double m_q;
 
   public DummyKMValue( final double q )
   {
-    m_qLowerChannel = q;
+    m_q = q;
   }
 
   @Override
@@ -89,26 +89,21 @@ class DummyKMValue extends AbstractKMValue
   }
 
   @Override
-  public double getLowerQchannel( )
+  public double getQ( )
   {
-    return m_qLowerChannel;
+    return 0;
   }
 
   @Override
-  public double getUpperQchannel( )
+  public double getQForeland( )
   {
-    return 0.0;
+    return 0;
   }
 
   @Override
-  public double getLowerQforeland( )
+  public double getQSum( )
   {
-    return 0.0;
+    return m_q;
   }
 
-  @Override
-  public double getUpperQforeland( )
-  {
-    return 0.0;
-  }
 }

@@ -43,159 +43,121 @@ package org.kalypso.model.km.internal.ui.kmupdate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.km.internal.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
-import org.kalypso.model.wspm.tuhh.core.results.WspmResultQIntervalNode;
 
 /**
- * FIXME: remove this. Use databinding, we do not need all this terrible overhead.
- * 
- * @author Andreas Doemming (original)
- * @author Holger Albert (modified)
+ * @author doemming
  */
 public class DirectoryFieldWidget implements ISelectionProvider
 {
-  /**
-   * The listeners.
-   */
-  private final List<ISelectionChangedListener> m_listeners;
+  private final Text m_text;
 
-  /**
-   * The text field.
-   */
-  protected Text m_text;
+  private final boolean m_dirOnly;
 
-  /**
-   * The button.
-   */
-  private Button m_button;
+  private final List<ISelectionChangedListener> m_listeners = new ArrayList<ISelectionChangedListener>();
 
-  private IWspmResultNode[] m_rootNodes;
+  private final Button m_button;
 
-  private final IWizardContainer m_context;
-
-  public DirectoryFieldWidget( final Composite parent, final IWizardContainer context )
+  public DirectoryFieldWidget( final String label, final String toolTip, final boolean dirOnly, final Composite parent, final int sp1, final int sp2, final int sp3 )
   {
-    m_context = context;
-    m_listeners = new ArrayList<ISelectionChangedListener>();
-    m_text = null;
-    m_button = null;
-
-    createControls( parent );
-  }
-
-  private void createControls( final Composite parent )
-  {
-    /* Create a label. */
+    m_dirOnly = dirOnly;
     final Label label1 = new Label( parent, SWT.NONE );
-    label1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-
-    label1.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.1" ) ); //$NON-NLS-1$
-    label1.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMViewer.0" ) ); //$NON-NLS-1$
-
-    /* Create a text. */
+    label1.setText( label );
+    label1.setToolTipText( toolTip );
+    final GridData data = new GridData();
+    data.horizontalSpan = sp1;
+    label1.setLayoutData( data );
     m_text = new Text( parent, SWT.BORDER );
-    m_text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_text.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0" ) ); //$NON-NLS-1$
-    m_text.setEditable( false );
+    m_text.setToolTipText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.0" ) ); // TODO always show complete path as tooltip //$NON-NLS-1$
+    final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
+    data2.horizontalSpan = sp2;
+    data2.grabExcessHorizontalSpace = true;
+    m_text.setLayoutData( data2 );
+    m_text.addFocusListener( new FocusAdapter()
+    {
+      @Override
+      public void focusLost( final FocusEvent e )
+      {
+        fireSelectionChangeEvent();
+      }
+    } );
 
-    /* Add a listener. */
-// m_text.addFocusListener( new FocusAdapter()
-// {
-// /**
-// * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-// */
-// @Override
-// public void focusLost( final FocusEvent e )
-// {
-// fireSelectionChangeEvent();
-// }
-// } );
-
-    /* Create a button. */
     m_button = new Button( parent, SWT.NONE );
     m_button.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.DirectoryFieldWidget.1" ) ); //$NON-NLS-1$
-    m_button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    final GridData data3 = new GridData();
+    data3.horizontalSpan = sp3;
+    m_button.setLayoutData( data3 );
     m_button.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
+      private String m_lastPath = null;
+
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        handleBrowseClicked( parent.getDisplay() );
+        if( m_dirOnly )
+        {
+          final DirectoryDialog dialog = new DirectoryDialog( parent.getShell() );
+          if( m_lastPath != null )
+            dialog.setFilterPath( m_lastPath );
+          // dialog.setText( );
+          final String filePath = dialog.open();
+          if( filePath != null )
+          {
+            m_text.setText( filePath );
+            m_lastPath = filePath;
+            fireSelectionChangeEvent();
+          }
+        }
+        else
+        {
+          final FileDialog dialog = new FileDialog( parent.getShell() );
+          if( m_lastPath != null )
+            dialog.setFilterPath( m_lastPath );
+          // dialog.setText( "text" );
+          final String filePath = dialog.open();
+          m_text.setText( filePath );
+          m_lastPath = filePath;
+          fireSelectionChangeEvent();
+        }
       }
     } );
   }
 
-  protected void handleBrowseClicked( final Display display )
+  void fireSelectionChangeEvent( )
   {
-    final IWspmResultNode[] rootNodes = readNodes();
-    final BrowseWspmDialog dialog = new BrowseWspmDialog( display.getActiveShell(), rootNodes );
-    final int open = dialog.open();
-    if( open != Window.OK )
-      return;
-
-    final IWspmResultNode selectedNode = dialog.getSelectedNode();
-    if( !(selectedNode instanceof WspmResultQIntervalNode) )
-      return;
-
-    final IPath path = (IPath) selectedNode.getObject();
-    m_text.setText( path.toString() );
-
-    fireSelectionChangeEvent();
-  }
-
-  protected IWspmResultNode[] readNodes( )
-  {
-    if( m_rootNodes == null )
+    final SelectionChangedEvent event = new SelectionChangedEvent( this, getSelection() );
+    for( final ISelectionChangedListener iSelectionChangedListener : m_listeners )
     {
-      final ReadNodesOperation operation = new ReadNodesOperation();
-      final IStatus status = RunnableContextHelper.execute( m_context, true, false, operation );
-      m_rootNodes = operation.getNodes();
-      if( !status.isOK() )
-        new StatusDialog( m_context.getShell(), status, Messages.getString( "DirectoryFieldWidget.2" ) ).open(); //$NON-NLS-1$
+      iSelectionChangedListener.selectionChanged( event );
     }
-
-    return m_rootNodes;
   }
 
   /**
-   * This function fires a selection changed event.
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  protected void fireSelectionChangeEvent( )
-  {
-    final SelectionChangedEvent event = new SelectionChangedEvent( this, getSelection() );
-    for( final ISelectionChangedListener listener : m_listeners )
-      listener.selectionChanged( event );
-  }
-
   @Override
   public ISelection getSelection( )
   {
-    return new StructuredSelection( m_text.getText() );
+    final String value = m_text.getText();
+    return new StructuredSelection( value );
   }
 
   /**
@@ -224,23 +186,17 @@ public class DirectoryFieldWidget implements ISelectionProvider
   {
     if( selection.isEmpty() )
       m_text.setText( "" ); //$NON-NLS-1$
-
     if( selection instanceof IStructuredSelection )
     {
       final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof String )
-        m_text.setText( (String) firstElement );
+        m_text.setText( (String) firstElement ); // fire event ? TODO
     }
   }
 
-  /**
-   * This function enables/disables the controls.
-   * 
-   * @param enabled
-   *          True for enabled and false for disabled.
-   */
   public void setEnabled( final boolean enabled )
   {
     m_button.setEnabled( enabled );
+    m_text.setEnabled( enabled );
   }
 }

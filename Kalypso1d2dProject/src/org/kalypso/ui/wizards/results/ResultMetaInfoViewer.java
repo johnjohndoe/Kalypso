@@ -75,7 +75,6 @@ public class ResultMetaInfoViewer extends Viewer
   /*
    * fonts
    */
-  // FIXME never disposed; use JFaceResources instead!
   private final Font fTextHeader;
 
   private final Font fTextNormal;
@@ -138,30 +137,30 @@ public class ResultMetaInfoViewer extends Viewer
     for( final Control control : children )
       control.dispose();
 
-        m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
-        m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
+    m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-        m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
-        m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
-        m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
+    m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
+    m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
+    m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
 
-        if( m_input instanceof IResultMeta )
-        {
-          final IResultMeta result = (IResultMeta) m_input;
+    if( m_input instanceof IResultMeta )
+    {
+      final IResultMeta result = (IResultMeta) m_input;
 
-          // special result data
-          if( m_factory != null )
-          {
-            final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
-            final Composite buttonControl = createThemeCreator.createControl( m_panel );
-            if( buttonControl != null )
-              buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-          }
+      // special result data
+      if( m_factory != null )
+      {
+        final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
+        final Composite buttonControl = createThemeCreator.createControl( m_panel );
+        if( buttonControl != null )
+          buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+      }
 
-          final String infoText = getInformationText( result );
-          m_textPanel.setText( infoText, true, false );
-        }
-        m_panel.layout( true );
+      final String infoText = getInformationText( result );
+      m_textPanel.setText( infoText, true, false );
+    }
+    m_panel.layout( true );
   }
 
   public static String getInformationText( final IResultMeta result )
@@ -207,7 +206,7 @@ public class ResultMetaInfoViewer extends Viewer
     // dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
     dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
-    final ICalcUnitResultMeta calcUnitResult = ResultMeta1d2dHelper.getCalcUnitResultMeta( result );
+    final ICalcUnitResultMeta calcUnitResult = getCalcUnitResultMeta( result );
     if( calcUnitResult != null )
     {
       calcUnitName = calcUnitResult.getName();
@@ -317,26 +316,26 @@ public class ResultMetaInfoViewer extends Viewer
           maxValueForType = docResult.getMaxValueForType( resultType );
           docMax = maxValueForType.toString();
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           continue;
         }
         if( docMax != null )
         {
-          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"maximaler " + resultType + " Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if( docMin != null )
         {
-          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"minimaler " + resultType + " Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          buf.append( "<li style=\"text\" bindent=\"40\" indent=\"190\" value=\"minimaler " + resultType + " Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         bDone = true;
         /*
          * set actual min/max settings also in the helper map
          */
-        final String sourceFile = docResult.getFullPath().toOSString();
-        final int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
-        final String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
-        final Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
+        String sourceFile = docResult.getFullPath().toOSString();
+        int beginIndex = sourceFile.indexOf( ResultMeta1d2dHelper.TIME_STEP_PREFIX ) + ResultMeta1d2dHelper.TIME_STEP_PREFIX.length();
+        String stepNameStr = sourceFile.substring( beginIndex, beginIndex + 16 );
+        Map<String, Object> m_mapSldSettingsIntern = NodeResultHelper.getSldSettingsMapForStep( stepNameStr );
         m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MIN_PREFIX + resultType.toLowerCase(), minValueForType.doubleValue() );
         m_mapSldSettingsIntern.put( NodeResultHelper.VALUE_MAX_PREFIX + resultType.toLowerCase(), maxValueForType.doubleValue() );
 
@@ -350,7 +349,7 @@ public class ResultMetaInfoViewer extends Viewer
           docMin = docResult.getMinValue().toString();
           docMax = docResult.getMaxValue().toString();
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
 
         }
@@ -385,6 +384,24 @@ public class ResultMetaInfoViewer extends Viewer
       if( parent != null )
       {
         return getScenarioResultMeta( parent );
+      }
+    }
+    return null;
+  }
+
+  /**
+   * gets the CalcUnitResultMeta as the papa of all steps
+   */
+  private static ICalcUnitResultMeta getCalcUnitResultMeta( final IResultMeta result )
+  {
+    if( result instanceof ICalcUnitResultMeta )
+      return (ICalcUnitResultMeta) result;
+    else
+    {
+      final IResultMeta parent = result.getParent();
+      if( parent != null )
+      {
+        return getCalcUnitResultMeta( parent );
       }
     }
     return null;

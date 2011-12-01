@@ -50,7 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DO
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Factory for creating theme constructors
@@ -100,7 +100,7 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
 
       final CalcUnitResultThemeCreator calcUnitResultThemeCreator = new CalcUnitResultThemeCreator();
 
-      IFeatureBindingCollection<IResultMeta> children = calcUnitResult.getChildren();
+      IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
       for( IResultMeta child : children )
       {
         ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
@@ -121,7 +121,7 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
 
       final StepResultThemeCreator stepResultThemeCreator = new StepResultThemeCreator();
 
-      IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
+      IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
       for( IResultMeta child : children )
       {
         ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );

@@ -45,11 +45,11 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.channels.VirtualChannel;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.VirtualChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -83,8 +83,11 @@ public class GerWriter extends AbstractCoreFileWriter
     m_channels = channels;
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
     for( final Entry<NetElement, Integer> rootChannel : m_rootChannels )
     {
@@ -96,7 +99,7 @@ public class GerWriter extends AbstractCoreFileWriter
       writeChannel( writer, element.getChannel() );
   }
 
-  private void writeChannel( final PrintWriter writer, final Channel channel )
+  private void writeChannel( final PrintWriter writer, final Channel channel ) throws Exception
   {
     final int channelID = m_idManager.getAsciiID( channel );
     writer.format( "%d\n", channelID ); //$NON-NLS-1$
@@ -108,8 +111,8 @@ public class GerWriter extends AbstractCoreFileWriter
       writer.println( KMCHANNEL );
 
       final KMChannel kmChannel = (KMChannel) channel;
-      final double faktorRkf = kmChannel.getFaktorRkf();
-      final double faktorRnf = kmChannel.getFaktorRnf();
+      double faktorRkf = kmChannel.getFaktorRkf();
+      double faktorRnf = kmChannel.getFaktorRnf();
       final IFeatureBindingCollection<KMParameter> parameters = kmChannel.getParameters();
       for( final KMParameter kmParameter : parameters )
         writeParameter( writer, kmParameter, faktorRnf, faktorRkf );
@@ -117,17 +120,13 @@ public class GerWriter extends AbstractCoreFileWriter
     else if( channel instanceof StorageChannel )
     {
       final TimeseriesLinkType link = ((StorageChannel) channel).getSeaEvaporationTimeseriesLink();
-
-      // FIXME: this distinction is probably too soft; we want to always use HRB however, so meaybe not a problem
-// writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
-
-      writer.println( STORAGECHANNEL_HRB );
+      writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
     }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii" + channel.toString() ); //$NON-NLS-1$
   }
 
-  private void writeParameter( final PrintWriter writer, final KMParameter kmParameter, final double faktorRnf, final double faktorRkf )
+  private void writeParameter( final PrintWriter writer, final KMParameter kmParameter, double faktorRnf, double faktorRkf )
   {
     final double qrk = kmParameter.getQrk();
     final double rnf = kmParameter.getRnf() * faktorRnf;

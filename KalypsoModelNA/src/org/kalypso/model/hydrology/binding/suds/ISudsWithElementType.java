@@ -45,5 +45,5 @@ package org.kalypso.model.hydrology.binding.suds;
  */
 public interface ISudsWithElementType extends ISuds
 {
-  String getElementType( );
+  public String getElementType( );
 }

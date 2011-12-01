@@ -1,49 +1,63 @@
 package org.kalypso.model.km.internal.core;
 
-import java.math.BigDecimal;
+import java.io.File;
 
 import org.kalypso.model.km.internal.i18n.Messages;
 
 public class ProfileData
 {
-  /**
-   * Station [km]
-   */
-  private final BigDecimal m_station;
+  private final double m_meter;
+
+  private final double m_min;
+
+  private final double m_max;
 
   private Row[] m_rows;
 
-  private final String m_file;
+  private final File m_file;
 
-  /**
-   * Length [m]
-   */
-  private double m_length;
+  private double m_range;
 
-  /**
-   * @param station
-   *          This profiles station [km]
-   */
-  public ProfileData( final String file, final BigDecimal station )
+  public ProfileData( final File file, final double min, final double max, final double meter )
   {
     m_file = file;
-    m_station = station;
+    m_meter = meter;
+    m_min = min;
+    m_max = max;
   }
 
-  public String getFile( )
+  public File getFile( )
   {
     return m_file;
   }
 
-  public double getLength( )
+  // FIXME: instead of setting prev/next and later calculate range: directly set range from outside
+  public double calculateRange( final ProfileData prevProfile, final ProfileData nextProfile )
   {
-    return m_length;
+    final double resultMax;
+    final double resultMin;
+
+    if( nextProfile == null )
+      resultMax = m_max;
+    else
+      resultMax = Math.min( getPosition() + (nextProfile.getPosition() - getPosition()) / 2d, m_max );
+    if( prevProfile == null )
+      resultMin = m_min;
+    else
+      resultMin = Math.max( getPosition() - (getPosition() - prevProfile.getPosition()) / 2d, m_min );
+
+    return resultMax - resultMin;
+  }
+
+  private double getRange( )
+  {
+    return m_range;
   }
 
   @Override
   public String toString( )
   {
-    final StringBuffer result = new StringBuffer( Messages.getString( "org.kalypso.model.km.ProfileData.0" ) + m_station + Messages.getString( "org.kalypso.model.km.ProfileData.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final StringBuffer result = new StringBuffer( Messages.getString( "org.kalypso.model.km.ProfileData.0" ) + m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     for( final Row row : m_rows )
     {
       result.append( row.toString() );
@@ -53,9 +67,9 @@ public class ProfileData
     return result.toString();
   }
 
-  public BigDecimal getStation( )
+  public double getPosition( )
   {
-    return m_station;
+    return m_meter;
   }
 
   public void set( final Row[] rowArray )
@@ -68,34 +82,15 @@ public class ProfileData
     return m_rows.length - 1;
   }
 
-  /**
-   * @param lengthFactor
-   *          The length factor is used to adjust the real length of the profile, in order to give the sum of all
-   *          profile the length of the calculated strand, even if we calculate with a subsection of all profiles. If
-   *          only one profile is present, the factor should be exactly the length of the section, we wil use this
-   *          length for the singular profile.
-   */
-  public IKMValue getKMValue( final double lengthFactor, final int indexQfrom, final int indexQto )
+  public IKMValue getKMValue( final int index )
   {
-    final double length = getLength();
-
-    final double adjustedLength = getAdjustedLength( lengthFactor, length );
-
-    return new KMValue( adjustedLength, m_rows[indexQfrom], m_rows[indexQto] );
-  }
-
-  protected double getAdjustedLength( final double lengthFactor, final double length )
-  {
-    if( Double.isNaN( length ) )
-      return lengthFactor;
-
-    return length * lengthFactor;
+    return new KMValue( getRange(), m_rows[index], m_rows[index + 1] );
   }
 
   public String isValidForKalypso( )
   {
     if( m_rows.length < 6 ) // not enough values for calculation
-      return m_station + Messages.getString( "org.kalypso.model.km.ProfileData.3" ); //$NON-NLS-1$
+      return m_meter + Messages.getString( "org.kalypso.model.km.ProfileData.3" ); //$NON-NLS-1$
 
     for( int i = 0; i < m_rows.length - 1; i++ )
     {
@@ -123,38 +118,9 @@ public class ProfileData
     return null;
   }
 
-  public double findQBordvoll( )
+  public void setRange( final double range )
   {
-    for( final Row row : m_rows )
-    {
-      final double qforeland = row.getQforeland();
-      if( qforeland > 0 )
-        return row.getQfull();
-    }
-
-    // TODO: check: using maxQ if we have no q bordvoll here
-    return m_rows[m_rows.length - 1].getQfull();
+    m_range = range;
   }
 
-  /**
-   * Returns the index of qBordvoll. We are currently using the index of the biggest q below qBordvoll.<br/>
-   * This method is independent of the actual data and only depends on the existing discharges (equal for all profiles).
-   */
-  public int getQBordvollIndex( final double qBordvoll )
-  {
-    for( int i = 0; i < m_rows.length; i++ )
-    {
-      if( m_rows[i].getQfull() > qBordvoll )
-      {
-        return i - 1;
-      }
-    }
-
-    return -1;
-  }
-
-  void setLength( final double length )
-  {
-    m_length = length;
-  }
 }

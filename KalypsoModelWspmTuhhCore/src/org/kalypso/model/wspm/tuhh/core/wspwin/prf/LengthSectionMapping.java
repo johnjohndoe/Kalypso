@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.wspwin.core.prf.IWspWinConstants;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockDescription;
@@ -58,7 +58,7 @@ public final class LengthSectionMapping
 {
   private static LengthSectionMapping INSTANCE;
 
-  public static final String BLANC200 = StringUtils.repeat( " ", 200 ); //$NON-NLS-1$
+  public final static String blanc200 = StringUtils.repeat( " ", 200 ); //$NON-NLS-1$
 
   private final Map<String, DataBlockDescription> m_propertyMap = new HashMap<String, DataBlockDescription>();
 
@@ -77,12 +77,10 @@ public final class LengthSectionMapping
     m_propertyMap.put( IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, DataBlockDescription.WASSERSPIEGEL );
   }
 
-  public static synchronized DataBlockHeader createHeader( final String id )
+  public synchronized static DataBlockHeader createHeader( final String id )
   {
     if( INSTANCE == null )
-    {
       INSTANCE = new LengthSectionMapping();
-    }
 
     return INSTANCE.createH( id );
   }
