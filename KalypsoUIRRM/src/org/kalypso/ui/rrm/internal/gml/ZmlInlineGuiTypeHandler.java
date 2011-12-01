@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.view.observationDialog.RemoveObservationAction;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
