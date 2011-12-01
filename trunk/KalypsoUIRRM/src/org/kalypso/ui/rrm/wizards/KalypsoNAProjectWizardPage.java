@@ -77,7 +77,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

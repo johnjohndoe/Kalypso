@@ -57,7 +57,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand;
 import org.kalypso.ui.editor.gmleditor.util.command.RemoveHeavyRelationCommand;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
