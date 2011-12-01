@@ -67,7 +67,7 @@
             </enabledWhen>
         </handler>
 	
-		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler">
+		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.internal.handler.RRMCreateHydrotopsHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
 			</activeWhen>
@@ -230,11 +230,11 @@
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
-         <handler class="org.kalypso.simulation.ui.actions.StartCalculationActionDelegate" commandId="org.kalypso.ui.rrm.command.calccase.runCalcCase"/>
-         <handler class="org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries" commandId="org.kalypso.ui.rrm.command.calccase.updateCalcCaseTimeseries"/>
-         <handler class="org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate" commandId="org.kalypso.ui.rrm.command.calccase.copyCalcCase"/>
-         <handler class="org.kalypso.simulation.ui.actions.NewCalcCaseAction" commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase"/>
-         <handler class="org.kalypso.ui.rrm.action.SetBasicModelDelegate" commandId="org.kalypso.ui.rrm.command.calccase.setBasicModel"/>
+         <handler class="org.kalypso.ui.rrm.internal.handler.StartCalculationActionDelegate" commandId="org.kalypso.ui.rrm.command.calccase.runCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.internal.handler.UpdateCalcCaseTimeseries" commandId="org.kalypso.ui.rrm.command.calccase.updateCalcCaseTimeseries"/>
+         <handler class="org.kalypso.ui.rrm.internal.handler.CopyCalcCaseDelegate" commandId="org.kalypso.ui.rrm.command.calccase.copyCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.internal.handler.NewCalcCaseAction" commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.internal.handler.SetBasicModelDelegate" commandId="org.kalypso.ui.rrm.command.calccase.setBasicModel"/>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -335,5 +335,13 @@
             class="org.kalypso.ui.rrm.internal.gml.StorageChannelValidateControlFactory"
             id=".StorageChannelValidateFeatureControl">
       </extensionControl>
+   </extension>
+   <extension
+         point="de.renew.workflow.model.workflowSystem">
+      <workflowSystem
+            definition="etc/workflow.xml"
+            id="org.kalypso.model.rrm.workflow"
+            name="KalypsoHydrology Workflow">
+      </workflowSystem>
    </extension>
 </plugin>
