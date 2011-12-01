@@ -56,12 +56,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -89,11 +92,13 @@ import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
 import org.kalypso.model.hydrology.binding.model.channels.IVirtualChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
-import org.kalypso.ui.rrm.i18n.Messages;
+import org.kalypso.ui.rrm.extension.KalypsoRrmNewProjectHandler;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -192,15 +197,15 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     addPage( m_createMappingHydrotopPage );
   }
 
-  /**
-   * @see org.kalypso.afgui.wizards.NewProjectWizard#postCreateProject(org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
   {
-    final IFile modelFile = project.getFile( "modell.gml" ); //$NON-NLS-1$
-    final IFile hydrotopeFile = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
+    new KalypsoRrmNewProjectHandler().postCreateProject( project, template, new NullProgressMonitor() );
+
+    final IPath basisScenarioPath = new Path( INaProjectConstants.FOLDER_BASIS );
+
+    final IFile modelFile = project.getFile( basisScenarioPath.append( INaProjectConstants.GML_MODELL_PATH ) ); //$NON-NLS-1$
+    final IFile hydrotopeFile = project.getFile( basisScenarioPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) ); //$NON-NLS-1$
 
     try
     {
@@ -526,7 +531,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
    * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
    * and check if the ID doesn´t exist in the idMap. if the id ColKey is not set, use the ID of the sourceFeature (shape
    * file).
-   * 
+   *
    * @param idColKey
    * @param sourceFeature
    * @param IDText
