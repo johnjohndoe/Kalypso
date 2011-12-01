@@ -46,7 +46,7 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
  * Provides translation for catalog registered templates of this plug-in.
- * 
+ *
  * @author Gernot Belger
  */
 public final class TemplateMessages
@@ -61,9 +61,9 @@ public final class TemplateMessages
   {
   }
 
-/*
- * java reflections needs this method-signatur
- */
+  /**
+   * java reflections needs this method-signatur
+   */
   public static String getString( final String key )
   {
     return getString( key, NO_ARGS );
