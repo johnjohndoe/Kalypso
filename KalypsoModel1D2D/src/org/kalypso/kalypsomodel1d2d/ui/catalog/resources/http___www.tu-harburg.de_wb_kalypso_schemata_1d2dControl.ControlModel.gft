@@ -1,0 +1,1148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="c1d2d:ControlModel" style="SWT.NONE" xmlns:gft="featureview.template.kalypso.org" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc">
+
+	<gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="1" marginWidth="0" marginHeight="0" />
+  
+	<gft:tabFolder style="SWT.NONE">
+		<gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+
+		<!-- Allgemeines-->
+		<gft:tabItem>
+			<gft:tabLabel>General</gft:tabLabel><!-- Allgemein-->
+			<gft:composite style="SWT.NONE">
+				<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+				<gft:gridLayout numColumns="1" />
+
+				<gft:group text="Modell Information" style="SWT.NONE">
+					<!--
+						Modellinformationen
+					-->
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="2" />
+					<gft:label property="c1d2d:title" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:title" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:label property="gml:description" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="gml:description" tooltip="" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+				</gft:group>
+
+				<gft:group text="Calculation Core" style="SWT.NONE">
+					<!--
+						zu verwendender Rechenkern
+					-->
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="4" />
+					<gft:label visible="true" style="SWT.NONE" property="c1d2d:Version">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:Version" enabled="false">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+						<gft:param name="dir" value="bin" />
+						<gft:param name="label" value="RMA-Kalypso Version" />
+						<gft:param name="exePattern" value="rma-kalypso_(.*).exe" />
+					</gft:extensioncontrol>
+					<gft:validatorlabel property="c1d2d:Version" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+				<gft:group text="Common Parameters" style="SWT.NONE">
+					<!--
+						allgemeine Parameter
+					-->
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="3" />
+
+					<gft:label property="c1d2d:ICPU" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:ICPU" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:ICPU" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:MFW" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:MFW" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:MFW" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:BUFFSIZ" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:BUFFSIZ" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:BUFFSIZ" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					
+				</gft:group>
+				<gft:group text="SWAN Calculation" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="4" />
+					<gft:checkbox enabled="true" property="c1d2d:SWANCalculation" style="SWT.NONE">
+						<gft:gridData horizontalSpan="4" horizontalAlignment="SWT.BEGINNING" />
+					</gft:checkbox>
+					<!--
+						zu verwendender Rechenkern
+					-->
+					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANVersion">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:SWANVersion" enabled="false">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANVersion" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+						<gft:param name="dir" value="bin" />
+						<gft:param name="label" value="SWAN-Software Version" />
+						<gft:param name="exePattern" value="swan(.*).exe" />
+					</gft:extensioncontrol>
+					<gft:validatorlabel property="c1d2d:SWANVersion" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+			</gft:composite>
+		</gft:tabItem>
+
+		<!-- Berechnungssteuerung-->
+		<gft:tabItem>
+			<gft:tabLabel>Calculation Settings</gft:tabLabel>
+			<gft:composite style="SWT.NONE">
+				<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+				<gft:gridLayout numColumns="2" makeColumnsEqualWidth="true" marginWidth="0" marginHeight="0" horizontalSpacing="0" />
+
+				<!--
+					Composite, that holds the three groups stationäre Berechung,
+					instationäre Berechung and Anfangswerte
+				-->
+				<gft:composite style="SWT.NONE">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="1" />
+
+					<gft:group property="c1d2d:_steady" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="false"  />
+						<gft:gridLayout numColumns="3" />
+						<gft:checkbox enabled="true" property="c1d2d:_steady" style="SWT.NONE">
+							<gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+							<gft:text>Active</gft:text>
+						</gft:checkbox>
+						<gft:label property="c1d2d:NITI" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:NITI" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:NITI" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+
+						<gft:label property="c1d2d:_steadyBC" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:_steadyBC" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:_steadyBC" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_steady</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+					</gft:group>
+
+					<gft:group property="c1d2d:_unsteady" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						<gft:gridLayout numColumns="3" />
+						<gft:checkbox enabled="true" property="c1d2d:_unsteady" style="SWT.NONE">
+							<gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+							<gft:text>Active</gft:text>
+						</gft:checkbox>
+						<gft:label property="c1d2d:NITN" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_unsteady
+									</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:NITN" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_unsteady
+									</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:NITN" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_unsteady
+									</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+						<gft:label property="c1d2d:IACCYC" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<and>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_steady
+										</ogc:PropertyName>
+										<ogc:Literal>false</ogc:Literal>
+									</ogc:PropertyIsLike>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_unsteady
+										</ogc:PropertyName>
+										<ogc:Literal>true</ogc:Literal>
+									</ogc:PropertyIsLike>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_restart
+										</ogc:PropertyName>
+										<ogc:Literal>true</ogc:Literal>
+									</ogc:PropertyIsLike>
+								</and>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:IACCYC" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<and>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_steady
+										</ogc:PropertyName>
+										<ogc:Literal>false</ogc:Literal>
+									</ogc:PropertyIsLike>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_unsteady
+										</ogc:PropertyName>
+										<ogc:Literal>true</ogc:Literal>
+									</ogc:PropertyIsLike>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_restart
+										</ogc:PropertyName>
+										<ogc:Literal>true</ogc:Literal>
+									</ogc:PropertyIsLike>
+								</and>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:IACCYC" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<and>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_steady
+										</ogc:PropertyName>
+										<ogc:Literal>false</ogc:Literal>
+									</ogc:PropertyIsLike>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_unsteady
+										</ogc:PropertyName>
+										<ogc:Literal>true</ogc:Literal>
+									</ogc:PropertyIsLike>
+									<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+										<ogc:PropertyName>c1d2d:_restart
+										</ogc:PropertyName>
+										<ogc:Literal>true</ogc:Literal>
+									</ogc:PropertyIsLike>
+								</and>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+					</gft:group>
+
+					<!-- Anfangswerte-->
+					<gft:group text="Initial Conditions" style="SWT.NONE">
+						<!--
+							Anfangswerte
+						-->
+						<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+						<gft:gridLayout numColumns="3" />
+
+						<gft:checkbox enabled="true" property="c1d2d:_restart" style="SWT.NONE">
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:checkbox>
+						<gft:extensioncontrol property="c1d2d:Version" extension-id="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING"  />
+						</gft:extensioncontrol>
+						<gft:label visible="false" style="SWT.NONE">
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+
+						<gft:label property="c1d2d:ELEV" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:ELEV" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:ELEV" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+
+						<gft:label property="c1d2d:UNOM" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:UNOM" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:UNOM" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+
+						<gft:label property="c1d2d:UDIR" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:UDIR" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:UDIR" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+
+						<gft:label property="c1d2d:HMIN" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+						</gft:label>
+						<gft:text editable="true" property="c1d2d:HMIN" style="SWT.BORDER">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+						</gft:text>
+						<gft:validatorlabel property="c1d2d:HMIN" visible="true" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_restart
+									</ogc:PropertyName>
+									<ogc:Literal>false</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+						</gft:validatorlabel>
+					</gft:group>
+				</gft:composite>
+
+				<!--
+					additional composite just to get the same extent od the observation
+					view
+				-->
+				<gft:composite style="SWT.NONE">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
+					<gft:gridLayout numColumns="1" />
+
+					<gft:group property="c1d2d:timestepsMember" style="SWT.NONE">
+						<!--
+							Zeitschrittdefinition
+						-->
+						<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false"  />
+						<gft:gridLayout numColumns="1" />
+						<gft:subcomposite property="c1d2d:timestepsMember" style="SWT.NONE">
+							<gft:enabledOperation>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:_unsteady
+									</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</gft:enabledOperation>
+							<gft:gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"  />
+						</gft:subcomposite>
+					</gft:group>
+				</gft:composite>
+			</gft:composite>
+		</gft:tabItem>
+
+		<!-- Rechenkernparameter -->
+		<gft:tabItem>
+			<gft:tabLabel>Calculation Unit Settings</gft:tabLabel>
+			<!--
+				Rechenkernparameter
+			-->
+			<gft:composite style="SWT.NONE">
+				<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+				<gft:gridLayout numColumns="2" />
+
+				<gft:group text="Convergence Parameters" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.BEGINNING" />
+					<gft:gridLayout numColumns="3" />
+
+					<gft:checkbox enabled="true" property="c1d2d:PERCENT_CHECK" style="SWT.NONE">
+						<!-- prozentuale Aenderungen verwenden?-->
+						<gft:gridData horizontalSpan="4" horizontalAlignment="SWT.BEGINNING" />
+					</gft:checkbox>
+					<gft:label property="c1d2d:CONV_1" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:CONV_1" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:CONV_1" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:CONV_2" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:CONV_2" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:CONV_2" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:CONV_3" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:CONV_3" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:CONV_3" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:IDRPT" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:IDRPT" style="SWT.DROP_DOWN | SWT.READ_ONLY" />
+					<gft:validatorlabel property="c1d2d:IDRPT" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:DRFACT" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDRPT</ogc:PropertyName>
+								<ogc:Literal>1</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:DRFACT" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDRPT</ogc:PropertyName>
+								<ogc:Literal>1</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:DRFACT" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDRPT</ogc:PropertyName>
+								<ogc:Literal>1</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+				<!-- Rechenkernparameter -->
+				<gft:group style="SWT.NONE" text="Calculation Unit Parameters">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="3" />
+					<gft:checkbox enabled="true" property="c1d2d:VEGETA" style="SWT.NONE">
+						<gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+					</gft:checkbox>
+					<gft:checkbox enabled="true" property="c1d2d:BEIENT" style="SWT.NONE">
+						<gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+					</gft:checkbox>
+					<gft:label property="c1d2d:OMEGA" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:OMEGA" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:OMEGA" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+
+				<gft:group text="Turbulence Model Parameters" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"  />
+					<gft:gridLayout numColumns="3" />
+
+					<gft:label property="c1d2d:IEDSW" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:IEDSW" style="SWT.DROP_DOWN | SWT.READ_ONLY" />
+					<gft:validatorlabel property="c1d2d:IEDSW" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<!--Smagorinsky-Parameter-->
+					<gft:label property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>2</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsBetween xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:LowerBoundary>
+										<ogc:Literal>13</ogc:Literal>
+									</ogc:LowerBoundary>
+									<ogc:UpperBoundary>
+										<ogc:Literal>14</ogc:Literal>
+									</ogc:UpperBoundary>
+								</ogc:PropertyIsBetween>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>16</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:TBFACT" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>2</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsBetween xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:LowerBoundary>
+										<ogc:Literal>13</ogc:Literal>
+									</ogc:LowerBoundary>
+									<ogc:UpperBoundary>
+										<ogc:Literal>14</ogc:Literal>
+									</ogc:UpperBoundary>
+								</ogc:PropertyIsBetween>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>16</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>2</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsBetween xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:LowerBoundary>
+										<ogc:Literal>13</ogc:Literal>
+									</ogc:LowerBoundary>
+									<ogc:UpperBoundary>
+										<ogc:Literal>14</ogc:Literal>
+									</ogc:UpperBoundary>
+								</ogc:PropertyIsBetween>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>16</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<!-- text="Scherschichtdicke" -->
+					<gft:label property="c1d2d:TBFACT_ESCUDIER" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>12</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>15</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:TBFACT_ESCUDIER" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>12</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>15</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:TBFACT_ESCUDIER" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>12</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>15</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:TBMIN" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:TBMIN" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:TBMIN" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+
+					<gft:label property="c1d2d:_p_bottom" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>11</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsBetween xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:LowerBoundary>
+										<ogc:Literal>14</ogc:Literal>
+									</ogc:LowerBoundary>
+									<ogc:UpperBoundary>
+										<ogc:Literal>16</ogc:Literal>
+									</ogc:UpperBoundary>
+								</ogc:PropertyIsBetween>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:_p_bottom" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>11</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsBetween xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:LowerBoundary>
+										<ogc:Literal>14</ogc:Literal>
+									</ogc:LowerBoundary>
+									<ogc:UpperBoundary>
+										<ogc:Literal>16</ogc:Literal>
+									</ogc:UpperBoundary>
+								</ogc:PropertyIsBetween>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:_p_bottom" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<or>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:Literal>11</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsBetween xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:IEDSW</ogc:PropertyName>
+									<ogc:LowerBoundary>
+										<ogc:Literal>14</ogc:Literal>
+									</ogc:LowerBoundary>
+									<ogc:UpperBoundary>
+										<ogc:Literal>16</ogc:Literal>
+									</ogc:UpperBoundary>
+								</ogc:PropertyIsBetween>
+							</or>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+
+				<gft:group text="Marsh Parameters" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"  grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="3"  />
+
+					<gft:label property="c1d2d:IDNOPT" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:IDNOPT" style="SWT.DROP_DOWN | SWT.READ_ONLY" />
+					<gft:validatorlabel property="c1d2d:IDNOPT" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:AC1" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:AC1" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:AC1" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:AC2" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:AC2" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:AC2" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:AC3" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:AC3" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:AC3" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:IDNOPT</ogc:PropertyName>
+								<ogc:Literal>-2</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:DSET" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:DSET" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:DSET" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:DSETD" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:DSETD" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:DSETD" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+
+			</gft:composite>
+		</gft:tabItem>
+
+        <!-- SWAN-Parameter -->
+		<gft:tabItem>
+			<gft:tabLabel>Calculation Unit Settings for swell calculation</gft:tabLabel>
+				
+			<gft:composite style="SWT.NONE">
+				<gft:enabledOperation>
+					<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+						<ogc:Literal>true</ogc:Literal>
+					</ogc:PropertyIsLike>
+				</gft:enabledOperation>
+				<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+				<gft:gridLayout numColumns="2" makeColumnsEqualWidth="true" />
+				<!-- SWAN common params  horizontalAlignment="SWT.FILL"-->
+				<gft:group style="SWT.NONE" text="Common SWAN Settings">
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					<gft:gridLayout numColumns="3" />
+					<gft:checkbox enabled="true" property="c1d2d:SWANCoordCart" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<!-- set to false(null) in all cases, theoretically may be other -->
+								<ogc:Literal>dontuse</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalSpan="3" horizontalAlignment="SWT.BEGINNING" />
+					</gft:checkbox>
+					<gft:label property="c1d2d:SWANINITialValues" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:SWANINITialValues" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+					</gft:combo>
+					<gft:validatorlabel property="c1d2d:SWANINITialValues" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+					<gft:label property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANINITialValuesPar" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<and>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:SWANINITialValues</ogc:PropertyName>
+									<ogc:Literal>2</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANINITialValuesPar" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<and>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:SWANINITialValues</ogc:PropertyName>
+									<ogc:Literal>2</ogc:Literal>
+								</ogc:PropertyIsLike>
+								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+									<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+									<ogc:Literal>true</ogc:Literal>
+								</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+        
+                <!-- SWAN Result Settings  horizontalAlignment="SWT.FILL"-->
+                <gft:group text="Result Settings" style="SWT.NONE">
+                  <gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+                  <gft:gridLayout numColumns="3"  />
+                  <gft:label property="c1d2d:SWANAdditionalResultsPar" visible="true" style="SWT.NONE">
+                    <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+                  </gft:label>
+                  <gft:text editable="true" property="c1d2d:SWANAdditionalResultsPar" style="SWT.BORDER">
+                    <gft:enabledOperation>
+                      <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                        <ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+                        <ogc:Literal>true</ogc:Literal>
+                      </ogc:PropertyIsLike>
+                    </gft:enabledOperation>
+                    <gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+                  </gft:text>
+                  <gft:validatorlabel property="c1d2d:SWANAdditionalResultsPar" visible="true" style="SWT.NONE">
+                    <gft:enabledOperation>
+                      <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+                        <ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+                        <ogc:Literal>true</ogc:Literal>
+                      </ogc:PropertyIsLike>
+                    </gft:enabledOperation>
+                    <gft:gridData horizontalAlignment="SWT.BEGINNING" />
+                  </gft:validatorlabel>
+        
+                  <gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANInputCoordFile">
+                    <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+                  </gft:label>
+                  <gft:text style="SWT.BORDER | SWT.RIGHT" property="c1d2d:SWANInputCoordFile" enabled="false">
+                    <gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+                  </gft:text>
+                  <gft:extensioncontrol style="SWT.NONE" property="c1d2d:SWANInputCoordFile" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+                    <gft:param name="dir" value="." />
+                    <gft:param name="label" value="Additional Coordinates File" />
+                    <!-- simple file name pattern for setting it in to file open dialog -->
+                    <gft:param name="exePattern" value="*.txt" />
+                  </gft:extensioncontrol>
+                  <gft:validatorlabel property="c1d2d:SWANInputCoordFile" visible="true" style="SWT.NONE">
+                    <gft:gridData horizontalAlignment="SWT.BEGINNING" />
+                  </gft:validatorlabel>
+                </gft:group>        
+        
+				<!-- SWAN Boundary Conditions Settings  horizontalAlignment="SWT.FILL"-->
+				<gft:group text="Boundary Conditions Settings" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL"/>
+					<gft:gridLayout numColumns="3" />
+					<gft:label property="c1d2d:SWANBoundaryAlg" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:combo property="c1d2d:SWANBoundaryAlg" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="true"/>
+					</gft:combo>
+					<gft:validatorlabel property="c1d2d:SWANBoundaryAlg" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+				<!-- SWAN Physics Settings horizontalAlignment="SWT.FILL" -->
+				<gft:group text="Physics Settings" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.BEGINNING" />
+					<gft:gridLayout numColumns="3" />
+
+					<gft:checkbox enabled="true" property="c1d2d:SWANConstantWind" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalSpan="4" horizontalAlignment="SWT.BEGINNING" />
+					</gft:checkbox>
+					
+					<gft:label property="c1d2d:SWANConstantWindPar" visible="true" style="SWT.NONE">
+					<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANConstantWindPar" style="SWT.BORDER">
+						<gft:enabledOperation>
+							<and>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANConstantWind</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANConstantWindPar" visible="true" style="SWT.NONE">
+						<gft:enabledOperation>
+							<and>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANConstantWind</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+							</and>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>
+				</gft:group>
+				
+				<gft:group text="Additional Simulation Settings" style="SWT.NONE">
+					<gft:enabledOperation>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</gft:enabledOperation>
+					<gft:gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.BEGINNING|SWT.FILL" />
+					<gft:gridLayout numColumns="3"/> 
+					<gft:label visible="true" style="SWT.NONE" property="c1d2d:SWANInputAdditionalCmds">
+						<gft:gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:SWANInputAdditionalCmds" style="SWT.BORDER|SWT.MULTI|SWT.WRAP|SWT.V_SCROLL" >
+						<gft:enabledOperation>
+							<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+								<ogc:PropertyName>c1d2d:SWANCalculation</ogc:PropertyName>
+								<ogc:Literal>true</ogc:Literal>
+							</ogc:PropertyIsLike>
+						</gft:enabledOperation>
+						<gft:gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" verticalAlignment="SWT.FILL" grabExcessVerticalSpace="true" />
+					</gft:text>
+					<gft:validatorlabel property="c1d2d:SWANInputAdditionalCmds" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="SWT.BEGINNING" />
+					</gft:validatorlabel>				
+				</gft:group>
+			</gft:composite>
+		</gft:tabItem>
+	</gft:tabFolder>
+</gft:featureview>
+
