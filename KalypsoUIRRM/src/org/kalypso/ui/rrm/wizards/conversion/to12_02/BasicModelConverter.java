@@ -51,10 +51,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.conversion.ConverterData;
 
 /**
  * @author Gernot Belger
@@ -65,16 +68,21 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private final File m_targetDir;
 
+  private final ConverterData m_data;
+
   public BasicModelConverter( final File sourceDir, final File targetDir )
   {
     super( Messages.getString( "BasicModelConverter_1" ) ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
+
+    final File basisDir = new File( m_targetDir, INaProjectConstants.FOLDER_BASIS );
+    m_data = new ConverterData( basisDir );
   }
 
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws IOException, CoreException
+  protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
     try
     {
@@ -92,6 +100,10 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyBasicTimeseries();
 
       copyObservationConf();
+
+      m_data.load();
+
+      fixTimeseries();
     }
     finally
     {
@@ -133,5 +145,16 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final File modelTargetFile = new File( m_targetDir, targetPath.toOSString() );
 
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
+  }
+
+  private void fixTimeseries( ) throws IOException, GmlSerializeException
+  {
+    final NaModell naModel = m_data.getNaModel();
+
+    final IStatus log = CalcCaseConverter.fixTimeseriesLinks( naModel );
+    getLog().add( log );
+
+    m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
+    getLog().add( IStatus.INFO, "Timeseries links have been updated." );
   }
 }
