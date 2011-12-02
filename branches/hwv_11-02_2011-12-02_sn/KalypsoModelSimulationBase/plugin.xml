@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase"
+            id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase"/>
+      <catalog
+            class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness"
+            id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness"/>
+   </extension>
+   
+   <extension
+         id="org.kalypso.core.adapters"
+         name="Kalypso Simulation-Base Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection"/>
+      
+      </factory>
+      
+      <!--factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory">
+         <adapter type="org.kalypso.kalypsosimulationmodel.util.math.IPolynomial2D"/>
+      </factory-->
+      
+   </extension>   
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
+            id="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
+            name="Native-Terrain-Elevation-Shape-Builder"/>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionProperty">
+      <function
+            class="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+            id="org.kalypso.kalypsosimulationmodel.core.wind.geom.WindDataShapeGeometry"
+            name="Native-Wind-Data-Shape-Builder"/>
+   </extension>
+   <extension
+         point="org.kalypso.afgui.scenarioData">
+      <dataSet
+            id="org.kalypso.kalypso1d2d">
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection"
+               modelPath="project:/.metadata/roughness.gml">
+         </scenarioDatum>
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel"
+               modelPath="models/flowrelations.gml">
+         </scenarioDatum>
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"
+               modelPath="models/terrain.gml">
+         </scenarioDatum>
+         <scenarioDatum
+               bundle="org.kalypso.ModelSimulationBase"
+               classKey="org.kalypso.kalypsosimulationmodel.core.wind.IWindModel"
+               modelPath="models/wind.gml"> 
+         </scenarioDatum>
+      </dataSet>
+   </extension>
+   <extension point="org.kalypso.ui.featureViewExtensionControl">
+    <extensionControl class="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory"
+      					id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+    </extensionControl>
+   </extension>
+
+</plugin>
