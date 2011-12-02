@@ -42,27 +42,23 @@ package org.kalypso.ui.rrm.wizards.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.conversion.ConverterData;
 import org.kalypso.ui.rrm.wizards.conversion.ITimeseriesVisitor;
 import org.kalypso.ui.rrm.wizards.conversion.TimeseriesWalker;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -84,7 +80,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final File m_sourceDir;
 
-  private INaSimulationData m_data;
+  private final ConverterData m_data;
 
   private final String m_chosenExe;
 
@@ -95,6 +91,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     m_sourceDir = sourceDir;
     m_targetCalcCaseDir = targetcalcCaseDir;
     m_chosenExe = chosenExe;
+    m_data = new ConverterData( m_targetCalcCaseDir );
   }
 
   @Override
@@ -108,8 +105,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     {
       ProgressUtilities.done( monitor );
 
-      if( m_data != null )
-        m_data.dispose();
+      m_data.dispose();
     }
   }
 
@@ -119,7 +115,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     copyBasicData();
 
-    readBasicData();
+    m_data.load();
 
     renameOldResults();
 
@@ -148,17 +144,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
     getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalcCaseConverter_0" ) ) ); //$NON-NLS-1$
-  }
-
-  private void readBasicData( ) throws Exception
-  {
-    final File naModelFile = new File( m_targetCalcCaseDir, INaProjectConstants.GML_MODELL_PATH );
-    final File naControlFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.CALCULATION_GML_PATH );
-
-    final URL naModelLocation = naModelFile.toURI().toURL();
-    final URL naControlLocation = naControlFile.toURI().toURL();
-
-    m_data = NaSimulationDataFactory.load( naModelLocation, null, naControlLocation, null, null, null, null, null, null, null );
   }
 
   private void renameOldResults( )
@@ -231,25 +216,19 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     if( m_chosenExe != null )
     {
       metaControl.setExeVersion( m_chosenExe );
+
+      m_data.saveModel( metaControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
+
       final String statusMsg = Messages.getString( "CalcCaseConverter_2", m_chosenExe, exeVersion ); //$NON-NLS-1$
-      final int severity = IStatus.OK;
-      saveModel( metaControl, INaCalcCaseConstants.CALCULATION_GML_PATH, severity, statusMsg );
+      getLog().add( IStatus.OK, statusMsg );
     }
     else
     {
       final String statusMsg = String.format( Messages.getString( "CalcCaseConverter_3" ), exeVersion ); //$NON-NLS-1$
-      getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), statusMsg ) );
+      getLog().add( IStatus.OK, statusMsg );
     }
 
     metaControl.getWorkspace().dispose();
-  }
-
-  private void saveModel( final Feature model, final String path, final int severity, final String statusMsg ) throws IOException, GmlSerializeException
-  {
-    // REMARK: we asume that all files are 'UTF-8'.
-    final File naControlFile = new File( m_targetCalcCaseDir, path );
-    GmlSerializer.serializeWorkspace( naControlFile, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
-    getLog().add( new Status( severity, KalypsoUIRRMPlugin.getID(), statusMsg ) );
   }
 
   /**
@@ -259,15 +238,20 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   {
     final NaModell naModel = m_data.getNaModel();
 
+    final IStatus log = fixTimeseriesLinks( naModel );
+    getLog().add( log );
+
+    m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
+    getLog().add( IStatus.INFO, "Timeseries links have been updated." );
+
+  }
+
+  static IStatus fixTimeseriesLinks( final NaModell naModel )
+  {
     final ITimeseriesVisitor visitor = new FixDotDotTimeseriesVisitor();
 
     final TimeseriesWalker walker = new TimeseriesWalker( visitor );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
-    final IStatus log = walker.getStatus();
-    getLog().add( log );
-
-    final String statusMsg = "Timeseries links have been updated.";
-
-    saveModel( naModel, INaProjectConstants.GML_MODELL_PATH, IStatus.INFO, statusMsg );
+    return walker.getStatus();
   }
 }
