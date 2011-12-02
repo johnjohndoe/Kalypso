@@ -120,7 +120,6 @@ public class Gaf2Db implements IPdbOperation
         m_monitor.worked( 1 );
       }
 
-
       m_monitor.subTask( "writing data into database" );
     }
     catch( final Exception e )
@@ -207,8 +206,8 @@ public class Gaf2Db implements IPdbOperation
     final Geometry line = part.getLine( dbType );
     csPart.setLine( line );
 
-    if( line == null )
-      return null;
+// if( line == null )
+// return null;
 
     csPart.setCrossSection( crossSection );
     session.save( csPart );
