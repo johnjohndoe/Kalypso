@@ -44,7 +44,6 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -80,7 +79,7 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
 
-    final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
+    final Feature baseFeature = (Feature) getModel().getData( featureKey );
     final Feature feature;
     if( propertyName == null )
       feature = baseFeature;

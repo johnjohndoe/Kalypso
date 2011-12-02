@@ -62,6 +62,8 @@ import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
 import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.kalypso.commons.image.ExifUtils;
+import org.kalypso.commons.java.activation.MimeTypeFinder;
+import org.kalypso.commons.java.activation.MimeTypeUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
