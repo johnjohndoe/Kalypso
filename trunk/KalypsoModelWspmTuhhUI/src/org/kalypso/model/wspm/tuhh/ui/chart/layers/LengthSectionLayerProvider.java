@@ -44,8 +44,10 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -53,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 /**
  * @author Gernot Belger
  */
-public class LengthSectionLayerProvider extends AbstractLayerProvider
+public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
 {
   // FIXME: bad design!
   // There should be exactly one layer provider per layer implementation
@@ -85,10 +87,7 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
     return new TupleResultLineLayer( this, getDataContainer(), styleSet );
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
-  public TupleResultDomainValueData< ? , ? > getDataContainer( )
+  private TupleResultDomainValueData< ? , ? > getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
     return getDataContainer( pc, pc.getParameterValue( "targetComponentId", null ) ); //$NON-NLS-1$
@@ -96,15 +95,21 @@ public class LengthSectionLayerProvider extends AbstractLayerProvider
 
   private TupleResultDomainValueData< ? , ? > getDataContainer( final IParameterContainer pc, final String targetComponentId )
   {
+    final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$
+    if( domainComponentName == null || targetComponentId == null )
+      return null;
+
+    // try to find loaded observation (from GFT)
+    final IObservation<TupleResult> obs = getObservation();
+    if( obs != null )
+      return new TupleResultDomainValueData<Object, Object>( obs, domainComponentName, targetComponentId );
+
     final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
     final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
-    final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$
-    final String targetComponentName = targetComponentId;
-
-    if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
-      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentName );
+    if( href != null && observationId != null )
+      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentId );
 
     return null;
-
   }
+
 }

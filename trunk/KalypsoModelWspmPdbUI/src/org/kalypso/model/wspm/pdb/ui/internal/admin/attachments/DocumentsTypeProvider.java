@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 import javax.activation.MimeType;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.commons.java.activation.MimeTypeUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**

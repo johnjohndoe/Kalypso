@@ -119,9 +119,6 @@ public class TuhhProfil extends AbstractProfil
     return new ProfilDevider( marker, point );
   }
 
-  /**
-   * @return false if the point is captured by a marker and will NOT remove the point from pointList
-   */
   @Override
   public boolean removePoint( final IRecord point )
   {
@@ -132,9 +129,6 @@ public class TuhhProfil extends AbstractProfil
     return false;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.impl.AbstractProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
   {
@@ -151,9 +145,6 @@ public class TuhhProfil extends AbstractProfil
     return pointMarkers.toArray( new IProfilPointMarker[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.impl.AbstractProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
-   */
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {

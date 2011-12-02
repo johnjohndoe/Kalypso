@@ -954,4 +954,9 @@ INSERT INTO INFO("key", "value") VALUES ('srsTolZ', '${srsTolZ}');
 
 -- Version endgültig setzen
 UPDATE INFO set value='0.0.3' where key ='Version';
+
+-- add missing rights
+GRANT USAGE ON SCHEMA pdb TO pdb_user;
+GRANT SELECT, UPDATE ON TABLE pdb.seq_pdb TO pdb_admin;
+
 commit;

@@ -118,7 +118,7 @@ public class GafProfile implements IGafConstants
           return;
 
         final String message = String.format( Messages.getString( "GafProfile.0" ), kind ); //$NON-NLS-1$
-        m_stati.add( IStatus.WARNING, message );
+        m_stati.add( IStatus.INFO, message );
       }
     }
   }
@@ -167,7 +167,8 @@ public class GafProfile implements IGafConstants
 
       final String okMessage = String.format( Messages.getString( "GafProfile.1" ), getStation() ); //$NON-NLS-1$
       final String message = String.format( Messages.getString( "GafProfile.2" ), getStation() ); //$NON-NLS-1$
-      return m_stati.asMultiStatusOrOK( message, okMessage );
+      m_status = m_stati.asMultiStatusOrOK( message, okMessage );
+      return m_status;
     }
 
     return m_status;

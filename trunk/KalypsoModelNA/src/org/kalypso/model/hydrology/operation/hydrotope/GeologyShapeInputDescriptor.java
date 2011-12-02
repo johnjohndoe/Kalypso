@@ -154,7 +154,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
         m_shape = new ShapeFile( shapeBase );
         final String[] properties = m_shape.getProperties();
         for( int i = 0; i < properties.length; i++ )
-          m_propHash.put( properties[i], i );
+          m_propHash.put( properties[i].toLowerCase(), i );
       }
       catch( final IOException e )
       {
@@ -177,7 +177,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   {
     final ShapeFile shape = getShapeFile();
 
-    final Integer column = m_propHash.get( property );
+    final Integer column = m_propHash.get( property.toLowerCase() );
     if( column == null )
     {
       final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$

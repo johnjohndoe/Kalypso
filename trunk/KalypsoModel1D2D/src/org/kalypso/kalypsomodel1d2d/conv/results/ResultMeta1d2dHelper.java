@@ -97,9 +97,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
-import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -521,10 +520,10 @@ public class ResultMeta1d2dHelper
     switch( stepMeta.getStepType() )
     {
       case steady:
-        return toDelete.contains( ResultManager.STEADY_DATE );
+        return toDelete.contains( ISimulation1D2DConstants.STEADY_DATE );
 
       case maximum:
-        return toDelete.contains( ResultManager.MAXI_DATE );
+        return toDelete.contains( ISimulation1D2DConstants.MAXI_DATE );
 
       case unsteady:
         final Date stepTime = stepMeta.getStepTime();
@@ -552,11 +551,11 @@ public class ResultMeta1d2dHelper
         switch( stepMeta.getStepType() )
         {
           case steady:
-            dates.add( ResultManager.STEADY_DATE );
+            dates.add( ISimulation1D2DConstants.STEADY_DATE );
             break;
 
           case maximum:
-            dates.add( ResultManager.MAXI_DATE );
+            dates.add( ISimulation1D2DConstants.MAXI_DATE );
             break;
           case unsteady:
             final Date stepTime = stepMeta.getStepTime();
@@ -586,11 +585,11 @@ public class ResultMeta1d2dHelper
         switch( stepMeta.getStepType() )
         {
           case steady:
-            l_date = ResultManager.STEADY_DATE;
+            l_date = ISimulation1D2DConstants.STEADY_DATE;
             break;
 
           case maximum:
-            l_date = ResultManager.MAXI_DATE;
+            l_date = ISimulation1D2DConstants.MAXI_DATE;
             break;
           case unsteady:
             final Date stepTime = stepMeta.getStepTime();
@@ -663,7 +662,7 @@ public class ResultMeta1d2dHelper
   public static String getNodeResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta, final String strType )
   {
     return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR
-        + stepResult.getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
+        + stepResult.getProperty( IStepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
   }
 
   public static String getIsolineResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
@@ -722,8 +721,8 @@ public class ResultMeta1d2dHelper
   {
     try
     {
-      final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
-      final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; //$NON-NLS-1$
+      final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; 
+      final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; 
       final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
       final SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
       final int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();

@@ -189,7 +189,7 @@ public class GafPoint
     return m_vegetationClass;
   }
 
-  public Point getPoint( ) throws Exception
+  public Point getPoint( )
   {
     return m_point;
   }
