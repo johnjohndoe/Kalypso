@@ -36,7 +36,7 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
@@ -77,7 +77,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final String dialogValue = FileUtilities.validateName( m_eventName, "_" ); //$NON-NLS-1$
 
       /* Create a unique name */
-      final IFeatureBindingCollection<IRunoffEvent> events = m_model.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> events = m_model.getEvents();
       final Set<String> names = new HashSet<String>();
       for( final IRunoffEvent runoffEvent : events )
         names.add( runoffEvent.getName() );
@@ -93,8 +93,8 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       /* Add new feature */
       final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
-      final Feature parentFeature = events.getParentFeature();
-      final IRelationType parentRelation = events.getFeatureList().getParentFeatureTypeProperty();
+      final Feature parentFeature = events.getFeature();
+      final IRelationType parentRelation = events.getWrappedList().getParentFeatureTypeProperty();
       final IFeatureType featureType = parentRelation.getTargetFeatureType();
       final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 1 );
 
@@ -156,7 +156,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     final IFile propertiesDeFile = eventFolder.getFile( "wsp_de.properties" ); //$NON-NLS-1$
     if( !sldFile.exists() )
     {
-      final String eventID = event.getId();
+      final String eventID = event.getFeature().getId();
 
       final URL propertiesLocation = new URL( sldTemplate, "wsp.properties" ); //$NON-NLS-1$
       final URL propertiesDeLocation = new URL( sldTemplate, "wsp_de.properties" ); //$NON-NLS-1$
@@ -176,7 +176,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   public static void addEventThemes( final IKalypsoCascadingTheme wspThemes, final IRunoffEvent event ) throws Exception
   {
-    final String eventID = event.getId();
+    final String eventID = event.getFeature().getId();
 
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
@@ -247,7 +247,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
 
-      final String infoFormat = String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.2" ), event.getName() ); //$NON-NLS-1$
+      final String infoFormat = String.format( Messages.getString("org.kalypso.model.flood.ui.map.operations.AddEventOperation.2"), event.getName() ); //$NON-NLS-1$
       final String infoValue = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=" + infoFormat; //$NON-NLS-1$
       layerPropertyThemeInfoId.setValue( infoValue );
 

@@ -63,7 +63,7 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -88,9 +88,9 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     public GM_Triangle m_triangle = null;
   }
 
-  private final IFeatureBindingCollection<ITinReference> m_tins;
+  private final IFeatureWrapperCollection<ITinReference> m_tins;
 
-  private final IFeatureBindingCollection<IFloodPolygon> m_polygons;
+  private final IFeatureWrapperCollection<IFloodPolygon> m_polygons;
 
   private final Map<IFloodExtrapolationPolygon, Double> m_polygonWsps = new HashMap<IFloodExtrapolationPolygon, Double>();
 
@@ -110,7 +110,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return new FloodBean( BLOCK_SIZE );
   }
 
-  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
+  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
   {
     super( inputGrid, pUrl );
 
