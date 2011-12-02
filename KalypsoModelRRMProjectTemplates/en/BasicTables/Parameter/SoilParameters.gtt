@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:gistableview xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <ns0:layer id="id" featurePath="soilLayerMember" linktype="gml" xlink:type="simple" xlink:href="project:/parameter.gml" xlink:actuate="onRequest">
+        <ns0:column width="100" name="description" format="" editable="true" alignment="16384"/>
+        <ns0:column width="77" name="name" format="" editable="true" alignment="16384"/>
+        <ns0:column width="73" name="typwp" format="" editable="true" alignment="16384"/>
+        <ns0:column width="76" name="typfk" format="" editable="true" alignment="16384"/>
+        <ns0:column width="135" name="typbfm" format="" editable="true" alignment="16384"/>
+        <ns0:column width="55" name="typkf" format="" editable="true" alignment="16384"/>
+        <ns0:column width="128" name="typbf0" format="" editable="true" alignment="16384"/>
+        <ns0:sort propertyName="name" inverse="false"/>
+    </ns0:layer>
+</ns0:gistableview>
+
