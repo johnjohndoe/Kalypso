@@ -1,0 +1,33 @@
+Manifest-Version: 1.0 
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelWspmTuhhCore Plug-in
+Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
+Bundle-Version: 11.6.2.qualifier
+Bundle-Localization: plugin
+Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
+Bundle-Vendor: kalypso.sourceforge.net
+Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
+ org.kalypso.model.wspm.core;visibility:=reexport,
+ org.kalypso.ui,
+ org.kalypso.model.wspm.schema;visibility:=reexport,
+ org.kalypso.wspwin.core;visibility:=reexport,
+ de.openali.odysseus.chart.factory,
+ org.kalypso.model.wspm.tuhh.project.template,
+ org.kalypso.model.wspm.tuhh.project.demo;resolution:=optional
+Bundle-ActivationPolicy: lazy
+Export-Package: org.kalypso.model.wspm.tuhh.core,
+ org.kalypso.model.wspm.tuhh.core.gml,
+ org.kalypso.model.wspm.tuhh.core.profile,
+ org.kalypso.model.wspm.tuhh.core.profile.buildings,
+ org.kalypso.model.wspm.tuhh.core.profile.buildings.building,
+ org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass,
+ org.kalypso.model.wspm.tuhh.core.profile.export,
+ org.kalypso.model.wspm.tuhh.core.profile.importer.wprof,
+ org.kalypso.model.wspm.tuhh.core.profile.pattern,
+ org.kalypso.model.wspm.tuhh.core.profile.sinuositaet,
+ org.kalypso.model.wspm.tuhh.core.results,
+ org.kalypso.model.wspm.tuhh.core.util,
+ org.kalypso.model.wspm.tuhh.core.wprof,
+ org.kalypso.model.wspm.tuhh.core.wspwin,
+ org.kalypso.model.wspm.tuhh.core.wspwin.prf
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
