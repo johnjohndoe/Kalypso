@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	typeID="KalypsoNA_Preprocessing">
+	<input id="StatusQuoResultsFolder" optional="true" relativeToCalcCase="true" path="Ergebnisse/PLC/IstZustand" />
+	<input id="DifferenceFolder" optional="true" relativeToCalcCase="true" path="Ergebnisse/PLC/Difference" />
+	<input id="ActualResultsFolder" relativeToCalcCase="true" path="Ergebnisse/Aktuell" />
+	<output id="OutputFolder" relativeToCalcCase="true" path="Ergebnisse/PLC" />
+</modelspec>
