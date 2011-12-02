@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaSimulationDataFactory;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
@@ -59,7 +60,10 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.wizards.conversion.ITimeseriesVisitor;
+import org.kalypso.ui.rrm.wizards.conversion.TimeseriesWalker;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * Converts one calc case.
@@ -121,11 +125,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     /* Tweak model data */
     tweakCalculation();
+
+    fixTimeseriesLinks();
   }
 
   private void copyBasicData( ) throws IOException
   {
-
     /* Copy top level gml files (everything else in this path will be ignored) */
     copyFile( CALC_CASE, INaProjectConstants.GML_MODELL_PATH );
     copyFile( CALC_HYDROTOP, INaProjectConstants.GML_HYDROTOP_PATH );
@@ -140,10 +145,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     copyPegel();
     copyZufluss();
 
-    // TODO: Benutzer entscheiden lassen:
-    // - ergebnisse übernehmen?
-    // - nur 'aktuell' oder alle ergebnisse?
-    // Momentan: es wird immer alles kopiert
     copyDir( INaCalcCaseConstants.ERGEBNISSE_DIR );
 
     getLog().add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CalcCaseConverter_0" ) ) ); //$NON-NLS-1$
@@ -151,11 +152,13 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void readBasicData( ) throws Exception
   {
+    final File naModelFile = new File( m_targetCalcCaseDir, INaProjectConstants.GML_MODELL_PATH );
     final File naControlFile = new File( m_targetCalcCaseDir, INaCalcCaseConstants.CALCULATION_GML_PATH );
 
+    final URL naModelLocation = naModelFile.toURI().toURL();
     final URL naControlLocation = naControlFile.toURI().toURL();
 
-    m_data = NaSimulationDataFactory.load( null, null, naControlLocation, null, null, null, null, null, null, null );
+    m_data = NaSimulationDataFactory.load( naModelLocation, null, naControlLocation, null, null, null, null, null, null, null );
   }
 
   private void renameOldResults( )
@@ -228,7 +231,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     if( m_chosenExe != null )
     {
       metaControl.setExeVersion( m_chosenExe );
-      // FIXME: we should write in the same encoding as we read the file
       final String statusMsg = Messages.getString( "CalcCaseConverter_2", m_chosenExe, exeVersion ); //$NON-NLS-1$
       final int severity = IStatus.OK;
       saveModel( metaControl, INaCalcCaseConstants.CALCULATION_GML_PATH, severity, statusMsg );
@@ -244,8 +246,28 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void saveModel( final Feature model, final String path, final int severity, final String statusMsg ) throws IOException, GmlSerializeException
   {
+    // REMARK: we asume that all files are 'UTF-8'.
     final File naControlFile = new File( m_targetCalcCaseDir, path );
     GmlSerializer.serializeWorkspace( naControlFile, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
     getLog().add( new Status( severity, KalypsoUIRRMPlugin.getID(), statusMsg ) );
+  }
+
+  /**
+   * Add an additional '../' to every timeseries path.
+   */
+  private void fixTimeseriesLinks( ) throws IOException, GmlSerializeException
+  {
+    final NaModell naModel = m_data.getNaModel();
+
+    final ITimeseriesVisitor visitor = new FixDotDotTimeseriesVisitor();
+
+    final TimeseriesWalker walker = new TimeseriesWalker( visitor );
+    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
+    final IStatus log = walker.getStatus();
+    getLog().add( log );
+
+    final String statusMsg = "Timeseries links have been updated.";
+
+    saveModel( naModel, INaProjectConstants.GML_MODELL_PATH, IStatus.INFO, statusMsg );
   }
 }
