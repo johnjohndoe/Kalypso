@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoManualFlood Plug-in
+Bundle-SymbolicName: org.kalypso.KalypsoManualFlood;singleton:=true
+Bundle-Version: 11.6.2.qualifier
+Bundle-Activator: org.kalypso.KalypsoManualFlood.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.help,
+ org.eclipse.help.appserver,
+ org.eclipse.help.base,
+ org.eclipse.help.webapp
+Bundle-ActivationPolicy: lazy
+Export-Package: org.kalypso.KalypsoManualFlood.help
+Bundle-Vendor: kalypso.sourceforge.net
+Bundle-ClassPath: library.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
