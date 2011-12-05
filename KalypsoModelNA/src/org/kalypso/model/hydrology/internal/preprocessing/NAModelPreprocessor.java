@@ -55,7 +55,7 @@ import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
@@ -101,7 +101,7 @@ public class NAModelPreprocessor
     return m_idManager;
   }
 
-  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, SimulationException
+  public void process( final ISimulationMonitor monitor ) throws NAPreprocessorException, OperationCanceledException
   {
     try
     {
@@ -111,14 +111,11 @@ public class NAModelPreprocessor
     {
       throw e;
     }
-    catch( final SimulationException e ) {
-      throw e;
-    }
     catch( final Exception e )
     {
       // Handle only unexpected exceptions here. Everything else should be handling deeper down!
       e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString( "NAModelPreprocessor.0" ), e ); //$NON-NLS-1$
+      throw new NAPreprocessorException( "Unexpected error while generating Kalypso-NA ASCII files", e );
     }
   }
 
@@ -147,12 +144,12 @@ public class NAModelPreprocessor
 
     checkCancel( monitor );
 
-    monitor.setMessage( Messages.getString( "NAModelPreprocessor.1" ) ); //$NON-NLS-1$
+    monitor.setMessage( "Adding additional virtual channels" );
     final NaModelTweaker naModelTweaker = new NaModelTweaker( naModel, rootNode );
     naModelTweaker.tweakModel();
     checkCancel( monitor );
 
-    monitor.setMessage( Messages.getString( "NAModelPreprocessor.2" ) ); //$NON-NLS-1$
+    monitor.setMessage( "Writing control files for Kalypso-NA" );
     final NAControlConverter naControlConverter = new NAControlConverter( metaControl, m_asciiDirs.startDir );
     naControlConverter.writeFalstart();
     naControlConverter.writeStartFile( naControl, rootNode, naModel, sudsWorkspace, m_idManager );
@@ -182,13 +179,13 @@ public class NAModelPreprocessor
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new SimulationException( Messages.getString("NAModelPreprocessor.5"), e ); //$NON-NLS-1$
+      throw new SimulationException( "Fehler beim Entzippen der Vorprozessierten ASCII Dateien", e );
     }
   }
 
   public void processCallibrationFiles( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
-    monitor.setMessage( Messages.getString("NAModelPreprocessor.6") ); //$NON-NLS-1$
+    monitor.setMessage( "Wende Kalibrierungsfaktoren an..." );
 
     final NAModellConverter naModellConverter = new NAModellConverter( m_idManager, m_simulationData, m_asciiDirs, m_logger );
 
@@ -198,7 +195,7 @@ public class NAModelPreprocessor
     naModellConverter.writeCalibratedFiles( m_relevantElements, m_tsFileManager );
   }
 
-  private void initNetData( final Node rootNode ) throws Exception
+  private void initNetData( final Node rootNode ) throws SimulationException, Exception
   {
     final NaModell naModel = m_simulationData.getNaModel();
     final NAHydrotop hydrotopeCollection = m_simulationData.getHydrotopCollection();
@@ -206,8 +203,8 @@ public class NAModelPreprocessor
     final NAControl metaControl = m_simulationData.getMetaControl();
     final Parameter parameter = (Parameter) parameterWorkspace.getRootFeature();
 
-    final NetFileAnalyser nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
-    m_relevantElements = nodeManager.analyseNet();
+    final NetFileAnalyser m_nodeManager = new NetFileAnalyser( rootNode, m_logger, naModel, m_idManager );
+    m_relevantElements = m_nodeManager.analyseNet();
 
     if( hydrotopeCollection != null )
     {

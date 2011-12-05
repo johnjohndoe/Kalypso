@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
@@ -46,15 +46,14 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -65,11 +64,11 @@ import com.google.common.collect.MapMaker;
 
 public final class ProfileResultPattern extends AbstractPatternInput<IProfilePatternData> implements IValueWithFormat<Object>
 {
-  private final ConcurrentMap<IKeyValue<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = new MapMaker().expireAfterWrite( 5, TimeUnit.SECONDS ).makeComputingMap( new ResultFinder() );
+  private final ConcurrentMap<IKeyValue<IProfileFeature, String>, WspmResultLengthSection> m_lengthSectionCache = new MapMaker().expiration( 5, TimeUnit.SECONDS ).makeComputingMap( new ResultFinder() );
 
   public ProfileResultPattern( )
   {
-    super( "Result", Messages.getString( "ProfileResultPattern_0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "Result", "Result" ); //$NON-NLS-1$
   }
 
   /**
@@ -125,7 +124,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     }
     catch( final ComputationException e )
     {
-      // happens, if computation function throws an exception
+      // happens, if compution functin throws an exception
       return StringUtils.EMPTY;
     }
   }
@@ -150,7 +149,7 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   private IKeyValue<String, String> parseParams( final String param )
   {
-    final String[] params = param.split( "\\:", 2 ); //$NON-NLS-1$
+    final String[] params = param.split( "\\:", 2 );
     if( params.length != 2 )
       return null;
 
@@ -180,10 +179,10 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
 
   private String guessComponent( final String component )
   {
-    if( component.contains( ":" ) ) //$NON-NLS-1$
+    if( component.contains( ":" ) )
       return component;
 
-    if( component.startsWith( "#" ) ) //$NON-NLS-1$
+    if( component.startsWith( "#" ))
       return IWspmConstants.URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + component;
 
     return IWspmConstants.LENGTH_SECTION_PROPERTY + component;
@@ -233,9 +232,4 @@ public final class ProfileResultPattern extends AbstractPatternInput<IProfilePat
     return 0;
   }
 
-  @Override
-  public boolean getShowInMenu( )
-  {
-    return false;
-  }
 }

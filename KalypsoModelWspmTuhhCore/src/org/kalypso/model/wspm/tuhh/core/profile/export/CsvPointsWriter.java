@@ -55,21 +55,9 @@ import org.kalypso.observation.result.IRecord;
  */
 public class CsvPointsWriter extends AbstractCsvWriter
 {
-  private static final String DEFAULT_TOKEN_SEPARATOR = "\t"; //$NON-NLS-1$
-
-  /** Separator between two tokens */
-  private final String m_tokenSeparator;
-
   public CsvPointsWriter( final IProfileExportColumn[] columns )
   {
-    this( columns, DEFAULT_TOKEN_SEPARATOR );
-  }
-
-  public CsvPointsWriter( final IProfileExportColumn[] columns, final String tokenSeparator )
-  {
     super( columns );
-
-    m_tokenSeparator = tokenSeparator;
   }
 
   @Override
@@ -99,9 +87,7 @@ public class CsvPointsWriter extends AbstractCsvWriter
       writer.append( cleanValue );
 
       if( i != columns.length - 1 )
-      {
-        writer.append( m_tokenSeparator );
-      }
+        writer.append( '\t' );
     }
   }
 }

@@ -49,13 +49,13 @@ import org.kalypso.model.hydrology.NaModelConstants;
  */
 public interface ISealing extends ISuds
 {
-  QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); //$NON-NLS-1$
+  public QName QN_PROPERTY_ELEMENT_TYPE = new QName( NaModelConstants.NS_NASUDS, "elementType" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_SEALING_FACTOR = new QName( NaModelConstants.NS_NASUDS, "sealingFactor" ); //$NON-NLS-1$
+  public QName QN_PROPERTY_SEALING_FACTOR = new QName( NaModelConstants.NS_NASUDS, "sealingFactor" ); //$NON-NLS-1$
 
-  double SEALING_FACTOR_DEFAULT_VALUE = 1.0;
+  public double SEALING_FACTOR_DEFAULT_VALUE = 1.0;
 
-  double getSealingFactor( );
+  public double getSealingFactor( );
 
-  void setSealingFactor( final Double value );
+  public void setSealingFactor( final Double value );
 }

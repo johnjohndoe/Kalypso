@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:gistableview xmlns:ns2="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <ns2:layer id="id" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" linktype="gml" xlink:type="simple" xlink:href="../../.models/modell.gml" xlink:actuate="onRequest">
-    <ns2:column width="289" name="description" format="" editable="true" alignment="16384" />
-    <ns2:column width="46" name="name" format="" editable="false" alignment="16777216" />
-    <ns2:sort propertyName="inum" inverse="false" />
-  </ns2:layer>
-</ns2:gistableview>
-

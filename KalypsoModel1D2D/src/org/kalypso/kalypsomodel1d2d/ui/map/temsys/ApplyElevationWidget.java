@@ -80,8 +80,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * 
  * @author Patrice Congo
  * @author Madanagopal
+ * 
  */
 public class ApplyElevationWidget extends AbstractDelegateWidget implements IWidgetWithOptions
 {
@@ -159,6 +161,9 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, elevationTheme );
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -203,6 +208,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -335,6 +341,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void paint( final Graphics g )
   {
@@ -358,6 +365,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     m_toolTipRendererDesc.paintToolTip( new Point( 5, bounds.height - 5 ), g2, bounds );
   }
 
+  @SuppressWarnings("unchecked")
   private void paintSelecetedNodes( final Graphics2D g2, final List<IFE1D2DNode> selectedNodeList )
   {
     final IMapPanel panel = m_dataModel.getMapPanel();
@@ -396,9 +404,12 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     return true;
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
   @Override
   public String getPartName( )
   {
-    return Messages.getString("ApplyElevationWidget.0"); //$NON-NLS-1$
+    return null;
   }
 }

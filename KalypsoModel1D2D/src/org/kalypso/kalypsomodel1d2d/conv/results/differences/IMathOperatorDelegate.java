@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.conv.results.differences;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.NotImplementedException;
+
 /**
  * @author Thomas Jung
  * 
@@ -54,7 +56,7 @@ public interface IMathOperatorDelegate
     eMinus;
     public IMathOperatorDelegate getOperator( )
     {
-      final MATH_OPERATOR type = valueOf( name() );
+      MATH_OPERATOR type = valueOf( name() );
 
       switch( type )
       {
@@ -63,7 +65,7 @@ public interface IMathOperatorDelegate
           {
 
             @Override
-            public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
+            public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
             {
               return o1.subtract( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
             }
@@ -73,14 +75,14 @@ public interface IMathOperatorDelegate
           return new IMathOperatorDelegate()
           {
             @Override
-            public BigDecimal getResult( final BigDecimal o1, final BigDecimal o2 )
+            public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
             {
               return o1.add( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
             }
           };
 
         default:
-          throw (new UnsupportedOperationException());
+          throw (new NotImplementedException());
       }
 
     }

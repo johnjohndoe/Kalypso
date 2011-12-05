@@ -22,8 +22,10 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * 
  * @author Patrice Congo
  */
+@SuppressWarnings("unchecked")
 public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFunction
 {
+
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
@@ -44,18 +46,24 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
 
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureQName ) )
     {
-      // TODO: Sometimes here is a NPE when first displaying the map. Race condition?
-      final IFE1D2DNode< ? > node = (IFE1D2DNode< ? >) feature.getAdapter( IFE1D2DNode.class );
+      // TODO: Sometimes here is a NPE when first displaying the map
+      // Rac e condition?
+      final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
       try
       {
-        final GM_Point point = node == null ? null : node.getPoint();
+        final GM_Point point = node.getPoint();
         if( point == null )
+        {
           return Boolean.FALSE;
-
+        }
         if( point.getCoordinateDimension() == 3 )
+        {
           return !Double.isNaN( point.getZ() );
-
-        return Boolean.FALSE;
+        }
+        else
+        {
+          return Boolean.FALSE;
+        }
       }
       catch( final Throwable th )
       {

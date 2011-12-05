@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
-
 /**
  * @author Gernot Belger
  */
-// FIXME: move to sobek data classes
-// TODO: merge with SobekFrictionDat-Sections
 public class SobekFrictionZone
 {
   private final double m_from;
@@ -58,6 +54,18 @@ public class SobekFrictionZone
   private final double m_friction;
 
   private final String m_comment;
+
+  static enum FrictionType
+  {
+    Chezy,
+    Manning,
+    Strickler_Kn,
+    Strickler_Ks, // = WSPM kst
+    White_Colebrook, // WSPM ks
+    unknown1,
+    unknown2,
+    De_Bos_and_Bijkerk;
+  }
 
   public SobekFrictionZone( final double from, final double to, final FrictionType type, final double friction, final String comment )
   {
@@ -102,4 +110,5 @@ public class SobekFrictionZone
         return String.format( "%.2f", m_friction ); //$NON-NLS-1$
     }
   }
+
 }

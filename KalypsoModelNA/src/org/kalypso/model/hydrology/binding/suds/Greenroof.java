@@ -98,15 +98,6 @@ public class Greenroof extends AbstractSud implements IGreenRoof
     if( property instanceof Double )
       return (Double) property;
 
-    // default
-    switch( getUsageType() )
-    {
-      case EXTENSIVE:
-        return 35.0;
-      case INTENSIVE:
-        return 70.0;
-    }
-
     return null;
   }
 

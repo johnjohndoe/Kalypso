@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 
 /**
@@ -65,9 +65,7 @@ class ProfileMarkers
     final int pointAttribute = wprofPoint.getPunktattribut();
     final String[] markerIDs = m_punktattribute.getMarkerIDs( pointAttribute );
     for( final String markerID : markerIDs )
-    {
       addWProfPoint( markerID, wprofPoint );
-    }
   }
 
   private void addWProfPoint( final String markerID, final IWProfPoint wprofPoint )
@@ -84,5 +82,6 @@ class ProfileMarkers
 
     return new IWProfPoint[] {};
   }
+
 
 }

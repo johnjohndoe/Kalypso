@@ -57,12 +57,8 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
  * 
  * @author kurzbach
  */
-public final class TopologyChecker
+public class TopologyChecker
 {
-  private TopologyChecker( )
-  {
-  }
-
   /**
    * Check a geometry for topological validity using {@link IsValidOp} and return the result as an {@link IStatus}
    * 
@@ -83,8 +79,8 @@ public final class TopologyChecker
         {
           featureLabel = geometry.toString();
         }
-        final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.TopologyChecker.0", featureLabel ); //$NON-NLS-1$
-        return StatusUtilities.createStatus( IStatus.WARNING, message + validationError.getMessage(), null );
+        final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.TopologyChecker.0", featureLabel ); //$NON-NLS-1$
+        return StatusUtilities.createStatus( Status.WARNING, message + validationError.getMessage(), null );
       }
     }
     catch( final GM_Exception e )

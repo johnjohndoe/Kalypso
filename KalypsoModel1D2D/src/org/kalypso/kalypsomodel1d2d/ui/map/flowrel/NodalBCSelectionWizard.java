@@ -53,8 +53,8 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -70,6 +70,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -77,7 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class NodalBCSelectionWizard extends Wizard implements IWizard
 {
-  protected static final DateFormat DF = new SimpleDateFormat( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0" ) ); //$NON-NLS-1$
+  protected static final DateFormat DF = new SimpleDateFormat( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0") ); //$NON-NLS-1$
 
   private NodalBCSelectionWizardPage m_selectionPage;
 
@@ -97,20 +98,20 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private IFeatureSelectionManager m_selectionManager;
 
-  private final Feature m_parentModelElement;
+  private final IFeatureWrapper2 m_parentModelElement;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature parentModelElement )
+  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 parentModelElement )
   {
     m_descriptors = descriptors;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     m_parentModelElement = parentModelElement;
-    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.1" ) ); //$NON-NLS-1$
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.1") ); //$NON-NLS-1$
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -152,29 +153,26 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
         descriptor.fillObservation( obs );
         bc.setObservation( obs );
 
-        // isAbsolute property is available only for the BCs with element as a parent or as wave boundary condition
+        // isAbsolute property is available only for the BCs with element as a parent or as wave boundary condition 
         if( m_parentModelElement instanceof IFELine )
           bc.setIsAbsolute( null );
-
+        
         String lStrSteadyValue = m_selectionPage.getSteadyValue();
-        if( !(descriptor instanceof WaveStepDescriptor) )
-        {
-          try
-          {
+        if( !( descriptor instanceof WaveStepDescriptor ) ){
+          try{
             Double.parseDouble( lStrSteadyValue );
           }
-          catch( final Exception e )
-          {
-            throw new IllegalArgumentException( "Illegal value set for stationary condition!" ); //$NON-NLS-1$
+          catch (Exception e) {
+            throw new IllegalArgumentException( "Illegal value set for stationary condition!" );
           }
         }
-        else
-        {
+        else{
           lStrSteadyValue = WaveStepDescriptor.SWAN_BC_DEFAULT_STEADY_VALUE_PREFIX + lStrSteadyValue;
-          bc.setIsAbsolute( ((WaveStepDescriptor) descriptor).isStateAbsoluteCond() );
+          bc.setIsAbsolute( ( ( WaveStepDescriptor )descriptor ).isStateAbsoluteCond() );
         }
         bc.setStationaryCondition( lStrSteadyValue );
         bc.setParentElement( m_parentModelElement );
+
 
         if( m_boundaryPosition != null )
         {
@@ -182,7 +180,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           final AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_parentFeature, m_parentRelation, -1, newFeature, m_selectionManager, true, true )
           {
             /**
-             * @see org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand#process()
+             * @see org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand#process()
              */
             @Override
             public void process( ) throws Exception
@@ -190,7 +188,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
               super.process();
               if( m_selectionManager != null )
               {
-                final EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper( m_workspace, newFeature );
+                EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper( m_workspace, newFeature );
 
                 try
                 {
@@ -210,6 +208,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           try
           {
             m_workspace.postCommand( command );
+
           }
           catch( final Throwable e )
           {
@@ -222,7 +221,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.6" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.6"), status ); //$NON-NLS-1$
 
     if( status.isOK() )
       m_boundaryCondition = bc;
@@ -241,7 +240,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
    * Sets the target position of the boundary condition to be created.
    * 
    * @param boundaryPosition
-   *          the target position
+   *            the target position
    * 
    */
   public void setBoundaryPosition( final GM_Point boundaryPosition )

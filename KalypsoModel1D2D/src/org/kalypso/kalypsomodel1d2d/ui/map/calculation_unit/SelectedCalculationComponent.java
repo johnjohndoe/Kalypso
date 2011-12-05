@@ -69,12 +69,11 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -132,7 +131,7 @@ public class SelectedCalculationComponent
     } );
 
     final IFEDiscretisationModel1d2d discModel = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final GMLWorkspace workspace = discModel.getWorkspace();
+    final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
       @Override
@@ -192,21 +191,21 @@ public class SelectedCalculationComponent
     if( newValue instanceof ICalculationUnit1D )
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.6" ) ); //$NON-NLS-1$
-      m_subCalcUnitsTableViewer.setInput( new Object[] {} );
       m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
+      m_subCalcUnitsTableViewer.setInput( new Object[] {} );
     }
     else if( newValue instanceof ICalculationUnit2D )
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.7" ) ); //$NON-NLS-1$
-      m_subCalcUnitsTableViewer.setInput( new Object[] {} );
       m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
+      m_subCalcUnitsTableViewer.setInput( new Object[] {} );
     }
     else if( newValue instanceof ICalculationUnit1D2D )
     {
       m_txtCalcUnitType.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.8" ) ); //$NON-NLS-1$
-      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getChangedSubUnits().toArray() );
       m_txtNumberOfElements1D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements1D().size() ) );
       m_txtNumberOfElements2D.setText( String.valueOf( ((ICalculationUnit) newValue).getElements2D().size() ) );
+      m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getChangedSubUnits().toArray() );
     }
   }
 
@@ -215,9 +214,9 @@ public class SelectedCalculationComponent
     final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( m_dataModel );
     final Feature bcHolderFeature = workspace.getRootFeature();
     final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    final IFeatureBindingCollection<IFlowRelationship> allFlowRelationshipsList = flowRelationshipsModel.getFlowRelationsShips();
+    final List<IFeatureWrapper2> allFlowRelationshipsList = new ArrayList<IFeatureWrapper2>( flowRelationshipsModel );
     final List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>();
-    for( final Feature relationship : allFlowRelationshipsList )
+    for( final IFeatureWrapper2 relationship : allFlowRelationshipsList )
     {
       if( relationship instanceof IBoundaryCondition )
         conditions.add( (IBoundaryCondition) relationship );
@@ -256,7 +255,7 @@ public class SelectedCalculationComponent
     m_numberOfBoundaryConditions = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_numberOfBoundaryConditions.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     m_numberOfBoundaryConditions.setEditable( false );
-
+    
     toolkit.createLabel( parent, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent.20" ) ); //$NON-NLS-1$
     m_numberOfBoundaryConditionsWaves = toolkit.createText( parent, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_numberOfBoundaryConditionsWaves.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );

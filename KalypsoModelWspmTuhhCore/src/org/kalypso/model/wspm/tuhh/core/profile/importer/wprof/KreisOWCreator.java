@@ -77,11 +77,10 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     {
       final IProfileCreator creator = profileData.getProfileCreator();
       if( creator instanceof KreisProfileCreator )
-      {
         createKreisOW( project, profileData );
-      }
     }
   }
+
 
   private void createKreisOW( final TuhhWspmProject project, final ProfileData kreisData ) throws CoreException
   {
@@ -97,8 +96,8 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
 
   private GelaendeProfileCreator createGelaendeCreator( final ProfileData kreisData, final IProfil kreisProfile )
   {
-    final double minDistance = 10.0;
-    final double owDistance = 6.0;
+    final double MIN_DISTANCE = 10.0;
+    final double OW_DISTANCE = 6.0;
 
     final double kreisStation = kreisProfile.getStation();
     if( Double.isNaN( kreisStation ) )
@@ -112,10 +111,10 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
 
     final double distance = Math.abs( kreisStation - owStation );
     final double signum = Math.signum( kreisStation - owStation );
-    if( distance < minDistance )
+    if( distance < MIN_DISTANCE )
       return null;
 
-    final double kreisOwStation = kreisStation + signum * owDistance;
+    final double kreisOwStation = kreisStation + signum * OW_DISTANCE; 
 
     final double kreisSoil = ProfilUtil.getMinValueFor( kreisProfile, kreisProfile.getPointPropertyFor( POINT_PROPERTY_HOEHE ) );
     final double owSoil = ProfilUtil.getMinValueFor( owProfile, owProfile.getPointPropertyFor( POINT_PROPERTY_HOEHE ) );
@@ -123,10 +122,10 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     final double kreisOwSoil = interpolateSoil( kreisSoil, kreisStation, owSoil, owStation, kreisOwStation );
     if( Double.isNaN( kreisOwSoil ) )
       return null;
-
+    
     final double offset = Math.max( 0.0, kreisOwSoil - kreisSoil );
 
-    final GelaendeProfileCreator kreisOWCreator = new GelaendeProfileCreator( Messages.getString( "KreisOWCreator_0" ), kreisData, "V01" ); //$NON-NLS-1$//$NON-NLS-2$
+    final GelaendeProfileCreator kreisOWCreator = new GelaendeProfileCreator( Messages.getString("KreisOWCreator_0"), kreisData, "V01" );  //$NON-NLS-1$//$NON-NLS-2$
 
     kreisOWCreator.setSoilOffset( offset );
     kreisOWCreator.setOverwriteStation( new BigDecimal( kreisOwStation ).setScale( STATION_SCALE, BigDecimal.ROUND_HALF_UP ) );

@@ -61,7 +61,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
@@ -143,7 +143,7 @@ public class TsFileWriter
       catch( final Exception e )
       {
         e.printStackTrace();
-        final String message = String.format( Messages.getString("TsFileWriter.0"), catchment.getName() ); //$NON-NLS-1$
+        final String message = String.format( "Fehler beim Schreiben der Zeitreihen für Teilgebiet '%s'", catchment.getName() );
         throw new NAPreprocessorException( message, e );
       }
     }
@@ -165,11 +165,11 @@ public class TsFileWriter
 
       final TimeseriesLinkType linkT = catchment.getTemperatureLink();
       final File targetFileT = m_tsFileManager.getTemperaturEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0", simulationRange ); //$NON-NLS-1$
+      writeExtTimeseries( targetFileT, linkT, m_zmlContext, ITimeseriesConstants.TYPE_TEMPERATURE, "1.0", simulationRange );
 
       final TimeseriesLinkType linkV = catchment.getEvaporationLink();
       final File targetFileV = m_tsFileManager.getVerdunstungEingabeDatei( catchment, klimaDir ); //$NON-NLS-1$
-      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, "0.5", simulationRange ); //$NON-NLS-1$
+      writeExtTimeseries( targetFileV, linkV, m_zmlContext, ITimeseriesConstants.TYPE_EVAPORATION, "0.5", simulationRange );
     }
   }
 
@@ -292,7 +292,7 @@ public class TsFileWriter
           final List< ? > statNParameterList = (List< ? >) statNFE.getProperty( NaModelConstants.STATNPARA_MEMBER );
           for( final Object object : statNParameterList )
           {
-            final Feature fe = (Feature) object;
+            final Catchment fe = (Catchment) object;
             final String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {

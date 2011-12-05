@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<simBase:FlowRelationshipModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:om="http://www.opengis.net/om" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:swe="http://www.opengis.net/swe" xmlns:ns2="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:sweExt="org.kalypso.swe.ext" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:wspm="org.kalypso.model.wspm" xmlns:commonShp="org.kalypso.gml.common" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:math="org.kalypso.gml.common.math" gml:id="root">
+<simBase:FlowRelationshipModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:swe="http://www.opengis.net/swe" xmlns:ns2="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:math="org.kalypso.gml.common.math" xmlns:commonShp="org.kalypso.gml.common" xmlns:om="http://www.opengis.net/om" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <simBase:flowRelationshipMember>
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1212680777110315">
    <gml:description>Gelesen aus: PROF0044.4050.txt</gml:description>
    <gml:name>44.4050</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3929971.777 775460.254 361.563</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929971.777 775460.254 361.563</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -19,7 +19,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296156728">
        <tuhh:startStation>40</tuhh:startStation>
@@ -68,10 +67,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296156121">
      <gml:description>Übernommen aus Datei: PROF0044.4050.txt</gml:description>
      <gml:name>0044.4050</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296156344">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -229,8 +224,8 @@
    <gml:description>Gelesen aus: PROF0044.4250.txt</gml:description>
    <gml:name>44.4250</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3929976.168 775469.786 361.601</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929976.168 775469.786 361.601</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -243,7 +238,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296234842">
        <tuhh:startStation>40</tuhh:startStation>
@@ -292,10 +286,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296234716">
      <gml:description>Übernommen aus Datei: PROF0044.4250.txt</gml:description>
      <gml:name>0044.4250</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234900">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -453,8 +443,8 @@
    <gml:description>Gelesen aus: PROF0044.5000.txt</gml:description>
    <gml:name>44.5000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930019.466 775539.966 361.792</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930019.466 775539.966 361.792</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -467,7 +457,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962501105">
        <tuhh:startStation>40</tuhh:startStation>
@@ -516,10 +505,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250799">
      <gml:description>Übernommen aus Datei: PROF0044.5000.txt</gml:description>
      <gml:name>0044.5000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296250605">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -677,8 +662,8 @@
    <gml:description>Gelesen aus: PROF0044.6000.txt</gml:description>
    <gml:name>44.6000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930053.367 775633.404 360.74</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930053.367 775633.404 360.74</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -691,7 +676,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296265885">
        <tuhh:startStation>40</tuhh:startStation>
@@ -740,10 +724,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296265817">
      <gml:description>Übernommen aus Datei: PROF0044.6000.txt</gml:description>
      <gml:name>0044.6000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265596">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -901,8 +881,8 @@
    <gml:description>Gelesen aus: PROF0044.7000.txt</gml:description>
    <gml:name>44.7000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930078.452 775730.197 359.728</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930078.452 775730.197 359.728</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -915,7 +895,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296203776">
        <tuhh:startStation>40</tuhh:startStation>
@@ -964,10 +943,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296203305">
      <gml:description>Übernommen aus Datei: PROF0044.7000.txt</gml:description>
      <gml:name>0044.7000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203198">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -1125,8 +1100,8 @@
    <gml:description>Gelesen aus: PROF0044.8000.txt</gml:description>
    <gml:name>44.8000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930112.938 775823.897 359.599</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930112.938 775823.897 359.599</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -1139,7 +1114,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962341135">
        <tuhh:startStation>40</tuhh:startStation>
@@ -1188,10 +1162,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296234169">
      <gml:description>Übernommen aus Datei: PROF0044.8000.txt</gml:description>
      <gml:name>0044.8000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234820">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -1349,8 +1319,8 @@
    <gml:description>Gelesen aus: PROF0044.9000.txt</gml:description>
    <gml:name>44.9000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930150.319 775915.808 359.986</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930150.319 775915.808 359.986</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -1363,7 +1333,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296093252">
        <tuhh:startStation>40</tuhh:startStation>
@@ -1412,10 +1381,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296093380">
      <gml:description>Übernommen aus Datei: PROF0044.9000.txt</gml:description>
      <gml:name>0044.9000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296093682">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -1573,8 +1538,8 @@
    <gml:description>Gelesen aus: PROF0045.0000.txt</gml:description>
    <gml:name>45.0000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930202.681 776001.955 359.854</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930202.681 776001.955 359.854</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -1587,7 +1552,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition122252229626599">
        <tuhh:startStation>40</tuhh:startStation>
@@ -1636,10 +1600,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962651276">
      <gml:description>Übernommen aus Datei: PROF0045.0000.txt</gml:description>
      <gml:name>0045.0000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265854">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -1797,8 +1757,8 @@
    <gml:description>Gelesen aus: PROF0045.1000.txt</gml:description>
    <gml:name>45.1000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930234.182 776097.545 360.251</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930234.182 776097.545 360.251</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -1811,7 +1771,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296234429">
        <tuhh:startStation>40</tuhh:startStation>
@@ -1860,10 +1819,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296234659">
      <gml:description>Übernommen aus Datei: PROF0045.1000.txt</gml:description>
      <gml:name>0045.1000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234360">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -2021,8 +1976,8 @@
    <gml:description>Gelesen aus: PROF0045.2000.txt</gml:description>
    <gml:name>45.2000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930230.109 776205.698 358.997</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930230.109 776205.698 358.997</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -2035,7 +1990,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296187496">
        <tuhh:startStation>40</tuhh:startStation>
@@ -2084,10 +2038,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296187233">
      <gml:description>Übernommen aus Datei: PROF0045.2000.txt</gml:description>
      <gml:name>0045.2000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296187167">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -2245,8 +2195,8 @@
    <gml:description>Gelesen aus: PROF0045.3000.txt</gml:description>
    <gml:name>45.3000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930247.241 776305.667 358.516</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930247.241 776305.667 358.516</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -2259,7 +2209,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296265153">
        <tuhh:startStation>40</tuhh:startStation>
@@ -2308,10 +2257,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962651435">
      <gml:description>Übernommen aus Datei: PROF0045.3000.txt</gml:description>
      <gml:name>0045.3000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265180">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -2469,8 +2414,8 @@
    <gml:description>Gelesen aus: PROF0045.4000.txt</gml:description>
    <gml:name>45.4000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930306.198 776372.15 358.504</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930306.198 776372.15 358.504</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -2483,7 +2428,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition122252229623484">
        <tuhh:startStation>40</tuhh:startStation>
@@ -2532,10 +2476,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962341171">
      <gml:description>Übernommen aus Datei: PROF0045.4000.txt</gml:description>
      <gml:name>0045.4000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296234127">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -2693,8 +2633,8 @@
    <gml:description>Gelesen aus: PROF0045.5000.txt</gml:description>
    <gml:name>45.5000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930406.571 776381.501 356.958</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930406.571 776381.501 356.958</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -2707,7 +2647,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962031112">
        <tuhh:startStation>40</tuhh:startStation>
@@ -2756,10 +2695,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296203899">
      <gml:description>Übernommen aus Datei: PROF0045.5000.txt</gml:description>
      <gml:name>0045.5000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203592">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -2917,8 +2852,8 @@
    <gml:description>Gelesen aus: PROF0045.6000.txt</gml:description>
    <gml:name>45.6000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930498.498 776418.028 357.376</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930498.498 776418.028 357.376</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -2931,7 +2866,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296171623">
        <tuhh:startStation>40</tuhh:startStation>
@@ -2980,10 +2914,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296171621">
      <gml:description>Übernommen aus Datei: PROF0045.6000.txt</gml:description>
      <gml:name>0045.6000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296171587">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -3141,8 +3071,8 @@
    <gml:description>Gelesen aus: PROF0045.7000.txt</gml:description>
    <gml:name>45.7000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930553.005 776500.844 358.597</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930553.005 776500.844 358.597</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -3155,7 +3085,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296171864">
        <tuhh:startStation>40</tuhh:startStation>
@@ -3204,10 +3133,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296171331">
      <gml:description>Übernommen aus Datei: PROF0045.7000.txt</gml:description>
      <gml:name>0045.7000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296171472">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -3365,8 +3290,8 @@
    <gml:description>Gelesen aus: PROF0045.8000.txt</gml:description>
    <gml:name>45.8000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930562.354 776599.847 358.91</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930562.354 776599.847 358.91</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -3379,7 +3304,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition122252229618783">
        <tuhh:startStation>40</tuhh:startStation>
@@ -3428,10 +3352,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296187574">
      <gml:description>Übernommen aus Datei: PROF0045.8000.txt</gml:description>
      <gml:name>0045.8000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296187702">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -3589,8 +3509,8 @@
    <gml:description>Gelesen aus: PROF0045.9000.txt</gml:description>
    <gml:name>45.9000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930544.969 776695.513 359.301</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930544.969 776695.513 359.301</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -3603,7 +3523,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296171739">
        <tuhh:startStation>40</tuhh:startStation>
@@ -3652,10 +3571,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296171807">
      <gml:description>Übernommen aus Datei: PROF0045.9000.txt</gml:description>
      <gml:name>0045.9000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296171176">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -3813,8 +3728,8 @@
    <gml:description>Gelesen aus: PROF0046.0000.txt</gml:description>
    <gml:name>46.0000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930542.955 776796.046 359.857</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930542.955 776796.046 359.857</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -3827,7 +3742,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296218287">
        <tuhh:startStation>40</tuhh:startStation>
@@ -3876,10 +3790,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296218593">
      <gml:description>Übernommen aus Datei: PROF0046.0000.txt</gml:description>
      <gml:name>0046.0000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296218826">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -4037,8 +3947,8 @@
    <gml:description>Gelesen aus: PROF0046.0160.txt</gml:description>
    <gml:name>46.0160</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930559.811 776812.645 359.723</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930559.811 776812.645 359.723</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -4051,7 +3961,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962651319">
        <tuhh:startStation>40</tuhh:startStation>
@@ -4100,10 +4009,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation122252229626548">
      <gml:description>Übernommen aus Datei: PROF0046.0160.txt</gml:description>
      <gml:name>0046.0160</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265339">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -4261,8 +4166,8 @@
    <gml:description>Gelesen aus: PROF0046.1000.txt</gml:description>
    <gml:name>46.1000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930586.027 776894.371 358.505</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930586.027 776894.371 358.505</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -4275,7 +4180,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296265726">
        <tuhh:startStation>40</tuhh:startStation>
@@ -4324,10 +4228,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296265411">
      <gml:description>Übernommen aus Datei: PROF0046.1000.txt</gml:description>
      <gml:name>0046.1000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296265587">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -4485,8 +4385,8 @@
    <gml:description>Gelesen aus: PROF0046.2000.txt</gml:description>
    <gml:name>46.2000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930630.518 776986.725 358.194</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930630.518 776986.725 358.194</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -4499,7 +4399,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296156584">
        <tuhh:startStation>40</tuhh:startStation>
@@ -4548,10 +4447,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296156286">
      <gml:description>Übernommen aus Datei: PROF0046.2000.txt</gml:description>
      <gml:name>0046.2000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296156457">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -4709,8 +4604,8 @@
    <gml:description>Gelesen aus: PROF0046.3000.txt</gml:description>
    <gml:name>46.3000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930698.622 777066.027 359.02</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930698.622 777066.027 359.02</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -4723,7 +4618,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962501275">
        <tuhh:startStation>40</tuhh:startStation>
@@ -4772,10 +4666,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250462">
      <gml:description>Übernommen aus Datei: PROF0046.3000.txt</gml:description>
      <gml:name>0046.3000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition12225222962501081">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -4933,8 +4823,8 @@
    <gml:description>Gelesen aus: PROF0046.4000.txt</gml:description>
    <gml:name>46.4000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930792.961 777121.784 359.094</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930792.961 777121.784 359.094</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -4947,7 +4837,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296140652">
        <tuhh:startStation>40</tuhh:startStation>
@@ -4996,10 +4885,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296140331">
      <gml:description>Übernommen aus Datei: PROF0046.4000.txt</gml:description>
      <gml:name>0046.4000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296140220">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -5157,8 +5042,8 @@
    <gml:description>Gelesen aus: PROF0046.5000.txt</gml:description>
    <gml:name>46.5000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930881.155 777155.892 359.172</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930881.155 777155.892 359.172</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -5171,7 +5056,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296140655">
        <tuhh:startStation>40</tuhh:startStation>
@@ -5220,10 +5104,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296140557">
      <gml:description>Übernommen aus Datei: PROF0046.5000.txt</gml:description>
      <gml:name>0046.5000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296140605">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -5381,8 +5261,8 @@
    <gml:description>Gelesen aus: PROF0046.6000.txt</gml:description>
    <gml:name>46.6000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3930981.771 777180.843 359.309</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3930981.771 777180.843 359.309</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -5395,7 +5275,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962181184">
        <tuhh:startStation>40</tuhh:startStation>
@@ -5444,10 +5323,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296218278">
      <gml:description>Übernommen aus Datei: PROF0046.6000.txt</gml:description>
      <gml:name>0046.6000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296218838">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -5605,8 +5480,8 @@
    <gml:description>Gelesen aus: PROF0046.7000.txt</gml:description>
    <gml:name>46.7000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931071.328 777227.814 361.199</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931071.328 777227.814 361.199</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -5619,7 +5494,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962501268">
        <tuhh:startStation>40</tuhh:startStation>
@@ -5668,10 +5542,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250335">
      <gml:description>Übernommen aus Datei: PROF0046.7000.txt</gml:description>
      <gml:name>0046.7000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296250505">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -5829,8 +5699,8 @@
    <gml:description>Gelesen aus: PROF0046.8000.txt</gml:description>
    <gml:name>46.8000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931129.447 777312.963 362.984</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931129.447 777312.963 362.984</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -5843,7 +5713,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition12225222962811172">
        <tuhh:startStation>40</tuhh:startStation>
@@ -5892,10 +5761,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962811330">
      <gml:description>Übernommen aus Datei: PROF0046.8000.txt</gml:description>
      <gml:name>0046.8000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296281626">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -6053,8 +5918,8 @@
    <gml:description>Gelesen aus: PROF0046.9000.txt</gml:description>
    <gml:name>46.9000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931211.262 777372.837 362.748</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931211.262 777372.837 362.748</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -6067,7 +5932,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296187644">
        <tuhh:startStation>40</tuhh:startStation>
@@ -6116,10 +5980,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation12225222962031004">
      <gml:description>Übernommen aus Datei: PROF0046.9000.txt</gml:description>
      <gml:name>0046.9000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203273">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -6277,8 +6137,8 @@
    <gml:description>Gelesen aus: PROF0047.0000.txt</gml:description>
    <gml:name>47.0000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931275.948 777450.32 362.535</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931275.948 777450.32 362.535</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -6291,7 +6151,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296250657">
        <tuhh:startStation>40</tuhh:startStation>
@@ -6340,10 +6199,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296250868">
      <gml:description>Übernommen aus Datei: PROF0047.0000.txt</gml:description>
      <gml:name>0047.0000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition12225222962501297">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -6501,8 +6356,8 @@
    <gml:description>Gelesen aus: PROF0047.1000.txt</gml:description>
    <gml:name>47.1000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931330.728 777535.229 362.399</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931330.728 777535.229 362.399</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -6515,7 +6370,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296156272">
        <tuhh:startStation>40</tuhh:startStation>
@@ -6564,10 +6418,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296156961">
      <gml:description>Übernommen aus Datei: PROF0047.1000.txt</gml:description>
      <gml:name>0047.1000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296156548">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -6725,8 +6575,8 @@
    <gml:description>Gelesen aus: PROF0047.2000.txt</gml:description>
    <gml:name>47.2000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931373.91 777626.618 362.532</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931373.91 777626.618 362.532</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -6739,7 +6589,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296203699">
        <tuhh:startStation>40</tuhh:startStation>
@@ -6788,10 +6637,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296203886">
      <gml:description>Übernommen aus Datei: PROF0047.2000.txt</gml:description>
      <gml:name>0047.2000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296203846">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -6949,8 +6794,8 @@
    <gml:description>Gelesen aus: PROF0047.3000.txt</gml:description>
    <gml:name>47.3000</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="3">
-     <gml:pos>3931412.2 777722.447 362.51</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931412.2 777722.447 362.51</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <wb1d2d:wspmTuhhCalculationMember>
@@ -6963,7 +6808,6 @@
        <wspm:date>2008-05-30T09:47:09.129+02:00</wspm:date>
       </wspm:CalcCreation>
      </wspm:calcCreationMember>
-     <tuhh:reachWspmTuhhSteadyStateMember/>
      <tuhh:subReachDefinitionMember>
       <tuhh:SubReachDefinition gml:id="SubReachDefinition1222522296218825">
        <tuhh:startStation>40</tuhh:startStation>
@@ -7012,10 +6856,6 @@
     <tuhh:WPointsObservation gml:id="WPointsObservation1222522296218453">
      <gml:description>Übernommen aus Datei: PROF0047.3000.txt</gml:description>
      <gml:name>0047.3000</gml:name>
-     <om:time/>
-     <om:procedure/>
-     <om:observedProperty/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <swe:RecordDefinition gml:id="RecordDefinition1222522296218558">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel"/>
@@ -7173,21 +7013,16 @@
    <gml:description>Manuell erzeugt am: 06.06.2008 9:06</gml:description>
    <gml:name>Abfluss Hochwasser 1D</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3931412.2 777722.447</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3931412.2 777722.447</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection>true</op1d2d:hasDirection>
    <op1d2d:direction>250</op1d2d:direction>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource12127360097821736">
      <gml:name>Importierte Zeitreihe</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition1212736009891379">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -7195,306 +7030,305 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
-     <om:result><![CDATA[2011-01-03T21%3A00%3A00.000Z 250 null null
-2011-01-04T02%3A15%3A00.000Z 255 null null
-2011-01-04T02%3A30%3A00.000Z 257.99 null null
-2011-01-04T03%3A15%3A00.000Z 258 null null
-2011-01-04T03%3A45%3A00.000Z 261.28 null null
-2011-01-04T04%3A15%3A00.000Z 261.28 null null
-2011-01-04T04%3A30%3A00.000Z 262.93 null null
-2011-01-04T05%3A00%3A00.000Z 262.93 null null
-2011-01-04T05%3A15%3A00.000Z 264.59 null null
-2011-01-04T05%3A30%3A00.000Z 264.59 null null
-2011-01-04T05%3A45%3A00.000Z 266.26 null null
-2011-01-04T09%3A45%3A00.000Z 266.29 null null
-2011-01-04T10%3A00%3A00.000Z 269.65 null null
-2011-01-04T12%3A15%3A00.000Z 269.66 null null
-2011-01-04T12%3A30%3A00.000Z 271.36 null null
-2011-01-04T13%3A15%3A00.000Z 271.36 null null
-2011-01-04T13%3A30%3A00.000Z 273.06 null null
-2011-01-04T14%3A15%3A00.000Z 273.07 null null
-2011-01-04T14%3A30%3A00.000Z 274.78 null null
-2011-01-04T15%3A00%3A00.000Z 274.78 null null
-2011-01-04T15%3A15%3A00.000Z 278.23 null null
-2011-01-04T15%3A30%3A00.000Z 279.96 null null
-2011-01-04T15%3A45%3A00.000Z 283.46 null null
-2011-01-04T16%3A00%3A00.000Z 283.46 null null
-2011-01-04T16%3A45%3A00.000Z 294.15 null null
-2011-01-04T17%3A00%3A00.000Z 295.96 null null
-2011-01-04T17%3A15%3A00.000Z 299.61 null null
-2011-01-04T17%3A30%3A00.000Z 301.45 null null
-2011-01-04T17%3A45%3A00.000Z 301.45 null null
-2011-01-04T18%3A00%3A00.000Z 303.3 null null
-2011-01-04T18%3A15%3A00.000Z 303.3 null null
-2011-01-04T18%3A30%3A00.000Z 305.15 null null
-2011-01-04T19%3A30%3A00.000Z 305.16 null null
-2011-01-04T19%3A45%3A00.000Z 310.77 null null
-2011-01-04T22%3A45%3A00.000Z 310.8 null null
-2011-01-04T22%3A49%3A00.000Z 312.68 null null
-2011-01-04T23%3A00%3A00.000Z 310.8 null null
-2011-01-04T23%3A15%3A00.000Z 312.69 null null
-2011-01-05T00%3A00%3A00.000Z 312.69 null null
-2011-01-05T00%3A01%3A00.000Z 312.69 null null
-2011-01-05T00%3A15%3A00.000Z 316.49 null null
-2011-01-05T00%3A30%3A00.000Z 318.41 null null
-2011-01-05T01%3A30%3A00.000Z 318.42 null null
-2011-01-05T01%3A45%3A00.000Z 320.34 null null
-2011-01-05T02%3A30%3A00.000Z 320.34 null null
-2011-01-05T02%3A45%3A00.000Z 322.28 null null
-2011-01-05T03%3A00%3A00.000Z 322.28 null null
-2011-01-05T03%3A15%3A00.000Z 324.22 null null
-2011-01-05T03%3A45%3A00.000Z 324.22 null null
-2011-01-05T04%3A15%3A00.000Z 328.12 null null
-2011-01-05T04%3A45%3A00.000Z 328.13 null null
-2011-01-05T05%3A00%3A00.000Z 330.09 null null
-2011-01-05T05%3A30%3A00.000Z 330.1 null null
-2011-01-05T05%3A45%3A00.000Z 332.07 null null
-2011-01-05T06%3A00%3A00.000Z 332.07 null null
-2011-01-05T06%3A15%3A00.000Z 334.05 null null
-2011-01-05T06%3A45%3A00.000Z 334.06 null null
-2011-01-05T07%3A00%3A00.000Z 338.04 null null
-2011-01-05T07%3A30%3A00.000Z 338.04 null null
-2011-01-05T07%3A45%3A00.000Z 340.05 null null
-2011-01-05T08%3A15%3A00.000Z 340.05 null null
-2011-01-05T08%3A30%3A00.000Z 342.07 null null
-2011-01-05T08%3A45%3A00.000Z 342.07 null null
-2011-01-05T09%3A30%3A00.000Z 348.16 null null
-2011-01-05T09%3A45%3A00.000Z 348.16 null null
-2011-01-05T10%3A15%3A00.000Z 352.26 null null
-2011-01-05T10%3A30%3A00.000Z 358.47 null null
-2011-01-05T11%3A15%3A00.000Z 364.83 null null
-2011-01-05T11%3A30%3A00.000Z 364.86 null null
-2011-01-05T11%3A45%3A00.000Z 369.12 null null
-2011-01-05T12%3A00%3A00.000Z 369.15 null null
-2011-01-05T12%3A15%3A00.000Z 371.3 null null
-2011-01-05T12%3A45%3A00.000Z 371.36 null null
-2011-01-05T13%3A00%3A00.000Z 373.53 null null
-2011-01-05T13%3A30%3A00.000Z 373.59 null null
-2011-01-05T13%3A45%3A00.000Z 375.76 null null
-2011-01-05T14%3A00%3A00.000Z 375.79 null null
-2011-01-05T14%3A15%3A00.000Z 380.12 null null
-2011-01-05T14%3A30%3A00.000Z 380.15 null null
-2011-01-05T14%3A45%3A00.000Z 382.34 null null
-2011-01-05T15%3A00%3A00.000Z 382.37 null null
-2011-01-05T15%3A15%3A00.000Z 384.57 null null
-2011-01-05T15%3A30%3A00.000Z 384.6 null null
-2011-01-05T15%3A45%3A00.000Z 386.81 null null
-2011-01-05T16%3A00%3A00.000Z 386.84 null null
-2011-01-05T16%3A15%3A00.000Z 389.05 null null
-2011-01-05T16%3A30%3A00.000Z 389.08 null null
-2011-01-05T16%3A45%3A00.000Z 391.3 null null
-2011-01-05T17%3A00%3A00.000Z 391.33 null null
-2011-01-05T17%3A30%3A00.000Z 395.8 null null
-2011-01-05T17%3A45%3A00.000Z 395.83 null null
-2011-01-05T18%3A00%3A00.000Z 398.07 null null
-2011-01-05T18%3A45%3A00.000Z 398.16 null null
-2011-01-05T19%3A00%3A00.000Z 400.41 null null
-2011-01-05T20%3A00%3A00.000Z 400.54 null null
-2011-01-05T20%3A45%3A00.000Z 407.32 null null
-2011-01-05T21%3A30%3A00.000Z 407.42 null null
-2011-01-05T21%3A45%3A00.000Z 409.69 null null
-2011-01-05T22%3A00%3A00.000Z 409.72 null null
-2011-01-05T22%3A15%3A00.000Z 412 null null
-2011-01-05T22%3A45%3A00.000Z 412.07 null null
-2011-01-05T23%3A00%3A00.000Z 414.35 null null
-2011-01-05T23%3A30%3A00.000Z 414.42 null null
-2011-01-05T23%3A39%3A00.000Z 418.96 null null
-2011-01-05T23%3A45%3A00.000Z 414.45 null null
-2011-01-06T00%3A00%3A00.000Z 419.01 null null
-2011-01-06T00%3A30%3A00.000Z 419.07 null null
-2011-01-06T00%3A45%3A00.000Z 421.38 null null
-2011-01-06T01%3A15%3A00.000Z 421.44 null null
-2011-01-06T01%3A30%3A00.000Z 423.75 null null
-2011-01-06T02%3A00%3A00.000Z 423.82 null null
-2011-01-06T02%3A15%3A00.000Z 426.13 null null
-2011-01-06T02%3A45%3A00.000Z 426.2 null null
-2011-01-06T03%3A00%3A00.000Z 430.82 null null
-2011-01-06T03%3A45%3A00.000Z 430.91 null null
-2011-01-06T04%3A00%3A00.000Z 433.25 null null
-2011-01-06T04%3A30%3A00.000Z 433.31 null null
-2011-01-06T04%3A45%3A00.000Z 435.65 null null
-2011-01-06T05%3A15%3A00.000Z 435.71 null null
-2011-01-06T05%3A30%3A00.000Z 438.06 null null
-2011-01-06T05%3A45%3A00.000Z 438.09 null null
-2011-01-06T06%3A31%3A00.000Z 440.68 null null
-2011-01-06T07%3A05%3A00.000Z 440.75 null null
-2011-01-06T08%3A00%3A00.000Z 442.91 null null
-2011-01-06T08%3A40%3A00.000Z 443.12 null null
-2011-01-06T09%3A32%3A00.000Z 450.21 null null
-2011-01-06T10%3A30%3A00.000Z 452.53 null null
-2011-01-06T11%3A31%3A00.000Z 450.2 null null
-2011-01-06T11%3A55%3A00.000Z 445.5 null null
-2011-01-06T12%3A45%3A00.000Z 440.8 null null
-2011-01-06T13%3A15%3A00.000Z 440.79 null null
-2011-01-06T13%3A30%3A00.000Z 438.46 null null
-2011-01-06T13%3A45%3A00.000Z 438.46 null null
-2011-01-06T14%3A00%3A00.000Z 433.83 null null
-2011-01-06T15%3A15%3A00.000Z 433.8 null null
-2011-01-06T15%3A30%3A00.000Z 431.49 null null
-2011-01-06T17%3A45%3A00.000Z 431.43 null null
-2011-01-06T18%3A15%3A00.000Z 426.83 null null
-2011-01-06T18%3A30%3A00.000Z 422.26 null null
-2011-01-06T18%3A45%3A00.000Z 419.98 null null
-2011-01-06T19%3A00%3A00.000Z 419.97 null null
-2011-01-06T19%3A15%3A00.000Z 417.7 null null
-2011-01-06T19%3A30%3A00.000Z 417.69 null null
-2011-01-06T19%3A45%3A00.000Z 415.42 null null
-2011-01-06T20%3A30%3A00.000Z 415.4 null null
-2011-01-06T20%3A45%3A00.000Z 410.89 null null
-2011-01-06T21%3A30%3A00.000Z 410.87 null null
-2011-01-06T21%3A45%3A00.000Z 408.62 null null
-2011-01-06T22%3A45%3A00.000Z 408.59 null null
-2011-01-06T22%3A50%3A00.000Z 406.35 null null
-2011-01-07T00%3A30%3A00.000Z 406.31 null null
-2011-01-07T00%3A45%3A00.000Z 404.07 null null
-2011-01-07T02%3A00%3A00.000Z 404.04 null null
-2011-01-07T02%3A15%3A00.000Z 399.59 null null
-2011-01-07T02%3A45%3A00.000Z 399.58 null null
-2011-01-07T03%3A00%3A00.000Z 397.36 null null
-2011-01-07T04%3A00%3A00.000Z 397.33 null null
-2011-01-07T04%3A15%3A00.000Z 395.12 null null
-2011-01-07T05%3A15%3A00.000Z 395.1 null null
-2011-01-07T05%3A30%3A00.000Z 392.89 null null
-2011-01-07T06%3A15%3A00.000Z 392.87 null null
-2011-01-07T06%3A45%3A00.000Z 388.48 null null
-2011-01-07T07%3A15%3A00.000Z 388.47 null null
-2011-01-07T07%3A30%3A00.000Z 386.29 null null
-2011-01-07T08%3A15%3A00.000Z 386.27 null null
-2011-01-07T08%3A30%3A00.000Z 384.09 null null
-2011-01-07T09%3A30%3A00.000Z 384.06 null null
-2011-01-07T09%3A45%3A00.000Z 381.89 null null
-2011-01-07T10%3A00%3A00.000Z 381.89 null null
-2011-01-07T12%3A00%3A00.000Z 364.8 null null
-2011-01-07T12%3A15%3A00.000Z 364.79 null null
-2011-01-07T12%3A45%3A00.000Z 360.59 null null
-2011-01-07T13%3A00%3A00.000Z 360.59 null null
-2011-01-07T13%3A15%3A00.000Z 356.43 null null
-2011-01-07T13%3A30%3A00.000Z 354.35 null null
-2011-01-07T13%3A45%3A00.000Z 354.35 null null
-2011-01-07T14%3A00%3A00.000Z 352.28 null null
-2011-01-07T14%3A30%3A00.000Z 352.27 null null
-2011-01-07T14%3A45%3A00.000Z 350.21 null null
-2011-01-07T15%3A15%3A00.000Z 350.2 null null
-2011-01-07T15%3A30%3A00.000Z 346.12 null null
-2011-01-07T16%3A15%3A00.000Z 346.1 null null
-2011-01-07T16%3A30%3A00.000Z 344.07 null null
-2011-01-07T17%3A00%3A00.000Z 344.06 null null
-2011-01-07T17%3A15%3A00.000Z 342.03 null null
-2011-01-07T18%3A00%3A00.000Z 342.01 null null
-2011-01-07T18%3A15%3A00.000Z 340 null null
-2011-01-07T19%3A30%3A00.000Z 339.97 null null
-2011-01-07T20%3A00%3A00.000Z 335.96 null null
-2011-01-07T20%3A45%3A00.000Z 335.94 null null
-2011-01-07T21%3A00%3A00.000Z 333.95 null null
-2011-01-07T21%3A45%3A00.000Z 333.93 null null
-2011-01-07T22%3A00%3A00.000Z 331.95 null null
-2011-01-07T23%3A00%3A00.000Z 331.92 null null
-2011-01-07T23%3A01%3A00.000Z 329.95 null null
-2011-01-08T00%3A00%3A00.000Z 329.93 null null
-2011-01-08T00%3A15%3A00.000Z 329.92 null null
-2011-01-08T00%3A30%3A00.000Z 326 null null
-2011-01-08T01%3A00%3A00.000Z 325.99 null null
-2011-01-08T01%3A15%3A00.000Z 324.04 null null
-2011-01-08T02%3A15%3A00.000Z 324.02 null null
-2011-01-08T02%3A30%3A00.000Z 322.08 null null
-2011-01-08T03%3A00%3A00.000Z 322.06 null null
-2011-01-08T03%3A15%3A00.000Z 320.13 null null
-2011-01-08T03%3A30%3A00.000Z 320.13 null null
-2011-01-08T04%3A00%3A00.000Z 316.28 null null
-2011-01-08T04%3A30%3A00.000Z 316.27 null null
-2011-01-08T04%3A45%3A00.000Z 314.36 null null
-2011-01-08T05%3A15%3A00.000Z 314.35 null null
-2011-01-08T05%3A30%3A00.000Z 312.45 null null
-2011-01-08T06%3A15%3A00.000Z 312.43 null null
-2011-01-08T06%3A30%3A00.000Z 310.54 null null
-2011-01-08T07%3A30%3A00.000Z 310.52 null null
-2011-01-08T07%3A45%3A00.000Z 306.77 null null
-2011-01-08T08%3A15%3A00.000Z 306.76 null null
-2011-01-08T08%3A30%3A00.000Z 304.89 null null
-2011-01-08T09%3A30%3A00.000Z 304.87 null null
-2011-01-08T10%3A00%3A00.000Z 301.16 null null
-2011-01-08T11%3A00%3A00.000Z 301.18 null null
-2011-01-08T11%3A30%3A00.000Z 297.54 null null
-2011-01-08T12%3A00%3A00.000Z 297.57 null null
-2011-01-08T12%3A15%3A00.000Z 295.76 null null
-2011-01-08T12%3A30%3A00.000Z 295.77 null null
-2011-01-08T12%3A45%3A00.000Z 297.6 null null
-2011-01-08T13%3A00%3A00.000Z 297.62 null null
-2011-01-08T13%3A15%3A00.000Z 295.81 null null
-2011-01-08T14%3A00%3A00.000Z 295.85 null null
-2011-01-08T14%3A15%3A00.000Z 294.05 null null
-2011-01-08T15%3A15%3A00.000Z 294.1 null null
-2011-01-08T15%3A30%3A00.000Z 290.52 null null
-2011-01-08T16%3A15%3A00.000Z 290.55 null null
-2011-01-08T16%3A30%3A00.000Z 288.78 null null
-2011-01-08T17%3A15%3A00.000Z 288.82 null null
-2011-01-08T17%3A30%3A00.000Z 287.05 null null
-2011-01-08T18%3A30%3A00.000Z 287.1 null null
-2011-01-08T18%3A45%3A00.000Z 285.34 null null
-2011-01-08T19%3A30%3A00.000Z 285.38 null null
-2011-01-08T19%3A45%3A00.000Z 281.88 null null
-2011-01-08T20%3A30%3A00.000Z 281.91 null null
-2011-01-08T20%3A45%3A00.000Z 280.18 null null
-2011-01-08T21%3A15%3A00.000Z 280.21 null null
-2011-01-08T21%3A30%3A00.000Z 278.48 null null
-2011-01-08T22%3A30%3A00.000Z 278.53 null null
-2011-01-08T22%3A45%3A00.000Z 276.81 null null
-2011-01-08T23%3A15%3A00.000Z 276.84 null null
-2011-01-08T23%3A20%3A00.000Z 273.41 null null
-2011-01-09T00%3A15%3A00.000Z 273.46 null null
-2011-01-09T00%3A30%3A00.000Z 271.76 null null
-2011-01-09T01%3A15%3A00.000Z 271.8 null null
-2011-01-09T01%3A30%3A00.000Z 270.12 null null
-2011-01-09T02%3A00%3A00.000Z 270.14 null null
-2011-01-09T02%3A15%3A00.000Z 268.47 null null
-2011-01-09T03%3A00%3A00.000Z 268.5 null null
-2011-01-09T03%3A15%3A00.000Z 265.16 null null
-2011-01-09T04%3A00%3A00.000Z 265.2 null null
-2011-01-09T04%3A15%3A00.000Z 263.55 null null
-2011-01-09T05%3A00%3A00.000Z 263.58 null null
-2011-01-09T05%3A30%3A00.000Z 260.31 null null
-2011-01-09T06%3A00%3A00.000Z 260.33 null null
-2011-01-09T06%3A30%3A00.000Z 257.09 null null
-2011-01-09T07%3A00%3A00.000Z 257.11 null null
-2011-01-09T07%3A15%3A00.000Z 255.5 null null
-2011-01-09T07%3A45%3A00.000Z 255.52 null null
-2011-01-09T08%3A00%3A00.000Z 253.92 null null
-2011-01-09T09%3A00%3A00.000Z 253.97 null null
-2011-01-09T09%3A30%3A00.000Z 250.79 null null
-2011-01-09T10%3A15%3A00.000Z 250.76 null null
-2011-01-09T10%3A30%3A00.000Z 249.15 null null
-2011-01-09T11%3A15%3A00.000Z 249.11 null null
-2011-01-09T11%3A30%3A00.000Z 247.52 null null
-2011-01-09T12%3A00%3A00.000Z 247.49 null null
-2011-01-09T12%3A15%3A00.000Z 244.34 null null
-2011-01-09T12%3A30%3A00.000Z 245.89 null null
-2011-01-09T12%3A45%3A00.000Z 244.31 null null
-2011-01-09T13%3A30%3A00.000Z 244.27 null null
-2011-01-09T13%3A45%3A00.000Z 242.7 null null
-2011-01-09T14%3A15%3A00.000Z 242.67 null null
-2011-01-09T14%3A30%3A00.000Z 239.58 null null
-2011-01-09T15%3A15%3A00.000Z 239.54 null null
-2011-01-09T15%3A30%3A00.000Z 237.99 null null
-2011-01-09T16%3A30%3A00.000Z 237.94 null null
-2011-01-09T16%3A45%3A00.000Z 236.41 null null
-2011-01-09T17%3A30%3A00.000Z 236.36 null null
-2011-01-09T17%3A45%3A00.000Z 234.84 null null
-2011-01-09T18%3A15%3A00.000Z 234.81 null null
-2011-01-09T18%3A45%3A00.000Z 231.79 null null
-2011-01-09T19%3A15%3A00.000Z 231.76 null null
-2011-01-09T19%3A30%3A00.000Z 230.26 null null
-2011-01-09T20%3A00%3A00.000Z 230.23 null null
-2011-01-09T20%3A15%3A00.000Z 228.74 null null
-2011-01-09T21%3A00%3A00.000Z 228.7 null null
-2011-01-09T21%3A15%3A00.000Z 227.22 null null
-2011-01-09T22%3A00%3A00.000Z 227.18 null null
-2011-01-09T22%3A30%3A00.000Z 224.25 null null
-2011-01-09T23%3A00%3A00.000Z 224.22 null null
-2011-01-09T23%3A14%3A00.000Z 222.77 null null
-2011-01-10T00%3A00%3A00.000Z 222.73 null null
+     <om:result><![CDATA[2008-06-03T22%3A00%3A00.625%2B02%3A00 250.000 null null
+2008-06-04T01%3A15%3A00.000Z 255 null null
+2008-06-04T01%3A30%3A00.000Z 257.99 null null
+2008-06-04T02%3A15%3A00.000Z 258.0 null null
+2008-06-04T02%3A45%3A00.000Z 261.28 null null
+2008-06-04T03%3A15%3A00.000Z 261.28 null null
+2008-06-04T03%3A30%3A00.000Z 262.93 null null
+2008-06-04T04%3A00%3A00.000Z 262.93 null null
+2008-06-04T04%3A15%3A00.000Z 264.59 null null
+2008-06-04T04%3A30%3A00.000Z 264.59 null null
+2008-06-04T04%3A45%3A00.000Z 266.26 null null
+2008-06-04T08%3A45%3A00.000Z 266.29 null null
+2008-06-04T09%3A00%3A00.000Z 269.65 null null
+2008-06-04T11%3A15%3A00.000Z 269.66 null null
+2008-06-04T11%3A30%3A00.000Z 271.36 null null
+2008-06-04T12%3A15%3A00.000Z 271.36 null null
+2008-06-04T12%3A30%3A00.000Z 273.06 null null
+2008-06-04T13%3A15%3A00.000Z 273.07 null null
+2008-06-04T13%3A30%3A00.000Z 274.78 null null
+2008-06-04T14%3A00%3A00.000Z 274.78 null null
+2008-06-04T14%3A15%3A00.000Z 278.23 null null
+2008-06-04T14%3A30%3A00.000Z 279.96 null null
+2008-06-04T14%3A45%3A00.000Z 283.46 null null
+2008-06-04T15%3A00%3A00.000Z 283.46 null null
+2008-06-04T15%3A45%3A00.000Z 294.15 null null
+2008-06-04T16%3A00%3A00.000Z 295.96 null null
+2008-06-04T16%3A15%3A00.000Z 299.61 null null
+2008-06-04T16%3A30%3A00.000Z 301.45 null null
+2008-06-04T16%3A45%3A00.000Z 301.45 null null
+2008-06-04T17%3A00%3A00.000Z 303.3 null null
+2008-06-04T17%3A15%3A00.000Z 303.3 null null
+2008-06-04T17%3A30%3A00.000Z 305.15 null null
+2008-06-04T18%3A30%3A00.000Z 305.16 null null
+2008-06-04T18%3A45%3A00.000Z 310.77 null null
+2008-06-04T21%3A45%3A00.000Z 310.8 null null
+2008-06-04T21%3A49%3A00.000Z 312.68 null null
+2008-06-04T22%3A00%3A00.000Z 310.8 null null
+2008-06-04T22%3A15%3A00.000Z 312.69 null null
+2008-06-04T23%3A00%3A00.000Z 312.69 null null
+2008-06-04T23%3A01%3A00.000Z 312.69 null null
+2008-06-04T23%3A15%3A00.000Z 316.49 null null
+2008-06-04T23%3A30%3A00.000Z 318.41 null null
+2008-06-05T00%3A30%3A00.000Z 318.42 null null
+2008-06-05T00%3A45%3A00.000Z 320.34 null null
+2008-06-05T01%3A30%3A00.000Z 320.34 null null
+2008-06-05T01%3A45%3A00.000Z 322.28 null null
+2008-06-05T02%3A00%3A00.000Z 322.28 null null
+2008-06-05T02%3A15%3A00.000Z 324.22 null null
+2008-06-05T02%3A45%3A00.000Z 324.22 null null
+2008-06-05T03%3A15%3A00.000Z 328.12 null null
+2008-06-05T03%3A45%3A00.000Z 328.13 null null
+2008-06-05T04%3A00%3A00.000Z 330.09 null null
+2008-06-05T04%3A30%3A00.000Z 330.1 null null
+2008-06-05T04%3A45%3A00.000Z 332.07 null null
+2008-06-05T05%3A00%3A00.000Z 332.07 null null
+2008-06-05T05%3A15%3A00.000Z 334.05 null null
+2008-06-05T05%3A45%3A00.000Z 334.06 null null
+2008-06-05T06%3A00%3A00.000Z 338.04 null null
+2008-06-05T06%3A30%3A00.000Z 338.04 null null
+2008-06-05T06%3A45%3A00.000Z 340.05 null null
+2008-06-05T07%3A15%3A00.000Z 340.05 null null
+2008-06-05T07%3A30%3A00.000Z 342.07 null null
+2008-06-05T07%3A45%3A00.000Z 342.07 null null
+2008-06-05T08%3A30%3A00.000Z 348.16 null null
+2008-06-05T08%3A45%3A00.000Z 348.16 null null
+2008-06-05T09%3A15%3A00.000Z 352.26 null null
+2008-06-05T09%3A30%3A00.000Z 358.47 null null
+2008-06-05T10%3A15%3A00.000Z 364.83 null null
+2008-06-05T10%3A30%3A00.000Z 364.86 null null
+2008-06-05T10%3A45%3A00.000Z 369.12 null null
+2008-06-05T11%3A00%3A00.000Z 369.15 null null
+2008-06-05T11%3A15%3A00.000Z 371.3 null null
+2008-06-05T11%3A45%3A00.000Z 371.36 null null
+2008-06-05T12%3A00%3A00.000Z 373.53 null null
+2008-06-05T12%3A30%3A00.000Z 373.59 null null
+2008-06-05T12%3A45%3A00.000Z 375.76 null null
+2008-06-05T13%3A00%3A00.000Z 375.79 null null
+2008-06-05T13%3A15%3A00.000Z 380.12 null null
+2008-06-05T13%3A30%3A00.000Z 380.15 null null
+2008-06-05T13%3A45%3A00.000Z 382.34 null null
+2008-06-05T14%3A00%3A00.000Z 382.37 null null
+2008-06-05T14%3A15%3A00.000Z 384.57 null null
+2008-06-05T14%3A30%3A00.000Z 384.6 null null
+2008-06-05T14%3A45%3A00.000Z 386.81 null null
+2008-06-05T15%3A00%3A00.000Z 386.84 null null
+2008-06-05T15%3A15%3A00.000Z 389.05 null null
+2008-06-05T15%3A30%3A00.000Z 389.08 null null
+2008-06-05T15%3A45%3A00.000Z 391.3 null null
+2008-06-05T16%3A00%3A00.000Z 391.33 null null
+2008-06-05T16%3A30%3A00.000Z 395.8 null null
+2008-06-05T16%3A45%3A00.000Z 395.83 null null
+2008-06-05T17%3A00%3A00.000Z 398.07 null null
+2008-06-05T17%3A45%3A00.000Z 398.16 null null
+2008-06-05T18%3A00%3A00.000Z 400.41 null null
+2008-06-05T19%3A00%3A00.000Z 400.54 null null
+2008-06-05T19%3A45%3A00.000Z 407.32 null null
+2008-06-05T20%3A30%3A00.000Z 407.42 null null
+2008-06-05T20%3A45%3A00.000Z 409.69 null null
+2008-06-05T21%3A00%3A00.000Z 409.72 null null
+2008-06-05T21%3A15%3A00.000Z 412.0 null null
+2008-06-05T21%3A45%3A00.000Z 412.07 null null
+2008-06-05T22%3A00%3A00.000Z 414.35 null null
+2008-06-05T22%3A30%3A00.000Z 414.42 null null
+2008-06-05T22%3A39%3A00.000Z 418.96 null null
+2008-06-05T22%3A45%3A00.000Z 414.45 null null
+2008-06-05T23%3A00%3A00.000Z 419.01 null null
+2008-06-05T23%3A30%3A00.000Z 419.07 null null
+2008-06-05T23%3A45%3A00.000Z 421.38 null null
+2008-06-06T00%3A15%3A00.000Z 421.44 null null
+2008-06-06T00%3A30%3A00.000Z 423.75 null null
+2008-06-06T01%3A00%3A00.000Z 423.82 null null
+2008-06-06T01%3A15%3A00.000Z 426.13 null null
+2008-06-06T01%3A45%3A00.000Z 426.2 null null
+2008-06-06T02%3A00%3A00.000Z 430.82 null null
+2008-06-06T02%3A45%3A00.000Z 430.91 null null
+2008-06-06T03%3A00%3A00.000Z 433.25 null null
+2008-06-06T03%3A30%3A00.000Z 433.31 null null
+2008-06-06T03%3A45%3A00.000Z 435.65 null null
+2008-06-06T04%3A15%3A00.000Z 435.71 null null
+2008-06-06T04%3A30%3A00.000Z 438.06 null null
+2008-06-06T04%3A45%3A00.000Z 438.09 null null
+2008-06-06T05%3A31%3A00.000Z 440.68 null null
+2008-06-06T06%3A05%3A00.000Z 440.75 null null
+2008-06-06T07%3A00%3A00.000Z 442.91 null null
+2008-06-06T07%3A40%3A00.000Z 443.12 null null
+2008-06-06T08%3A32%3A00.000Z 450.21 null null
+2008-06-06T09%3A30%3A00.000Z 452.53 null null
+2008-06-06T10%3A31%3A00.000Z 450.2 null null
+2008-06-06T10%3A55%3A00.000Z 445.5 null null
+2008-06-06T11%3A45%3A00.000Z 440.8 null null
+2008-06-06T12%3A15%3A00.000Z 440.79 null null
+2008-06-06T12%3A30%3A00.000Z 438.46 null null
+2008-06-06T12%3A45%3A00.000Z 438.46 null null
+2008-06-06T13%3A00%3A00.000Z 433.83 null null
+2008-06-06T14%3A15%3A00.000Z 433.8 null null
+2008-06-06T14%3A30%3A00.000Z 431.49 null null
+2008-06-06T16%3A45%3A00.000Z 431.43 null null
+2008-06-06T17%3A15%3A00.000Z 426.83 null null
+2008-06-06T17%3A30%3A00.000Z 422.26 null null
+2008-06-06T17%3A45%3A00.000Z 419.98 null null
+2008-06-06T18%3A00%3A00.000Z 419.97 null null
+2008-06-06T18%3A15%3A00.000Z 417.7 null null
+2008-06-06T18%3A30%3A00.000Z 417.69 null null
+2008-06-06T18%3A45%3A00.000Z 415.42 null null
+2008-06-06T19%3A30%3A00.000Z 415.4 null null
+2008-06-06T19%3A45%3A00.000Z 410.89 null null
+2008-06-06T20%3A30%3A00.000Z 410.87 null null
+2008-06-06T20%3A45%3A00.000Z 408.62 null null
+2008-06-06T21%3A45%3A00.000Z 408.59 null null
+2008-06-06T21%3A50%3A00.000Z 406.35 null null
+2008-06-06T23%3A30%3A00.000Z 406.31 null null
+2008-06-06T23%3A45%3A00.000Z 404.07 null null
+2008-06-07T01%3A00%3A00.000Z 404.04 null null
+2008-06-07T01%3A15%3A00.000Z 399.59 null null
+2008-06-07T01%3A45%3A00.000Z 399.58 null null
+2008-06-07T02%3A00%3A00.000Z 397.36 null null
+2008-06-07T03%3A00%3A00.000Z 397.33 null null
+2008-06-07T03%3A15%3A00.000Z 395.12 null null
+2008-06-07T04%3A15%3A00.000Z 395.1 null null
+2008-06-07T04%3A30%3A00.000Z 392.89 null null
+2008-06-07T05%3A15%3A00.000Z 392.87 null null
+2008-06-07T05%3A45%3A00.000Z 388.48 null null
+2008-06-07T06%3A15%3A00.000Z 388.47 null null
+2008-06-07T06%3A30%3A00.000Z 386.29 null null
+2008-06-07T07%3A15%3A00.000Z 386.27 null null
+2008-06-07T07%3A30%3A00.000Z 384.09 null null
+2008-06-07T08%3A30%3A00.000Z 384.06 null null
+2008-06-07T08%3A45%3A00.000Z 381.89 null null
+2008-06-07T09%3A00%3A00.000Z 381.89 null null
+2008-06-07T11%3A00%3A00.000Z 364.8 null null
+2008-06-07T11%3A15%3A00.000Z 364.79 null null
+2008-06-07T11%3A45%3A00.000Z 360.59 null null
+2008-06-07T12%3A00%3A00.000Z 360.59 null null
+2008-06-07T12%3A15%3A00.000Z 356.43 null null
+2008-06-07T12%3A30%3A00.000Z 354.35 null null
+2008-06-07T12%3A45%3A00.000Z 354.35 null null
+2008-06-07T13%3A00%3A00.000Z 352.28 null null
+2008-06-07T13%3A30%3A00.000Z 352.27 null null
+2008-06-07T13%3A45%3A00.000Z 350.21 null null
+2008-06-07T14%3A15%3A00.000Z 350.2 null null
+2008-06-07T14%3A30%3A00.000Z 346.12 null null
+2008-06-07T15%3A15%3A00.000Z 346.1 null null
+2008-06-07T15%3A30%3A00.000Z 344.07 null null
+2008-06-07T16%3A00%3A00.000Z 344.06 null null
+2008-06-07T16%3A15%3A00.000Z 342.03 null null
+2008-06-07T17%3A00%3A00.000Z 342.01 null null
+2008-06-07T17%3A15%3A00.000Z 340.0 null null
+2008-06-07T18%3A30%3A00.000Z 339.97 null null
+2008-06-07T19%3A00%3A00.000Z 335.96 null null
+2008-06-07T19%3A45%3A00.000Z 335.94 null null
+2008-06-07T20%3A00%3A00.000Z 333.95 null null
+2008-06-07T20%3A45%3A00.000Z 333.93 null null
+2008-06-07T21%3A00%3A00.000Z 331.95 null null
+2008-06-07T22%3A00%3A00.000Z 331.92 null null
+2008-06-07T22%3A01%3A00.000Z 329.95 null null
+2008-06-07T23%3A00%3A00.000Z 329.93 null null
+2008-06-07T23%3A15%3A00.000Z 329.92 null null
+2008-06-07T23%3A30%3A00.000Z 326.0 null null
+2008-06-08T00%3A00%3A00.000Z 325.99 null null
+2008-06-08T00%3A15%3A00.000Z 324.04 null null
+2008-06-08T01%3A15%3A00.000Z 324.02 null null
+2008-06-08T01%3A30%3A00.000Z 322.08 null null
+2008-06-08T02%3A00%3A00.000Z 322.06 null null
+2008-06-08T02%3A15%3A00.000Z 320.13 null null
+2008-06-08T02%3A30%3A00.000Z 320.13 null null
+2008-06-08T03%3A00%3A00.000Z 316.28 null null
+2008-06-08T03%3A30%3A00.000Z 316.27 null null
+2008-06-08T03%3A45%3A00.000Z 314.36 null null
+2008-06-08T04%3A15%3A00.000Z 314.35 null null
+2008-06-08T04%3A30%3A00.000Z 312.45 null null
+2008-06-08T05%3A15%3A00.000Z 312.43 null null
+2008-06-08T05%3A30%3A00.000Z 310.54 null null
+2008-06-08T06%3A30%3A00.000Z 310.52 null null
+2008-06-08T06%3A45%3A00.000Z 306.77 null null
+2008-06-08T07%3A15%3A00.000Z 306.76 null null
+2008-06-08T07%3A30%3A00.000Z 304.89 null null
+2008-06-08T08%3A30%3A00.000Z 304.87 null null
+2008-06-08T09%3A00%3A00.000Z 301.16 null null
+2008-06-08T10%3A00%3A00.000Z 301.18 null null
+2008-06-08T10%3A30%3A00.000Z 297.54 null null
+2008-06-08T11%3A00%3A00.000Z 297.57 null null
+2008-06-08T11%3A15%3A00.000Z 295.76 null null
+2008-06-08T11%3A30%3A00.000Z 295.77 null null
+2008-06-08T11%3A45%3A00.000Z 297.6 null null
+2008-06-08T12%3A00%3A00.000Z 297.62 null null
+2008-06-08T12%3A15%3A00.000Z 295.81 null null
+2008-06-08T13%3A00%3A00.000Z 295.85 null null
+2008-06-08T13%3A15%3A00.000Z 294.05 null null
+2008-06-08T14%3A15%3A00.000Z 294.1 null null
+2008-06-08T14%3A30%3A00.000Z 290.52 null null
+2008-06-08T15%3A15%3A00.000Z 290.55 null null
+2008-06-08T15%3A30%3A00.000Z 288.78 null null
+2008-06-08T16%3A15%3A00.000Z 288.82 null null
+2008-06-08T16%3A30%3A00.000Z 287.05 null null
+2008-06-08T17%3A30%3A00.000Z 287.1 null null
+2008-06-08T17%3A45%3A00.000Z 285.34 null null
+2008-06-08T18%3A30%3A00.000Z 285.38 null null
+2008-06-08T18%3A45%3A00.000Z 281.88 null null
+2008-06-08T19%3A30%3A00.000Z 281.91 null null
+2008-06-08T19%3A45%3A00.000Z 280.18 null null
+2008-06-08T20%3A15%3A00.000Z 280.21 null null
+2008-06-08T20%3A30%3A00.000Z 278.48 null null
+2008-06-08T21%3A30%3A00.000Z 278.53 null null
+2008-06-08T21%3A45%3A00.000Z 276.81 null null
+2008-06-08T22%3A15%3A00.000Z 276.84 null null
+2008-06-08T22%3A20%3A00.000Z 273.41 null null
+2008-06-08T23%3A15%3A00.000Z 273.46 null null
+2008-06-08T23%3A30%3A00.000Z 271.76 null null
+2008-06-09T00%3A15%3A00.000Z 271.8 null null
+2008-06-09T00%3A30%3A00.000Z 270.12 null null
+2008-06-09T01%3A00%3A00.000Z 270.14 null null
+2008-06-09T01%3A15%3A00.000Z 268.47 null null
+2008-06-09T02%3A00%3A00.000Z 268.5 null null
+2008-06-09T02%3A15%3A00.000Z 265.16 null null
+2008-06-09T03%3A00%3A00.000Z 265.2 null null
+2008-06-09T03%3A15%3A00.000Z 263.55 null null
+2008-06-09T04%3A00%3A00.000Z 263.58 null null
+2008-06-09T04%3A30%3A00.000Z 260.31 null null
+2008-06-09T05%3A00%3A00.000Z 260.33 null null
+2008-06-09T05%3A30%3A00.000Z 257.09 null null
+2008-06-09T06%3A00%3A00.000Z 257.11 null null
+2008-06-09T06%3A15%3A00.000Z 255.5 null null
+2008-06-09T06%3A45%3A00.000Z 255.52 null null
+2008-06-09T07%3A00%3A00.000Z 253.92 null null
+2008-06-09T08%3A00%3A00.000Z 253.97 null null
+2008-06-09T08%3A30%3A00.000Z 250.79 null null
+2008-06-09T09%3A15%3A00.000Z 250.76 null null
+2008-06-09T09%3A30%3A00.000Z 249.15 null null
+2008-06-09T10%3A15%3A00.000Z 249.11 null null
+2008-06-09T10%3A30%3A00.000Z 247.52 null null
+2008-06-09T11%3A00%3A00.000Z 247.49 null null
+2008-06-09T11%3A15%3A00.000Z 244.34 null null
+2008-06-09T11%3A30%3A00.000Z 245.89 null null
+2008-06-09T11%3A45%3A00.000Z 244.31 null null
+2008-06-09T12%3A30%3A00.000Z 244.27 null null
+2008-06-09T12%3A45%3A00.000Z 242.7 null null
+2008-06-09T13%3A15%3A00.000Z 242.67 null null
+2008-06-09T13%3A30%3A00.000Z 239.58 null null
+2008-06-09T14%3A15%3A00.000Z 239.54 null null
+2008-06-09T14%3A30%3A00.000Z 237.99 null null
+2008-06-09T15%3A30%3A00.000Z 237.94 null null
+2008-06-09T15%3A45%3A00.000Z 236.41 null null
+2008-06-09T16%3A30%3A00.000Z 236.36 null null
+2008-06-09T16%3A45%3A00.000Z 234.84 null null
+2008-06-09T17%3A15%3A00.000Z 234.81 null null
+2008-06-09T17%3A45%3A00.000Z 231.79 null null
+2008-06-09T18%3A15%3A00.000Z 231.76 null null
+2008-06-09T18%3A30%3A00.000Z 230.26 null null
+2008-06-09T19%3A00%3A00.000Z 230.23 null null
+2008-06-09T19%3A15%3A00.000Z 228.74 null null
+2008-06-09T20%3A00%3A00.000Z 228.7 null null
+2008-06-09T20%3A15%3A00.000Z 227.22 null null
+2008-06-09T21%3A00%3A00.000Z 227.18 null null
+2008-06-09T21%3A30%3A00.000Z 224.25 null null
+2008-06-09T22%3A00%3A00.000Z 224.22 null null
+2008-06-09T22%3A14%3A00.000Z 222.77 null null
+2008-06-09T23%3A00%3A00.000Z 222.73 null null
 ]]></om:result>
      <ns2:dataSourceURI/>
     </ns2:ObservationWithSource>
@@ -7515,21 +7349,16 @@
    <gml:description>Manuell erzeugt am: 25.06.2008 15:16</gml:description>
    <gml:name>Wasserstand Teichlösung 2D</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3929045.7501006303 773764.8059923581</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929045.7501006303 773764.8059923581</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection/>
    <op1d2d:direction/>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource1214399762355420">
      <gml:name>Wasserstand - Zeitreihe</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition1214399762495882">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -7537,16 +7366,14 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
-     <om:result><![CDATA[2011-01-24T17%3A00%3A00.000Z 367.00 null null
-2011-01-24T23%3A00%3A00.000Z 366.85 null null
-2011-01-25T05%3A00%3A00.000Z 366.72 null null
-2011-01-25T11%3A00%3A00.000Z 366.60 null null
-2011-01-25T17%3A00%3A00.000Z 366.50 null null
-2011-01-25T23%3A00%3A00.000Z 366.50 null null
-2011-01-26T05%3A00%3A00.000Z 366.50 null null
+     <om:result><![CDATA[2008-06-25T00%3A00%3A00.000%2B02%3A00 367 null null
+2008-06-25T06%3A00%3A00.127%2B02%3A00 366.85 null null
+2008-06-25T12%3A00%3A00.658%2B02%3A00 366.72 null null
+2008-06-25T18%3A00%3A00.799%2B02%3A00 366.6 null null
+2008-06-26T00%3A00%3A00.299%2B02%3A00 366.5 null null
+2008-06-26T06%3A00%3A00.314%2B02%3A00 366.50 null null
 ]]></om:result>
      <ns2:dataSourceURI/>
     </ns2:ObservationWithSource>
@@ -7562,21 +7389,16 @@
    <gml:description>Manuell erzeugt am: 26.06.2008 11:25</gml:description>
    <gml:name>W/Q - Beziehung</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3929088.2594008152 773754.3590080483</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929088.2594008152 773754.3590080483</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection/>
    <op1d2d:direction>260</op1d2d:direction>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource1214472319537536">
      <gml:name>W/Q - Beziehung</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition1214472319552768">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
@@ -7584,7 +7406,6 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
      <om:result><![CDATA[363.58 10 null null
@@ -7611,21 +7432,16 @@
    <gml:description>Manuell erzeugt am: 26.06.2008 13:21</gml:description>
    <gml:name>Wasserstand Hochwasser 2D</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3929130.7565019033 773743.8734519278</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929130.7565019033 773743.8734519278</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection/>
    <op1d2d:direction/>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource1214479265441730">
      <gml:name>Importierte Zeitreihe</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition121447926567574">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -7633,1519 +7449,1518 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
-     <om:result><![CDATA[2011-01-03T23%3A00%3A00.000Z 366.57 null null
-2011-01-03T23%3A04%3A00.000Z 366.58 null null
-2011-01-03T23%3A08%3A00.000Z 366.57 null null
-2011-01-03T23%3A40%3A00.000Z 366.57 null null
-2011-01-03T23%3A44%3A00.000Z 366.56 null null
-2011-01-03T23%3A48%3A00.000Z 366.57 null null
-2011-01-03T23%3A52%3A00.000Z 366.56 null null
-2011-01-03T23%3A56%3A00.000Z 366.57 null null
-2011-01-04T00%3A00%3A00.000Z 366.56 null null
-2011-01-04T00%3A04%3A00.000Z 366.56 null null
-2011-01-04T00%3A08%3A00.000Z 366.57 null null
-2011-01-04T00%3A12%3A00.000Z 366.56 null null
-2011-01-04T00%3A32%3A00.000Z 366.56 null null
-2011-01-04T00%3A36%3A00.000Z 366.55 null null
-2011-01-04T00%3A40%3A00.000Z 366.56 null null
-2011-01-04T00%3A44%3A00.000Z 366.55 null null
-2011-01-04T00%3A56%3A00.000Z 366.55 null null
-2011-01-04T01%3A00%3A00.000Z 366.56 null null
-2011-01-04T01%3A16%3A00.000Z 366.56 null null
-2011-01-04T01%3A20%3A00.000Z 366.54 null null
-2011-01-04T01%3A24%3A00.000Z 366.54 null null
-2011-01-04T01%3A28%3A00.000Z 366.56 null null
-2011-01-04T01%3A32%3A00.000Z 366.55 null null
-2011-01-04T01%3A36%3A00.000Z 366.55 null null
-2011-01-04T01%3A40%3A00.000Z 366.56 null null
-2011-01-04T01%3A44%3A00.000Z 366.55 null null
-2011-01-04T02%3A00%3A00.000Z 366.55 null null
-2011-01-04T02%3A04%3A00.000Z 366.56 null null
-2011-01-04T02%3A08%3A00.000Z 366.55 null null
-2011-01-04T02%3A16%3A00.000Z 366.55 null null
-2011-01-04T02%3A20%3A00.000Z 366.54 null null
-2011-01-04T02%3A24%3A00.000Z 366.55 null null
-2011-01-04T03%3A24%3A00.000Z 366.55 null null
-2011-01-04T03%3A28%3A00.000Z 366.54 null null
-2011-01-04T03%3A36%3A00.000Z 366.56 null null
-2011-01-04T03%3A44%3A00.000Z 366.54 null null
-2011-01-04T03%3A52%3A00.000Z 366.56 null null
-2011-01-04T03%3A56%3A00.000Z 366.54 null null
-2011-01-04T04%3A00%3A00.000Z 366.55 null null
-2011-01-04T05%3A08%3A00.000Z 366.55 null null
-2011-01-04T05%3A12%3A00.000Z 366.56 null null
-2011-01-04T05%3A16%3A00.000Z 366.56 null null
-2011-01-04T05%3A20%3A00.000Z 366.55 null null
-2011-01-04T05%3A24%3A00.000Z 366.55 null null
-2011-01-04T05%3A28%3A00.000Z 366.56 null null
-2011-01-04T06%3A08%3A00.000Z 366.56 null null
-2011-01-04T06%3A12%3A00.000Z 366.55 null null
-2011-01-04T06%3A16%3A00.000Z 366.56 null null
-2011-01-04T06%3A20%3A00.000Z 366.56 null null
-2011-01-04T06%3A24%3A00.000Z 366.57 null null
-2011-01-04T06%3A28%3A00.000Z 366.56 null null
-2011-01-04T06%3A36%3A00.000Z 366.56 null null
-2011-01-04T06%3A40%3A00.000Z 366.57 null null
-2011-01-04T06%3A44%3A00.000Z 366.56 null null
-2011-01-04T06%3A48%3A00.000Z 366.56 null null
-2011-01-04T06%3A52%3A00.000Z 366.57 null null
-2011-01-04T07%3A12%3A00.000Z 366.57 null null
-2011-01-04T07%3A16%3A00.000Z 366.56 null null
-2011-01-04T07%3A20%3A00.000Z 366.57 null null
-2011-01-04T07%3A24%3A00.000Z 366.57 null null
-2011-01-04T07%3A28%3A00.000Z 366.56 null null
-2011-01-04T07%3A32%3A00.000Z 366.57 null null
-2011-01-04T07%3A40%3A00.000Z 366.57 null null
-2011-01-04T07%3A44%3A00.000Z 366.56 null null
-2011-01-04T07%3A48%3A00.000Z 366.57 null null
-2011-01-04T08%3A16%3A00.000Z 366.57 null null
-2011-01-04T08%3A20%3A00.000Z 366.58 null null
-2011-01-04T08%3A24%3A00.000Z 366.57 null null
-2011-01-04T08%3A28%3A00.000Z 366.58 null null
-2011-01-04T08%3A36%3A00.000Z 366.58 null null
-2011-01-04T08%3A40%3A00.000Z 366.57 null null
-2011-01-04T08%3A44%3A00.000Z 366.57 null null
-2011-01-04T08%3A48%3A00.000Z 366.58 null null
-2011-01-04T08%3A52%3A00.000Z 366.57 null null
-2011-01-04T08%3A56%3A00.000Z 366.58 null null
-2011-01-04T09%3A56%3A00.000Z 366.58 null null
-2011-01-04T10%3A00%3A00.000Z 366.59 null null
-2011-01-04T10%3A04%3A00.000Z 366.59 null null
-2011-01-04T10%3A08%3A00.000Z 366.58 null null
-2011-01-04T10%3A24%3A00.000Z 366.58 null null
-2011-01-04T10%3A28%3A00.000Z 366.59 null null
-2011-01-04T10%3A32%3A00.000Z 366.58 null null
-2011-01-04T10%3A36%3A00.000Z 366.58 null null
-2011-01-04T10%3A40%3A00.000Z 366.59 null null
-2011-01-04T10%3A48%3A00.000Z 366.59 null null
-2011-01-04T10%3A52%3A00.000Z 366.58 null null
-2011-01-04T11%3A04%3A00.000Z 366.58 null null
-2011-01-04T11%3A08%3A00.000Z 366.59 null null
-2011-01-04T11%3A16%3A00.000Z 366.59 null null
-2011-01-04T11%3A20%3A00.000Z 366.60 null null
-2011-01-04T11%3A24%3A00.000Z 366.59 null null
-2011-01-04T11%3A36%3A00.000Z 366.59 null null
-2011-01-04T11%3A40%3A00.000Z 366.60 null null
-2011-01-04T11%3A44%3A00.000Z 366.59 null null
-2011-01-04T11%3A48%3A00.000Z 366.59 null null
-2011-01-04T11%3A52%3A00.000Z 366.60 null null
-2011-01-04T11%3A56%3A00.000Z 366.59 null null
-2011-01-04T12%3A00%3A00.000Z 366.60 null null
-2011-01-04T12%3A04%3A00.000Z 366.59 null null
-2011-01-04T12%3A12%3A00.000Z 366.59 null null
-2011-01-04T12%3A16%3A00.000Z 366.60 null null
-2011-01-04T12%3A20%3A00.000Z 366.59 null null
-2011-01-04T12%3A24%3A00.000Z 366.60 null null
-2011-01-04T12%3A52%3A00.000Z 366.60 null null
-2011-01-04T12%3A56%3A00.000Z 366.61 null null
-2011-01-04T13%3A00%3A00.000Z 366.60 null null
-2011-01-04T13%3A12%3A00.000Z 366.60 null null
-2011-01-04T13%3A16%3A00.000Z 366.61 null null
-2011-01-04T13%3A20%3A00.000Z 366.60 null null
-2011-01-04T13%3A32%3A00.000Z 366.60 null null
-2011-01-04T13%3A36%3A00.000Z 366.61 null null
-2011-01-04T13%3A48%3A00.000Z 366.61 null null
-2011-01-04T13%3A52%3A00.000Z 366.60 null null
-2011-01-04T13%3A56%3A00.000Z 366.61 null null
-2011-01-04T14%3A12%3A00.000Z 366.61 null null
-2011-01-04T14%3A16%3A00.000Z 366.60 null null
-2011-01-04T14%3A20%3A00.000Z 366.61 null null
-2011-01-04T14%3A24%3A00.000Z 366.60 null null
-2011-01-04T14%3A28%3A00.000Z 366.61 null null
-2011-01-04T15%3A24%3A00.000Z 366.61 null null
-2011-01-04T15%3A28%3A00.000Z 366.62 null null
-2011-01-04T15%3A32%3A00.000Z 366.61 null null
-2011-01-04T15%3A36%3A00.000Z 366.62 null null
-2011-01-04T15%3A48%3A00.000Z 366.62 null null
-2011-01-04T15%3A52%3A00.000Z 366.63 null null
-2011-01-04T15%3A56%3A00.000Z 366.63 null null
-2011-01-04T16%3A00%3A00.000Z 366.62 null null
-2011-01-04T16%3A04%3A00.000Z 366.64 null null
-2011-01-04T16%3A08%3A00.000Z 366.63 null null
-2011-01-04T16%3A16%3A00.000Z 366.63 null null
-2011-01-04T16%3A20%3A00.000Z 366.64 null null
-2011-01-04T16%3A36%3A00.000Z 366.64 null null
-2011-01-04T16%3A40%3A00.000Z 366.65 null null
-2011-01-04T16%3A52%3A00.000Z 366.65 null null
-2011-01-04T16%3A56%3A00.000Z 366.66 null null
-2011-01-04T17%3A12%3A00.000Z 366.66 null null
-2011-01-04T17%3A16%3A00.000Z 366.67 null null
-2011-01-04T17%3A32%3A00.000Z 366.67 null null
-2011-01-04T17%3A36%3A00.000Z 366.68 null null
-2011-01-04T17%3A40%3A00.000Z 366.68 null null
-2011-01-04T17%3A44%3A00.000Z 366.69 null null
-2011-01-04T17%3A48%3A00.000Z 366.69 null null
-2011-01-04T17%3A52%3A00.000Z 366.68 null null
-2011-01-04T17%3A56%3A00.000Z 366.69 null null
-2011-01-04T18%3A00%3A00.000Z 366.69 null null
-2011-01-04T18%3A04%3A00.000Z 366.70 null null
-2011-01-04T18%3A24%3A00.000Z 366.70 null null
-2011-01-04T18%3A28%3A00.000Z 366.69 null null
-2011-01-04T18%3A32%3A00.000Z 366.70 null null
-2011-01-04T18%3A36%3A00.000Z 366.70 null null
-2011-01-04T18%3A40%3A00.000Z 366.71 null null
-2011-01-04T18%3A56%3A00.000Z 366.71 null null
-2011-01-04T19%3A00%3A00.000Z 366.72 null null
-2011-01-04T19%3A04%3A00.000Z 366.71 null null
-2011-01-04T19%3A08%3A00.000Z 366.72 null null
-2011-01-04T19%3A32%3A00.000Z 366.72 null null
-2011-01-04T19%3A36%3A00.000Z 366.73 null null
-2011-01-04T19%3A44%3A00.000Z 366.73 null null
-2011-01-04T19%3A48%3A00.000Z 366.74 null null
-2011-01-04T19%3A52%3A00.000Z 366.73 null null
-2011-01-04T20%3A00%3A00.000Z 366.73 null null
-2011-01-04T20%3A04%3A00.000Z 366.74 null null
-2011-01-04T20%3A08%3A00.000Z 366.73 null null
-2011-01-04T20%3A12%3A00.000Z 366.74 null null
-2011-01-04T20%3A40%3A00.000Z 366.74 null null
-2011-01-04T20%3A44%3A00.000Z 366.75 null null
-2011-01-04T20%3A48%3A00.000Z 366.74 null null
-2011-01-04T20%3A56%3A00.000Z 366.74 null null
-2011-01-04T21%3A00%3A00.000Z 366.75 null null
-2011-01-04T21%3A12%3A00.000Z 366.75 null null
-2011-01-04T21%3A16%3A00.000Z 366.76 null null
-2011-01-04T21%3A40%3A00.000Z 366.76 null null
-2011-01-04T21%3A44%3A00.000Z 366.75 null null
-2011-01-04T21%3A48%3A00.000Z 366.77 null null
-2011-01-04T21%3A52%3A00.000Z 366.76 null null
-2011-01-04T21%3A56%3A00.000Z 366.77 null null
-2011-01-04T22%3A00%3A00.000Z 366.77 null null
-2011-01-04T22%3A04%3A00.000Z 366.76 null null
-2011-01-04T22%3A08%3A00.000Z 366.76 null null
-2011-01-04T22%3A12%3A00.000Z 366.77 null null
-2011-01-04T22%3A28%3A00.000Z 366.77 null null
-2011-01-04T22%3A32%3A00.000Z 366.79 null null
-2011-01-04T22%3A40%3A00.000Z 366.77 null null
-2011-01-04T22%3A44%3A00.000Z 366.78 null null
-2011-01-04T23%3A04%3A00.000Z 366.78 null null
-2011-01-04T23%3A08%3A00.000Z 366.79 null null
-2011-01-04T23%3A12%3A00.000Z 366.78 null null
-2011-01-04T23%3A16%3A00.000Z 366.79 null null
-2011-01-04T23%3A20%3A00.000Z 366.78 null null
-2011-01-04T23%3A36%3A00.000Z 366.78 null null
-2011-01-04T23%3A40%3A00.000Z 366.79 null null
-2011-01-04T23%3A44%3A00.000Z 366.78 null null
-2011-01-04T23%3A48%3A00.000Z 366.79 null null
-2011-01-04T23%3A52%3A00.000Z 366.78 null null
-2011-01-04T23%3A56%3A00.000Z 366.79 null null
-2011-01-05T00%3A12%3A00.000Z 366.79 null null
-2011-01-05T00%3A16%3A00.000Z 366.78 null null
-2011-01-05T00%3A20%3A00.000Z 366.80 null null
-2011-01-05T00%3A24%3A00.000Z 366.80 null null
-2011-01-05T00%3A28%3A00.000Z 366.79 null null
-2011-01-05T00%3A32%3A00.000Z 366.79 null null
-2011-01-05T00%3A36%3A00.000Z 366.80 null null
-2011-01-05T00%3A40%3A00.000Z 366.79 null null
-2011-01-05T00%3A44%3A00.000Z 366.80 null null
-2011-01-05T00%3A52%3A00.000Z 366.80 null null
-2011-01-05T00%3A56%3A00.000Z 366.79 null null
-2011-01-05T01%3A00%3A00.000Z 366.79 null null
-2011-01-05T01%3A04%3A00.000Z 366.81 null null
-2011-01-05T01%3A20%3A00.000Z 366.81 null null
-2011-01-05T01%3A24%3A00.000Z 366.80 null null
-2011-01-05T01%3A28%3A00.000Z 366.81 null null
-2011-01-05T01%3A40%3A00.000Z 366.81 null null
-2011-01-05T01%3A44%3A00.000Z 366.80 null null
-2011-01-05T01%3A52%3A00.000Z 366.82 null null
-2011-01-05T01%3A56%3A00.000Z 366.81 null null
-2011-01-05T02%3A00%3A00.000Z 366.81 null null
-2011-01-05T02%3A04%3A00.000Z 366.82 null null
-2011-01-05T02%3A44%3A00.000Z 366.82 null null
-2011-01-05T02%3A48%3A00.000Z 366.83 null null
-2011-01-05T02%3A52%3A00.000Z 366.82 null null
-2011-01-05T03%3A00%3A00.000Z 366.82 null null
-2011-01-05T03%3A04%3A00.000Z 366.83 null null
-2011-01-05T03%3A08%3A00.000Z 366.82 null null
-2011-01-05T03%3A12%3A00.000Z 366.83 null null
-2011-01-05T03%3A16%3A00.000Z 366.83 null null
-2011-01-05T03%3A20%3A00.000Z 366.82 null null
-2011-01-05T03%3A24%3A00.000Z 366.83 null null
-2011-01-05T03%3A28%3A00.000Z 366.83 null null
-2011-01-05T03%3A32%3A00.000Z 366.82 null null
-2011-01-05T03%3A36%3A00.000Z 366.83 null null
-2011-01-05T03%3A52%3A00.000Z 366.83 null null
-2011-01-05T03%3A56%3A00.000Z 366.84 null null
-2011-01-05T04%3A00%3A00.000Z 366.83 null null
-2011-01-05T04%3A20%3A00.000Z 366.83 null null
-2011-01-05T04%3A24%3A00.000Z 366.84 null null
-2011-01-05T05%3A00%3A00.000Z 366.84 null null
-2011-01-05T05%3A04%3A00.000Z 366.85 null null
-2011-01-05T05%3A08%3A00.000Z 366.84 null null
-2011-01-05T05%3A12%3A00.000Z 366.85 null null
-2011-01-05T05%3A16%3A00.000Z 366.84 null null
-2011-01-05T05%3A20%3A00.000Z 366.84 null null
-2011-01-05T05%3A24%3A00.000Z 366.85 null null
-2011-01-05T05%3A28%3A00.000Z 366.84 null null
-2011-01-05T05%3A32%3A00.000Z 366.84 null null
-2011-01-05T05%3A36%3A00.000Z 366.85 null null
-2011-01-05T05%3A40%3A00.000Z 366.84 null null
-2011-01-05T05%3A44%3A00.000Z 366.84 null null
-2011-01-05T05%3A48%3A00.000Z 366.85 null null
-2011-01-05T06%3A32%3A00.000Z 366.85 null null
-2011-01-05T06%3A36%3A00.000Z 366.86 null null
-2011-01-05T06%3A40%3A00.000Z 366.85 null null
-2011-01-05T06%3A44%3A00.000Z 366.85 null null
-2011-01-05T06%3A48%3A00.000Z 366.86 null null
-2011-01-05T06%3A52%3A00.000Z 366.85 null null
-2011-01-05T06%3A56%3A00.000Z 366.86 null null
-2011-01-05T07%3A20%3A00.000Z 366.86 null null
-2011-01-05T07%3A24%3A00.000Z 366.87 null null
-2011-01-05T07%3A28%3A00.000Z 366.86 null null
-2011-01-05T07%3A32%3A00.000Z 366.86 null null
-2011-01-05T07%3A36%3A00.000Z 366.87 null null
-2011-01-05T08%3A00%3A00.000Z 366.87 null null
-2011-01-05T08%3A04%3A00.000Z 366.86 null null
-2011-01-05T08%3A12%3A00.000Z 366.88 null null
-2011-01-05T08%3A20%3A00.000Z 366.86 null null
-2011-01-05T08%3A24%3A00.000Z 366.87 null null
-2011-01-05T08%3A28%3A00.000Z 366.87 null null
-2011-01-05T08%3A32%3A00.000Z 366.88 null null
-2011-01-05T08%3A36%3A00.000Z 366.87 null null
-2011-01-05T08%3A44%3A00.000Z 366.87 null null
-2011-01-05T08%3A48%3A00.000Z 366.89 null null
-2011-01-05T08%3A52%3A00.000Z 366.88 null null
-2011-01-05T09%3A12%3A00.000Z 366.88 null null
-2011-01-05T09%3A16%3A00.000Z 366.89 null null
-2011-01-05T09%3A20%3A00.000Z 366.88 null null
-2011-01-05T09%3A32%3A00.000Z 366.88 null null
-2011-01-05T09%3A36%3A00.000Z 366.89 null null
-2011-01-05T09%3A44%3A00.000Z 366.89 null null
-2011-01-05T09%3A48%3A00.000Z 366.90 null null
-2011-01-05T09%3A52%3A00.000Z 366.89 null null
-2011-01-05T10%3A00%3A00.000Z 366.89 null null
-2011-01-05T10%3A04%3A00.000Z 366.90 null null
-2011-01-05T10%3A08%3A00.000Z 366.89 null null
-2011-01-05T10%3A12%3A00.000Z 366.89 null null
-2011-01-05T10%3A16%3A00.000Z 366.90 null null
-2011-01-05T10%3A28%3A00.000Z 366.90 null null
-2011-01-05T10%3A32%3A00.000Z 366.91 null null
-2011-01-05T10%3A56%3A00.000Z 366.91 null null
-2011-01-05T11%3A00%3A00.000Z 366.92 null null
-2011-01-05T11%3A04%3A00.000Z 366.91 null null
-2011-01-05T11%3A08%3A00.000Z 366.92 null null
-2011-01-05T11%3A32%3A00.000Z 366.92 null null
-2011-01-05T11%3A36%3A00.000Z 366.93 null null
-2011-01-05T11%3A40%3A00.000Z 366.93 null null
-2011-01-05T11%3A44%3A00.000Z 366.94 null null
-2011-01-05T11%3A48%3A00.000Z 366.93 null null
-2011-01-05T11%3A52%3A00.000Z 366.93 null null
-2011-01-05T11%3A56%3A00.000Z 366.94 null null
-2011-01-05T12%3A00%3A00.000Z 366.93 null null
-2011-01-05T12%3A04%3A00.000Z 366.94 null null
-2011-01-05T12%3A08%3A00.000Z 366.94 null null
-2011-01-05T12%3A12%3A00.000Z 366.93 null null
-2011-01-05T12%3A20%3A00.000Z 366.95 null null
-2011-01-05T12%3A24%3A00.000Z 366.95 null null
-2011-01-05T12%3A28%3A00.000Z 366.94 null null
-2011-01-05T12%3A32%3A00.000Z 366.95 null null
-2011-01-05T12%3A36%3A00.000Z 366.95 null null
-2011-01-05T12%3A40%3A00.000Z 366.94 null null
-2011-01-05T12%3A44%3A00.000Z 366.96 null null
-2011-01-05T12%3A48%3A00.000Z 366.95 null null
-2011-01-05T12%3A52%3A00.000Z 366.95 null null
-2011-01-05T12%3A56%3A00.000Z 366.96 null null
-2011-01-05T13%3A00%3A00.000Z 366.95 null null
-2011-01-05T13%3A04%3A00.000Z 366.96 null null
-2011-01-05T13%3A12%3A00.000Z 366.96 null null
-2011-01-05T13%3A16%3A00.000Z 366.97 null null
-2011-01-05T13%3A36%3A00.000Z 366.97 null null
-2011-01-05T13%3A40%3A00.000Z 366.98 null null
-2011-01-05T13%3A44%3A00.000Z 366.97 null null
-2011-01-05T13%3A48%3A00.000Z 366.97 null null
-2011-01-05T13%3A52%3A00.000Z 366.98 null null
-2011-01-05T14%3A12%3A00.000Z 366.98 null null
-2011-01-05T14%3A16%3A00.000Z 366.99 null null
-2011-01-05T14%3A24%3A00.000Z 366.99 null null
-2011-01-05T14%3A28%3A00.000Z 367.00 null null
-2011-01-05T14%3A32%3A00.000Z 366.99 null null
-2011-01-05T14%3A40%3A00.000Z 366.99 null null
-2011-01-05T14%3A44%3A00.000Z 367.00 null null
-2011-01-05T15%3A12%3A00.000Z 367.00 null null
-2011-01-05T15%3A16%3A00.000Z 367.01 null null
-2011-01-05T15%3A20%3A00.000Z 367.00 null null
-2011-01-05T15%3A24%3A00.000Z 367.01 null null
-2011-01-05T15%3A32%3A00.000Z 367.01 null null
-2011-01-05T15%3A36%3A00.000Z 367.02 null null
-2011-01-05T16%3A04%3A00.000Z 367.02 null null
-2011-01-05T16%3A08%3A00.000Z 367.03 null null
-2011-01-05T16%3A12%3A00.000Z 367.03 null null
-2011-01-05T16%3A16%3A00.000Z 367.02 null null
-2011-01-05T16%3A20%3A00.000Z 367.03 null null
-2011-01-05T16%3A28%3A00.000Z 367.03 null null
-2011-01-05T16%3A32%3A00.000Z 367.02 null null
-2011-01-05T16%3A40%3A00.000Z 367.04 null null
-2011-01-05T16%3A44%3A00.000Z 367.04 null null
-2011-01-05T16%3A48%3A00.000Z 367.03 null null
-2011-01-05T16%3A52%3A00.000Z 367.04 null null
-2011-01-05T17%3A12%3A00.000Z 367.04 null null
-2011-01-05T17%3A16%3A00.000Z 367.05 null null
-2011-01-05T17%3A20%3A00.000Z 367.04 null null
-2011-01-05T17%3A24%3A00.000Z 367.05 null null
-2011-01-05T18%3A00%3A00.000Z 367.05 null null
-2011-01-05T18%3A04%3A00.000Z 367.06 null null
-2011-01-05T18%3A32%3A00.000Z 367.06 null null
-2011-01-05T18%3A36%3A00.000Z 367.07 null null
-2011-01-05T18%3A40%3A00.000Z 367.06 null null
-2011-01-05T18%3A44%3A00.000Z 367.07 null null
-2011-01-05T18%3A48%3A00.000Z 367.06 null null
-2011-01-05T18%3A56%3A00.000Z 367.08 null null
-2011-01-05T19%3A00%3A00.000Z 367.07 null null
-2011-01-05T19%3A04%3A00.000Z 367.08 null null
-2011-01-05T19%3A08%3A00.000Z 367.07 null null
-2011-01-05T19%3A16%3A00.000Z 367.07 null null
-2011-01-05T19%3A20%3A00.000Z 367.08 null null
-2011-01-05T19%3A24%3A00.000Z 367.07 null null
-2011-01-05T19%3A32%3A00.000Z 367.09 null null
-2011-01-05T19%3A36%3A00.000Z 367.08 null null
-2011-01-05T19%3A40%3A00.000Z 367.09 null null
-2011-01-05T19%3A44%3A00.000Z 367.08 null null
-2011-01-05T19%3A48%3A00.000Z 367.08 null null
-2011-01-05T19%3A52%3A00.000Z 367.07 null null
-2011-01-05T20%3A00%3A00.000Z 367.07 null null
-2011-01-05T20%3A04%3A00.000Z 367.08 null null
-2011-01-05T20%3A08%3A00.000Z 367.07 null null
-2011-01-05T20%3A12%3A00.000Z 367.08 null null
-2011-01-05T20%3A16%3A00.000Z 367.08 null null
-2011-01-05T20%3A20%3A00.000Z 367.07 null null
-2011-01-05T20%3A24%3A00.000Z 367.07 null null
-2011-01-05T20%3A28%3A00.000Z 367.08 null null
-2011-01-05T20%3A32%3A00.000Z 367.08 null null
-2011-01-05T20%3A36%3A00.000Z 367.09 null null
-2011-01-05T20%3A40%3A00.000Z 367.08 null null
-2011-01-05T20%3A48%3A00.000Z 367.08 null null
-2011-01-05T20%3A52%3A00.000Z 367.09 null null
-2011-01-05T20%3A56%3A00.000Z 367.08 null null
-2011-01-05T21%3A16%3A00.000Z 367.08 null null
-2011-01-05T21%3A20%3A00.000Z 367.09 null null
-2011-01-05T21%3A28%3A00.000Z 367.09 null null
-2011-01-05T21%3A32%3A00.000Z 367.08 null null
-2011-01-05T21%3A36%3A00.000Z 367.09 null null
-2011-01-05T21%3A40%3A00.000Z 367.09 null null
-2011-01-05T21%3A44%3A00.000Z 367.08 null null
-2011-01-05T21%3A48%3A00.000Z 367.09 null null
-2011-01-05T21%3A52%3A00.000Z 367.08 null null
-2011-01-05T21%3A56%3A00.000Z 367.09 null null
-2011-01-05T22%3A00%3A00.000Z 367.09 null null
-2011-01-05T22%3A04%3A00.000Z 367.10 null null
-2011-01-05T22%3A32%3A00.000Z 367.10 null null
-2011-01-05T22%3A36%3A00.000Z 367.11 null null
-2011-01-05T22%3A40%3A00.000Z 367.11 null null
-2011-01-05T22%3A44%3A00.000Z 367.10 null null
-2011-01-05T22%3A48%3A00.000Z 367.10 null null
-2011-01-05T22%3A52%3A00.000Z 367.11 null null
-2011-01-05T22%3A56%3A00.000Z 367.11 null null
-2011-01-05T23%3A00%3A00.000Z 367.12 null null
-2011-01-05T23%3A04%3A00.000Z 367.11 null null
-2011-01-05T23%3A12%3A00.000Z 367.11 null null
-2011-01-05T23%3A16%3A00.000Z 367.12 null null
-2011-01-05T23%3A20%3A00.000Z 367.11 null null
-2011-01-05T23%3A24%3A00.000Z 367.12 null null
-2011-01-05T23%3A28%3A00.000Z 367.12 null null
-2011-01-05T23%3A32%3A00.000Z 367.11 null null
-2011-01-05T23%3A36%3A00.000Z 367.12 null null
-2011-01-05T23%3A40%3A00.000Z 367.12 null null
-2011-01-05T23%3A44%3A00.000Z 367.13 null null
-2011-01-06T00%3A16%3A00.000Z 367.13 null null
-2011-01-06T00%3A20%3A00.000Z 367.14 null null
-2011-01-06T00%3A24%3A00.000Z 367.13 null null
-2011-01-06T00%3A32%3A00.000Z 367.13 null null
-2011-01-06T00%3A36%3A00.000Z 367.14 null null
-2011-01-06T00%3A44%3A00.000Z 367.14 null null
-2011-01-06T00%3A48%3A00.000Z 367.13 null null
-2011-01-06T00%3A52%3A00.000Z 367.13 null null
-2011-01-06T00%3A56%3A00.000Z 367.14 null null
-2011-01-06T01%3A16%3A00.000Z 367.14 null null
-2011-01-06T01%3A20%3A00.000Z 367.13 null null
-2011-01-06T01%3A28%3A00.000Z 367.15 null null
-2011-01-06T01%3A32%3A00.000Z 367.15 null null
-2011-01-06T01%3A36%3A00.000Z 367.14 null null
-2011-01-06T01%3A40%3A00.000Z 367.15 null null
-2011-01-06T01%3A44%3A00.000Z 367.15 null null
-2011-01-06T01%3A48%3A00.000Z 367.14 null null
-2011-01-06T01%3A52%3A00.000Z 367.14 null null
-2011-01-06T01%3A56%3A00.000Z 367.15 null null
-2011-01-06T02%3A12%3A00.000Z 367.15 null null
-2011-01-06T02%3A16%3A00.000Z 367.16 null null
-2011-01-06T02%3A20%3A00.000Z 367.16 null null
-2011-01-06T02%3A24%3A00.000Z 367.15 null null
-2011-01-06T02%3A28%3A00.000Z 367.16 null null
-2011-01-06T02%3A32%3A00.000Z 367.16 null null
-2011-01-06T02%3A36%3A00.000Z 367.15 null null
-2011-01-06T02%3A40%3A00.000Z 367.16 null null
-2011-01-06T03%3A08%3A00.000Z 367.16 null null
-2011-01-06T03%3A12%3A00.000Z 367.15 null null
-2011-01-06T03%3A16%3A00.000Z 367.17 null null
-2011-01-06T03%3A20%3A00.000Z 367.16 null null
-2011-01-06T03%3A36%3A00.000Z 367.16 null null
-2011-01-06T03%3A40%3A00.000Z 367.17 null null
-2011-01-06T03%3A44%3A00.000Z 367.16 null null
-2011-01-06T03%3A48%3A00.000Z 367.16 null null
-2011-01-06T03%3A52%3A00.000Z 367.17 null null
-2011-01-06T04%3A44%3A00.000Z 367.17 null null
-2011-01-06T04%3A48%3A00.000Z 367.18 null null
-2011-01-06T05%3A12%3A00.000Z 367.18 null null
-2011-01-06T05%3A16%3A00.000Z 367.19 null null
-2011-01-06T05%3A20%3A00.000Z 367.18 null null
-2011-01-06T05%3A24%3A00.000Z 367.18 null null
-2011-01-06T05%3A28%3A00.000Z 367.19 null null
-2011-01-06T05%3A32%3A00.000Z 367.19 null null
-2011-01-06T05%3A36%3A00.000Z 367.18 null null
-2011-01-06T05%3A40%3A00.000Z 367.19 null null
-2011-01-06T05%3A44%3A00.000Z 367.18 null null
-2011-01-06T05%3A48%3A00.000Z 367.19 null null
-2011-01-06T05%3A52%3A00.000Z 367.18 null null
-2011-01-06T05%3A56%3A00.000Z 367.19 null null
-2011-01-06T06%3A04%3A00.000Z 367.19 null null
-2011-01-06T06%3A08%3A00.000Z 367.20 null null
-2011-01-06T06%3A12%3A00.000Z 367.19 null null
-2011-01-06T06%3A36%3A00.000Z 367.19 null null
-2011-01-06T06%3A40%3A00.000Z 367.20 null null
-2011-01-06T06%3A44%3A00.000Z 367.19 null null
-2011-01-06T06%3A48%3A00.000Z 367.20 null null
-2011-01-06T06%3A56%3A00.000Z 367.20 null null
-2011-01-06T07%3A00%3A00.000Z 367.19 null null
-2011-01-06T07%3A08%3A00.000Z 367.21 null null
-2011-01-06T07%3A12%3A00.000Z 367.20 null null
-2011-01-06T07%3A16%3A00.000Z 367.20 null null
-2011-01-06T07%3A20%3A00.000Z 367.21 null null
-2011-01-06T07%3A24%3A00.000Z 367.20 null null
-2011-01-06T07%3A32%3A00.000Z 367.20 null null
-2011-01-06T07%3A36%3A00.000Z 367.21 null null
-2011-01-06T07%3A40%3A00.000Z 367.20 null null
-2011-01-06T07%3A44%3A00.000Z 367.20 null null
-2011-01-06T07%3A48%3A00.000Z 367.21 null null
-2011-01-06T08%3A12%3A00.000Z 367.21 null null
-2011-01-06T08%3A16%3A00.000Z 367.22 null null
-2011-01-06T08%3A20%3A00.000Z 367.21 null null
-2011-01-06T08%3A24%3A00.000Z 367.22 null null
-2011-01-06T08%3A32%3A00.000Z 367.22 null null
-2011-01-06T08%3A36%3A00.000Z 367.21 null null
-2011-01-06T08%3A40%3A00.000Z 367.22 null null
-2011-01-06T08%3A52%3A00.000Z 367.22 null null
-2011-01-06T08%3A56%3A00.000Z 367.21 null null
-2011-01-06T09%3A04%3A00.000Z 367.23 null null
-2011-01-06T09%3A08%3A00.000Z 367.23 null null
-2011-01-06T09%3A12%3A00.000Z 367.22 null null
-2011-01-06T09%3A16%3A00.000Z 367.23 null null
-2011-01-06T09%3A28%3A00.000Z 367.23 null null
-2011-01-06T09%3A32%3A00.000Z 367.22 null null
-2011-01-06T09%3A36%3A00.000Z 367.23 null null
-2011-01-06T09%3A40%3A00.000Z 367.23 null null
-2011-01-06T09%3A44%3A00.000Z 367.22 null null
-2011-01-06T09%3A48%3A00.000Z 367.23 null null
-2011-01-06T10%3A24%3A00.000Z 367.23 null null
-2011-01-06T10%3A28%3A00.000Z 367.24 null null
-2011-01-06T10%3A32%3A00.000Z 367.23 null null
-2011-01-06T10%3A44%3A00.000Z 367.23 null null
-2011-01-06T10%3A48%3A00.000Z 367.24 null null
-2011-01-06T11%3A16%3A00.000Z 367.24 null null
-2011-01-06T11%3A20%3A00.000Z 367.25 null null
-2011-01-06T11%3A24%3A00.000Z 367.24 null null
-2011-01-06T11%3A28%3A00.000Z 367.25 null null
-2011-01-06T11%3A32%3A00.000Z 367.24 null null
-2011-01-06T11%3A36%3A00.000Z 367.25 null null
-2011-01-06T11%3A40%3A00.000Z 367.24 null null
-2011-01-06T11%3A44%3A00.000Z 367.25 null null
-2011-01-06T11%3A56%3A00.000Z 367.25 null null
-2011-01-06T12%3A00%3A00.000Z 367.26 null null
-2011-01-06T12%3A04%3A00.000Z 367.24 null null
-2011-01-06T12%3A08%3A00.000Z 367.25 null null
-2011-01-06T12%3A12%3A00.000Z 367.24 null null
-2011-01-06T12%3A16%3A00.000Z 367.25 null null
-2011-01-06T12%3A20%3A00.000Z 367.24 null null
-2011-01-06T12%3A24%3A00.000Z 367.25 null null
-2011-01-06T12%3A28%3A00.000Z 367.25 null null
-2011-01-06T12%3A32%3A00.000Z 367.24 null null
-2011-01-06T12%3A36%3A00.000Z 367.25 null null
-2011-01-06T12%3A40%3A00.000Z 367.25 null null
-2011-01-06T12%3A44%3A00.000Z 367.24 null null
-2011-01-06T12%3A48%3A00.000Z 367.25 null null
-2011-01-06T12%3A52%3A00.000Z 367.24 null null
-2011-01-06T12%3A56%3A00.000Z 367.25 null null
-2011-01-06T14%3A04%3A00.000Z 367.25 null null
-2011-01-06T14%3A08%3A00.000Z 367.24 null null
-2011-01-06T14%3A12%3A00.000Z 367.24 null null
-2011-01-06T14%3A16%3A00.000Z 367.25 null null
-2011-01-06T14%3A20%3A00.000Z 367.25 null null
-2011-01-06T14%3A24%3A00.000Z 367.24 null null
-2011-01-06T14%3A28%3A00.000Z 367.25 null null
-2011-01-06T14%3A36%3A00.000Z 367.25 null null
-2011-01-06T14%3A40%3A00.000Z 367.23 null null
-2011-01-06T14%3A44%3A00.000Z 367.25 null null
-2011-01-06T14%3A48%3A00.000Z 367.24 null null
-2011-01-06T14%3A52%3A00.000Z 367.24 null null
-2011-01-06T14%3A56%3A00.000Z 367.25 null null
-2011-01-06T15%3A00%3A00.000Z 367.24 null null
-2011-01-06T15%3A20%3A00.000Z 367.24 null null
-2011-01-06T15%3A24%3A00.000Z 367.23 null null
-2011-01-06T15%3A28%3A00.000Z 367.24 null null
-2011-01-06T15%3A32%3A00.000Z 367.24 null null
-2011-01-06T15%3A36%3A00.000Z 367.25 null null
-2011-01-06T15%3A40%3A00.000Z 367.24 null null
-2011-01-06T15%3A52%3A00.000Z 367.24 null null
-2011-01-06T15%3A56%3A00.000Z 367.23 null null
-2011-01-06T16%3A00%3A00.000Z 367.24 null null
-2011-01-06T16%3A04%3A00.000Z 367.24 null null
-2011-01-06T16%3A08%3A00.000Z 367.23 null null
-2011-01-06T16%3A28%3A00.000Z 367.23 null null
-2011-01-06T16%3A32%3A00.000Z 367.24 null null
-2011-01-06T16%3A36%3A00.000Z 367.24 null null
-2011-01-06T16%3A40%3A00.000Z 367.23 null null
-2011-01-06T16%3A44%3A00.000Z 367.21 null null
-2011-01-06T16%3A48%3A00.000Z 367.23 null null
-2011-01-06T16%3A52%3A00.000Z 367.22 null null
-2011-01-06T16%3A56%3A00.000Z 367.22 null null
-2011-01-06T17%3A00%3A00.000Z 367.23 null null
-2011-01-06T17%3A04%3A00.000Z 367.23 null null
-2011-01-06T17%3A08%3A00.000Z 367.22 null null
-2011-01-06T17%3A12%3A00.000Z 367.23 null null
-2011-01-06T17%3A32%3A00.000Z 367.23 null null
-2011-01-06T17%3A36%3A00.000Z 367.22 null null
-2011-01-06T17%3A40%3A00.000Z 367.23 null null
-2011-01-06T17%3A56%3A00.000Z 367.23 null null
-2011-01-06T18%3A04%3A00.000Z 367.21 null null
-2011-01-06T18%3A12%3A00.000Z 367.23 null null
-2011-01-06T18%3A16%3A00.000Z 367.23 null null
-2011-01-06T18%3A20%3A00.000Z 367.22 null null
-2011-01-06T18%3A32%3A00.000Z 367.22 null null
-2011-01-06T18%3A36%3A00.000Z 367.23 null null
-2011-01-06T18%3A40%3A00.000Z 367.22 null null
-2011-01-06T18%3A48%3A00.000Z 367.22 null null
-2011-01-06T18%3A52%3A00.000Z 367.21 null null
-2011-01-06T19%3A00%3A00.000Z 367.21 null null
-2011-01-06T19%3A04%3A00.000Z 367.22 null null
-2011-01-06T19%3A08%3A00.000Z 367.22 null null
-2011-01-06T19%3A16%3A00.000Z 367.20 null null
-2011-01-06T19%3A20%3A00.000Z 367.22 null null
-2011-01-06T19%3A24%3A00.000Z 367.20 null null
-2011-01-06T19%3A28%3A00.000Z 367.21 null null
-2011-01-06T19%3A40%3A00.000Z 367.21 null null
-2011-01-06T19%3A44%3A00.000Z 367.20 null null
-2011-01-06T19%3A48%3A00.000Z 367.21 null null
-2011-01-06T19%3A52%3A00.000Z 367.20 null null
-2011-01-06T20%3A12%3A00.000Z 367.20 null null
-2011-01-06T20%3A16%3A00.000Z 367.21 null null
-2011-01-06T20%3A24%3A00.000Z 367.19 null null
-2011-01-06T20%3A28%3A00.000Z 367.19 null null
-2011-01-06T20%3A36%3A00.000Z 367.21 null null
-2011-01-06T20%3A44%3A00.000Z 367.19 null null
-2011-01-06T20%3A52%3A00.000Z 367.19 null null
-2011-01-06T20%3A56%3A00.000Z 367.20 null null
-2011-01-06T21%3A00%3A00.000Z 367.19 null null
-2011-01-06T21%3A16%3A00.000Z 367.19 null null
-2011-01-06T21%3A20%3A00.000Z 367.18 null null
-2011-01-06T21%3A24%3A00.000Z 367.19 null null
-2011-01-06T21%3A28%3A00.000Z 367.18 null null
-2011-01-06T21%3A32%3A00.000Z 367.18 null null
-2011-01-06T21%3A36%3A00.000Z 367.19 null null
-2011-01-06T21%3A40%3A00.000Z 367.18 null null
-2011-01-06T22%3A00%3A00.000Z 367.18 null null
-2011-01-06T22%3A04%3A00.000Z 367.19 null null
-2011-01-06T22%3A08%3A00.000Z 367.18 null null
-2011-01-06T22%3A24%3A00.000Z 367.18 null null
-2011-01-06T22%3A28%3A00.000Z 367.17 null null
-2011-01-06T22%3A44%3A00.000Z 367.17 null null
-2011-01-06T22%3A48%3A00.000Z 367.16 null null
-2011-01-06T22%3A52%3A00.000Z 367.17 null null
-2011-01-06T23%3A00%3A00.000Z 367.17 null null
-2011-01-06T23%3A04%3A00.000Z 367.18 null null
-2011-01-06T23%3A12%3A00.000Z 367.16 null null
-2011-01-06T23%3A36%3A00.000Z 367.16 null null
-2011-01-06T23%3A40%3A00.000Z 367.17 null null
-2011-01-06T23%3A44%3A00.000Z 367.17 null null
-2011-01-06T23%3A48%3A00.000Z 367.15 null null
-2011-01-06T23%3A52%3A00.000Z 367.16 null null
-2011-01-07T00%3A36%3A00.000Z 367.16 null null
-2011-01-07T00%3A40%3A00.000Z 367.15 null null
-2011-01-07T00%3A44%3A00.000Z 367.16 null null
-2011-01-07T00%3A48%3A00.000Z 367.15 null null
-2011-01-07T01%3A08%3A00.000Z 367.15 null null
-2011-01-07T01%3A12%3A00.000Z 367.14 null null
-2011-01-07T01%3A16%3A00.000Z 367.15 null null
-2011-01-07T01%3A20%3A00.000Z 367.15 null null
-2011-01-07T01%3A24%3A00.000Z 367.14 null null
-2011-01-07T01%3A28%3A00.000Z 367.15 null null
-2011-01-07T01%3A32%3A00.000Z 367.14 null null
-2011-01-07T01%3A44%3A00.000Z 367.14 null null
-2011-01-07T01%3A48%3A00.000Z 367.13 null null
-2011-01-07T01%3A52%3A00.000Z 367.14 null null
-2011-01-07T02%3A04%3A00.000Z 367.14 null null
-2011-01-07T02%3A08%3A00.000Z 367.13 null null
-2011-01-07T02%3A12%3A00.000Z 367.13 null null
-2011-01-07T02%3A16%3A00.000Z 367.14 null null
-2011-01-07T02%3A20%3A00.000Z 367.14 null null
-2011-01-07T02%3A24%3A00.000Z 367.13 null null
-2011-01-07T02%3A36%3A00.000Z 367.13 null null
-2011-01-07T02%3A40%3A00.000Z 367.12 null null
-2011-01-07T02%3A48%3A00.000Z 367.14 null null
-2011-01-07T02%3A56%3A00.000Z 367.12 null null
-2011-01-07T03%3A00%3A00.000Z 367.13 null null
-2011-01-07T03%3A04%3A00.000Z 367.13 null null
-2011-01-07T03%3A08%3A00.000Z 367.12 null null
-2011-01-07T03%3A20%3A00.000Z 367.12 null null
-2011-01-07T03%3A24%3A00.000Z 367.13 null null
-2011-01-07T03%3A32%3A00.000Z 367.11 null null
-2011-01-07T03%3A40%3A00.000Z 367.13 null null
-2011-01-07T03%3A44%3A00.000Z 367.12 null null
-2011-01-07T03%3A52%3A00.000Z 367.12 null null
-2011-01-07T03%3A56%3A00.000Z 367.11 null null
-2011-01-07T04%3A00%3A00.000Z 367.12 null null
-2011-01-07T04%3A04%3A00.000Z 367.12 null null
-2011-01-07T04%3A08%3A00.000Z 367.11 null null
-2011-01-07T04%3A12%3A00.000Z 367.12 null null
-2011-01-07T04%3A16%3A00.000Z 367.11 null null
-2011-01-07T04%3A24%3A00.000Z 367.11 null null
-2011-01-07T04%3A28%3A00.000Z 367.10 null null
-2011-01-07T04%3A32%3A00.000Z 367.11 null null
-2011-01-07T04%3A44%3A00.000Z 367.11 null null
-2011-01-07T04%3A48%3A00.000Z 367.10 null null
-2011-01-07T04%3A52%3A00.000Z 367.11 null null
-2011-01-07T04%3A56%3A00.000Z 367.10 null null
-2011-01-07T05%3A00%3A00.000Z 367.11 null null
-2011-01-07T05%3A04%3A00.000Z 367.10 null null
-2011-01-07T05%3A12%3A00.000Z 367.10 null null
-2011-01-07T05%3A16%3A00.000Z 367.11 null null
-2011-01-07T05%3A20%3A00.000Z 367.11 null null
-2011-01-07T05%3A24%3A00.000Z 367.10 null null
-2011-01-07T05%3A32%3A00.000Z 367.10 null null
-2011-01-07T05%3A36%3A00.000Z 367.09 null null
-2011-01-07T05%3A44%3A00.000Z 367.11 null null
-2011-01-07T05%3A48%3A00.000Z 367.10 null null
-2011-01-07T05%3A52%3A00.000Z 367.10 null null
-2011-01-07T05%3A56%3A00.000Z 367.09 null null
-2011-01-07T06%3A00%3A00.000Z 367.09 null null
-2011-01-07T06%3A04%3A00.000Z 367.11 null null
-2011-01-07T06%3A08%3A00.000Z 367.10 null null
-2011-01-07T06%3A16%3A00.000Z 367.10 null null
-2011-01-07T06%3A20%3A00.000Z 367.08 null null
-2011-01-07T06%3A28%3A00.000Z 367.10 null null
-2011-01-07T06%3A32%3A00.000Z 367.09 null null
-2011-01-07T06%3A36%3A00.000Z 367.10 null null
-2011-01-07T06%3A40%3A00.000Z 367.09 null null
-2011-01-07T07%3A08%3A00.000Z 367.09 null null
-2011-01-07T07%3A12%3A00.000Z 367.07 null null
-2011-01-07T07%3A16%3A00.000Z 367.09 null null
-2011-01-07T07%3A24%3A00.000Z 367.07 null null
-2011-01-07T07%3A28%3A00.000Z 367.09 null null
-2011-01-07T07%3A32%3A00.000Z 367.09 null null
-2011-01-07T07%3A36%3A00.000Z 367.08 null null
-2011-01-07T07%3A40%3A00.000Z 367.08 null null
-2011-01-07T07%3A44%3A00.000Z 367.07 null null
-2011-01-07T07%3A48%3A00.000Z 367.08 null null
-2011-01-07T08%3A12%3A00.000Z 367.08 null null
-2011-01-07T08%3A16%3A00.000Z 367.09 null null
-2011-01-07T08%3A20%3A00.000Z 367.08 null null
-2011-01-07T08%3A28%3A00.000Z 367.08 null null
-2011-01-07T08%3A32%3A00.000Z 367.07 null null
-2011-01-07T08%3A36%3A00.000Z 367.07 null null
-2011-01-07T08%3A40%3A00.000Z 367.08 null null
-2011-01-07T08%3A44%3A00.000Z 367.07 null null
-2011-01-07T08%3A56%3A00.000Z 367.07 null null
-2011-01-07T09%3A00%3A00.000Z 367.06 null null
-2011-01-07T09%3A04%3A00.000Z 367.06 null null
-2011-01-07T09%3A08%3A00.000Z 367.07 null null
-2011-01-07T09%3A12%3A00.000Z 367.07 null null
-2011-01-07T09%3A16%3A00.000Z 367.06 null null
-2011-01-07T09%3A20%3A00.000Z 367.07 null null
-2011-01-07T09%3A40%3A00.000Z 367.07 null null
-2011-01-07T09%3A44%3A00.000Z 367.06 null null
-2011-01-07T09%3A48%3A00.000Z 367.07 null null
-2011-01-07T09%3A52%3A00.000Z 367.07 null null
-2011-01-07T09%3A56%3A00.000Z 367.06 null null
-2011-01-07T10%3A00%3A00.000Z 367.07 null null
-2011-01-07T10%3A08%3A00.000Z 367.07 null null
-2011-01-07T10%3A12%3A00.000Z 367.06 null null
-2011-01-07T10%3A20%3A00.000Z 367.06 null null
-2011-01-07T10%3A24%3A00.000Z 367.05 null null
-2011-01-07T10%3A28%3A00.000Z 367.06 null null
-2011-01-07T10%3A32%3A00.000Z 367.06 null null
-2011-01-07T10%3A36%3A00.000Z 367.05 null null
-2011-01-07T10%3A40%3A00.000Z 367.06 null null
-2011-01-07T10%3A44%3A00.000Z 367.05 null null
-2011-01-07T10%3A48%3A00.000Z 367.05 null null
-2011-01-07T10%3A52%3A00.000Z 367.06 null null
-2011-01-07T10%3A56%3A00.000Z 367.05 null null
-2011-01-07T11%3A24%3A00.000Z 367.05 null null
-2011-01-07T11%3A28%3A00.000Z 367.04 null null
-2011-01-07T11%3A32%3A00.000Z 367.05 null null
-2011-01-07T11%3A36%3A00.000Z 367.04 null null
-2011-01-07T11%3A44%3A00.000Z 367.04 null null
-2011-01-07T11%3A48%3A00.000Z 367.03 null null
-2011-01-07T11%3A52%3A00.000Z 367.03 null null
-2011-01-07T11%3A56%3A00.000Z 367.04 null null
-2011-01-07T12%3A00%3A00.000Z 367.04 null null
-2011-01-07T12%3A04%3A00.000Z 367.03 null null
-2011-01-07T12%3A08%3A00.000Z 367.03 null null
-2011-01-07T12%3A12%3A00.000Z 367.04 null null
-2011-01-07T12%3A16%3A00.000Z 367.03 null null
-2011-01-07T12%3A20%3A00.000Z 367.04 null null
-2011-01-07T12%3A24%3A00.000Z 367.03 null null
-2011-01-07T12%3A56%3A00.000Z 367.03 null null
-2011-01-07T13%3A00%3A00.000Z 367.02 null null
-2011-01-07T13%3A20%3A00.000Z 367.02 null null
-2011-01-07T13%3A24%3A00.000Z 367.00 null null
-2011-01-07T13%3A28%3A00.000Z 367.02 null null
-2011-01-07T13%3A32%3A00.000Z 367.01 null null
-2011-01-07T13%3A48%3A00.000Z 367.01 null null
-2011-01-07T13%3A52%3A00.000Z 367.00 null null
-2011-01-07T13%3A56%3A00.000Z 367.01 null null
-2011-01-07T14%3A00%3A00.000Z 367.01 null null
-2011-01-07T14%3A04%3A00.000Z 366.99 null null
-2011-01-07T14%3A08%3A00.000Z 367.01 null null
-2011-01-07T14%3A12%3A00.000Z 367.01 null null
-2011-01-07T14%3A20%3A00.000Z 366.99 null null
-2011-01-07T14%3A24%3A00.000Z 366.99 null null
-2011-01-07T14%3A28%3A00.000Z 367.00 null null
-2011-01-07T14%3A32%3A00.000Z 366.99 null null
-2011-01-07T14%3A36%3A00.000Z 367.00 null null
-2011-01-07T14%3A40%3A00.000Z 367.00 null null
-2011-01-07T14%3A44%3A00.000Z 366.99 null null
-2011-01-07T14%3A56%3A00.000Z 366.99 null null
-2011-01-07T15%3A00%3A00.000Z 366.98 null null
-2011-01-07T15%3A04%3A00.000Z 366.98 null null
-2011-01-07T15%3A08%3A00.000Z 366.99 null null
-2011-01-07T15%3A12%3A00.000Z 366.98 null null
-2011-01-07T15%3A16%3A00.000Z 366.98 null null
-2011-01-07T15%3A20%3A00.000Z 366.99 null null
-2011-01-07T15%3A24%3A00.000Z 366.98 null null
-2011-01-07T15%3A28%3A00.000Z 366.98 null null
-2011-01-07T15%3A32%3A00.000Z 366.97 null null
-2011-01-07T15%3A36%3A00.000Z 366.97 null null
-2011-01-07T15%3A44%3A00.000Z 366.99 null null
-2011-01-07T15%3A48%3A00.000Z 366.96 null null
-2011-01-07T15%3A52%3A00.000Z 366.97 null null
-2011-01-07T15%3A56%3A00.000Z 366.97 null null
-2011-01-07T16%3A00%3A00.000Z 366.98 null null
-2011-01-07T16%3A04%3A00.000Z 366.97 null null
-2011-01-07T16%3A12%3A00.000Z 366.97 null null
-2011-01-07T16%3A16%3A00.000Z 366.96 null null
-2011-01-07T16%3A20%3A00.000Z 366.96 null null
-2011-01-07T16%3A24%3A00.000Z 366.95 null null
-2011-01-07T16%3A28%3A00.000Z 366.97 null null
-2011-01-07T16%3A32%3A00.000Z 366.96 null null
-2011-01-07T16%3A40%3A00.000Z 366.96 null null
-2011-01-07T16%3A44%3A00.000Z 366.97 null null
-2011-01-07T16%3A48%3A00.000Z 366.95 null null
-2011-01-07T17%3A12%3A00.000Z 366.95 null null
-2011-01-07T17%3A16%3A00.000Z 366.96 null null
-2011-01-07T17%3A20%3A00.000Z 366.94 null null
-2011-01-07T17%3A24%3A00.000Z 366.95 null null
-2011-01-07T17%3A32%3A00.000Z 366.95 null null
-2011-01-07T17%3A36%3A00.000Z 366.94 null null
-2011-01-07T17%3A40%3A00.000Z 366.94 null null
-2011-01-07T17%3A44%3A00.000Z 366.93 null null
-2011-01-07T17%3A48%3A00.000Z 366.94 null null
-2011-01-07T18%3A04%3A00.000Z 366.94 null null
-2011-01-07T18%3A08%3A00.000Z 366.93 null null
-2011-01-07T18%3A12%3A00.000Z 366.95 null null
-2011-01-07T18%3A16%3A00.000Z 366.93 null null
-2011-01-07T18%3A20%3A00.000Z 366.94 null null
-2011-01-07T18%3A24%3A00.000Z 366.94 null null
-2011-01-07T18%3A28%3A00.000Z 366.95 null null
-2011-01-07T18%3A32%3A00.000Z 366.93 null null
-2011-01-07T18%3A36%3A00.000Z 366.93 null null
-2011-01-07T18%3A40%3A00.000Z 366.94 null null
-2011-01-07T18%3A44%3A00.000Z 366.93 null null
-2011-01-07T18%3A48%3A00.000Z 366.94 null null
-2011-01-07T18%3A52%3A00.000Z 366.93 null null
-2011-01-07T18%3A56%3A00.000Z 366.93 null null
-2011-01-07T19%3A00%3A00.000Z 366.92 null null
-2011-01-07T19%3A04%3A00.000Z 366.93 null null
-2011-01-07T19%3A08%3A00.000Z 366.92 null null
-2011-01-07T19%3A12%3A00.000Z 366.93 null null
-2011-01-07T19%3A20%3A00.000Z 366.93 null null
-2011-01-07T19%3A24%3A00.000Z 366.92 null null
-2011-01-07T19%3A32%3A00.000Z 366.92 null null
-2011-01-07T19%3A36%3A00.000Z 366.93 null null
-2011-01-07T19%3A40%3A00.000Z 366.92 null null
-2011-01-07T19%3A52%3A00.000Z 366.92 null null
-2011-01-07T19%3A56%3A00.000Z 366.91 null null
-2011-01-07T20%3A00%3A00.000Z 366.92 null null
-2011-01-07T20%3A08%3A00.000Z 366.92 null null
-2011-01-07T20%3A12%3A00.000Z 366.91 null null
-2011-01-07T20%3A28%3A00.000Z 366.91 null null
-2011-01-07T20%3A32%3A00.000Z 366.92 null null
-2011-01-07T20%3A36%3A00.000Z 366.91 null null
-2011-01-07T20%3A44%3A00.000Z 366.91 null null
-2011-01-07T20%3A48%3A00.000Z 366.90 null null
-2011-01-07T20%3A52%3A00.000Z 366.90 null null
-2011-01-07T20%3A56%3A00.000Z 366.91 null null
-2011-01-07T21%3A16%3A00.000Z 366.91 null null
-2011-01-07T21%3A20%3A00.000Z 366.90 null null
-2011-01-07T21%3A24%3A00.000Z 366.91 null null
-2011-01-07T21%3A28%3A00.000Z 366.90 null null
-2011-01-07T21%3A32%3A00.000Z 366.90 null null
-2011-01-07T21%3A36%3A00.000Z 366.91 null null
-2011-01-07T21%3A40%3A00.000Z 366.90 null null
-2011-01-07T21%3A44%3A00.000Z 366.90 null null
-2011-01-07T21%3A48%3A00.000Z 366.91 null null
-2011-01-07T21%3A56%3A00.000Z 366.89 null null
-2011-01-07T22%3A00%3A00.000Z 366.90 null null
-2011-01-07T22%3A08%3A00.000Z 366.90 null null
-2011-01-07T22%3A12%3A00.000Z 366.89 null null
-2011-01-07T22%3A16%3A00.000Z 366.90 null null
-2011-01-07T22%3A32%3A00.000Z 366.90 null null
-2011-01-07T22%3A36%3A00.000Z 366.89 null null
-2011-01-07T22%3A40%3A00.000Z 366.90 null null
-2011-01-07T22%3A44%3A00.000Z 366.89 null null
-2011-01-07T22%3A56%3A00.000Z 366.89 null null
-2011-01-07T23%3A00%3A00.000Z 366.88 null null
-2011-01-07T23%3A04%3A00.000Z 366.89 null null
-2011-01-07T23%3A08%3A00.000Z 366.89 null null
-2011-01-07T23%3A12%3A00.000Z 366.88 null null
-2011-01-07T23%3A16%3A00.000Z 366.89 null null
-2011-01-07T23%3A20%3A00.000Z 366.88 null null
-2011-01-07T23%3A24%3A00.000Z 366.89 null null
-2011-01-07T23%3A28%3A00.000Z 366.89 null null
-2011-01-07T23%3A32%3A00.000Z 366.88 null null
-2011-01-07T23%3A36%3A00.000Z 366.89 null null
-2011-01-07T23%3A40%3A00.000Z 366.89 null null
-2011-01-07T23%3A44%3A00.000Z 366.87 null null
-2011-01-07T23%3A48%3A00.000Z 366.89 null null
-2011-01-07T23%3A52%3A00.000Z 366.88 null null
-2011-01-07T23%3A56%3A00.000Z 366.88 null null
-2011-01-08T00%3A00%3A00.000Z 366.87 null null
-2011-01-08T00%3A04%3A00.000Z 366.87 null null
-2011-01-08T00%3A08%3A00.000Z 366.88 null null
-2011-01-08T00%3A24%3A00.000Z 366.88 null null
-2011-01-08T00%3A28%3A00.000Z 366.87 null null
-2011-01-08T00%3A32%3A00.000Z 366.88 null null
-2011-01-08T00%3A40%3A00.000Z 366.88 null null
-2011-01-08T00%3A44%3A00.000Z 366.87 null null
-2011-01-08T00%3A48%3A00.000Z 366.88 null null
-2011-01-08T00%3A52%3A00.000Z 366.87 null null
-2011-01-08T00%3A56%3A00.000Z 366.87 null null
-2011-01-08T01%3A00%3A00.000Z 366.86 null null
-2011-01-08T01%3A04%3A00.000Z 366.87 null null
-2011-01-08T01%3A08%3A00.000Z 366.86 null null
-2011-01-08T01%3A12%3A00.000Z 366.86 null null
-2011-01-08T01%3A16%3A00.000Z 366.87 null null
-2011-01-08T01%3A20%3A00.000Z 366.86 null null
-2011-01-08T01%3A24%3A00.000Z 366.87 null null
-2011-01-08T01%3A28%3A00.000Z 366.87 null null
-2011-01-08T01%3A32%3A00.000Z 366.86 null null
-2011-01-08T01%3A36%3A00.000Z 366.87 null null
-2011-01-08T01%3A40%3A00.000Z 366.86 null null
-2011-01-08T02%3A04%3A00.000Z 366.86 null null
-2011-01-08T02%3A08%3A00.000Z 366.85 null null
-2011-01-08T02%3A12%3A00.000Z 366.86 null null
-2011-01-08T02%3A24%3A00.000Z 366.86 null null
-2011-01-08T02%3A28%3A00.000Z 366.85 null null
-2011-01-08T02%3A36%3A00.000Z 366.85 null null
-2011-01-08T02%3A40%3A00.000Z 366.86 null null
-2011-01-08T02%3A44%3A00.000Z 366.85 null null
-2011-01-08T03%3A04%3A00.000Z 366.85 null null
-2011-01-08T03%3A08%3A00.000Z 366.86 null null
-2011-01-08T03%3A12%3A00.000Z 366.85 null null
-2011-01-08T03%3A36%3A00.000Z 366.85 null null
-2011-01-08T03%3A40%3A00.000Z 366.84 null null
-2011-01-08T03%3A44%3A00.000Z 366.85 null null
-2011-01-08T03%3A48%3A00.000Z 366.84 null null
-2011-01-08T03%3A52%3A00.000Z 366.84 null null
-2011-01-08T03%3A56%3A00.000Z 366.85 null null
-2011-01-08T04%3A00%3A00.000Z 366.84 null null
-2011-01-08T04%3A16%3A00.000Z 366.84 null null
-2011-01-08T04%3A20%3A00.000Z 366.83 null null
-2011-01-08T04%3A24%3A00.000Z 366.84 null null
-2011-01-08T04%3A56%3A00.000Z 366.84 null null
-2011-01-08T05%3A04%3A00.000Z 366.82 null null
-2011-01-08T05%3A08%3A00.000Z 366.83 null null
-2011-01-08T05%3A20%3A00.000Z 366.83 null null
-2011-01-08T05%3A24%3A00.000Z 366.82 null null
-2011-01-08T05%3A28%3A00.000Z 366.83 null null
-2011-01-08T05%3A32%3A00.000Z 366.83 null null
-2011-01-08T05%3A36%3A00.000Z 366.82 null null
-2011-01-08T05%3A40%3A00.000Z 366.83 null null
-2011-01-08T05%3A48%3A00.000Z 366.83 null null
-2011-01-08T05%3A52%3A00.000Z 366.82 null null
-2011-01-08T05%3A56%3A00.000Z 366.82 null null
-2011-01-08T06%3A00%3A00.000Z 366.83 null null
-2011-01-08T06%3A04%3A00.000Z 366.81 null null
-2011-01-08T06%3A08%3A00.000Z 366.82 null null
-2011-01-08T06%3A12%3A00.000Z 366.81 null null
-2011-01-08T06%3A16%3A00.000Z 366.81 null null
-2011-01-08T06%3A20%3A00.000Z 366.82 null null
-2011-01-08T06%3A36%3A00.000Z 366.82 null null
-2011-01-08T06%3A40%3A00.000Z 366.81 null null
-2011-01-08T06%3A48%3A00.000Z 366.81 null null
-2011-01-08T06%3A52%3A00.000Z 366.80 null null
-2011-01-08T06%3A56%3A00.000Z 366.81 null null
-2011-01-08T07%3A00%3A00.000Z 366.81 null null
-2011-01-08T07%3A04%3A00.000Z 366.82 null null
-2011-01-08T07%3A08%3A00.000Z 366.81 null null
-2011-01-08T07%3A24%3A00.000Z 366.81 null null
-2011-01-08T07%3A28%3A00.000Z 366.80 null null
-2011-01-08T08%3A00%3A00.000Z 366.80 null null
-2011-01-08T08%3A04%3A00.000Z 366.79 null null
-2011-01-08T08%3A08%3A00.000Z 366.80 null null
-2011-01-08T08%3A12%3A00.000Z 366.80 null null
-2011-01-08T08%3A16%3A00.000Z 366.79 null null
-2011-01-08T08%3A24%3A00.000Z 366.79 null null
-2011-01-08T08%3A28%3A00.000Z 366.80 null null
-2011-01-08T08%3A32%3A00.000Z 366.79 null null
-2011-01-08T08%3A36%3A00.000Z 366.80 null null
-2011-01-08T08%3A40%3A00.000Z 366.79 null null
-2011-01-08T08%3A48%3A00.000Z 366.79 null null
-2011-01-08T08%3A52%3A00.000Z 366.78 null null
-2011-01-08T08%3A56%3A00.000Z 366.79 null null
-2011-01-08T09%3A04%3A00.000Z 366.79 null null
-2011-01-08T09%3A08%3A00.000Z 366.78 null null
-2011-01-08T09%3A12%3A00.000Z 366.79 null null
-2011-01-08T09%3A24%3A00.000Z 366.79 null null
-2011-01-08T09%3A32%3A00.000Z 366.77 null null
-2011-01-08T09%3A36%3A00.000Z 366.79 null null
-2011-01-08T09%3A40%3A00.000Z 366.78 null null
-2011-01-08T09%3A44%3A00.000Z 366.79 null null
-2011-01-08T09%3A48%3A00.000Z 366.78 null null
-2011-01-08T09%3A56%3A00.000Z 366.78 null null
-2011-01-08T10%3A00%3A00.000Z 366.77 null null
-2011-01-08T10%3A04%3A00.000Z 366.78 null null
-2011-01-08T10%3A08%3A00.000Z 366.77 null null
-2011-01-08T10%3A16%3A00.000Z 366.77 null null
-2011-01-08T10%3A20%3A00.000Z 366.78 null null
-2011-01-08T10%3A32%3A00.000Z 366.78 null null
-2011-01-08T10%3A36%3A00.000Z 366.77 null null
-2011-01-08T10%3A48%3A00.000Z 366.77 null null
-2011-01-08T10%3A52%3A00.000Z 366.76 null null
-2011-01-08T10%3A56%3A00.000Z 366.76 null null
-2011-01-08T11%3A00%3A00.000Z 366.77 null null
-2011-01-08T11%3A04%3A00.000Z 366.77 null null
-2011-01-08T11%3A08%3A00.000Z 366.76 null null
-2011-01-08T11%3A12%3A00.000Z 366.76 null null
-2011-01-08T11%3A16%3A00.000Z 366.77 null null
-2011-01-08T11%3A20%3A00.000Z 366.76 null null
-2011-01-08T11%3A36%3A00.000Z 366.76 null null
-2011-01-08T11%3A40%3A00.000Z 366.77 null null
-2011-01-08T11%3A44%3A00.000Z 366.76 null null
-2011-01-08T11%3A48%3A00.000Z 366.76 null null
-2011-01-08T11%3A52%3A00.000Z 366.77 null null
-2011-01-08T11%3A56%3A00.000Z 366.76 null null
-2011-01-08T12%3A00%3A00.000Z 366.76 null null
-2011-01-08T12%3A04%3A00.000Z 366.75 null null
-2011-01-08T12%3A08%3A00.000Z 366.76 null null
-2011-01-08T12%3A16%3A00.000Z 366.76 null null
-2011-01-08T12%3A20%3A00.000Z 366.75 null null
-2011-01-08T12%3A24%3A00.000Z 366.76 null null
-2011-01-08T12%3A40%3A00.000Z 366.76 null null
-2011-01-08T12%3A44%3A00.000Z 366.75 null null
-2011-01-08T12%3A48%3A00.000Z 366.75 null null
-2011-01-08T12%3A52%3A00.000Z 366.76 null null
-2011-01-08T12%3A56%3A00.000Z 366.76 null null
-2011-01-08T13%3A00%3A00.000Z 366.75 null null
-2011-01-08T13%3A12%3A00.000Z 366.75 null null
-2011-01-08T13%3A16%3A00.000Z 366.74 null null
-2011-01-08T13%3A20%3A00.000Z 366.74 null null
-2011-01-08T13%3A24%3A00.000Z 366.73 null null
-2011-01-08T13%3A28%3A00.000Z 366.75 null null
-2011-01-08T13%3A32%3A00.000Z 366.74 null null
-2011-01-08T13%3A36%3A00.000Z 366.75 null null
-2011-01-08T13%3A40%3A00.000Z 366.74 null null
-2011-01-08T13%3A44%3A00.000Z 366.75 null null
-2011-01-08T13%3A48%3A00.000Z 366.74 null null
-2011-01-08T14%3A08%3A00.000Z 366.74 null null
-2011-01-08T14%3A12%3A00.000Z 366.73 null null
-2011-01-08T14%3A16%3A00.000Z 366.74 null null
-2011-01-08T14%3A20%3A00.000Z 366.74 null null
-2011-01-08T14%3A24%3A00.000Z 366.73 null null
-2011-01-08T14%3A28%3A00.000Z 366.74 null null
-2011-01-08T14%3A32%3A00.000Z 366.73 null null
-2011-01-08T14%3A36%3A00.000Z 366.74 null null
-2011-01-08T14%3A40%3A00.000Z 366.73 null null
-2011-01-08T14%3A44%3A00.000Z 366.74 null null
-2011-01-08T14%3A48%3A00.000Z 366.74 null null
-2011-01-08T14%3A52%3A00.000Z 366.73 null null
-2011-01-08T14%3A56%3A00.000Z 366.73 null null
-2011-01-08T15%3A00%3A00.000Z 366.72 null null
-2011-01-08T15%3A04%3A00.000Z 366.73 null null
-2011-01-08T15%3A12%3A00.000Z 366.73 null null
-2011-01-08T15%3A16%3A00.000Z 366.72 null null
-2011-01-08T15%3A20%3A00.000Z 366.73 null null
-2011-01-08T15%3A24%3A00.000Z 366.72 null null
-2011-01-08T15%3A28%3A00.000Z 366.73 null null
-2011-01-08T15%3A40%3A00.000Z 366.73 null null
-2011-01-08T15%3A44%3A00.000Z 366.72 null null
-2011-01-08T15%3A48%3A00.000Z 366.72 null null
-2011-01-08T15%3A52%3A00.000Z 366.71 null null
-2011-01-08T15%3A56%3A00.000Z 366.72 null null
-2011-01-08T16%3A00%3A00.000Z 366.71 null null
-2011-01-08T16%3A04%3A00.000Z 366.72 null null
-2011-01-08T16%3A12%3A00.000Z 366.72 null null
-2011-01-08T16%3A16%3A00.000Z 366.71 null null
-2011-01-08T16%3A20%3A00.000Z 366.72 null null
-2011-01-08T16%3A28%3A00.000Z 366.72 null null
-2011-01-08T16%3A32%3A00.000Z 366.71 null null
-2011-01-08T17%3A12%3A00.000Z 366.71 null null
-2011-01-08T17%3A16%3A00.000Z 366.70 null null
-2011-01-08T17%3A20%3A00.000Z 366.70 null null
-2011-01-08T17%3A24%3A00.000Z 366.71 null null
-2011-01-08T17%3A28%3A00.000Z 366.70 null null
-2011-01-08T18%3A00%3A00.000Z 366.70 null null
-2011-01-08T18%3A04%3A00.000Z 366.69 null null
-2011-01-08T18%3A08%3A00.000Z 366.70 null null
-2011-01-08T18%3A16%3A00.000Z 366.70 null null
-2011-01-08T18%3A20%3A00.000Z 366.69 null null
-2011-01-08T18%3A28%3A00.000Z 366.69 null null
-2011-01-08T18%3A32%3A00.000Z 366.70 null null
-2011-01-08T18%3A36%3A00.000Z 366.69 null null
-2011-01-08T19%3A08%3A00.000Z 366.69 null null
-2011-01-08T19%3A12%3A00.000Z 366.70 null null
-2011-01-08T19%3A16%3A00.000Z 366.69 null null
-2011-01-08T19%3A20%3A00.000Z 366.69 null null
-2011-01-08T19%3A24%3A00.000Z 366.68 null null
-2011-01-08T19%3A28%3A00.000Z 366.68 null null
-2011-01-08T19%3A32%3A00.000Z 366.69 null null
-2011-01-08T19%3A36%3A00.000Z 366.69 null null
-2011-01-08T19%3A40%3A00.000Z 366.68 null null
-2011-01-08T20%3A00%3A00.000Z 366.68 null null
-2011-01-08T20%3A04%3A00.000Z 366.69 null null
-2011-01-08T20%3A08%3A00.000Z 366.68 null null
-2011-01-08T20%3A16%3A00.000Z 366.68 null null
-2011-01-08T20%3A20%3A00.000Z 366.69 null null
-2011-01-08T20%3A28%3A00.000Z 366.67 null null
-2011-01-08T20%3A32%3A00.000Z 366.68 null null
-2011-01-08T20%3A36%3A00.000Z 366.67 null null
-2011-01-08T20%3A44%3A00.000Z 366.67 null null
-2011-01-08T20%3A48%3A00.000Z 366.68 null null
-2011-01-08T20%3A52%3A00.000Z 366.67 null null
-2011-01-08T20%3A56%3A00.000Z 366.68 null null
-2011-01-08T21%3A00%3A00.000Z 366.67 null null
-2011-01-08T21%3A24%3A00.000Z 366.67 null null
-2011-01-08T21%3A28%3A00.000Z 366.65 null null
-2011-01-08T21%3A32%3A00.000Z 366.67 null null
-2011-01-08T21%3A36%3A00.000Z 366.66 null null
-2011-01-08T22%3A00%3A00.000Z 366.66 null null
-2011-01-08T22%3A04%3A00.000Z 366.65 null null
-2011-01-08T22%3A08%3A00.000Z 366.65 null null
-2011-01-08T22%3A12%3A00.000Z 366.66 null null
-2011-01-08T22%3A20%3A00.000Z 366.66 null null
-2011-01-08T22%3A24%3A00.000Z 366.65 null null
-2011-01-08T22%3A56%3A00.000Z 366.65 null null
-2011-01-08T23%3A00%3A00.000Z 366.64 null null
-2011-01-08T23%3A04%3A00.000Z 366.64 null null
-2011-01-08T23%3A08%3A00.000Z 366.65 null null
-2011-01-08T23%3A16%3A00.000Z 366.65 null null
-2011-01-08T23%3A20%3A00.000Z 366.64 null null
-2011-01-08T23%3A24%3A00.000Z 366.65 null null
-2011-01-08T23%3A28%3A00.000Z 366.64 null null
-2011-01-08T23%3A52%3A00.000Z 366.64 null null
-2011-01-08T23%3A56%3A00.000Z 366.63 null null
-2011-01-09T00%3A00%3A00.000Z 366.63 null null
-2011-01-09T00%3A04%3A00.000Z 366.62 null null
-2011-01-09T00%3A08%3A00.000Z 366.64 null null
-2011-01-09T00%3A12%3A00.000Z 366.63 null null
-2011-01-09T00%3A20%3A00.000Z 366.63 null null
-2011-01-09T00%3A24%3A00.000Z 366.64 null null
-2011-01-09T00%3A32%3A00.000Z 366.62 null null
-2011-01-09T00%3A36%3A00.000Z 366.63 null null
-2011-01-09T00%3A40%3A00.000Z 366.63 null null
-2011-01-09T00%3A44%3A00.000Z 366.62 null null
-2011-01-09T00%3A48%3A00.000Z 366.63 null null
-2011-01-09T00%3A52%3A00.000Z 366.62 null null
-2011-01-09T01%3A20%3A00.000Z 366.62 null null
-2011-01-09T01%3A24%3A00.000Z 366.61 null null
-2011-01-09T01%3A28%3A00.000Z 366.61 null null
-2011-01-09T01%3A32%3A00.000Z 366.62 null null
-2011-01-09T01%3A36%3A00.000Z 366.62 null null
-2011-01-09T01%3A40%3A00.000Z 366.61 null null
-2011-01-09T01%3A44%3A00.000Z 366.61 null null
-2011-01-09T01%3A48%3A00.000Z 366.62 null null
-2011-01-09T01%3A56%3A00.000Z 366.60 null null
-2011-01-09T02%3A00%3A00.000Z 366.61 null null
-2011-01-09T02%3A16%3A00.000Z 366.61 null null
-2011-01-09T02%3A20%3A00.000Z 366.60 null null
-2011-01-09T02%3A36%3A00.000Z 366.60 null null
-2011-01-09T02%3A40%3A00.000Z 366.61 null null
-2011-01-09T02%3A44%3A00.000Z 366.59 null null
-2011-01-09T02%3A48%3A00.000Z 366.60 null null
-2011-01-09T03%3A16%3A00.000Z 366.60 null null
-2011-01-09T03%3A24%3A00.000Z 366.58 null null
-2011-01-09T03%3A32%3A00.000Z 366.60 null null
-2011-01-09T03%3A36%3A00.000Z 366.59 null null
-2011-01-09T04%3A08%3A00.000Z 366.59 null null
-2011-01-09T04%3A12%3A00.000Z 366.58 null null
-2011-01-09T04%3A16%3A00.000Z 366.58 null null
-2011-01-09T04%3A20%3A00.000Z 366.59 null null
-2011-01-09T04%3A24%3A00.000Z 366.58 null null
-2011-01-09T04%3A36%3A00.000Z 366.58 null null
-2011-01-09T04%3A40%3A00.000Z 366.57 null null
-2011-01-09T04%3A44%3A00.000Z 366.57 null null
-2011-01-09T04%3A48%3A00.000Z 366.58 null null
-2011-01-09T04%3A56%3A00.000Z 366.58 null null
-2011-01-09T05%3A00%3A00.000Z 366.57 null null
-2011-01-09T05%3A08%3A00.000Z 366.57 null null
-2011-01-09T05%3A12%3A00.000Z 366.56 null null
-2011-01-09T05%3A20%3A00.000Z 366.56 null null
-2011-01-09T05%3A24%3A00.000Z 366.57 null null
-2011-01-09T05%3A28%3A00.000Z 366.57 null null
-2011-01-09T05%3A32%3A00.000Z 366.55 null null
-2011-01-09T05%3A36%3A00.000Z 366.56 null null
-2011-01-09T06%3A12%3A00.000Z 366.56 null null
-2011-01-09T06%3A16%3A00.000Z 366.55 null null
-2011-01-09T06%3A20%3A00.000Z 366.56 null null
-2011-01-09T06%3A24%3A00.000Z 366.55 null null
-2011-01-09T06%3A28%3A00.000Z 366.56 null null
-2011-01-09T06%3A32%3A00.000Z 366.56 null null
-2011-01-09T06%3A36%3A00.000Z 366.55 null null
-2011-01-09T06%3A44%3A00.000Z 366.55 null null
-2011-01-09T06%3A48%3A00.000Z 366.54 null null
-2011-01-09T06%3A52%3A00.000Z 366.55 null null
-2011-01-09T06%3A56%3A00.000Z 366.54 null null
-2011-01-09T07%3A00%3A00.000Z 366.54 null null
-2011-01-09T07%3A04%3A00.000Z 366.55 null null
-2011-01-09T07%3A12%3A00.000Z 366.55 null null
-2011-01-09T07%3A16%3A00.000Z 366.54 null null
-2011-01-09T07%3A28%3A00.000Z 366.54 null null
-2011-01-09T07%3A32%3A00.000Z 366.53 null null
-2011-01-09T07%3A36%3A00.000Z 366.54 null null
-2011-01-09T07%3A44%3A00.000Z 366.54 null null
-2011-01-09T07%3A48%3A00.000Z 366.53 null null
-2011-01-09T08%3A04%3A00.000Z 366.53 null null
-2011-01-09T08%3A08%3A00.000Z 366.52 null null
-2011-01-09T08%3A12%3A00.000Z 366.52 null null
-2011-01-09T08%3A16%3A00.000Z 366.53 null null
-2011-01-09T08%3A20%3A00.000Z 366.52 null null
-2011-01-09T08%3A32%3A00.000Z 366.52 null null
-2011-01-09T08%3A36%3A00.000Z 366.53 null null
-2011-01-09T08%3A40%3A00.000Z 366.53 null null
-2011-01-09T08%3A44%3A00.000Z 366.52 null null
-2011-01-09T08%3A52%3A00.000Z 366.52 null null
-2011-01-09T08%3A56%3A00.000Z 366.51 null null
-2011-01-09T09%3A00%3A00.000Z 366.52 null null
-2011-01-09T09%3A04%3A00.000Z 366.51 null null
-2011-01-09T09%3A16%3A00.000Z 366.51 null null
-2011-01-09T09%3A20%3A00.000Z 366.52 null null
-2011-01-09T09%3A24%3A00.000Z 366.51 null null
-2011-01-09T09%3A36%3A00.000Z 366.51 null null
-2011-01-09T09%3A40%3A00.000Z 366.50 null null
-2011-01-09T09%3A44%3A00.000Z 366.50 null null
-2011-01-09T09%3A48%3A00.000Z 366.51 null null
-2011-01-09T09%3A52%3A00.000Z 366.51 null null
-2011-01-09T09%3A56%3A00.000Z 366.50 null null
-2011-01-09T10%3A20%3A00.000Z 366.50 null null
-2011-01-09T10%3A24%3A00.000Z 366.49 null null
-2011-01-09T10%3A28%3A00.000Z 366.50 null null
-2011-01-09T10%3A36%3A00.000Z 366.50 null null
-2011-01-09T10%3A40%3A00.000Z 366.49 null null
-2011-01-09T10%3A44%3A00.000Z 366.49 null null
-2011-01-09T10%3A48%3A00.000Z 366.48 null null
-2011-01-09T10%3A52%3A00.000Z 366.49 null null
-2011-01-09T10%3A56%3A00.000Z 366.48 null null
-2011-01-09T11%3A00%3A00.000Z 366.49 null null
-2011-01-09T11%3A04%3A00.000Z 366.49 null null
-2011-01-09T11%3A08%3A00.000Z 366.48 null null
-2011-01-09T11%3A12%3A00.000Z 366.49 null null
-2011-01-09T11%3A16%3A00.000Z 366.48 null null
-2011-01-09T11%3A28%3A00.000Z 366.48 null null
-2011-01-09T11%3A32%3A00.000Z 366.49 null null
-2011-01-09T11%3A36%3A00.000Z 366.48 null null
-2011-01-09T11%3A40%3A00.000Z 366.48 null null
-2011-01-09T11%3A44%3A00.000Z 366.47 null null
-2011-01-09T11%3A48%3A00.000Z 366.48 null null
-2011-01-09T12%3A00%3A00.000Z 366.48 null null
-2011-01-09T12%3A08%3A00.000Z 366.46 null null
-2011-01-09T12%3A12%3A00.000Z 366.47 null null
-2011-01-09T12%3A16%3A00.000Z 366.47 null null
-2011-01-09T12%3A20%3A00.000Z 366.48 null null
-2011-01-09T12%3A24%3A00.000Z 366.47 null null
-2011-01-09T12%3A28%3A00.000Z 366.48 null null
-2011-01-09T12%3A32%3A00.000Z 366.46 null null
-2011-01-09T12%3A36%3A00.000Z 366.47 null null
-2011-01-09T12%3A40%3A00.000Z 366.46 null null
-2011-01-09T12%3A52%3A00.000Z 366.46 null null
-2011-01-09T12%3A56%3A00.000Z 366.45 null null
-2011-01-09T13%3A00%3A00.000Z 366.46 null null
-2011-01-09T13%3A16%3A00.000Z 366.46 null null
-2011-01-09T13%3A20%3A00.000Z 366.45 null null
-2011-01-09T13%3A24%3A00.000Z 366.45 null null
-2011-01-09T13%3A28%3A00.000Z 366.46 null null
-2011-01-09T13%3A32%3A00.000Z 366.45 null null
-2011-01-09T13%3A48%3A00.000Z 366.45 null null
-2011-01-09T13%3A52%3A00.000Z 366.44 null null
-2011-01-09T14%3A00%3A00.000Z 366.44 null null
-2011-01-09T14%3A04%3A00.000Z 366.45 null null
-2011-01-09T14%3A12%3A00.000Z 366.45 null null
-2011-01-09T14%3A16%3A00.000Z 366.44 null null
-2011-01-09T14%3A40%3A00.000Z 366.44 null null
-2011-01-09T14%3A44%3A00.000Z 366.43 null null
-2011-01-09T14%3A48%3A00.000Z 366.43 null null
-2011-01-09T14%3A52%3A00.000Z 366.44 null null
-2011-01-09T14%3A56%3A00.000Z 366.43 null null
-2011-01-09T15%3A08%3A00.000Z 366.43 null null
-2011-01-09T15%3A12%3A00.000Z 366.42 null null
-2011-01-09T15%3A20%3A00.000Z 366.42 null null
-2011-01-09T15%3A24%3A00.000Z 366.43 null null
-2011-01-09T15%3A28%3A00.000Z 366.42 null null
-2011-01-09T16%3A04%3A00.000Z 366.42 null null
-2011-01-09T16%3A08%3A00.000Z 366.41 null null
-2011-01-09T16%3A28%3A00.000Z 366.41 null null
-2011-01-09T16%3A32%3A00.000Z 366.40 null null
-2011-01-09T16%3A44%3A00.000Z 366.40 null null
-2011-01-09T16%3A48%3A00.000Z 366.41 null null
-2011-01-09T16%3A52%3A00.000Z 366.41 null null
-2011-01-09T17%3A00%3A00.000Z 366.39 null null
-2011-01-09T17%3A04%3A00.000Z 366.40 null null
-2011-01-09T17%3A24%3A00.000Z 366.40 null null
-2011-01-09T17%3A28%3A00.000Z 366.39 null null
-2011-01-09T17%3A40%3A00.000Z 366.39 null null
-2011-01-09T17%3A44%3A00.000Z 366.40 null null
-2011-01-09T17%3A48%3A00.000Z 366.39 null null
-2011-01-09T18%3A00%3A00.000Z 366.39 null null
-2011-01-09T18%3A04%3A00.000Z 366.40 null null
-2011-01-09T18%3A08%3A00.000Z 366.38 null null
-2011-01-09T18%3A12%3A00.000Z 366.39 null null
-2011-01-09T18%3A16%3A00.000Z 366.38 null null
-2011-01-09T18%3A24%3A00.000Z 366.38 null null
-2011-01-09T18%3A28%3A00.000Z 366.37 null null
-2011-01-09T18%3A32%3A00.000Z 366.38 null null
-2011-01-09T18%3A40%3A00.000Z 366.38 null null
-2011-01-09T18%3A44%3A00.000Z 366.37 null null
-2011-01-09T18%3A48%3A00.000Z 366.37 null null
-2011-01-09T18%3A52%3A00.000Z 366.38 null null
-2011-01-09T18%3A56%3A00.000Z 366.37 null null
-2011-01-09T19%3A04%3A00.000Z 366.37 null null
-2011-01-09T19%3A08%3A00.000Z 366.38 null null
-2011-01-09T19%3A12%3A00.000Z 366.38 null null
-2011-01-09T19%3A20%3A00.000Z 366.36 null null
-2011-01-09T19%3A24%3A00.000Z 366.37 null null
-2011-01-09T19%3A28%3A00.000Z 366.36 null null
-2011-01-09T19%3A32%3A00.000Z 366.36 null null
-2011-01-09T19%3A36%3A00.000Z 366.37 null null
-2011-01-09T19%3A40%3A00.000Z 366.36 null null
-2011-01-09T20%3A08%3A00.000Z 366.36 null null
-2011-01-09T20%3A12%3A00.000Z 366.35 null null
-2011-01-09T20%3A24%3A00.000Z 366.35 null null
-2011-01-09T20%3A28%3A00.000Z 366.36 null null
-2011-01-09T20%3A32%3A00.000Z 366.35 null null
-2011-01-09T21%3A00%3A00.000Z 366.35 null null
-2011-01-09T21%3A04%3A00.000Z 366.34 null null
-2011-01-09T21%3A08%3A00.000Z 366.34 null null
-2011-01-09T21%3A12%3A00.000Z 366.35 null null
-2011-01-09T21%3A16%3A00.000Z 366.34 null null
-2011-01-09T21%3A56%3A00.000Z 366.34 null null
-2011-01-09T22%3A00%3A00.000Z 366.32 null null
-2011-01-09T22%3A04%3A00.000Z 366.33 null null
-2011-01-09T22%3A40%3A00.000Z 366.33 null null
-2011-01-09T22%3A44%3A00.000Z 366.32 null null
-2011-01-09T22%3A48%3A00.000Z 366.33 null null
-2011-01-09T22%3A52%3A00.000Z 366.32 null null
-2011-01-09T23%3A20%3A00.000Z 366.32 null null
-2011-01-09T23%3A24%3A00.000Z 366.31 null null
-2011-01-09T23%3A28%3A00.000Z 366.32 null null
-2011-01-09T23%3A32%3A00.000Z 366.31 null null
-2011-01-09T23%3A44%3A00.000Z 366.31 null null
-2011-01-09T23%3A48%3A00.000Z 366.32 null null
-2011-01-09T23%3A52%3A00.000Z 366.31 null null
-2011-01-09T23%3A56%3A00.000Z 366.31 null null
-2011-01-10T00%3A00%3A00.000Z 366.30 null null
-2011-01-10T00%3A32%3A00.000Z 366.30 null null
-2011-01-10T00%3A36%3A00.000Z 366.29 null null
-2011-01-10T00%3A40%3A00.000Z 366.30 null null
-2011-01-10T00%3A52%3A00.000Z 366.30 null null
-2011-01-10T00%3A56%3A00.000Z 366.29 null null
-2011-01-10T01%3A12%3A00.000Z 366.29 null null
-2011-01-10T01%3A16%3A00.000Z 366.28 null null
-2011-01-10T01%3A20%3A00.000Z 366.29 null null
-2011-01-10T01%3A40%3A00.000Z 366.29 null null
-2011-01-10T01%3A44%3A00.000Z 366.28 null null
-2011-01-10T01%3A48%3A00.000Z 366.28 null null
-2011-01-10T01%3A52%3A00.000Z 366.29 null null
-2011-01-10T01%3A56%3A00.000Z 366.28 null null
-2011-01-10T02%3A00%3A00.000Z 366.28 null null
-2011-01-10T02%3A04%3A00.000Z 366.29 null null
-2011-01-10T02%3A08%3A00.000Z 366.27 null null
-2011-01-10T02%3A12%3A00.000Z 366.28 null null
-2011-01-10T02%3A16%3A00.000Z 366.28 null null
-2011-01-10T02%3A20%3A00.000Z 366.27 null null
-2011-01-10T02%3A24%3A00.000Z 366.27 null null
-2011-01-10T02%3A28%3A00.000Z 366.28 null null
-2011-01-10T02%3A32%3A00.000Z 366.27 null null
-2011-01-10T02%3A36%3A00.000Z 366.27 null null
-2011-01-10T02%3A40%3A00.000Z 366.28 null null
-2011-01-10T02%3A44%3A00.000Z 366.27 null null
-2011-01-10T03%3A08%3A00.000Z 366.27 null null
-2011-01-10T03%3A12%3A00.000Z 366.26 null null
-2011-01-10T03%3A28%3A00.000Z 366.26 null null
-2011-01-10T03%3A32%3A00.000Z 366.27 null null
-2011-01-10T03%3A36%3A00.000Z 366.25 null null
-2011-01-10T03%3A40%3A00.000Z 366.26 null null
-2011-01-10T03%3A44%3A00.000Z 366.25 null null
-2011-01-10T03%3A48%3A00.000Z 366.25 null null
-2011-01-10T03%3A52%3A00.000Z 366.26 null null
-2011-01-10T03%3A56%3A00.000Z 366.26 null null
-2011-01-10T04%3A00%3A00.000Z 366.25 null null
-2011-01-10T04%3A20%3A00.000Z 366.25 null null
-2011-01-10T04%3A24%3A00.000Z 366.24 null null
-2011-01-10T04%3A28%3A00.000Z 366.25 null null
-2011-01-10T04%3A32%3A00.000Z 366.24 null null
-2011-01-10T04%3A36%3A00.000Z 366.24 null null
-2011-01-10T04%3A40%3A00.000Z 366.25 null null
-2011-01-10T04%3A44%3A00.000Z 366.25 null null
-2011-01-10T04%3A48%3A00.000Z 366.24 null null
-2011-01-10T04%3A52%3A00.000Z 366.24 null null
-2011-01-10T04%3A56%3A00.000Z 366.25 null null
-2011-01-10T05%3A00%3A00.000Z 366.23 null null
-2011-01-10T05%3A04%3A00.000Z 366.24 null null
-2011-01-10T05%3A08%3A00.000Z 366.24 null null
-2011-01-10T05%3A12%3A00.000Z 366.23 null null
-2011-01-10T05%3A16%3A00.000Z 366.24 null null
-2011-01-10T05%3A20%3A00.000Z 366.23 null null
-2011-01-10T05%3A24%3A00.000Z 366.24 null null
-2011-01-10T05%3A28%3A00.000Z 366.23 null null
-2011-01-10T05%3A52%3A00.000Z 366.23 null null
-2011-01-10T05%3A56%3A00.000Z 366.22 null null
-2011-01-10T06%3A04%3A00.000Z 366.22 null null
-2011-01-10T06%3A08%3A00.000Z 366.23 null null
-2011-01-10T06%3A16%3A00.000Z 366.23 null null
-2011-01-10T06%3A20%3A00.000Z 366.22 null null
-2011-01-10T06%3A48%3A00.000Z 366.22 null null
-2011-01-10T06%3A52%3A00.000Z 366.21 null null
-2011-01-10T06%3A56%3A00.000Z 366.22 null null
-2011-01-10T07%3A00%3A00.000Z 366.22 null null
-2011-01-10T07%3A04%3A00.000Z 366.21 null null
-2011-01-10T07%3A08%3A00.000Z 366.22 null null
-2011-01-10T07%3A12%3A00.000Z 366.21 null null
-2011-01-10T07%3A24%3A00.000Z 366.21 null null
-2011-01-10T07%3A28%3A00.000Z 366.20 null null
-2011-01-10T07%3A32%3A00.000Z 366.21 null null
-2011-01-10T07%3A36%3A00.000Z 366.21 null null
-2011-01-10T07%3A40%3A00.000Z 366.20 null null
-2011-01-10T07%3A44%3A00.000Z 366.20 null null
-2011-01-10T07%3A48%3A00.000Z 366.21 null null
-2011-01-10T07%3A52%3A00.000Z 366.20 null null
-2011-01-10T08%3A16%3A00.000Z 366.20 null null
-2011-01-10T08%3A20%3A00.000Z 366.19 null null
-2011-01-10T08%3A44%3A00.000Z 366.19 null null
-2011-01-10T08%3A48%3A00.000Z 366.20 null null
-2011-01-10T08%3A52%3A00.000Z 366.19 null null
-2011-01-10T09%3A00%3A00.000Z 366.19 null null
-2011-01-10T09%3A04%3A00.000Z 366.18 null null
-2011-01-10T09%3A08%3A00.000Z 366.19 null null
-2011-01-10T09%3A12%3A00.000Z 366.19 null null
-2011-01-10T09%3A16%3A00.000Z 366.18 null null
-2011-01-10T09%3A20%3A00.000Z 366.18 null null
-2011-01-10T09%3A24%3A00.000Z 366.19 null null
-2011-01-10T09%3A32%3A00.000Z 366.17 null null
-2011-01-10T09%3A36%3A00.000Z 366.18 null null
-2011-01-10T09%3A40%3A00.000Z 366.18 null null
-2011-01-10T09%3A44%3A00.000Z 366.17 null null
-2011-01-10T09%3A48%3A00.000Z 366.18 null null
-2011-01-10T09%3A52%3A00.000Z 366.17 null null
-2011-01-10T10%3A20%3A00.000Z 366.17 null null
-2011-01-10T10%3A24%3A00.000Z 366.18 null null
-2011-01-10T10%3A28%3A00.000Z 366.17 null null
-2011-01-10T10%3A32%3A00.000Z 366.17 null null
-2011-01-10T10%3A36%3A00.000Z 366.16 null null
-2011-01-10T10%3A40%3A00.000Z 366.17 null null
-2011-01-10T10%3A44%3A00.000Z 366.17 null null
-2011-01-10T10%3A48%3A00.000Z 366.16 null null
-2011-01-10T11%3A00%3A00.000Z 366.16 null null
-2011-01-10T11%3A04%3A00.000Z 366.15 null null
-2011-01-10T11%3A08%3A00.000Z 366.16 null null
-2011-01-10T11%3A24%3A00.000Z 366.16 null null
-2011-01-10T11%3A28%3A00.000Z 366.15 null null
-2011-01-10T11%3A32%3A00.000Z 366.16 null null
-2011-01-10T11%3A36%3A00.000Z 366.15 null null
-2011-01-10T11%3A48%3A00.000Z 366.15 null null
-2011-01-10T11%3A52%3A00.000Z 366.14 null null
-2011-01-10T11%3A56%3A00.000Z 366.15 null null
-2011-01-10T12%3A04%3A00.000Z 366.15 null null
-2011-01-10T12%3A08%3A00.000Z 366.14 null null
-2011-01-10T12%3A32%3A00.000Z 366.14 null null
-2011-01-10T12%3A36%3A00.000Z 366.13 null null
-2011-01-10T12%3A40%3A00.000Z 366.14 null null
-2011-01-10T12%3A52%3A00.000Z 366.14 null null
-2011-01-10T12%3A56%3A00.000Z 366.13 null null
-2011-01-10T13%3A08%3A00.000Z 366.13 null null
-2011-01-10T13%3A12%3A00.000Z 366.14 null null
-2011-01-10T13%3A16%3A00.000Z 366.13 null null
-2011-01-10T13%3A24%3A00.000Z 366.13 null null
-2011-01-10T13%3A28%3A00.000Z 366.12 null null
-2011-01-10T13%3A32%3A00.000Z 366.13 null null
-2011-01-10T13%3A36%3A00.000Z 366.12 null null
-2011-01-10T13%3A44%3A00.000Z 366.12 null null
-2011-01-10T13%3A48%3A00.000Z 366.13 null null
-2011-01-10T13%3A52%3A00.000Z 366.12 null null
-2011-01-10T14%3A04%3A00.000Z 366.12 null null
-2011-01-10T14%3A08%3A00.000Z 366.11 null null
-2011-01-10T14%3A40%3A00.000Z 366.11 null null
-2011-01-10T14%3A44%3A00.000Z 366.10 null null
-2011-01-10T14%3A56%3A00.000Z 366.10 null null
-2011-01-10T15%3A00%3A00.000Z 366.09 null null
-2011-01-10T15%3A04%3A00.000Z 366.10 null null
-2011-01-10T15%3A16%3A00.000Z 366.10 null null
-2011-01-10T15%3A20%3A00.000Z 366.09 null null
-2011-01-10T15%3A24%3A00.000Z 366.10 null null
-2011-01-10T15%3A28%3A00.000Z 366.10 null null
-2011-01-10T15%3A32%3A00.000Z 366.09 null null
-2011-01-10T16%3A08%3A00.000Z 366.09 null null
-2011-01-10T16%3A12%3A00.000Z 366.08 null null
-2011-01-10T16%3A16%3A00.000Z 366.08 null null
-2011-01-10T16%3A20%3A00.000Z 366.07 null null
-2011-01-10T16%3A24%3A00.000Z 366.07 null null
-2011-01-10T16%3A28%3A00.000Z 366.08 null null
-2011-01-10T16%3A32%3A00.000Z 366.07 null null
-2011-01-10T16%3A44%3A00.000Z 366.07 null null
-2011-01-10T16%3A48%3A00.000Z 366.06 null null
-2011-01-10T16%3A52%3A00.000Z 366.07 null null
-2011-01-10T16%3A56%3A00.000Z 366.06 null null
-2011-01-10T17%3A00%3A00.000Z 366.06 null null
-2011-01-10T17%3A04%3A00.000Z 366.07 null null
-2011-01-10T17%3A08%3A00.000Z 366.06 null null
-2011-01-10T17%3A16%3A00.000Z 366.06 null null
-2011-01-10T17%3A20%3A00.000Z 366.05 null null
-2011-01-10T17%3A24%3A00.000Z 366.06 null null
-2011-01-10T17%3A28%3A00.000Z 366.06 null null
-2011-01-10T17%3A32%3A00.000Z 366.05 null null
-2011-01-10T18%3A00%3A00.000Z 366.05 null null
-2011-01-10T18%3A04%3A00.000Z 366.04 null null
-2011-01-10T18%3A08%3A00.000Z 366.04 null null
-2011-01-10T18%3A12%3A00.000Z 366.05 null null
-2011-01-10T18%3A16%3A00.000Z 366.04 null null
-2011-01-10T18%3A20%3A00.000Z 366.04 null null
-2011-01-10T18%3A24%3A00.000Z 366.03 null null
-2011-01-10T18%3A40%3A00.000Z 366.03 null null
-2011-01-10T18%3A44%3A00.000Z 366.02 null null
-2011-01-10T18%3A48%3A00.000Z 366.02 null null
-2011-01-10T18%3A52%3A00.000Z 366.03 null null
-2011-01-10T19%3A04%3A00.000Z 366.03 null null
-2011-01-10T19%3A08%3A00.000Z 366.01 null null
-2011-01-10T19%3A12%3A00.000Z 366.02 null null
-2011-01-10T19%3A16%3A00.000Z 366.01 null null
-2011-01-10T19%3A20%3A00.000Z 366.02 null null
-2011-01-10T19%3A24%3A00.000Z 366.01 null null
-2011-01-10T19%3A48%3A00.000Z 366.01 null null
-2011-01-10T19%3A52%3A00.000Z 366.00 null null
-2011-01-10T19%3A56%3A00.000Z 366.01 null null
-2011-01-10T20%3A00%3A00.000Z 366.00 null null
-2011-01-10T20%3A24%3A00.000Z 366.00 null null
-2011-01-10T20%3A28%3A00.000Z 365.99 null null
-2011-01-10T20%3A36%3A00.000Z 365.99 null null
-2011-01-10T20%3A40%3A00.000Z 365.98 null null
-2011-01-10T20%3A44%3A00.000Z 365.99 null null
-2011-01-10T20%3A48%3A00.000Z 365.99 null null
-2011-01-10T20%3A52%3A00.000Z 365.98 null null
-2011-01-10T20%3A56%3A00.000Z 365.99 null null
-2011-01-10T21%3A00%3A00.000Z 365.98 null null
-2011-01-10T21%3A24%3A00.000Z 365.98 null null
-2011-01-10T21%3A28%3A00.000Z 365.97 null null
-2011-01-10T21%3A44%3A00.000Z 365.97 null null
-2011-01-10T21%3A48%3A00.000Z 365.96 null null
-2011-01-10T21%3A52%3A00.000Z 365.97 null null
-2011-01-10T22%3A00%3A00.000Z 365.95 null null
-2011-01-10T22%3A04%3A00.000Z 365.95 null null
-2011-01-10T22%3A08%3A00.000Z 365.96 null null
-2011-01-10T22%3A16%3A00.000Z 365.96 null null
-2011-01-10T22%3A20%3A00.000Z 365.95 null null
-2011-01-10T22%3A28%3A00.000Z 365.95 null null
-2011-01-10T22%3A32%3A00.000Z 365.94 null null
-2011-01-10T22%3A36%3A00.000Z 365.94 null null
-2011-01-10T22%3A40%3A00.000Z 365.95 null null
-2011-01-10T22%3A44%3A00.000Z 365.94 null null
-2011-01-10T22%3A52%3A00.000Z 365.94 null null
-2011-01-10T22%3A56%3A00.000Z 365.95 null null
+     <om:result><![CDATA[2008-06-03T22%3A00%3A00.000Z 366.57 null null
+2008-06-03T22%3A04%3A00.000Z 366.58 null null
+2008-06-03T22%3A08%3A00.000Z 366.57 null null
+2008-06-03T22%3A40%3A00.000Z 366.57 null null
+2008-06-03T22%3A44%3A00.000Z 366.56 null null
+2008-06-03T22%3A48%3A00.000Z 366.57 null null
+2008-06-03T22%3A52%3A00.000Z 366.56 null null
+2008-06-03T22%3A56%3A00.000Z 366.57 null null
+2008-06-03T23%3A00%3A00.000Z 366.56 null null
+2008-06-03T23%3A04%3A00.000Z 366.56 null null
+2008-06-03T23%3A08%3A00.000Z 366.57 null null
+2008-06-03T23%3A12%3A00.000Z 366.56 null null
+2008-06-03T23%3A32%3A00.000Z 366.56 null null
+2008-06-03T23%3A36%3A00.000Z 366.55 null null
+2008-06-03T23%3A40%3A00.000Z 366.56 null null
+2008-06-03T23%3A44%3A00.000Z 366.55 null null
+2008-06-03T23%3A56%3A00.000Z 366.55 null null
+2008-06-04T00%3A00%3A00.000Z 366.56 null null
+2008-06-04T00%3A16%3A00.000Z 366.56 null null
+2008-06-04T00%3A20%3A00.000Z 366.54 null null
+2008-06-04T00%3A24%3A00.000Z 366.54 null null
+2008-06-04T00%3A28%3A00.000Z 366.56 null null
+2008-06-04T00%3A32%3A00.000Z 366.55 null null
+2008-06-04T00%3A36%3A00.000Z 366.55 null null
+2008-06-04T00%3A40%3A00.000Z 366.56 null null
+2008-06-04T00%3A44%3A00.000Z 366.55 null null
+2008-06-04T01%3A00%3A00.000Z 366.55 null null
+2008-06-04T01%3A04%3A00.000Z 366.56 null null
+2008-06-04T01%3A08%3A00.000Z 366.55 null null
+2008-06-04T01%3A16%3A00.000Z 366.55 null null
+2008-06-04T01%3A20%3A00.000Z 366.54 null null
+2008-06-04T01%3A24%3A00.000Z 366.55 null null
+2008-06-04T02%3A24%3A00.000Z 366.55 null null
+2008-06-04T02%3A28%3A00.000Z 366.54 null null
+2008-06-04T02%3A36%3A00.000Z 366.56 null null
+2008-06-04T02%3A44%3A00.000Z 366.54 null null
+2008-06-04T02%3A52%3A00.000Z 366.56 null null
+2008-06-04T02%3A56%3A00.000Z 366.54 null null
+2008-06-04T03%3A00%3A00.000Z 366.55 null null
+2008-06-04T04%3A08%3A00.000Z 366.55 null null
+2008-06-04T04%3A12%3A00.000Z 366.56 null null
+2008-06-04T04%3A16%3A00.000Z 366.56 null null
+2008-06-04T04%3A20%3A00.000Z 366.55 null null
+2008-06-04T04%3A24%3A00.000Z 366.55 null null
+2008-06-04T04%3A28%3A00.000Z 366.56 null null
+2008-06-04T05%3A08%3A00.000Z 366.56 null null
+2008-06-04T05%3A12%3A00.000Z 366.55 null null
+2008-06-04T05%3A16%3A00.000Z 366.56 null null
+2008-06-04T05%3A20%3A00.000Z 366.56 null null
+2008-06-04T05%3A24%3A00.000Z 366.57 null null
+2008-06-04T05%3A28%3A00.000Z 366.56 null null
+2008-06-04T05%3A36%3A00.000Z 366.56 null null
+2008-06-04T05%3A40%3A00.000Z 366.57 null null
+2008-06-04T05%3A44%3A00.000Z 366.56 null null
+2008-06-04T05%3A48%3A00.000Z 366.56 null null
+2008-06-04T05%3A52%3A00.000Z 366.57 null null
+2008-06-04T06%3A12%3A00.000Z 366.57 null null
+2008-06-04T06%3A16%3A00.000Z 366.56 null null
+2008-06-04T06%3A20%3A00.000Z 366.57 null null
+2008-06-04T06%3A24%3A00.000Z 366.57 null null
+2008-06-04T06%3A28%3A00.000Z 366.56 null null
+2008-06-04T06%3A32%3A00.000Z 366.57 null null
+2008-06-04T06%3A40%3A00.000Z 366.57 null null
+2008-06-04T06%3A44%3A00.000Z 366.56 null null
+2008-06-04T06%3A48%3A00.000Z 366.57 null null
+2008-06-04T07%3A16%3A00.000Z 366.57 null null
+2008-06-04T07%3A20%3A00.000Z 366.58 null null
+2008-06-04T07%3A24%3A00.000Z 366.57 null null
+2008-06-04T07%3A28%3A00.000Z 366.58 null null
+2008-06-04T07%3A36%3A00.000Z 366.58 null null
+2008-06-04T07%3A40%3A00.000Z 366.57 null null
+2008-06-04T07%3A44%3A00.000Z 366.57 null null
+2008-06-04T07%3A48%3A00.000Z 366.58 null null
+2008-06-04T07%3A52%3A00.000Z 366.57 null null
+2008-06-04T07%3A56%3A00.000Z 366.58 null null
+2008-06-04T08%3A56%3A00.000Z 366.58 null null
+2008-06-04T09%3A00%3A00.000Z 366.59 null null
+2008-06-04T09%3A04%3A00.000Z 366.59 null null
+2008-06-04T09%3A08%3A00.000Z 366.58 null null
+2008-06-04T09%3A24%3A00.000Z 366.58 null null
+2008-06-04T09%3A28%3A00.000Z 366.59 null null
+2008-06-04T09%3A32%3A00.000Z 366.58 null null
+2008-06-04T09%3A36%3A00.000Z 366.58 null null
+2008-06-04T09%3A40%3A00.000Z 366.59 null null
+2008-06-04T09%3A48%3A00.000Z 366.59 null null
+2008-06-04T09%3A52%3A00.000Z 366.58 null null
+2008-06-04T10%3A04%3A00.000Z 366.58 null null
+2008-06-04T10%3A08%3A00.000Z 366.59 null null
+2008-06-04T10%3A16%3A00.000Z 366.59 null null
+2008-06-04T10%3A20%3A00.000Z 366.6 null null
+2008-06-04T10%3A24%3A00.000Z 366.59 null null
+2008-06-04T10%3A36%3A00.000Z 366.59 null null
+2008-06-04T10%3A40%3A00.000Z 366.6 null null
+2008-06-04T10%3A44%3A00.000Z 366.59 null null
+2008-06-04T10%3A48%3A00.000Z 366.59 null null
+2008-06-04T10%3A52%3A00.000Z 366.6 null null
+2008-06-04T10%3A56%3A00.000Z 366.59 null null
+2008-06-04T11%3A00%3A00.000Z 366.6 null null
+2008-06-04T11%3A04%3A00.000Z 366.59 null null
+2008-06-04T11%3A12%3A00.000Z 366.59 null null
+2008-06-04T11%3A16%3A00.000Z 366.6 null null
+2008-06-04T11%3A20%3A00.000Z 366.59 null null
+2008-06-04T11%3A24%3A00.000Z 366.6 null null
+2008-06-04T11%3A52%3A00.000Z 366.6 null null
+2008-06-04T11%3A56%3A00.000Z 366.61 null null
+2008-06-04T12%3A00%3A00.000Z 366.6 null null
+2008-06-04T12%3A12%3A00.000Z 366.6 null null
+2008-06-04T12%3A16%3A00.000Z 366.61 null null
+2008-06-04T12%3A20%3A00.000Z 366.6 null null
+2008-06-04T12%3A32%3A00.000Z 366.6 null null
+2008-06-04T12%3A36%3A00.000Z 366.61 null null
+2008-06-04T12%3A48%3A00.000Z 366.61 null null
+2008-06-04T12%3A52%3A00.000Z 366.6 null null
+2008-06-04T12%3A56%3A00.000Z 366.61 null null
+2008-06-04T13%3A12%3A00.000Z 366.61 null null
+2008-06-04T13%3A16%3A00.000Z 366.6 null null
+2008-06-04T13%3A20%3A00.000Z 366.61 null null
+2008-06-04T13%3A24%3A00.000Z 366.6 null null
+2008-06-04T13%3A28%3A00.000Z 366.61 null null
+2008-06-04T14%3A24%3A00.000Z 366.61 null null
+2008-06-04T14%3A28%3A00.000Z 366.62 null null
+2008-06-04T14%3A32%3A00.000Z 366.61 null null
+2008-06-04T14%3A36%3A00.000Z 366.62 null null
+2008-06-04T14%3A48%3A00.000Z 366.62 null null
+2008-06-04T14%3A52%3A00.000Z 366.63 null null
+2008-06-04T14%3A56%3A00.000Z 366.63 null null
+2008-06-04T15%3A00%3A00.000Z 366.62 null null
+2008-06-04T15%3A04%3A00.000Z 366.64 null null
+2008-06-04T15%3A08%3A00.000Z 366.63 null null
+2008-06-04T15%3A16%3A00.000Z 366.63 null null
+2008-06-04T15%3A20%3A00.000Z 366.64 null null
+2008-06-04T15%3A36%3A00.000Z 366.64 null null
+2008-06-04T15%3A40%3A00.000Z 366.65 null null
+2008-06-04T15%3A52%3A00.000Z 366.65 null null
+2008-06-04T15%3A56%3A00.000Z 366.66 null null
+2008-06-04T16%3A12%3A00.000Z 366.66 null null
+2008-06-04T16%3A16%3A00.000Z 366.67 null null
+2008-06-04T16%3A32%3A00.000Z 366.67 null null
+2008-06-04T16%3A36%3A00.000Z 366.68 null null
+2008-06-04T16%3A40%3A00.000Z 366.68 null null
+2008-06-04T16%3A44%3A00.000Z 366.69 null null
+2008-06-04T16%3A48%3A00.000Z 366.69 null null
+2008-06-04T16%3A52%3A00.000Z 366.68 null null
+2008-06-04T16%3A56%3A00.000Z 366.69 null null
+2008-06-04T17%3A00%3A00.000Z 366.69 null null
+2008-06-04T17%3A04%3A00.000Z 366.7 null null
+2008-06-04T17%3A24%3A00.000Z 366.7 null null
+2008-06-04T17%3A28%3A00.000Z 366.69 null null
+2008-06-04T17%3A32%3A00.000Z 366.7 null null
+2008-06-04T17%3A36%3A00.000Z 366.7 null null
+2008-06-04T17%3A40%3A00.000Z 366.71 null null
+2008-06-04T17%3A56%3A00.000Z 366.71 null null
+2008-06-04T18%3A00%3A00.000Z 366.72 null null
+2008-06-04T18%3A04%3A00.000Z 366.71 null null
+2008-06-04T18%3A08%3A00.000Z 366.72 null null
+2008-06-04T18%3A32%3A00.000Z 366.72 null null
+2008-06-04T18%3A36%3A00.000Z 366.73 null null
+2008-06-04T18%3A44%3A00.000Z 366.73 null null
+2008-06-04T18%3A48%3A00.000Z 366.74 null null
+2008-06-04T18%3A52%3A00.000Z 366.73 null null
+2008-06-04T19%3A00%3A00.000Z 366.73 null null
+2008-06-04T19%3A04%3A00.000Z 366.74 null null
+2008-06-04T19%3A08%3A00.000Z 366.73 null null
+2008-06-04T19%3A12%3A00.000Z 366.74 null null
+2008-06-04T19%3A40%3A00.000Z 366.74 null null
+2008-06-04T19%3A44%3A00.000Z 366.75 null null
+2008-06-04T19%3A48%3A00.000Z 366.74 null null
+2008-06-04T19%3A56%3A00.000Z 366.74 null null
+2008-06-04T20%3A00%3A00.000Z 366.75 null null
+2008-06-04T20%3A12%3A00.000Z 366.75 null null
+2008-06-04T20%3A16%3A00.000Z 366.76 null null
+2008-06-04T20%3A40%3A00.000Z 366.76 null null
+2008-06-04T20%3A44%3A00.000Z 366.75 null null
+2008-06-04T20%3A48%3A00.000Z 366.77 null null
+2008-06-04T20%3A52%3A00.000Z 366.76 null null
+2008-06-04T20%3A56%3A00.000Z 366.77 null null
+2008-06-04T21%3A00%3A00.000Z 366.77 null null
+2008-06-04T21%3A04%3A00.000Z 366.76 null null
+2008-06-04T21%3A08%3A00.000Z 366.76 null null
+2008-06-04T21%3A12%3A00.000Z 366.77 null null
+2008-06-04T21%3A28%3A00.000Z 366.77 null null
+2008-06-04T21%3A32%3A00.000Z 366.79 null null
+2008-06-04T21%3A40%3A00.000Z 366.77 null null
+2008-06-04T21%3A44%3A00.000Z 366.78 null null
+2008-06-04T22%3A04%3A00.000Z 366.78 null null
+2008-06-04T22%3A08%3A00.000Z 366.79 null null
+2008-06-04T22%3A12%3A00.000Z 366.78 null null
+2008-06-04T22%3A16%3A00.000Z 366.79 null null
+2008-06-04T22%3A20%3A00.000Z 366.78 null null
+2008-06-04T22%3A36%3A00.000Z 366.78 null null
+2008-06-04T22%3A40%3A00.000Z 366.79 null null
+2008-06-04T22%3A44%3A00.000Z 366.78 null null
+2008-06-04T22%3A48%3A00.000Z 366.79 null null
+2008-06-04T22%3A52%3A00.000Z 366.78 null null
+2008-06-04T22%3A56%3A00.000Z 366.79 null null
+2008-06-04T23%3A12%3A00.000Z 366.79 null null
+2008-06-04T23%3A16%3A00.000Z 366.78 null null
+2008-06-04T23%3A20%3A00.000Z 366.8 null null
+2008-06-04T23%3A24%3A00.000Z 366.8 null null
+2008-06-04T23%3A28%3A00.000Z 366.79 null null
+2008-06-04T23%3A32%3A00.000Z 366.79 null null
+2008-06-04T23%3A36%3A00.000Z 366.8 null null
+2008-06-04T23%3A40%3A00.000Z 366.79 null null
+2008-06-04T23%3A44%3A00.000Z 366.8 null null
+2008-06-04T23%3A52%3A00.000Z 366.8 null null
+2008-06-04T23%3A56%3A00.000Z 366.79 null null
+2008-06-05T00%3A00%3A00.000Z 366.79 null null
+2008-06-05T00%3A04%3A00.000Z 366.81 null null
+2008-06-05T00%3A20%3A00.000Z 366.81 null null
+2008-06-05T00%3A24%3A00.000Z 366.8 null null
+2008-06-05T00%3A28%3A00.000Z 366.81 null null
+2008-06-05T00%3A40%3A00.000Z 366.81 null null
+2008-06-05T00%3A44%3A00.000Z 366.8 null null
+2008-06-05T00%3A52%3A00.000Z 366.82 null null
+2008-06-05T00%3A56%3A00.000Z 366.81 null null
+2008-06-05T01%3A00%3A00.000Z 366.81 null null
+2008-06-05T01%3A04%3A00.000Z 366.82 null null
+2008-06-05T01%3A44%3A00.000Z 366.82 null null
+2008-06-05T01%3A48%3A00.000Z 366.83 null null
+2008-06-05T01%3A52%3A00.000Z 366.82 null null
+2008-06-05T02%3A00%3A00.000Z 366.82 null null
+2008-06-05T02%3A04%3A00.000Z 366.83 null null
+2008-06-05T02%3A08%3A00.000Z 366.82 null null
+2008-06-05T02%3A12%3A00.000Z 366.83 null null
+2008-06-05T02%3A16%3A00.000Z 366.83 null null
+2008-06-05T02%3A20%3A00.000Z 366.82 null null
+2008-06-05T02%3A24%3A00.000Z 366.83 null null
+2008-06-05T02%3A28%3A00.000Z 366.83 null null
+2008-06-05T02%3A32%3A00.000Z 366.82 null null
+2008-06-05T02%3A36%3A00.000Z 366.83 null null
+2008-06-05T02%3A52%3A00.000Z 366.83 null null
+2008-06-05T02%3A56%3A00.000Z 366.84 null null
+2008-06-05T03%3A00%3A00.000Z 366.83 null null
+2008-06-05T03%3A20%3A00.000Z 366.83 null null
+2008-06-05T03%3A24%3A00.000Z 366.84 null null
+2008-06-05T04%3A00%3A00.000Z 366.84 null null
+2008-06-05T04%3A04%3A00.000Z 366.85 null null
+2008-06-05T04%3A08%3A00.000Z 366.84 null null
+2008-06-05T04%3A12%3A00.000Z 366.85 null null
+2008-06-05T04%3A16%3A00.000Z 366.84 null null
+2008-06-05T04%3A20%3A00.000Z 366.84 null null
+2008-06-05T04%3A24%3A00.000Z 366.85 null null
+2008-06-05T04%3A28%3A00.000Z 366.84 null null
+2008-06-05T04%3A32%3A00.000Z 366.84 null null
+2008-06-05T04%3A36%3A00.000Z 366.85 null null
+2008-06-05T04%3A40%3A00.000Z 366.84 null null
+2008-06-05T04%3A44%3A00.000Z 366.84 null null
+2008-06-05T04%3A48%3A00.000Z 366.85 null null
+2008-06-05T05%3A32%3A00.000Z 366.85 null null
+2008-06-05T05%3A36%3A00.000Z 366.86 null null
+2008-06-05T05%3A40%3A00.000Z 366.85 null null
+2008-06-05T05%3A44%3A00.000Z 366.85 null null
+2008-06-05T05%3A48%3A00.000Z 366.86 null null
+2008-06-05T05%3A52%3A00.000Z 366.85 null null
+2008-06-05T05%3A56%3A00.000Z 366.86 null null
+2008-06-05T06%3A20%3A00.000Z 366.86 null null
+2008-06-05T06%3A24%3A00.000Z 366.87 null null
+2008-06-05T06%3A28%3A00.000Z 366.86 null null
+2008-06-05T06%3A32%3A00.000Z 366.86 null null
+2008-06-05T06%3A36%3A00.000Z 366.87 null null
+2008-06-05T07%3A00%3A00.000Z 366.87 null null
+2008-06-05T07%3A04%3A00.000Z 366.86 null null
+2008-06-05T07%3A12%3A00.000Z 366.88 null null
+2008-06-05T07%3A20%3A00.000Z 366.86 null null
+2008-06-05T07%3A24%3A00.000Z 366.87 null null
+2008-06-05T07%3A28%3A00.000Z 366.87 null null
+2008-06-05T07%3A32%3A00.000Z 366.88 null null
+2008-06-05T07%3A36%3A00.000Z 366.87 null null
+2008-06-05T07%3A44%3A00.000Z 366.87 null null
+2008-06-05T07%3A48%3A00.000Z 366.89 null null
+2008-06-05T07%3A52%3A00.000Z 366.88 null null
+2008-06-05T08%3A12%3A00.000Z 366.88 null null
+2008-06-05T08%3A16%3A00.000Z 366.89 null null
+2008-06-05T08%3A20%3A00.000Z 366.88 null null
+2008-06-05T08%3A32%3A00.000Z 366.88 null null
+2008-06-05T08%3A36%3A00.000Z 366.89 null null
+2008-06-05T08%3A44%3A00.000Z 366.89 null null
+2008-06-05T08%3A48%3A00.000Z 366.9 null null
+2008-06-05T08%3A52%3A00.000Z 366.89 null null
+2008-06-05T09%3A00%3A00.000Z 366.89 null null
+2008-06-05T09%3A04%3A00.000Z 366.9 null null
+2008-06-05T09%3A08%3A00.000Z 366.89 null null
+2008-06-05T09%3A12%3A00.000Z 366.89 null null
+2008-06-05T09%3A16%3A00.000Z 366.9 null null
+2008-06-05T09%3A28%3A00.000Z 366.9 null null
+2008-06-05T09%3A32%3A00.000Z 366.91 null null
+2008-06-05T09%3A56%3A00.000Z 366.91 null null
+2008-06-05T10%3A00%3A00.000Z 366.92 null null
+2008-06-05T10%3A04%3A00.000Z 366.91 null null
+2008-06-05T10%3A08%3A00.000Z 366.92 null null
+2008-06-05T10%3A32%3A00.000Z 366.92 null null
+2008-06-05T10%3A36%3A00.000Z 366.93 null null
+2008-06-05T10%3A40%3A00.000Z 366.93 null null
+2008-06-05T10%3A44%3A00.000Z 366.94 null null
+2008-06-05T10%3A48%3A00.000Z 366.93 null null
+2008-06-05T10%3A52%3A00.000Z 366.93 null null
+2008-06-05T10%3A56%3A00.000Z 366.94 null null
+2008-06-05T11%3A00%3A00.000Z 366.93 null null
+2008-06-05T11%3A04%3A00.000Z 366.94 null null
+2008-06-05T11%3A08%3A00.000Z 366.94 null null
+2008-06-05T11%3A12%3A00.000Z 366.93 null null
+2008-06-05T11%3A20%3A00.000Z 366.95 null null
+2008-06-05T11%3A24%3A00.000Z 366.95 null null
+2008-06-05T11%3A28%3A00.000Z 366.94 null null
+2008-06-05T11%3A32%3A00.000Z 366.95 null null
+2008-06-05T11%3A36%3A00.000Z 366.95 null null
+2008-06-05T11%3A40%3A00.000Z 366.94 null null
+2008-06-05T11%3A44%3A00.000Z 366.96 null null
+2008-06-05T11%3A48%3A00.000Z 366.95 null null
+2008-06-05T11%3A52%3A00.000Z 366.95 null null
+2008-06-05T11%3A56%3A00.000Z 366.96 null null
+2008-06-05T12%3A00%3A00.000Z 366.95 null null
+2008-06-05T12%3A04%3A00.000Z 366.96 null null
+2008-06-05T12%3A12%3A00.000Z 366.96 null null
+2008-06-05T12%3A16%3A00.000Z 366.97 null null
+2008-06-05T12%3A36%3A00.000Z 366.97 null null
+2008-06-05T12%3A40%3A00.000Z 366.98 null null
+2008-06-05T12%3A44%3A00.000Z 366.97 null null
+2008-06-05T12%3A48%3A00.000Z 366.97 null null
+2008-06-05T12%3A52%3A00.000Z 366.98 null null
+2008-06-05T13%3A12%3A00.000Z 366.98 null null
+2008-06-05T13%3A16%3A00.000Z 366.99 null null
+2008-06-05T13%3A24%3A00.000Z 366.99 null null
+2008-06-05T13%3A28%3A00.000Z 367.0 null null
+2008-06-05T13%3A32%3A00.000Z 366.99 null null
+2008-06-05T13%3A40%3A00.000Z 366.99 null null
+2008-06-05T13%3A44%3A00.000Z 367.0 null null
+2008-06-05T14%3A12%3A00.000Z 367.0 null null
+2008-06-05T14%3A16%3A00.000Z 367.01 null null
+2008-06-05T14%3A20%3A00.000Z 367.0 null null
+2008-06-05T14%3A24%3A00.000Z 367.01 null null
+2008-06-05T14%3A32%3A00.000Z 367.01 null null
+2008-06-05T14%3A36%3A00.000Z 367.02 null null
+2008-06-05T15%3A04%3A00.000Z 367.02 null null
+2008-06-05T15%3A08%3A00.000Z 367.03 null null
+2008-06-05T15%3A12%3A00.000Z 367.03 null null
+2008-06-05T15%3A16%3A00.000Z 367.02 null null
+2008-06-05T15%3A20%3A00.000Z 367.03 null null
+2008-06-05T15%3A28%3A00.000Z 367.03 null null
+2008-06-05T15%3A32%3A00.000Z 367.02 null null
+2008-06-05T15%3A40%3A00.000Z 367.04 null null
+2008-06-05T15%3A44%3A00.000Z 367.04 null null
+2008-06-05T15%3A48%3A00.000Z 367.03 null null
+2008-06-05T15%3A52%3A00.000Z 367.04 null null
+2008-06-05T16%3A12%3A00.000Z 367.04 null null
+2008-06-05T16%3A16%3A00.000Z 367.05 null null
+2008-06-05T16%3A20%3A00.000Z 367.04 null null
+2008-06-05T16%3A24%3A00.000Z 367.05 null null
+2008-06-05T17%3A00%3A00.000Z 367.05 null null
+2008-06-05T17%3A04%3A00.000Z 367.06 null null
+2008-06-05T17%3A32%3A00.000Z 367.06 null null
+2008-06-05T17%3A36%3A00.000Z 367.07 null null
+2008-06-05T17%3A40%3A00.000Z 367.06 null null
+2008-06-05T17%3A44%3A00.000Z 367.07 null null
+2008-06-05T17%3A48%3A00.000Z 367.06 null null
+2008-06-05T17%3A56%3A00.000Z 367.08 null null
+2008-06-05T18%3A00%3A00.000Z 367.07 null null
+2008-06-05T18%3A04%3A00.000Z 367.08 null null
+2008-06-05T18%3A08%3A00.000Z 367.07 null null
+2008-06-05T18%3A16%3A00.000Z 367.07 null null
+2008-06-05T18%3A20%3A00.000Z 367.08 null null
+2008-06-05T18%3A24%3A00.000Z 367.07 null null
+2008-06-05T18%3A32%3A00.000Z 367.09 null null
+2008-06-05T18%3A36%3A00.000Z 367.08 null null
+2008-06-05T18%3A40%3A00.000Z 367.09 null null
+2008-06-05T18%3A44%3A00.000Z 367.08 null null
+2008-06-05T18%3A48%3A00.000Z 367.08 null null
+2008-06-05T18%3A52%3A00.000Z 367.07 null null
+2008-06-05T19%3A00%3A00.000Z 367.07 null null
+2008-06-05T19%3A04%3A00.000Z 367.08 null null
+2008-06-05T19%3A08%3A00.000Z 367.07 null null
+2008-06-05T19%3A12%3A00.000Z 367.08 null null
+2008-06-05T19%3A16%3A00.000Z 367.08 null null
+2008-06-05T19%3A20%3A00.000Z 367.07 null null
+2008-06-05T19%3A24%3A00.000Z 367.07 null null
+2008-06-05T19%3A28%3A00.000Z 367.08 null null
+2008-06-05T19%3A32%3A00.000Z 367.08 null null
+2008-06-05T19%3A36%3A00.000Z 367.09 null null
+2008-06-05T19%3A40%3A00.000Z 367.08 null null
+2008-06-05T19%3A48%3A00.000Z 367.08 null null
+2008-06-05T19%3A52%3A00.000Z 367.09 null null
+2008-06-05T19%3A56%3A00.000Z 367.08 null null
+2008-06-05T20%3A16%3A00.000Z 367.08 null null
+2008-06-05T20%3A20%3A00.000Z 367.09 null null
+2008-06-05T20%3A28%3A00.000Z 367.09 null null
+2008-06-05T20%3A32%3A00.000Z 367.08 null null
+2008-06-05T20%3A36%3A00.000Z 367.09 null null
+2008-06-05T20%3A40%3A00.000Z 367.09 null null
+2008-06-05T20%3A44%3A00.000Z 367.08 null null
+2008-06-05T20%3A48%3A00.000Z 367.09 null null
+2008-06-05T20%3A52%3A00.000Z 367.08 null null
+2008-06-05T20%3A56%3A00.000Z 367.09 null null
+2008-06-05T21%3A00%3A00.000Z 367.09 null null
+2008-06-05T21%3A04%3A00.000Z 367.1 null null
+2008-06-05T21%3A32%3A00.000Z 367.1 null null
+2008-06-05T21%3A36%3A00.000Z 367.11 null null
+2008-06-05T21%3A40%3A00.000Z 367.11 null null
+2008-06-05T21%3A44%3A00.000Z 367.1 null null
+2008-06-05T21%3A48%3A00.000Z 367.1 null null
+2008-06-05T21%3A52%3A00.000Z 367.11 null null
+2008-06-05T21%3A56%3A00.000Z 367.11 null null
+2008-06-05T22%3A00%3A00.000Z 367.12 null null
+2008-06-05T22%3A04%3A00.000Z 367.11 null null
+2008-06-05T22%3A12%3A00.000Z 367.11 null null
+2008-06-05T22%3A16%3A00.000Z 367.12 null null
+2008-06-05T22%3A20%3A00.000Z 367.11 null null
+2008-06-05T22%3A24%3A00.000Z 367.12 null null
+2008-06-05T22%3A28%3A00.000Z 367.12 null null
+2008-06-05T22%3A32%3A00.000Z 367.11 null null
+2008-06-05T22%3A36%3A00.000Z 367.12 null null
+2008-06-05T22%3A40%3A00.000Z 367.12 null null
+2008-06-05T22%3A44%3A00.000Z 367.13 null null
+2008-06-05T23%3A16%3A00.000Z 367.13 null null
+2008-06-05T23%3A20%3A00.000Z 367.14 null null
+2008-06-05T23%3A24%3A00.000Z 367.13 null null
+2008-06-05T23%3A32%3A00.000Z 367.13 null null
+2008-06-05T23%3A36%3A00.000Z 367.14 null null
+2008-06-05T23%3A44%3A00.000Z 367.14 null null
+2008-06-05T23%3A48%3A00.000Z 367.13 null null
+2008-06-05T23%3A52%3A00.000Z 367.13 null null
+2008-06-05T23%3A56%3A00.000Z 367.14 null null
+2008-06-06T00%3A16%3A00.000Z 367.14 null null
+2008-06-06T00%3A20%3A00.000Z 367.13 null null
+2008-06-06T00%3A28%3A00.000Z 367.15 null null
+2008-06-06T00%3A32%3A00.000Z 367.15 null null
+2008-06-06T00%3A36%3A00.000Z 367.14 null null
+2008-06-06T00%3A40%3A00.000Z 367.15 null null
+2008-06-06T00%3A44%3A00.000Z 367.15 null null
+2008-06-06T00%3A48%3A00.000Z 367.14 null null
+2008-06-06T00%3A52%3A00.000Z 367.14 null null
+2008-06-06T00%3A56%3A00.000Z 367.15 null null
+2008-06-06T01%3A12%3A00.000Z 367.15 null null
+2008-06-06T01%3A16%3A00.000Z 367.16 null null
+2008-06-06T01%3A20%3A00.000Z 367.16 null null
+2008-06-06T01%3A24%3A00.000Z 367.15 null null
+2008-06-06T01%3A28%3A00.000Z 367.16 null null
+2008-06-06T01%3A32%3A00.000Z 367.16 null null
+2008-06-06T01%3A36%3A00.000Z 367.15 null null
+2008-06-06T01%3A40%3A00.000Z 367.16 null null
+2008-06-06T02%3A08%3A00.000Z 367.16 null null
+2008-06-06T02%3A12%3A00.000Z 367.15 null null
+2008-06-06T02%3A16%3A00.000Z 367.17 null null
+2008-06-06T02%3A20%3A00.000Z 367.16 null null
+2008-06-06T02%3A36%3A00.000Z 367.16 null null
+2008-06-06T02%3A40%3A00.000Z 367.17 null null
+2008-06-06T02%3A44%3A00.000Z 367.16 null null
+2008-06-06T02%3A48%3A00.000Z 367.16 null null
+2008-06-06T02%3A52%3A00.000Z 367.17 null null
+2008-06-06T03%3A44%3A00.000Z 367.17 null null
+2008-06-06T03%3A48%3A00.000Z 367.18 null null
+2008-06-06T04%3A12%3A00.000Z 367.18 null null
+2008-06-06T04%3A16%3A00.000Z 367.19 null null
+2008-06-06T04%3A20%3A00.000Z 367.18 null null
+2008-06-06T04%3A24%3A00.000Z 367.18 null null
+2008-06-06T04%3A28%3A00.000Z 367.19 null null
+2008-06-06T04%3A32%3A00.000Z 367.19 null null
+2008-06-06T04%3A36%3A00.000Z 367.18 null null
+2008-06-06T04%3A40%3A00.000Z 367.19 null null
+2008-06-06T04%3A44%3A00.000Z 367.18 null null
+2008-06-06T04%3A48%3A00.000Z 367.19 null null
+2008-06-06T04%3A52%3A00.000Z 367.18 null null
+2008-06-06T04%3A56%3A00.000Z 367.19 null null
+2008-06-06T05%3A04%3A00.000Z 367.19 null null
+2008-06-06T05%3A08%3A00.000Z 367.2 null null
+2008-06-06T05%3A12%3A00.000Z 367.19 null null
+2008-06-06T05%3A36%3A00.000Z 367.19 null null
+2008-06-06T05%3A40%3A00.000Z 367.2 null null
+2008-06-06T05%3A44%3A00.000Z 367.19 null null
+2008-06-06T05%3A48%3A00.000Z 367.2 null null
+2008-06-06T05%3A56%3A00.000Z 367.2 null null
+2008-06-06T06%3A00%3A00.000Z 367.19 null null
+2008-06-06T06%3A08%3A00.000Z 367.21 null null
+2008-06-06T06%3A12%3A00.000Z 367.2 null null
+2008-06-06T06%3A16%3A00.000Z 367.2 null null
+2008-06-06T06%3A20%3A00.000Z 367.21 null null
+2008-06-06T06%3A24%3A00.000Z 367.2 null null
+2008-06-06T06%3A32%3A00.000Z 367.2 null null
+2008-06-06T06%3A36%3A00.000Z 367.21 null null
+2008-06-06T06%3A40%3A00.000Z 367.2 null null
+2008-06-06T06%3A44%3A00.000Z 367.2 null null
+2008-06-06T06%3A48%3A00.000Z 367.21 null null
+2008-06-06T07%3A12%3A00.000Z 367.21 null null
+2008-06-06T07%3A16%3A00.000Z 367.22 null null
+2008-06-06T07%3A20%3A00.000Z 367.21 null null
+2008-06-06T07%3A24%3A00.000Z 367.22 null null
+2008-06-06T07%3A32%3A00.000Z 367.22 null null
+2008-06-06T07%3A36%3A00.000Z 367.21 null null
+2008-06-06T07%3A40%3A00.000Z 367.22 null null
+2008-06-06T07%3A52%3A00.000Z 367.22 null null
+2008-06-06T07%3A56%3A00.000Z 367.21 null null
+2008-06-06T08%3A04%3A00.000Z 367.23 null null
+2008-06-06T08%3A08%3A00.000Z 367.23 null null
+2008-06-06T08%3A12%3A00.000Z 367.22 null null
+2008-06-06T08%3A16%3A00.000Z 367.23 null null
+2008-06-06T08%3A28%3A00.000Z 367.23 null null
+2008-06-06T08%3A32%3A00.000Z 367.22 null null
+2008-06-06T08%3A36%3A00.000Z 367.23 null null
+2008-06-06T08%3A40%3A00.000Z 367.23 null null
+2008-06-06T08%3A44%3A00.000Z 367.22 null null
+2008-06-06T08%3A48%3A00.000Z 367.23 null null
+2008-06-06T09%3A24%3A00.000Z 367.23 null null
+2008-06-06T09%3A28%3A00.000Z 367.24 null null
+2008-06-06T09%3A32%3A00.000Z 367.23 null null
+2008-06-06T09%3A44%3A00.000Z 367.23 null null
+2008-06-06T09%3A48%3A00.000Z 367.24 null null
+2008-06-06T10%3A16%3A00.000Z 367.24 null null
+2008-06-06T10%3A20%3A00.000Z 367.25 null null
+2008-06-06T10%3A24%3A00.000Z 367.24 null null
+2008-06-06T10%3A28%3A00.000Z 367.25 null null
+2008-06-06T10%3A32%3A00.000Z 367.24 null null
+2008-06-06T10%3A36%3A00.000Z 367.25 null null
+2008-06-06T10%3A40%3A00.000Z 367.24 null null
+2008-06-06T10%3A44%3A00.000Z 367.25 null null
+2008-06-06T10%3A56%3A00.000Z 367.25 null null
+2008-06-06T11%3A00%3A00.000Z 367.26 null null
+2008-06-06T11%3A04%3A00.000Z 367.24 null null
+2008-06-06T11%3A08%3A00.000Z 367.25 null null
+2008-06-06T11%3A12%3A00.000Z 367.24 null null
+2008-06-06T11%3A16%3A00.000Z 367.25 null null
+2008-06-06T11%3A20%3A00.000Z 367.24 null null
+2008-06-06T11%3A24%3A00.000Z 367.25 null null
+2008-06-06T11%3A28%3A00.000Z 367.25 null null
+2008-06-06T11%3A32%3A00.000Z 367.24 null null
+2008-06-06T11%3A36%3A00.000Z 367.25 null null
+2008-06-06T11%3A40%3A00.000Z 367.25 null null
+2008-06-06T11%3A44%3A00.000Z 367.24 null null
+2008-06-06T11%3A48%3A00.000Z 367.25 null null
+2008-06-06T11%3A52%3A00.000Z 367.24 null null
+2008-06-06T11%3A56%3A00.000Z 367.25 null null
+2008-06-06T13%3A04%3A00.000Z 367.25 null null
+2008-06-06T13%3A08%3A00.000Z 367.24 null null
+2008-06-06T13%3A12%3A00.000Z 367.24 null null
+2008-06-06T13%3A16%3A00.000Z 367.25 null null
+2008-06-06T13%3A20%3A00.000Z 367.25 null null
+2008-06-06T13%3A24%3A00.000Z 367.24 null null
+2008-06-06T13%3A28%3A00.000Z 367.25 null null
+2008-06-06T13%3A36%3A00.000Z 367.25 null null
+2008-06-06T13%3A40%3A00.000Z 367.23 null null
+2008-06-06T13%3A44%3A00.000Z 367.25 null null
+2008-06-06T13%3A48%3A00.000Z 367.24 null null
+2008-06-06T13%3A52%3A00.000Z 367.24 null null
+2008-06-06T13%3A56%3A00.000Z 367.25 null null
+2008-06-06T14%3A00%3A00.000Z 367.24 null null
+2008-06-06T14%3A20%3A00.000Z 367.24 null null
+2008-06-06T14%3A24%3A00.000Z 367.23 null null
+2008-06-06T14%3A28%3A00.000Z 367.24 null null
+2008-06-06T14%3A32%3A00.000Z 367.24 null null
+2008-06-06T14%3A36%3A00.000Z 367.25 null null
+2008-06-06T14%3A40%3A00.000Z 367.24 null null
+2008-06-06T14%3A52%3A00.000Z 367.24 null null
+2008-06-06T14%3A56%3A00.000Z 367.23 null null
+2008-06-06T15%3A00%3A00.000Z 367.24 null null
+2008-06-06T15%3A04%3A00.000Z 367.24 null null
+2008-06-06T15%3A08%3A00.000Z 367.23 null null
+2008-06-06T15%3A28%3A00.000Z 367.23 null null
+2008-06-06T15%3A32%3A00.000Z 367.24 null null
+2008-06-06T15%3A36%3A00.000Z 367.24 null null
+2008-06-06T15%3A40%3A00.000Z 367.23 null null
+2008-06-06T15%3A44%3A00.000Z 367.21 null null
+2008-06-06T15%3A48%3A00.000Z 367.23 null null
+2008-06-06T15%3A52%3A00.000Z 367.22 null null
+2008-06-06T15%3A56%3A00.000Z 367.22 null null
+2008-06-06T16%3A00%3A00.000Z 367.23 null null
+2008-06-06T16%3A04%3A00.000Z 367.23 null null
+2008-06-06T16%3A08%3A00.000Z 367.22 null null
+2008-06-06T16%3A12%3A00.000Z 367.23 null null
+2008-06-06T16%3A32%3A00.000Z 367.23 null null
+2008-06-06T16%3A36%3A00.000Z 367.22 null null
+2008-06-06T16%3A40%3A00.000Z 367.23 null null
+2008-06-06T16%3A56%3A00.000Z 367.23 null null
+2008-06-06T17%3A04%3A00.000Z 367.21 null null
+2008-06-06T17%3A12%3A00.000Z 367.23 null null
+2008-06-06T17%3A16%3A00.000Z 367.23 null null
+2008-06-06T17%3A20%3A00.000Z 367.22 null null
+2008-06-06T17%3A32%3A00.000Z 367.22 null null
+2008-06-06T17%3A36%3A00.000Z 367.23 null null
+2008-06-06T17%3A40%3A00.000Z 367.22 null null
+2008-06-06T17%3A48%3A00.000Z 367.22 null null
+2008-06-06T17%3A52%3A00.000Z 367.21 null null
+2008-06-06T18%3A00%3A00.000Z 367.21 null null
+2008-06-06T18%3A04%3A00.000Z 367.22 null null
+2008-06-06T18%3A08%3A00.000Z 367.22 null null
+2008-06-06T18%3A16%3A00.000Z 367.2 null null
+2008-06-06T18%3A20%3A00.000Z 367.22 null null
+2008-06-06T18%3A24%3A00.000Z 367.2 null null
+2008-06-06T18%3A28%3A00.000Z 367.21 null null
+2008-06-06T18%3A40%3A00.000Z 367.21 null null
+2008-06-06T18%3A44%3A00.000Z 367.2 null null
+2008-06-06T18%3A48%3A00.000Z 367.21 null null
+2008-06-06T18%3A52%3A00.000Z 367.2 null null
+2008-06-06T19%3A12%3A00.000Z 367.2 null null
+2008-06-06T19%3A16%3A00.000Z 367.21 null null
+2008-06-06T19%3A24%3A00.000Z 367.19 null null
+2008-06-06T19%3A28%3A00.000Z 367.19 null null
+2008-06-06T19%3A36%3A00.000Z 367.21 null null
+2008-06-06T19%3A44%3A00.000Z 367.19 null null
+2008-06-06T19%3A52%3A00.000Z 367.19 null null
+2008-06-06T19%3A56%3A00.000Z 367.2 null null
+2008-06-06T20%3A00%3A00.000Z 367.19 null null
+2008-06-06T20%3A16%3A00.000Z 367.19 null null
+2008-06-06T20%3A20%3A00.000Z 367.18 null null
+2008-06-06T20%3A24%3A00.000Z 367.19 null null
+2008-06-06T20%3A28%3A00.000Z 367.18 null null
+2008-06-06T20%3A32%3A00.000Z 367.18 null null
+2008-06-06T20%3A36%3A00.000Z 367.19 null null
+2008-06-06T20%3A40%3A00.000Z 367.18 null null
+2008-06-06T21%3A00%3A00.000Z 367.18 null null
+2008-06-06T21%3A04%3A00.000Z 367.19 null null
+2008-06-06T21%3A08%3A00.000Z 367.18 null null
+2008-06-06T21%3A24%3A00.000Z 367.18 null null
+2008-06-06T21%3A28%3A00.000Z 367.17 null null
+2008-06-06T21%3A44%3A00.000Z 367.17 null null
+2008-06-06T21%3A48%3A00.000Z 367.16 null null
+2008-06-06T21%3A52%3A00.000Z 367.17 null null
+2008-06-06T22%3A00%3A00.000Z 367.17 null null
+2008-06-06T22%3A04%3A00.000Z 367.18 null null
+2008-06-06T22%3A12%3A00.000Z 367.16 null null
+2008-06-06T22%3A36%3A00.000Z 367.16 null null
+2008-06-06T22%3A40%3A00.000Z 367.17 null null
+2008-06-06T22%3A44%3A00.000Z 367.17 null null
+2008-06-06T22%3A48%3A00.000Z 367.15 null null
+2008-06-06T22%3A52%3A00.000Z 367.16 null null
+2008-06-06T23%3A36%3A00.000Z 367.16 null null
+2008-06-06T23%3A40%3A00.000Z 367.15 null null
+2008-06-06T23%3A44%3A00.000Z 367.16 null null
+2008-06-06T23%3A48%3A00.000Z 367.15 null null
+2008-06-07T00%3A08%3A00.000Z 367.15 null null
+2008-06-07T00%3A12%3A00.000Z 367.14 null null
+2008-06-07T00%3A16%3A00.000Z 367.15 null null
+2008-06-07T00%3A20%3A00.000Z 367.15 null null
+2008-06-07T00%3A24%3A00.000Z 367.14 null null
+2008-06-07T00%3A28%3A00.000Z 367.15 null null
+2008-06-07T00%3A32%3A00.000Z 367.14 null null
+2008-06-07T00%3A44%3A00.000Z 367.14 null null
+2008-06-07T00%3A48%3A00.000Z 367.13 null null
+2008-06-07T00%3A52%3A00.000Z 367.14 null null
+2008-06-07T01%3A04%3A00.000Z 367.14 null null
+2008-06-07T01%3A08%3A00.000Z 367.13 null null
+2008-06-07T01%3A12%3A00.000Z 367.13 null null
+2008-06-07T01%3A16%3A00.000Z 367.14 null null
+2008-06-07T01%3A20%3A00.000Z 367.14 null null
+2008-06-07T01%3A24%3A00.000Z 367.13 null null
+2008-06-07T01%3A36%3A00.000Z 367.13 null null
+2008-06-07T01%3A40%3A00.000Z 367.12 null null
+2008-06-07T01%3A48%3A00.000Z 367.14 null null
+2008-06-07T01%3A56%3A00.000Z 367.12 null null
+2008-06-07T02%3A00%3A00.000Z 367.13 null null
+2008-06-07T02%3A04%3A00.000Z 367.13 null null
+2008-06-07T02%3A08%3A00.000Z 367.12 null null
+2008-06-07T02%3A20%3A00.000Z 367.12 null null
+2008-06-07T02%3A24%3A00.000Z 367.13 null null
+2008-06-07T02%3A32%3A00.000Z 367.11 null null
+2008-06-07T02%3A40%3A00.000Z 367.13 null null
+2008-06-07T02%3A44%3A00.000Z 367.12 null null
+2008-06-07T02%3A52%3A00.000Z 367.12 null null
+2008-06-07T02%3A56%3A00.000Z 367.11 null null
+2008-06-07T03%3A00%3A00.000Z 367.12 null null
+2008-06-07T03%3A04%3A00.000Z 367.12 null null
+2008-06-07T03%3A08%3A00.000Z 367.11 null null
+2008-06-07T03%3A12%3A00.000Z 367.12 null null
+2008-06-07T03%3A16%3A00.000Z 367.11 null null
+2008-06-07T03%3A24%3A00.000Z 367.11 null null
+2008-06-07T03%3A28%3A00.000Z 367.1 null null
+2008-06-07T03%3A32%3A00.000Z 367.11 null null
+2008-06-07T03%3A44%3A00.000Z 367.11 null null
+2008-06-07T03%3A48%3A00.000Z 367.1 null null
+2008-06-07T03%3A52%3A00.000Z 367.11 null null
+2008-06-07T03%3A56%3A00.000Z 367.1 null null
+2008-06-07T04%3A00%3A00.000Z 367.11 null null
+2008-06-07T04%3A04%3A00.000Z 367.1 null null
+2008-06-07T04%3A12%3A00.000Z 367.1 null null
+2008-06-07T04%3A16%3A00.000Z 367.11 null null
+2008-06-07T04%3A20%3A00.000Z 367.11 null null
+2008-06-07T04%3A24%3A00.000Z 367.1 null null
+2008-06-07T04%3A32%3A00.000Z 367.1 null null
+2008-06-07T04%3A36%3A00.000Z 367.09 null null
+2008-06-07T04%3A44%3A00.000Z 367.11 null null
+2008-06-07T04%3A48%3A00.000Z 367.1 null null
+2008-06-07T04%3A52%3A00.000Z 367.1 null null
+2008-06-07T04%3A56%3A00.000Z 367.09 null null
+2008-06-07T05%3A00%3A00.000Z 367.09 null null
+2008-06-07T05%3A04%3A00.000Z 367.11 null null
+2008-06-07T05%3A08%3A00.000Z 367.1 null null
+2008-06-07T05%3A16%3A00.000Z 367.1 null null
+2008-06-07T05%3A20%3A00.000Z 367.08 null null
+2008-06-07T05%3A28%3A00.000Z 367.1 null null
+2008-06-07T05%3A32%3A00.000Z 367.09 null null
+2008-06-07T05%3A36%3A00.000Z 367.1 null null
+2008-06-07T05%3A40%3A00.000Z 367.09 null null
+2008-06-07T06%3A08%3A00.000Z 367.09 null null
+2008-06-07T06%3A12%3A00.000Z 367.07 null null
+2008-06-07T06%3A16%3A00.000Z 367.09 null null
+2008-06-07T06%3A24%3A00.000Z 367.07 null null
+2008-06-07T06%3A28%3A00.000Z 367.09 null null
+2008-06-07T06%3A32%3A00.000Z 367.09 null null
+2008-06-07T06%3A36%3A00.000Z 367.08 null null
+2008-06-07T06%3A40%3A00.000Z 367.08 null null
+2008-06-07T06%3A44%3A00.000Z 367.07 null null
+2008-06-07T06%3A48%3A00.000Z 367.08 null null
+2008-06-07T07%3A12%3A00.000Z 367.08 null null
+2008-06-07T07%3A16%3A00.000Z 367.09 null null
+2008-06-07T07%3A20%3A00.000Z 367.08 null null
+2008-06-07T07%3A28%3A00.000Z 367.08 null null
+2008-06-07T07%3A32%3A00.000Z 367.07 null null
+2008-06-07T07%3A36%3A00.000Z 367.07 null null
+2008-06-07T07%3A40%3A00.000Z 367.08 null null
+2008-06-07T07%3A44%3A00.000Z 367.07 null null
+2008-06-07T07%3A56%3A00.000Z 367.07 null null
+2008-06-07T08%3A00%3A00.000Z 367.06 null null
+2008-06-07T08%3A04%3A00.000Z 367.06 null null
+2008-06-07T08%3A08%3A00.000Z 367.07 null null
+2008-06-07T08%3A12%3A00.000Z 367.07 null null
+2008-06-07T08%3A16%3A00.000Z 367.06 null null
+2008-06-07T08%3A20%3A00.000Z 367.07 null null
+2008-06-07T08%3A40%3A00.000Z 367.07 null null
+2008-06-07T08%3A44%3A00.000Z 367.06 null null
+2008-06-07T08%3A48%3A00.000Z 367.07 null null
+2008-06-07T08%3A52%3A00.000Z 367.07 null null
+2008-06-07T08%3A56%3A00.000Z 367.06 null null
+2008-06-07T09%3A00%3A00.000Z 367.07 null null
+2008-06-07T09%3A08%3A00.000Z 367.07 null null
+2008-06-07T09%3A12%3A00.000Z 367.06 null null
+2008-06-07T09%3A20%3A00.000Z 367.06 null null
+2008-06-07T09%3A24%3A00.000Z 367.05 null null
+2008-06-07T09%3A28%3A00.000Z 367.06 null null
+2008-06-07T09%3A32%3A00.000Z 367.06 null null
+2008-06-07T09%3A36%3A00.000Z 367.05 null null
+2008-06-07T09%3A40%3A00.000Z 367.06 null null
+2008-06-07T09%3A44%3A00.000Z 367.05 null null
+2008-06-07T09%3A48%3A00.000Z 367.05 null null
+2008-06-07T09%3A52%3A00.000Z 367.06 null null
+2008-06-07T09%3A56%3A00.000Z 367.05 null null
+2008-06-07T10%3A24%3A00.000Z 367.05 null null
+2008-06-07T10%3A28%3A00.000Z 367.04 null null
+2008-06-07T10%3A32%3A00.000Z 367.05 null null
+2008-06-07T10%3A36%3A00.000Z 367.04 null null
+2008-06-07T10%3A44%3A00.000Z 367.04 null null
+2008-06-07T10%3A48%3A00.000Z 367.03 null null
+2008-06-07T10%3A52%3A00.000Z 367.03 null null
+2008-06-07T10%3A56%3A00.000Z 367.04 null null
+2008-06-07T11%3A00%3A00.000Z 367.04 null null
+2008-06-07T11%3A04%3A00.000Z 367.03 null null
+2008-06-07T11%3A08%3A00.000Z 367.03 null null
+2008-06-07T11%3A12%3A00.000Z 367.04 null null
+2008-06-07T11%3A16%3A00.000Z 367.03 null null
+2008-06-07T11%3A20%3A00.000Z 367.04 null null
+2008-06-07T11%3A24%3A00.000Z 367.03 null null
+2008-06-07T11%3A56%3A00.000Z 367.03 null null
+2008-06-07T12%3A00%3A00.000Z 367.02 null null
+2008-06-07T12%3A20%3A00.000Z 367.02 null null
+2008-06-07T12%3A24%3A00.000Z 367.0 null null
+2008-06-07T12%3A28%3A00.000Z 367.02 null null
+2008-06-07T12%3A32%3A00.000Z 367.01 null null
+2008-06-07T12%3A48%3A00.000Z 367.01 null null
+2008-06-07T12%3A52%3A00.000Z 367.0 null null
+2008-06-07T12%3A56%3A00.000Z 367.01 null null
+2008-06-07T13%3A00%3A00.000Z 367.01 null null
+2008-06-07T13%3A04%3A00.000Z 366.99 null null
+2008-06-07T13%3A08%3A00.000Z 367.01 null null
+2008-06-07T13%3A12%3A00.000Z 367.01 null null
+2008-06-07T13%3A20%3A00.000Z 366.99 null null
+2008-06-07T13%3A24%3A00.000Z 366.99 null null
+2008-06-07T13%3A28%3A00.000Z 367.0 null null
+2008-06-07T13%3A32%3A00.000Z 366.99 null null
+2008-06-07T13%3A36%3A00.000Z 367.0 null null
+2008-06-07T13%3A40%3A00.000Z 367.0 null null
+2008-06-07T13%3A44%3A00.000Z 366.99 null null
+2008-06-07T13%3A56%3A00.000Z 366.99 null null
+2008-06-07T14%3A00%3A00.000Z 366.98 null null
+2008-06-07T14%3A04%3A00.000Z 366.98 null null
+2008-06-07T14%3A08%3A00.000Z 366.99 null null
+2008-06-07T14%3A12%3A00.000Z 366.98 null null
+2008-06-07T14%3A16%3A00.000Z 366.98 null null
+2008-06-07T14%3A20%3A00.000Z 366.99 null null
+2008-06-07T14%3A24%3A00.000Z 366.98 null null
+2008-06-07T14%3A28%3A00.000Z 366.98 null null
+2008-06-07T14%3A32%3A00.000Z 366.97 null null
+2008-06-07T14%3A36%3A00.000Z 366.97 null null
+2008-06-07T14%3A44%3A00.000Z 366.99 null null
+2008-06-07T14%3A48%3A00.000Z 366.96 null null
+2008-06-07T14%3A52%3A00.000Z 366.97 null null
+2008-06-07T14%3A56%3A00.000Z 366.97 null null
+2008-06-07T15%3A00%3A00.000Z 366.98 null null
+2008-06-07T15%3A04%3A00.000Z 366.97 null null
+2008-06-07T15%3A12%3A00.000Z 366.97 null null
+2008-06-07T15%3A16%3A00.000Z 366.96 null null
+2008-06-07T15%3A20%3A00.000Z 366.96 null null
+2008-06-07T15%3A24%3A00.000Z 366.95 null null
+2008-06-07T15%3A28%3A00.000Z 366.97 null null
+2008-06-07T15%3A32%3A00.000Z 366.96 null null
+2008-06-07T15%3A40%3A00.000Z 366.96 null null
+2008-06-07T15%3A44%3A00.000Z 366.97 null null
+2008-06-07T15%3A48%3A00.000Z 366.95 null null
+2008-06-07T16%3A12%3A00.000Z 366.95 null null
+2008-06-07T16%3A16%3A00.000Z 366.96 null null
+2008-06-07T16%3A20%3A00.000Z 366.94 null null
+2008-06-07T16%3A24%3A00.000Z 366.95 null null
+2008-06-07T16%3A32%3A00.000Z 366.95 null null
+2008-06-07T16%3A36%3A00.000Z 366.94 null null
+2008-06-07T16%3A40%3A00.000Z 366.94 null null
+2008-06-07T16%3A44%3A00.000Z 366.93 null null
+2008-06-07T16%3A48%3A00.000Z 366.94 null null
+2008-06-07T17%3A04%3A00.000Z 366.94 null null
+2008-06-07T17%3A08%3A00.000Z 366.93 null null
+2008-06-07T17%3A12%3A00.000Z 366.95 null null
+2008-06-07T17%3A16%3A00.000Z 366.93 null null
+2008-06-07T17%3A20%3A00.000Z 366.94 null null
+2008-06-07T17%3A24%3A00.000Z 366.94 null null
+2008-06-07T17%3A28%3A00.000Z 366.95 null null
+2008-06-07T17%3A32%3A00.000Z 366.93 null null
+2008-06-07T17%3A36%3A00.000Z 366.93 null null
+2008-06-07T17%3A40%3A00.000Z 366.94 null null
+2008-06-07T17%3A44%3A00.000Z 366.93 null null
+2008-06-07T17%3A48%3A00.000Z 366.94 null null
+2008-06-07T17%3A52%3A00.000Z 366.93 null null
+2008-06-07T17%3A56%3A00.000Z 366.93 null null
+2008-06-07T18%3A00%3A00.000Z 366.92 null null
+2008-06-07T18%3A04%3A00.000Z 366.93 null null
+2008-06-07T18%3A08%3A00.000Z 366.92 null null
+2008-06-07T18%3A12%3A00.000Z 366.93 null null
+2008-06-07T18%3A20%3A00.000Z 366.93 null null
+2008-06-07T18%3A24%3A00.000Z 366.92 null null
+2008-06-07T18%3A32%3A00.000Z 366.92 null null
+2008-06-07T18%3A36%3A00.000Z 366.93 null null
+2008-06-07T18%3A40%3A00.000Z 366.92 null null
+2008-06-07T18%3A52%3A00.000Z 366.92 null null
+2008-06-07T18%3A56%3A00.000Z 366.91 null null
+2008-06-07T19%3A00%3A00.000Z 366.92 null null
+2008-06-07T19%3A08%3A00.000Z 366.92 null null
+2008-06-07T19%3A12%3A00.000Z 366.91 null null
+2008-06-07T19%3A28%3A00.000Z 366.91 null null
+2008-06-07T19%3A32%3A00.000Z 366.92 null null
+2008-06-07T19%3A36%3A00.000Z 366.91 null null
+2008-06-07T19%3A44%3A00.000Z 366.91 null null
+2008-06-07T19%3A48%3A00.000Z 366.9 null null
+2008-06-07T19%3A52%3A00.000Z 366.9 null null
+2008-06-07T19%3A56%3A00.000Z 366.91 null null
+2008-06-07T20%3A16%3A00.000Z 366.91 null null
+2008-06-07T20%3A20%3A00.000Z 366.9 null null
+2008-06-07T20%3A24%3A00.000Z 366.91 null null
+2008-06-07T20%3A28%3A00.000Z 366.9 null null
+2008-06-07T20%3A32%3A00.000Z 366.9 null null
+2008-06-07T20%3A36%3A00.000Z 366.91 null null
+2008-06-07T20%3A40%3A00.000Z 366.9 null null
+2008-06-07T20%3A44%3A00.000Z 366.9 null null
+2008-06-07T20%3A48%3A00.000Z 366.91 null null
+2008-06-07T20%3A56%3A00.000Z 366.89 null null
+2008-06-07T21%3A00%3A00.000Z 366.9 null null
+2008-06-07T21%3A08%3A00.000Z 366.9 null null
+2008-06-07T21%3A12%3A00.000Z 366.89 null null
+2008-06-07T21%3A16%3A00.000Z 366.9 null null
+2008-06-07T21%3A32%3A00.000Z 366.9 null null
+2008-06-07T21%3A36%3A00.000Z 366.89 null null
+2008-06-07T21%3A40%3A00.000Z 366.9 null null
+2008-06-07T21%3A44%3A00.000Z 366.89 null null
+2008-06-07T21%3A56%3A00.000Z 366.89 null null
+2008-06-07T22%3A00%3A00.000Z 366.88 null null
+2008-06-07T22%3A04%3A00.000Z 366.89 null null
+2008-06-07T22%3A08%3A00.000Z 366.89 null null
+2008-06-07T22%3A12%3A00.000Z 366.88 null null
+2008-06-07T22%3A16%3A00.000Z 366.89 null null
+2008-06-07T22%3A20%3A00.000Z 366.88 null null
+2008-06-07T22%3A24%3A00.000Z 366.89 null null
+2008-06-07T22%3A28%3A00.000Z 366.89 null null
+2008-06-07T22%3A32%3A00.000Z 366.88 null null
+2008-06-07T22%3A36%3A00.000Z 366.89 null null
+2008-06-07T22%3A40%3A00.000Z 366.89 null null
+2008-06-07T22%3A44%3A00.000Z 366.87 null null
+2008-06-07T22%3A48%3A00.000Z 366.89 null null
+2008-06-07T22%3A52%3A00.000Z 366.88 null null
+2008-06-07T22%3A56%3A00.000Z 366.88 null null
+2008-06-07T23%3A00%3A00.000Z 366.87 null null
+2008-06-07T23%3A04%3A00.000Z 366.87 null null
+2008-06-07T23%3A08%3A00.000Z 366.88 null null
+2008-06-07T23%3A24%3A00.000Z 366.88 null null
+2008-06-07T23%3A28%3A00.000Z 366.87 null null
+2008-06-07T23%3A32%3A00.000Z 366.88 null null
+2008-06-07T23%3A40%3A00.000Z 366.88 null null
+2008-06-07T23%3A44%3A00.000Z 366.87 null null
+2008-06-07T23%3A48%3A00.000Z 366.88 null null
+2008-06-07T23%3A52%3A00.000Z 366.87 null null
+2008-06-07T23%3A56%3A00.000Z 366.87 null null
+2008-06-08T00%3A00%3A00.000Z 366.86 null null
+2008-06-08T00%3A04%3A00.000Z 366.87 null null
+2008-06-08T00%3A08%3A00.000Z 366.86 null null
+2008-06-08T00%3A12%3A00.000Z 366.86 null null
+2008-06-08T00%3A16%3A00.000Z 366.87 null null
+2008-06-08T00%3A20%3A00.000Z 366.86 null null
+2008-06-08T00%3A24%3A00.000Z 366.87 null null
+2008-06-08T00%3A28%3A00.000Z 366.87 null null
+2008-06-08T00%3A32%3A00.000Z 366.86 null null
+2008-06-08T00%3A36%3A00.000Z 366.87 null null
+2008-06-08T00%3A40%3A00.000Z 366.86 null null
+2008-06-08T01%3A04%3A00.000Z 366.86 null null
+2008-06-08T01%3A08%3A00.000Z 366.85 null null
+2008-06-08T01%3A12%3A00.000Z 366.86 null null
+2008-06-08T01%3A24%3A00.000Z 366.86 null null
+2008-06-08T01%3A28%3A00.000Z 366.85 null null
+2008-06-08T01%3A36%3A00.000Z 366.85 null null
+2008-06-08T01%3A40%3A00.000Z 366.86 null null
+2008-06-08T01%3A44%3A00.000Z 366.85 null null
+2008-06-08T02%3A04%3A00.000Z 366.85 null null
+2008-06-08T02%3A08%3A00.000Z 366.86 null null
+2008-06-08T02%3A12%3A00.000Z 366.85 null null
+2008-06-08T02%3A36%3A00.000Z 366.85 null null
+2008-06-08T02%3A40%3A00.000Z 366.84 null null
+2008-06-08T02%3A44%3A00.000Z 366.85 null null
+2008-06-08T02%3A48%3A00.000Z 366.84 null null
+2008-06-08T02%3A52%3A00.000Z 366.84 null null
+2008-06-08T02%3A56%3A00.000Z 366.85 null null
+2008-06-08T03%3A00%3A00.000Z 366.84 null null
+2008-06-08T03%3A16%3A00.000Z 366.84 null null
+2008-06-08T03%3A20%3A00.000Z 366.83 null null
+2008-06-08T03%3A24%3A00.000Z 366.84 null null
+2008-06-08T03%3A56%3A00.000Z 366.84 null null
+2008-06-08T04%3A04%3A00.000Z 366.82 null null
+2008-06-08T04%3A08%3A00.000Z 366.83 null null
+2008-06-08T04%3A20%3A00.000Z 366.83 null null
+2008-06-08T04%3A24%3A00.000Z 366.82 null null
+2008-06-08T04%3A28%3A00.000Z 366.83 null null
+2008-06-08T04%3A32%3A00.000Z 366.83 null null
+2008-06-08T04%3A36%3A00.000Z 366.82 null null
+2008-06-08T04%3A40%3A00.000Z 366.83 null null
+2008-06-08T04%3A48%3A00.000Z 366.83 null null
+2008-06-08T04%3A52%3A00.000Z 366.82 null null
+2008-06-08T04%3A56%3A00.000Z 366.82 null null
+2008-06-08T05%3A00%3A00.000Z 366.83 null null
+2008-06-08T05%3A04%3A00.000Z 366.81 null null
+2008-06-08T05%3A08%3A00.000Z 366.82 null null
+2008-06-08T05%3A12%3A00.000Z 366.81 null null
+2008-06-08T05%3A16%3A00.000Z 366.81 null null
+2008-06-08T05%3A20%3A00.000Z 366.82 null null
+2008-06-08T05%3A36%3A00.000Z 366.82 null null
+2008-06-08T05%3A40%3A00.000Z 366.81 null null
+2008-06-08T05%3A48%3A00.000Z 366.81 null null
+2008-06-08T05%3A52%3A00.000Z 366.8 null null
+2008-06-08T05%3A56%3A00.000Z 366.81 null null
+2008-06-08T06%3A00%3A00.000Z 366.81 null null
+2008-06-08T06%3A04%3A00.000Z 366.82 null null
+2008-06-08T06%3A08%3A00.000Z 366.81 null null
+2008-06-08T06%3A24%3A00.000Z 366.81 null null
+2008-06-08T06%3A28%3A00.000Z 366.8 null null
+2008-06-08T07%3A00%3A00.000Z 366.8 null null
+2008-06-08T07%3A04%3A00.000Z 366.79 null null
+2008-06-08T07%3A08%3A00.000Z 366.8 null null
+2008-06-08T07%3A12%3A00.000Z 366.8 null null
+2008-06-08T07%3A16%3A00.000Z 366.79 null null
+2008-06-08T07%3A24%3A00.000Z 366.79 null null
+2008-06-08T07%3A28%3A00.000Z 366.8 null null
+2008-06-08T07%3A32%3A00.000Z 366.79 null null
+2008-06-08T07%3A36%3A00.000Z 366.8 null null
+2008-06-08T07%3A40%3A00.000Z 366.79 null null
+2008-06-08T07%3A48%3A00.000Z 366.79 null null
+2008-06-08T07%3A52%3A00.000Z 366.78 null null
+2008-06-08T07%3A56%3A00.000Z 366.79 null null
+2008-06-08T08%3A04%3A00.000Z 366.79 null null
+2008-06-08T08%3A08%3A00.000Z 366.78 null null
+2008-06-08T08%3A12%3A00.000Z 366.79 null null
+2008-06-08T08%3A24%3A00.000Z 366.79 null null
+2008-06-08T08%3A32%3A00.000Z 366.77 null null
+2008-06-08T08%3A36%3A00.000Z 366.79 null null
+2008-06-08T08%3A40%3A00.000Z 366.78 null null
+2008-06-08T08%3A44%3A00.000Z 366.79 null null
+2008-06-08T08%3A48%3A00.000Z 366.78 null null
+2008-06-08T08%3A56%3A00.000Z 366.78 null null
+2008-06-08T09%3A00%3A00.000Z 366.77 null null
+2008-06-08T09%3A04%3A00.000Z 366.78 null null
+2008-06-08T09%3A08%3A00.000Z 366.77 null null
+2008-06-08T09%3A16%3A00.000Z 366.77 null null
+2008-06-08T09%3A20%3A00.000Z 366.78 null null
+2008-06-08T09%3A32%3A00.000Z 366.78 null null
+2008-06-08T09%3A36%3A00.000Z 366.77 null null
+2008-06-08T09%3A48%3A00.000Z 366.77 null null
+2008-06-08T09%3A52%3A00.000Z 366.76 null null
+2008-06-08T09%3A56%3A00.000Z 366.76 null null
+2008-06-08T10%3A00%3A00.000Z 366.77 null null
+2008-06-08T10%3A04%3A00.000Z 366.77 null null
+2008-06-08T10%3A08%3A00.000Z 366.76 null null
+2008-06-08T10%3A12%3A00.000Z 366.76 null null
+2008-06-08T10%3A16%3A00.000Z 366.77 null null
+2008-06-08T10%3A20%3A00.000Z 366.76 null null
+2008-06-08T10%3A36%3A00.000Z 366.76 null null
+2008-06-08T10%3A40%3A00.000Z 366.77 null null
+2008-06-08T10%3A44%3A00.000Z 366.76 null null
+2008-06-08T10%3A48%3A00.000Z 366.76 null null
+2008-06-08T10%3A52%3A00.000Z 366.77 null null
+2008-06-08T10%3A56%3A00.000Z 366.76 null null
+2008-06-08T11%3A00%3A00.000Z 366.76 null null
+2008-06-08T11%3A04%3A00.000Z 366.75 null null
+2008-06-08T11%3A08%3A00.000Z 366.76 null null
+2008-06-08T11%3A16%3A00.000Z 366.76 null null
+2008-06-08T11%3A20%3A00.000Z 366.75 null null
+2008-06-08T11%3A24%3A00.000Z 366.76 null null
+2008-06-08T11%3A40%3A00.000Z 366.76 null null
+2008-06-08T11%3A44%3A00.000Z 366.75 null null
+2008-06-08T11%3A48%3A00.000Z 366.75 null null
+2008-06-08T11%3A52%3A00.000Z 366.76 null null
+2008-06-08T11%3A56%3A00.000Z 366.76 null null
+2008-06-08T12%3A00%3A00.000Z 366.75 null null
+2008-06-08T12%3A12%3A00.000Z 366.75 null null
+2008-06-08T12%3A16%3A00.000Z 366.74 null null
+2008-06-08T12%3A20%3A00.000Z 366.74 null null
+2008-06-08T12%3A24%3A00.000Z 366.73 null null
+2008-06-08T12%3A28%3A00.000Z 366.75 null null
+2008-06-08T12%3A32%3A00.000Z 366.74 null null
+2008-06-08T12%3A36%3A00.000Z 366.75 null null
+2008-06-08T12%3A40%3A00.000Z 366.74 null null
+2008-06-08T12%3A44%3A00.000Z 366.75 null null
+2008-06-08T12%3A48%3A00.000Z 366.74 null null
+2008-06-08T13%3A08%3A00.000Z 366.74 null null
+2008-06-08T13%3A12%3A00.000Z 366.73 null null
+2008-06-08T13%3A16%3A00.000Z 366.74 null null
+2008-06-08T13%3A20%3A00.000Z 366.74 null null
+2008-06-08T13%3A24%3A00.000Z 366.73 null null
+2008-06-08T13%3A28%3A00.000Z 366.74 null null
+2008-06-08T13%3A32%3A00.000Z 366.73 null null
+2008-06-08T13%3A36%3A00.000Z 366.74 null null
+2008-06-08T13%3A40%3A00.000Z 366.73 null null
+2008-06-08T13%3A44%3A00.000Z 366.74 null null
+2008-06-08T13%3A48%3A00.000Z 366.74 null null
+2008-06-08T13%3A52%3A00.000Z 366.73 null null
+2008-06-08T13%3A56%3A00.000Z 366.73 null null
+2008-06-08T14%3A00%3A00.000Z 366.72 null null
+2008-06-08T14%3A04%3A00.000Z 366.73 null null
+2008-06-08T14%3A12%3A00.000Z 366.73 null null
+2008-06-08T14%3A16%3A00.000Z 366.72 null null
+2008-06-08T14%3A20%3A00.000Z 366.73 null null
+2008-06-08T14%3A24%3A00.000Z 366.72 null null
+2008-06-08T14%3A28%3A00.000Z 366.73 null null
+2008-06-08T14%3A40%3A00.000Z 366.73 null null
+2008-06-08T14%3A44%3A00.000Z 366.72 null null
+2008-06-08T14%3A48%3A00.000Z 366.72 null null
+2008-06-08T14%3A52%3A00.000Z 366.71 null null
+2008-06-08T14%3A56%3A00.000Z 366.72 null null
+2008-06-08T15%3A00%3A00.000Z 366.71 null null
+2008-06-08T15%3A04%3A00.000Z 366.72 null null
+2008-06-08T15%3A12%3A00.000Z 366.72 null null
+2008-06-08T15%3A16%3A00.000Z 366.71 null null
+2008-06-08T15%3A20%3A00.000Z 366.72 null null
+2008-06-08T15%3A28%3A00.000Z 366.72 null null
+2008-06-08T15%3A32%3A00.000Z 366.71 null null
+2008-06-08T16%3A12%3A00.000Z 366.71 null null
+2008-06-08T16%3A16%3A00.000Z 366.7 null null
+2008-06-08T16%3A20%3A00.000Z 366.7 null null
+2008-06-08T16%3A24%3A00.000Z 366.71 null null
+2008-06-08T16%3A28%3A00.000Z 366.7 null null
+2008-06-08T17%3A00%3A00.000Z 366.7 null null
+2008-06-08T17%3A04%3A00.000Z 366.69 null null
+2008-06-08T17%3A08%3A00.000Z 366.7 null null
+2008-06-08T17%3A16%3A00.000Z 366.7 null null
+2008-06-08T17%3A20%3A00.000Z 366.69 null null
+2008-06-08T17%3A28%3A00.000Z 366.69 null null
+2008-06-08T17%3A32%3A00.000Z 366.7 null null
+2008-06-08T17%3A36%3A00.000Z 366.69 null null
+2008-06-08T18%3A08%3A00.000Z 366.69 null null
+2008-06-08T18%3A12%3A00.000Z 366.7 null null
+2008-06-08T18%3A16%3A00.000Z 366.69 null null
+2008-06-08T18%3A20%3A00.000Z 366.69 null null
+2008-06-08T18%3A24%3A00.000Z 366.68 null null
+2008-06-08T18%3A28%3A00.000Z 366.68 null null
+2008-06-08T18%3A32%3A00.000Z 366.69 null null
+2008-06-08T18%3A36%3A00.000Z 366.69 null null
+2008-06-08T18%3A40%3A00.000Z 366.68 null null
+2008-06-08T19%3A00%3A00.000Z 366.68 null null
+2008-06-08T19%3A04%3A00.000Z 366.69 null null
+2008-06-08T19%3A08%3A00.000Z 366.68 null null
+2008-06-08T19%3A16%3A00.000Z 366.68 null null
+2008-06-08T19%3A20%3A00.000Z 366.69 null null
+2008-06-08T19%3A28%3A00.000Z 366.67 null null
+2008-06-08T19%3A32%3A00.000Z 366.68 null null
+2008-06-08T19%3A36%3A00.000Z 366.67 null null
+2008-06-08T19%3A44%3A00.000Z 366.67 null null
+2008-06-08T19%3A48%3A00.000Z 366.68 null null
+2008-06-08T19%3A52%3A00.000Z 366.67 null null
+2008-06-08T19%3A56%3A00.000Z 366.68 null null
+2008-06-08T20%3A00%3A00.000Z 366.67 null null
+2008-06-08T20%3A24%3A00.000Z 366.67 null null
+2008-06-08T20%3A28%3A00.000Z 366.65 null null
+2008-06-08T20%3A32%3A00.000Z 366.67 null null
+2008-06-08T20%3A36%3A00.000Z 366.66 null null
+2008-06-08T21%3A00%3A00.000Z 366.66 null null
+2008-06-08T21%3A04%3A00.000Z 366.65 null null
+2008-06-08T21%3A08%3A00.000Z 366.65 null null
+2008-06-08T21%3A12%3A00.000Z 366.66 null null
+2008-06-08T21%3A20%3A00.000Z 366.66 null null
+2008-06-08T21%3A24%3A00.000Z 366.65 null null
+2008-06-08T21%3A56%3A00.000Z 366.65 null null
+2008-06-08T22%3A00%3A00.000Z 366.64 null null
+2008-06-08T22%3A04%3A00.000Z 366.64 null null
+2008-06-08T22%3A08%3A00.000Z 366.65 null null
+2008-06-08T22%3A16%3A00.000Z 366.65 null null
+2008-06-08T22%3A20%3A00.000Z 366.64 null null
+2008-06-08T22%3A24%3A00.000Z 366.65 null null
+2008-06-08T22%3A28%3A00.000Z 366.64 null null
+2008-06-08T22%3A52%3A00.000Z 366.64 null null
+2008-06-08T22%3A56%3A00.000Z 366.63 null null
+2008-06-08T23%3A00%3A00.000Z 366.63 null null
+2008-06-08T23%3A04%3A00.000Z 366.62 null null
+2008-06-08T23%3A08%3A00.000Z 366.64 null null
+2008-06-08T23%3A12%3A00.000Z 366.63 null null
+2008-06-08T23%3A20%3A00.000Z 366.63 null null
+2008-06-08T23%3A24%3A00.000Z 366.64 null null
+2008-06-08T23%3A32%3A00.000Z 366.62 null null
+2008-06-08T23%3A36%3A00.000Z 366.63 null null
+2008-06-08T23%3A40%3A00.000Z 366.63 null null
+2008-06-08T23%3A44%3A00.000Z 366.62 null null
+2008-06-08T23%3A48%3A00.000Z 366.63 null null
+2008-06-08T23%3A52%3A00.000Z 366.62 null null
+2008-06-09T00%3A20%3A00.000Z 366.62 null null
+2008-06-09T00%3A24%3A00.000Z 366.61 null null
+2008-06-09T00%3A28%3A00.000Z 366.61 null null
+2008-06-09T00%3A32%3A00.000Z 366.62 null null
+2008-06-09T00%3A36%3A00.000Z 366.62 null null
+2008-06-09T00%3A40%3A00.000Z 366.61 null null
+2008-06-09T00%3A44%3A00.000Z 366.61 null null
+2008-06-09T00%3A48%3A00.000Z 366.62 null null
+2008-06-09T00%3A56%3A00.000Z 366.6 null null
+2008-06-09T01%3A00%3A00.000Z 366.61 null null
+2008-06-09T01%3A16%3A00.000Z 366.61 null null
+2008-06-09T01%3A20%3A00.000Z 366.6 null null
+2008-06-09T01%3A36%3A00.000Z 366.6 null null
+2008-06-09T01%3A40%3A00.000Z 366.61 null null
+2008-06-09T01%3A44%3A00.000Z 366.59 null null
+2008-06-09T01%3A48%3A00.000Z 366.6 null null
+2008-06-09T02%3A16%3A00.000Z 366.6 null null
+2008-06-09T02%3A24%3A00.000Z 366.58 null null
+2008-06-09T02%3A32%3A00.000Z 366.6 null null
+2008-06-09T02%3A36%3A00.000Z 366.59 null null
+2008-06-09T03%3A08%3A00.000Z 366.59 null null
+2008-06-09T03%3A12%3A00.000Z 366.58 null null
+2008-06-09T03%3A16%3A00.000Z 366.58 null null
+2008-06-09T03%3A20%3A00.000Z 366.59 null null
+2008-06-09T03%3A24%3A00.000Z 366.58 null null
+2008-06-09T03%3A36%3A00.000Z 366.58 null null
+2008-06-09T03%3A40%3A00.000Z 366.57 null null
+2008-06-09T03%3A44%3A00.000Z 366.57 null null
+2008-06-09T03%3A48%3A00.000Z 366.58 null null
+2008-06-09T03%3A56%3A00.000Z 366.58 null null
+2008-06-09T04%3A00%3A00.000Z 366.57 null null
+2008-06-09T04%3A08%3A00.000Z 366.57 null null
+2008-06-09T04%3A12%3A00.000Z 366.56 null null
+2008-06-09T04%3A20%3A00.000Z 366.56 null null
+2008-06-09T04%3A24%3A00.000Z 366.57 null null
+2008-06-09T04%3A28%3A00.000Z 366.57 null null
+2008-06-09T04%3A32%3A00.000Z 366.55 null null
+2008-06-09T04%3A36%3A00.000Z 366.56 null null
+2008-06-09T05%3A12%3A00.000Z 366.56 null null
+2008-06-09T05%3A16%3A00.000Z 366.55 null null
+2008-06-09T05%3A20%3A00.000Z 366.56 null null
+2008-06-09T05%3A24%3A00.000Z 366.55 null null
+2008-06-09T05%3A28%3A00.000Z 366.56 null null
+2008-06-09T05%3A32%3A00.000Z 366.56 null null
+2008-06-09T05%3A36%3A00.000Z 366.55 null null
+2008-06-09T05%3A44%3A00.000Z 366.55 null null
+2008-06-09T05%3A48%3A00.000Z 366.54 null null
+2008-06-09T05%3A52%3A00.000Z 366.55 null null
+2008-06-09T05%3A56%3A00.000Z 366.54 null null
+2008-06-09T06%3A00%3A00.000Z 366.54 null null
+2008-06-09T06%3A04%3A00.000Z 366.55 null null
+2008-06-09T06%3A12%3A00.000Z 366.55 null null
+2008-06-09T06%3A16%3A00.000Z 366.54 null null
+2008-06-09T06%3A28%3A00.000Z 366.54 null null
+2008-06-09T06%3A32%3A00.000Z 366.53 null null
+2008-06-09T06%3A36%3A00.000Z 366.54 null null
+2008-06-09T06%3A44%3A00.000Z 366.54 null null
+2008-06-09T06%3A48%3A00.000Z 366.53 null null
+2008-06-09T07%3A04%3A00.000Z 366.53 null null
+2008-06-09T07%3A08%3A00.000Z 366.52 null null
+2008-06-09T07%3A12%3A00.000Z 366.52 null null
+2008-06-09T07%3A16%3A00.000Z 366.53 null null
+2008-06-09T07%3A20%3A00.000Z 366.52 null null
+2008-06-09T07%3A32%3A00.000Z 366.52 null null
+2008-06-09T07%3A36%3A00.000Z 366.53 null null
+2008-06-09T07%3A40%3A00.000Z 366.53 null null
+2008-06-09T07%3A44%3A00.000Z 366.52 null null
+2008-06-09T07%3A52%3A00.000Z 366.52 null null
+2008-06-09T07%3A56%3A00.000Z 366.51 null null
+2008-06-09T08%3A00%3A00.000Z 366.52 null null
+2008-06-09T08%3A04%3A00.000Z 366.51 null null
+2008-06-09T08%3A16%3A00.000Z 366.51 null null
+2008-06-09T08%3A20%3A00.000Z 366.52 null null
+2008-06-09T08%3A24%3A00.000Z 366.51 null null
+2008-06-09T08%3A36%3A00.000Z 366.51 null null
+2008-06-09T08%3A40%3A00.000Z 366.5 null null
+2008-06-09T08%3A44%3A00.000Z 366.5 null null
+2008-06-09T08%3A48%3A00.000Z 366.51 null null
+2008-06-09T08%3A52%3A00.000Z 366.51 null null
+2008-06-09T08%3A56%3A00.000Z 366.5 null null
+2008-06-09T09%3A20%3A00.000Z 366.5 null null
+2008-06-09T09%3A24%3A00.000Z 366.49 null null
+2008-06-09T09%3A28%3A00.000Z 366.5 null null
+2008-06-09T09%3A36%3A00.000Z 366.5 null null
+2008-06-09T09%3A40%3A00.000Z 366.49 null null
+2008-06-09T09%3A44%3A00.000Z 366.49 null null
+2008-06-09T09%3A48%3A00.000Z 366.48 null null
+2008-06-09T09%3A52%3A00.000Z 366.49 null null
+2008-06-09T09%3A56%3A00.000Z 366.48 null null
+2008-06-09T10%3A00%3A00.000Z 366.49 null null
+2008-06-09T10%3A04%3A00.000Z 366.49 null null
+2008-06-09T10%3A08%3A00.000Z 366.48 null null
+2008-06-09T10%3A12%3A00.000Z 366.49 null null
+2008-06-09T10%3A16%3A00.000Z 366.48 null null
+2008-06-09T10%3A28%3A00.000Z 366.48 null null
+2008-06-09T10%3A32%3A00.000Z 366.49 null null
+2008-06-09T10%3A36%3A00.000Z 366.48 null null
+2008-06-09T10%3A40%3A00.000Z 366.48 null null
+2008-06-09T10%3A44%3A00.000Z 366.47 null null
+2008-06-09T10%3A48%3A00.000Z 366.48 null null
+2008-06-09T11%3A00%3A00.000Z 366.48 null null
+2008-06-09T11%3A08%3A00.000Z 366.46 null null
+2008-06-09T11%3A12%3A00.000Z 366.47 null null
+2008-06-09T11%3A16%3A00.000Z 366.47 null null
+2008-06-09T11%3A20%3A00.000Z 366.48 null null
+2008-06-09T11%3A24%3A00.000Z 366.47 null null
+2008-06-09T11%3A28%3A00.000Z 366.48 null null
+2008-06-09T11%3A32%3A00.000Z 366.46 null null
+2008-06-09T11%3A36%3A00.000Z 366.47 null null
+2008-06-09T11%3A40%3A00.000Z 366.46 null null
+2008-06-09T11%3A52%3A00.000Z 366.46 null null
+2008-06-09T11%3A56%3A00.000Z 366.45 null null
+2008-06-09T12%3A00%3A00.000Z 366.46 null null
+2008-06-09T12%3A16%3A00.000Z 366.46 null null
+2008-06-09T12%3A20%3A00.000Z 366.45 null null
+2008-06-09T12%3A24%3A00.000Z 366.45 null null
+2008-06-09T12%3A28%3A00.000Z 366.46 null null
+2008-06-09T12%3A32%3A00.000Z 366.45 null null
+2008-06-09T12%3A48%3A00.000Z 366.45 null null
+2008-06-09T12%3A52%3A00.000Z 366.44 null null
+2008-06-09T13%3A00%3A00.000Z 366.44 null null
+2008-06-09T13%3A04%3A00.000Z 366.45 null null
+2008-06-09T13%3A12%3A00.000Z 366.45 null null
+2008-06-09T13%3A16%3A00.000Z 366.44 null null
+2008-06-09T13%3A40%3A00.000Z 366.44 null null
+2008-06-09T13%3A44%3A00.000Z 366.43 null null
+2008-06-09T13%3A48%3A00.000Z 366.43 null null
+2008-06-09T13%3A52%3A00.000Z 366.44 null null
+2008-06-09T13%3A56%3A00.000Z 366.43 null null
+2008-06-09T14%3A08%3A00.000Z 366.43 null null
+2008-06-09T14%3A12%3A00.000Z 366.42 null null
+2008-06-09T14%3A20%3A00.000Z 366.42 null null
+2008-06-09T14%3A24%3A00.000Z 366.43 null null
+2008-06-09T14%3A28%3A00.000Z 366.42 null null
+2008-06-09T15%3A04%3A00.000Z 366.42 null null
+2008-06-09T15%3A08%3A00.000Z 366.41 null null
+2008-06-09T15%3A28%3A00.000Z 366.41 null null
+2008-06-09T15%3A32%3A00.000Z 366.4 null null
+2008-06-09T15%3A44%3A00.000Z 366.4 null null
+2008-06-09T15%3A48%3A00.000Z 366.41 null null
+2008-06-09T15%3A52%3A00.000Z 366.41 null null
+2008-06-09T16%3A00%3A00.000Z 366.39 null null
+2008-06-09T16%3A04%3A00.000Z 366.4 null null
+2008-06-09T16%3A24%3A00.000Z 366.4 null null
+2008-06-09T16%3A28%3A00.000Z 366.39 null null
+2008-06-09T16%3A40%3A00.000Z 366.39 null null
+2008-06-09T16%3A44%3A00.000Z 366.4 null null
+2008-06-09T16%3A48%3A00.000Z 366.39 null null
+2008-06-09T17%3A00%3A00.000Z 366.39 null null
+2008-06-09T17%3A04%3A00.000Z 366.4 null null
+2008-06-09T17%3A08%3A00.000Z 366.38 null null
+2008-06-09T17%3A12%3A00.000Z 366.39 null null
+2008-06-09T17%3A16%3A00.000Z 366.38 null null
+2008-06-09T17%3A24%3A00.000Z 366.38 null null
+2008-06-09T17%3A28%3A00.000Z 366.37 null null
+2008-06-09T17%3A32%3A00.000Z 366.38 null null
+2008-06-09T17%3A40%3A00.000Z 366.38 null null
+2008-06-09T17%3A44%3A00.000Z 366.37 null null
+2008-06-09T17%3A48%3A00.000Z 366.37 null null
+2008-06-09T17%3A52%3A00.000Z 366.38 null null
+2008-06-09T17%3A56%3A00.000Z 366.37 null null
+2008-06-09T18%3A04%3A00.000Z 366.37 null null
+2008-06-09T18%3A08%3A00.000Z 366.38 null null
+2008-06-09T18%3A12%3A00.000Z 366.38 null null
+2008-06-09T18%3A20%3A00.000Z 366.36 null null
+2008-06-09T18%3A24%3A00.000Z 366.37 null null
+2008-06-09T18%3A28%3A00.000Z 366.36 null null
+2008-06-09T18%3A32%3A00.000Z 366.36 null null
+2008-06-09T18%3A36%3A00.000Z 366.37 null null
+2008-06-09T18%3A40%3A00.000Z 366.36 null null
+2008-06-09T19%3A08%3A00.000Z 366.36 null null
+2008-06-09T19%3A12%3A00.000Z 366.35 null null
+2008-06-09T19%3A24%3A00.000Z 366.35 null null
+2008-06-09T19%3A28%3A00.000Z 366.36 null null
+2008-06-09T19%3A32%3A00.000Z 366.35 null null
+2008-06-09T20%3A00%3A00.000Z 366.35 null null
+2008-06-09T20%3A04%3A00.000Z 366.34 null null
+2008-06-09T20%3A08%3A00.000Z 366.34 null null
+2008-06-09T20%3A12%3A00.000Z 366.35 null null
+2008-06-09T20%3A16%3A00.000Z 366.34 null null
+2008-06-09T20%3A56%3A00.000Z 366.34 null null
+2008-06-09T21%3A00%3A00.000Z 366.32 null null
+2008-06-09T21%3A04%3A00.000Z 366.33 null null
+2008-06-09T21%3A40%3A00.000Z 366.33 null null
+2008-06-09T21%3A44%3A00.000Z 366.32 null null
+2008-06-09T21%3A48%3A00.000Z 366.33 null null
+2008-06-09T21%3A52%3A00.000Z 366.32 null null
+2008-06-09T22%3A20%3A00.000Z 366.32 null null
+2008-06-09T22%3A24%3A00.000Z 366.31 null null
+2008-06-09T22%3A28%3A00.000Z 366.32 null null
+2008-06-09T22%3A32%3A00.000Z 366.31 null null
+2008-06-09T22%3A44%3A00.000Z 366.31 null null
+2008-06-09T22%3A48%3A00.000Z 366.32 null null
+2008-06-09T22%3A52%3A00.000Z 366.31 null null
+2008-06-09T22%3A56%3A00.000Z 366.31 null null
+2008-06-09T23%3A00%3A00.000Z 366.3 null null
+2008-06-09T23%3A32%3A00.000Z 366.3 null null
+2008-06-09T23%3A36%3A00.000Z 366.29 null null
+2008-06-09T23%3A40%3A00.000Z 366.3 null null
+2008-06-09T23%3A52%3A00.000Z 366.3 null null
+2008-06-09T23%3A56%3A00.000Z 366.29 null null
+2008-06-10T00%3A12%3A00.000Z 366.29 null null
+2008-06-10T00%3A16%3A00.000Z 366.28 null null
+2008-06-10T00%3A20%3A00.000Z 366.29 null null
+2008-06-10T00%3A40%3A00.000Z 366.29 null null
+2008-06-10T00%3A44%3A00.000Z 366.28 null null
+2008-06-10T00%3A48%3A00.000Z 366.28 null null
+2008-06-10T00%3A52%3A00.000Z 366.29 null null
+2008-06-10T00%3A56%3A00.000Z 366.28 null null
+2008-06-10T01%3A00%3A00.000Z 366.28 null null
+2008-06-10T01%3A04%3A00.000Z 366.29 null null
+2008-06-10T01%3A08%3A00.000Z 366.27 null null
+2008-06-10T01%3A12%3A00.000Z 366.28 null null
+2008-06-10T01%3A16%3A00.000Z 366.28 null null
+2008-06-10T01%3A20%3A00.000Z 366.27 null null
+2008-06-10T01%3A24%3A00.000Z 366.27 null null
+2008-06-10T01%3A28%3A00.000Z 366.28 null null
+2008-06-10T01%3A32%3A00.000Z 366.27 null null
+2008-06-10T01%3A36%3A00.000Z 366.27 null null
+2008-06-10T01%3A40%3A00.000Z 366.28 null null
+2008-06-10T01%3A44%3A00.000Z 366.27 null null
+2008-06-10T02%3A08%3A00.000Z 366.27 null null
+2008-06-10T02%3A12%3A00.000Z 366.26 null null
+2008-06-10T02%3A28%3A00.000Z 366.26 null null
+2008-06-10T02%3A32%3A00.000Z 366.27 null null
+2008-06-10T02%3A36%3A00.000Z 366.25 null null
+2008-06-10T02%3A40%3A00.000Z 366.26 null null
+2008-06-10T02%3A44%3A00.000Z 366.25 null null
+2008-06-10T02%3A48%3A00.000Z 366.25 null null
+2008-06-10T02%3A52%3A00.000Z 366.26 null null
+2008-06-10T02%3A56%3A00.000Z 366.26 null null
+2008-06-10T03%3A00%3A00.000Z 366.25 null null
+2008-06-10T03%3A20%3A00.000Z 366.25 null null
+2008-06-10T03%3A24%3A00.000Z 366.24 null null
+2008-06-10T03%3A28%3A00.000Z 366.25 null null
+2008-06-10T03%3A32%3A00.000Z 366.24 null null
+2008-06-10T03%3A36%3A00.000Z 366.24 null null
+2008-06-10T03%3A40%3A00.000Z 366.25 null null
+2008-06-10T03%3A44%3A00.000Z 366.25 null null
+2008-06-10T03%3A48%3A00.000Z 366.24 null null
+2008-06-10T03%3A52%3A00.000Z 366.24 null null
+2008-06-10T03%3A56%3A00.000Z 366.25 null null
+2008-06-10T04%3A00%3A00.000Z 366.23 null null
+2008-06-10T04%3A04%3A00.000Z 366.24 null null
+2008-06-10T04%3A08%3A00.000Z 366.24 null null
+2008-06-10T04%3A12%3A00.000Z 366.23 null null
+2008-06-10T04%3A16%3A00.000Z 366.24 null null
+2008-06-10T04%3A20%3A00.000Z 366.23 null null
+2008-06-10T04%3A24%3A00.000Z 366.24 null null
+2008-06-10T04%3A28%3A00.000Z 366.23 null null
+2008-06-10T04%3A52%3A00.000Z 366.23 null null
+2008-06-10T04%3A56%3A00.000Z 366.22 null null
+2008-06-10T05%3A04%3A00.000Z 366.22 null null
+2008-06-10T05%3A08%3A00.000Z 366.23 null null
+2008-06-10T05%3A16%3A00.000Z 366.23 null null
+2008-06-10T05%3A20%3A00.000Z 366.22 null null
+2008-06-10T05%3A48%3A00.000Z 366.22 null null
+2008-06-10T05%3A52%3A00.000Z 366.21 null null
+2008-06-10T05%3A56%3A00.000Z 366.22 null null
+2008-06-10T06%3A00%3A00.000Z 366.22 null null
+2008-06-10T06%3A04%3A00.000Z 366.21 null null
+2008-06-10T06%3A08%3A00.000Z 366.22 null null
+2008-06-10T06%3A12%3A00.000Z 366.21 null null
+2008-06-10T06%3A24%3A00.000Z 366.21 null null
+2008-06-10T06%3A28%3A00.000Z 366.2 null null
+2008-06-10T06%3A32%3A00.000Z 366.21 null null
+2008-06-10T06%3A36%3A00.000Z 366.21 null null
+2008-06-10T06%3A40%3A00.000Z 366.2 null null
+2008-06-10T06%3A44%3A00.000Z 366.2 null null
+2008-06-10T06%3A48%3A00.000Z 366.21 null null
+2008-06-10T06%3A52%3A00.000Z 366.2 null null
+2008-06-10T07%3A16%3A00.000Z 366.2 null null
+2008-06-10T07%3A20%3A00.000Z 366.19 null null
+2008-06-10T07%3A44%3A00.000Z 366.19 null null
+2008-06-10T07%3A48%3A00.000Z 366.2 null null
+2008-06-10T07%3A52%3A00.000Z 366.19 null null
+2008-06-10T08%3A00%3A00.000Z 366.19 null null
+2008-06-10T08%3A04%3A00.000Z 366.18 null null
+2008-06-10T08%3A08%3A00.000Z 366.19 null null
+2008-06-10T08%3A12%3A00.000Z 366.19 null null
+2008-06-10T08%3A16%3A00.000Z 366.18 null null
+2008-06-10T08%3A20%3A00.000Z 366.18 null null
+2008-06-10T08%3A24%3A00.000Z 366.19 null null
+2008-06-10T08%3A32%3A00.000Z 366.17 null null
+2008-06-10T08%3A36%3A00.000Z 366.18 null null
+2008-06-10T08%3A40%3A00.000Z 366.18 null null
+2008-06-10T08%3A44%3A00.000Z 366.17 null null
+2008-06-10T08%3A48%3A00.000Z 366.18 null null
+2008-06-10T08%3A52%3A00.000Z 366.17 null null
+2008-06-10T09%3A20%3A00.000Z 366.17 null null
+2008-06-10T09%3A24%3A00.000Z 366.18 null null
+2008-06-10T09%3A28%3A00.000Z 366.17 null null
+2008-06-10T09%3A32%3A00.000Z 366.17 null null
+2008-06-10T09%3A36%3A00.000Z 366.16 null null
+2008-06-10T09%3A40%3A00.000Z 366.17 null null
+2008-06-10T09%3A44%3A00.000Z 366.17 null null
+2008-06-10T09%3A48%3A00.000Z 366.16 null null
+2008-06-10T10%3A00%3A00.000Z 366.16 null null
+2008-06-10T10%3A04%3A00.000Z 366.15 null null
+2008-06-10T10%3A08%3A00.000Z 366.16 null null
+2008-06-10T10%3A24%3A00.000Z 366.16 null null
+2008-06-10T10%3A28%3A00.000Z 366.15 null null
+2008-06-10T10%3A32%3A00.000Z 366.16 null null
+2008-06-10T10%3A36%3A00.000Z 366.15 null null
+2008-06-10T10%3A48%3A00.000Z 366.15 null null
+2008-06-10T10%3A52%3A00.000Z 366.14 null null
+2008-06-10T10%3A56%3A00.000Z 366.15 null null
+2008-06-10T11%3A04%3A00.000Z 366.15 null null
+2008-06-10T11%3A08%3A00.000Z 366.14 null null
+2008-06-10T11%3A32%3A00.000Z 366.14 null null
+2008-06-10T11%3A36%3A00.000Z 366.13 null null
+2008-06-10T11%3A40%3A00.000Z 366.14 null null
+2008-06-10T11%3A52%3A00.000Z 366.14 null null
+2008-06-10T11%3A56%3A00.000Z 366.13 null null
+2008-06-10T12%3A08%3A00.000Z 366.13 null null
+2008-06-10T12%3A12%3A00.000Z 366.14 null null
+2008-06-10T12%3A16%3A00.000Z 366.13 null null
+2008-06-10T12%3A24%3A00.000Z 366.13 null null
+2008-06-10T12%3A28%3A00.000Z 366.12 null null
+2008-06-10T12%3A32%3A00.000Z 366.13 null null
+2008-06-10T12%3A36%3A00.000Z 366.12 null null
+2008-06-10T12%3A44%3A00.000Z 366.12 null null
+2008-06-10T12%3A48%3A00.000Z 366.13 null null
+2008-06-10T12%3A52%3A00.000Z 366.12 null null
+2008-06-10T13%3A04%3A00.000Z 366.12 null null
+2008-06-10T13%3A08%3A00.000Z 366.11 null null
+2008-06-10T13%3A40%3A00.000Z 366.11 null null
+2008-06-10T13%3A44%3A00.000Z 366.1 null null
+2008-06-10T13%3A56%3A00.000Z 366.1 null null
+2008-06-10T14%3A00%3A00.000Z 366.09 null null
+2008-06-10T14%3A04%3A00.000Z 366.1 null null
+2008-06-10T14%3A16%3A00.000Z 366.1 null null
+2008-06-10T14%3A20%3A00.000Z 366.09 null null
+2008-06-10T14%3A24%3A00.000Z 366.1 null null
+2008-06-10T14%3A28%3A00.000Z 366.1 null null
+2008-06-10T14%3A32%3A00.000Z 366.09 null null
+2008-06-10T15%3A08%3A00.000Z 366.09 null null
+2008-06-10T15%3A12%3A00.000Z 366.08 null null
+2008-06-10T15%3A16%3A00.000Z 366.08 null null
+2008-06-10T15%3A20%3A00.000Z 366.07 null null
+2008-06-10T15%3A24%3A00.000Z 366.07 null null
+2008-06-10T15%3A28%3A00.000Z 366.08 null null
+2008-06-10T15%3A32%3A00.000Z 366.07 null null
+2008-06-10T15%3A44%3A00.000Z 366.07 null null
+2008-06-10T15%3A48%3A00.000Z 366.06 null null
+2008-06-10T15%3A52%3A00.000Z 366.07 null null
+2008-06-10T15%3A56%3A00.000Z 366.06 null null
+2008-06-10T16%3A00%3A00.000Z 366.06 null null
+2008-06-10T16%3A04%3A00.000Z 366.07 null null
+2008-06-10T16%3A08%3A00.000Z 366.06 null null
+2008-06-10T16%3A16%3A00.000Z 366.06 null null
+2008-06-10T16%3A20%3A00.000Z 366.05 null null
+2008-06-10T16%3A24%3A00.000Z 366.06 null null
+2008-06-10T16%3A28%3A00.000Z 366.06 null null
+2008-06-10T16%3A32%3A00.000Z 366.05 null null
+2008-06-10T17%3A00%3A00.000Z 366.05 null null
+2008-06-10T17%3A04%3A00.000Z 366.04 null null
+2008-06-10T17%3A08%3A00.000Z 366.04 null null
+2008-06-10T17%3A12%3A00.000Z 366.05 null null
+2008-06-10T17%3A16%3A00.000Z 366.04 null null
+2008-06-10T17%3A20%3A00.000Z 366.04 null null
+2008-06-10T17%3A24%3A00.000Z 366.03 null null
+2008-06-10T17%3A40%3A00.000Z 366.03 null null
+2008-06-10T17%3A44%3A00.000Z 366.02 null null
+2008-06-10T17%3A48%3A00.000Z 366.02 null null
+2008-06-10T17%3A52%3A00.000Z 366.03 null null
+2008-06-10T18%3A04%3A00.000Z 366.03 null null
+2008-06-10T18%3A08%3A00.000Z 366.01 null null
+2008-06-10T18%3A12%3A00.000Z 366.02 null null
+2008-06-10T18%3A16%3A00.000Z 366.01 null null
+2008-06-10T18%3A20%3A00.000Z 366.02 null null
+2008-06-10T18%3A24%3A00.000Z 366.01 null null
+2008-06-10T18%3A48%3A00.000Z 366.01 null null
+2008-06-10T18%3A52%3A00.000Z 366.0 null null
+2008-06-10T18%3A56%3A00.000Z 366.01 null null
+2008-06-10T19%3A00%3A00.000Z 366.0 null null
+2008-06-10T19%3A24%3A00.000Z 366.0 null null
+2008-06-10T19%3A28%3A00.000Z 365.99 null null
+2008-06-10T19%3A36%3A00.000Z 365.99 null null
+2008-06-10T19%3A40%3A00.000Z 365.98 null null
+2008-06-10T19%3A44%3A00.000Z 365.99 null null
+2008-06-10T19%3A48%3A00.000Z 365.99 null null
+2008-06-10T19%3A52%3A00.000Z 365.98 null null
+2008-06-10T19%3A56%3A00.000Z 365.99 null null
+2008-06-10T20%3A00%3A00.000Z 365.98 null null
+2008-06-10T20%3A24%3A00.000Z 365.98 null null
+2008-06-10T20%3A28%3A00.000Z 365.97 null null
+2008-06-10T20%3A44%3A00.000Z 365.97 null null
+2008-06-10T20%3A48%3A00.000Z 365.96 null null
+2008-06-10T20%3A52%3A00.000Z 365.97 null null
+2008-06-10T21%3A00%3A00.000Z 365.95 null null
+2008-06-10T21%3A04%3A00.000Z 365.95 null null
+2008-06-10T21%3A08%3A00.000Z 365.96 null null
+2008-06-10T21%3A16%3A00.000Z 365.96 null null
+2008-06-10T21%3A20%3A00.000Z 365.95 null null
+2008-06-10T21%3A28%3A00.000Z 365.95 null null
+2008-06-10T21%3A32%3A00.000Z 365.94 null null
+2008-06-10T21%3A36%3A00.000Z 365.94 null null
+2008-06-10T21%3A40%3A00.000Z 365.95 null null
+2008-06-10T21%3A44%3A00.000Z 365.94 null null
+2008-06-10T21%3A52%3A00.000Z 365.94 null null
+2008-06-10T21%3A56%3A00.000Z 365.95 null null
 ]]></om:result>
      <ns2:dataSourceURI/>
     </ns2:ObservationWithSource>
@@ -9171,21 +8986,16 @@
    <gml:description>Manuell erzeugt am: 09.12.2008 13:11</gml:description>
    <gml:name>Wasserstand Hochwasser 1D</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3929971.777 775460.254</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929971.777 775460.254</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection/>
    <op1d2d:direction/>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource1228824707389193">
      <gml:name>Wasserstand - Zeitreihe</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition1228824707420907">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -9193,11 +9003,33 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
-     <om:result><![CDATA[2011-01-03T21%3A00%3A00.000Z 367.05 null null
-2011-01-10T00%3A00%3A00.000Z 367.05 null null
+     <om:result><![CDATA[2008-12-09T00%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T01%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T02%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T03%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T04%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T05%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T06%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T07%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T08%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T09%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T10%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T11%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T12%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T13%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T14%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T15%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T16%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T17%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T18%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T19%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T20%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T21%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T22%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-09T23%3A00%3A00.000%2B01%3A00 367.0500 null null
+2008-12-10T00%3A00%3A00.000%2B01%3A00 367.0500 null null
 ]]></om:result>
      <ns2:dataSourceURI/>
     </ns2:ObservationWithSource>
@@ -9213,21 +9045,16 @@
    <gml:description>Manuell erzeugt am: 09.01.2009 13:56</gml:description>
    <gml:name>Abfluss Teichlösung 2D</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3929967.2990107248 775458.2210388153</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929967.2990107248 775458.2210388153</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection>true</op1d2d:hasDirection>
    <op1d2d:direction>251</op1d2d:direction>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource1231505809018173">
      <gml:name>Abfluss - Zeitreihe</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition1231505809097475">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -9235,16 +9062,14 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
-     <om:result><![CDATA[2011-01-24T17%3A00%3A00.000Z 50.000 null null
-2011-01-24T23%3A00%3A00.000Z 90.000 null null
-2011-01-25T05%3A00%3A00.000Z 130.000 null null
-2011-01-25T11%3A00%3A00.000Z 170.000 null null
-2011-01-25T17%3A00%3A00.000Z 230.000 null null
-2011-01-25T23%3A00%3A00.000Z 250.000 null null
-2011-01-26T05%3A00%3A00.000Z 250.000 null null
+     <om:result><![CDATA[2008-06-25T00%3A00%3A00.000%2B02%3A00 50.0000 null null
+2008-06-25T06%3A00%3A00.000%2B02%3A00 90.0000 null null
+2008-06-25T12%3A00%3A00.000%2B02%3A00 130.0000 null null
+2008-06-25T18%3A00%3A00.000%2B02%3A00 170.0000 null null
+2008-06-26T00%3A00%3A00.000%2B02%3A00 230 null null
+2008-06-26T06%3A00%3A00.000%2B02%3A00 250.0000 null null
 ]]></om:result>
      <ns2:dataSourceURI/>
     </ns2:ObservationWithSource>
@@ -9257,7 +9082,7 @@
    <op1d2d:parentCalculationUnit>CalculationUnit1D2D123142936348411130</op1d2d:parentCalculationUnit>
    <op1d2d:parentCalculationUnit>CalculationUnit1D2D12314971785275075</op1d2d:parentCalculationUnit>
    <op1d2d:parentCalculationUnit>CalculationUnit1D2D123149718683712977</op1d2d:parentCalculationUnit>
-   <op1d2d:stationaryCondition>5</op1d2d:stationaryCondition>
+   <op1d2d:stationaryCondition>250.0</op1d2d:stationaryCondition>
   </op1d2d:BoundaryCondition>
  </simBase:flowRelationshipMember>
  <simBase:flowRelationshipMember>
@@ -9265,21 +9090,16 @@
    <gml:description>Manuell erzeugt am: 22.01.2009 14:16</gml:description>
    <gml:name>Abfluss Hochwasser 2D</gml:name>
    <simBase:position>
-    <gml:Point srsName="EPSG:31467" srsDimension="2">
-     <gml:pos>3929998.623668724 775446.5197622114</gml:pos>
+    <gml:Point xmlns:ns4="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns5="http://www.isotc211.org/2005/gco" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gss" xmlns:ns8="http://www.isotc211.org/2005/gsr" xmlns:ns9="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+     <gml:coordinates ts="," decimal="." cs=" ">3929998.623668724 775446.5197622114</gml:coordinates>
     </gml:Point>
    </simBase:position>
    <op1d2d:absolute/>
-   <op1d2d:hasDirection/>
    <op1d2d:direction>251</op1d2d:direction>
-   <op1d2d:inflowVelocity/>
    <op1d2d:observation>
     <ns2:ObservationWithSource gml:id="ObservationWithSource1232630197583218">
      <gml:name>Importierte Zeitreihe</gml:name>
-     <om:time/>
-     <om:procedure/>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-     <om:featureOfInterest/>
      <om:resultDefinition>
       <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition1232630197599565">
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
@@ -9287,306 +9107,305 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"/>
        <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
-       <sweExt:ordinalNumberComponent/>
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
-     <om:result><![CDATA[2011-01-03T21%3A00%3A00.000Z 250 null null
-2011-01-04T02%3A15%3A00.000Z 255 null null
-2011-01-04T02%3A30%3A00.000Z 257.99 null null
-2011-01-04T03%3A15%3A00.000Z 258 null null
-2011-01-04T03%3A45%3A00.000Z 261.28 null null
-2011-01-04T04%3A15%3A00.000Z 261.28 null null
-2011-01-04T04%3A30%3A00.000Z 262.93 null null
-2011-01-04T05%3A00%3A00.000Z 262.93 null null
-2011-01-04T05%3A15%3A00.000Z 264.59 null null
-2011-01-04T05%3A30%3A00.000Z 264.59 null null
-2011-01-04T05%3A45%3A00.000Z 266.26 null null
-2011-01-04T09%3A45%3A00.000Z 266.29 null null
-2011-01-04T10%3A00%3A00.000Z 269.65 null null
-2011-01-04T12%3A15%3A00.000Z 269.66 null null
-2011-01-04T12%3A30%3A00.000Z 271.36 null null
-2011-01-04T13%3A15%3A00.000Z 271.36 null null
-2011-01-04T13%3A30%3A00.000Z 273.06 null null
-2011-01-04T14%3A15%3A00.000Z 273.07 null null
-2011-01-04T14%3A30%3A00.000Z 274.78 null null
-2011-01-04T15%3A00%3A00.000Z 274.78 null null
-2011-01-04T15%3A15%3A00.000Z 278.23 null null
-2011-01-04T15%3A30%3A00.000Z 279.96 null null
-2011-01-04T15%3A45%3A00.000Z 283.46 null null
-2011-01-04T16%3A00%3A00.000Z 283.46 null null
-2011-01-04T16%3A45%3A00.000Z 294.15 null null
-2011-01-04T17%3A00%3A00.000Z 295.96 null null
-2011-01-04T17%3A15%3A00.000Z 299.61 null null
-2011-01-04T17%3A30%3A00.000Z 301.45 null null
-2011-01-04T17%3A45%3A00.000Z 301.45 null null
-2011-01-04T18%3A00%3A00.000Z 303.3 null null
-2011-01-04T18%3A15%3A00.000Z 303.3 null null
-2011-01-04T18%3A30%3A00.000Z 305.15 null null
-2011-01-04T19%3A30%3A00.000Z 305.16 null null
-2011-01-04T19%3A45%3A00.000Z 310.77 null null
-2011-01-04T22%3A45%3A00.000Z 310.8 null null
-2011-01-04T22%3A49%3A00.000Z 312.68 null null
-2011-01-04T23%3A00%3A00.000Z 310.8 null null
-2011-01-04T23%3A15%3A00.000Z 312.69 null null
-2011-01-05T00%3A00%3A00.000Z 312.69 null null
-2011-01-05T00%3A01%3A00.000Z 312.69 null null
-2011-01-05T00%3A15%3A00.000Z 316.49 null null
-2011-01-05T00%3A30%3A00.000Z 318.41 null null
-2011-01-05T01%3A30%3A00.000Z 318.42 null null
-2011-01-05T01%3A45%3A00.000Z 320.34 null null
-2011-01-05T02%3A30%3A00.000Z 320.34 null null
-2011-01-05T02%3A45%3A00.000Z 322.28 null null
-2011-01-05T03%3A00%3A00.000Z 322.28 null null
-2011-01-05T03%3A15%3A00.000Z 324.22 null null
-2011-01-05T03%3A45%3A00.000Z 324.22 null null
-2011-01-05T04%3A15%3A00.000Z 328.12 null null
-2011-01-05T04%3A45%3A00.000Z 328.13 null null
-2011-01-05T05%3A00%3A00.000Z 330.09 null null
-2011-01-05T05%3A30%3A00.000Z 330.1 null null
-2011-01-05T05%3A45%3A00.000Z 332.07 null null
-2011-01-05T06%3A00%3A00.000Z 332.07 null null
-2011-01-05T06%3A15%3A00.000Z 334.05 null null
-2011-01-05T06%3A45%3A00.000Z 334.06 null null
-2011-01-05T07%3A00%3A00.000Z 338.04 null null
-2011-01-05T07%3A30%3A00.000Z 338.04 null null
-2011-01-05T07%3A45%3A00.000Z 340.05 null null
-2011-01-05T08%3A15%3A00.000Z 340.05 null null
-2011-01-05T08%3A30%3A00.000Z 342.07 null null
-2011-01-05T08%3A45%3A00.000Z 342.07 null null
-2011-01-05T09%3A30%3A00.000Z 348.16 null null
-2011-01-05T09%3A45%3A00.000Z 348.16 null null
-2011-01-05T10%3A15%3A00.000Z 352.26 null null
-2011-01-05T10%3A30%3A00.000Z 358.47 null null
-2011-01-05T11%3A15%3A00.000Z 364.83 null null
-2011-01-05T11%3A30%3A00.000Z 364.86 null null
-2011-01-05T11%3A45%3A00.000Z 369.12 null null
-2011-01-05T12%3A00%3A00.000Z 369.15 null null
-2011-01-05T12%3A15%3A00.000Z 371.3 null null
-2011-01-05T12%3A45%3A00.000Z 371.36 null null
-2011-01-05T13%3A00%3A00.000Z 373.53 null null
-2011-01-05T13%3A30%3A00.000Z 373.59 null null
-2011-01-05T13%3A45%3A00.000Z 375.76 null null
-2011-01-05T14%3A00%3A00.000Z 375.79 null null
-2011-01-05T14%3A15%3A00.000Z 380.12 null null
-2011-01-05T14%3A30%3A00.000Z 380.15 null null
-2011-01-05T14%3A45%3A00.000Z 382.34 null null
-2011-01-05T15%3A00%3A00.000Z 382.37 null null
-2011-01-05T15%3A15%3A00.000Z 384.57 null null
-2011-01-05T15%3A30%3A00.000Z 384.6 null null
-2011-01-05T15%3A45%3A00.000Z 386.81 null null
-2011-01-05T16%3A00%3A00.000Z 386.84 null null
-2011-01-05T16%3A15%3A00.000Z 389.05 null null
-2011-01-05T16%3A30%3A00.000Z 389.08 null null
-2011-01-05T16%3A45%3A00.000Z 391.3 null null
-2011-01-05T17%3A00%3A00.000Z 391.33 null null
-2011-01-05T17%3A30%3A00.000Z 395.8 null null
-2011-01-05T17%3A45%3A00.000Z 395.83 null null
-2011-01-05T18%3A00%3A00.000Z 398.07 null null
-2011-01-05T18%3A45%3A00.000Z 398.16 null null
-2011-01-05T19%3A00%3A00.000Z 400.41 null null
-2011-01-05T20%3A00%3A00.000Z 400.54 null null
-2011-01-05T20%3A45%3A00.000Z 407.32 null null
-2011-01-05T21%3A30%3A00.000Z 407.42 null null
-2011-01-05T21%3A45%3A00.000Z 409.69 null null
-2011-01-05T22%3A00%3A00.000Z 409.72 null null
-2011-01-05T22%3A15%3A00.000Z 412 null null
-2011-01-05T22%3A45%3A00.000Z 412.07 null null
-2011-01-05T23%3A00%3A00.000Z 414.35 null null
-2011-01-05T23%3A30%3A00.000Z 414.42 null null
-2011-01-05T23%3A39%3A00.000Z 418.96 null null
-2011-01-05T23%3A45%3A00.000Z 414.45 null null
-2011-01-06T00%3A00%3A00.000Z 419.01 null null
-2011-01-06T00%3A30%3A00.000Z 419.07 null null
-2011-01-06T00%3A45%3A00.000Z 421.38 null null
-2011-01-06T01%3A15%3A00.000Z 421.44 null null
-2011-01-06T01%3A30%3A00.000Z 423.75 null null
-2011-01-06T02%3A00%3A00.000Z 423.82 null null
-2011-01-06T02%3A15%3A00.000Z 426.13 null null
-2011-01-06T02%3A45%3A00.000Z 426.2 null null
-2011-01-06T03%3A00%3A00.000Z 430.82 null null
-2011-01-06T03%3A45%3A00.000Z 430.91 null null
-2011-01-06T04%3A00%3A00.000Z 433.25 null null
-2011-01-06T04%3A30%3A00.000Z 433.31 null null
-2011-01-06T04%3A45%3A00.000Z 435.65 null null
-2011-01-06T05%3A15%3A00.000Z 435.71 null null
-2011-01-06T05%3A30%3A00.000Z 438.06 null null
-2011-01-06T05%3A45%3A00.000Z 438.09 null null
-2011-01-06T06%3A31%3A00.000Z 440.68 null null
-2011-01-06T07%3A05%3A00.000Z 440.75 null null
-2011-01-06T08%3A00%3A00.000Z 442.91 null null
-2011-01-06T08%3A40%3A00.000Z 443.12 null null
-2011-01-06T09%3A32%3A00.000Z 450.21 null null
-2011-01-06T10%3A30%3A00.000Z 452.53 null null
-2011-01-06T11%3A31%3A00.000Z 450.2 null null
-2011-01-06T11%3A55%3A00.000Z 445.5 null null
-2011-01-06T12%3A45%3A00.000Z 440.8 null null
-2011-01-06T13%3A15%3A00.000Z 440.79 null null
-2011-01-06T13%3A30%3A00.000Z 438.46 null null
-2011-01-06T13%3A45%3A00.000Z 438.46 null null
-2011-01-06T14%3A00%3A00.000Z 433.83 null null
-2011-01-06T15%3A15%3A00.000Z 433.8 null null
-2011-01-06T15%3A30%3A00.000Z 431.49 null null
-2011-01-06T17%3A45%3A00.000Z 431.43 null null
-2011-01-06T18%3A15%3A00.000Z 426.83 null null
-2011-01-06T18%3A30%3A00.000Z 422.26 null null
-2011-01-06T18%3A45%3A00.000Z 419.98 null null
-2011-01-06T19%3A00%3A00.000Z 419.97 null null
-2011-01-06T19%3A15%3A00.000Z 417.7 null null
-2011-01-06T19%3A30%3A00.000Z 417.69 null null
-2011-01-06T19%3A45%3A00.000Z 415.42 null null
-2011-01-06T20%3A30%3A00.000Z 415.4 null null
-2011-01-06T20%3A45%3A00.000Z 410.89 null null
-2011-01-06T21%3A30%3A00.000Z 410.87 null null
-2011-01-06T21%3A45%3A00.000Z 408.62 null null
-2011-01-06T22%3A45%3A00.000Z 408.59 null null
-2011-01-06T22%3A50%3A00.000Z 406.35 null null
-2011-01-07T00%3A30%3A00.000Z 406.31 null null
-2011-01-07T00%3A45%3A00.000Z 404.07 null null
-2011-01-07T02%3A00%3A00.000Z 404.04 null null
-2011-01-07T02%3A15%3A00.000Z 399.59 null null
-2011-01-07T02%3A45%3A00.000Z 399.58 null null
-2011-01-07T03%3A00%3A00.000Z 397.36 null null
-2011-01-07T04%3A00%3A00.000Z 397.33 null null
-2011-01-07T04%3A15%3A00.000Z 395.12 null null
-2011-01-07T05%3A15%3A00.000Z 395.1 null null
-2011-01-07T05%3A30%3A00.000Z 392.89 null null
-2011-01-07T06%3A15%3A00.000Z 392.87 null null
-2011-01-07T06%3A45%3A00.000Z 388.48 null null
-2011-01-07T07%3A15%3A00.000Z 388.47 null null
-2011-01-07T07%3A30%3A00.000Z 386.29 null null
-2011-01-07T08%3A15%3A00.000Z 386.27 null null
-2011-01-07T08%3A30%3A00.000Z 384.09 null null
-2011-01-07T09%3A30%3A00.000Z 384.06 null null
-2011-01-07T09%3A45%3A00.000Z 381.89 null null
-2011-01-07T10%3A00%3A00.000Z 381.89 null null
-2011-01-07T12%3A00%3A00.000Z 364.8 null null
-2011-01-07T12%3A15%3A00.000Z 364.79 null null
-2011-01-07T12%3A45%3A00.000Z 360.59 null null
-2011-01-07T13%3A00%3A00.000Z 360.59 null null
-2011-01-07T13%3A15%3A00.000Z 356.43 null null
-2011-01-07T13%3A30%3A00.000Z 354.35 null null
-2011-01-07T13%3A45%3A00.000Z 354.35 null null
-2011-01-07T14%3A00%3A00.000Z 352.28 null null
-2011-01-07T14%3A30%3A00.000Z 352.27 null null
-2011-01-07T14%3A45%3A00.000Z 350.21 null null
-2011-01-07T15%3A15%3A00.000Z 350.2 null null
-2011-01-07T15%3A30%3A00.000Z 346.12 null null
-2011-01-07T16%3A15%3A00.000Z 346.1 null null
-2011-01-07T16%3A30%3A00.000Z 344.07 null null
-2011-01-07T17%3A00%3A00.000Z 344.06 null null
-2011-01-07T17%3A15%3A00.000Z 342.03 null null
-2011-01-07T18%3A00%3A00.000Z 342.01 null null
-2011-01-07T18%3A15%3A00.000Z 340 null null
-2011-01-07T19%3A30%3A00.000Z 339.97 null null
-2011-01-07T20%3A00%3A00.000Z 335.96 null null
-2011-01-07T20%3A45%3A00.000Z 335.94 null null
-2011-01-07T21%3A00%3A00.000Z 333.95 null null
-2011-01-07T21%3A45%3A00.000Z 333.93 null null
-2011-01-07T22%3A00%3A00.000Z 331.95 null null
-2011-01-07T23%3A00%3A00.000Z 331.92 null null
-2011-01-07T23%3A01%3A00.000Z 329.95 null null
-2011-01-08T00%3A00%3A00.000Z 329.93 null null
-2011-01-08T00%3A15%3A00.000Z 329.92 null null
-2011-01-08T00%3A30%3A00.000Z 326 null null
-2011-01-08T01%3A00%3A00.000Z 325.99 null null
-2011-01-08T01%3A15%3A00.000Z 324.04 null null
-2011-01-08T02%3A15%3A00.000Z 324.02 null null
-2011-01-08T02%3A30%3A00.000Z 322.08 null null
-2011-01-08T03%3A00%3A00.000Z 322.06 null null
-2011-01-08T03%3A15%3A00.000Z 320.13 null null
-2011-01-08T03%3A30%3A00.000Z 320.13 null null
-2011-01-08T04%3A00%3A00.000Z 316.28 null null
-2011-01-08T04%3A30%3A00.000Z 316.27 null null
-2011-01-08T04%3A45%3A00.000Z 314.36 null null
-2011-01-08T05%3A15%3A00.000Z 314.35 null null
-2011-01-08T05%3A30%3A00.000Z 312.45 null null
-2011-01-08T06%3A15%3A00.000Z 312.43 null null
-2011-01-08T06%3A30%3A00.000Z 310.54 null null
-2011-01-08T07%3A30%3A00.000Z 310.52 null null
-2011-01-08T07%3A45%3A00.000Z 306.77 null null
-2011-01-08T08%3A15%3A00.000Z 306.76 null null
-2011-01-08T08%3A30%3A00.000Z 304.89 null null
-2011-01-08T09%3A30%3A00.000Z 304.87 null null
-2011-01-08T10%3A00%3A00.000Z 301.16 null null
-2011-01-08T11%3A00%3A00.000Z 301.18 null null
-2011-01-08T11%3A30%3A00.000Z 297.54 null null
-2011-01-08T12%3A00%3A00.000Z 297.57 null null
-2011-01-08T12%3A15%3A00.000Z 295.76 null null
-2011-01-08T12%3A30%3A00.000Z 295.77 null null
-2011-01-08T12%3A45%3A00.000Z 297.6 null null
-2011-01-08T13%3A00%3A00.000Z 297.62 null null
-2011-01-08T13%3A15%3A00.000Z 295.81 null null
-2011-01-08T14%3A00%3A00.000Z 295.85 null null
-2011-01-08T14%3A15%3A00.000Z 294.05 null null
-2011-01-08T15%3A15%3A00.000Z 294.1 null null
-2011-01-08T15%3A30%3A00.000Z 290.52 null null
-2011-01-08T16%3A15%3A00.000Z 290.55 null null
-2011-01-08T16%3A30%3A00.000Z 288.78 null null
-2011-01-08T17%3A15%3A00.000Z 288.82 null null
-2011-01-08T17%3A30%3A00.000Z 287.05 null null
-2011-01-08T18%3A30%3A00.000Z 287.1 null null
-2011-01-08T18%3A45%3A00.000Z 285.34 null null
-2011-01-08T19%3A30%3A00.000Z 285.38 null null
-2011-01-08T19%3A45%3A00.000Z 281.88 null null
-2011-01-08T20%3A30%3A00.000Z 281.91 null null
-2011-01-08T20%3A45%3A00.000Z 280.18 null null
-2011-01-08T21%3A15%3A00.000Z 280.21 null null
-2011-01-08T21%3A30%3A00.000Z 278.48 null null
-2011-01-08T22%3A30%3A00.000Z 278.53 null null
-2011-01-08T22%3A45%3A00.000Z 276.81 null null
-2011-01-08T23%3A15%3A00.000Z 276.84 null null
-2011-01-08T23%3A20%3A00.000Z 273.41 null null
-2011-01-09T00%3A15%3A00.000Z 273.46 null null
-2011-01-09T00%3A30%3A00.000Z 271.76 null null
-2011-01-09T01%3A15%3A00.000Z 271.8 null null
-2011-01-09T01%3A30%3A00.000Z 270.12 null null
-2011-01-09T02%3A00%3A00.000Z 270.14 null null
-2011-01-09T02%3A15%3A00.000Z 268.47 null null
-2011-01-09T03%3A00%3A00.000Z 268.5 null null
-2011-01-09T03%3A15%3A00.000Z 265.16 null null
-2011-01-09T04%3A00%3A00.000Z 265.2 null null
-2011-01-09T04%3A15%3A00.000Z 263.55 null null
-2011-01-09T05%3A00%3A00.000Z 263.58 null null
-2011-01-09T05%3A30%3A00.000Z 260.31 null null
-2011-01-09T06%3A00%3A00.000Z 260.33 null null
-2011-01-09T06%3A30%3A00.000Z 257.09 null null
-2011-01-09T07%3A00%3A00.000Z 257.11 null null
-2011-01-09T07%3A15%3A00.000Z 255.5 null null
-2011-01-09T07%3A45%3A00.000Z 255.52 null null
-2011-01-09T08%3A00%3A00.000Z 253.92 null null
-2011-01-09T09%3A00%3A00.000Z 253.97 null null
-2011-01-09T09%3A30%3A00.000Z 250.79 null null
-2011-01-09T10%3A15%3A00.000Z 250.76 null null
-2011-01-09T10%3A30%3A00.000Z 249.15 null null
-2011-01-09T11%3A15%3A00.000Z 249.11 null null
-2011-01-09T11%3A30%3A00.000Z 247.52 null null
-2011-01-09T12%3A00%3A00.000Z 247.49 null null
-2011-01-09T12%3A15%3A00.000Z 244.34 null null
-2011-01-09T12%3A30%3A00.000Z 245.89 null null
-2011-01-09T12%3A45%3A00.000Z 244.31 null null
-2011-01-09T13%3A30%3A00.000Z 244.27 null null
-2011-01-09T13%3A45%3A00.000Z 242.7 null null
-2011-01-09T14%3A15%3A00.000Z 242.67 null null
-2011-01-09T14%3A30%3A00.000Z 239.58 null null
-2011-01-09T15%3A15%3A00.000Z 239.54 null null
-2011-01-09T15%3A30%3A00.000Z 237.99 null null
-2011-01-09T16%3A30%3A00.000Z 237.94 null null
-2011-01-09T16%3A45%3A00.000Z 236.41 null null
-2011-01-09T17%3A30%3A00.000Z 236.36 null null
-2011-01-09T17%3A45%3A00.000Z 234.84 null null
-2011-01-09T18%3A15%3A00.000Z 234.81 null null
-2011-01-09T18%3A45%3A00.000Z 231.79 null null
-2011-01-09T19%3A15%3A00.000Z 231.76 null null
-2011-01-09T19%3A30%3A00.000Z 230.26 null null
-2011-01-09T20%3A00%3A00.000Z 230.23 null null
-2011-01-09T20%3A15%3A00.000Z 228.74 null null
-2011-01-09T21%3A00%3A00.000Z 228.7 null null
-2011-01-09T21%3A15%3A00.000Z 227.22 null null
-2011-01-09T22%3A00%3A00.000Z 227.18 null null
-2011-01-09T22%3A30%3A00.000Z 224.25 null null
-2011-01-09T23%3A00%3A00.000Z 224.22 null null
-2011-01-09T23%3A14%3A00.000Z 222.77 null null
-2011-01-10T00%3A00%3A00.000Z 222.73 null null
+     <om:result><![CDATA[2008-06-03T22%3A00%3A00.958%2B02%3A00 250 null null
+2008-06-04T01%3A15%3A00.000Z 256.37 null null
+2008-06-04T01%3A30%3A00.000Z 257.99 null null
+2008-06-04T02%3A15%3A00.000Z 258.0 null null
+2008-06-04T02%3A45%3A00.000Z 261.28 null null
+2008-06-04T03%3A15%3A00.000Z 261.28 null null
+2008-06-04T03%3A30%3A00.000Z 262.93 null null
+2008-06-04T04%3A00%3A00.000Z 262.93 null null
+2008-06-04T04%3A15%3A00.000Z 264.59 null null
+2008-06-04T04%3A30%3A00.000Z 264.59 null null
+2008-06-04T04%3A45%3A00.000Z 266.26 null null
+2008-06-04T08%3A45%3A00.000Z 266.29 null null
+2008-06-04T09%3A00%3A00.000Z 269.65 null null
+2008-06-04T11%3A15%3A00.000Z 269.66 null null
+2008-06-04T11%3A30%3A00.000Z 271.36 null null
+2008-06-04T12%3A15%3A00.000Z 271.36 null null
+2008-06-04T12%3A30%3A00.000Z 273.06 null null
+2008-06-04T13%3A15%3A00.000Z 273.07 null null
+2008-06-04T13%3A30%3A00.000Z 274.78 null null
+2008-06-04T14%3A00%3A00.000Z 274.78 null null
+2008-06-04T14%3A15%3A00.000Z 278.23 null null
+2008-06-04T14%3A30%3A00.000Z 279.96 null null
+2008-06-04T14%3A45%3A00.000Z 283.46 null null
+2008-06-04T15%3A00%3A00.000Z 283.46 null null
+2008-06-04T15%3A45%3A00.000Z 294.15 null null
+2008-06-04T16%3A00%3A00.000Z 295.96 null null
+2008-06-04T16%3A15%3A00.000Z 299.61 null null
+2008-06-04T16%3A30%3A00.000Z 301.45 null null
+2008-06-04T16%3A45%3A00.000Z 301.45 null null
+2008-06-04T17%3A00%3A00.000Z 303.3 null null
+2008-06-04T17%3A15%3A00.000Z 303.3 null null
+2008-06-04T17%3A30%3A00.000Z 305.15 null null
+2008-06-04T18%3A30%3A00.000Z 305.16 null null
+2008-06-04T18%3A45%3A00.000Z 310.77 null null
+2008-06-04T21%3A45%3A00.000Z 310.8 null null
+2008-06-04T21%3A49%3A00.000Z 312.68 null null
+2008-06-04T22%3A00%3A00.000Z 310.8 null null
+2008-06-04T22%3A15%3A00.000Z 312.69 null null
+2008-06-04T23%3A00%3A00.000Z 312.69 null null
+2008-06-04T23%3A01%3A00.000Z 312.69 null null
+2008-06-04T23%3A15%3A00.000Z 316.49 null null
+2008-06-04T23%3A30%3A00.000Z 318.41 null null
+2008-06-05T00%3A30%3A00.000Z 318.42 null null
+2008-06-05T00%3A45%3A00.000Z 320.34 null null
+2008-06-05T01%3A30%3A00.000Z 320.34 null null
+2008-06-05T01%3A45%3A00.000Z 322.28 null null
+2008-06-05T02%3A00%3A00.000Z 322.28 null null
+2008-06-05T02%3A15%3A00.000Z 324.22 null null
+2008-06-05T02%3A45%3A00.000Z 324.22 null null
+2008-06-05T03%3A15%3A00.000Z 328.12 null null
+2008-06-05T03%3A45%3A00.000Z 328.13 null null
+2008-06-05T04%3A00%3A00.000Z 330.09 null null
+2008-06-05T04%3A30%3A00.000Z 330.1 null null
+2008-06-05T04%3A45%3A00.000Z 332.07 null null
+2008-06-05T05%3A00%3A00.000Z 332.07 null null
+2008-06-05T05%3A15%3A00.000Z 334.05 null null
+2008-06-05T05%3A45%3A00.000Z 334.06 null null
+2008-06-05T06%3A00%3A00.000Z 338.04 null null
+2008-06-05T06%3A30%3A00.000Z 338.04 null null
+2008-06-05T06%3A45%3A00.000Z 340.05 null null
+2008-06-05T07%3A15%3A00.000Z 340.05 null null
+2008-06-05T07%3A30%3A00.000Z 342.07 null null
+2008-06-05T07%3A45%3A00.000Z 342.07 null null
+2008-06-05T08%3A30%3A00.000Z 348.16 null null
+2008-06-05T08%3A45%3A00.000Z 348.16 null null
+2008-06-05T09%3A15%3A00.000Z 352.26 null null
+2008-06-05T09%3A30%3A00.000Z 358.47 null null
+2008-06-05T10%3A15%3A00.000Z 364.83 null null
+2008-06-05T10%3A30%3A00.000Z 364.86 null null
+2008-06-05T10%3A45%3A00.000Z 369.12 null null
+2008-06-05T11%3A00%3A00.000Z 369.15 null null
+2008-06-05T11%3A15%3A00.000Z 371.3 null null
+2008-06-05T11%3A45%3A00.000Z 371.36 null null
+2008-06-05T12%3A00%3A00.000Z 373.53 null null
+2008-06-05T12%3A30%3A00.000Z 373.59 null null
+2008-06-05T12%3A45%3A00.000Z 375.76 null null
+2008-06-05T13%3A00%3A00.000Z 375.79 null null
+2008-06-05T13%3A15%3A00.000Z 380.12 null null
+2008-06-05T13%3A30%3A00.000Z 380.15 null null
+2008-06-05T13%3A45%3A00.000Z 382.34 null null
+2008-06-05T14%3A00%3A00.000Z 382.37 null null
+2008-06-05T14%3A15%3A00.000Z 384.57 null null
+2008-06-05T14%3A30%3A00.000Z 384.6 null null
+2008-06-05T14%3A45%3A00.000Z 386.81 null null
+2008-06-05T15%3A00%3A00.000Z 386.84 null null
+2008-06-05T15%3A15%3A00.000Z 389.05 null null
+2008-06-05T15%3A30%3A00.000Z 389.08 null null
+2008-06-05T15%3A45%3A00.000Z 391.3 null null
+2008-06-05T16%3A00%3A00.000Z 391.33 null null
+2008-06-05T16%3A30%3A00.000Z 395.8 null null
+2008-06-05T16%3A45%3A00.000Z 395.83 null null
+2008-06-05T17%3A00%3A00.000Z 398.07 null null
+2008-06-05T17%3A45%3A00.000Z 398.16 null null
+2008-06-05T18%3A00%3A00.000Z 400.41 null null
+2008-06-05T19%3A00%3A00.000Z 400.54 null null
+2008-06-05T19%3A45%3A00.000Z 407.32 null null
+2008-06-05T20%3A30%3A00.000Z 407.42 null null
+2008-06-05T20%3A45%3A00.000Z 409.69 null null
+2008-06-05T21%3A00%3A00.000Z 409.72 null null
+2008-06-05T21%3A15%3A00.000Z 412.0 null null
+2008-06-05T21%3A45%3A00.000Z 412.07 null null
+2008-06-05T22%3A00%3A00.000Z 414.35 null null
+2008-06-05T22%3A30%3A00.000Z 414.42 null null
+2008-06-05T22%3A39%3A00.000Z 418.96 null null
+2008-06-05T22%3A45%3A00.000Z 414.45 null null
+2008-06-05T23%3A00%3A00.000Z 419.01 null null
+2008-06-05T23%3A30%3A00.000Z 419.07 null null
+2008-06-05T23%3A45%3A00.000Z 421.38 null null
+2008-06-06T00%3A15%3A00.000Z 421.44 null null
+2008-06-06T00%3A30%3A00.000Z 423.75 null null
+2008-06-06T01%3A00%3A00.000Z 423.82 null null
+2008-06-06T01%3A15%3A00.000Z 426.13 null null
+2008-06-06T01%3A45%3A00.000Z 426.2 null null
+2008-06-06T02%3A00%3A00.000Z 430.82 null null
+2008-06-06T02%3A45%3A00.000Z 430.91 null null
+2008-06-06T03%3A00%3A00.000Z 433.25 null null
+2008-06-06T03%3A30%3A00.000Z 433.31 null null
+2008-06-06T03%3A45%3A00.000Z 435.65 null null
+2008-06-06T04%3A15%3A00.000Z 435.71 null null
+2008-06-06T04%3A30%3A00.000Z 438.06 null null
+2008-06-06T04%3A45%3A00.000Z 438.09 null null
+2008-06-06T05%3A31%3A00.000Z 440.68 null null
+2008-06-06T06%3A05%3A00.000Z 440.75 null null
+2008-06-06T07%3A00%3A00.000Z 442.91 null null
+2008-06-06T07%3A40%3A00.000Z 443.12 null null
+2008-06-06T08%3A32%3A00.000Z 450.21 null null
+2008-06-06T09%3A30%3A00.000Z 452.53 null null
+2008-06-06T10%3A31%3A00.000Z 450.2 null null
+2008-06-06T10%3A55%3A00.000Z 445.5 null null
+2008-06-06T11%3A45%3A00.000Z 440.8 null null
+2008-06-06T12%3A15%3A00.000Z 440.79 null null
+2008-06-06T12%3A30%3A00.000Z 438.46 null null
+2008-06-06T12%3A45%3A00.000Z 438.46 null null
+2008-06-06T13%3A00%3A00.000Z 433.83 null null
+2008-06-06T14%3A15%3A00.000Z 433.8 null null
+2008-06-06T14%3A30%3A00.000Z 431.49 null null
+2008-06-06T16%3A45%3A00.000Z 431.43 null null
+2008-06-06T17%3A15%3A00.000Z 426.83 null null
+2008-06-06T17%3A30%3A00.000Z 422.26 null null
+2008-06-06T17%3A45%3A00.000Z 419.98 null null
+2008-06-06T18%3A00%3A00.000Z 419.97 null null
+2008-06-06T18%3A15%3A00.000Z 417.7 null null
+2008-06-06T18%3A30%3A00.000Z 417.69 null null
+2008-06-06T18%3A45%3A00.000Z 415.42 null null
+2008-06-06T19%3A30%3A00.000Z 415.4 null null
+2008-06-06T19%3A45%3A00.000Z 410.89 null null
+2008-06-06T20%3A30%3A00.000Z 410.87 null null
+2008-06-06T20%3A45%3A00.000Z 408.62 null null
+2008-06-06T21%3A45%3A00.000Z 408.59 null null
+2008-06-06T21%3A50%3A00.000Z 406.35 null null
+2008-06-06T23%3A30%3A00.000Z 406.31 null null
+2008-06-06T23%3A45%3A00.000Z 404.07 null null
+2008-06-07T01%3A00%3A00.000Z 404.04 null null
+2008-06-07T01%3A15%3A00.000Z 399.59 null null
+2008-06-07T01%3A45%3A00.000Z 399.58 null null
+2008-06-07T02%3A00%3A00.000Z 397.36 null null
+2008-06-07T03%3A00%3A00.000Z 397.33 null null
+2008-06-07T03%3A15%3A00.000Z 395.12 null null
+2008-06-07T04%3A15%3A00.000Z 395.1 null null
+2008-06-07T04%3A30%3A00.000Z 392.89 null null
+2008-06-07T05%3A15%3A00.000Z 392.87 null null
+2008-06-07T05%3A45%3A00.000Z 388.48 null null
+2008-06-07T06%3A15%3A00.000Z 388.47 null null
+2008-06-07T06%3A30%3A00.000Z 386.29 null null
+2008-06-07T07%3A15%3A00.000Z 386.27 null null
+2008-06-07T07%3A30%3A00.000Z 384.09 null null
+2008-06-07T08%3A30%3A00.000Z 384.06 null null
+2008-06-07T08%3A45%3A00.000Z 381.89 null null
+2008-06-07T09%3A00%3A00.000Z 381.89 null null
+2008-06-07T11%3A00%3A00.000Z 364.8 null null
+2008-06-07T11%3A15%3A00.000Z 364.79 null null
+2008-06-07T11%3A45%3A00.000Z 360.59 null null
+2008-06-07T12%3A00%3A00.000Z 360.59 null null
+2008-06-07T12%3A15%3A00.000Z 356.43 null null
+2008-06-07T12%3A30%3A00.000Z 354.35 null null
+2008-06-07T12%3A45%3A00.000Z 354.35 null null
+2008-06-07T13%3A00%3A00.000Z 352.28 null null
+2008-06-07T13%3A30%3A00.000Z 352.27 null null
+2008-06-07T13%3A45%3A00.000Z 350.21 null null
+2008-06-07T14%3A15%3A00.000Z 350.2 null null
+2008-06-07T14%3A30%3A00.000Z 346.12 null null
+2008-06-07T15%3A15%3A00.000Z 346.1 null null
+2008-06-07T15%3A30%3A00.000Z 344.07 null null
+2008-06-07T16%3A00%3A00.000Z 344.06 null null
+2008-06-07T16%3A15%3A00.000Z 342.03 null null
+2008-06-07T17%3A00%3A00.000Z 342.01 null null
+2008-06-07T17%3A15%3A00.000Z 340.0 null null
+2008-06-07T18%3A30%3A00.000Z 339.97 null null
+2008-06-07T19%3A00%3A00.000Z 335.96 null null
+2008-06-07T19%3A45%3A00.000Z 335.94 null null
+2008-06-07T20%3A00%3A00.000Z 333.95 null null
+2008-06-07T20%3A45%3A00.000Z 333.93 null null
+2008-06-07T21%3A00%3A00.000Z 331.95 null null
+2008-06-07T22%3A00%3A00.000Z 331.92 null null
+2008-06-07T22%3A01%3A00.000Z 329.95 null null
+2008-06-07T23%3A00%3A00.000Z 329.93 null null
+2008-06-07T23%3A15%3A00.000Z 329.92 null null
+2008-06-07T23%3A30%3A00.000Z 326.0 null null
+2008-06-08T00%3A00%3A00.000Z 325.99 null null
+2008-06-08T00%3A15%3A00.000Z 324.04 null null
+2008-06-08T01%3A15%3A00.000Z 324.02 null null
+2008-06-08T01%3A30%3A00.000Z 322.08 null null
+2008-06-08T02%3A00%3A00.000Z 322.06 null null
+2008-06-08T02%3A15%3A00.000Z 320.13 null null
+2008-06-08T02%3A30%3A00.000Z 320.13 null null
+2008-06-08T03%3A00%3A00.000Z 316.28 null null
+2008-06-08T03%3A30%3A00.000Z 316.27 null null
+2008-06-08T03%3A45%3A00.000Z 314.36 null null
+2008-06-08T04%3A15%3A00.000Z 314.35 null null
+2008-06-08T04%3A30%3A00.000Z 312.45 null null
+2008-06-08T05%3A15%3A00.000Z 312.43 null null
+2008-06-08T05%3A30%3A00.000Z 310.54 null null
+2008-06-08T06%3A30%3A00.000Z 310.52 null null
+2008-06-08T06%3A45%3A00.000Z 306.77 null null
+2008-06-08T07%3A15%3A00.000Z 306.76 null null
+2008-06-08T07%3A30%3A00.000Z 304.89 null null
+2008-06-08T08%3A30%3A00.000Z 304.87 null null
+2008-06-08T09%3A00%3A00.000Z 301.16 null null
+2008-06-08T10%3A00%3A00.000Z 301.18 null null
+2008-06-08T10%3A30%3A00.000Z 297.54 null null
+2008-06-08T11%3A00%3A00.000Z 297.57 null null
+2008-06-08T11%3A15%3A00.000Z 295.76 null null
+2008-06-08T11%3A30%3A00.000Z 295.77 null null
+2008-06-08T11%3A45%3A00.000Z 297.6 null null
+2008-06-08T12%3A00%3A00.000Z 297.62 null null
+2008-06-08T12%3A15%3A00.000Z 295.81 null null
+2008-06-08T13%3A00%3A00.000Z 295.85 null null
+2008-06-08T13%3A15%3A00.000Z 294.05 null null
+2008-06-08T14%3A15%3A00.000Z 294.1 null null
+2008-06-08T14%3A30%3A00.000Z 290.52 null null
+2008-06-08T15%3A15%3A00.000Z 290.55 null null
+2008-06-08T15%3A30%3A00.000Z 288.78 null null
+2008-06-08T16%3A15%3A00.000Z 288.82 null null
+2008-06-08T16%3A30%3A00.000Z 287.05 null null
+2008-06-08T17%3A30%3A00.000Z 287.1 null null
+2008-06-08T17%3A45%3A00.000Z 285.34 null null
+2008-06-08T18%3A30%3A00.000Z 285.38 null null
+2008-06-08T18%3A45%3A00.000Z 281.88 null null
+2008-06-08T19%3A30%3A00.000Z 281.91 null null
+2008-06-08T19%3A45%3A00.000Z 280.18 null null
+2008-06-08T20%3A15%3A00.000Z 280.21 null null
+2008-06-08T20%3A30%3A00.000Z 278.48 null null
+2008-06-08T21%3A30%3A00.000Z 278.53 null null
+2008-06-08T21%3A45%3A00.000Z 276.81 null null
+2008-06-08T22%3A15%3A00.000Z 276.84 null null
+2008-06-08T22%3A20%3A00.000Z 273.41 null null
+2008-06-08T23%3A15%3A00.000Z 273.46 null null
+2008-06-08T23%3A30%3A00.000Z 271.76 null null
+2008-06-09T00%3A15%3A00.000Z 271.8 null null
+2008-06-09T00%3A30%3A00.000Z 270.12 null null
+2008-06-09T01%3A00%3A00.000Z 270.14 null null
+2008-06-09T01%3A15%3A00.000Z 268.47 null null
+2008-06-09T02%3A00%3A00.000Z 268.5 null null
+2008-06-09T02%3A15%3A00.000Z 265.16 null null
+2008-06-09T03%3A00%3A00.000Z 265.2 null null
+2008-06-09T03%3A15%3A00.000Z 263.55 null null
+2008-06-09T04%3A00%3A00.000Z 263.58 null null
+2008-06-09T04%3A30%3A00.000Z 260.31 null null
+2008-06-09T05%3A00%3A00.000Z 260.33 null null
+2008-06-09T05%3A30%3A00.000Z 257.09 null null
+2008-06-09T06%3A00%3A00.000Z 257.11 null null
+2008-06-09T06%3A15%3A00.000Z 255.5 null null
+2008-06-09T06%3A45%3A00.000Z 255.52 null null
+2008-06-09T07%3A00%3A00.000Z 253.92 null null
+2008-06-09T08%3A00%3A00.000Z 253.97 null null
+2008-06-09T08%3A30%3A00.000Z 250.79 null null
+2008-06-09T09%3A15%3A00.000Z 250.76 null null
+2008-06-09T09%3A30%3A00.000Z 249.15 null null
+2008-06-09T10%3A15%3A00.000Z 249.11 null null
+2008-06-09T10%3A30%3A00.000Z 247.52 null null
+2008-06-09T11%3A00%3A00.000Z 247.49 null null
+2008-06-09T11%3A15%3A00.000Z 244.34 null null
+2008-06-09T11%3A30%3A00.000Z 245.89 null null
+2008-06-09T11%3A45%3A00.000Z 244.31 null null
+2008-06-09T12%3A30%3A00.000Z 244.27 null null
+2008-06-09T12%3A45%3A00.000Z 242.7 null null
+2008-06-09T13%3A15%3A00.000Z 242.67 null null
+2008-06-09T13%3A30%3A00.000Z 239.58 null null
+2008-06-09T14%3A15%3A00.000Z 239.54 null null
+2008-06-09T14%3A30%3A00.000Z 237.99 null null
+2008-06-09T15%3A30%3A00.000Z 237.94 null null
+2008-06-09T15%3A45%3A00.000Z 236.41 null null
+2008-06-09T16%3A30%3A00.000Z 236.36 null null
+2008-06-09T16%3A45%3A00.000Z 234.84 null null
+2008-06-09T17%3A15%3A00.000Z 234.81 null null
+2008-06-09T17%3A45%3A00.000Z 231.79 null null
+2008-06-09T18%3A15%3A00.000Z 231.76 null null
+2008-06-09T18%3A30%3A00.000Z 230.26 null null
+2008-06-09T19%3A00%3A00.000Z 230.23 null null
+2008-06-09T19%3A15%3A00.000Z 228.74 null null
+2008-06-09T20%3A00%3A00.000Z 228.7 null null
+2008-06-09T20%3A15%3A00.000Z 227.22 null null
+2008-06-09T21%3A00%3A00.000Z 227.18 null null
+2008-06-09T21%3A30%3A00.000Z 224.25 null null
+2008-06-09T22%3A00%3A00.000Z 224.22 null null
+2008-06-09T22%3A14%3A00.000Z 222.77 null null
+2008-06-09T23%3A00%3A00.000Z 222.73 null null
 ]]></om:result>
      <ns2:dataSourceURI/>
     </ns2:ObservationWithSource>

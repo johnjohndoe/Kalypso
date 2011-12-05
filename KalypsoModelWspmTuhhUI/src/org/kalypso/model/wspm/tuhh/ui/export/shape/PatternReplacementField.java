@@ -45,16 +45,17 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternData;
-import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.dbf.DBFField;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class PatternReplacementField extends AbstractProfileValue
 {
   private final PatternReplacementColumn m_column;
 
-  public PatternReplacementField( final PatternReplacementColumn column, final IDBFField field )
+  public PatternReplacementField( final PatternReplacementColumn column, final DBFField field )
   {
     super( column.getHeader(), field );
 

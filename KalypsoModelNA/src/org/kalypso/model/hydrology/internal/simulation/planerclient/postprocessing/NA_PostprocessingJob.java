@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,10 +29,13 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.nodes.INode;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
+import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.suds.PlaningArea;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -53,10 +57,16 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GMLConstants;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * This class is the post processor for standard rainfall-runoff calculation. It produces the set of data representing
@@ -87,24 +97,14 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
     private final double m_volume;
 
-    /**
-     * rounds values to sensible precision
-     */
     public DischargeData( final double valueMaximum, final Date dateMaximum, final double volume )
     {
-      // round maximum value to 2 digits
-      m_valueMaximum = Math.round( valueMaximum * 100 ) / 100.0;
-
-      // round date to minutes
-      m_dateMaximum = (Date) dateMaximum.clone();
-      final long timeMillis = m_dateMaximum.getTime();
-      m_dateMaximum.setTime( Math.round( timeMillis * 1000 * 60 ) / (1000 * 60) );
-
-      // round volume
-      m_volume = Math.round( volume );
+      m_valueMaximum = valueMaximum;
+      m_dateMaximum = dateMaximum;
+      m_volume = volume;
     }
 
-    public final double getValueMaximum( )
+    public final Double getValueMaximum( )
     {
       return m_valueMaximum;
     }
@@ -114,7 +114,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       return m_dateMaximum;
     }
 
-    public final double getVolume( )
+    public final Double getVolume( )
     {
       return m_volume;
     }
@@ -125,7 +125,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     public String getDateMaximumFormatted( )
     {
       final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-      final SimpleDateFormat dfm = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" ); //$NON-NLS-1$
+      final DateFormat dfm = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss Z" ); //$NON-NLS-1$
       dfm.setTimeZone( timeZone );
       return dfm.format( m_dateMaximum );
     }
@@ -156,10 +156,26 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
     {
       final GMLWorkspace sudsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "sudsModel" ), null ); //$NON-NLS-1$
       sudsWorkspace.accept( transformVisitor, sudsWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      final Geometry planingAreaGeometry;
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "naModel" ), null ); //$NON-NLS-1$
       final NaModell naModel = (NaModell) modelWorkspace.getRootFeature();
 
       modelWorkspace.accept( transformVisitor, naModel, FeatureVisitor.DEPTH_INFINITE );
+      final IFeatureBindingCollection<Catchment> catchments = naModel.getCatchments();
+      final PlaningArea planingArea = (PlaningArea) sudsWorkspace.getRootFeature().getProperty( PlaningArea.QNAME_PROP_PLANING_AREA_MEMBER );
+      final boolean planningAreaDefined = planingArea != null;
+      if( planningAreaDefined )
+      {
+        planingAreaGeometry = JTSAdapter.export( planingArea.getDefaultGeometryProperty() );
+      }
+      else
+      {
+        /*
+         * TODO: This should happen only if the calculation is started by PLC Manager application. Implement such check.
+         */
+        final GM_Envelope envelope = catchments.getBoundingBox();
+        planingAreaGeometry = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
+      }
 
       /* read statistics: max discharge / date of max discharge */
       final Map<String, String> izNodesPath = new HashMap<String, String>();
@@ -230,7 +246,52 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
       outputSubfolderSteady.mkdirs();
       outputSubfolderCalculated.mkdirs();
 
-      final List<Node> affectedNodes = naModel.getNodes();
+      final List<Node> affectedNodes = new ArrayList<Node>();
+
+      // FIXME: this is planer client code and DOES NOT belong here!
+      if( !planningAreaDefined )
+      {
+        final IFeatureBindingCollection<Node> nodes = naModel.getNodes();
+        affectedNodes.addAll( nodes );
+      }
+      else
+      {
+        for( final Catchment catchment : catchments )
+        {
+          // FIXME: do not use default geometry property at all!
+          final Geometry geometry = JTSAdapter.export( catchment.getDefaultGeometryPropertyValue() );
+          if( planingAreaGeometry.intersects( geometry ) )
+          {
+            // resolve downstream channel and node, and add node to the affected nodes list
+            final Channel downstreamChannel = catchment.getChannel();
+            if( downstreamChannel != null )
+            {
+              final Node downstreamNode = downstreamChannel.getDownstreamNode();
+              if( downstreamNode != null )
+                affectedNodes.add( downstreamNode );
+            }
+          }
+        }
+        // resolve all downstream nodes (from those who are the direct downstream nodes for the affected catchments)
+        final List<Node> additionalDownstreamNodes = new ArrayList<Node>();
+        for( final Node node : affectedNodes )
+        {
+          // resolve downstream channel and node, and add node to the affected nodes list (if not already there)
+          final Channel downstreamChannel = node.getDownstreamChannel();
+          if( downstreamChannel != null )
+          {
+            final Node downstreamNode = downstreamChannel.getDownstreamNode();
+            if( downstreamNode != null && !additionalDownstreamNodes.contains( downstreamNode ) )
+              additionalDownstreamNodes.add( downstreamNode );
+          }
+        }
+        // additional list is the easiest way to avoid concurrent modification exception...
+        for( final Node node : additionalDownstreamNodes )
+        {
+          if( !affectedNodes.contains( node ) )
+            affectedNodes.add( node );
+        }
+      }
 
       if( affectedNodes.size() == 0 )
       {
@@ -317,9 +378,9 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( node.getDefaultGeometryPropertyValue() );
         dataList.add( node.getName() );
 
-        final String riverCode = (String) node.getProperty( INode.PROPERTY_RIVER_CODE );
+        final String riverCode = (String) node.getProperty( NaModelConstants.NODE_RIVER_CODE_PROP );
         dataList.add( riverCode == null ? "" : riverCode ); //$NON-NLS-1$
-        final Double riverKm = (Double) node.getProperty( INode.PROPERTY_RIVER_KM );
+        final Double riverKm = (Double) node.getProperty( NaModelConstants.NODE_RIVER_KILOMETER_PROP );
         dataList.add( riverKm == null ? Double.NaN : riverKm );
 
         final String name = node.getName();
@@ -345,7 +406,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
         dataList.add( izMax.getDateMaximumFormatted() );
         dataList.add( calcMax.getValueMaximum() );
         dataList.add( calcMax.getDateMaximumFormatted() );
-        dataList.add( Double.compare( izMax.getValueMaximum(), calcMax.getValueMaximum() ) );
+        dataList.add( izMax.getValueMaximum().compareTo( calcMax.getValueMaximum() ) );
         dataList.add( calcMax.getDateMaximum().compareTo( izMax.getDateMaximum() ) );
         dataList.add( izMax.getVolume() );
         dataList.add( calcMax.getVolume() );
@@ -356,12 +417,12 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
 
       // FIXME: check if this workspace is empty and give a better error message
       final File shapeFile = new File( tmpdir, "difference" ); //$NON-NLS-1$
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), targetCRS );
+      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
     }
     catch( final Exception e )
     {
       setStatus( STATUS.ERROR, e.getLocalizedMessage() );
-      throw new SimulationException( Messages.getString( "NA_PostprocessingJob_0" ), e ); //$NON-NLS-1$
+      throw new SimulationException( e.getLocalizedMessage() );
     }
     resultEater.addResult( "OutputFolder", tmpdir ); //$NON-NLS-1$
     setStatus( STATUS.OK, "Success" ); //$NON-NLS-1$

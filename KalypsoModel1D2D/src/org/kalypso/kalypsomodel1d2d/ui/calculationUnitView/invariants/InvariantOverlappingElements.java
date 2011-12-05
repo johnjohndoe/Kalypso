@@ -50,7 +50,7 @@ import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Provides checking conditions to see if any elements overlap in the 1D2D Calculation Unit
@@ -71,7 +71,7 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
   {
     final List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
 
-    final List<Feature> bufferList = new ArrayList<Feature>();
+    final List<IFeatureWrapper2> bufferList = new ArrayList<IFeatureWrapper2>();
 
     if( !(calcUnit instanceof ICalculationUnit1D2D) )
       return invariantErrorMessages;
@@ -88,7 +88,7 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
       else
         thisCalcUnit = null;
 
-      for( final Feature subUnit_ : subUnits )
+      for( final IFeatureWrapper2 subUnit_ : subUnits )
       {
         if( subUnit_ instanceof ICalculationUnit2D )
         {
@@ -100,10 +100,10 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
             continue;
 
           final List<IFENetItem> bufSubUnits = thisCalcUnit.getElements();
-          for( final Feature element : bufSubUnits )
+          for( final IFeatureWrapper2 element : bufSubUnits )
           {
             if( toCompareCalcUnit.getElements().contains( element ) )
-              invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements.0", toCompareCalcUnit.getName() ), calcUnit, calcUnit1d2d ) ); //$NON-NLS-1$
+              invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements.0", toCompareCalcUnit.getName()), calcUnit, calcUnit1d2d ) ); //$NON-NLS-1$
           }
           bufferList.add( thisCalcUnit );
         }

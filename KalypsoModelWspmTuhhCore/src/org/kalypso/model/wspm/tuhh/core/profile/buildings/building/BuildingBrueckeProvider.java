@@ -49,7 +49,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author Dirk Kuch
  */
-public final class BuildingBrueckeProvider implements IProfileObjectProvider
+final public class BuildingBrueckeProvider implements IProfileObjectProvider
 {
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,

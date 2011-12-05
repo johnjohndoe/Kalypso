@@ -57,9 +57,10 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileUtil;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
+import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -70,7 +71,6 @@ import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.commons.process.ProcessTimeoutException;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
@@ -260,12 +260,11 @@ public class SWANKalypsoSimulation implements ISimulation, ISimulation1D2DConsta
   {
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     String exeName = exeVersionName;
-    if( exeVersionName == null || "".equals( exeVersionName.trim() ) ) //$NON-NLS-1$
+    if( exeVersionName == null || "".equals( exeVersionName.trim() ) )
     {
       exeName = ISimulation1D2DConstants.SIM_SWAN_EXE_FILE_PREFIX + ".exe"; //$NON-NLS-1$
     }
-    else
-    {
+    else{
       exeName = ISimulation1D2DConstants.SIM_SWAN_EXE_FILE_PREFIX + exeVersionName + ".exe"; //$NON-NLS-1$
 
     }

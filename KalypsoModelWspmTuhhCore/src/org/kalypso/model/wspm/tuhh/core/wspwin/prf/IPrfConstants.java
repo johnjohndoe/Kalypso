@@ -45,20 +45,15 @@ package org.kalypso.model.wspm.tuhh.core.wspwin.prf;
  */
 public interface IPrfConstants
 {
-  String PROFILE_PROPERTY_PRF_META = "prfFileFormat_MetaData";//$NON-NLS-1$
+  static final String PROFILE_PROPERTY_PRF_META = "prfFileFormat_MetaData";//$NON-NLS-1$
 
-  Integer PRF_LINE_1_URDATEI = 1;
+  static final Integer PRF_LINE_1_URDATEI = 1;
 
-  Integer PRF_LINE_4_PROJEKTBEZEICHNUNG_1 = 4;
+  static final Integer PRF_LINE_4_PROJEKTBEZEICHNUNG_1 = 4;
 
-  Integer PRF_LINE_5_PROJEKTBEZEICHNUNG_2 = 5;
+  static final Integer PRF_LINE_5_PROJEKTBEZEICHNUNG_2 = 5;
 
-  Integer PRF_LINE_6_PROJEKTBEZEICHNUNG_3 = 6;
+  static final Integer PRF_LINE_6_PROJEKTBEZEICHNUNG_3 = 6;
 
-  /* Reserved for profile number */
-  Integer PRF_LINE_8_BLATTBEZEICHNUNG_2 = 8;
-
-  Integer PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT = 13;
-
-  String HEADER_SINUOSITAET = "SINUOSITAET"; //$NON-NLS-1$
+  static final Integer PRF_LINE_13_ZEICHNUNGSUEBERSCHRIFT = 13;
 }

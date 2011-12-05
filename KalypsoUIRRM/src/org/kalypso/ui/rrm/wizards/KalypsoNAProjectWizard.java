@@ -41,6 +41,9 @@
 
 package org.kalypso.ui.rrm.wizards;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,20 +54,19 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.resources.IFile;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -79,26 +81,23 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.INaModelFeature;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.KMChannel;
 import org.kalypso.model.hydrology.binding.model.KMParameter;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.channels.IChannel;
-import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
-import org.kalypso.model.hydrology.binding.model.channels.IVirtualChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.INode;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
+import org.kalypso.model.hydrology.binding.model.VirtualChannel;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.extension.KalypsoModuleRRM;
-import org.kalypso.ui.rrm.extension.KalypsoRrmNewProjectHandler;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -167,7 +166,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   public KalypsoNAProjectWizard( )
   {
-    super( new ProjectTemplatePage( Messages.getString( "KalypsoNAProjectWizard_2" ), Messages.getString( "KalypsoNAProjectWizard_3" ), CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( new ProjectTemplatePage( Messages.getString("KalypsoNAProjectWizard_2"), Messages.getString("KalypsoNAProjectWizard_3"), CATEGORY_TEMPLATE ), true, KalypsoModuleRRM.ID ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "KalypsoNAProjectWizard.9" ) ); //$NON-NLS-1$
@@ -197,25 +196,25 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     addPage( m_createMappingHydrotopPage );
   }
 
+  /**
+   * @see org.kalypso.afgui.wizards.NewProjectWizard#postCreateProject(org.eclipse.core.resources.IProject,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
-  public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    new KalypsoRrmNewProjectHandler().postCreateProject( project, template, new NullProgressMonitor() );
-
-    final IPath basisScenarioPath = new Path( INaProjectConstants.FOLDER_BASIS );
-
-    final IFile modelFile = project.getFile( basisScenarioPath.append( INaProjectConstants.GML_MODELL_PATH ) ); //$NON-NLS-1$
-    final IFile hydrotopeFile = project.getFile( basisScenarioPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) ); //$NON-NLS-1$
+    final IPath modelPath = project.getLocation().append( "/modell.gml" ); //$NON-NLS-1$
+    final IPath hydPath = project.getLocation().append( "/hydrotop.gml" ); //$NON-NLS-1$
 
     try
     {
       // open modell.gml and hydrotop.gml file to write imported feature
-      m_modelWS = GmlSerializer.createGMLWorkspace( modelFile );
-      m_hydWS = GmlSerializer.createGMLWorkspace( hydrotopeFile );
+      m_modelWS = GmlSerializer.createGMLWorkspace( modelPath.toFile(), null );
+      m_hydWS = GmlSerializer.createGMLWorkspace( hydPath.toFile(), null );
     }
     catch( final Exception e1 )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "KalypsoNAProjectWizard_4" ), e1 ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_4"), e1 ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -254,10 +253,26 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     // in the workspace model.gml
     try
     {
-      GmlSerializer.serializeWorkspace( modelFile, m_modelWS, new NullProgressMonitor() );
-      GmlSerializer.serializeWorkspace( hydrotopeFile, m_hydWS, new NullProgressMonitor() );
+      final OutputStreamWriter modelWriter = new FileWriter( modelPath.toFile() );
+      GmlSerializer.serializeWorkspace( modelWriter, m_modelWS );
+      modelWriter.close();
+      // hydrotop.gml
+      final OutputStreamWriter hydrotopWriter = new FileWriter( hydPath.toFile() );
+      GmlSerializer.serializeWorkspace( hydrotopWriter, m_hydWS );
+      hydrotopWriter.close();
 
+      project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
       return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_5"), e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    catch( final GmlSerializeException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAProjectWizard_6"), e ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
     finally
     {
@@ -277,7 +292,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     for( final Object sourceElement : sourceFeatureList )
     {
       final Feature sourceFeature = (Feature) sourceElement;
-      final IHydrotope targetFeature = hydList.addNew( IHydrotope.QNAME, sourceFeature.getId() );
+      final IHydrotope targetFeature = hydList.addNew( Hydrotop.QNAME, sourceFeature.getId() );
 
       copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_SURFACE_2_MULTISURFACE );
     }
@@ -343,7 +358,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     {
       final Feature sourceFeature = (Feature) sourceElement;
       final String fid = getId( idColKey, sourceFeature, "K" ); //$NON-NLS-1$
-      final Feature targetFeature = nodes.addNew( INode.FEATURE_NODE, fid );
+      final Feature targetFeature = nodes.addNew( Node.FEATURE_NODE, fid );
 
       copyValues( sourceFeature, targetFeature, mapping, GEO_MAPPING_NONE );
     }
@@ -391,7 +406,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     switch( channelType )
     {
       case 0:
-        return channels.addNew( IVirtualChannel.FEATURE_VIRTUAL_CHANNEL, fid );
+        return channels.addNew( VirtualChannel.FEATURE_VIRTUAL_CHANNEL, fid );
 
       case 1:
       {
@@ -406,13 +421,13 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       }
 
       case 2:
-        return channels.addNew( IStorageChannel.FEATURE_STORAGE_CHANNEL, fid );
+        return channels.addNew( StorageChannel.FEATURE_STORAGE_CHANNEL, fid );
 
       case 3:
-        throw new UnsupportedOperationException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
+        throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
 
       default:
-        throw new IllegalArgumentException( String.format( Messages.getString( "KalypsoNAProjectWizard_7" ), channelType ) ); //$NON-NLS-1$
+        throw new IllegalArgumentException( String.format( Messages.getString("KalypsoNAProjectWizard_7"), channelType ) ); //$NON-NLS-1$
     }
   }
 
@@ -459,8 +474,8 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
   {
     if( (mappingOption & GEO_MAPPING_SURFACE_2_MULTISURFACE) != 0 && sourceValue instanceof GM_Surface )
     {
-      final GM_Surface< ? >[] surfaces = new GM_Surface[] { (GM_Surface< ? >) (GM_Surface< ? >) sourceValue };
-      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Surface< ? >) (GM_Surface< ? >) sourceValue).getCoordinateSystem() );
+      final GM_Surface< ? >[] surfaces = new GM_Surface[] { (GM_Surface< ? >) ((GM_Surface< ? >) sourceValue) };
+      return GeometryFactory.createGM_MultiSurface( surfaces, ((GM_Surface< ? >) ((GM_Surface< ? >) sourceValue)).getCoordinateSystem() );
     }
 
     if( (mappingOption & GEO_MAPPING_MULTISURFACE_2_SURFACE) != 0 && sourceValue instanceof GM_MultiSurface )
@@ -474,6 +489,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) sourceValue).getCurveAt( 0 ) };
       return curves[0];
     }
+
 
     return sourceValue;
   }
@@ -490,7 +506,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     catch( final Exception e )
     {
       // we do not print the stack trace!
-      final String msg = String.format( Messages.getString( "KalypsoNAProjectWizard_9" ), ObjectUtils.toString( sourceValue ), vpt.getQName(), vpt.getValueQName() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString("KalypsoNAProjectWizard_9"), ObjectUtils.toString( sourceValue ), vpt.getQName(), vpt.getValueQName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), msg );
       KalypsoUIRRMPlugin.getDefault().getLog().log( status );
     }
@@ -531,7 +547,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
    * generates an ID based on the FeatureType. If the idColKey variable is set, then use this field to generate the ID
    * and check if the ID doesn´t exist in the idMap. if the id ColKey is not set, use the ID of the sourceFeature (shape
    * file).
-   *
+   * 
    * @param idColKey
    * @param sourceFeature
    * @param IDText
@@ -544,7 +560,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
     try
     {
-      final String idKey = SpecialPropertyMapper.map( sourceFeature.getProperty( idColKey ).getClass(), Integer.class, sourceFeature.getProperty( idColKey ) ).toString();
+      final String idKey = SpecialPropertyMapper.map( (sourceFeature.getProperty( idColKey )).getClass(), Integer.class, sourceFeature.getProperty( idColKey ) ).toString();
 
       final String key = idText + idKey;
       if( !m_IDMap.containsKey( key ) )
@@ -567,6 +583,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     return sourceFeature.getId();
   }
 
+
   private IValuePropertyType[] getAllValueProperties( final IFeatureType targetFT )
   {
     final Collection<IValuePropertyType> result = new ArrayList<IValuePropertyType>();
@@ -581,7 +598,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
       if( ftp instanceof IValuePropertyType )
       {
         final IValuePropertyType targetPT = (IValuePropertyType) ftp;
-        if( Feature.QN_NAME.equals( qName ) || (!targetPT.isVirtual() && !targetPT.isList()) )
+        if( !targetPT.isVirtual() && !targetPT.isList() )
           result.add( targetPT );
       }
     }
@@ -597,11 +614,11 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private IValuePropertyType[] getChannelTargetProperties( )
   {
-    final IFeatureType channelFT = GMLSchemaUtilities.getFeatureTypeQuiet( IChannel.FEATURE_CHANNEL );
+    final IFeatureType channelFT = GMLSchemaUtilities.getFeatureTypeQuiet( Channel.FEATURE_CHANNEL );
 
-    final IValuePropertyType propOrt = (IValuePropertyType) channelFT.getProperty( INaModelFeature.PROPERTY_ORT );
-    final IValuePropertyType propName = (IValuePropertyType) channelFT.getProperty( Feature.QN_NAME );
-    final IValuePropertyType propDescription = (IValuePropertyType) channelFT.getProperty( Feature.QN_DESCRIPTION );
+    final IValuePropertyType propOrt = (IValuePropertyType) channelFT.getProperty( Channel.PROP_ORT );
+    final IValuePropertyType propName = (IValuePropertyType) channelFT.getProperty( Channel.QN_NAME );
+    final IValuePropertyType propDescription = (IValuePropertyType) channelFT.getProperty( Channel.QN_DESCRIPTION );
 
     // Create fake property type for 'channel type'
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
@@ -614,7 +631,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
 
   private IValuePropertyType[] getNodeTargetProperties( )
   {
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( INode.FEATURE_NODE );
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( Node.FEATURE_NODE );
     return getAllValueProperties( featureType );
   }
 

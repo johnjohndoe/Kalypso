@@ -8,14 +8,6 @@ package org.kalypso.model.km.internal.core;
  */
 class MultiKMValue extends AbstractKMValue
 {
-  private final double m_qLowerChannel;
-
-  private final double m_qUpperChannel;
-
-  private final double m_qLowerForeland;
-
-  private final double m_qUpperForeland;
-
   /* Average (weighted by length) of all inner alphas's */
   private final double m_alpha;
 
@@ -34,13 +26,16 @@ class MultiKMValue extends AbstractKMValue
   /* Sum of all inner nForeland's */
   private final double m_nForeland;
 
+  /* q of first km */
+  private final double m_q;
+
+  /* qForeland of first km */
+  private final double m_qForeland;
+
   public MultiKMValue( final IKMValue[] values )
   {
-    m_qLowerChannel = values[0].getLowerQchannel();
-    m_qUpperChannel = values[0].getUpperQchannel();
-
-    m_qLowerForeland = values[0].getLowerQforeland();
-    m_qUpperForeland = values[0].getUpperQforeland();
+    m_q = values[0].getQ();
+    m_qForeland = values[0].getQForeland();
 
     double length = 0;
     double alpha = 0;
@@ -88,6 +83,7 @@ class MultiKMValue extends AbstractKMValue
   @Override
   public double getK( )
   {
+
     return m_k;
   }
 
@@ -104,26 +100,15 @@ class MultiKMValue extends AbstractKMValue
   }
 
   @Override
-  public double getLowerQchannel( )
+  public double getQ( )
   {
-    return m_qLowerChannel;
+    return m_q;
   }
 
   @Override
-  public double getUpperQchannel( )
+  public double getQForeland( )
   {
-    return m_qUpperChannel;
+    return m_qForeland;
   }
 
-  @Override
-  public double getLowerQforeland( )
-  {
-    return m_qLowerForeland;
-  }
-
-  @Override
-  public double getUpperQforeland( )
-  {
-    return m_qUpperForeland;
-  }
 }

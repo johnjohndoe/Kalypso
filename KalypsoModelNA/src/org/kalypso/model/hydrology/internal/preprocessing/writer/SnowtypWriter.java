@@ -62,11 +62,14 @@ public class SnowtypWriter extends AbstractCoreFileWriter
     m_parameter = parameter;
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
     writer.append( Messages.getString( "org.kalypso.convert.namodel.manager.SchneeManager.0" ) ); //$NON-NLS-1$
-    writer.append( "\n/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
+    writer.append( "/                     wwo wwmax snotem snorad h0\n" ); //$NON-NLS-1$
     writer.append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Snow> snowMembers = m_parameter.getSnow();
@@ -77,7 +80,7 @@ public class SnowtypWriter extends AbstractCoreFileWriter
     }
   }
 
-  private void writeSnow( final PrintWriter snowBuffer, final Snow snow )
+  private void writeSnow( final PrintWriter snowBuffer, final Snow snow ) throws Exception
   {
     final String name = snow.getName();
     final double xwwo = snow.getXwwo();

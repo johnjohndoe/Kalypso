@@ -41,7 +41,6 @@
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Date;
@@ -55,19 +54,17 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Branching;
+import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.KontEntnahme;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;
-import org.kalypso.model.hydrology.binding.model.nodes.Branching;
-import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
-import org.kalypso.model.hydrology.binding.model.nodes.INode;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.model.hydrology.binding.model.nodes.Verzweigung;
+import org.kalypso.model.hydrology.binding.model.Verzweigung;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.model.hydrology.internal.preprocessing.RelevantNetElements;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.timeseries.GrapWriter;
@@ -147,7 +144,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
    * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractCoreFileWriter#writeContent(java.io.PrintWriter)
    */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws IOException, NAPreprocessorException
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
     final NetElement[] channels = m_relevantElements.getChannels();
     for( final NetElement netElement : channels )
@@ -161,21 +158,13 @@ public class NetFileWriter extends AbstractCoreFileWriter
       netElement.writeRootChannel( writer, virtualChannelId );
     }
 
-    try
-    {
-      final Node[] nodeCollector = m_relevantElements.getNodes();
-      writer.append( "99999\n" ); //$NON-NLS-1$
-      appendNodeList( nodeCollector, writer );
-      writer.append( "99999\n" ); //$NON-NLS-1$
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString( "NetFileWriter_0" ), e ); //$NON-NLS-1$
-    }
+    final Node[] nodeCollector = m_relevantElements.getNodes();
+    writer.append( "99999\n" ); //$NON-NLS-1$
+    appendNodeList( nodeCollector, writer );
+    writer.append( "99999\n" ); //$NON-NLS-1$
   }
 
-  private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws IOException, SensorException
+  private void appendNodeList( final Node[] nodes, final PrintWriter netBuffer ) throws Exception, Exception
   {
     // FIXME: theses nodes do not contain the branching nodes
 
@@ -228,7 +217,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     final Node relatedNode = node.getQQRelatedNode();
     if( relatedNode == null )
       return null;
-    final IObservation observation = (IObservation) node.getProperty( INode.PROPERTY_QQ_RELATION );
+    final IObservation observation = (IObservation) node.getProperty( NaModelConstants.NODE_QQRELATION_PROP );
     if( observation == null )
       return null;
     final StringBuffer buffer = new StringBuffer();
@@ -251,7 +240,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     return bean;
   }
 
-  private ZuflussBean appendZuflussStuff( final Node node ) throws SensorException, IOException
+  private ZuflussBean appendZuflussStuff( final Node node ) throws Exception
   {
     // TODO: like this, only one branching can be used at the same time. Also, braching and zufluss cannot appear at
     // the same time. Is both intented? Isn't kalypso-na able to do more?
@@ -266,7 +255,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
     return new ZuflussBean( 0, 0, 0, 0, 0, Double.NaN, null );
   }
 
-  private ZuflussBean appendZuflussLink( final Node node, final TimeseriesLinkType zuflussLink ) throws SensorException, IOException
+  private ZuflussBean appendZuflussLink( final Node node, final TimeseriesLinkType zuflussLink ) throws Exception
   {
     final ZuflussBean bean = new ZuflussBean( 0, 0, 0, 5, 0, Double.NaN, null );
 
@@ -372,7 +361,7 @@ public class NetFileWriter extends AbstractCoreFileWriter
       return new ZuflussBean( 0, 0, 1, 0, 0, queb, branchNode );
     }
 
-    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() ); //$NON-NLS-1$
+    throw new IllegalArgumentException( "Illegal branching type: " + branching.getClass() );
   }
 
   private String getZuflussEingabeDateiString( final Feature nodeFE )

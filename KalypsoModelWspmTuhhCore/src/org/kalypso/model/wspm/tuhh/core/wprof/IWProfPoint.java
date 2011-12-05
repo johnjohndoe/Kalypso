@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.wprof;
 
 import java.math.BigDecimal;
-import java.net.URI;
+import java.net.URL;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -69,7 +69,7 @@ public interface IWProfPoint
 
   WProfProfileType getProfileType( );
 
-  URI[] getPhotos( );
+  URL[] getPhotos( );
 
   String getProfileComment( );
 
@@ -87,4 +87,6 @@ public interface IWProfPoint
   String getRiverName( );
 
   Feature getFeature( );
+
+  boolean hasPhotos( );
 }

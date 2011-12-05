@@ -46,8 +46,6 @@ import java.util.logging.Logger;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -76,22 +74,17 @@ public class ZftWriter extends AbstractCoreFileWriter
     m_catchments = catchments;
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    try
-    {
-      for( final Catchment catchment : m_catchments )
-        writeCatchment( writer, catchment );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString( "ZftWriter_0" ), e ); //$NON-NLS-1$
-    }
+    for( final Catchment catchment : m_catchments )
+      writeCatchment( writer, catchment );
   }
 
-  private void writeCatchment( final PrintWriter zftBuffer, final Catchment catchment ) throws SensorException
+  private void writeCatchment( final PrintWriter zftBuffer, final Catchment catchment ) throws Exception
   {
     final int catchmentID = m_idManager.getAsciiID( catchment );
 

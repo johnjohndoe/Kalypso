@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.results;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -90,9 +90,7 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
         for( final IFolder folder : folders )
         {
           if( !resultFolder.equals( folder ) )
-          {
             result.add( new WspmResultFolderNode( this, folder ) );
-          }
         }
       }
       catch( final CoreException e )
@@ -126,7 +124,7 @@ public class WspmResultPolynomeCalculationNode extends AbstractWspmResultNode im
   {
     final IWspmResultNode[] childResults = getChildResults();
     if( ArrayUtils.isEmpty( childResults ) )
-      return String.format( Messages.getString( "WspmResultCalculationNode_0" ), m_calculation.getName() ); //$NON-NLS-1$
+      return String.format( Messages.getString("WspmResultCalculationNode_0"), m_calculation.getName() ); //$NON-NLS-1$
 
     return m_calculation.getName();
   }

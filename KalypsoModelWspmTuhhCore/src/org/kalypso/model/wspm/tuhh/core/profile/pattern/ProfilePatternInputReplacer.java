@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import java.util.Locale;
 import java.util.regex.Matcher;
 
 import org.kalypso.commons.pair.IKeyValue;
@@ -51,16 +50,16 @@ import org.kalypso.commons.patternreplace.PatternInputReplacer;
 /**
  * @author Gernot Belger
  */
-public final class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
+public class ProfilePatternInputReplacer extends PatternInputReplacer<IProfilePatternData>
 {
-  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer( Locale.getDefault() );
+  private static ProfilePatternInputReplacer INSTANCE = new ProfilePatternInputReplacer();
 
   public static ProfilePatternInputReplacer getINSTANCE( )
   {
     return INSTANCE;
   }
 
-  public ProfilePatternInputReplacer( final Locale locale )
+  private ProfilePatternInputReplacer( )
   {
     /* Needs profile */
     addReplacer( new ProfileNamePattern() );
@@ -74,7 +73,7 @@ public final class ProfilePatternInputReplacer extends PatternInputReplacer<IPro
     addReplacer( new ProfileRiverIdPattern() );
 
     /* Needs points */
-    addReplacer( new PointComponentPattern( locale ) );
+    addReplacer( new PointComponentPattern() );
   }
 
   public IKeyValue<IPatternInput<IProfilePatternData>, String> getSinglePatternValue( final String pattern )

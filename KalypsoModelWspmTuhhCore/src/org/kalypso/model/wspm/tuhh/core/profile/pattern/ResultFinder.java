@@ -1,6 +1,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
@@ -33,30 +33,40 @@ public final class ResultFinder implements Function<IKeyValue<IProfileFeature, S
 
   public static IWspmResult findResult( final IProfileFeature profileFeature, final String nodeID )
   {
-    final Object element = ProfileAndResults.findResultNode( profileFeature );
-    if( !(element instanceof IWspmResultNode) )
+    final Object node = ProfileAndResults.findResultNode( profileFeature );
+    if( !(node instanceof IWspmResultNode) )
       return null;
 
-    final IWspmResultNode node = (IWspmResultNode) element;
-    return findResultByName( node, nodeID );
+    final IWspmResultNode resultNode = findNodeByName( ((IWspmResultNode) node), nodeID );
+    return findResult( resultNode );
   }
 
-  private static IWspmResult findResultByName( final IWspmResultNode node, final String name )
+  private static IWspmResult findResult( final IWspmResultNode node )
   {
     if( node instanceof IWspmResult )
-    {
-      final IWspmResultNode parent = node.getParent();
-      final String parentLabel = parent.getLabel();
-      if( ObjectUtils.equals( name, parentLabel ) )
-        return (IWspmResult) node;
-    }
+      return (IWspmResult) node;
 
-    // REMARK: tricky: this relies on the fact, that the current result ('_aktuell')
-    // is always the first element
     final IWspmResultNode[] childNodes = node.getChildResults();
     for( final IWspmResultNode childNode : childNodes )
     {
-      final IWspmResult result = findResultByName( childNode, name );
+      final IWspmResult result = findResult( childNode );
+      if( result != null )
+        return result;
+    }
+
+    return null;
+  }
+
+  private static IWspmResultNode findNodeByName( final IWspmResultNode node, final String name )
+  {
+    final String nodeName = node.getLabel();
+    if( ObjectUtils.equals( name, nodeName ) )
+      return node;
+
+    final IWspmResultNode[] childNodes = node.getChildResults();
+    for( final IWspmResultNode childNode : childNodes )
+    {
+      final IWspmResultNode result = findNodeByName( childNode, name );
       if( result != null )
         return result;
     }

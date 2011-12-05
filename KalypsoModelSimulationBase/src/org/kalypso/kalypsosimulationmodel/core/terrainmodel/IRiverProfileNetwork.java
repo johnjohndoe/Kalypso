@@ -4,15 +4,15 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /*
  * Interface to be implemented by classes that represent a simBase:RiverProfileNetwork
  *
  * @author Patrice Congo
  */
-public interface IRiverProfileNetwork extends Feature
+public interface IRiverProfileNetwork extends IFeatureWrapperCollection<IProfileFeature>, IFeatureWrapper2
 {
   public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetwork" ); //$NON-NLS-1$
 
@@ -35,7 +35,5 @@ public interface IRiverProfileNetwork extends Feature
    * @return the river profile situated after the specified one
    */
   public IProfileFeature getNext( final IProfileFeature riverProfile );
-  
-  public IFeatureBindingCollection<IProfileFeature> getProfiles( );
 
 }

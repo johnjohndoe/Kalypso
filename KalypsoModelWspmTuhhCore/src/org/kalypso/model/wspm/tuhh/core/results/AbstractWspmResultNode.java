@@ -108,4 +108,5 @@ public abstract class AbstractWspmResultNode implements IWspmResultNode
   {
     return getName();
   }
+
 }

@@ -50,7 +50,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
@@ -81,6 +80,7 @@ import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
@@ -137,7 +137,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       if( updateMap )
       {
         final URL mapURL = (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString() );
-        final File mapFile = FileUtils.toFile( mapURL );
+        final File mapFile = new File( mapURL.getPath() );
 
         /* Load the map template. */
         final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
@@ -160,7 +160,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Fehler bei der Berechnung des spezifischen Schadens", e );
+      e.printStackTrace();
+      throw new SimulationException( e.getLocalizedMessage() );
     }
   }
 
@@ -171,7 +172,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   private void doDamagePotentialCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final int importantDigits, final IProgressMonitor monitor ) throws SimulationException
   {
     final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterModel.getSpecificDamageCoverageCollection();
-    final IFeatureBindingCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection().getLandusePolygonCollection();
+    final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )

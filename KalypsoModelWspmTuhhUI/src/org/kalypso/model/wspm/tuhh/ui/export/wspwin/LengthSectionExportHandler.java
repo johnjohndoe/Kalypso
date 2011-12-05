@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.export.wspwin;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -53,32 +54,40 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.wspwin.LengthSectionExporter;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.wspwin.core.Plotter;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author kimwerner
  */
 public class LengthSectionExportHandler extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
-
-    final IObservation<TupleResult> obs = getLSObservation( chart );
+    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
+    if( chartPart == null )
+      return null;
+    final IObservation<TupleResult> obs = getLSObservation( chartPart );
 
     if( !Plotter.checkPlotterExe( shell ) )
       return null;
@@ -92,13 +101,13 @@ public class LengthSectionExportHandler extends AbstractHandler
       e.printStackTrace();
 
       final IStatus error = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, Messages.getString( "LengthSectionExportHandler_0" ), Messages.getString( "LengthSectionExportHandler_1" ), error ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString("LengthSectionExportHandler_0"), Messages.getString("LengthSectionExportHandler_1"), error ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return null;
   }
 
-  private void doExport( final IObservation<TupleResult> obs ) throws IOException
+  private final void doExport( final IObservation<TupleResult> obs ) throws FileNotFoundException, IOException
   {
     final File file = new File( System.getProperty( "java.io.tmpdir" ), "exportTmp.lng" );//$NON-NLS-1$ //$NON-NLS-2$
     file.deleteOnExit();
@@ -107,7 +116,7 @@ public class LengthSectionExportHandler extends AbstractHandler
     try
     {
       if( !lngExp.write( obs, writer ) )
-        throw new IOException( Messages.getString( "LengthSectionExportHandler_2" ) ); //$NON-NLS-1$
+        throw new IOException( Messages.getString("LengthSectionExportHandler_2") ); //$NON-NLS-1$
     }
     finally
     {
@@ -118,12 +127,27 @@ public class LengthSectionExportHandler extends AbstractHandler
     Plotter.openPrf( file, doPrint );
   }
 
-  static IObservation<TupleResult> getLSObservation( final IChartComposite chart )
+  private final IObservation<TupleResult> getLSObservation( final IChartPart chartPart )
   {
-    final IChartModel chartModel = chart.getChartModel();
+    final IChartModel chartModel = chartPart.getChartComposite().getChartModel();
     final ILayerManager layerManager = chartModel.getLayerManager();
-    final LengthSectionExportVisitor visitor = new LengthSectionExportVisitor();
-    layerManager.accept( visitor );
-    return visitor.getObservation();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer iChartLayer : layers )
+    {
+      if( iChartLayer instanceof TupleResultLineLayer )
+      {
+        final IObservation<TupleResult> obs = ((TupleResultLineLayer) iChartLayer).getObservation();
+        if( obs != null )
+        {
+          for( final IComponent comp : obs.getResult().getComponents() )
+          {
+            if( comp.getId().equals( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ) )
+              return obs;
+          }
+        }
+      }
+    }
+    return null;
   }
+
 }

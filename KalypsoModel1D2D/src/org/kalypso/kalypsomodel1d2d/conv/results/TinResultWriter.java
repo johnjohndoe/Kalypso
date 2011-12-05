@@ -48,7 +48,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xml.serializer.ToXMLStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
@@ -64,6 +63,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import com.sun.org.apache.xml.internal.serializer.ToXMLStream;
 
 /**
  * 
