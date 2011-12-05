@@ -126,9 +126,6 @@ public class LengthSectionHandler1d
     m_workspaceMap.put( calcUnit, lsObsWorkspace );
 
     final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
-    // remember name of calc unit
-    lsObs.setName( calcUnit.getName() );
-
     m_obsMap.put( calcUnit, lsObs );
 
     final TupleResult tuples = lsObs.getResult();

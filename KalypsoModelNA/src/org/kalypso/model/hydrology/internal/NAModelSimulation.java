@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NAModelSimulation
 {
-  private static final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
+  private final DateFormat START_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" ); //$NON-NLS-1$
 
   private final String m_startDateText = START_DATE_FORMAT.format( new Date() );
 
@@ -90,12 +90,12 @@ public class NAModelSimulation
     m_logger.log( Level.INFO, Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.13", m_startDateText ) ); //$NON-NLS-1$ 
   }
 
-  public void runSimulation( final ISimulationMonitor monitor ) throws Exception
+  public boolean runSimulation( final ISimulationMonitor monitor ) throws Exception
   {
-    monitor.setMessage( Messages.getString( "NAModelSimulation.3" ) ); //$NON-NLS-1$
+    monitor.setMessage( "Simulation wird gestartet..." );
     preprocess( m_simulationData, monitor );
     if( monitor.isCanceled() )
-      return;
+      return false;
 
     final NAControl metaControl = m_simulationData.getMetaControl();
     final String exeVersion = metaControl.getExeVersion();
@@ -104,24 +104,24 @@ public class NAModelSimulation
     m_processor.run( monitor );
 
     if( monitor.isCanceled() )
-      return;
+      return false;
 
-    postProcess( m_simulationData, monitor );
+    return postProcess( m_simulationData, monitor );
   }
 
-  public void rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
+  public boolean rerunForOptimization( final NAOptimize optimize, final ISimulationMonitor monitor ) throws Exception
   {
     // FIXME: clear old result file (we_nat_out etc.)
     m_preprocessor.processCallibrationFiles( optimize, monitor );
     if( monitor.isCanceled() )
-      return;
+      return false;
 
     m_processor.run( monitor );
 
     if( monitor.isCanceled() )
-      return;
+      return false;
 
-    postProcess( m_simulationData, monitor );
+    return postProcess( m_simulationData, monitor );
   }
 
   private void preprocess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws SimulationException
@@ -136,13 +136,13 @@ public class NAModelSimulation
     }
     catch( final NAPreprocessorException e )
     {
-      final String msg = String.format( Messages.getString( "NAModelSimulation.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to convert data in Kalypso-NA.exe format files: %s", e.getLocalizedMessage() );
       m_logger.log( Level.SEVERE, msg, e );
       throw new SimulationException( msg, e );
     }
   }
 
-  private void postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
+  private boolean postProcess( final INaSimulationData simulationData, final ISimulationMonitor monitor ) throws Exception
   {
     final String messageStartPostprocess = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.28" ); //$NON-NLS-1$
     monitor.setMessage( messageStartPostprocess );
@@ -156,6 +156,7 @@ public class NAModelSimulation
 
     final NaPostProcessor postProcessor = new NaPostProcessor( idManager, m_logger, modelWorkspace, naControl, hydroHash );
     postProcessor.process( m_simDirs.asciiDirs, m_simDirs );
+    return postProcessor.isSucceeded();
   }
 
   public INaSimulationData getSimulationData( )

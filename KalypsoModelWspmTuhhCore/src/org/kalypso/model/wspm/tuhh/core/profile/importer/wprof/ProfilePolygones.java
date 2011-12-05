@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
@@ -89,9 +89,7 @@ class ProfilePolygones extends HashMap<String, ProfilePolygon>
   {
     int numPoints = 0;
     for( final ProfilePolygon poly : values() )
-    {
       numPoints += poly.size();
-    }
 
     return numPoints;
   }
@@ -102,20 +100,19 @@ class ProfilePolygones extends HashMap<String, ProfilePolygon>
   }
 
   /** Find the first point that has a foto. */
-  public URI[] getPhotoUrls( )
+  public URL[] getPhotoUrls( )
   {
     for( final ProfilePolygon polygon : values() )
     {
       final IWProfPoint[] points = polygon.getPoints();
       for( final IWProfPoint point : points )
       {
-        final URI[] photos = point.getPhotos();
-        if( photos != null && photos.length > 0 )
-          return photos;
+        if( point.hasPhotos() )
+          return point.getPhotos();
       }
     }
 
-    return new URI[0];
+    return new URL[0];
   }
 
 }

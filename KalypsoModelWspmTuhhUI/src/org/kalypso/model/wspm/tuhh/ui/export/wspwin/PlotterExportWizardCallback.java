@@ -52,32 +52,29 @@ import org.kalypso.wspwin.core.Plotter;
 
 public final class PlotterExportWizardCallback extends PrfExportWizardCallback
 {
-  private final PlotterExportData m_data;
+  private final boolean m_doPrint;
 
-  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final PlotterExportData data, final WspmResultLengthSection[] waterlevel )
+  public PlotterExportWizardCallback( final File exportDir, final String filenamePattern, final boolean doPrint, final WspmResultLengthSection[] waterlevel )
   {
     super( exportDir, filenamePattern, waterlevel );
-
-    m_data = data;
+    m_doPrint = doPrint;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.PrfExportWizardCallback#profileWritten(java.io.File)
+   */
   @Override
   public void profileWritten( final File file ) throws CoreException
   {
     try
     {
-      final boolean doPrint = m_data.getDoPrint();
-      Plotter.openPrf( file, doPrint );
+      Plotter.openPrf( file, m_doPrint );
 
-      if( doPrint )
-      {
-        final long sleep = m_data.getSleepTime();
-        Thread.sleep( sleep );
-      }
+      Thread.sleep( 500 );
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "PlotterExportWizardCallback_0" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("PlotterExportWizardCallback_0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

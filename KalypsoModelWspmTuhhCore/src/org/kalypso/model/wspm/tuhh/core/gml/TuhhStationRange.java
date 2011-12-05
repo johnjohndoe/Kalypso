@@ -42,6 +42,9 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
 
+import org.eclipse.core.runtime.Assert;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 /**
  * @author Gernot Belger
  */
@@ -51,27 +54,16 @@ public class TuhhStationRange
 
   private final BigDecimal m_to;
 
-  private final boolean m_directionUpstreams;
+  private final TuhhStationComparator m_stationComparator;
 
-  public TuhhStationRange( final TuhhCalculation calculation )
+  public TuhhStationRange( final TuhhCalculation calculation, final boolean isDirectionUpstreams )
   {
-    m_directionUpstreams = calculation.getReach().getWaterBody().isDirectionUpstreams();
+    m_from = calculation.getStartStation();
+    m_to = calculation.getEndStation();
 
-    final BigDecimal startStation = calculation.getStartStation();
-    final BigDecimal endStation = calculation.getEndStation();
+    m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
 
-    // REMARK: We sort from/to always in ascending order, regardless of the chosen direction of the river.
-    // This is a precondition of the calculation core.
-    if( startStation.compareTo( endStation ) < 0 )
-    {
-      m_from = startStation;
-      m_to = endStation;
-    }
-    else
-    {
-      m_from = endStation;
-      m_to = startStation;
-    }
+    Assert.isTrue( m_stationComparator.compare( m_from, m_to ) < 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -79,29 +71,7 @@ public class TuhhStationRange
    */
   public boolean isOutside( final BigDecimal station )
   {
-    return m_from.compareTo( station ) > 0 || station.compareTo( m_to ) > 0;
+    return m_stationComparator.compare( station, m_from ) == -1 || m_stationComparator.compare( m_to, station ) == -1;
   }
 
-  public boolean getDirection( )
-  {
-    return m_directionUpstreams;
-  }
-
-  public double getExportFrom( )
-  {
-    return m_directionUpstreams ? m_from.doubleValue() : -m_to.doubleValue();
-  }
-
-  public double getExportTo( )
-  {
-    return m_directionUpstreams ? m_to.doubleValue() : -m_from.doubleValue();
-  }
-
-  public int getExportSign( )
-  {
-    if( m_directionUpstreams )
-      return 1;
-    else
-      return -1;
-  }
 }

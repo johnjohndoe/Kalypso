@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.util;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -73,7 +71,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ProfileInterpolation
 {
-  private static final double SIMPLIFIKATION_DISTANCE = 0.01;
+  private final static double SIMPLIFIKATION_DISTANCE = 0.01;
 
   private final IProfil m_previousProfile;
 
@@ -110,7 +108,7 @@ public class ProfileInterpolation
     catch( final IllegalProfileOperationException e )
     {
       e.printStackTrace();
-      profile.setDescription( Messages.getString( "ProfileInterpolation_0" ) + e.getMessage() ); //$NON-NLS-1$
+      profile.setDescription( Messages.getString("ProfileInterpolation_0") + e.getMessage() ); //$NON-NLS-1$
     }
 
     /* update profile: add durchstroemte bereiche, trennflaechen */
@@ -137,17 +135,17 @@ public class ProfileInterpolation
     {
       if( m_previousProfile == null )
       {
-        profile.setDescription( String.format( Messages.getString( "ProfileInterpolation_1" ), profile.getStation() ) ); //$NON-NLS-1$
+        profile.setDescription( String.format( Messages.getString("ProfileInterpolation_1"), profile.getStation() ) ); //$NON-NLS-1$
         return null;
       }
 
       if( m_nextProfile == null )
       {
-        profile.setDescription( String.format( Messages.getString( "ProfileInterpolation_2" ), profile.getStation() ) ); //$NON-NLS-1$
+        profile.setDescription( String.format( Messages.getString("ProfileInterpolation_2"), profile.getStation() ) ); //$NON-NLS-1$
         return null;
       }
 
-      final String description = String.format( Messages.getString( "ProfileInterpolation_3" ), m_previousProfile.getStation(), m_nextProfile.getStation() ); //$NON-NLS-1$
+      final String description = String.format( Messages.getString("ProfileInterpolation_3"), m_previousProfile.getStation(), m_nextProfile.getStation() ); //$NON-NLS-1$
       profile.setName( description );
 
       return doInterpolation( profile );
@@ -155,7 +153,7 @@ public class ProfileInterpolation
     catch( final SameXValuesException e )
     {
       e.printStackTrace();
-      profile.setDescription( String.format( Messages.getString( "ProfileInterpolation_4" ), e.toString() ) ); //$NON-NLS-1$
+      profile.setDescription( String.format( Messages.getString("ProfileInterpolation_4"), e.toString() ) ); //$NON-NLS-1$
       return null;
     }
   }
@@ -170,9 +168,7 @@ public class ProfileInterpolation
 
     final IComponent[] prevComponents = m_previousProfile.getPointProperties();
     for( final IComponent prevComponent : prevComponents )
-    {
       interpolateComponent( m_previousProfile, m_nextProfile, profil, prevComponent );
-    }
 
     return profil;
   }
@@ -183,12 +179,12 @@ public class ProfileInterpolation
     final Double[] nextWidths = getWidths( m_nextProfile );
     if( prevWidths.length < 2 )
     {
-      profil.setComment( Messages.getString( "ProfileInterpolation_5" ) ); //$NON-NLS-1$
+      profil.setComment( Messages.getString("ProfileInterpolation_5") ); //$NON-NLS-1$
       return;
     }
     if( nextWidths.length < 2 )
     {
-      profil.setComment( Messages.getString( "ProfileInterpolation_6" ) ); //$NON-NLS-1$
+      profil.setComment( Messages.getString("ProfileInterpolation_6") ); //$NON-NLS-1$
       return;
     }
 
@@ -240,24 +236,7 @@ public class ProfileInterpolation
   private Double[] getWidths( final IProfil profil )
   {
     final IRecord[] points = getInterpolationPoints( profil );
-
-    final IRecord[] veryGoodPoints = filterNullHeights( profil, points );
-
-    return ProfilUtil.getValuesFor( veryGoodPoints, IWspmConstants.POINT_PROPERTY_BREITE, Double.class, true );
-  }
-
-  private IRecord[] filterNullHeights( final IProfil profil, final IRecord[] points )
-  {
-    final int heightComponent = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-
-    final Collection<IRecord> goodPoints = new ArrayList<IRecord>( points.length );
-    for( final IRecord record : points )
-    {
-      if( record.getValue( heightComponent ) != null )
-        goodPoints.add( record );
-    }
-
-    return goodPoints.toArray( new IRecord[goodPoints.size()] );
+    return ProfilUtil.getValuesFor( points, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
   }
 
   protected IRecord[] getInterpolationPoints( final IProfil profil )

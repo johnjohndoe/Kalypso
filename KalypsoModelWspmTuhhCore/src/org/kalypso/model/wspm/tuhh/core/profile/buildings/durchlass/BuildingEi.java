@@ -71,7 +71,7 @@ public class BuildingEi extends AbstractProfileObject implements IProfileBuildin
     result.addComponent( getObjectComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
     final IComponent buildingComponent = getObjectComponent( ID );
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, buildingComponent == null ? ID : buildingComponent.getName(), result ); //$NON-NLS-1$
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, buildingComponent==null?ID:buildingComponent.getName(), result ); //$NON-NLS-1$
 
     return observation;
   }
@@ -117,7 +117,7 @@ public class BuildingEi extends AbstractProfileObject implements IProfileBuildin
 // IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT,
 // "Rauheit", "Rauheit" ) );
 //
-// throw new UnsupportedOperationException();
+// throw new NotImplementedException();
 //
 // }
   /**

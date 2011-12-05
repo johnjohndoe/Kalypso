@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+		<documentation>Suds definitions available for a hydrology-modell.</documentation>
+	</annotation>
 
 	<import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd" />
 	<import namespace="http://www.opengis.net/gml" />
@@ -88,13 +94,11 @@
 						</complexType>
 					</element>
 					<element name="drainagePipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
-					<element name="drainagePipeKFvalue" type="integer" default="8270"/>
+					<element name="drainagePipeKFvalue" type="integer" default="8000"/>
 					<element name="drainagePipeSlope" type="integer" default="3"/>
 					<element name="drainagePipeRoughness" type="double" default="2.0"/>
 					<element name="layerProfileThickness" type="suds:EnumLayerProfileThicknessType"/>
 					<element name="maxCapacityOfEmergencySpill" type="double" default="0.0"/>
-					<element name="maxPercRate" type="double" default="5.0E-5"/>
-					<element name="percentToGroundwater" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -125,6 +129,8 @@
 			<extension base="suds:AbstractSwaleType">
 				<sequence>
 					<element name="elementType" type="suds:EnumSwaleInfiltrationDitchType" default="30"/>
+					<element name="maxPercRate" type="double" default="2.8E-15"/>
+					<element name="percentToGroundwater" type="double" default="1.0"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -145,7 +151,7 @@
 						</simpleType>
 					</element>
 					<element name="usageType" type="suds:EnumGreenRoofUsageType" default="EXTENSIVE"/>
-					<element name="rainwaterPipeDiameter" type="suds:EnumPipeDiameter" default="100"/>
+					<element name="rainwaterPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
 					<element name="rainwaterPipeRoughness" type="double" default="2.0" />
 					<element name="drainageLayerPorosity" default="0.2" >
 						<simpleType>
@@ -155,9 +161,9 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="100"/>
+					<element name="emergencySpillPipeDiameter" type="suds:EnumPipeDiameter" default="200"/>
 					<element name="emergencySpillPipeRoughness" type="double" default="2.0" />
-					<element name="emergencySpillHeight" default="35"> <!-- just for extensive, should be 70 for extensive -->
+					<element name="emergencySpillHeight" default="100">
 						<simpleType>
 							<restriction base="integer">
 								<minInclusive value="0" />

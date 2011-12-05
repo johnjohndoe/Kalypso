@@ -53,6 +53,9 @@ import org.kalypso.model.wspm.tuhh.ui.internal.preferences.Preferences;
  */
 public class ToggleKeepChannelRoughnessHandler extends AbstractHandler implements IElementUpdater
 {
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -61,10 +64,14 @@ public class ToggleKeepChannelRoughnessHandler extends AbstractHandler implement
     return null;
   }
 
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     final boolean isOn = Preferences.isKeepChannelRoughness();
     element.setChecked( isOn );
   }
+
 }

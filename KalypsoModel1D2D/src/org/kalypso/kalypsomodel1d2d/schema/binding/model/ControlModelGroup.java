@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
@@ -50,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * {@link Feature_Impl} based default implementation of {@link IControlModelGroup}.
+ * {@link AbstractFeatureBinder} based default implementation of {@link IControlModelGroup}.
  * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
@@ -58,15 +57,31 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ControlModelGroup extends VersionedModel implements IControlModelGroup
 {
-  public ControlModelGroup( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
 
+  private IControlModel1D2DCollection cModelCollection;
   public final static QName WB1D2DCONTROL_FP_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
-
   // Control model
   public final static QName WB1D2DCONTROL_F_MODEL_GROUP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" ); //$NON-NLS-1$
+
+  public ControlModelGroup( Feature featureToBind )
+  {
+    this( featureToBind, ControlModelGroup.WB1D2DCONTROL_F_MODEL_GROUP );
+  }
+
+  public ControlModelGroup( Feature featureToBind, QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+    Feature controlModelCollection = (Feature) featureToBind.getProperty( ControlModelGroup.WB1D2DCONTROL_FP_MODEL_COLLECTION );
+    if( controlModelCollection == null )
+    {
+      final Feature feature = getFeature();
+      final GMLWorkspace workspace = feature.getWorkspace();
+      final IRelationType parentRelation = (IRelationType) feature.getFeatureType().getProperty( ControlModelGroup.WB1D2DCONTROL_FP_MODEL_COLLECTION );
+      controlModelCollection = workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
+      feature.setProperty( ControlModelGroup.WB1D2DCONTROL_FP_MODEL_COLLECTION, controlModelCollection );
+    }
+    cModelCollection = (IControlModel1D2DCollection) controlModelCollection.getAdapter( IControlModel1D2DCollection.class );
+  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup#getModel1D2DCollection()
@@ -74,15 +89,7 @@ public class ControlModelGroup extends VersionedModel implements IControlModelGr
   @Override
   public IControlModel1D2DCollection getModel1D2DCollection( )
   {
-    Object controlModelCollection = getProperty( WB1D2DCONTROL_FP_MODEL_COLLECTION );
-    if( controlModelCollection == null )
-    {
-      final GMLWorkspace workspace = getWorkspace();
-      final IRelationType parentRelation = (IRelationType) getFeatureType().getProperty( ControlModelGroup.WB1D2DCONTROL_FP_MODEL_COLLECTION );
-      controlModelCollection = workspace.createFeature( this, parentRelation, parentRelation.getTargetFeatureType(), -1 );
-      setProperty( ControlModelGroup.WB1D2DCONTROL_FP_MODEL_COLLECTION, controlModelCollection );
-    }
-    return (IControlModel1D2DCollection) ((Feature) controlModelCollection).getAdapter( IControlModel1D2DCollection.class );
+    return cModelCollection;
   }
 
 }

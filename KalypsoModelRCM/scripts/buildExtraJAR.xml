@@ -11,7 +11,6 @@
 	<target name="main" depends="init">
 		<path id="build.classpath">
 			<dirset dir="${basedir}/..">
-				<include name="EclipsePlatformContributions/build/bin" />
 				<include name="EclipseRCPContributions/build/bin" />
 				<include name="JavaApiContributions/build/bin" />
 				<include name="KalypsoDeegree/build/bin" />
@@ -30,7 +29,7 @@
 			</fileset>
 		</path>
 
-		<antcall target="buildAntJar" inheritrefs="true"/>
+		<antcall target="buildAntJar" />
 	</target>
 	
 </project>

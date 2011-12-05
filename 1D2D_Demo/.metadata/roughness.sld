@@ -8,8 +8,8 @@
             <FeatureTypeStyle>
                 <Rule>
                     <Name>undefinierterStilID</Name>
-                    <Title>undefinierter Stil</Title>
-                    <Abstract>undefinierter Stil</Abstract>
+                    <Title>Undefined style</Title>
+                    <Abstract>Undefined style</Abstract>
                     <ElseFilter/>
                     <MinScaleDenominator>0.0</MinScaleDenominator>
                     <MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>

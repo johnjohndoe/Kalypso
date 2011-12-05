@@ -1,15 +1,13 @@
 package org.kalypso.risk.model.schema.binding;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
-public class AdministrationUnit extends Feature_Impl implements IAdministrationUnit
+public class AdministrationUnit extends AbstractFeatureBinder implements IAdministrationUnit
 {
-
-  public AdministrationUnit( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public AdministrationUnit( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IAdministrationUnit.QNAME );
   }
 
 }

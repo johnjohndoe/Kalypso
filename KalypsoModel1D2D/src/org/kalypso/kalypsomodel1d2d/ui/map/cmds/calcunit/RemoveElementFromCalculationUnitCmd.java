@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -82,7 +83,7 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     return null;
   }
@@ -131,16 +132,16 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
   private final void fireProcessChanges( )
   {
     List<Feature> features = new ArrayList<Feature>( elementsToRemove.length * 2 );
-    features.add( calculationUnit );
+    features.add( calculationUnit.getFeature() );
     for( IFE1D2DElement ele : elementsToRemove )
     {
-      features.remove( ele );
+      features.remove( ele.getFeature() );
     }
 
-    GMLWorkspace workspace = calculationUnit.getWorkspace();
+    GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
     // workspace,
-    model1d2d,// Feature parentFeature,
+    model1d2d.getFeature(),// Feature parentFeature,
     features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
     FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
     );

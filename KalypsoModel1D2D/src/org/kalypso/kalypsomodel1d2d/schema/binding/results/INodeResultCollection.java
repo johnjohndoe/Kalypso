@@ -43,17 +43,14 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
  */
-public interface INodeResultCollection extends Feature
+public interface INodeResultCollection extends IFeatureWrapperCollection<INodeResult>
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ); //$NON-NLS-1$
 
   public final static QName QNAME_PROP_NODERESULT_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ); //$NON-NLS-1$
-  
-  public IFeatureBindingCollection<INodeResult> getNodeResults( );
 }

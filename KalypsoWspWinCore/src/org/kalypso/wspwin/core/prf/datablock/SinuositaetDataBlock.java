@@ -40,40 +40,87 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core.prf.datablock;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.lang.NotImplementedException;
 
 /**
- * @author Dirk Kch
+ * @author Dirk Kuch
+ * @author kimwerner
  */
-public final class SinuositaetDataBlock extends DoubleDataBlock
+public class SinuositaetDataBlock extends AbstractDataBlock
 {
   public SinuositaetDataBlock( final DataBlockHeader dbh )
   {
     super( dbh );
   }
 
+  private final Collection<String> m_lines = new ArrayList<String>();
+
+  /**
+   * @see org.kalypso.wspwin.core.prf.datablock.IDataBlock#getX()
+   */
+  @Override
+  public Double[] getX( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.wspwin.core.prf.datablock.IDataBlock#getY()
+   */
+  @Override
+  public Double[] getY( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.wspwin.core.prf.datablock.IDataBlock#getText()
+   */
+  @Override
+  public String[] getText( )
+  {
+    throw new NotImplementedException();
+  }
+
+  /**
+   * @see org.kalypso.wspwin.core.prf.datablock.IDataBlock#getCoordCount()
+   */
+  @Override
+  public int getCoordCount( )
+  {
+    return m_lines.size();
+  }
+
+  /**
+   * @see org.kalypso.wspwin.core.prf.datablock.AbstractDataBlock#readFromReader(int, java.io.BufferedReader)
+   */
+  @Override
+  public void readFromReader( final int count, final BufferedReader reader ) throws IOException
+  {
+    m_lines.add( reader.readLine() );
+    for( int i = 1; i < count; i++ )
+    {
+      m_lines.add( reader.readLine() );
+    }
+  }
+
+  /**
+   * @see org.kalypso.wspwin.core.prf.datablock.AbstractDataBlock#printToPrinter(java.io.PrintWriter)
+   */
   @Override
   public void printToPrinter( final PrintWriter pw )
   {
     getDataBlockHeader().printToPrinter( pw );
-    writeDoubleBlock( getValues(), pw );
-  }
-
-  private void writeDoubleBlock( final Double[] dbls, final PrintWriter pw )
-  {
-    for( int i = 0; i < dbls.length; i++ )
+    for( final String line : m_lines )
     {
-      // format sin_kenn and ger_art as integer values
-      if( i == 0 || i == 2 )
-        pw.write( String.format( Locale.US, "%13.0f", dbls[i] ) ); //$NON-NLS-1$
-      else
-        pw.write( String.format( Locale.US, "%13.4f", dbls[i] == null ? Double.NaN : dbls[i] ) ); //$NON-NLS-1$
-
-      if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
-        pw.println();
+      pw.println( line );
     }
-
-    pw.println();
   }
+
 }

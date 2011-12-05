@@ -42,13 +42,12 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -60,15 +59,20 @@ import org.kalypso.observation.result.IRecord;
  */
 public class SobekProfileDatExportOperation extends AbstractSobekFileExportOperation
 {
+  public static final String PROFILE_DAT = "profile.dat"; //$NON-NLS-1$
+
   public SobekProfileDatExportOperation( final SobekExportInfo info )
   {
-    super( info, ISobekConstants.PROFILE_DAT );
+    super( info, PROFILE_DAT );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
+   */
   @Override
   public String getLabel( )
   {
-    return ISobekConstants.PROFILE_DAT;
+    return PROFILE_DAT;
   }
 
   @Override
@@ -87,7 +91,7 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
     final double rs = getHeight( surfacePoints[0] );
     final double ls = getHeight( surfacePoints[1] );
 
-    getFormatter().format( Locale.US, "CRSN id '%s' di '%s' rl %d  rs %.2f ls %.2f crsn%n", id, id, rl, rs, ls ); //$NON-NLS-1$
+    getFormatter().format( Locale.US, "CRSN id '%s' di '%s' rl %d  rs %.2f ls %.2f crsn%n", id, id, rl, rs, ls );
   }
 
   private double getHeight( final IRecord point )
@@ -101,8 +105,10 @@ public class SobekProfileDatExportOperation extends AbstractSobekFileExportOpera
     final IProfil profil = profileFeature.getProfil();
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
+    {
       // TODO: log?
       return null;
+    }
 
     final SobekExportInfo info = getInfo();
     final String flowZone = info.getFlowZone();

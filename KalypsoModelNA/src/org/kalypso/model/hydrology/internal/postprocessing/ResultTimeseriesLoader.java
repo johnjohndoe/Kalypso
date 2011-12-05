@@ -47,8 +47,8 @@ import java.util.logging.Logger;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
@@ -89,15 +89,12 @@ public class ResultTimeseriesLoader
 
   private final NAStatistics m_naStatistics;
 
-  private final ENACoreResultsFormat m_resultsFormat;
-
-  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final ENACoreResultsFormat resultsFormat, final Logger logger )
+  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final Logger logger )
   {
     m_inputDir = inputDir;
     m_outputDir = outputDir;
     m_modelWorkspace = modelWorkspace;
     m_idManager = idManager;
-    m_resultsFormat = resultsFormat;
     m_logger = logger;
 
     m_naStatistics = new NAStatistics( logger );
@@ -121,9 +118,9 @@ public class ResultTimeseriesLoader
     if( qgsFiles.length == 0 )
       return;
 
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-2$
 
-    final BlockTimeSeries ts = new BlockTimeSeries(m_resultsFormat);
+    final BlockTimeSeries ts = new BlockTimeSeries();
     ts.importBlockFile( qgsFiles[0] );
 
     final Feature[] resultFeatures = m_modelWorkspace.getFeatures( resultFT );
@@ -153,7 +150,7 @@ public class ResultTimeseriesLoader
     }
 
     final String suffix = descriptor.name();
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-2$
 
     final String resultPathRelative = generateResultPath( resultFeature, descriptor );
 
@@ -275,7 +272,7 @@ public class ResultTimeseriesLoader
     // FIXME: Arrg! Is this really possible to happen? Most probably something else is wrong. We should not
     // do such terrible things here!
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
-    final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")";
     final String resultPath = DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, extra ); //$NON-NLS-1$ //$NON-NLS-2$
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
 

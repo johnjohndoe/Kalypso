@@ -49,7 +49,6 @@ import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
-import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 
 /**
@@ -59,7 +58,7 @@ public class WspmResultValue implements IDBFValue
 {
   private final WspmResultLengthSectionColumn m_column;
 
-  private final IDBFField m_field;
+  private final DBFField m_field;
 
   public WspmResultValue( final WspmResultLengthSectionColumn column )
   {
@@ -71,7 +70,7 @@ public class WspmResultValue implements IDBFValue
     m_field = createField( label, valueTypeName );
   }
 
-  private IDBFField createField( final String label, final QName valueTypeName )
+  private DBFField createField( final String label, final QName valueTypeName )
   {
     try
     {
@@ -122,7 +121,7 @@ public class WspmResultValue implements IDBFValue
    * @see org.kalypso.shape.dbf.IDBFValue#getField()
    */
   @Override
-  public IDBFField getField( ) throws ShapeDataException
+  public DBFField getField( ) throws ShapeDataException
   {
     if( m_field == null )
       throw new ShapeDataException();

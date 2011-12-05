@@ -59,15 +59,12 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.rcm.binding.IMetadata;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
-import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
-import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -99,8 +96,8 @@ public class RainfallGenerationOp
   private final IRainfallGenerator[] m_generators;
 
   /**
-   * @param gmlContext
-   *          If set to non-<code>null</code>, this location will be set to the rcm-workspace as context.
+   *
+   * @param gmlContext If set to non-<code>null</code>, this location will be set to the rcm-workspace as context.
    * @param log
    *          If provided, the generators will write messages to this log.
    */
@@ -151,7 +148,7 @@ public class RainfallGenerationOp
 
     // Combine observations and write into target file while applying the targetFilter
     progress.subTask( "Schreibe Zeitreihen" );
-    final IObservation[] combinedObservations = combineObservations();
+    final IObservation[] combinedObservations = combineObservations(  );
 
     /* Add additional metadata, if wanted. */
     addAdditionalMetadata( combinedObservations );
@@ -281,17 +278,7 @@ public class RainfallGenerationOp
       final IObservation[] combine = observations.toArray( new IObservation[] {} );
       fc.initFilter( combine, combine[0], null );
 
-      /* Clone and set the timestep. */
-      final IObservation clonedObservation = ObservationHelper.clone( fc, null );
-      MetadataList metadataList = clonedObservation.getMetadataList();
-      String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
-      if( timestep == null )
-      {
-        String bestGuess = RainfallGeneratorUtilities.findTimeStep( combine );
-        metadataList.setProperty( MetadataHelper.MD_TIMESTEP, bestGuess );
-      }
-
-      return clonedObservation;
+      return fc;
     }
     catch( final SensorException e )
     {

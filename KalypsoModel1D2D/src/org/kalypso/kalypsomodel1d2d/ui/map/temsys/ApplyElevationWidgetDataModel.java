@@ -65,7 +65,8 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -74,6 +75,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * @author Madanagopal
  * @author Patrice Congo
+ * 
  */
 public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements IFeatureSelectionListener
 {
@@ -88,8 +90,9 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   private final boolean m_ignoreMapSelection = false;
 
-  private final ICaseDataProvider<Feature> m_dataProvider;
+  private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
+  @SuppressWarnings("unchecked")
   private List<IFE1D2DNode> m_selectedNodeList;
 
   @SuppressWarnings("unchecked")
@@ -99,7 +102,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
   public void setMapModell( final IMapModell mapModell )
@@ -177,6 +180,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   }
 
+  @SuppressWarnings("unchecked")
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
   {
     setData( SELECTED_NODE_KEY, selectedNode, false );
@@ -241,7 +245,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setSelectedNode( nodes );
   }
 
-  public final IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
+  public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     final ITerrainElevationModelSystem elevationModelSystem = getElevationModelSystem();
     if( elevationModelSystem == null )
@@ -250,18 +254,27 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
       return elevationModelSystem.getTerrainElevationModels();
   }
 
+  @SuppressWarnings("unchecked")
   public void setSelectedNodeList( final List<IFE1D2DNode> selectionNodeList )
   {
     m_selectedNodeList = selectionNodeList;
   }
 
+  @SuppressWarnings("unchecked")
   public List<IFE1D2DNode> getSelectedNodeList( )
   {
     return m_selectedNodeList;
   }
 
-  public void saveModels( ) throws CoreException
-  {
+  public void saveModels() throws CoreException{
+    //    try
+    //    {
     m_dataProvider.saveModel( new NullProgressMonitor() );
+    //    }
+    //    catch( CoreException e )
+    //    {
+    //      e.printStackTrace();
+    //    }
   }
+
 }

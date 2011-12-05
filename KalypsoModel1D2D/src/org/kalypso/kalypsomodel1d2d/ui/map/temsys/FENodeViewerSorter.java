@@ -151,13 +151,13 @@ public class FENodeViewerSorter extends ViewerSorter
       name=name.trim();
       if(name.length()==0)
       {
-        name=node.getId();
+        name=node.getGmlID();
       }
       return name;
     }
     else
     {
-      return node.getId();
+      return node.getGmlID();
     }
   }
  

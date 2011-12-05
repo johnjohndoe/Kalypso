@@ -60,9 +60,6 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
-import org.kalypso.model.wspm.tuhh.core.results.processing.IResultLSFile;
-import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSChartFile;
-import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSTableFile;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -113,7 +110,7 @@ public class ResultLengthSection
     m_epsThinning = epsThinning;
     m_ovwMapURL = ovwMapURL;
 
-    m_dataDir = new File( m_outDir, IWspmTuhhConstants.DIR_RESULT_DATEN );
+    m_dataDir = new File( m_outDir, "Daten" ); //$NON-NLS-1$
   }
 
   public void setLsFilePattern( final String pattern )
@@ -154,34 +151,33 @@ public class ResultLengthSection
 
     final String title = getTitle();
 
-    /* Some handlers need access to the reach/profiles, fetch 'em! */
-    final TuhhReach reach = m_calculation.getReach();
-    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    
-    /* sort the segments */
-    final WspmWaterBody waterBody = reach.getWaterBody();
-    final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
-
-    final GMLWorkspace lengthSectionWorkspace = createLengthSection( title, isDirectionUpstreams );
+    final GMLWorkspace lengthSectionWorkspace = createLengthSection( title );
     final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( lengthSectionWorkspace.getRootFeature() );
     final TupleResult result = lengthSectionObs.getResult();
 
+    /* Some handlers need access to the reach/profiles, fetch 'em! */
+    final TuhhReach reach = m_calculation.getReach();
+    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+
+    /* sort the segments */
+    final WspmWaterBody waterBody = reach.getWaterBody();
+    final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Breaklines */
-    final BreakLinesWriter breakLines = new BreakLinesWriter( reachProfileSegments, result, IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ) );
+    final BreakLinesWriter breakLines = new BreakLinesWriter( reachProfileSegments, result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL, Double.valueOf( m_epsThinning ) );
 
     final String dataFilename = m_gmlFilePattern.replaceAll( PATTERN_RUNOFF, runoffName );
 
     /* Create result file handlers */
     addResultFile( new ResultLSGmlFile( m_dataDir, dataFilename, lengthSectionWorkspace ) );
-    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title, m_calculation, "LengthSectionResult" ) ); //$NON-NLS-1$
+    addResultFile( new ResultLSChartFile( m_outDir, runoffName, isDirectionUpstreams, dataFilename, title ) );
     addResultFile( new ResultLSTableFile( m_outDir, runoffName, dataFilename ) );
-    addResultFile( new ResultLSBreaklinesFile( m_dataDir, runoffName, breakLines ) );
-    addResultFile( new ResultLSTinFile( m_dataDir, runoffName, breakLines ) );
-    addResultFile( new ResultLSTinSldFile( m_dataDir, runoffName, breakLines ) );
-    addResultFile( new ResultLSModelBoundaryFile( m_dataDir, runoffName, result, reachProfileSegments ) );
-    addResultFile( new ResultLSWaterlevelFile( m_dataDir, runoffName, result, reachProfileSegments ) );
+    addResultFile( new ResultLSBreaklinesFile( m_outDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSTinFile( m_outDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSTinSldFile( m_outDir, runoffName, breakLines ) );
+    addResultFile( new ResultLSModelBoundaryFile( m_outDir, runoffName, result, reachProfileSegments ) );
+    addResultFile( new ResultLSWaterlevelFile( m_outDir, runoffName, result, reachProfileSegments ) );
     addResultFile( new ResultLSOverviewMapFile( m_outDir, reach, m_ovwMapURL ) );
 
     return writeResultFiles();
@@ -212,7 +208,7 @@ public class ResultLengthSection
     return m_titlePattern.replaceAll( PATTERN_RUNOFF, m_runoff.toString() ).replaceAll( PATTERN_CALCNAME, calcname );
   }
 
-  private GMLWorkspace createLengthSection( final String title, boolean isDirectionUpstreams ) throws Exception
+  private GMLWorkspace createLengthSection( final String title ) throws Exception
   {
     final String description = String.format( Messages.getString( "ResultLengthSection.1" ), title ); //$NON-NLS-1$
 
@@ -232,7 +228,6 @@ public class ResultLengthSection
     final TupleResult result = lengthSectionObs.getResult();
 
     final ILengthSectionColumn[] columns = new ILengthSectionColumn[] { //
-        new LengthSectionInvertStation( isDirectionUpstreams ),
         new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_F, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_F_RE ), //
         new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_BR, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_RE ), //
         new LengthSectionColumnDivide( IWspmConstants.LENGTH_SECTION_PROPERTY_V_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_Q_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI ), //

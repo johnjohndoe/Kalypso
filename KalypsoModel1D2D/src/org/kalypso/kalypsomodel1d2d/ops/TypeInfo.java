@@ -50,7 +50,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Provides mechanism to get the type info for fe element concepts
@@ -73,10 +74,10 @@ public class TypeInfo
     {
       return false;
     }
-    IFeatureBindingCollection<IFE1D2DElement> containers = edge.getContainers();
+    IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for( IFE1D2DElement element : containers )
     {
-      if( IElement1D.QNAME.equals( element.getFeatureType().getQName() ) )
+      if( IElement1D.QNAME.equals( element.getFeature().getFeatureType().getQName() ) )
       {
         return true;
       }
@@ -114,10 +115,10 @@ public class TypeInfo
     {
       return false;
     }
-    IFeatureBindingCollection<IFE1D2DElement> containers = edge.getContainers();
+    IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for( IFE1D2DElement element : containers )
     {
-      if( IPolyElement.QNAME.equals( element.getFeatureType().getQName() ) )
+      if( IPolyElement.QNAME.equals( element.getFeature().getFeatureType().getQName() ) )
       {
         return true;
       }
@@ -130,7 +131,7 @@ public class TypeInfo
    * substitution
    * 
    * @param feature
-   *          the feature to check for type
+   *            the feature to check for type
    * @return true if the given feature is an element 1d feature
    */
   public static final boolean isElement1DFeature( Feature feature )
@@ -146,12 +147,24 @@ public class TypeInfo
     }
   }
 
+  public static final boolean isPolyElementFeature( IFeatureWrapper2 featureWrapper )
+  {
+    if( featureWrapper == null )
+    {
+      return false;
+    }
+    else
+    {
+      return isPolyElementFeature( featureWrapper.getFeature() );
+    }
+  }
+
   /**
    * checks whether the provided feature is of type Poly element The check is base on {@link QName} equality and not on
    * substitution
    * 
    * @param feature
-   *          the feature to check for type
+   *            the feature to check for type
    * @return true if the given feature is an element 1d feature
    */
   public static final boolean isPolyElementFeature( Feature feature )

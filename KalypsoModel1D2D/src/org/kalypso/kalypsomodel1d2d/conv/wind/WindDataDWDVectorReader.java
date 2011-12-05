@@ -137,7 +137,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
 
   private String m_strTimeStepLine = ""; //$NON-NLS-1$
 
-  private String m_strSourceCrs = ""; //$NON-NLS-1$
+  private String m_strSourceCrs = "";
 
   private List<Integer> m_listElementPropId;
 
@@ -255,7 +255,7 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
         WindDataGenericGridConverter lActWindDataProvider = new WindDataGenericGridConverter( m_dateActStep, m_pairsActTimeStepWindData, m_gridDescriptor, m_urlOutputDir, m_strFileNameSuffix );
         if( !lActWindDataProvider.convert() )
         {
-          throw new IOException( "Cannot convert actual data!" ); //$NON-NLS-1$
+          throw new IOException( "Cannot convert actual data!" );
         }
         m_listWindDataProviders.add( lActWindDataProvider );
         initializePairsArray();
@@ -304,16 +304,13 @@ public class WindDataDWDVectorReader implements IWindDataCollectionReader
     StringTokenizer lStringTokenizer = new StringTokenizer( strActLine, " " ); //$NON-NLS-1$
     while( lStringTokenizer.hasMoreTokens() && (m_intReadFirstElements < actBlockDescriptor.m_intActBlockAmount || m_intReadSecondElements < actBlockDescriptor.m_intActBlockAmount) )
     {
-      final int j = m_intNumberRows - actBlockDescriptor.m_intActBlockLine;
       if( m_intReadFirstElements < actBlockDescriptor.m_intActBlockAmount )
       {
-        final int i = m_intReadFirstElements++ + actBlockDescriptor.m_intActBlockColumnStart - 1;
-        m_pairsActTimeStepWindData[i][j].first = Double.parseDouble( lStringTokenizer.nextToken() );
+        m_pairsActTimeStepWindData[m_intReadFirstElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].first = Double.parseDouble( lStringTokenizer.nextToken() );
       }
       else
       {
-        final int i = m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart - 1;
-        m_pairsActTimeStepWindData[i][j].second = Double.parseDouble( lStringTokenizer.nextToken() );
+        m_pairsActTimeStepWindData[m_intReadSecondElements++ + actBlockDescriptor.m_intActBlockColumnStart][m_intNumberRows - actBlockDescriptor.m_intActBlockLine].second = Double.parseDouble( lStringTokenizer.nextToken() );
       }
     }
   }

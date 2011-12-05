@@ -12,6 +12,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -224,7 +225,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
     final Feature parentFeature = featureList.getParentFeature();
 
     /* Initialize elements needed for edges and elements */
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;
+    final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
 
     /* create 1d elements */
     final String crs = curve.getCoordinateSystem();

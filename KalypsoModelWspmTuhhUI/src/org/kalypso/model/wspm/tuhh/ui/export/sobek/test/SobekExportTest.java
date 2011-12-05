@@ -54,10 +54,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation;
@@ -91,7 +89,7 @@ public class SobekExportTest extends Assert
   {
     m_platformEncoding = Charset.defaultCharset().name();
 
-    m_targetDir = FileUtilities.createNewTempDir( "sobekExportText" ); //$NON-NLS-1$
+    m_targetDir = FileUtilities.createNewTempDir( "sobekExportText" );
 
     m_info = new SobekExportInfo( null, null );
     m_info.setIdPattern( "<Name>" ); //$NON-NLS-1$
@@ -100,7 +98,7 @@ public class SobekExportTest extends Assert
     m_info.setFlowZone( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     m_info.setExportBridges( true );
     m_info.setTargetDir( m_targetDir );
-    m_info.setRoughnessID( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    m_info.setRoughnessID( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
     m_info.setRoughnessZoneTypes( m_info.getAllRoughnessZones() );
 
     final URL dataLocation = getClass().getResource( "resources/modell.gml.gz" ); //$NON-NLS-1$
@@ -108,8 +106,8 @@ public class SobekExportTest extends Assert
     final GMLWorkspace wspmWorkspace = GmlSerializer.createGMLWorkspace( dataLocation, null );
     m_project = (TuhhWspmProject) wspmWorkspace.getRootFeature();
 
-    final IFeatureBindingCollection<WspmWaterBody> waterBodies = m_project.getWaterBodies();
-    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies.get( 0 ).getProfiles();
+    final WspmWaterBody[] waterBodies = m_project.getWaterBodies();
+    final IFeatureBindingCollection<IProfileFeature> profiles = waterBodies[0].getProfiles();
     m_profiles = profiles.toArray( new IProfileFeature[profiles.size()] );
 
     m_info.setProfiles( m_profiles );
@@ -119,9 +117,7 @@ public class SobekExportTest extends Assert
   public void tearDown( ) throws IOException
   {
     if( m_targetDir != null )
-    {
       FileUtils.deleteDirectory( m_targetDir );
-    }
   }
 
   private void testOperation( final ISobekProfileExportOperation exportOperation, final String filename ) throws IOException, CoreException
@@ -142,14 +138,14 @@ public class SobekExportTest extends Assert
   public void exportProfileDef( ) throws IOException, CoreException
   {
     final ISobekProfileExportOperation exportOperation = new SobekProfileDefExportOperation( m_info );
-    testOperation( exportOperation, ISobekConstants.PROFILE_DEF );
+    testOperation( exportOperation, SobekProfileDefExportOperation.PROFILE_DEF );
   }
 
   @Test
   public void exportProfileDat( ) throws IOException, CoreException
   {
     final ISobekProfileExportOperation exportOperation = new SobekProfileDatExportOperation( m_info );
-    testOperation( exportOperation, ISobekConstants.PROFILE_DAT );
+    testOperation( exportOperation, SobekProfileDatExportOperation.PROFILE_DAT );
   }
 
   @Test
@@ -170,6 +166,7 @@ public class SobekExportTest extends Assert
   public void exportFrictionDef( ) throws IOException, CoreException
   {
     final ISobekProfileExportOperation exportOperation = new SobekFrictionDatExportOperation( m_info );
-    testOperation( exportOperation, ISobekConstants.FRICTION_DAT );
+    testOperation( exportOperation, SobekFrictionDatExportOperation.FRICTION_DAT );
   }
+
 }

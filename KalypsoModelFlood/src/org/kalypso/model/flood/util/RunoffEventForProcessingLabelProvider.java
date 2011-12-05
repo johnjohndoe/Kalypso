@@ -1,6 +1,6 @@
 package org.kalypso.model.flood.util;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.i18n.Messages;
@@ -33,7 +33,7 @@ public final class RunoffEventForProcessingLabelProvider extends LabelProvider
   {
     final String name = event.getName();
     if( StringUtils.isBlank( name ) )
-      Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.24", event.getId() ); //$NON-NLS-1$
+      Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.24", event.getGmlID() ); //$NON-NLS-1$
 
     return name;
   }

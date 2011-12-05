@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.actions.interpolation;
 
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import java.math.BigDecimal;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -56,8 +56,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.forms.ManagedForm;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.commons.validation.BigDecimalParser;
+import org.kalypso.commons.validation.IValueReceiver;
+import org.kalypso.commons.validation.NotNullError;
+import org.kalypso.commons.validation.RuleValidator;
+import org.kalypso.commons.validation.TooMuchDecimalsIgnoredWarning;
+import org.kalypso.commons.validation.ValidatingModifyListener;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
@@ -66,40 +74,29 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  */
 public class InterpolationStationPage extends WizardPage
 {
-  private final DataBindingContext m_bindingContext = new DataBindingContext();
+  private static final String STR_NOT_FOUND = Messages.getString("InterpolationStationPage_0"); //$NON-NLS-1$
 
-  private ManagedForm m_form;
+  private final IProfileFeature[] m_profiles;
 
-  private Label m_prevStation;
+  private BigDecimal m_station;
 
-  private Label m_nextStation;
+  private final NoTwoNeighbouringStationsError m_neighbourRule;
 
-  private final InterpolationStationData m_interpolationData;
+  private IProfileFeature m_prevProfile;
 
-  private WizardPageSupport m_pageSupport;
+  private IProfileFeature m_nextProfile;
 
-  public InterpolationStationPage( final String pageName, final InterpolationStationData interpolationData )
+  private boolean m_onlyRiverChannel = true;
+
+  public InterpolationStationPage( final String pageName, final IProfileFeature[] profiles )
   {
     super( pageName );
+    m_profiles = profiles;
 
-    m_interpolationData = interpolationData;
+    m_neighbourRule = new NoTwoNeighbouringStationsError( m_profiles );
 
-    setTitle( Messages.getString( "InterpolationStationPage_1" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "InterpolationStationPage_2" ) ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.DialogPage#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( m_pageSupport != null )
-    {
-      m_pageSupport.dispose();
-    }
-
-    super.dispose();
+    setTitle( Messages.getString("InterpolationStationPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("InterpolationStationPage_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -108,11 +105,24 @@ public class InterpolationStationPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    m_form = new ManagedForm( parent );
-    final ScrolledForm form = m_form.getForm();
-
+    final ScrolledForm form = new ScrolledForm( parent );
+    form.setExpandHorizontal( true );
+    form.setExpandVertical( true );
     setControl( form );
 
+    final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
+    form.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        toolkit.dispose();
+      }
+    } );
+
+    final ManagedForm managedForm = new ManagedForm( toolkit, form );
+
+    final IMessageManager messageManager = managedForm.getMessageManager();
     final Composite body = form.getBody();
     body.setLayout( new FillLayout() );
 
@@ -120,63 +130,120 @@ public class InterpolationStationPage extends WizardPage
     final GridLayout groupLayout = new GridLayout( 3, true );
     groupLayout.horizontalSpacing = 10;
     group.setLayout( groupLayout );
-    group.setText( Messages.getString( "InterpolationStationPage_3" ) ); //$NON-NLS-1$
+    group.setText( Messages.getString("InterpolationStationPage_3") ); //$NON-NLS-1$
 
     // 1st line
+
     final Label prevLabel = new Label( group, SWT.NONE );
-    prevLabel.setText( Messages.getString( "InterpolationStationPage_4" ) ); //$NON-NLS-1$
+    prevLabel.setText( Messages.getString("InterpolationStationPage_4") ); //$NON-NLS-1$
     prevLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     final Label kmLabel = new Label( group, SWT.NONE );
-    kmLabel.setText( Messages.getString( "InterpolationStationPage_5" ) ); //$NON-NLS-1$
+    kmLabel.setText( Messages.getString("InterpolationStationPage_5") ); //$NON-NLS-1$
     kmLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     final Label nextLabel = new Label( group, SWT.NONE );
-    nextLabel.setText( Messages.getString( "InterpolationStationPage_6" ) ); //$NON-NLS-1$
+    nextLabel.setText( Messages.getString("InterpolationStationPage_6") ); //$NON-NLS-1$
     nextLabel.setLayoutData( new GridData( SWT.LEFT, SWT.CENTER, false, false ) );
 
     // // 2nd line
-    m_prevStation = new Label( group, SWT.NONE );
-    m_prevStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final Label prevStation = new Label( group, SWT.NONE );
+    prevStation.setText( "" ); //$NON-NLS-1$
+    prevStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Text stationEditor = new Text( group, SWT.BORDER | SWT.TRAIL );
     stationEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    m_nextStation = new Label( group, SWT.NONE );
-    m_nextStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final Label nextStation = new Label( group, SWT.NONE );
+    nextStation.setText( "" ); //$NON-NLS-1$
+    nextStation.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     // / 3rd line
+
     final Button onlyChannelCheck = new Button( group, SWT.CHECK );
     onlyChannelCheck.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    onlyChannelCheck.setText( Messages.getString( "InterpolationStationPage_7" ) ); //$NON-NLS-1$
+    onlyChannelCheck.setText( Messages.getString("InterpolationStationPage_7") ); //$NON-NLS-1$
+    onlyChannelCheck.setSelection( m_onlyRiverChannel );
 
-    createBinding( stationEditor, onlyChannelCheck );
+    // / Rules
+
+    final RuleValidator validator = new RuleValidator();
+    validator.addRule( new NotNullError() );
+    validator.addRule( new TooMuchDecimalsIgnoredWarning( IProfileFeature.STATION_SCALE ) );
+    validator.addRule( m_neighbourRule );
+
+    final BigDecimalParser parser = new BigDecimalParser( true, IProfileFeature.STATION_SCALE );
+
+    final IValueReceiver receiver = new IValueReceiver()
+    {
+      @Override
+      public void updateValue( final Object object )
+      {
+        final BigDecimal station = (BigDecimal) object;
+        setStation( station, prevStation, nextStation );
+      }
+    };
+
+    onlyChannelCheck.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleOnlyChannelRadioSelected( onlyChannelCheck.getSelection() );
+      }
+    } );
+
+    final ValidatingModifyListener stationValidator = new ValidatingModifyListener( stationEditor, parser, messageManager );
+    stationValidator.setValidator( validator );
+    stationValidator.setValueReceiver( receiver );
   }
 
-  protected void createBinding( final Text stationEditor, final Button onlyChannelCheck )
+  protected void handleOnlyChannelRadioSelected( final boolean selection )
   {
-    m_pageSupport = WizardPageSupport.create( this, m_bindingContext );
-
-    bindOnlyChannel( onlyChannelCheck );
-    bindStation( stationEditor );
+    m_onlyRiverChannel = selection;
   }
 
-  private void bindOnlyChannel( final Button onlyChannelCheck )
+  protected void setStation( final BigDecimal station, final Label prevLabel, final Label nextLabel )
   {
-    final ISWTObservableValue checkValue = WidgetProperties.selection().observe( onlyChannelCheck );
-    m_bindingContext.bindValue( checkValue, m_interpolationData.observeOnlyChannel() );
+    m_station = station;
+
+    m_prevProfile = m_neighbourRule.getPreviousProfile( station );
+    m_nextProfile = m_neighbourRule.getNextProfile( station );
+
+    if( m_prevProfile == null )
+      prevLabel.setText( STR_NOT_FOUND );
+    else
+      prevLabel.setText( m_prevProfile.getBigStation().toString() );
+
+    if( m_nextProfile == null )
+      nextLabel.setText( STR_NOT_FOUND );
+    else
+      nextLabel.setText( m_nextProfile.getBigStation().toString() );
+
+    setPageComplete( m_station != null && m_prevProfile != null && m_nextProfile != null );
   }
 
-  private void bindStation( final Text stationEditor )
+  public IProfileFeature getPreviousProfile( )
   {
-    final UpdateValueStrategy update = new UpdateValueStrategy();
-    final IProfileFeature[] profiles = m_interpolationData.getProfiles();
-    update.setAfterConvertValidator( new NoTwoNeighbouringStationsError( profiles ) );
+    return m_prevProfile;
+  }
 
-    final IObservableValue stationTextValue = WidgetProperties.text( SWT.Modify ).observe( stationEditor );
-    m_bindingContext.bindValue( stationTextValue, m_interpolationData.observeStation(), update, null );
+  public IProfileFeature getNextProfile( )
+  {
+    return m_nextProfile;
+  }
 
-    m_bindingContext.bindValue( WidgetProperties.text().observe( m_prevStation ), m_interpolationData.observePrevLabel(), null, null );
-    m_bindingContext.bindValue( WidgetProperties.text().observe( m_nextStation ), m_interpolationData.observeNextLabel(), null, null );
+  public BigDecimal getNewStation( )
+  {
+    return m_station;
+  }
+
+  public boolean getOnlyRiverChannel( )
+  {
+    return m_onlyRiverChannel;
   }
 }

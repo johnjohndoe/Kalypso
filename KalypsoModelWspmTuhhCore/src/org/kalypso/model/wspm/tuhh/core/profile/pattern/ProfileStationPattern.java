@@ -2,7 +2,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -36,7 +36,7 @@ public final class ProfileStationPattern extends AbstractPatternInput<IProfilePa
       return StringUtils.EMPTY;
 
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( value );
-    return String.format( "%s", bigStation ); //$NON-NLS-1$
+    return String.format( "%s", bigStation );
   }
 
   @Override

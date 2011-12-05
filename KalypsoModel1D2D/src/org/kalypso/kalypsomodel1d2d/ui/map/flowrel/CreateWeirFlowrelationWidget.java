@@ -46,6 +46,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
@@ -63,7 +64,7 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IWeirFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
+  protected IWeirFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     // TODO: use newAdd method in FeatureWrapperCollection instead?
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation.QNAME );
@@ -81,7 +82,7 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
 //   *      org.kalypsodeegree.model.geometry.GM_Point, double)
 //   */
 //  @Override
-//  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+//  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
 //  {
 //    return discModel.find1DElement( currentPos, grabDistance );
 //  }

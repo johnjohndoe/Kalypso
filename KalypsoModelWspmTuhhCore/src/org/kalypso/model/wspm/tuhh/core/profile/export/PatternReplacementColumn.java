@@ -41,9 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export;
 
 import java.math.BigDecimal;
-import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.patternreplace.IPatternInput;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -58,11 +57,6 @@ import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
  */
 public class PatternReplacementColumn implements IProfileExportColumn
 {
-  /* Used for formatting the values */
-  private Locale m_locale = Locale.getDefault();
-
-  private ProfilePatternInputReplacer m_replacer = new ProfilePatternInputReplacer( m_locale );
-
   public static final int NOT_SET = -1;
 
   private final String m_header;
@@ -87,17 +81,6 @@ public class PatternReplacementColumn implements IProfileExportColumn
   }
 
   @Override
-  public void setLocale( final Locale locale )
-  {
-    if( locale == null )
-      m_locale = Locale.getDefault();
-    else
-      m_locale = locale;
-
-    m_replacer = new ProfilePatternInputReplacer( m_locale );
-  }
-
-  @Override
   public String getHeader( )
   {
     return m_header;
@@ -114,7 +97,9 @@ public class PatternReplacementColumn implements IProfileExportColumn
   @Override
   public String formatValue( final IProfilePatternData data )
   {
-    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = m_replacer.getSinglePatternValue( m_pattern );
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
+    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = replacer.getSinglePatternValue( m_pattern );
     if( pair != null )
     {
       final IPatternInput<IProfilePatternData> token = pair.getKey();
@@ -130,7 +115,7 @@ public class PatternReplacementColumn implements IProfileExportColumn
       }
     }
 
-    return m_replacer.replaceTokens( m_pattern, data );
+    return replacer.replaceTokens( m_pattern, data );
   }
 
   private String formatValue( final Object value )
@@ -141,7 +126,7 @@ public class PatternReplacementColumn implements IProfileExportColumn
     final Class< ? > type = value.getClass();
 
     final String formatString = getFormatString( type, width, precision );
-    return String.format( m_locale, formatString, value );
+    return String.format( formatString, value );
   }
 
   private String getFormatString( final Class< ? > type, final int width, final int precision )
@@ -159,15 +144,15 @@ public class PatternReplacementColumn implements IProfileExportColumn
   protected String formatFormatString( final char formatType, final int width, final int precision )
   {
     if( width != NOT_SET && precision != NOT_SET )
-      return String.format( "%%%d.%d%s", width, precision, formatType ); //$NON-NLS-1$
+      return String.format( "%%%d.%d%s", width, precision, formatType );
 
     if( width != NOT_SET )
-      return String.format( "%%%d%s", width, formatType ); //$NON-NLS-1$
+      return String.format( "%%%d%s", width, formatType );
 
     if( precision != NOT_SET )
-      return String.format( "%%.%d%s", precision, formatType ); //$NON-NLS-1$
+      return String.format( "%%.%d%s", precision, formatType );
 
-    return String.format( "%%%s", formatType ); //$NON-NLS-1$
+    return String.format( "%%%s", formatType );
   }
 
   /**
@@ -176,7 +161,9 @@ public class PatternReplacementColumn implements IProfileExportColumn
   @Override
   public Object getValue( final IProfilePatternData data )
   {
-    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = m_replacer.getSinglePatternValue( m_pattern );
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
+    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = replacer.getSinglePatternValue( m_pattern );
     if( pair == null )
       return null;
 
@@ -211,7 +198,9 @@ public class PatternReplacementColumn implements IProfileExportColumn
 
   public Class< ? > getType( )
   {
-    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = m_replacer.getSinglePatternValue( m_pattern );
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
+    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = replacer.getSinglePatternValue( m_pattern );
     if( pair == null )
       return null;
 
@@ -228,7 +217,9 @@ public class PatternReplacementColumn implements IProfileExportColumn
 
   public int getDefaultWidth( )
   {
-    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = m_replacer.getSinglePatternValue( m_pattern );
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
+    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = replacer.getSinglePatternValue( m_pattern );
     if( pair == null )
       return 10;
 
@@ -245,7 +236,9 @@ public class PatternReplacementColumn implements IProfileExportColumn
 
   public int getDefaultPrecision( )
   {
-    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = m_replacer.getSinglePatternValue( m_pattern );
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
+    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = replacer.getSinglePatternValue( m_pattern );
     if( pair == null )
       return 3;
 
@@ -260,10 +253,15 @@ public class PatternReplacementColumn implements IProfileExportColumn
     return 3;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn#getResult()
+   */
   @Override
   public IWspmResult getResult( final IProfileFeature[] profiles )
   {
-    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = m_replacer.getSinglePatternValue( m_pattern );
+    final ProfilePatternInputReplacer replacer = ProfilePatternInputReplacer.getINSTANCE();
+
+    final IKeyValue<IPatternInput<IProfilePatternData>, String> pair = replacer.getSinglePatternValue( m_pattern );
     if( pair == null )
       return null;
 

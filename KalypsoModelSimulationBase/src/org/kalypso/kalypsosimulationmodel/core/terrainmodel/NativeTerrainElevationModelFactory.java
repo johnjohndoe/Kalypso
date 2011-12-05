@@ -63,7 +63,7 @@ public class NativeTerrainElevationModelFactory
     // yes empty
   }
 
-  public static final IElevationProvider getTerrainElevationModel( final File nativeTerrainModelFile_ ) throws IOException
+  public static final IElevationProvider getTerrainElevationModel( final File nativeTerrainModelFile_ ) throws IllegalArgumentException, IOException
   {
     Assert.throwIAEOnNullParam( nativeTerrainModelFile_, "nativeTerrainModelFile_" ); //$NON-NLS-1$
     // Decoding the White Spaces present in the File Paths. Sometimes requires to decode twice.
