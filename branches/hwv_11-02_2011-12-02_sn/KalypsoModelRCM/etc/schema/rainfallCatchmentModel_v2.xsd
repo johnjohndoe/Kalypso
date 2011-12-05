@@ -160,10 +160,15 @@ a timeseries for each catchment area.]]></documentation>
                 <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
               </annotation>
             </element>
-            <element name="filter" type="filter:AbstractZmlFilterType" minOccurs="0" maxOccurs="unbounded">
+            <element name="filterMember" minOccurs="0" maxOccurs="unbounded">
               <annotation>
                 <documentation xml:lang="en"><![CDATA[Filters that will be applied to the read timeseries. Multiple filters will be applied in the given order.]]></documentation>
               </annotation>
+              <complexType>
+                <sequence>
+                  <element ref="filter:AbstractZmlFilter"/>
+                </sequence>
+              </complexType>
             </element>
             <element name="stationLocationPath" type="string">
               <annotation>
