@@ -48,15 +48,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.INode;
-import org.kalypso.model.hydrology.gml.ZmlWQVInlineTypeHandler;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
-import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
+import org.kalypso.model.hydrology.internal.preprocessing.writer.TsFileWriter.TSFormat;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -70,7 +66,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
  */
 public class HRBFileWriter extends AbstractCoreFileWriter
 {
-  private static final double HECTO_CUBIC_METER = 1000000.0;
+  private final StorageChannel[] m_storageChannels;
 
   // maps timeseries link path to its ascii file name
   private final Map<String, String> m_timseriesMap = new HashMap<String, String>();
@@ -79,160 +75,132 @@ public class HRBFileWriter extends AbstractCoreFileWriter
 
   private final IDManager m_idManager;
 
-  private final NetElement[] m_channels;
+  private final NAControl m_metaControl;
 
-  public HRBFileWriter( final NetElement[] channels, final IDManager idManager, final File klimaDir, final Logger logger )
+  public HRBFileWriter( final StorageChannel[] storageChannels, final NAControl metaControl, final IDManager idManager, final File klimaDir, final Logger logger )
   {
     super( logger );
 
-    m_channels = channels;
+    m_storageChannels = storageChannels;
+    m_metaControl = metaControl;
     m_klimaDir = klimaDir;
     m_idManager = idManager;
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.AbstractCoreFileWriter#write(java.io.PrintWriter)
+   */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
-    for( final NetElement element : m_channels )
+    for( final StorageChannel channel : m_storageChannels )
     {
-      final Channel channel = element.getChannel();
-      if( channel instanceof StorageChannel )
-        writeChannel( writer, (StorageChannel) channel );
+      final String asciiTS = processTimeserieFile( channel );
+      if( asciiTS != null )
+      {
+        final int channelID = m_idManager.getAsciiID( channel );
+        final Node overflowNode = channel.getOverflowNode();
+        final Node overflowNode2 = channel.getOverflowNode2();
+        final Node overflowNode3 = channel.getOverflowNode3();
+        final int overflowNode1ID = overflowNode == null ? 0 : m_idManager.getAsciiID( overflowNode );
+        final int overflowNode2ID = overflowNode2 == null ? 0 : m_idManager.getAsciiID( overflowNode2 );
+        final int overflowNode3ID = overflowNode3 == null ? 0 : m_idManager.getAsciiID( overflowNode3 );
+        writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d  %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
+        writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
+        writer.format( Locale.ENGLISH, "text;text\n" ); //$NON-NLS-1$
+
+        final IObservation wvqObservation = channel.getWVQObservation();
+        if( wvqObservation == null )
+        {
+          // TODO check if this case is valid; throw an exception otherwise
+          writer.format( Locale.ENGLISH, "%s %10.6f %9.6f %9.6f %d\n", channel.getName(), 0.0, 0.0, 0.0, 0 ); //$NON-NLS-1$
+        }
+        else
+        {
+          final WVQInfo wvqInfo = getWVQInfo( wvqObservation );
+          // to discuss: shall we use the user-defined max and min, or those calculated from wvqInfo?
+          final double initialCapacity = channel.getInitialCapacity() / 1000000.0;
+          final double volumeMax = channel.getVolumeMax() / 1000000.0; // wvqInfo.getMaxVolume()
+          final double volumeMin = channel.getVolumeMin() / 1000000.0; // wvqInfo.getMinVolume()
+          writer.format( Locale.ENGLISH, "%-10s%10.6f%10.6f%10.6f %d\n", channel.getName().length() > 10 ? channel.getName().substring( 0, 10 ) : channel.getName(), initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
+          writer.write( wvqInfo.getFormattedObservation() );
+        }
+        writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
+      }
     }
-  }
-
-  private void writeChannel( final PrintWriter writer, final StorageChannel channel ) throws NAPreprocessorException
-  {
-    final String asciiTS = processTimeserieFile( channel );
-    final int channelID = m_idManager.getAsciiID( channel );
-
-    final int overflowNode1ID = getNodeID( channel.getOverflowNode() );
-    final int overflowNode2ID = getNodeID( channel.getOutletNode1() );
-    final int overflowNode3ID = getNodeID( channel.getOutletNode2() );
-
-    writer.format( Locale.ENGLISH, "SPEICHER %7d %7d %7d %7d  %s\n", channelID, overflowNode1ID, overflowNode2ID, overflowNode3ID, asciiTS ); //$NON-NLS-1$
-    writer.format( Locale.ENGLISH, "Fakt_SeeV %.2f\n", channel.getSeaEvaporationFactor() ); //$NON-NLS-1$
-    writer.format( Locale.ENGLISH, "text;text\n" ); //$NON-NLS-1$
-
-    final IObservation wvqObservation = channel.getWVQObservation();
-
-    final String channelName = channel.getName();
-    // Strange but correct: print out name as reminder what this element is
-    final String channelShortName = channelName.length() > 10 ? channelName.substring( 0, 10 ) : channelName;
-
-    if( wvqObservation == null )
-    {
-      final String message = String.format( Messages.getString( "HRBFileWriter_0" ), channelName ); //$NON-NLS-1$
-      throw new NAPreprocessorException( message );
-    }
-
-    final WVQInfo wvqInfo = getWVQInfo( wvqObservation, channelName );
-    final double initialCapacity = channel.getInitialCapacity() / HECTO_CUBIC_METER;
-    final double volumeMax = channel.getVolumeMax() / HECTO_CUBIC_METER;
-    final double volumeMin = channel.getVolumeMin() / HECTO_CUBIC_METER;
-    writer.format( Locale.ENGLISH, "%-10s%10.6f%10.6f%10.6f %d\n", channelShortName, initialCapacity, volumeMax, volumeMin, wvqInfo.getNumberOfEntries() ); //$NON-NLS-1$
-    writer.write( wvqInfo.getFormattedObservation() );
-    writer.format( Locale.ENGLISH, "ENDE\n" ); //$NON-NLS-1$
-  }
-
-  private int getNodeID( final INode overflowNode1 )
-  {
-    if( overflowNode1 == null )
-      return 0;
-
-    return m_idManager.getAsciiID( overflowNode1 );
   }
 
   /**
    * Returns the ASCII timeserie file name (without path), or null if no link is provided or writing error occurs
    */
-  private String processTimeserieFile( final StorageChannel channel ) throws NAPreprocessorException
+  private String processTimeserieFile( final StorageChannel channel )
   {
-    try
+    final TimeseriesLinkType seaEvaporationTimeseriesLink = channel.getSeaEvaporationTimeseriesLink();
+    if( seaEvaporationTimeseriesLink == null )
+      return null;
+    final String zmlHref = seaEvaporationTimeseriesLink.getHref();
+    if( !m_timseriesMap.containsKey( zmlHref ) )
     {
-      final TimeseriesLinkType seaEvaporationTimeseriesLink = channel.getSeaEvaporationTimeseriesLink();
-      if( seaEvaporationTimeseriesLink == null )
-        return StringUtils.EMPTY;
+      final int asciiID = m_idManager.getAsciiID( channel );
 
-      final String zmlHref = seaEvaporationTimeseriesLink.getHref();
-      if( !m_timseriesMap.containsKey( zmlHref ) )
+      final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_EVAPORATION );//$NON-NLS-1$
+
+      final File asciiTimeseriesFile = new File( m_klimaDir, name );
+      try
       {
-        final int asciiID = m_idManager.getAsciiID( channel );
-
-        final String name = String.format( "SE_%d.%s", asciiID, ITimeseriesConstants.TYPE_EVAPORATION );//$NON-NLS-1$
-
-        final File asciiTimeseriesFile = new File( m_klimaDir, name );
         final URL context = channel.getWorkspace().getContext();
-        TsFileWriter.writeGrapTimeseries( asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null );
-        m_timseriesMap.put( zmlHref, name );
+        // This is not a bug, sea evaporation is the exception (needs GRAP format)!
+        TsFileWriter.writeTimeseries(TSFormat.GRAP, asciiTimeseriesFile, seaEvaporationTimeseriesLink, context, ITimeseriesConstants.TYPE_EVAPORATION, null, "-777", m_metaControl.getSimulationStart(), m_metaControl.getSimulationEnd() );
       }
-
-      return m_timseriesMap.get( zmlHref );
+      catch( final Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        return null;
+      }
+      m_timseriesMap.put( zmlHref, name );
     }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new NAPreprocessorException( Messages.getString( "HRBFileWriter_1" ), e ); //$NON-NLS-1$
-    }
+    return m_timseriesMap.get( zmlHref );
   }
 
-  private WVQInfo getWVQInfo( final IObservation observation, final String channelName ) throws NAPreprocessorException
+  private WVQInfo getWVQInfo( final IObservation observation ) throws SensorException
   {
-    try
+    final StringBuffer buffer = new StringBuffer();
+    final IAxis[] axisList = observation.getAxes();
+    final IAxis axis_NN = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_NORMNULL );
+    final IAxis axis_V = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_VOLUME );
+    final IAxis axis_Q = ObservationUtilities.findAxisByType( axisList, ITimeseriesConstants.TYPE_RUNOFF );
+
+    // these are optional
+    final IAxis axis_Q2 = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_RUNOFF_Q2 );
+    final IAxis axis_Q3 = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_RUNOFF_Q3 );
+
+    final ITupleModel values = observation.getValues( null );
+    double vMax = -Double.MAX_VALUE;
+    double vMin = Double.MAX_VALUE;
+    final int count = values.size();
+    if( count == 0 )
     {
-      final StringBuilder buffer = new StringBuilder();
-      final IAxis[] axisList = observation.getAxes();
-      final IAxis axisNN = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_NORMNULL );
-      final IAxis axisV = ObservationUtilities.findAxisByTypeNoEx( axisList, ITimeseriesConstants.TYPE_VOLUME );
-      final IAxis axisQ = ObservationUtilities.findAxisByNameNoEx( axisList, ZmlWQVInlineTypeHandler.AXIS_NAME_ABFLUSS );
-
-      // these are optional
-      final IAxis axisQ2 = ObservationUtilities.findAxisByNameNoEx( axisList, ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_1 );
-      final IAxis axisQ3 = ObservationUtilities.findAxisByNameNoEx( axisList, ZmlWQVInlineTypeHandler.AXIS_NAME_ABGABE_2 );
-
-      final ITupleModel values = observation.getValues( null );
-      final int count = values.size();
+      vMax = 0.0;
+      vMin = 0.0;
+    }
+    else
+    {
       for( int row = 0; row < count; row++ )
       {
-        final double w = getAsDouble( values, axisNN, row, Double.NaN );
-        final double v = getAsDouble( values, axisV, row, Double.NaN ) / HECTO_CUBIC_METER;
-        final double q = getAsDouble( values, axisQ, row, Double.NaN );
-        final double q2 = getAsDouble( values, axisQ2, row, 0.0 );
-        final double q3 = getAsDouble( values, axisQ3, row, 0.0 );
-        buffer.append( String.format( Locale.ENGLISH, "%12.2f %16.6f %13.3f %13.3f %13.3f\n", w, v, q, q2, q3 ) ); //$NON-NLS-1$
+        final double w = (Double) values.get( row, axis_NN );
+        final double v = ((Double) values.get( row, axis_V )) / 1000000;
+        final Double q = (Double) values.get( row, axis_Q );
+        final Double q2 = axis_Q2 == null ? 0.0 : (Double) values.get( row, axis_Q2 );
+        final Double q3 = axis_Q3 == null ? 0.0 : (Double) values.get( row, axis_Q3 );
+        buffer.append( String.format( Locale.ENGLISH, "%12.2f %16.6f %13.3f %13.3f %13.3f\n", w, v, q == null ? 0.0 : q, q2 == null ? 0.0 : q2, q3 == null ? 0.0 : q3 ) );
+        if( v > vMax )
+          vMax = v;
+        if( v < vMin )
+          vMin = v;
       }
-
-      return new WVQInfo( buffer.toString(), count );
     }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      throw new NAPreprocessorException( String.format( Messages.getString( "HRBFileWriter_2" ), channelName ) ); //$NON-NLS-1$
-    }
+    return new WVQInfo( buffer.toString(), vMax, vMin, count );
   }
 
-  /**
-   * @defaultValue Returned if the given axis is null. If the defaultValue NaN, is is considered as required and an
-   *               exception is thrown instead.
-   */
-  private double getAsDouble( final ITupleModel values, final IAxis axis, final int row, final double defaultValue ) throws SensorException
-  {
-    if( axis == null )
-    {
-      if( Double.isNaN( defaultValue ) )
-      {
-        final String message = String.format( Messages.getString( "HRBFileWriter_3" ) ); //$NON-NLS-1$
-        throw new SensorException( message );
-      }
-
-      return defaultValue;
-    }
-
-    final Object value = values.get( row, axis );
-    if( value instanceof Number )
-      return ((Number) value).doubleValue();
-
-    final String message = String.format( Messages.getString( "HRBFileWriter_4" ), axis.getName(), row ); //$NON-NLS-1$
-    throw new SensorException( message );
-  }
 }

@@ -47,7 +47,6 @@ import java.util.Map;
 
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
-import org.kalypso.model.hydrology.binding.suds.IAbstractSwale;
 import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -115,7 +114,7 @@ public class MaxPercolationCalculator
     return average / list.size();
   }
 
-  public double getSudsAverageMaxPercRate( final IAbstractSwale ditch )
+  public double getSudsAverageMaxPercRate( final ISwaleInfiltrationDitch ditch )
   {
     final double maxPercRate = calculateAverageMaxPercRate( ditch );
     if( Double.isNaN( maxPercRate ) )

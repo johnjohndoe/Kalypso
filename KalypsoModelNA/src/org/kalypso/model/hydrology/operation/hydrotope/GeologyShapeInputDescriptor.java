@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -90,7 +91,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   @Override
   public String getDescription( final int index )
   {
-    return Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor.1", m_shapeFile.getName() ); //$NON-NLS-1$
   }
 
   /**
@@ -112,7 +113,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
       if( property instanceof GM_MultiSurface )
         return (GM_MultiSurface) property;
 
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor.2" ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -154,7 +155,7 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
         m_shape = new ShapeFile( shapeBase );
         final String[] properties = m_shape.getProperties();
         for( int i = 0; i < properties.length; i++ )
-          m_propHash.put( properties[i].toLowerCase(), i );
+          m_propHash.put( properties[i], i );
       }
       catch( final IOException e )
       {
@@ -177,10 +178,10 @@ public class GeologyShapeInputDescriptor implements InputDescriptor
   {
     final ShapeFile shape = getShapeFile();
 
-    final Integer column = m_propHash.get( property.toLowerCase() );
+    final Integer column = m_propHash.get( property );
     if( column == null )
     {
-      final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor.3", property ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, null ) );
     }
 

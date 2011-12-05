@@ -45,7 +45,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,8 +61,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
-import de.openali.odysseus.chart.framework.view.IChartComposite;
-
 /**
  * Saves the changes made on a building into the real flow relation.
  * 
@@ -71,32 +68,34 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class SaveBuildingParameterHandler extends AbstractHandler implements IElementUpdater
 {
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
-    final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
-    final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
+    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
+    if( chartPart == null )
+      return null;
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        final BuildingParameterLayer layer = EditBuildingParameterMouseHandler.findLayer( chart.getChartModel() );
-        if( layer != null )
-        {
-          layer.saveData( monitor );
-          ChartHandlerUtilities.updateElements( part );
-        }
+        final BuildingParameterLayer layer = EditBuildingParameterMouseHandler.findLayer( chartPart.getChartComposite().getChartModel() );
+        layer.saveData( monitor );
+
+        ChartHandlerUtilities.updateElements( chartPart );
         return Status.OK_STATUS;
       }
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, "", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
@@ -105,6 +104,7 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
   @Override
+  @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {
     // TODO: disable/enable according to dirty state of layer; this is tricky, as it is hard to find the layer here...

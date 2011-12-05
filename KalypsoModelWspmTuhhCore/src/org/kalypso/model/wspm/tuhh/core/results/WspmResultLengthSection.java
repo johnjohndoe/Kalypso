@@ -46,7 +46,7 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -69,31 +69,24 @@ public class WspmResultLengthSection
 
   public static WspmResultLengthSection create( final IFile observationFile, final GMLXPath gmlxPath )
   {
-    GMLWorkspace workspace = null;
     try
     {
-      workspace = GmlSerializer.createGMLWorkspace( observationFile );
-      final Object object = GMLXPathUtilities.query( gmlxPath, workspace );
-      if( object instanceof Feature )
-        return create( (Feature) object );
-
-      return null;
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( observationFile );
+      final Feature obsFeature = (Feature) GMLXPathUtilities.query( gmlxPath, workspace );
+      final WspmResultLengthSection obs = create( obsFeature );
+      workspace.dispose();
+      return obs;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       return null;
     }
-    finally
-    {
-      if( workspace != null )
-        workspace.dispose();
-    }
   }
 
-  public static WspmResultLengthSection create( final Feature object )
+  public static WspmResultLengthSection create( final Feature fixation )
   {
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( object );
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( fixation );
     return new WspmResultLengthSection( observation );
   }
 
@@ -105,7 +98,7 @@ public class WspmResultLengthSection
   {
     m_observation = observation;
     final TupleResult result = m_observation.getResult();
-    final IComponent stationComponent = TupleResultUtilities.findComponentById( result, IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
+    final IComponent stationComponent = TupleResultUtilities.findComponentById( result, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
     m_stationIndex = new TupleResultIndex( result, stationComponent );
   }
 
@@ -159,19 +152,15 @@ public class WspmResultLengthSection
     {
       final BigDecimal station = stations[i];
 
-      final String type = (String) getValue( station, IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE );
+      final String type = (String) getValue( station, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TYPE );
       if( LS_TYPE_INTERPOLATED.equals( type ) )
       {
         final BigDecimal nextNormalStation = findNextNormalStation( stations, i );
         if( lastNormalStation != null && nextNormalStation != null )
-        {
           interpolatedProfiles.add( new WspmResultInterpolationProfile( lastNormalStation, nextNormalStation, station ) );
-        }
       }
       else
-      {
         lastNormalStation = station;
-      }
     }
 
     return interpolatedProfiles.toArray( new WspmResultInterpolationProfile[interpolatedProfiles.size()] );
@@ -182,16 +171,11 @@ public class WspmResultLengthSection
     for( int i = startIndex; i < stations.length; i++ )
     {
       final BigDecimal station = stations[i];
-      final String type = (String) getValue( station, IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE );
+      final String type = (String) getValue( station, IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_TYPE );
       if( !LS_TYPE_INTERPOLATED.equals( type ) )
         return station;
     }
 
     return null;
-  }
-
-  public IObservation<TupleResult> getObservation( )
-  {
-    return m_observation;
   }
 }

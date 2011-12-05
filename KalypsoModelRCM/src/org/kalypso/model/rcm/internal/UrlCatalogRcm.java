@@ -47,6 +47,11 @@ import java.util.Map;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.model.rcm.RcmConstants;
 
+/**
+ * Catalog which provides the url to the 1d2d schema
+ * 
+ * @author Patrice Congo
+ */
 public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
 {
   /**
@@ -58,7 +63,7 @@ public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
     catalog.put( NS_OMBROMETER, UrlCatalogRcm.class.getResource( "schema/ombrometer.xsd" ) );
     prefixes.put( NS_OMBROMETER, "ombr" );
 
-    catalog.put( NS_RCM, UrlCatalogRcm.class.getResource( "schema/rainfallCatchmentModel_v2.xsd" ) );
+    catalog.put( NS_RCM, UrlCatalogRcm.class.getResource( "schema/rainfallCatchmentModel.xsd" ) );
     prefixes.put( NS_RCM, "rcm" );
   }
 }

@@ -44,8 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -64,15 +62,15 @@ public class Catchment extends AbstractNaModelElement
 
   public static final QName FEATURE_CATCHMENT = new QName( NS_NAMODELL, "Catchment" ); //$NON-NLS-1$
 
-  public static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
+  private static final QName LINK_CHANNEL = new QName( NS_NAMODELL, "entwaesserungsStrangMember" ); //$NON-NLS-1$
 
-  public static final QName LINK_OVERFLOW_NODE = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
+  private static final QName LINK_OVERFLOW_NODE = new QName( NS_NAMODELL, "izkn_vers" ); //$NON-NLS-1$
 
   public static final QName LINK_IZKN_NODE = new QName( NS_NAMODELL, "izkn" ); //$NON-NLS-1$
 
   private static final QName PROPLIST_BODENKORREKTUR_MEMBER = new QName( NS_NAMODELL, "bodenkorrekturmember" ); //$NON-NLS-1$
 
-  public static final QName PROPLIST_GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
+  private static final QName PROPLIST_GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" ); //$NON-NLS-1$
 
   private static final QName PROP_GEOM = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
 
@@ -141,8 +139,6 @@ public class Catchment extends AbstractNaModelElement
   private static final QName PROP_FTEM = new QName( NS_NAMODELL, "ftem" ); //$NON-NLS-1$
 
   private static final QName PROP_FVER = new QName( NS_NAMODELL, "fver" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_CORRSEALING = new QName( NS_NAMODELL, "corrSealing" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<Bodenschichtkorrektur> m_bodenKorrekturCollection = null;
 
@@ -425,15 +421,5 @@ public class Catchment extends AbstractNaModelElement
         sumGwwi += gwa.getGwwi();
     }
     return sumGwwi;
-  }
-
-  public Double getCorrSealing( )
-  {
-    return getDoubleProperty( QNAME_PROP_CORRSEALING, 1.0 );
-  }
-
-  public void setCorrSealing( final Double corrSealing )
-  {
-    setProperty( QNAME_PROP_CORRSEALING, corrSealing );
   }
 }

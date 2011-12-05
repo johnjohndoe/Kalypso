@@ -99,9 +99,7 @@ class KreisProfileCreator extends BridgeProfileCreator
     {
       final double distance = point.getDistance().doubleValue();
       if( distance < x == smaller )
-      {
         listToAdd.add( point );
-      }
     }
   }
 
@@ -145,9 +143,7 @@ class KreisProfileCreator extends BridgeProfileCreator
       final double value = point.getValue();
       final BigDecimal distance = point.getDistance();
       if( value > yHalf == upper )
-      {
         result.put( distance, point );
-      }
     }
 
     return result.values().toArray( new IWProfPoint[result.size()] );

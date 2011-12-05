@@ -132,9 +132,7 @@ public class ExportFileChooserPage extends ValidatingWizardPage
 
     final File file = m_fileChooserGroup.getFile();
     if( file != null )
-    {
       setFile( file );
-    }
   }
 
   protected void setFile( final File file )

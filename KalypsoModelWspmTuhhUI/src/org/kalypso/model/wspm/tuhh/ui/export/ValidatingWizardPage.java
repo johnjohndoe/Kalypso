@@ -51,6 +51,9 @@ public abstract class ValidatingWizardPage extends WizardPage
     super( pageName );
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -72,13 +75,9 @@ public abstract class ValidatingWizardPage extends WizardPage
   protected void setMessage( final IMessageProvider message )
   {
     if( message == null )
-    {
       setMessage( (String) null );
-    }
     else
-    {
       setMessage( message.getMessage(), message.getMessageType() );
-    }
 
     setPageComplete( message == null || message.getMessageType() != IMessageProvider.ERROR );
   }

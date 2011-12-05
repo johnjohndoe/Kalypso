@@ -46,7 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -476,7 +476,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     // setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15" ) ); //$NON-NLS-1$
 
     if( m_timezone == null )
-      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.0"), ERROR ); //$NON-NLS-1$
+      return new MessageProvider( "Please select a valid time zone", ERROR );
 
     return null;
   }
@@ -505,9 +505,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private void fireSelectionChanged( )
   {
-    if( m_sourceFile == null ){
-      return;
-    }
     for( final ISelectionChangedListener iSelectionChangedListener : m_selectionListener )
       (iSelectionChangedListener).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }

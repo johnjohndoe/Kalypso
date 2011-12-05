@@ -96,7 +96,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 
     if( ptQName.equals( m_groundTypeName ) )
     {
-      member = FeatureHelper.resolveLink( feature, m_groundClsMember, true );
+      member = (Feature) feature.getProperty( m_groundClsMember );
       if( member == null )
         return ""; //$NON-NLS-1$
       else
@@ -104,7 +104,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
     }
     else if( ptQName.equals( m_vegetationTypeName ) )
     {
-      member = FeatureHelper.resolveLink( feature, m_vegetationClsMember );
+      member = (Feature) feature.getProperty( m_vegetationClsMember );
       if( member == null )
         return ""; //$NON-NLS-1$
       else
@@ -112,7 +112,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
     }
     else if( ptQName.equals( m_eddyViscosityTypeName ) )
     {
-      member = FeatureHelper.resolveLink( feature, m_eddyViscosityClsMember );
+      member = (Feature) feature.getProperty( m_eddyViscosityClsMember );
       if( member == null )
         return ""; //$NON-NLS-1$
       else

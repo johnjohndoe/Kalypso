@@ -79,12 +79,12 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -111,7 +111,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   protected IFEDiscretisationModel1d2d m_discModel = null;
 
   /* The current element (node, contiline, 1delement, ...) of the disc-model under the cursor. */
-  protected Feature m_modelElement = null;
+  protected IFeatureWrapper2 m_modelElement = null;
 
   protected IFlowRelationship m_existingFlowRelation;
 
@@ -135,12 +135,12 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     reinit();
   }
 
-  public final Feature getModelElement( )
+  public final IFeatureWrapper2 getModelElement( )
   {
     return m_modelElement;
   }
 
-  public final void setModelElement( final Feature modelElement )
+  public final void setModelElement( IFeatureWrapper2 modelElement )
   {
     m_modelElement = modelElement;
   }
@@ -151,7 +151,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.0" ) ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.0") ); //$NON-NLS-1$
 
     m_flowTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
     if( m_flowTheme == null )
@@ -233,11 +233,11 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final GM_Curve line = (GM_Curve) element.recalculateElementGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement, line, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getFeature(), line, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
       else if( m_modelElement instanceof IFELine )
@@ -246,11 +246,11 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final GM_Curve line = element.getGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
-        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement, line, symb );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getFeature(), line, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
       else if( m_modelElement instanceof IPolyElement )
@@ -259,12 +259,12 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) polyElement.recalculateElementGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
 
-        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement, surface, symb );
+        final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement.getFeature(), surface, symb );
         de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
       }
     }
@@ -292,21 +292,21 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_modelElement instanceof IFELine )
     {
       int countBCs = 0;
-      for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips().getFeatureList() )
+      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
         if( bc == null )
           continue;
-        if( bc.getParentElementID().equals( m_modelElement.getId() ) )
+        if( bc.getParentElementID().equals( m_modelElement.getGmlID() ) )
           countBCs++;
       }
       int i = 0;
-      for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips().getFeatureList() )
+      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
         if( bc == null )
           continue;
-        if( bc.getParentElementID().equals( m_modelElement.getId() ) )
+        if( bc.getParentElementID().equals( m_modelElement.getGmlID() ) )
         {
           final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( m_modelElement, countBCs + 1, ++i );
           bc.setPosition( GeometryFactory.createGM_Point( position.getX(), position.getY(), bc.getPosition().getCoordinateSystem() ) );
@@ -320,12 +320,12 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     /* Create flow relation at position */
     display.asyncExec( new Runnable()
     {
-
+      
       @Override
       public void run( )
       {
-        final Feature parentFeature = m_flowRelCollection;
-        final IRelationType parentRelation = m_flowRelCollection.getFlowRelationsShips().getFeatureList().getParentFeatureTypeProperty();
+        final Feature parentFeature = m_flowRelCollection.getFeature();
+        final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
         final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
         if( flowRel == null )
@@ -340,7 +340,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         /* Post it as an command */
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
         selectionManager.clear();
-        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel, selectionManager, true, true );
+        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getFeature(), selectionManager, true, true );
         try
         {
           workspace.postCommand( command );
@@ -354,7 +354,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.1" ), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.1"), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -387,26 +387,24 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
   /**
    * Really create the new object.
-   * 
+   *
    * @return The new object, if null, nothing happens..
    */
-  protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement );
+  protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement );
 
   /**
    * @param grabDistance
-   *          The grab distance in world (=geo) coordinates.
+   *            The grab distance in world (=geo) coordinates.
    */
   @SuppressWarnings("unchecked")
-  // protected abstract Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final
-  // GM_Point currentPos, final double grabDistance );
-  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
-  {
-    final Feature lFoundElement = discModel.find1DElement( currentPos, grabDistance );
+//  protected abstract IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance );
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance ){
+    IFeatureWrapper2 lFoundElement = discModel.find1DElement( currentPos, grabDistance );
     if( lFoundElement == null )
     {
       return null;
     }
-    final Feature lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D) lFoundElement, m_flowRelCollection );
+    IFeatureWrapper2 lBuildingExisting = FlowRelationUtilitites.findBuildingElement1D( (IElement1D) lFoundElement, m_flowRelCollection );
     if( lBuildingExisting == null )
     {
       return lFoundElement;
@@ -418,12 +416,12 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   }
 
   @SuppressWarnings("unchecked")
-  public Feature findModelElementFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  public IFeatureWrapper2 findModelElementFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
     if( node != null )
     {
-      if( FlowRelationUtilitites.findBuildingElementFromPosition( node.getPoint(), m_flowRelCollection ) != null )
+      if( FlowRelationUtilitites.findBuildingElementFromPosition( node.getPoint(), m_flowRelCollection ) != null ) 
         return null;
       final IFE1D2DElement[] elements = node.getElements();
       for( final IFE1D2DElement element : elements )

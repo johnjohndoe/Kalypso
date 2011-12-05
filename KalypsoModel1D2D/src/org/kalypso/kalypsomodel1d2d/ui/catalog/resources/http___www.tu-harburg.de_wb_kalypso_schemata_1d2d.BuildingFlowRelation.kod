@@ -5,7 +5,7 @@
 
 
 	<Chart id="buildingParameterChart">
-		<Title horizontalTextAnchor="CENTER">Parameter</Title>
+		<Title>Parameter</Title>
 		<Description>Parameterschar der UW-OW Beziehung</Description>
 		<Layers>
 			<Layer visible="true" id="parameterLayer">

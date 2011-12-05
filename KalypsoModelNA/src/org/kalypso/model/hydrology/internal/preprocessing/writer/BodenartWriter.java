@@ -69,7 +69,7 @@ public class BodenartWriter extends AbstractCoreFileWriter
   }
 
   @Override
-  protected void writeContent( final PrintWriter writer )
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
     final Feature rootFeature = m_parameterWorkspace.getRootFeature();
     final List< ? > list = (List< ? >) rootFeature.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
@@ -94,24 +94,22 @@ public class BodenartWriter extends AbstractCoreFileWriter
      * Substr kap 4.5 19.0 42.0 350.0 0.25 Drain kap 4.5 36.0 42.0 4000.0 0.25
      */
     if( !names.contains( "mulde" ) ) //$NON-NLS-1$
-      writer.append( "mulde kap 0.001 0.1 99.0 8640.0 0.01\n" ); //$NON-NLS-1$
+      writer.append( "mulde kap 1.0 2.0 99.0 8640.0 0.01\n" ); //$NON-NLS-1$
     if( !names.contains( "rein" ) ) //$NON-NLS-1$
-      writer.append( "rein kap 5.0 15.5 41.0 1720.0 0.50\n" ); //$NON-NLS-1$
+      writer.append( "rein kap 11.5 28.5 38.5 864.0 0.50\n" ); //$NON-NLS-1$
     if( !names.contains( "filter" ) ) //$NON-NLS-1$
-      writer.append( "filter kap 4.0 17.5 43.0 2720.0 0.10\n" ); //$NON-NLS-1$
+      writer.append( "filter kap 4.5 36.0 42.0 3110.0 0.50\n" ); //$NON-NLS-1$
     if( !names.contains( "base" ) ) //$NON-NLS-1$
-      writer.append( "base kap 4.0 28.0 40.0 2720.0 0.50\n" ); //$NON-NLS-1$
+      writer.append( "base kap 4.5 19.0 51.0 3110.0 0.50\n" ); //$NON-NLS-1$
     if( !names.contains( "GR-stau" ) ) //$NON-NLS-1$
-      writer.append( "GR-stau kap 0.001 0.1 99.0 8640.0 0.01\n" ); //$NON-NLS-1$
+      writer.append( "GR-stau kap 1.0 2.0 99.0 8640.0 0.01\n" ); //$NON-NLS-1$
     if( !names.contains( "Substr" ) ) //$NON-NLS-1$
-      writer.append( "Substr kap 5.0 20.0 37.5 350.0 0.10\n" ); //$NON-NLS-1$
+      writer.append( "Substr kap 4.5 19.0 42.0 350.0 0.25\n" ); //$NON-NLS-1$
     if( !names.contains( "Drain" ) ) //$NON-NLS-1$
-      writer.append( "Drain kap 4.0 30.5 40.0 1720.0 0.10\n" ); //$NON-NLS-1$
-    if( !names.contains( "basem" ) ) //$NON-NLS-1$
-      writer.append( "basem kap 6.5 24.0 41.0 1570.0 0.50\n" ); //$NON-NLS-1$    
+      writer.append( "Drain kap 4.5 36.0 42.0 4000.0 0.25\n" ); //$NON-NLS-1$
   }
 
-  private void writeFeature( final PrintWriter writer, final Feature feature )
+  private void writeFeature( final PrintWriter writer, final Feature feature ) throws Exception
   {
     // (name,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
     writer.append( FortranFormatHelper.printf( feature.getName(), "*" ) + " kap " //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$

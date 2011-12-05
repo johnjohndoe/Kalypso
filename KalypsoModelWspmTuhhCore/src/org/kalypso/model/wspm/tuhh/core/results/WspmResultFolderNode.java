@@ -80,7 +80,6 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
 
     try
     {
-      /* Collect all results with length sections. */
       final Pattern lsPattern = Pattern.compile( IWspmTuhhConstants.FILE_PATTERN_POLYNOME_LENGTH_SECTIONS_GML );
       final WildcardFileFilter fileFilter = new WildcardFileFilter( IWspmTuhhConstants.FILE_RESULT_POLYNOME_LENGTH_SECTIONS_GML );
       final FileFilterVisitor visitor = new FileFilterVisitor( fileFilter );
@@ -96,15 +95,6 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
           final IWspmResultNode node = new WspmResultContainer( this, lsFile, label );
           result.add( node );
         }
-      }
-
-      /* Collect all results with q interval results. */
-      final FileFilterVisitor qIntervalVisitor = new FileFilterVisitor( new WildcardFileFilter( "qIntervallResults*.gml" ) ); //$NON-NLS-1$
-      m_folder.accept( qIntervalVisitor );
-      final IFile[] qIntervalVisitorFiles = qIntervalVisitor.getFiles();
-      for( final IFile qIntervalFile : qIntervalVisitorFiles )
-      {
-        result.add( new WspmResultQIntervalNode( this, qIntervalFile.getFullPath(), qIntervalFile.getName() ) );
       }
     }
     catch( final CoreException e )
@@ -124,9 +114,6 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
     return m_folder.getName();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.AbstractWspmResultNode#getInternalName()
-   */
   @Override
   protected String getInternalName( )
   {
@@ -142,12 +129,10 @@ public class WspmResultFolderNode extends AbstractWspmResultNode implements ITuh
     return m_folder;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.results.ITuhhCalculationNode#getCalculation()
-   */
   @Override
   public TuhhCalculation getCalculation( )
   {
     return ((ITuhhCalculationNode) getParent()).getCalculation();
   }
+
 }

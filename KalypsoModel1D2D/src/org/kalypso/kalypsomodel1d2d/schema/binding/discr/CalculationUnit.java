@@ -41,43 +41,58 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * Default implementation for {@link ICalculationUnit}
- * 
+ *
  * @author Patrice Congo
- * @author Stefan Kurzbach
- * 
+ *
  */
-public class CalculationUnit extends Feature_Impl implements ICalculationUnit
+public class CalculationUnit extends AbstractFeatureBinder implements ICalculationUnit
 {
-  public final static QName QN_PROPERTY_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" ); //$NON-NLS-1$
+  private Set<String> m_memberIDs;
+  private final IFeatureWrapperCollection<IFENetItem> elements;
 
-  private final FeatureBindingCollection<IFENetItem> m_elements = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, QN_PROPERTY_ELEMENT );
-
-  public CalculationUnit( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalculationUnit( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qnameToBind );
+    elements = Util.<IFENetItem> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass, true );
+    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFE1D2DElement.class );
+    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFELine.class );
+  }
+
+  private Set<String> getMemberIDs( )
+  {
+    if( m_memberIDs == null )
+    {
+      m_memberIDs = new HashSet<String>();
+      final IFeatureWrapperCollection<IFENetItem> elements = getElements();
+      for( final IFENetItem element : elements )
+        m_memberIDs.add( element.getGmlID() );
+    }
+    return m_memberIDs;
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
    */
   @Override
-  public FeatureBindingCollection<IFENetItem> getElements( )
+  public IFeatureWrapperCollection<IFENetItem> getElements( )
   {
-    return m_elements;
+    return elements;
   }
 
   /**
@@ -87,7 +102,7 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   public boolean addElementAsRef( final IFENetItem element )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
-    return m_elements.addRef( element );
+    return elements.addRef( element );
   }
 
   /**
@@ -96,7 +111,7 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   @Override
   public void removeElementAsRef( final IFENetItem element )
   {
-    m_elements.remove( element );
+    elements.removeAllRefs( element );
   }
 
   /**
@@ -117,20 +132,25 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   @Override
   public List<IFELine> getContinuityLines( )
   {
+    final IFeatureWrapperCollection<IFENetItem> elements = getElements();
     final List<IFELine> continuityLines = new ArrayList<IFELine>();
-    for( final IFENetItem element : m_elements )
+    for( final IFENetItem element : elements )
       if( element instanceof IFELine )
         continuityLines.add( (IFELine) element );
     return continuityLines;
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#contains(org.kalypsodeegree.model.feature.binding.Feature)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#contains(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @Override
   public boolean contains( final IFENetItem member )
   {
-    return m_elements.contains( member );
+    if( member == null )
+      return false;
+
+    // FIXME: !This will not always work! the memberIDs is not updated, if an element is added....!
+    return getMemberIDs().contains( member.getGmlID() );
   }
 
   /**
@@ -140,7 +160,8 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   public List<IElement1D> getElements1D( )
   {
     final List<IElement1D> list = new ArrayList<IElement1D>();
-    for( final IFENetItem element : m_elements )
+    final IFeatureWrapperCollection<IFENetItem> elements = getElements();
+    for( final IFENetItem element : elements )
       if( element instanceof IElement1D )
         list.add( (IElement1D) element );
     return list;
@@ -153,7 +174,8 @@ public class CalculationUnit extends Feature_Impl implements ICalculationUnit
   public List<IPolyElement> getElements2D( )
   {
     final List<IPolyElement> list = new ArrayList<IPolyElement>();
-    for( final IFENetItem element : m_elements )
+    final IFeatureWrapperCollection<IFENetItem> elements = getElements();
+    for( final IFENetItem element : elements )
     {
       if( element instanceof IPolyElement )
         list.add( (IPolyElement) element );

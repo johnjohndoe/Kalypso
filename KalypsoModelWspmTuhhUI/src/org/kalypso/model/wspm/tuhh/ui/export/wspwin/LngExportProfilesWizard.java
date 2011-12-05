@@ -47,9 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.LngSink;
@@ -57,6 +55,7 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.wspwin.core.Plotter;
 
 /**
@@ -68,37 +67,13 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
 
   private static final String EXTENSION = "lng"; //$NON-NLS-1$
 
-  private LngExportFileChooserPage m_profileFileChooserPage;
+  final private LngExportFileChooserPage m_profileFileChooserPage;
 
-  public LngExportProfilesWizard( )
+  public LngExportProfilesWizard( final ProfileSelection selection )
   {
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
+    super( selection );
 
-  @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
-  {
-    final File file = m_profileFileChooserPage.getFile();
-    final SinkExporter exporter = new SinkExporter( new LngSink() );
-    exporter.export( profiles, file, monitor );
-
-    if( m_profileFileChooserPage.doOpenPlotter() )
-    {
-      openInPlotter( file );
-    }
-  }
-
-  @Override
-  protected int getMinimumSelectionCount( )
-  {
-    // Two profiles needed for length section.
-    return 2;
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    super.init( workbench, selection );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
     saveDelegate.addFilter( FILTER_LABEL, "*." + EXTENSION ); //$NON-NLS-1$
@@ -110,6 +85,17 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     addPage( m_profileFileChooserPage );
   }
 
+  @Override
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  {
+    final File file = m_profileFileChooserPage.getFile();
+    final SinkExporter exporter = new SinkExporter( new LngSink() );
+    exporter.export( profiles, file, monitor );
+
+    if( m_profileFileChooserPage.doOpenPlotter() )
+      openInPlotter( file );
+  }
+
   private void openInPlotter( final File file ) throws CoreException
   {
     try
@@ -118,7 +104,7 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     }
     catch( final IOException e )
     {
-      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString( "LngExportProfilesWizard_0" ), e ); //$NON-NLS-1$
+      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("LngExportProfilesWizard_0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

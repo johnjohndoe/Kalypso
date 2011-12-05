@@ -117,8 +117,8 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         coverage.setDescription( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
-        final GMLWorkspace workspace = m_rasterModel.getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_rasterModel, new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        final GMLWorkspace workspace = m_rasterModel.getFeature().getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_rasterModel.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       // statistics...
@@ -147,7 +147,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     /* task: create an observation */
-    final Feature controlModelFeature = controlModel;
+    final Feature controlModelFeature = controlModel.getFeature();
     final CommandableWorkspace workspace = new CommandableWorkspace( controlModelFeature.getWorkspace() );
 
     final IPropertyType property = controlModelFeature.getFeatureType().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );

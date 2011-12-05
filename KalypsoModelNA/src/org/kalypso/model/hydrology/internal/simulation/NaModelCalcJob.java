@@ -76,11 +76,13 @@ public class NaModelCalcJob implements ISimulation
 
     try
     {
-      monitor.setMessage( Messages.getString( "NaModelCalcJob.0" ) ); //$NON-NLS-1$
+      monitor.setMessage( "Loading simulation data..." );
       data = NaSimulationDataFactory.load( dataProvider );
 
       runnable = createRunnable( data, tmpdir );
       /* final boolean success = */runnable.run( monitor );
+      // FIXME: what to do of not succeeded?
+      publishResults( resultEater, runnable );
     }
     catch( final SimulationException e )
     {
@@ -93,8 +95,6 @@ public class NaModelCalcJob implements ISimulation
     }
     finally
     {
-      // FIXME: what to do of not succeeded?
-      publishResults( resultEater, runnable );
       if( data != null )
         data.dispose();
     }
@@ -108,17 +108,15 @@ public class NaModelCalcJob implements ISimulation
     final File resultDir = runnable.getResultDir();
     final File optimizeResult = runnable.getOptimizeResult();
 
-    if( resultDir.isDirectory() )
-      resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
-    else
-      throw new SimulationException( Messages.getString( "NaModelCalcJob.1" ) ); //$NON-NLS-1$
+    if( !resultDir.exists() )
+      throw new SimulationException( "Fehler bei der Optimierung, Optimierungsergebnis nicht vorhanden." );
 
+    resultEater.addResult( NaModelConstants.OUT_ZML, resultDir );
     if( optimizeResult != null )
     {
-      if( optimizeResult.isFile() )
-        resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
-      else
-        throw new SimulationException( Messages.getString( "NaModelCalcJob.1" ) ); //$NON-NLS-1$
+      resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, optimizeResult );
+      if( !optimizeResult.exists() )
+        throw new SimulationException( "Fehler bei der Optimierung, Optimierungsergebnis nicht vorhanden." );
     }
   }
 

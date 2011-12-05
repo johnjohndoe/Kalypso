@@ -40,15 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -109,20 +107,10 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
 
     final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, pointLeft );
     final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, pointRight );
-// m1.setInterpretedValue( true );
-// m2.setInterpretedValue( true );
+    m1.setInterpretedValue( true );
+    m2.setInterpretedValue( true );
 
-    m1.setPoint( pointLeft );
-    m2.setPoint( pointRight );
-
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
-
-    final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    m1.setValue( defaultValue );
-    m2.setValue( defaultValue );
-
-// operation.addChange( new PointMarkerSetPoint( m1, pointLeft ) );
-// operation.addChange( new PointMarkerSetPoint( m2, pointRight ) );
+    // operation.addChange( new PointMarkerSetPoint( devider, newPoint ) );
 
     operation.addChange( new ActiveObjectEdit( profil, pointLeft, null ) );
     new ProfilOperationJob( operation ).schedule();

@@ -67,7 +67,7 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -165,9 +165,9 @@ public class MergeTrianglesWidget extends AbstractWidget
 
     try
     {
-      final IFeatureBindingCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
+      final IFeatureWrapperCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
       final IFE1D2DElement[] elements2remove = adjacentElements.toArray( new IFE1D2DElement[adjacentElements.size()] );
-
+      
       final GM_Surface<GM_SurfacePatch> newElement = createNewElement( (IPolyElement) elements2remove[0], (IPolyElement) elements2remove[1] );
       newElement.setCoordinateSystem( m_currentEdge.getGeometry().getCoordinateSystem() );
       final CommandableWorkspace workspace = m_theme.getWorkspace();
@@ -175,7 +175,7 @@ public class MergeTrianglesWidget extends AbstractWidget
       // add remove element command
       for( final IFE1D2DElement element : elements2remove )
       {
-        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element, m_model1d2d );
+        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element.getFeature(), m_model1d2d );
         workspace.postCommand( deleteCmd );
       }
 
@@ -227,7 +227,7 @@ public class MergeTrianglesWidget extends AbstractWidget
     // Validate and set warning
     if( m_currentEdge != null )
     {
-      final IFeatureBindingCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
+      final IFeatureWrapperCollection<IFE1D2DElement> adjacentElements = m_currentEdge.getAdjacentElements();
       if( adjacentElements.size() != 2 )
         m_warning = "Edge must have two adjacent 2D-elements"; //$NON-NLS-1$
       else
@@ -257,7 +257,7 @@ public class MergeTrianglesWidget extends AbstractWidget
       try
       {
         final Symbolizer symbolizer = m_warning == null ? createGoodSymbolizer() : createBadSymbolizer();
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( m_currentEdge, symbolizer, null );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( m_currentEdge.getFeature(), symbolizer );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
       catch( final Exception e )
@@ -279,7 +279,7 @@ public class MergeTrianglesWidget extends AbstractWidget
     if( m_goodSld == null )
       m_goodSld = XMLTools.parse( getClass().getResource( "styles/goodEdge.sld" ) ); //$NON-NLS-1$
 
-    return SLDFactory.createSymbolizer( null, m_goodSld.getDocumentElement() );
+    return SLDFactory.createSymbolizer( null, m_goodSld.getDocumentElement(), 0.0, Double.MAX_VALUE );
   }
 
   private Symbolizer createBadSymbolizer( ) throws IOException, SAXException, XMLParsingException
@@ -287,7 +287,7 @@ public class MergeTrianglesWidget extends AbstractWidget
     if( m_badSld == null )
       m_badSld = XMLTools.parse( getClass().getResource( "styles/badEdge.sld" ) ); //$NON-NLS-1$
 
-    return SLDFactory.createSymbolizer( null, m_badSld.getDocumentElement() );
+    return SLDFactory.createSymbolizer( null, m_badSld.getDocumentElement(), 0.0, Double.MAX_VALUE );
   }
 
 }

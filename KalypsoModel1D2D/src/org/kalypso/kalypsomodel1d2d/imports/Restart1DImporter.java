@@ -51,7 +51,6 @@ import javax.vecmath.Vector2d;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -92,13 +91,12 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * Imports the results of a wspm water level calculation as stationary result into the result database of 1d2d.
+ * Imports the results of a wspm waterlevel calculation as stationary result into the result database of 1d2d.
  * <p>
  * This result can then be used to pseudo-restart a 1d-instationary calculation.
  * </p>
@@ -150,7 +148,7 @@ public class Restart1DImporter
       final IFile resultFile = stepFolder.getFile( "results.gml" ); //$NON-NLS-1$
       final File resultJavaFile = resultFile.getLocation().toFile();
       GmlSerializer.serializeWorkspace( resultJavaFile, resultWorkspace, "UTF-8" ); //$NON-NLS-1$
-      resultFile.refreshLocal( IResource.DEPTH_ONE, progress.newChild( 10 ) );
+      resultFile.refreshLocal( IFile.DEPTH_ONE, progress.newChild( 10 ) );
       ProgressUtilities.worked( progress, 0 );
 
       ProgressUtilities.worked( progress, 10 );
@@ -192,7 +190,7 @@ public class Restart1DImporter
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
     final TuhhWspmProject tuhhWspmProject = (TuhhWspmProject) modelWorkspace.getRootFeature();
 
-    final IFeatureBindingCollection<TuhhCalculation> calculations = tuhhWspmProject.getCalculations();
+    final TuhhCalculation[] calculations = tuhhWspmProject.getCalculations();
     for( final TuhhCalculation tuhhCalculation : calculations )
     {
       if( tuhhCalculation.getName().equals( calcName ) )
@@ -364,7 +362,7 @@ public class Restart1DImporter
 
   private void createNodeResult( final INodeResultCollection nodeResults, final String name, final String desc, final GM_Point location, final BigDecimal waterlevel, final Vector2d vector, final boolean isMidside )
   {
-    final INodeResult nodeResult = nodeResults.getNodeResults().addNew( INodeResult.QNAME, INodeResult.class );
+    final INodeResult nodeResult = nodeResults.addNew( INodeResult.QNAME, INodeResult.class );
     nodeResult.setName( name );
     nodeResult.setDescription( desc );
     // nodeResult.setCalcId( -1 );

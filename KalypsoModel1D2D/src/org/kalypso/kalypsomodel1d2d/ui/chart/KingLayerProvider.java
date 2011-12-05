@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 import java.net.URL;
 
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
@@ -71,11 +72,11 @@ public class KingLayerProvider extends AbstractLayerProvider
 
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     if( featureKey == null )
-      throw new ConfigurationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.0" ) ); //$NON-NLS-1$
+      throw new ConfigurationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.0") ); //$NON-NLS-1$
 
-    final Feature kingFeature = (Feature) getModel().getData( featureKey );
+    final Feature kingFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     if( kingFeature == null )
-      throw new ConfigurationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2", featureKey ) ); //$NON-NLS-1$
+      throw new ConfigurationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider.2", featureKey) ); //$NON-NLS-1$
 
     KingDataContainer data = new KingDataContainer( kingFeature );
 

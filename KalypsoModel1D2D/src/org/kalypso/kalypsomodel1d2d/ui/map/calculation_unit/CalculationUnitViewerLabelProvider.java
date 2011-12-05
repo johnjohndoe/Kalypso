@@ -48,7 +48,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
@@ -87,22 +87,22 @@ public class CalculationUnitViewerLabelProvider extends LabelProvider
     if( element instanceof ICalculationUnit1D2D )
       return calc1D2DImage;
 
-    throw new UnsupportedOperationException( "Only Feature is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    throw new UnsupportedOperationException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof Feature )
+    if( element instanceof IFeatureWrapper2 )
     {
-      final String name = ((Feature) element).getName();
+      final String name = ((IFeatureWrapper2) element).getName();
       if( name != null )
         return name;
 
-      return ((Feature) element).getId();
+      return ((IFeatureWrapper2) element).getGmlID();
     }
 
-    throw new UnsupportedOperationException( "Only Feature is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    throw new UnsupportedOperationException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
 }

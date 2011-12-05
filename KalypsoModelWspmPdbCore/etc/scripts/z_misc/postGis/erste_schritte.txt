@@ -1,6 +1,0 @@
-sudo -u postgres createuser -P pdb_admin:
-
-- password: pdb_admin
-- superuser: n
-- neue Datenbanken: j
-- neue Rollen: j

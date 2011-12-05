@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
@@ -54,12 +54,8 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 /**
  * @author Dirk Kuch
  */
-public final class WspmProfileHelper
+public class WspmProfileHelper
 {
-  private WspmProfileHelper( )
-  {
-  }
-
   /**
    * @return breite of sohlpunkt
    */
@@ -100,7 +96,7 @@ public final class WspmProfileHelper
     {
       final Double h = point.getHoehe();
 
-      if( h < sohlpunkt - fuziness )
+      if( h < (sohlpunkt - fuziness) )
       {
         sohle.clear();
 
@@ -109,7 +105,7 @@ public final class WspmProfileHelper
 
         lastIterationAdd = true;
       }
-      else if( h - sohlpunkt < fuziness && lastIterationAdd )
+      else if( (h - sohlpunkt) < fuziness && lastIterationAdd == true )
       {
         sohle.add( point );
       }

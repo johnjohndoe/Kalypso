@@ -52,12 +52,13 @@
 			<Label>
 				<ogc:PropertyName>name</ogc:PropertyName>
 			</Label>
-            <Font>
-                <CssParameter name="font-color">#000000</CssParameter>
-                <CssParameter name="font-size">12.0</CssParameter>
-                <CssParameter name="font-style">normal</CssParameter>
-                <CssParameter name="font-weight">normal</CssParameter>
-            </Font>
+			<Font>
+				<CssParameter name="font-family" />
+				<CssParameter name="font-color">#000000</CssParameter>
+				<CssParameter name="font-size">10.0</CssParameter>
+				<CssParameter name="font-style">normal</CssParameter>
+				<CssParameter name="font-weight">normal</CssParameter>
+			</Font>
 			<LabelPlacement>
 				<PointPlacement>
 					<AnchorPoint>
@@ -65,26 +66,25 @@
 						<AnchorPointY>0.0</AnchorPointY>
 					</AnchorPoint>
 					<Displacement>
-						<DisplacementX>15.0</DisplacementX>
-						<DisplacementY>15.0</DisplacementY>
+						<DisplacementX>5.0</DisplacementX>
+						<DisplacementY>5.0</DisplacementY>
 					</Displacement>
 					<Rotation>0.0</Rotation>
 				</PointPlacement>
 			</LabelPlacement>
-            <Halo>
-                <Radius>3</Radius>
-                <Fill>
-                    <CssParameter name="fill-opacity">0.3</CssParameter>
-                    <CssParameter name="fill">#808080</CssParameter>
-                </Fill>
-                <Stroke>
-                    <CssParameter name="stroke">#000000</CssParameter>
-                    <CssParameter name="stroke-width">2.0</CssParameter>
-                    <CssParameter name="stroke-linejoin">round</CssParameter>
-                    <CssParameter name="stroke-opacity">1.0</CssParameter>
-                    <CssParameter name="stroke-linecap">square</CssParameter>
-                </Stroke>
-            </Halo>
+			<Halo>
+				<Fill>
+					<CssParameter name="fill-opacity">0.0</CssParameter>
+					<CssParameter name="fill">#fbf193</CssParameter>
+				</Fill>
+				<Stroke>
+					<CssParameter name="stroke">#000000</CssParameter>
+					<CssParameter name="stroke-width">1.0</CssParameter>
+					<CssParameter name="stroke-linejoin">round</CssParameter>
+					<CssParameter name="stroke-opacity">0.0</CssParameter>
+					<CssParameter name="stroke-linecap">square</CssParameter>
+				</Stroke>
+			</Halo>
 		</TextSymbolizer>		
 	</Rule>
 	<Rule>
@@ -100,32 +100,6 @@
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>
-                <CssParameter name="stroke-arrow-type">line</CssParameter>
-                <CssParameter name="stroke-arrow-widget">open</CssParameter>
-                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
-                <CssParameter name="stroke-arrow-size">35</CssParameter>
-			</Stroke>
-		</LineSymbolizer>
-	</Rule>
-	<Rule>
-		<Name>rule_link_izkn_vers</Name>
-		<Title>%rule_link_izkn_vers_title</Title>
-		<LineSymbolizer>
-			<Geometry>
-				<ogc:PropertyName>link_izkn_vers</ogc:PropertyName>
-			</Geometry>
-			<Stroke>
-				<CssParameter name="stroke-width">2.0</CssParameter>
-				<CssParameter name="stroke-dashoffset">0.0</CssParameter>
-				<CssParameter name="stroke-dasharray">10.0,10.0</CssParameter>
-				<CssParameter name="stroke-opacity">1.0</CssParameter>
-				<CssParameter name="stroke">#008040</CssParameter>
-				<CssParameter name="stroke-linejoin">mitre</CssParameter>
-				<CssParameter name="stroke-linecap">square</CssParameter>
-                <CssParameter name="stroke-arrow-type">line</CssParameter>
-                <CssParameter name="stroke-arrow-widget">open</CssParameter>
-                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
-                <CssParameter name="stroke-arrow-size">35</CssParameter>
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
@@ -134,20 +108,16 @@
 		<Title>%rule_link_izkn_title</Title>
 		<LineSymbolizer>
 			<Geometry>
-				<ogc:PropertyName>link_izkn</ogc:PropertyName>
+				<ogc:PropertyName>link_izkn_vers</ogc:PropertyName>
 			</Geometry>
 			<Stroke>
 				<CssParameter name="stroke-width">2.0</CssParameter>
 				<CssParameter name="stroke-dashoffset">0.0</CssParameter>
-				<CssParameter name="stroke-dasharray">10.0,10.0</CssParameter>
+				<CssParameter name="stroke-dasharray">1.0,1.0</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
-				<CssParameter name="stroke">#800040</CssParameter>
+				<CssParameter name="stroke">#008040</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-linecap">square</CssParameter>
-                <CssParameter name="stroke-arrow-type">line</CssParameter>
-                <CssParameter name="stroke-arrow-widget">open</CssParameter>
-                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
-                <CssParameter name="stroke-arrow-size">35</CssParameter>
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>

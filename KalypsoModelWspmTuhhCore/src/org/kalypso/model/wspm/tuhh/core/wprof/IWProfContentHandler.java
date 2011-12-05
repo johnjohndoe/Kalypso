@@ -50,5 +50,5 @@ public interface IWProfContentHandler
   void newPoint( IWProfPoint point ) throws CoreException;
 
   /** To be called after all points have been added */
-  void finished( ) throws CoreException;
+  public void finished( ) throws CoreException;
 }

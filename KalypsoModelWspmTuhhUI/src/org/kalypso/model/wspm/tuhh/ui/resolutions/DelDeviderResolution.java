@@ -115,7 +115,7 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( final String parameterStream )
+  public void setData( String parameterStream )
   {
     final String[] params = getParameter( parameterStream );
     try
@@ -124,7 +124,7 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
       m_deviderTyp = params[2];
       m_initialized = true;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       throw new IllegalArgumentException();
     }

@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
-import java.util.Locale;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
-import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -53,15 +50,14 @@ import org.kalypso.observation.result.IRecord;
  */
 public class PointComponentPattern extends AbstractPatternInput<IProfilePatternData>
 {
-  private final Locale m_locale;
-
-  public PointComponentPattern( final Locale locale )
+  public PointComponentPattern( )
   {
-    super( "Component", Messages.getString( "PointComponentPattern_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    m_locale = locale;
+    super( "Component", "Component" );
   }
 
+  /**
+   * @see org.kalypso.commons.patternreplace.AbstractPatternInput#getShowInMenu()
+   */
   @Override
   public boolean getShowInMenu( )
   {
@@ -91,7 +87,7 @@ public class PointComponentPattern extends AbstractPatternInput<IProfilePatternD
   {
     // TODO: we need a more sophisticated handling of types here...
     if( value instanceof Number )
-      return String.format( m_locale, "%.4f", value ); //$NON-NLS-1$
+      return String.format( "%.4f", value ); //$NON-NLS-1$
 
     return ObjectUtils.toString( value );
   }

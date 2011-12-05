@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelWspmTuhhSchema Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.schema; singleton:=true
-Bundle-Version: 11.6.4.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
@@ -14,10 +14,10 @@ Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  de.openali.odysseus.chart.factory,
  de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.ext.observation,
- org.kalypso.ModelSimulationBase
+ org.kalypso.ModelSimulationBase;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.schema,
  org.kalypso.model.wspm.tuhh.schema.gml,
  org.kalypso.model.wspm.tuhh.schema.schemata,
  org.kalypso.model.wspm.tuhh.schema.simulation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

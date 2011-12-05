@@ -40,46 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.commons.tokenreplace.IStringResolver;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * GML-binding for the rcm:RainfallGenerator's.
+ * GML-binding for the rcm:RainfallGenerator's
  * 
  * @author Gernot Belger
  */
 public interface IRainfallGenerator extends Feature
 {
   /**
-   * @param sourceFilter
-   *          Enforces source timeseries to have equal properties (length, interval, ...). May be null.
+   * This function could be used to provide a log, the generator can write messages to. This is fully optional though.
+   * 
+   * @param log
+   *          The log.
    */
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, ILog log, final IProgressMonitor monitor ) throws CoreException;
+  public void setLog( final ILog log );
 
   /**
-   * This function returns the period. This will be the unmodified period from the feature, containing strings, which
-   * may be variables, which needs to be resolved.
-   * 
-   * @return The period.
+   * @param sourceFilter Enforces source timeseries to have equal properties (length, interval, ...). May be null.
    */
-  public org.kalypso.model.rcm.internal.binding.DateRange getPeriod( );
-
-  /**
-   * This function returns the period. This will be a modified period, containing already resolved dates.
-   * 
-   * @return The period.
-   */
-  public DateRange getPeriod( IStringResolver variables );
-
-  /**
-   * This function returns the models this generator handles.
-   * 
-   * @return The models.
-   */
-  public String[] getModels( );
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final Date from, final Date to, final String sourceFilter, final IProgressMonitor monitor ) throws CoreException;
 }

@@ -53,18 +53,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
@@ -99,7 +97,6 @@ import org.kalypso.simulation.core.util.DefaultSimulationResultEater;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
@@ -307,27 +304,18 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       // read interval results and remember them
       final File qintervallFile = (File) resultEater.getResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT );
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qintervallFile, calcWorkspace.getFeatureProviderFactory() );
-      final QIntervallResultCollection qResultCollection = (QIntervallResultCollection) qresultsWorkspace.getRootFeature();
+      final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
 
-      final IFeatureBindingCollection<QIntervallResult> resultList = qResultCollection.getQIntervalls();
-      for( final QIntervallResult qresult : resultList )
+      final List< ? > resultList = qResultCollection.getQResultFeatures();
+      for( final Object o : resultList )
       {
-        final BigDecimal flowStation = flowRel.getStation();
-        if( flowStation == null )
-        {
-          final String message = String.format( Messages.getString("FlowRelationshipCalcOperation.0"), flowRel.getName() ); //$NON-NLS-1$
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, null ) ); //$NON-NLS-1$
-        }
-
+        final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
         // HACK: we set a scale here in order to get a right comparison with the station value that was read from the
         // profile. if a rounded station value occurs in the flow relation, the result of the comparison is always
         // false, because the station value of the flow relation gets rounded and the one of the profile gets not
         // rounded (read from string with fixed length).
         // TODO: implement the right setting of the station value for the flow relation with a fixed scale of 4!
-        final BigDecimal station = flowStation.setScale( 4, BigDecimal.ROUND_HALF_UP );
-
-        // FIXME: why do we use the station defined in the relation at all -> the calculation uses the station defined
-        // in the profile anyways
+        final BigDecimal station = flowRel.getStation().setScale( 4, BigDecimal.ROUND_HALF_UP );
 
         // REMARK: sometimes it could be, that the user wants to assign a profile to a new created flow relation. in
         // this case he is able to to this and to calculate the data, but the assignment will never happen, if the
@@ -379,7 +367,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
   private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles ) throws GMLSchemaException, InvocationTargetException
   {
-    final IFeatureProviderFactory factory = flowRel.getWorkspace().getFeatureProviderFactory();
+    final IFeatureProviderFactory factory = flowRel.getFeature().getWorkspace().getFeatureProviderFactory();
 
     // Create empty project with one calculation and one reach
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
@@ -447,7 +435,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
   public static void copyTeschkeData( final ITeschkeFlowRelation flowRel, final QIntervallResult qresult ) throws Exception
   {
-    final Feature feature = flowRel;
+    final Feature feature = flowRel.getFeature();
     final Feature flowRelParentFeature = feature;
     final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
     final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
@@ -455,7 +443,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
 
     /* clone observation */
-    final Feature pointObsFeature = (Feature) qresult.getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
+    final Feature pointObsFeature = (Feature) qresult.getFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
     if( pointObsFeature != null )
       FeatureHelper.cloneFeature( feature, flowRelObsRelation, pointObsFeature );
 
@@ -464,7 +452,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final List< ? > polynomeFeatures = qresult.getPolynomialFeatures();
     for( final Object object : polynomeFeatures )
     {
-      final GMLWorkspace qresultsWorkspace = qresult.getWorkspace();
+      final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
       final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
       if( polynomeFeature != null )
       {
@@ -478,7 +466,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
   public static void copyBuildingData( final IBuildingFlowRelation buildingRelation, final QIntervallResult qresult )
   {
     /* copy building parameter from one observation to the other */
-    final Feature buildingFeature = buildingRelation;
+    final Feature buildingFeature = buildingRelation.getFeature();
     final GMLWorkspace buildingWorkspace = buildingFeature.getWorkspace();
     final IObservation<TupleResult> buildingObservation = buildingRelation.getBuildingObservation();
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );

@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSection;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class ResultProfileInterpolator
 {

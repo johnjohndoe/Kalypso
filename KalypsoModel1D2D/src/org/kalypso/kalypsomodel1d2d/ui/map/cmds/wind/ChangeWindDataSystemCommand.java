@@ -61,6 +61,7 @@ import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -96,8 +97,8 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   public ChangeWindDataSystemCommand( final CommandableWorkspace commandableWorkspace, final IWindModel pWindModel, final String description )
   {
-    Assert.throwIAEOnNullParam( pWindModel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.1" ) ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.2" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( pWindModel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.1" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.2" ) ); //$NON-NLS-1$
     m_commandableWorkspace = commandableWorkspace;
     m_windModel = pWindModel;
     m_description = description;
@@ -131,14 +132,14 @@ public class ChangeWindDataSystemCommand implements ICommand
       try
       {
         command.process();
-        final Feature[] changedFeatures2 = command.getChangedFeature();
+        final IFeatureWrapper2[] changedFeatures2 = command.getChangedFeature();
         if( changedFeatures2 != null )
         {
-          for( final Feature changedFeature : changedFeatures2 )
+          for( final IFeatureWrapper2 changedFeature : changedFeatures2 )
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature;
+              final Feature wrappedFeature = changedFeature.getFeature();
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
@@ -161,7 +162,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel, changedFeaturesArray, m_intEventType ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel.getFeature(), changedFeaturesArray, m_intEventType ) );
   }
 
   /**
@@ -239,7 +240,7 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   public IStatus deleteFiles( )
   {
-    final MultiStatus status = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.4" ), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindSystemCommand.4" ), null ); //$NON-NLS-1$
     for( final IFile lFile : m_files )
     {
       try

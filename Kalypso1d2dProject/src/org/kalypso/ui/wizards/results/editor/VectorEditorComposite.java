@@ -71,6 +71,7 @@ import org.kalypso.ui.editor.sldEditor.IFillModifyListener;
 import org.kalypso.ui.editor.sldEditor.IStrokeModifyListener;
 import org.kalypso.ui.editor.sldEditor.StrokeEditorComposite;
 import org.kalypso.ui.wizards.i18n.Messages;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.Mark;
@@ -114,7 +115,7 @@ public class VectorEditorComposite extends Composite
 
   private FillEditorComposite m_fillEditor;
 
-  public VectorEditorComposite( final Composite parent, final int style, final PointSymbolizer symb, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
+  public VectorEditorComposite( final Composite parent, final int style, PointSymbolizer symb, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
     m_symb = symb;
@@ -125,40 +126,48 @@ public class VectorEditorComposite extends Composite
     m_globalMin = minGlobalValue.toString();
     m_globalMax = maxGlobalValue.toString();
 
-    final ParameterValueType sizeParameter = m_graphic.getSizeParameter();
-    final Object[] components = sizeParameter.getComponents();
+    try
+    {
+      final ParameterValueType sizeParameter = m_graphic.getSizeParameter();
+      final Object[] components = sizeParameter.getComponents();
 
-    ArithmeticExpression mult = null;
-    for( final Object object : components )
-    {
-      if( object instanceof ArithmeticExpression )
+      ArithmeticExpression mult = null;
+      for( Object object : components )
       {
-        mult = (ArithmeticExpression) object;
-        break;
+        if( object instanceof ArithmeticExpression )
+        {
+          mult = (ArithmeticExpression) object;
+          break;
+        }
       }
-    }
-    if( mult == null )
-      m_scale = new BigDecimal( 10 );
-    else
-    {
-      m_firstExpression = (Literal) mult.getFirstExpression();
-      m_scale = new BigDecimal( m_firstExpression.getValue() );
-    }
+      if( mult == null )
+        m_scale = new BigDecimal( 10 );
+      else
+      {
+        m_firstExpression = (Literal) mult.getFirstExpression();
+        m_scale = new BigDecimal( m_firstExpression.getValue() );
+      }
 
-    final Object[] mag = m_graphic.getMarksAndExtGraphics();
-    final Object object = mag[0];
-    if( object instanceof Mark )
+      m_graphic.getOpacity( null );
+      Object[] mag = m_graphic.getMarksAndExtGraphics();
+      Object object = mag[0];
+      if( object instanceof Mark )
+      {
+        m_mark = (Mark) object;
+        try{
+          m_fill = m_mark.getFill();
+        }
+        catch (Exception e) {
+          // TODO: handle exception
+        }
+        m_stroke = m_mark.getStroke();
+      }
+
+    }
+    catch( FilterEvaluationException e )
     {
-      m_mark = (Mark) object;
-      try
-      {
-        m_fill = m_mark.getFill();
-      }
-      catch( final Exception e )
-      {
-        // TODO: handle exception
-      }
-      m_stroke = m_mark.getStroke();
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
     createControl();
@@ -176,18 +185,18 @@ public class VectorEditorComposite extends Composite
   private void createStrokeFillControl( final Composite commonComposite )
   {
     final Group graphicGroup = new Group( commonComposite, SWT.NONE );
-    final GridData gridDataProperty = new GridData( SWT.FILL, SWT.FILL, true, true );
+    GridData gridDataProperty = new GridData( SWT.FILL, SWT.FILL, true, true );
     gridDataProperty.horizontalSpan = 2;
     graphicGroup.setLayoutData( gridDataProperty );
     graphicGroup.setLayout( new GridLayout( 2, true ) );
     graphicGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.1") ); //$NON-NLS-1$
 
-    final Group strokeColorMapGroup = new Group( graphicGroup, SWT.NONE );
+    Group strokeColorMapGroup = new Group( graphicGroup, SWT.NONE );
     strokeColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     strokeColorMapGroup.setLayout( new GridLayout( 1, true ) );
     strokeColorMapGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.2") ); //$NON-NLS-1$
 
-    final Group fillColorMapGroup = new Group( graphicGroup, SWT.NONE );
+    Group fillColorMapGroup = new Group( graphicGroup, SWT.NONE );
     fillColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     fillColorMapGroup.setLayout( new GridLayout( 1, true ) );
     fillColorMapGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.3") ); //$NON-NLS-1$
@@ -197,7 +206,7 @@ public class VectorEditorComposite extends Composite
     strokeEditor.addModifyListener( new IStrokeModifyListener()
     {
       @Override
-      public void onStrokeChanged( final Object source, final Stroke stroke )
+      public void onStrokeChanged( Object source, Stroke stroke )
       {
         contentChanged();
       }
@@ -208,14 +217,14 @@ public class VectorEditorComposite extends Composite
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
       @Override
-      public void onFillChanged( final Object source, final Fill fill )
+      public void onFillChanged( Object source, Fill fill )
       {
         contentChanged();
       }
     } );
   }
 
-  private void createUomControl( final Composite comp )
+  private void createUomControl( Composite comp )
   {
     /* uom type combo */
     // combo text
@@ -224,12 +233,12 @@ public class VectorEditorComposite extends Composite
     comboTextLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.4") ); //$NON-NLS-1$
 
     final ComboViewer uomTypeCombo = new ComboViewer( comp, SWT.READ_ONLY );
-    final GridData comboGridData = new GridData( SWT.END, SWT.CENTER, false, false );
+    GridData comboGridData = new GridData( SWT.END, SWT.CENTER, false, false );
     comboGridData.widthHint = 25;
     uomTypeCombo.getControl().setLayoutData( comboGridData );
     uomTypeCombo.setContentProvider( new ArrayContentProvider() );
 
-    final String[] types = new String[2];
+    String[] types = new String[2];
     types[0] = "Meter"; //$NON-NLS-1$
     types[1] = "Pixel"; //$NON-NLS-1$
 
@@ -245,7 +254,7 @@ public class VectorEditorComposite extends Composite
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( final Object element )
+      public String getText( Object element )
       {
 
         return super.getText( element );
@@ -286,19 +295,19 @@ public class VectorEditorComposite extends Composite
   {
     /* properties (global min / max, displayed min / max */
     final Group propertyGroup = new Group( commonComposite, SWT.NONE );
-    final GridData gridDataProperty = new GridData( SWT.FILL, SWT.FILL, true, true );
+    GridData gridDataProperty = new GridData( SWT.FILL, SWT.FILL, true, true );
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
     propertyGroup.setLayout( new GridLayout( 2, true ) );
     propertyGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.9") ); //$NON-NLS-1$
 
     final Composite globalComposite = new Composite( propertyGroup, SWT.NONE );
-    final GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
+    GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
     globalComposite.setLayoutData( gridDataGlobalComp );
     globalComposite.setLayout( new GridLayout( 2, false ) );
 
     final Composite displayComposite = new Composite( propertyGroup, SWT.NONE );
-    final GridData gridDataDisplayComp = new GridData( SWT.FILL, SWT.FILL, true, false );
+    GridData gridDataDisplayComp = new GridData( SWT.FILL, SWT.FILL, true, false );
     displayComposite.setLayoutData( gridDataDisplayComp );
     displayComposite.setLayout( new GridLayout( 2, false ) );
 
@@ -309,7 +318,7 @@ public class VectorEditorComposite extends Composite
     globalMaxLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.10") ); //$NON-NLS-1$
 
     final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
-    final GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.UP, false, false );
+    GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.UP, false, false );
     gridDataMaxValueLabel.widthHint = 40;
     gridDataMaxValueLabel.heightHint = 15;
 
@@ -322,7 +331,7 @@ public class VectorEditorComposite extends Composite
     globalMinLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.11") ); //$NON-NLS-1$
 
     final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
-    final GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.UP, false, false );
+    GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.UP, false, false );
     gridDataMinValueLabel.widthHint = 40;
 
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
@@ -335,7 +344,7 @@ public class VectorEditorComposite extends Composite
     displayScaleLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.12") ); //$NON-NLS-1$
 
     final Text scaleValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
-    final GridData gridDataMaxText = new GridData( SWT.END, SWT.UP, true, false );
+    GridData gridDataMaxText = new GridData( SWT.END, SWT.UP, true, false );
     gridDataMaxText.widthHint = 40;
     gridDataMaxText.heightHint = 10;
     scaleValueText.setLayoutData( gridDataMaxText );

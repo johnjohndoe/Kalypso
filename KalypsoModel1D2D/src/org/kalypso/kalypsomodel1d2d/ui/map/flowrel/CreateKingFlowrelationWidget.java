@@ -47,6 +47,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -65,7 +66,7 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IKingFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
+  protected IKingFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IKingFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
@@ -79,7 +80,7 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
-  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return findModelElementFromPosition( discModel, currentPos, grabDistance );
   }

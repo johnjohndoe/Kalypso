@@ -44,10 +44,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.km.internal.core.KMUpdateOperation;
 import org.kalypso.model.km.internal.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 
 /**
@@ -57,9 +56,9 @@ public class KMUpdateWizard extends Wizard
 {
   private final KMUpdateWizardPage m_kmUpdatePage;
 
-  public KMUpdateWizard( final CommandableWorkspace workspace, final Feature[] initialSelection )
+  public KMUpdateWizard( final CommandableWorkspace workspace, final IFeatureSelection selection )
   {
-    m_kmUpdatePage = new KMUpdateWizardPage( workspace, initialSelection );
+    m_kmUpdatePage = new KMUpdateWizardPage( workspace, selection );
 
     setWindowTitle( Messages.getString("KMUpdateWizard_0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );

@@ -108,13 +108,11 @@ public interface IRoughnessCls extends IColorStyledFeatureWrapper
    * @param name
    *          the name for the roughness
    * @param ks
-   *          the equivalent sand roughness for application of Colebrook White's law
+   *          the Manning Strickler coefficient
    * @param axay
-   *          the average distance of vegetation elements in and perpendicular to flow direction
    * @param dp
-   *          the average diameter of vegetation elements
    * @param eddy
-   *          the eddy viscosities
+   *          the eddy viskosity
    * @param marsh
    *          marsh parameter
    * @return

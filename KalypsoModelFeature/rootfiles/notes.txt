@@ -1,4 +1,8 @@
-This is Version 11.6.4.20111202 of Kalypso
+Notes:
+kalypso_11.4.0.20110210
+=======================
+
+This is Version 11.4.0.20110210 of Kalypso
 
 For further information, visit http://kalypso.sourceforge.net
 
@@ -11,8 +15,10 @@ Please see:
 
 Changes
 -------
-Please visit http://sourceforge.net/apps/trac/kalypso/report/32 for a detailed list of changes since Kalypso 11.6.2.
+Bugfixes to Kalypso 11.4.0
+
+Please visit http://sourceforge.net/apps/trac/kalypso/report/24 for a detailed list of changes since Kalypso 10.10.0.
 
 Known-Issues
 ------------
-Please see http://sourceforge.net/apps/trac/kalypso/report/28 for a list of known issues.
+Please see http://sourceforge.net/apps/trac/kalypso/report/23 for a list of known issues.

@@ -46,25 +46,25 @@ import javax.xml.datatype.Duration;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class BlockTimeStep
 {
   private final Calendar m_start;
-
   private final Duration m_timestep;
 
-  public BlockTimeStep( final Calendar start, final Duration timestep )
+  public BlockTimeStep( Calendar start, Duration timestep )
   {
     m_start = start;
     m_timestep = timestep;
   }
-
+  
   public Calendar getStart( )
   {
     return (Calendar) m_start.clone();
   }
 
-  public void step( final Calendar date )
+  public void step( Calendar date )
   {
     m_timestep.addTo( date );
   }

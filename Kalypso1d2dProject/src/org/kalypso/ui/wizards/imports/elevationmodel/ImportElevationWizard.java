@@ -62,9 +62,11 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -116,7 +118,6 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * @param selection
    *          the current object selection
    */
-  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;
@@ -149,31 +150,28 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
       getContainer().run( true, true, new IRunnableWithProgress()
       {
-        @Override
         public void run( final IProgressMonitor monitor ) throws InvocationTargetException, IllegalArgumentException
         {
           try
           {
             SubMonitor progress = null;
-            if( monitor != null )
-            {
-              progress = SubMonitor.convert( monitor, Messages.getString("ImportElevationWizard.0"), 100 ); //$NON-NLS-1$
+            if( monitor != null ){
+              progress = SubMonitor.convert( monitor, "Import Elevation", 100 );
             }
             ITerrainElevationModelSystem temSys = ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
             if( temSys == null )
             {
-              temSys =  ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
+              temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.m_terrainModel );
             }
 
-            final GMLWorkspace workspace = temSys.getWorkspace();
+            final GMLWorkspace workspace = temSys.getFeature().getWorkspace();
 
             // Decoding the White Spaces present in the File Paths.
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
             final File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( m_tempFolder.getLocationURI().toURL() ).getFile() ) );
             final File srcFileTif = getUTF_DecodedFile( sourcePath.toFile() );
-
-            if( progress != null )
-            {
+            
+            if( progress != null ){
               ProgressUtilities.worked( progress, 30 );
             }
             File dstFileTif = null;
@@ -194,10 +192,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
-            // final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-            final NativeTerrainElevationModelWrapper tem = (NativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
-            tem.setFile( nativeTEMRelPath );
-            
+//            final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+            final ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
+
             // TODO introduce in the first page a name imput field and gets the
             // name from there
 
@@ -224,17 +221,16 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
 
-            final Feature temFeature = tem;
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys, temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            final Feature temFeature = tem.getFeature();
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
             caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddTerrainelevationModelCmd() );
 
             caseDataProvider.saveModel( ITerrainModel.class.getName(), null );
-
-            if( progress != null )
-            {
+            
+            if( progress != null ){
               ProgressUtilities.worked( progress, 100 );
               progress.done();
             }
@@ -309,17 +305,13 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   protected boolean copy( final File src, final File dst, final IProgressMonitor monitor2 )
   {
     SubMonitor progress = null;
-    if( monitor2 != null )
-    {
-      final String taskName = String.format( Messages.getString("ImportElevationWizard.1"), src.getName(), dst.getName() ); //$NON-NLS-1$
-      progress = SubMonitor.convert( monitor2, taskName, 100 );
+    if( monitor2 != null ){
+      progress = SubMonitor.convert( monitor2, "Copy file: " + src.getName() + "->" + dst.getName(), 100 );
     }
-
     try
     {
       FileUtils.copyFile( src, dst );
-      if( progress != null )
-      {
+      if( progress != null ){
         ProgressUtilities.worked( progress, 100 );
       }
       return true;

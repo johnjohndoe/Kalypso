@@ -52,7 +52,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
@@ -64,11 +64,11 @@ public class Block
 
   private final BlockTimeStep m_timeStep;
 
-  private final Calendar m_currentStep;
+  private Calendar m_currentStep;
 
   private final SortedMap<Date, Double> m_data = new TreeMap<Date, Double>();
 
-  public Block( final String key, final BlockTimeStep timeStep )
+  public Block( String key, BlockTimeStep timeStep )
   {
     m_key = key;
     m_timeStep = timeStep;
@@ -86,7 +86,7 @@ public class Block
 
     while( reader.ready() )
     {
-      final String line = reader.readLine();
+      String line = reader.readLine();
       if( line == null )
         break;
 
@@ -96,7 +96,7 @@ public class Block
       if( StringUtils.isBlank( line ) )
         continue;
 
-      final String[] values = StringUtils.split( line, null );
+      final String values[] = StringUtils.split( line, null );
       for( final String item : values )
       {
         m_timeStep.step( m_currentStep );
@@ -115,19 +115,19 @@ public class Block
     }
   }
 
-  public void exportToFile( final File exportFile, final DateFormat dateFormat ) throws IOException
+  public void exportToFile( File exportFile, DateFormat dateFormat ) throws IOException
   {
     final PrintWriter writer = new PrintWriter( exportFile );
 
-    final Set<Entry<Date, Double>> entrySet = m_data.entrySet();
-    for( final Entry<Date, Double> entry : entrySet )
+    Set<Entry<Date, Double>> entrySet = m_data.entrySet();
+    for( Entry<Date, Double> entry : entrySet )
     {
       final Date dateKey = entry.getKey();
       final Double value = entry.getValue();
-      final String dateString = dateFormat.format( dateKey );
+      String dateString = dateFormat.format( dateKey );
       writer.print( dateString );
       writer.print( ' ' );
-      writer.format( "%.3f", value ); //$NON-NLS-1$
+      writer.format( "%.3f", value );
     }
     writer.close();
   }
@@ -137,7 +137,7 @@ public class Block
     return m_data.keySet().toArray( new Date[m_data.keySet().size()] );
   }
 
-  public Double getValue( final Date date )
+  public Double getValue( Date date )
   {
     return m_data.get( date );
   }
