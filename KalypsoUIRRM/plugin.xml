@@ -265,6 +265,22 @@
             icon="icons/logview/problems_view.gif"
             id="org.kalypso.ui.rrm.logviewer.LogViewer"
             name="%org.kalypso.ui.rrm.logviewer.LogViewer.name"/>
+      <view
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
+            icon="icons/timeseries/timeseriesManagementView.gif"
+            id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
+            name="Timeseries Management"
+            restorable="true">
+      </view>
+      <view
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
+            icon="icons/timeseries/propertiesView.gif"
+            id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
+            name="Properties"
+            restorable="true">
+      </view>
    </extension>
    
   <extension point="org.kalypso.module.conversion">
@@ -343,5 +359,69 @@
             id="org.kalypso.model.rrm.workflow"
             name="KalypsoHydrology Workflow">
       </workflowSystem>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+         <view
+               moveable="false"
+               closeable="false"
+               id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
+               relationship="stack"
+               relative="org.kalypso.ui.views.mapView"
+               visible="false">
+         </view>
+         <view
+               id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
+               moveable="false"
+               closeable="false"
+               ratio="0.33"
+               relationship="right"
+               relative="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
+               visible="false">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.kalypso.afgui.scenarioData">
+      <dataSet
+            id="org.kalypso.model.rrm.scenarioDataScope">
+         <scenarioDatum
+               classKey="org.kalypsodeegree.model.feature.Feature"
+               id="stations"
+               modelPath="project://.model/timeseries/stations.gml">
+         </scenarioDatum>
+      </dataSet>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationCollection">
+      </feature>
+      <feature
+            class="org.kalypso.ui.rrm.internal.timeseries.binding.HydrologicalStation"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}HydrologicalStation">
+      </feature>
+      <feature
+            class="org.kalypso.ui.rrm.internal.timeseries.binding.MeteorologicalStation"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}MeteorologicalStation">
+      </feature>
+      <feature
+            class="org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}Timeseries">
+      </feature>
+   </extension>
+   
+   <!-- Handler for workflow -->
+   <extension point="org.eclipse.ui.commands">
+            <command id="org.kalypso.model.rrm.timeseriesManagement" name="" />
+   </extension>
+   
+   <extension point="org.eclipse.ui.handlers">
+      <handler commandId="org.kalypso.model.rrm.timeseriesManagement">
+        <class class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler"/>
+      </handler>
    </extension>
 </plugin>
