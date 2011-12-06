@@ -3,34 +3,27 @@
   <Help>NONE</Help>
   <Name>KalypsoHydrology-Workflow</Name>
 
-  <TaskGroup URI="org.kalypso.model.rrm.timeseriesManagement" context="OverviewMap">
+  <TaskGroup URI="org.kalypso.model.rrm.timeseriesManagement" context="TimeseriesManagementContext">
     <Help>%timeseriesManagement_help</Help>
     <Name>%timeseriesManagement</Name>
-    <Task context="OverviewMap" URI="org.kalypso.model.rrm.timeseriesManagement.manageStations">
-      <Help>%timeseriesManagement_manageStations_help</Help>
-      <Name>%timeseriesManagement_manageStations</Name>
-    </Task>
   </TaskGroup>
 
   <Perspectives>
     <con:PerspectiveContext id="ContextHydrology" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
 
+      <con:WorkbenchSiteContext id="TimeseriesManagementContext" parent="ContextHydrology">
+        <con:ViewContext id="TimeseriesManagementView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="TimeseriesManagementContext"/>
+        <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView" parent="TimeseriesManagementContext"/>
+      </con:WorkbenchSiteContext>
+      
       <con:WorkbenchSiteContext id="MapContext" parent="ContextHydrology">
         <con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
         <con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
-        <!-- 
-          <con:ExtensionContext id="BaseMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
-            <con:WizardContext id="ImportBaseMap" wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-            <con:Parameter name="type" value="mapViewInputContext" />
-            <con:Parameter name="input" value="maps/base.gmt" />
-          </con:ExtensionContext>
-         -->
 
           <con:ExtensionContext id="OverviewMap" parent="MapContext" handlerFactoryId="kalypsoContextHandlerFactory">
             <con:Parameter name="type" value="mapViewInputContext" />
             <con:Parameter name="input" value=".views/Overview.gmt" />
           </con:ExtensionContext>
-
         </con:ViewContext>
 
       </con:WorkbenchSiteContext>
