@@ -82,6 +82,8 @@ public interface NaModelConstants
 
   String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
 
+  String NS_TIMESERIES_MANAGEMENT = "http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement"; //$NON-NLS-1$
+
   /** server client bean constants */
   // input
   String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
@@ -199,7 +201,7 @@ public interface NaModelConstants
 
   QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
-  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$ 
+  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$
 
   QName PARA_SOIL_LAYER_PARAMETER_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
 
