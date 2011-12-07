@@ -66,7 +66,9 @@ public class UIRrmImages
 
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
 
-    IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"); //$NON-NLS-1$
+    IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"),
+
+    EDIT_STATION("icons/timeseries/editStation.png"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
