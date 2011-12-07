@@ -111,9 +111,9 @@ public class ImportWSPMHandler extends AbstractHandler
       try
       {
         /* post empty command(s) in order to make pool dirty. */
-        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.0" ), false ) ); //$NON-NLS-1$
-        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.1" ), false ) ); //$NON-NLS-1$
-        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.2" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.0" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.1" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.2" ), false ) ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {

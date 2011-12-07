@@ -245,7 +245,7 @@ public class RoughnessAssignService extends Job
       final RoughnessAssignCommand command = new RoughnessAssignCommand( workspace, m_changesDiscretisationModel.toArray( new FeatureChange[m_changesDiscretisationModel.size()] ) );
       try
       {
-        ((ICommandPoster) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, command );
+        ((ICommandPoster) modelProvider).postCommand( IFEDiscretisationModel1d2d.class.getName(), command );
       }
       catch( final Exception e1 )
       {

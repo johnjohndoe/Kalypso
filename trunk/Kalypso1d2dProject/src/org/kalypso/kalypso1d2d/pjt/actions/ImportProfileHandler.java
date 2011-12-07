@@ -114,7 +114,7 @@ public class ImportProfileHandler extends AbstractHandler
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
+      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

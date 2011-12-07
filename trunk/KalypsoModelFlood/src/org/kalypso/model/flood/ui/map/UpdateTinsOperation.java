@@ -98,11 +98,11 @@ import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * TODO: remove the TriangulatedSurfaceTriangleEater from here: we do not want to have a dependency on 1d2d!<br>
- * 
+ *
  * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.
- * 
+ *
  * @author Gernot Belger
- * 
+ *
  */
 public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
@@ -336,7 +336,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     workspace.fireModellEvent( event );
 
     /* post command in order to make the pool dirty */
-    m_provider.postCommand( IFloodModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+    m_provider.postCommand( IFloodModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
     monitor.done();
     return Status.OK_STATUS;
