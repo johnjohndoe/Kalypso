@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Workflow URI="org.kalypso.model.rrm.WF_KalypsoHydrology" xmlns="http://www.renew.de/workflow/base" xmlns:con="http://www.renew.de/workflow/contexts" defaultTask="org.kalypso.model.rrm.timeseriesManagement.manageStations">
+<Workflow URI="org.kalypso.model.rrm.WF_KalypsoHydrology" xmlns="http://www.renew.de/workflow/base" xmlns:con="http://www.renew.de/workflow/contexts" defaultTask="org.kalypso.model.rrm.timeseriesManagement">
   <Help>NONE</Help>
   <Name>KalypsoHydrology-Workflow</Name>
 

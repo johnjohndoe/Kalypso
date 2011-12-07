@@ -40,24 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.IDataBinding;
+import org.eclipse.jface.action.Action;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 
 /**
  * @author Gernot Belger
  */
-public interface ITimeseriesNodeUiHandler
+public class ImportTimeseriesAction extends Action
 {
-  String getTypeLabel( );
+  private final Station m_station;
 
-  String getIdentifier( );
+  public ImportTimeseriesAction( final Station station )
+  {
+    m_station = station;
 
-  String getTreeLabel( );
+    setText( "Import Timeseries" );
+    setToolTipText( "Imports a timeseries from an external data source and adds it to the selected station." );
 
-  ImageDescriptor getTreeImage( );
-
-  Control createControl( FormToolkit toolkit, Composite parent, IDataBinding binding );
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.IMPORT_TIMESERIES ) );
+  }
 }

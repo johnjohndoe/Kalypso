@@ -41,9 +41,16 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 
@@ -88,9 +95,32 @@ public class StationUiHandler implements ITimeseriesNodeUiHandler
   }
 
   @Override
-  public Control createControl( final Group panel )
+  public Control createControl( final FormToolkit toolkit, final Composite parent, final IDataBinding binding )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final Composite panel = toolkit.createComposite( parent );
+    GridLayoutFactory.fillDefaults().applyTo( panel );
+
+    final Section controlSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
+    controlSection.setText( "Properties" );
+    controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    /* Station Control */
+    final StationBean bean = new StationBean( m_station );
+
+    final Composite stationControl = new StationComposite( toolkit, controlSection, bean, binding );
+    controlSection.setClient( stationControl );
+
+    /* Some actions */
+    final Section actionSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
+    actionSection.setText( "Actions" );
+    actionSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    final Composite actionPanel = toolkit.createComposite( actionSection );
+    actionSection.setClient( actionPanel );
+    GridLayoutFactory.fillDefaults().applyTo( actionPanel );
+
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station ) );
+
+    return panel;
   }
 }

@@ -44,10 +44,12 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
@@ -96,7 +98,7 @@ public class TimeseriesUiHandler implements ITimeseriesNodeUiHandler
   }
 
   @Override
-  public Control createControl( final Group panel )
+  public Control createControl( final FormToolkit toolkit, final Composite parent, final IDataBinding binding )
   {
     // TODO Auto-generated method stub
     return null;

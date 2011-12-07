@@ -40,24 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 
 /**
  * @author Gernot Belger
  */
-public interface ITimeseriesNodeUiHandler
+public class StationBean
 {
-  String getTypeLabel( );
+  public StationBean( final Station station )
+  {
+    setStation( station );
+  }
 
-  String getIdentifier( );
+  public void setStation( final Station station )
+  {
+    // TODO Auto-generated method stub
 
-  String getTreeLabel( );
-
-  ImageDescriptor getTreeImage( );
-
-  Control createControl( FormToolkit toolkit, Composite parent, IDataBinding binding );
+  }
 }
