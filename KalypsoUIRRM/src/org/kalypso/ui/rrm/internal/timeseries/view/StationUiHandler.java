@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -51,8 +52,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
@@ -61,8 +65,11 @@ public class StationUiHandler implements ITimeseriesNodeUiHandler
 {
   private final Station m_station;
 
-  public StationUiHandler( final Station station )
+  private final CommandableWorkspace m_workspace;
+
+  public StationUiHandler( final CommandableWorkspace workspace, final Station station )
   {
+    m_workspace = workspace;
     m_station = station;
   }
 
@@ -105,9 +112,9 @@ public class StationUiHandler implements ITimeseriesNodeUiHandler
     controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Station Control */
-    final StationBean bean = new StationBean( m_station );
+    final FeatureBean<Station> bean = new FeatureBean<>( m_station );
 
-    final Composite stationControl = new StationComposite( toolkit, controlSection, bean, binding );
+    final StationComposite stationControl = new StationComposite( controlSection, bean, binding, false );
     controlSection.setClient( stationControl );
 
     /* Some actions */
@@ -120,6 +127,11 @@ public class StationUiHandler implements ITimeseriesNodeUiHandler
     GridLayoutFactory.fillDefaults().applyTo( actionPanel );
 
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station ) );
+
+    /* Toolbar action */
+    final ToolBarManager toolbar = SectionUtils.createSectionToolbar( controlSection );
+    toolbar.add( new EditStationAction( m_workspace, m_station, stationControl ) );
+    toolbar.update( true );
 
     return panel;
   }

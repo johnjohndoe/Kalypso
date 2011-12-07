@@ -38,42 +38,45 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 
 /**
  * @author Gernot Belger
  */
-public abstract class Station extends Feature_Impl
+public abstract class FeatureBeanWizardPage extends WizardPage
 {
-  final static QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Station" ); //$NON-NLS-1$
+  private final FeatureBean< ? > m_bean;
 
-  private static final QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
-
-  private final IFeatureBindingCollection<Timeseries> m_timeseries = new FeatureBindingCollection<Timeseries>( this, Timeseries.class, MEMBER_TIMESERIES );
-
-  public Station( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  protected FeatureBeanWizardPage( final String pageName, final FeatureBean< ? > bean )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( pageName );
+
+    setTitle( "Edit Properties" );
+    setDescription( "Change the properties of the selected element" );
+
+    m_bean = bean;
   }
 
-  public IFeatureBindingCollection<Timeseries> getTimeseries( )
+  @Override
+  public void createControl( final Composite parent )
   {
-    return m_timeseries;
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
+
+    toolkit.adapt( parent );
+
+    final IDataBinding binding = new DatabindingWizardPage( this, toolkit );
+
+    final Control control = createFeatureBeanControl( parent, binding );
+    setControl( control );
   }
 
-  public String getComment( )
-  {
-    return getProperty( PROPERTY_COMMENT, String.class );
-  }
+  protected abstract Control createFeatureBeanControl( Composite parent, IDataBinding binding );
 }

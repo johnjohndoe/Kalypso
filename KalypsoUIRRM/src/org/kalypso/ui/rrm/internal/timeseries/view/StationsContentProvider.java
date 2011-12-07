@@ -41,15 +41,32 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Gernot Belger
  */
 public class StationsContentProvider implements ITreeContentProvider
 {
+  private final ModellEventListener m_modelListener = new ModellEventListener()
+  {
+    @Override
+    public void onModellChange( final ModellEvent modellEvent )
+    {
+      handleModellChange( modellEvent );
+    }
+  };
+
   private StationsByStationModel m_model;
+
+  private StructuredViewer m_viewer;
 
   @Override
   public void dispose( )
@@ -59,9 +76,18 @@ public class StationsContentProvider implements ITreeContentProvider
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    final StationCollection stations = (StationCollection) newInput;
+    m_viewer = (StructuredViewer) viewer;
 
-    m_model = new StationsByStationModel( stations );
+    if( oldInput != null )
+    {
+      final CommandableWorkspace oldWorkspace = ((StationsByStationModel) oldInput).getWorkspace();
+      oldWorkspace.removeModellListener( m_modelListener );
+    }
+
+    m_model = (StationsByStationModel) newInput;
+
+    if( m_model != null )
+      m_model.getWorkspace().addModellListener( m_modelListener );
   }
 
   @Override
@@ -87,5 +113,18 @@ public class StationsContentProvider implements ITreeContentProvider
   public Object[] getChildren( final Object parentElement )
   {
     return ((TimeseriesNode) parentElement).getChildren();
+  }
+
+  protected void handleModellChange( final ModellEvent modellEvent )
+  {
+    if( modellEvent instanceof FeaturesChangedModellEvent )
+    {
+      ViewerUtilities.refresh( m_viewer, false );
+    }
+
+    if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    {
+      ViewerUtilities.refresh( m_viewer, false );
+    }
   }
 }

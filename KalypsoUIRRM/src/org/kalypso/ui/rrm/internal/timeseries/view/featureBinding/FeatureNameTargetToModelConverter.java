@@ -38,23 +38,32 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
 
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.commons.databinding.conversion.TypedConverter;
 
 /**
  * @author Gernot Belger
  */
-public class StationBean
+@SuppressWarnings("rawtypes")
+public class FeatureNameTargetToModelConverter extends TypedConverter<String, List>
 {
-  public StationBean( final Station station )
+  public FeatureNameTargetToModelConverter( )
   {
-    setStation( station );
+    super( String.class, List.class );
   }
 
-  public void setStation( final Station station )
+  @Override
+  public List convertTyped( final String fromObject )
   {
-    // TODO Auto-generated method stub
+    final List<String> list = new ArrayList<>();
 
+    if( fromObject != null )
+      list.add( fromObject );
+
+    return list;
   }
 }

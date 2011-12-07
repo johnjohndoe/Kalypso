@@ -38,42 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.property.value.ValueProperty;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public abstract class Station extends Feature_Impl
+public class FeatureBeanValueProperty<F extends Feature> extends ValueProperty
 {
-  final static QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Station" ); //$NON-NLS-1$
+  private final QName m_property;
 
-  private static final QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
+  private final Class< ? > m_valueType;
 
-  public static final QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
-
-  private final IFeatureBindingCollection<Timeseries> m_timeseries = new FeatureBindingCollection<Timeseries>( this, Timeseries.class, MEMBER_TIMESERIES );
-
-  public Station( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public FeatureBeanValueProperty( final Class< ? > valueType, final QName property )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    m_valueType = valueType;
+    m_property = property;
   }
 
-  public IFeatureBindingCollection<Timeseries> getTimeseries( )
+  @Override
+  public Object getValueType( )
   {
-    return m_timeseries;
+    return m_valueType;
   }
 
-  public String getComment( )
+  @Override
+  public IObservableValue observe( final Realm realm, final Object source )
   {
-    return getProperty( PROPERTY_COMMENT, String.class );
+    return new FeatureBeanObservableValue( (FeatureBean< ? >) source, m_property );
   }
 }

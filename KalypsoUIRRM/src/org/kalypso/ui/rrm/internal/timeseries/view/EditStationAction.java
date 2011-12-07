@@ -38,42 +38,52 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 
 /**
  * @author Gernot Belger
  */
-public abstract class Station extends Feature_Impl
+public class EditStationAction extends Action
 {
-  final static QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Station" ); //$NON-NLS-1$
+  private final Station m_station;
 
-  private static final QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
+  private final CommandableWorkspace m_workspace;
 
-  public static final QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
+  private final StationComposite m_stationControl;
 
-  private final IFeatureBindingCollection<Timeseries> m_timeseries = new FeatureBindingCollection<Timeseries>( this, Timeseries.class, MEMBER_TIMESERIES );
-
-  public Station( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public EditStationAction( final CommandableWorkspace workspace, final Station station, final StationComposite stationControl )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    m_workspace = workspace;
+    m_station = station;
+    m_stationControl = stationControl;
+
+    setText( "Edit" );
+    setToolTipText( "Edits the properties of the station" );
+
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }
 
-  public IFeatureBindingCollection<Timeseries> getTimeseries( )
+  @Override
+  public void runWithEvent( final Event event )
   {
-    return m_timeseries;
-  }
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-  public String getComment( )
-  {
-    return getProperty( PROPERTY_COMMENT, String.class );
+    final Wizard wizard = new EditStationWizard( m_workspace, m_station );
+    wizard.setWindowTitle( "Edit Properties" );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
+
+    m_stationControl.refresh();
   }
 }
