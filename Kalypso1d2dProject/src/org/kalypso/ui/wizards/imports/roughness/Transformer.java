@@ -30,7 +30,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class Transformer implements ICoreRunnableWithProgress
@@ -168,7 +168,7 @@ public class Transformer implements ICoreRunnableWithProgress
     final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
     if( caseDataProvider != null )
     {
-      caseDataProvider.postCommand( ITerrainModel.class, new AddRoughnessPolygonsCmd() );
+      caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddRoughnessPolygonsCmd() );
     }
 
   }

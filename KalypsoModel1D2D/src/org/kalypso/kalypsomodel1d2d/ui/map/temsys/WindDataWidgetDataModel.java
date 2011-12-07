@@ -67,7 +67,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author ig
- * 
+ *
  */
 public class WindDataWidgetDataModel extends KeyBasedDataModel
 {
@@ -100,12 +100,11 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
     return (IMapModell) getData( IMapModell.class.toString() );
   }
 
-  @SuppressWarnings("deprecation")
   public CommandableWorkspace getWindModelWorkspace( )
   {
     try
     {
-      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IWindModel.class );
+      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IWindModel.class.getName() );
     }
     catch( final IllegalArgumentException e )
     {

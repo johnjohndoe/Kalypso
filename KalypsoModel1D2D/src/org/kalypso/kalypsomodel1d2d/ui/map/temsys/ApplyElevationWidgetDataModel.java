@@ -133,7 +133,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   {
     try
     {
-      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class );
+      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class.getName() );
     }
     catch( final IllegalArgumentException e )
     {
