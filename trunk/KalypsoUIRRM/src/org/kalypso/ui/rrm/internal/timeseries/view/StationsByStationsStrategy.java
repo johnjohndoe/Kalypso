@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
@@ -59,8 +60,11 @@ public class StationsByStationsStrategy
 {
   private final StationCollection m_stations;
 
-  public StationsByStationsStrategy( final StationCollection stations )
+  private final CommandableWorkspace m_workspace;
+
+  public StationsByStationsStrategy( final CommandableWorkspace workspace, final StationCollection stations )
   {
+    m_workspace = workspace;
     m_stations = stations;
   }
 
@@ -83,7 +87,7 @@ public class StationsByStationsStrategy
   {
     final TimeseriesNode parent = null;
 
-    final ITimeseriesNodeUiHandler uiHandler = new StationUiHandler( station );
+    final ITimeseriesNodeUiHandler uiHandler = new StationUiHandler( m_workspace, station );
 
     final TimeseriesNode stationNode = new TimeseriesNode( parent, uiHandler );
 

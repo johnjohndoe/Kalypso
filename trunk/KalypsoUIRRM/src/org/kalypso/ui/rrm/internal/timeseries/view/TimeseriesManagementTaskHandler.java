@@ -48,17 +48,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.afgui.model.IModel;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Gernot Belger
  */
 public class TimeseriesManagementTaskHandler extends AbstractHandler
 {
+  // TODO: move elsewhere
+  private static final String MODEL_KEY_STATIONS = "stations"; //$NON-NLS-1$
+
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -73,10 +76,11 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
 
     try
     {
-      @SuppressWarnings("unchecked")
-      final ICaseDataProvider<IModel> modelProvider = (ICaseDataProvider<IModel>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final StationCollection input = modelProvider.getModel( "stations", StationCollection.class );
-      view.setInput( input );
+      final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( MODEL_KEY_STATIONS );
+      final StationCollection input = modelProvider.getModel( MODEL_KEY_STATIONS, StationCollection.class );
+
+      view.setInput( workspace, input );
     }
     catch( final CoreException e )
     {

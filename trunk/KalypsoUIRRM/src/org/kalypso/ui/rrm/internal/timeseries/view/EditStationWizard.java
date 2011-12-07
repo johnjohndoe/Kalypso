@@ -40,38 +40,64 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
 
 /**
  * @author Gernot Belger
  */
-public class StationsByStationModel
+public class EditStationWizard extends Wizard
 {
-  private final StationCollection m_stations;
-
-  private TimeseriesNode[] m_nodes;
+  private final FeatureBean<Station> m_stationBean;
 
   private final CommandableWorkspace m_workspace;
 
-  public StationsByStationModel( final CommandableWorkspace workspace, final StationCollection stations )
+  public EditStationWizard( final CommandableWorkspace workspace, final Station station )
   {
     m_workspace = workspace;
-    m_stations = stations;
+    m_stationBean = new FeatureBean<>( station );
   }
 
-  public TimeseriesNode[] getRootElements( )
+  @Override
+  public void addPages( )
   {
-    if( m_nodes == null )
+    final FeatureBean<Station> stationBean = m_stationBean;
+
+    final WizardPage page = new FeatureBeanWizardPage( "feature", m_stationBean ) //$NON-NLS-1$
     {
-      m_nodes = new StationsByStationsStrategy( m_workspace, m_stations ).buildNodes();
+      @Override
+      protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
+      {
+        return new StationComposite( parent, stationBean, binding, true );
+      }
+    };
+
+    addPage( page );
+  }
+
+  @Override
+  public boolean performFinish( )
+  {
+    try
+    {
+      final ICommand command = m_stationBean.applyChanges();
+      m_workspace.postCommand( command );
+
+      // TODO: update tree etc.
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
 
-    return m_nodes;
-  }
-
-  public CommandableWorkspace getWorkspace( )
-  {
-    return m_workspace;
+    return true;
   }
 }

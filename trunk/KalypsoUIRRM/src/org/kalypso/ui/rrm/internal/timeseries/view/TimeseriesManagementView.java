@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 
 /**
@@ -116,8 +117,10 @@ public class TimeseriesManagementView extends ViewPart
     m_treeViewer.getControl().setFocus();
   }
 
-  public void setInput( final StationCollection stations )
+  public void setInput( final CommandableWorkspace workspace, final StationCollection stations )
   {
-    m_treeViewer.setInput( stations );
+    final StationsByStationModel input = new StationsByStationModel( workspace, stations );
+
+    m_treeViewer.setInput( input );
   }
 }

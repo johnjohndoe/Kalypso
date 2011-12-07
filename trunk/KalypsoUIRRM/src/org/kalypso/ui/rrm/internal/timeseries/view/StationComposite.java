@@ -40,32 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
 
 /**
  * @author Gernot Belger
  */
-public class StationComposite extends Composite
+public class StationComposite extends FeatureBeanComposite<Station>
 {
-  private final StationBean m_station;
-
-  private final IDataBinding m_binding;
-
-  public StationComposite( final FormToolkit toolkit, final Composite parent, final StationBean station, final IDataBinding binding )
+  public StationComposite( final Composite parent, final FeatureBean<Station> station, final IDataBinding binding, final boolean editable )
   {
-    super( parent, SWT.NONE );
-
-    m_station = station;
-    m_binding = binding;
-
-    toolkit.adapt( this );
-
-    super.setLayout( GridLayoutFactory.swtDefaults().create() );
+    super( parent, station, binding, editable );
   }
 
   /**
@@ -74,5 +63,39 @@ public class StationComposite extends Composite
   @Override
   public void setLayout( final Layout layout )
   {
+  }
+
+  @Override
+  protected void createContents( )
+  {
+    createPropertyControl( Station.QN_DESCRIPTION );
+    createPropertyControl( Station.QN_NAME );
+    createPropertyControl( Station.PROPERTY_COMMENT );
+
+    createLocationControl();
+    createMeasurementControl();
+    createTimeseriesControl();
+
+    // TODO
+    // gauge zero
+    // altitude
+  }
+
+  private void createLocationControl( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  private void createMeasurementControl( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  private void createTimeseriesControl( )
+  {
+    // TODO Auto-generated method stub
+
   }
 }
