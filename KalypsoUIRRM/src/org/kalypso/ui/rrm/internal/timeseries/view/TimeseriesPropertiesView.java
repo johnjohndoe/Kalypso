@@ -49,14 +49,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 
 /**
  * @author Gernot Belger
@@ -74,68 +83,144 @@ public class TimeseriesPropertiesView extends ViewPart
     }
   };
 
-  private Group m_panel;
+  private final IPartListener2 m_partListener = new PartAdapter2()
+  {
+    @Override
+    public void partOpened( final IWorkbenchPartReference partRef )
+    {
+      handlePartOpened( partRef );
+    }
+
+    @Override
+    public void partVisible( final IWorkbenchPartReference partRef )
+    {
+      if( ID.equals( partRef.getId() ) )
+        hookSelection();
+    }
+
+    @Override
+    public void partBroughtToTop( final IWorkbenchPartReference partRef )
+    {
+      if( ID.equals( partRef.getId() ) )
+        hookSelection();
+    }
+  };
+
+  private Form m_form;
+
+  private FormToolkit m_toolkit;
+
+  private IDataBinding m_binding;
+
+  private TimeseriesNode m_node;
+
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    final IWorkbenchWindow workbenchWindow = site.getWorkbenchWindow();
+    if( workbenchWindow != null )
+    {
+      final IWorkbenchPage page = workbenchWindow.getActivePage();
+      if( page != null )
+        page.addPartListener( m_partListener );
+    }
+
+    super.init( site );
+  }
 
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_panel = new Group( parent, SWT.NONE );
-    GridLayoutFactory.swtDefaults().applyTo( m_panel );
+    m_toolkit = ToolkitUtils.createToolkit( parent );
+    m_form = m_toolkit.createForm( parent );
+    m_toolkit.decorateFormHeading( m_form );
+
+    final Composite body = m_form.getBody();
+    GridLayoutFactory.swtDefaults().applyTo( body );
+
+    m_binding = new DatabindingForm( m_form, m_toolkit );
 
     hookSelection();
   }
 
-  private void hookSelection( )
+  @Override
+  public void dispose( )
+  {
+    final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
+    if( workbenchWindow != null )
+    {
+      final IWorkbenchPage page = workbenchWindow.getActivePage();
+      if( page != null )
+        page.removePartListener( m_partListener );
+    }
+
+    super.dispose();
+  }
+
+  void hookSelection( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( workbench.isStarting() || workbench.isClosing() )
+    if( workbench.isClosing() )
       return;
 
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return;
 
     final IViewPart managementView = page.findView( TimeseriesManagementView.ID );
     if( managementView == null )
-    {
-      // FIXME: what to do now...?
       return;
-    }
 
     final ISelectionProvider selectionProvider = managementView.getViewSite().getSelectionProvider();
     if( selectionProvider == null )
       return;
 
     selectionProvider.addSelectionChangedListener( m_selectionListener );
+
+    setNode( null );
+  }
+
+  private void setNode( final TimeseriesNode node )
+  {
+    m_node = node;
+
+    updateControl();
   }
 
   @Override
   public void setFocus( )
   {
-    m_panel.setFocus();
+    m_form.setFocus();
   }
 
-  private void updateControl( final TimeseriesNode node )
+  private void updateControl( )
   {
-    ControlUtils.disposeChildren( m_panel );
+    ControlUtils.disposeChildren( m_form.getBody() );
 
-    if( node == null )
+    if( m_node == null )
       updateNullNode();
     else
-      updateNonNullNode( node );
+      updateNonNullNode( m_node );
+
+    m_form.getBody().layout();
+// m_form.reflow( true );
   }
 
   private void updateNullNode( )
   {
-    m_panel.setText( "- no element selected -" );
+    m_form.setText( "- no element selected -" );
   }
 
   private void updateNonNullNode( final TimeseriesNode node )
   {
     final ITimeseriesNodeUiHandler uiHandler = node.getUiHandler();
 
-    m_panel.setText( uiHandler.getTypeLabel() );
+    m_form.setText( uiHandler.getTypeLabel() );
 
-    final Control control = uiHandler.createControl( m_panel );
+    final Composite body = m_form.getBody();
+
+    final Control control = uiHandler.createControl( m_toolkit, body, m_binding );
     if( control != null )
       control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }
@@ -143,7 +228,7 @@ public class TimeseriesPropertiesView extends ViewPart
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
     final TimeseriesNode node = findNode( selection );
-    updateControl( node );
+    setNode( node );
   }
 
   private TimeseriesNode findNode( final IStructuredSelection selection )
@@ -153,5 +238,11 @@ public class TimeseriesPropertiesView extends ViewPart
       return (TimeseriesNode) firstElement;
 
     return null;
+  }
+
+  protected void handlePartOpened( final IWorkbenchPartReference partRef )
+  {
+    if( TimeseriesManagementView.ID.equals( partRef.getId() ) )
+      hookSelection();
   }
 }

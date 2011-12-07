@@ -40,63 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
  * @author Gernot Belger
  */
-public class ParameterUiHandler implements ITimeseriesNodeUiHandler
+public class StationComposite extends Composite
 {
-  private final String m_parameterType;
+  private final StationBean m_station;
 
-  private final Timeseries[] m_timeseries;
+  private final IDataBinding m_binding;
 
-  public ParameterUiHandler( final String parameterType, final Timeseries[] timeseries )
+  public StationComposite( final FormToolkit toolkit, final Composite parent, final StationBean station, final IDataBinding binding )
   {
-    m_parameterType = parameterType;
-    m_timeseries = timeseries;
+    super( parent, SWT.NONE );
+
+    m_station = station;
+    m_binding = binding;
+
+    toolkit.adapt( this );
+
+    super.setLayout( GridLayoutFactory.swtDefaults().create() );
   }
 
+  /**
+   * Overridden in order to prohibit change of layout. Does nothing.
+   */
   @Override
-  public String getTypeLabel( )
+  public void setLayout( final Layout layout )
   {
-    return "Parameter Type";
-  }
-
-  @Override
-  public String getIdentifier( )
-  {
-    return StringUtils.EMPTY;
-  }
-
-  @Override
-  public String getTreeLabel( )
-  {
-    final String parameterName = TimeseriesUtils.getName( m_parameterType );
-    final String parameterUnit = TimeseriesUtils.getUnit( m_parameterType );
-
-    return String.format( "%s [%s]", parameterName, parameterUnit );
-  }
-
-  @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    final String imageLocation = UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_BASE.getImagePath() + "_" + m_parameterType + ".png"; //$NON-NLS-1$ //$NON-NLS-2$
-    return UIRrmImages.id( imageLocation );
-  }
-
-  @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final IDataBinding binding )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 }
