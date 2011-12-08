@@ -92,6 +92,13 @@ import org.kalypso.ui.wizards.i18n.Messages;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
+/**
+ *
+ * FIXME: aaarggg! Copy/Paste of ImportObservationWizard from KalypsoUI!
+ *
+ * @deprecated Merge this class with the other import wizard!
+ */
+@Deprecated
 public class ImportObservationWizard extends Wizard implements INewWizard
 {
   private ImportObservationSelectionWizardPage m_page1 = null;
@@ -202,7 +209,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     super.addPages();
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_timeseriesFolder ); //$NON-NLS-1$
+
+    m_page1 = new ImportObservationSelectionWizardPage( "Dateien wählen", m_timeseriesFolder ); //$NON-NLS-1$
     m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" ); //$NON-NLS-1$
 
     addPage( m_page1 );
@@ -210,15 +218,6 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     m_page1.setSelection( m_selection );
     m_page1.addSelectionChangedListener( m_page2 );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#performCancel()
-   */
-  @Override
-  public boolean performCancel( )
-  {
-    return true;
   }
 
   /**
