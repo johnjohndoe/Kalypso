@@ -55,6 +55,7 @@ public class UIRrmImages
 
     STATION("icons/timeseries/station.gif"), //$NON-NLS-1$
     STATION_METEOROLOGICAL("icons/timeseries/station_meteorological.png"), //$NON-NLS-1$
+    STATION_HYDROLOGICAL("icons/timeseries/station_hydrological.png"), //$NON-NLS-1$
 
     PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
     PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
