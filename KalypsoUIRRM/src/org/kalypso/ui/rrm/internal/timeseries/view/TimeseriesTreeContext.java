@@ -40,49 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Gernot Belger
  */
-public class EditStationAction extends Action
+public class TimeseriesTreeContext
 {
-  private final Station m_station;
+  private final StructuredViewer m_viewer;
 
-  private final StationComposite m_stationControl;
+  private final CommandableWorkspace m_workspace;
 
-  private final TimeseriesTreeContext m_context;
-
-  public EditStationAction( final TimeseriesTreeContext context, final Station station, final StationComposite stationControl )
+  public TimeseriesTreeContext( final StructuredViewer viewer, final CommandableWorkspace workspace )
   {
-    m_context = context;
-    m_station = station;
-    m_stationControl = stationControl;
-
-    setText( "Edit" );
-    setToolTipText( "Edits the properties of the station" );
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
+    m_viewer = viewer;
+    m_workspace = workspace;
   }
 
-  @Override
-  public void runWithEvent( final Event event )
+  public void postCommand( final ICommand command ) throws Exception
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
+    m_workspace.postCommand( command );
+  }
 
-    final Wizard wizard = new EditStationWizard( m_context, m_station );
-    wizard.setWindowTitle( "Edit Properties" );
+  public void setSelection( final TimeseriesNode... selection )
+  {
+    m_viewer.setSelection( new StructuredSelection( selection ) );
+  }
 
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
+  public void addModellListener( final ModellEventListener modelListener )
+  {
+    m_workspace.addModellListener( modelListener );
+  }
 
-    m_stationControl.refresh();
+  public void removeModellListener( final ModellEventListener modelListener )
+  {
+    m_workspace.removeModellListener( modelListener );
   }
 }

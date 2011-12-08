@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
@@ -58,11 +57,11 @@ public class EditStationWizard extends Wizard
 {
   private final FeatureBean<Station> m_stationBean;
 
-  private final CommandableWorkspace m_workspace;
+  private final TimeseriesTreeContext m_context;
 
-  public EditStationWizard( final CommandableWorkspace workspace, final Station station )
+  public EditStationWizard( final TimeseriesTreeContext context, final Station station )
   {
-    m_workspace = workspace;
+    m_context = context;
     m_stationBean = new FeatureBean<>( station );
   }
 
@@ -89,9 +88,7 @@ public class EditStationWizard extends Wizard
     try
     {
       final ICommand command = m_stationBean.applyChanges();
-      m_workspace.postCommand( command );
-
-      // TODO: update tree etc.
+      m_context.postCommand( command );
     }
     catch( final Exception e )
     {

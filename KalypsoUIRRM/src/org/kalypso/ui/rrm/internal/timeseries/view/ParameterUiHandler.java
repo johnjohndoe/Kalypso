@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -65,8 +66,11 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
 
   private final Station m_station;
 
-  public ParameterUiHandler( final Station station, final String parameterType, final Timeseries[] timeseries )
+  private final TimeseriesNode m_parentNode;
+
+  public ParameterUiHandler( final TimeseriesNode parentNode, final Station station, final String parameterType, final Timeseries[] timeseries )
   {
+    m_parentNode = parentNode;
     m_station = station;
     m_parameterType = parameterType;
     m_timeseries = timeseries;
@@ -112,5 +116,11 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station, m_parameterType ) );
+
+    /* Delete timeseries */
+    final String stationLabel = m_station.getDescription();
+    final String deleteMessage = String.format( "Delete all timeseries from parameter '%s' of station '%s'?", getTreeLabel(), stationLabel );
+    final IAction deleteAction = new DeleteTimeseriesAction( m_parentNode, deleteMessage, m_timeseries );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }
 }

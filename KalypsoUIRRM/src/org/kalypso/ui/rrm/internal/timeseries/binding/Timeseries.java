@@ -58,7 +58,7 @@ public class Timeseries extends Feature_Impl
 {
   final static QName FEATURE_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Timeseries" ); //$NON-NLS-1$
 
-  final static QName PROPERTY_QUALITY = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "quality" ); //$NON-NLS-1$
+  public final static QName PROPERTY_QUALITY = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "quality" ); //$NON-NLS-1$
 
   final static QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
 
@@ -106,5 +106,10 @@ public class Timeseries extends Feature_Impl
   public ZmlLink getDataLink( )
   {
     return new ZmlLink( this, PROPERTY_DATA );
+  }
+
+  public Station getStation( )
+  {
+    return (Station) getParent();
   }
 }

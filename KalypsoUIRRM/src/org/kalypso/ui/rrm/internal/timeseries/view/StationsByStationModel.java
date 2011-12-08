@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author Gernot Belger
@@ -52,11 +52,11 @@ public class StationsByStationModel
 
   private TimeseriesNode[] m_nodes;
 
-  private final CommandableWorkspace m_workspace;
+  private final TimeseriesTreeContext m_context;
 
-  public StationsByStationModel( final CommandableWorkspace workspace, final StationCollection stations )
+  public StationsByStationModel( final TimeseriesTreeContext context, final StationCollection stations )
   {
-    m_workspace = workspace;
+    m_context = context;
     m_stations = stations;
   }
 
@@ -64,14 +64,24 @@ public class StationsByStationModel
   {
     if( m_nodes == null )
     {
-      m_nodes = new StationsByStationsStrategy( m_workspace, m_stations ).buildNodes();
+      m_nodes = new StationsByStationsStrategy( m_context, m_stations ).buildNodes();
     }
 
     return m_nodes;
   }
 
-  public CommandableWorkspace getWorkspace( )
+  public void clear( )
   {
-    return m_workspace;
+    m_nodes = null;
+  }
+
+  public void addModellListener( final ModellEventListener modelListener )
+  {
+    m_context.addModellListener( modelListener );
+  }
+
+  public void removeModellListener( final ModellEventListener modelListener )
+  {
+    m_context.removeModellListener( modelListener );
   }
 }

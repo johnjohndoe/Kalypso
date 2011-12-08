@@ -56,10 +56,16 @@ public class TimeseriesNode
 
   private final ITimeseriesNodeUiHandler m_uiHandler;
 
-  public TimeseriesNode( final TimeseriesNode parent, final ITimeseriesNodeUiHandler uiHandler )
+  private final Object m_treeData;
+
+  private final TimeseriesTreeContext m_context;
+
+  public TimeseriesNode( final TimeseriesTreeContext context, final TimeseriesNode parent, final ITimeseriesNodeUiHandler uiHandler, final Object treeData )
   {
+    m_context = context;
     m_parent = parent;
     m_uiHandler = uiHandler;
+    m_treeData = treeData;
   }
 
   public TimeseriesNode getParent( )
@@ -100,5 +106,27 @@ public class TimeseriesNode
   public ITimeseriesNodeUiHandler getUiHandler( )
   {
     return m_uiHandler;
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( !(obj instanceof TimeseriesNode) )
+      return false;
+
+    final TimeseriesNode other = (TimeseriesNode) obj;
+
+    return m_treeData.equals( other.m_treeData );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return m_treeData.hashCode();
+  }
+
+  public TimeseriesTreeContext getContext( )
+  {
+    return m_context;
   }
 }

@@ -85,6 +85,21 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     createContents();
   }
 
+  protected final FeatureBean<F> getBean( )
+  {
+    return m_featureBean;
+  }
+
+  protected final IDataBinding getBinding( )
+  {
+    return m_binding;
+  }
+
+  protected final FormToolkit getToolkit( )
+  {
+    return m_binding.getToolkit();
+  }
+
   protected abstract void createContents( );
 
   protected final void createPropertyControl( final QName property )

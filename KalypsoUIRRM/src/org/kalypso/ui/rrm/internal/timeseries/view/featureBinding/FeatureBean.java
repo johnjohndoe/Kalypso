@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
@@ -56,9 +57,11 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * REMARK: extends {@link AbstractModelObject}, so implementors can add additonal properties to a bean.
+ * 
  * @author Gernot Belger
  */
-public class FeatureBean<F extends Feature>
+public class FeatureBean<F extends Feature> extends AbstractModelObject
 {
   private final Map<QName, Object> m_properties = new HashMap<>();
 

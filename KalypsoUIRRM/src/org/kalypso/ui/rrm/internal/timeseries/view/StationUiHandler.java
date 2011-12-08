@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -49,10 +50,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.binding.MeteorologicalStation;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -61,11 +65,11 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
 {
   private final Station m_station;
 
-  private final CommandableWorkspace m_workspace;
+  private final TimeseriesTreeContext m_context;
 
-  public StationUiHandler( final CommandableWorkspace workspace, final Station station )
+  public StationUiHandler( final TimeseriesTreeContext context, final Station station )
   {
-    m_workspace = workspace;
+    m_context = context;
     m_station = station;
   }
 
@@ -94,7 +98,10 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( UIRrmImages.DESCRIPTORS.STATION );
+    if( m_station instanceof MeteorologicalStation )
+      return UIRrmImages.id( DESCRIPTORS.STATION_METEOROLOGICAL );
+
+    return UIRrmImages.id( DESCRIPTORS.STATION );
   }
 
   @Override
@@ -104,7 +111,7 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
 
     final StationComposite stationControl = new StationComposite( parent, bean, binding, false );
 
-    sectionToolbar.add( new EditStationAction( m_workspace, m_station, stationControl ) );
+    sectionToolbar.add( new EditStationAction( m_context, m_station, stationControl ) );
 
     return stationControl;
   }
@@ -113,5 +120,14 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station, null ) );
+
+    /* Delete timeseries */
+    final IFeatureBindingCollection<Timeseries> timeseries = m_station.getTimeseries();
+    final Timeseries[] allTimeseries = timeseries.toArray( new Timeseries[timeseries.size()] );
+
+    final String deleteMessage = String.format( "Delete all timeseries from of station '%s'?", getTreeLabel() );
+    final TimeseriesNode pseudoParent = new TimeseriesNode( m_context, null, null, null );
+    final IAction deleteAction = new DeleteTimeseriesAction( pseudoParent, deleteMessage, allTimeseries );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }
 }
