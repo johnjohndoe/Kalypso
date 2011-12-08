@@ -166,7 +166,7 @@ public class TimeseriesPropertiesView extends ViewPart
 
     final Composite body = m_form.getBody();
 
-    final Control control = uiHandler.createControl( m_toolkit, body, m_binding );
+    final Control control = uiHandler.createControl( body, m_binding );
     if( control != null )
       control.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }

@@ -46,7 +46,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -98,7 +97,7 @@ public class TimeseriesUiHandler implements ITimeseriesNodeUiHandler
   }
 
   @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final IDataBinding binding )
+  public Control createControl( final Composite parent, final IDataBinding binding )
   {
     // TODO Auto-generated method stub
     return null;

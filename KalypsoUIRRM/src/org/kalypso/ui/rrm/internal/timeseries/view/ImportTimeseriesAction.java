@@ -52,9 +52,12 @@ public class ImportTimeseriesAction extends Action
 {
   private final Station m_station;
 
-  public ImportTimeseriesAction( final Station station )
+  private final String m_parameterType;
+
+  public ImportTimeseriesAction( final Station station, final String parameterType )
   {
     m_station = station;
+    m_parameterType = parameterType;
 
     setText( "Import Timeseries" );
     setToolTipText( "Imports a timeseries from an external data source and adds it to the selected station." );
