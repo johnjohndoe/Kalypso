@@ -108,7 +108,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     for( final IKalypsoTheme kalypsoTheme : themes )
     {
       final FeatureList list = ((IKalypsoFeatureTheme) kalypsoTheme).getFeatureList();
-      final IRelationType featureTypeProperty = list.getParentFeatureTypeProperty();
+      final IRelationType featureTypeProperty = list.getPropertyType();
       final Feature parentFeature = list.getParentFeature();
       if( featureTypeProperty == null )
         return error( shell,  Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
