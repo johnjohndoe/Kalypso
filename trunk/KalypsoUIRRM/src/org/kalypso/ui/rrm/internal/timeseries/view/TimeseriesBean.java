@@ -42,9 +42,20 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import java.util.Locale;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.joda.time.format.PeriodFormatter;
+import org.kalypso.contribs.eclipse.core.runtime.StatusWithEquals;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 
@@ -53,11 +64,17 @@ import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
  */
 public class TimeseriesBean extends FeatureBean<Timeseries>
 {
+  private static final Status STATUS_DATA_FILE_MISSING = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Data file missing" );
+
+  private static final Status STATUS_LINK_NOT_SET = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Data link not set" );
+
+  static final String PROPERTY_DATA_STATUS = "dataStatus"; //$NON-NLS-1$
+
   static String PROPERTY_PERIOD_TEXT = "periodText"; //$NON-NLS-1$
 
-  public TimeseriesBean( final Timeseries feature )
+  public TimeseriesBean( final Timeseries timeseries )
   {
-    super( feature );
+    super( timeseries );
   }
 
   public String getPeriodText( )
@@ -67,5 +84,59 @@ public class TimeseriesBean extends FeatureBean<Timeseries>
 
     final PeriodFormatter formatter = PeriodFormat.wordBased( Locale.getDefault() );
     return formatter.print( timestep );
+  }
+
+  public IStatus getDataStatus( )
+  {
+    final Timeseries timeseries = getFeature();
+    final ZmlLink dataLink = timeseries.getDataLink();
+
+    if( !dataLink.isLinkSet() )
+      return STATUS_LINK_NOT_SET;
+
+    if( !dataLink.isLinkExisting() )
+      return STATUS_DATA_FILE_MISSING;
+
+    try
+    {
+      final IObservation observation = dataLink.loadObservation();
+      final IAxis[] axes = observation.getAxes();
+
+      /* Parameter type */
+      final String parameterType = timeseries.getParameterType();
+      final IAxis parameterAxis = AxisUtils.findAxis( axes, parameterType );
+      if( parameterAxis == null )
+      {
+        final String axisMessage = String.format( "Value axis for parameter type '%s' is missing.", parameterType );
+        return new StatusWithEquals( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), axisMessage );
+      }
+
+      /* Timestep */
+      final Period timestep = timeseries.getTimestep();
+      final Period obsTimestep = MetadataHelper.getTimestep( observation.getMetadataList() );
+
+      if( !ObjectUtils.equals( timestep, obsTimestep ) )
+      {
+        final PeriodFormatter formatter = PeriodFormat.wordBased( Locale.getDefault() );
+        final String timestepText = formatter.print( timestep );
+        final String obsTimestepText = formatter.print( obsTimestep );
+
+        final String timestepMessage = String.format( "Inconsistent timestep definition: data file: '%s', timeseries definition: '%s'", obsTimestepText, timestepText );
+        return new StatusWithEquals( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), timestepMessage );
+      }
+
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Valid" );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      final String eText = e.toString();
+
+      // REMARK: we do NOT give the exception into the status, as exception do not compare with equals.
+      // Else, we get a StackOverflow here
+      final String message = String.format( "Failed to access data file: %s", eText );
+
+      return new StatusWithEquals( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
+    }
   }
 }
