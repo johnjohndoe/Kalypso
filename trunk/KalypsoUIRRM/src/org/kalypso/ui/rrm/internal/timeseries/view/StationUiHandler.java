@@ -42,17 +42,13 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
@@ -61,7 +57,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 /**
  * @author Gernot Belger
  */
-public class StationUiHandler implements ITimeseriesNodeUiHandler
+public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
 {
   private final Station m_station;
 
@@ -102,37 +98,20 @@ public class StationUiHandler implements ITimeseriesNodeUiHandler
   }
 
   @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final IDataBinding binding )
+  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().applyTo( panel );
-
-    final Section controlSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
-    controlSection.setText( "Properties" );
-    controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-
-    /* Station Control */
     final FeatureBean<Station> bean = new FeatureBean<>( m_station );
 
-    final StationComposite stationControl = new StationComposite( controlSection, bean, binding, false );
-    controlSection.setClient( stationControl );
+    final StationComposite stationControl = new StationComposite( parent, bean, binding, false );
 
-    /* Some actions */
-    final Section actionSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
-    actionSection.setText( "Actions" );
-    actionSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    sectionToolbar.add( new EditStationAction( m_workspace, m_station, stationControl ) );
 
-    final Composite actionPanel = toolkit.createComposite( actionSection );
-    actionSection.setClient( actionPanel );
-    GridLayoutFactory.fillDefaults().applyTo( actionPanel );
+    return stationControl;
+  }
 
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station ) );
-
-    /* Toolbar action */
-    final ToolBarManager toolbar = SectionUtils.createSectionToolbar( controlSection );
-    toolbar.add( new EditStationAction( m_workspace, m_station, stationControl ) );
-    toolbar.update( true );
-
-    return panel;
+  @Override
+  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  {
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station, null ) );
   }
 }

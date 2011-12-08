@@ -40,77 +40,59 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
  * @author Gernot Belger
  */
-public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
+public class ParameterComposite extends Composite
 {
   private final String m_parameterType;
 
+  private final IDataBinding m_binding;
+
   private final Timeseries[] m_timeseries;
 
-  private final Station m_station;
-
-  public ParameterUiHandler( final Station station, final String parameterType, final Timeseries[] timeseries )
+  public ParameterComposite( final Composite parent, final IDataBinding binding, final String parameterType, final Timeseries[] timeseries )
   {
-    m_station = station;
+    super( parent, SWT.NONE );
+
+    m_binding = binding;
     m_parameterType = parameterType;
     m_timeseries = timeseries;
+
+    GridLayoutFactory.fillDefaults().applyTo( this );
+
+    binding.getToolkit().adapt( this );
+
+    createContents();
   }
 
-  @Override
-  public String getTypeLabel( )
+  private void createContents( )
   {
-    return "Parameter Type";
+    createInfoField( "Name", TimeseriesUtils.getName( m_parameterType ) );
+    createInfoField( "Unit", TimeseriesUtils.getUnit( m_parameterType ) );
+
+    // TODO: list contained timeseries
   }
 
-  @Override
-  public String getIdentifier( )
+  private void createInfoField( final String label, final String text )
   {
-    return StringUtils.EMPTY;
-  }
+    final FormToolkit toolkit = m_binding.getToolkit();
 
-  @Override
-  public String getTreeLabel( )
-  {
-    final String parameterName = TimeseriesUtils.getName( m_parameterType );
-    final String parameterUnit = TimeseriesUtils.getUnit( m_parameterType );
+    toolkit.createLabel( this, label );
 
-    return String.format( "%s [%s]", parameterName, parameterUnit );
-  }
+    final Text field = toolkit.createText( this, text, SWT.BORDER | SWT.SINGLE );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-  @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    final String imageLocation = UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_BASE.getImagePath() + "_" + m_parameterType + ".png"; //$NON-NLS-1$ //$NON-NLS-2$
-    return UIRrmImages.id( imageLocation );
-  }
-
-  @Override
-  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
-  {
-    final Composite parameterControl = new ParameterComposite( parent, binding, m_parameterType, m_timeseries );
-
-    return parameterControl;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station, m_parameterType ) );
+    field.setEnabled( false );
   }
 }

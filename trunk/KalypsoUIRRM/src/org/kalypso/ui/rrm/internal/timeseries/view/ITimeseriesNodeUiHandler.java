@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 
 /**
@@ -59,5 +58,5 @@ public interface ITimeseriesNodeUiHandler
 
   ImageDescriptor getTreeImage( );
 
-  Control createControl( FormToolkit toolkit, Composite parent, IDataBinding binding );
+  Control createControl( Composite parent, IDataBinding binding );
 }

@@ -95,7 +95,7 @@ public class StationsByStationsStrategy
 
     for( final Entry<String, Timeseries[]> entry : parameters.entrySet() )
     {
-      final TimeseriesNode parameterNode = buildParameterNode( stationNode, entry );
+      final TimeseriesNode parameterNode = buildParameterNode( station, stationNode, entry );
       stationNode.addChild( parameterNode );
     }
 
@@ -124,12 +124,12 @@ public class StationsByStationsStrategy
     return parameters;
   }
 
-  private TimeseriesNode buildParameterNode( final TimeseriesNode parent, final Entry<String, Timeseries[]> entry )
+  private TimeseriesNode buildParameterNode( final Station station, final TimeseriesNode parent, final Entry<String, Timeseries[]> entry )
   {
     final String parameterType = entry.getKey();
     final Timeseries[] timeseries = entry.getValue();
 
-    final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( parameterType, timeseries );
+    final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( station, parameterType, timeseries );
     final TimeseriesNode parameterNode = new TimeseriesNode( parent, uiHandler );
 
     for( final Timeseries timeserie : timeseries )
