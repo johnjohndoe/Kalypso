@@ -64,6 +64,10 @@ public interface INaProjectConstants
 
   String PATH_RECHENVARIANTEN = FOLDER_BASIS + "/" + FOLDER_RECHENVARIANTEN; //$NON-NLS-1$
 
+  String FOLDER_TIMESERIES = "timeseries"; //$NON-NLS-1$
+
+  String PATH_TIMESERIES = FOLDER_MODEL + "/" + FOLDER_TIMESERIES; //$NON-NLS-1$
+
   String GML_MODELL_FILE = "modell.gml"; //$NON-NLS-1$
 
   String GML_MODELL_PATH = FOLDER_MODELS + "/" + GML_MODELL_FILE;
