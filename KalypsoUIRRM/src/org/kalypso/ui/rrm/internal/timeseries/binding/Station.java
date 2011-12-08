@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.binding;
 
+import java.net.URISyntaxException;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -75,5 +78,20 @@ public abstract class Station extends Feature_Impl
   public String getComment( )
   {
     return getProperty( PROPERTY_COMMENT, String.class );
+  }
+
+  public String getTimeseriesFoldername( )
+  {
+    try
+    {
+      final String dirtyFoldername = String.format( "%s_%s", getName(), getDescription() );
+      return URIUtil.fromString( dirtyFoldername ).toASCIIString();
+    }
+    catch( final URISyntaxException e )
+    {
+      // can this ever happen?
+      e.printStackTrace();
+      throw new RuntimeException( e );
+    }
   }
 }

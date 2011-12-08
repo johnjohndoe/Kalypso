@@ -42,6 +42,8 @@ package org.kalypso.ui.rrm.internal.timeseries.binding;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
@@ -60,7 +62,7 @@ public class Timeseries extends Feature_Impl
 
   public final static QName PROPERTY_QUALITY = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "quality" ); //$NON-NLS-1$
 
-  final static QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
+  public final static QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
 
   final static QName PROPERTY_DATA = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "data" ); //$NON-NLS-1$
 
@@ -111,5 +113,13 @@ public class Timeseries extends Feature_Impl
   public Station getStation( )
   {
     return (Station) getParent();
+  }
+
+  public void deleteDataFile( ) throws CoreException
+  {
+    final ZmlLink dataLink = getDataLink();
+    final IFile file = dataLink.getFile();
+    if( file != null && file.exists() )
+      file.delete( false, true, null );
   }
 }

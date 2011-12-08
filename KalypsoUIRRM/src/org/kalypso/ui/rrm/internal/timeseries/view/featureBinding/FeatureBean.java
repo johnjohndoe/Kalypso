@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * REMARK: extends {@link AbstractModelObject}, so implementors can add additonal properties to a bean.
- * 
+ *
  * @author Gernot Belger
  */
 public class FeatureBean<F extends Feature> extends AbstractModelObject
@@ -81,6 +81,12 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
   {
     m_feature = feature;
 
+    m_dirtyProperties.clear();
+    m_properties.clear();
+
+    if( m_feature == null )
+      return;
+
     final IPropertyType[] properties = m_feature.getFeatureType().getProperties();
     for( final IPropertyType pt : properties )
     {
@@ -96,7 +102,7 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
     return m_feature;
   }
 
-  Object getProperty( final QName property )
+  public Object getProperty( final QName property )
   {
     return m_properties.get( property );
   }
