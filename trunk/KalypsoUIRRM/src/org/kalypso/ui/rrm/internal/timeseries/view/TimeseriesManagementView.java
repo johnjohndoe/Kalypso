@@ -46,7 +46,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
@@ -65,7 +64,7 @@ public class TimeseriesManagementView extends ViewPart
   {
     final Composite panel = new Composite( parent, SWT.NONE );
 
-    GridLayoutFactory.swtDefaults().applyTo( panel );
+    GridLayoutFactory.fillDefaults().applyTo( panel );
 
     createTree( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -76,39 +75,11 @@ public class TimeseriesManagementView extends ViewPart
   {
     m_treeViewer = new TreeViewer( panel );
 
-    m_treeViewer.setContentProvider( new StationsContentProvider() );
+    m_treeViewer.setContentProvider( new TimeseriesTreeContentProvider() );
 
     m_treeViewer.setLabelProvider( new TimeseriesNodeLabelProvider() );
 
-// ColumnViewerUtil.createEmptyColumn( m_treeViewer );
-//
-// /* Label Column */
-// final ViewerColumn labelColumn = ColumnViewerUtil.createViewerColumn( m_treeViewer, SWT.LEFT );
-// labelColumn.setLabelProvider( new TimeseriesNodeLabelProvider() );
-// final ViewerColumnItem labelColumnItem = new ViewerColumnItem( labelColumn );
-// labelColumnItem.setText( "Name" );
-// labelColumnItem.setResizable( false );
-//
-// ColumnsResizeControlListener.setMinimumPackWidth( labelColumnItem.getColumn() );
-// ColumnViewerSorter.registerSorter( labelColumn, new TimeseriesNodeLabelComparator() );
-//
-// /* Identifier Column */
-// final ViewerColumn idColumn = ColumnViewerUtil.createViewerColumn( m_treeViewer, SWT.LEFT );
-// idColumn.setLabelProvider( new TimeseriesNodeIdProvider() );
-//
-// final ViewerColumnItem idColumnItem = new ViewerColumnItem( idColumn );
-// idColumnItem.setText( "Identifier" );
-// idColumnItem.setResizable( false );
-//
-// ColumnsResizeControlListener.setMinimumPackWidth( idColumnItem.getColumn() );
-// ColumnViewerSorter.registerSorter( idColumn, new TimeseriesNodeLabelComparator() );
-
-    final Tree tree = m_treeViewer.getTree();
-    // tree.setHeaderVisible( true );
-    // tree.setLinesVisible( true );
-    // tree.addControlListener( new ColumnsResizeControlListener() );
-
-    return tree;
+    return m_treeViewer.getTree();
   }
 
   @Override
@@ -119,7 +90,9 @@ public class TimeseriesManagementView extends ViewPart
 
   public void setInput( final CommandableWorkspace workspace, final StationCollection stations )
   {
-    final StationsByStationModel input = new StationsByStationModel( workspace, stations );
+    final TimeseriesTreeContext context = new TimeseriesTreeContext( m_treeViewer, workspace );
+
+    final StationsByStationModel input = new StationsByStationModel( context, stations );
 
     m_treeViewer.setInput( input );
   }

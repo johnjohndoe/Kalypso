@@ -44,7 +44,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -53,7 +52,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author Gernot Belger
  */
-public class StationsContentProvider implements ITreeContentProvider
+public class TimeseriesTreeContentProvider implements ITreeContentProvider
 {
   private final ModellEventListener m_modelListener = new ModellEventListener()
   {
@@ -79,15 +78,12 @@ public class StationsContentProvider implements ITreeContentProvider
     m_viewer = (StructuredViewer) viewer;
 
     if( oldInput != null )
-    {
-      final CommandableWorkspace oldWorkspace = ((StationsByStationModel) oldInput).getWorkspace();
-      oldWorkspace.removeModellListener( m_modelListener );
-    }
+      ((StationsByStationModel) oldInput).removeModellListener( m_modelListener );
 
     m_model = (StationsByStationModel) newInput;
 
     if( m_model != null )
-      m_model.getWorkspace().addModellListener( m_modelListener );
+      m_model.addModellListener( m_modelListener );
   }
 
   @Override
@@ -117,6 +113,9 @@ public class StationsContentProvider implements ITreeContentProvider
 
   protected void handleModellChange( final ModellEvent modellEvent )
   {
+    if( m_model == null )
+      return;
+
     if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       ViewerUtilities.refresh( m_viewer, false );
@@ -124,6 +123,8 @@ public class StationsContentProvider implements ITreeContentProvider
 
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
+      m_model.clear();
+
       ViewerUtilities.refresh( m_viewer, false );
     }
   }

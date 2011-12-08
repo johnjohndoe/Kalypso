@@ -40,49 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import java.util.Locale;
+
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormat;
+import org.joda.time.format.PeriodFormatter;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  */
-public class EditStationAction extends Action
+public class TimeseriesBean extends FeatureBean<Timeseries>
 {
-  private final Station m_station;
+  static String PROPERTY_PERIOD_TEXT = "periodText"; //$NON-NLS-1$
 
-  private final StationComposite m_stationControl;
-
-  private final TimeseriesTreeContext m_context;
-
-  public EditStationAction( final TimeseriesTreeContext context, final Station station, final StationComposite stationControl )
+  public TimeseriesBean( final Timeseries feature )
   {
-    m_context = context;
-    m_station = station;
-    m_stationControl = stationControl;
-
-    setText( "Edit" );
-    setToolTipText( "Edits the properties of the station" );
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
+    super( feature );
   }
 
-  @Override
-  public void runWithEvent( final Event event )
+  public String getPeriodText( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final Timeseries timeseries = getFeature();
+    final Period timestep = timeseries.getTimestep();
 
-    final Wizard wizard = new EditStationWizard( m_context, m_station );
-    wizard.setWindowTitle( "Edit Properties" );
-
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
-
-    m_stationControl.refresh();
+    final PeriodFormatter formatter = PeriodFormat.wordBased( Locale.getDefault() );
+    return formatter.print( timestep );
   }
 }

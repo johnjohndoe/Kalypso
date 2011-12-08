@@ -47,7 +47,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
@@ -60,11 +59,11 @@ public class StationsByStationsStrategy
 {
   private final StationCollection m_stations;
 
-  private final CommandableWorkspace m_workspace;
+  private final TimeseriesTreeContext m_context;
 
-  public StationsByStationsStrategy( final CommandableWorkspace workspace, final StationCollection stations )
+  public StationsByStationsStrategy( final TimeseriesTreeContext context, final StationCollection stations )
   {
-    m_workspace = workspace;
+    m_context = context;
     m_stations = stations;
   }
 
@@ -87,9 +86,9 @@ public class StationsByStationsStrategy
   {
     final TimeseriesNode parent = null;
 
-    final ITimeseriesNodeUiHandler uiHandler = new StationUiHandler( m_workspace, station );
+    final ITimeseriesNodeUiHandler uiHandler = new StationUiHandler( m_context, station );
 
-    final TimeseriesNode stationNode = new TimeseriesNode( parent, uiHandler );
+    final TimeseriesNode stationNode = new TimeseriesNode( m_context, parent, uiHandler, station );
 
     final Map<String, Timeseries[]> parameters = groupByParameter( station );
 
@@ -129,8 +128,8 @@ public class StationsByStationsStrategy
     final String parameterType = entry.getKey();
     final Timeseries[] timeseries = entry.getValue();
 
-    final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( station, parameterType, timeseries );
-    final TimeseriesNode parameterNode = new TimeseriesNode( parent, uiHandler );
+    final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( parent, station, parameterType, timeseries );
+    final TimeseriesNode parameterNode = new TimeseriesNode( m_context, parent, uiHandler, parameterType );
 
     for( final Timeseries timeserie : timeseries )
     {
@@ -143,8 +142,8 @@ public class StationsByStationsStrategy
 
   private TimeseriesNode buildTimeseriesNode( final TimeseriesNode parent, final Timeseries timeseries )
   {
-    final ITimeseriesNodeUiHandler uiHandler = new TimeseriesUiHandler( timeseries );
+    final ITimeseriesNodeUiHandler uiHandler = new TimeseriesUiHandler( parent, timeseries );
 
-    return new TimeseriesNode( parent, uiHandler );
+    return new TimeseriesNode( m_context, parent, uiHandler, timeseries );
   }
 }

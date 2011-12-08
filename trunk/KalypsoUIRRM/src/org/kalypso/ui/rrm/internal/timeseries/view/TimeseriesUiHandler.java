@@ -43,24 +43,33 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesUiHandler implements ITimeseriesNodeUiHandler
+public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
 {
   private final Timeseries m_timeseries;
 
-  public TimeseriesUiHandler( final Timeseries timeseries )
+  private final TimeseriesNode m_parentNode;
+
+  public TimeseriesUiHandler( final TimeseriesNode parentNode, final Timeseries timeseries )
   {
+    m_parentNode = parentNode;
     m_timeseries = timeseries;
   }
 
@@ -97,9 +106,25 @@ public class TimeseriesUiHandler implements ITimeseriesNodeUiHandler
   }
 
   @Override
-  public Control createControl( final Composite parent, final IDataBinding binding )
+  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final FeatureBean<Timeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
+
+    final Composite timeseriesControl = new TimeseriesComposite( parent, timeseriesBean, binding, false );
+
+    return timeseriesControl;
+  }
+
+  @Override
+  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  {
+    // TODO: utility that changes the timestep
+    // TODO: copy timeseries
+
+    /* Delete timeseries */
+    final String stationLabel = m_timeseries.getParent().getDescription();
+    final String deleteMessage = String.format( "Delete timeseries '%s' from station '%s'?", getTreeLabel(), stationLabel );
+    final IAction deleteAction = new DeleteTimeseriesAction( m_parentNode, deleteMessage, m_timeseries );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }
 }
