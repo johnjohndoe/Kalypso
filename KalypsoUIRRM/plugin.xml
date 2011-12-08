@@ -30,7 +30,7 @@
    </extension>
    
    <extension point="org.kalypso.module.kalypsoModule">
-      <module class="org.kalypso.ui.rrm.extension.KalypsoModuleRRM"/>
+      <module class="org.kalypso.ui.rrm.KalypsoModuleRRM"/>
    </extension>
    
   <!-- Commands for the map or map outline -->

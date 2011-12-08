@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 

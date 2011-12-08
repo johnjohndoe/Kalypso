@@ -54,7 +54,7 @@ import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.wizards.conversion.ConverterData;
 import org.kalypso.ui.rrm.wizards.conversion.ITimeseriesVisitor;

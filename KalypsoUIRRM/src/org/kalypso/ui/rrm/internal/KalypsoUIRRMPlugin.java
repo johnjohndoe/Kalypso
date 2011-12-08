@@ -1,6 +1,5 @@
-package org.kalypso.ui.rrm;
+package org.kalypso.ui.rrm.internal;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -9,7 +8,6 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoUIRRMPlugin extends AbstractUIPlugin
 {
-
   // The shared instance.
   private static KalypsoUIRRMPlugin plugin;
 
@@ -28,7 +26,6 @@ public class KalypsoUIRRMPlugin extends AbstractUIPlugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
-// NALogger.startLogging();
   }
 
   /**
@@ -47,18 +44,6 @@ public class KalypsoUIRRMPlugin extends AbstractUIPlugin
   public static KalypsoUIRRMPlugin getDefault( )
   {
     return plugin;
-  }
-
-  /**
-   * Returns an image descriptor for the image file at the given plug-in relative path.
-   * 
-   * @param path
-   *          the path
-   * @return the image descriptor
-   */
-  public static ImageDescriptor getImageDescriptor( final String path )
-  {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "KalypsoUIRRM", path ); //$NON-NLS-1$
   }
 
   public static String getID( )

@@ -49,7 +49,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.extension;
+package org.kalypso.ui.rrm.internal.welcome;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
+import org.kalypso.ui.rrm.KalypsoModuleRRM;
 
 /**
  * @author Dirk Kuch

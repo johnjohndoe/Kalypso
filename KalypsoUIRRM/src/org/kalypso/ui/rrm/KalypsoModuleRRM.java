@@ -1,4 +1,4 @@
-package org.kalypso.ui.rrm.extension;
+package org.kalypso.ui.rrm;
 
 import java.net.URL;
 import java.util.Collection;
@@ -17,8 +17,11 @@ import org.kalypso.module.INewProjectHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.module.welcome.SpecialImportProjectAction;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.welcome.KalypsoRRMOpenAction;
+import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmNewProjectHandler;
+import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmWelcomePageFrame;
 import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 
 public class KalypsoModuleRRM extends AbstractKalypsoModule
@@ -39,7 +42,7 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   @Override
   public URL getInfoURL( )
   {
-    return getInfoURL( getClass(), KalypsoUIRRMPlugin.getDefault() );
+    return getInfoURL( KalypsoRrmWelcomePageFrame.class, KalypsoUIRRMPlugin.getDefault() );
   }
 
   @Override
