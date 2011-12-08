@@ -51,34 +51,32 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteTimeseriesAction extends Action
+public class DeleteStationAction extends Action
 {
-  private final Timeseries[] m_timeseries;
+  private final Station[] m_stations;
 
-  private final String m_deleteMessage;
+  private final TimeseriesTreeContext m_context;
 
-  private final TimeseriesNode m_parentNode;
-
-  public DeleteTimeseriesAction( final TimeseriesNode parentNode, final String deleteMessage, final Timeseries... timeseries )
+  public DeleteStationAction( final TimeseriesTreeContext context, final Station... station )
   {
-    m_parentNode = parentNode;
-    m_timeseries = timeseries;
-    m_deleteMessage = deleteMessage;
+    m_context = context;
+    m_stations = station;
 
-    setText( "Delete Timeseries" );
-    setToolTipText( "Delete selected timeseries" );
+    setText( "Delete Station" );
+    setToolTipText( "Delete selected station(s)" );
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
-    if( timeseries.length == 0 )
+    if( station.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( "Element contains no timeseries" );
+      setToolTipText( "Element contains no stations" );
     }
   }
 
@@ -87,30 +85,38 @@ public class DeleteTimeseriesAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    if( !MessageDialog.openConfirm( shell, getText(), m_deleteMessage ) )
+    final String deleteMessage = getDeleteMessage();
+
+    if( !MessageDialog.openConfirm( shell, getText(), deleteMessage ) )
       return;
 
     try
     {
       /* Delete data files */
-      for( final Timeseries timeseries : m_timeseries )
-        timeseries.deleteDataFile();
-
-      final TimeseriesTreeContext context = m_parentNode.getContext();
-
-      /* Select parent node */
-      context.setSelection( m_parentNode );
+      for( final Station station : m_stations )
+      {
+        for( final Timeseries timeseries : station.getTimeseries() )
+          timeseries.deleteDataFile();
+      }
 
       /* Delete feature */
-      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeseries );
-      context.postCommand( deleteCommand );
+      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_stations );
+      m_context.postCommand( deleteCommand );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete timeseries", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete station(s)", e );
       StatusDialog.open( shell, status, getText() );
     }
+  }
+
+  private String getDeleteMessage( )
+  {
+    if( m_stations.length > 1 )
+      return "Delete selected station(s)? This operation cannot made undone!";
+
+    return String.format( "Delete station '%s'? This operation cannot made undone!", m_stations[0].getDescription() );
   }
 }

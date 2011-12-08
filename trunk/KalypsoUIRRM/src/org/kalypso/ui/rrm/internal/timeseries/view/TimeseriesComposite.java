@@ -54,6 +54,7 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
@@ -73,6 +74,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
   {
     // createPropertyControl( Timeseries.QN_DESCRIPTION );
     // createPropertyControl( Timeseries.QN_NAME );
+    createParameterTypeControl();
     createPropertyControl( Timeseries.PROPERTY_QUALITY );
 
     createTimestepControl();
@@ -85,6 +87,23 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
     // TODO: show timestep
     // TODO: utility that changes the timestep
     // TODO: copy timeseries
+  }
+
+  private void createParameterTypeControl( )
+  {
+    final FormToolkit toolkit = getToolkit();
+
+    toolkit.createLabel( this, "Parameter Type" );
+
+    final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setEnabled( false );
+
+    final String parameterType = getBean().getFeature().getParameterType();
+    final String parameterName = TimeseriesUtils.getName( parameterType );
+    final String parameterUnit = TimeseriesUtils.getUnit( parameterType );
+    final String parameterLabel = String.format( "%s (%s)", parameterName, parameterUnit );
+    field.setText( parameterLabel );
   }
 
   private void createTimestepControl( )

@@ -133,5 +133,9 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
     final TimeseriesNode pseudoParent = new TimeseriesNode( m_context, null, null, null );
     final IAction deleteAction = new DeleteTimeseriesAction( pseudoParent, deleteMessage, allTimeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
+
+    /* Delete station */
+    final IAction deleteStationAction = new DeleteStationAction( m_context, m_station );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteStationAction );
   }
 }
