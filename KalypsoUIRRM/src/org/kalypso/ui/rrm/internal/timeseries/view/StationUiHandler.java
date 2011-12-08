@@ -52,6 +52,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.binding.HydrologicalStation;
 import org.kalypso.ui.rrm.internal.timeseries.binding.MeteorologicalStation;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
@@ -100,6 +101,9 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   {
     if( m_station instanceof MeteorologicalStation )
       return UIRrmImages.id( DESCRIPTORS.STATION_METEOROLOGICAL );
+
+    if( m_station instanceof HydrologicalStation )
+      return UIRrmImages.id( DESCRIPTORS.STATION_HYDROLOGICAL );
 
     return UIRrmImages.id( DESCRIPTORS.STATION );
   }

@@ -52,6 +52,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
@@ -75,6 +77,8 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
 
     createTimestepControl();
 
+    createTimeseriesDataValidationControl();
+
     // TODO: Check consistency (i.e. existence) of data file
 
 
@@ -95,6 +99,23 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
 
     final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( getBean(), TimeseriesBean.PROPERTY_PERIOD_TEXT );
+
+    final DataBinder binder = new DataBinder( target, model );
+
+    getBinding().bindValue( binder );
+  }
+
+  private void createTimeseriesDataValidationControl( )
+  {
+    final FormToolkit toolkit = getToolkit();
+
+    toolkit.createLabel( this, "Data File" );
+
+    final StatusComposite statusComposite = new StatusComposite( this, SWT.NONE );
+    statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final IObservableValue target = new StatusCompositeValue( statusComposite );
+    final IObservableValue model = BeansObservables.observeValue( getBean(), TimeseriesBean.PROPERTY_DATA_STATUS );
 
     final DataBinder binder = new DataBinder( target, model );
 
