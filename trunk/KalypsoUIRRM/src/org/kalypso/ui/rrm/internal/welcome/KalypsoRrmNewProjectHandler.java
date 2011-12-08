@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.extension;
+package org.kalypso.ui.rrm.internal.welcome;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.module.INewProjectHandler;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 /**
  * @author Gernot Belger

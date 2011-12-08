@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
 
 /**
  * Convenience class for storing references to image descriptors used by the readme tool.

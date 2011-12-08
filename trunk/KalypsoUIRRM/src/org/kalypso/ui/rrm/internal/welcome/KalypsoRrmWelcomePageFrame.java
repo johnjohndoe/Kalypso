@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.extension;
+package org.kalypso.ui.rrm.internal.welcome;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.module.AbstractKalypsoModuleWelcomePageFrame;

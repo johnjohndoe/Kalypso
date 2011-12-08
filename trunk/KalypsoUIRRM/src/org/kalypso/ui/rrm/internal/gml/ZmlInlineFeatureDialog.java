@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.view.observationDialog.IObservationAction;
 import org.kalypso.ogc.sensor.view.observationDialog.ObservationViewer;
 import org.kalypso.ogc.sensor.view.observationDialog.ObservationViewerDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
