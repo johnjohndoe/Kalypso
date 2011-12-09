@@ -60,5 +60,8 @@ public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
 
     catalog.put( NS_RCM, UrlCatalogRcm.class.getResource( "schema/rainfallCatchmentModel_v2.xsd" ) );
     prefixes.put( NS_RCM, "rcm" );
+
+    catalog.put( NS_CM, UrlCatalogRcm.class.getResource( "schema/catchmentModel.xsd" ) );
+    prefixes.put( NS_CM, "cm" );
   }
 }

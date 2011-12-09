@@ -48,4 +48,6 @@ public interface RcmConstants
   final static public String NS_OMBROMETER = "org.kalypso.model.rcm.ombrometer"; //$NON-NLS-1$
 
   final static public String NS_RCM = "org.kalypso.model.rcm.v2"; //$NON-NLS-1$
+
+  final static public String NS_CM = "org.kalypso.model.cm"; //$NON-NLS-1$
 }
