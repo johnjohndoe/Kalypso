@@ -120,6 +120,8 @@ public class ImportTimeseriesAction extends Action
     final IAxis[] allowedAxes = StationClasses.findAllowedClasses( m_station );
 
     final Wizard wizard = new TimeseriesImportWizard( allowedAxes );
+    wizard.setWindowTitle( getText() );
+
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
   }
