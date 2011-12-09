@@ -38,34 +38,38 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.binding;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ui.wizard.sensor.ImportObservationData;
-import org.kalypso.ui.wizard.sensor.ImportObservationSourcePage;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesImportWizard extends Wizard
+public class StationClass extends Feature_Impl
 {
-  private final ImportObservationData m_data;
+  final static QName FEATURE_STATION_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClass" ); //$NON-NLS-1$
 
-  public TimeseriesImportWizard( final IAxis[] allowedAxes )
+  public static final QName PROPERTY_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "class" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
+
+  public StationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
-    m_data = new ImportObservationData( allowedAxes );
-
-    addPage( new ImportObservationSourcePage( "sourcePage", m_data ) );
+    super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  public boolean performFinish( )
+  String getClassName( )
   {
-    // TODO Auto-generated method stub
+    return getProperty( PROPERTY_CLASS, String.class );
+  }
 
-    // TODO: create observation
-
-    return true;
+  String getParameterType( )
+  {
+    return getProperty( PROPERTY_PARAMETER_TYPE, String.class );
   }
 }

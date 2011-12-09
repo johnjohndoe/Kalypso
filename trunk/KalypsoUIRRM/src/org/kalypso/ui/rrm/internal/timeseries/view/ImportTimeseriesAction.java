@@ -53,12 +53,14 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.kalypso.ui.rrm.internal.timeseries.binding.StationClasses;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
@@ -115,7 +117,9 @@ public class ImportTimeseriesAction extends Action
 
   private void showWizard( final Shell shell )
   {
-    final Wizard wizard = new TimeseriesImportWizard();
+    final IAxis[] allowedAxes = StationClasses.findAllowedClasses( m_station );
+
+    final Wizard wizard = new TimeseriesImportWizard( allowedAxes );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
   }
