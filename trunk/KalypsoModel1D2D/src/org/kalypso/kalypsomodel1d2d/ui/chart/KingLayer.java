@@ -49,8 +49,8 @@ import org.eclipse.swt.graphics.Path;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * A layer which renders a King-Profile.
@@ -64,7 +64,7 @@ public class KingLayer extends AbstractChartLayer
 
   public KingLayer( final KingDataContainer data )
   {
-    super( null );
+    super( null,new StyleSet() );
 
     m_data = data;
   }
@@ -139,16 +139,7 @@ public class KingLayer extends AbstractChartLayer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+  
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */

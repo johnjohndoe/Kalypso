@@ -8,7 +8,7 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.ProfilChartTooltip;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.TooltipFormatter;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
@@ -80,19 +80,15 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double ok = ProfilUtil.getDoubleValueFor( okIndex, rec );
     final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
 
-    final ProfilChartTooltip tooltip = new ProfilChartTooltip();
-    tooltip.add( stationLabel, station );
-    tooltip.add( okLabel, ok );
-    tooltip.add( ukLabel, uk );
-    tooltip.add( widthLabel, bw );
+    final String comment = commentIndex >= 0 ? (String) tr.get( index ).getValue( commentIndex ) : "";
 
-    if( commentIndex >= 0 )
-    {
-      final String comment = (String) tr.get( index ).getValue( commentIndex );
-      tooltip.add( comment, null );
-    }
+    final TooltipFormatter tooltip = new TooltipFormatter( comment );
+    tooltip.addLine( stationLabel, station.toString() );
+    tooltip.addLine( okLabel, ok.toString() );
+    tooltip.addLine( ukLabel, uk.toString() );
+    tooltip.addLine( widthLabel, bw.toString() );
 
-    return tooltip.toString();
+    return tooltip.format();
   }
 
   @Override

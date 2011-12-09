@@ -52,7 +52,6 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -67,18 +66,7 @@ public class VerticalLineLayer extends AbstractLineLayer
    */
   private final BigDecimal[] m_points;
 
-  /**
-   * The constructor.
-   * 
-   * @param points
-   *          A list of values at the domain axis, where the vertical lines should be drawn.
-   */
-  public VerticalLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle, final BigDecimal[] points )
-  {
-    super( provider, lineStyle, pointStyle );
-
-    m_points = points;
-  }
+  
 
   /**
    * The constructor.

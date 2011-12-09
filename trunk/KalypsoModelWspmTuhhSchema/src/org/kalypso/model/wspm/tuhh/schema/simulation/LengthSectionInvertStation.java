@@ -67,13 +67,14 @@ public class LengthSectionInvertStation implements ILengthSectionColumn
   {
     if( m_isdirectionUpstreams )
       return;
+    final BigDecimal invert = new BigDecimal( -1 );
     final int ci = result.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
     for( final IRecord record : result )
     {
       final Object stationObj = record.getValue( ci );
       if( stationObj instanceof BigDecimal )
       {
-        record.setValue( ci, new BigDecimal( ((Number) stationObj).doubleValue() * -1 ) );
+        record.setValue( ci, ((BigDecimal) stationObj).multiply( invert ) );
       }
     }
 

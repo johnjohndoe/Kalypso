@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -66,6 +67,8 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class DeviderTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.DeviderTheme.0" ); //$NON-NLS-1$
+
+  private ILegendEntry[] m_legendEntries;
 
   public DeviderTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
@@ -101,8 +104,21 @@ public class DeviderTheme extends AbstractProfilTheme
     return cl.toArray( new IChartLayer[] {} );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
+   */
   @Override
-  public ILegendEntry[] createLegendEntries( )
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
+    {
+      m_legendEntries = createLegendEntries();
+    }
+    return m_legendEntries;
+  }
+
+  private ILegendEntry[] createLegendEntries( )
   {
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
 
