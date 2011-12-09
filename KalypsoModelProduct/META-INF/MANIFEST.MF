@@ -23,7 +23,6 @@ Require-Bundle: org.eclipse.help.ui,
  org.kalypso.project.database.client,
  org.kalypso.risk,
  org.kalypso.simulation.ui,
- org.kalypso.ui.observationimport,
  org.kalypso.model.rrm.ui,
  org.kalypso.ui,
  org.eclipse.ui.navigator
