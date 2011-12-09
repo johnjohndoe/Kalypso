@@ -46,6 +46,6 @@
   </gft:group>
 
   <gft:translator id="commons.msgGetString">
-    <class>org.kalypso.ui.rrm:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
+    <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
   </gft:translator>
 </gft:featureview>

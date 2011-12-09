@@ -35,7 +35,7 @@ plugin@org.kalypso.metadoc=SVN,url=https://dev.bjoernsen.de/svn/kalypsobase,tag=
 plugin@org.kalypso.model1d2d=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModel1D2D
 feature@org.kalypso.model.product=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelFeature
 plugin@org.kalypso.model.flood=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelFlood
-plugin@org.kalypso.NACalcJob=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelNA
+plugin@org.kalypso.model.rrm.core=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelNA
 plugin@org.kalypso.model.product=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelProduct
 plugin@org.kalypso.model.rcm=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelRCM
 plugin@org.kalypso.risk=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoModelRisk
@@ -71,7 +71,7 @@ plugin@org.kalypso.service.wps=SVN,url=https://dev.bjoernsen.de/svn/kalypsobase,
 plugin@org.kalypso.simulation.core=SVN,url=https://dev.bjoernsen.de/svn/kalypsobase,tag=branches/kalypso_11.06,path=KalypsoSimulationCore
 plugin@org.kalypso.simulation.ui=SVN,url=https://dev.bjoernsen.de/svn/kalypsobase/trunk/KalypsoSimulationUI,KalypsoSimulationUI
 plugin@org.kalypso.ui=SVN,url=https://dev.bjoernsen.de/svn/kalypsobase,tag=branches/kalypso_11.06,path=KalypsoUI
-plugin@org.kalypso.ui.rrm=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoUIRRM
+plugin@org.kalypso.model.rrm.ui=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoUIRRM
 plugin@org.kalypso.wspwin.core=SVN,url=https://svn.wb.tu-harburg.de/kalypso/source/kalypso,tag=branches/kalypso_11.06,path=KalypsoWspWinCore
 plugin@org.kalypso.xplan=SVN,url=https://dev.bjoernsen.de/svn/planerclient,tag=branches/kalypso_11.06,path=KalypsoXPlan
 plugin@de.openali.odysseus.chart.ext.base=SVN,url=https://dev.bjoernsen.de/svn/kalypsobase,tag=branches/kalypso_11.06,path=OdysseusChartExtensionBase

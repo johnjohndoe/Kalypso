@@ -64,7 +64,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.NACalcJob"
+         id="org.kalypso.model.rrm.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -148,7 +148,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.ui.rrm"
+         id="org.kalypso.model.rrm.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

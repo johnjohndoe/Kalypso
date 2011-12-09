@@ -8,7 +8,7 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.commons,
  org.kalypso.core,
- org.kalypso.NACalcJob,
+ org.kalypso.model.rrm.core,
  org.kalypso.model.wspm.tuhh.schema,
  org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.ui,
