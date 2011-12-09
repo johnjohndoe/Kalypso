@@ -11,7 +11,7 @@
     <xs:complexContent>
       <xs:extension base="gml:AbstractFeatureType">
         <xs:sequence>
-          <xs:element name="generatorMember" minOccurs="1" maxOccurs="unbounded">
+          <xs:element name="catchmentGeneratorMember" minOccurs="1" maxOccurs="unbounded">
             <xs:complexType>
               <xs:sequence>
                 <xs:element ref="cm:CatchmentGenerator" />
