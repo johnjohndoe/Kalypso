@@ -202,16 +202,13 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     return repository;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#addPages()
-   */
   @Override
   public void addPages( )
   {
     super.addPages();
 
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien wählen", m_timeseriesFolder ); //$NON-NLS-1$
-    m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" ); //$NON-NLS-1$
+    m_page1 = new ImportObservationSelectionWizardPage( "importPage", m_timeseriesFolder ); //$NON-NLS-1$
+    m_page2 = new ImportObservationAxisMappingWizardPage( "sourcePage" ); //$NON-NLS-1$
 
     addPage( m_page1 );
     addPage( m_page2 );
