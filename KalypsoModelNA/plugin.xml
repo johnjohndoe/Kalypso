@@ -372,4 +372,11 @@
               factory="org.kalypso.model.hydrology.internal.gml.TypeHandlerFactory">
         </typeHandler>
      </extension>
+     <extension
+           point="org.kalypso.core.catalogContribution">
+        <catalogContribution
+              class="org.kalypso.model.hydrology.internal.gml.DictionaryCatalog"
+              name="KalypsoModelRrrmCoreContributions">
+        </catalogContribution>
+     </extension>
 </plugin>
