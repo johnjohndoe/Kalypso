@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.binding;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -68,8 +70,10 @@ public class StationClass extends Feature_Impl
     return getProperty( PROPERTY_CLASS, String.class );
   }
 
-  String getParameterType( )
+  String[] getParameterTypes( )
   {
-    return getProperty( PROPERTY_PARAMETER_TYPE, String.class );
+    @SuppressWarnings("unchecked")
+    final List<String> types = getProperty( PROPERTY_PARAMETER_TYPE, List.class );
+    return types.toArray( new String[types.size()] );
   }
 }
