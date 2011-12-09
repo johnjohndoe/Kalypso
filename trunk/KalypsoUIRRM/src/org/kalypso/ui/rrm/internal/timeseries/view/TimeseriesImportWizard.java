@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ui.wizard.sensor.ImportObservationData;
-import org.kalypso.ui.wizard.sensor.ImportObservationSourcePage;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.zml.ui.imports.ImportObservationData;
+import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
+import org.kalypso.zml.ui.imports.ImportTimeseriesOperation;
 
 /**
  * @author Gernot Belger
@@ -52,20 +55,21 @@ public class TimeseriesImportWizard extends Wizard
 {
   private final ImportObservationData m_data;
 
-  public TimeseriesImportWizard( final IAxis[] allowedAxes )
+  public TimeseriesImportWizard( final ImportObservationData data )
   {
-    m_data = new ImportObservationData( allowedAxes );
+    m_data = data;
 
-    addPage( new ImportObservationSourcePage( "sourcePage", m_data ) );
+    addPage( new ImportObservationSourcePage( "sourcePage", data ) );
   }
 
   @Override
   public boolean performFinish( )
   {
-    // TODO Auto-generated method stub
+    final ImportTimeseriesOperation importOperation = new ImportTimeseriesOperation( m_data );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, importOperation );
+    if( !status.isOK() )
+      StatusDialog.open( getShell(), status, getWindowTitle() );
 
-    // TODO: create observation
-
-    return true;
+    return !status.matches( IStatus.ERROR );
   }
 }

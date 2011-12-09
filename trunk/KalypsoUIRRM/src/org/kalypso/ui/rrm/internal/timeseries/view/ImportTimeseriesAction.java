@@ -45,7 +45,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -54,14 +54,12 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.StationClasses;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
+import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
  * @author Gernot Belger
@@ -90,14 +88,11 @@ public class ImportTimeseriesAction extends Action
 
     try
     {
-      final TimeseriesBean bean = new TimeseriesBean( null );
+      /* Prepare data */
+      final ImportObservationData data = prepareData();
 
-      showWizard( shell );
-      // show wizard
-
-      final IObservation observation;
-      // import file
-      importDataFile( bean, null );
+      if( !showWizard( shell, data ) )
+        return;
 
       // create timeseries feature and set properties
 
@@ -108,29 +103,28 @@ public class ImportTimeseriesAction extends Action
       e.printStackTrace();
       StatusDialog.open( shell, e.getStatus(), getText() );
     }
-    catch( final SensorException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
   }
 
-  private void showWizard( final Shell shell )
+  private ImportObservationData prepareData( ) throws CoreException
   {
+    final TimeseriesBean bean = new TimeseriesBean( null );
     final IAxis[] allowedAxes = StationClasses.findAllowedClasses( m_station );
 
-    final Wizard wizard = new TimeseriesImportWizard( allowedAxes );
+    final ImportObservationData data = new ImportObservationData( allowedAxes );
+
+    final IFile dataFile = createDataFile( bean );
+    data.setTargetFile( dataFile );
+
+    return data;
+  }
+
+  private boolean showWizard( final Shell shell, final ImportObservationData data )
+  {
+    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( data );
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
-  }
-
-  private void importDataFile( final TimeseriesBean bean, final IObservation observation ) throws CoreException, SensorException
-  {
-    final IFile dataFile = createDataFile( bean );
-
-    ZmlFactory.writeToFile( observation, dataFile );
+    return dialog.open() == Window.OK;
   }
 
   private IFile createDataFile( final TimeseriesBean bean ) throws CoreException
