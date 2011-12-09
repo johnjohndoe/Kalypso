@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.joda.time.format.PeriodFormatter;
+import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusWithEquals;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -72,6 +73,11 @@ public class TimeseriesBean extends FeatureBean<Timeseries>
 
   static String PROPERTY_PERIOD_TEXT = "periodText"; //$NON-NLS-1$
 
+  public TimeseriesBean( )
+  {
+    super( Timeseries.FEATURE_TIMESERIES );
+  }
+
   public TimeseriesBean( final Timeseries timeseries )
   {
     super( timeseries );
@@ -80,15 +86,19 @@ public class TimeseriesBean extends FeatureBean<Timeseries>
   public String getPeriodText( )
   {
     final Timeseries timeseries = getFeature();
-    final Period timestep = timeseries.getTimestep();
+    if( timeseries == null )
+      return null;
 
-    final PeriodFormatter formatter = PeriodFormat.wordBased( Locale.getDefault() );
-    return formatter.print( timestep );
+    final Period timestep = timeseries.getTimestep();
+    return PeriodUtils.formatDefault( timestep );
   }
 
   public IStatus getDataStatus( )
   {
     final Timeseries timeseries = getFeature();
+    if( timeseries == null )
+      return STATUS_LINK_NOT_SET;
+
     final ZmlLink dataLink = timeseries.getDataLink();
 
     if( !dataLink.isLinkSet() )

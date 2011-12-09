@@ -67,7 +67,7 @@ public class FeatureBeanObservableValue extends AbstractObservableValue
   @Override
   public Object getValueType( )
   {
-    final IPropertyType propertyType = m_source.getFeature().getFeatureType().getProperty( m_property );
+    final IPropertyType propertyType = m_source.getFeatureType().getProperty( m_property );
     final IValuePropertyType vpt = (IValuePropertyType) propertyType;
 
     if( vpt.isList() )

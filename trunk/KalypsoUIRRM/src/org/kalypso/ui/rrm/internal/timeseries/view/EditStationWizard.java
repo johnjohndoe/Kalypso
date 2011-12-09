@@ -70,7 +70,7 @@ public class EditStationWizard extends Wizard
   {
     final FeatureBean<Station> stationBean = m_stationBean;
 
-    final WizardPage page = new FeatureBeanWizardPage( "feature", m_stationBean ) //$NON-NLS-1$
+    final WizardPage page = new FeatureBeanWizardPage( "feature" ) //$NON-NLS-1$
     {
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )

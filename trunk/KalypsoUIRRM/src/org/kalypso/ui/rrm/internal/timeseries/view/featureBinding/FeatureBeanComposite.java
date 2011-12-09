@@ -104,7 +104,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected final void createPropertyControl( final QName property )
   {
-    final IPropertyType propertyType = m_featureBean.getFeature().getFeatureType().getProperty( property );
+    final IPropertyType propertyType = m_featureBean.getFeatureType().getProperty( property );
     final String label = AnnotationUtilities.getAnnotation( propertyType.getAnnotation(), null, IAnnotation.ANNO_LABEL );
 
     final FormToolkit toolkit = m_binding.getToolkit();

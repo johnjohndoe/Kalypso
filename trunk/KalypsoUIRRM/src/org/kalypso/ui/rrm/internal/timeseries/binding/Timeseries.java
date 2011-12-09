@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Timeseries extends Feature_Impl
 {
-  final static QName FEATURE_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Timeseries" ); //$NON-NLS-1$
+  public final static QName FEATURE_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Timeseries" ); //$NON-NLS-1$
 
   public final static QName PROPERTY_QUALITY = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "quality" ); //$NON-NLS-1$
 

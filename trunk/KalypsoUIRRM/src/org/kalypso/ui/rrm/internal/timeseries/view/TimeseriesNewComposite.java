@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -48,12 +47,10 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.core.status.StatusComposite;
-import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
@@ -62,39 +59,28 @@ import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanCom
 /**
  * @author Gernot Belger
  */
-public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
+public class TimeseriesNewComposite extends FeatureBeanComposite<Timeseries>
 {
-  public TimeseriesComposite( final Composite parent, final FeatureBean<Timeseries> featureBean, final IDataBinding binding, final boolean editable )
+  public TimeseriesNewComposite( final Composite parent, final FeatureBean<Timeseries> featureBean, final IDataBinding binding )
   {
-    super( parent, featureBean, binding, editable );
+    super( parent, featureBean, binding, true );
   }
 
   @Override
   protected void createContents( )
   {
-    // createPropertyControl( Timeseries.QN_DESCRIPTION );
-    // createPropertyControl( Timeseries.QN_NAME );
     createParameterTypeControl();
+
     createPropertyControl( Timeseries.PROPERTY_QUALITY );
 
     createTimestepControl();
-
-    createTimeseriesDataValidationControl();
-
-    // TODO: Check consistency (i.e. existence) of data file
-
-    // TODO: show timestep
-    // TODO: utility that changes the timestep
-    // TODO: copy timeseries
   }
 
   private void createParameterTypeControl( )
   {
-    final FormToolkit toolkit = getToolkit();
+    new Label( this, SWT.NONE ).setText( "Parameter Type" );
 
-    toolkit.createLabel( this, "Parameter Type" );
-
-    final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
+    final Text field = new Text( this, SWT.BORDER | SWT.SINGLE );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setEnabled( false );
 
@@ -107,33 +93,15 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
 
   private void createTimestepControl( )
   {
-    final FormToolkit toolkit = getToolkit();
+    new Label( this, SWT.NONE ).setText( "Timestep" );
 
-    toolkit.createLabel( this, "Timestep" );
+    // FIXME: instead amount + field chooser; use binding?
 
-    final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
+    final Text field = new Text( this, SWT.BORDER | SWT.SINGLE );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setEnabled( false );
 
     final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = BeansObservables.observeValue( getBean(), TimeseriesBean.PROPERTY_PERIOD_TEXT );
-
-    final DataBinder binder = new DataBinder( target, model );
-
-    getBinding().bindValue( binder );
-  }
-
-  private void createTimeseriesDataValidationControl( )
-  {
-    final FormToolkit toolkit = getToolkit();
-
-    toolkit.createLabel( this, "Data File" );
-
-    final StatusComposite statusComposite = new StatusComposite( toolkit, this, SWT.NONE );
-    statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    final IObservableValue target = new StatusCompositeValue( statusComposite );
-    final IObservableValue model = BeansObservables.observeValue( getBean(), TimeseriesBean.PROPERTY_DATA_STATUS );
 
     final DataBinder binder = new DataBinder( target, model );
 

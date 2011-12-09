@@ -128,7 +128,7 @@ public class StationsByStationsStrategy
     final String parameterType = entry.getKey();
     final Timeseries[] timeseries = entry.getValue();
 
-    final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( parent, station, parameterType, timeseries );
+    final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( m_context, station, parameterType, timeseries );
     final TimeseriesNode parameterNode = new TimeseriesNode( m_context, parent, uiHandler, parameterType );
 
     for( final Timeseries timeserie : timeseries )
@@ -142,7 +142,7 @@ public class StationsByStationsStrategy
 
   private TimeseriesNode buildTimeseriesNode( final TimeseriesNode parent, final Timeseries timeseries )
   {
-    final ITimeseriesNodeUiHandler uiHandler = new TimeseriesUiHandler( parent, timeseries );
+    final ITimeseriesNodeUiHandler uiHandler = new TimeseriesUiHandler( m_context, timeseries );
 
     return new TimeseriesNode( m_context, parent, uiHandler, timeseries );
   }

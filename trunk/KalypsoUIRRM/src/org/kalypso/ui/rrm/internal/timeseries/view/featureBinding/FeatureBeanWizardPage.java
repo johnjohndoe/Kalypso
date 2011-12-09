@@ -53,16 +53,12 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
  */
 public abstract class FeatureBeanWizardPage extends WizardPage
 {
-  private final FeatureBean< ? > m_bean;
-
-  protected FeatureBeanWizardPage( final String pageName, final FeatureBean< ? > bean )
+  protected FeatureBeanWizardPage( final String pageName )
   {
     super( pageName );
 
     setTitle( "Edit Properties" );
     setDescription( "Change the properties of the selected element" );
-
-    m_bean = bean;
   }
 
   @Override
