@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.help.ui,
  org.kalypso.risk,
  org.kalypso.simulation.ui,
  org.kalypso.ui.observationimport,
- org.kalypso.ui.rrm,
+ org.kalypso.model.rrm.ui,
  org.kalypso.ui,
  org.eclipse.ui.navigator
 Bundle-ActivationPolicy: lazy
