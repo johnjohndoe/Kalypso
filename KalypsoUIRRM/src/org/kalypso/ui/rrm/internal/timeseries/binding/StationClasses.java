@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.binding;
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -127,19 +128,19 @@ public class StationClasses extends Feature_Impl
         final String className = stationClass.getClassName();
 
         final Class< ? > loadedClass = StationClasses.class.getClassLoader().loadClass( className );
-        if( loadedClass == null || !loadedClass.isInstance( Station.class ) )
+        if( loadedClass == null || !Station.class.isAssignableFrom( loadedClass ) )
           throw new IllegalArgumentException( String.format( "Class must inherit from Station: %s", loadedClass.getName() ) ); //$NON-NLS-1$
 
         @SuppressWarnings("unchecked")
         final Class< ? extends Station> verifiedClass = (Class< ? extends Station>) loadedClass;
 
-        final String parameterType = stationClass.getParameterType();
-
         if( !classCatalog.containsKey( verifiedClass ) )
           classCatalog.put( verifiedClass, new HashSet<String>() );
 
         final Set<String> types = classCatalog.get( verifiedClass );
-        types.add( parameterType );
+
+        final String[] parameterTypes = stationClass.getParameterTypes();
+        types.addAll( Arrays.asList( parameterTypes ) );
       }
       catch( final ClassNotFoundException e )
       {
