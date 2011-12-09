@@ -84,9 +84,9 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
-import org.kalypso.ui.wizard.sensor.TimezoneEtcFilter;
 import org.kalypso.ui.wizards.i18n.Messages;
+import org.kalypso.zml.ui.imports.ObservationImportSelection;
+import org.kalypso.zml.ui.imports.TimezoneEtcFilter;
 
 /**
  * FIXME: this is a stupid copy/paste from the original ImportObservationSelectionWizardPage, however it does almost the
