@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.internal.conversion;
 
 import javax.xml.namespace.QName;
 

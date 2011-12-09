@@ -38,19 +38,38 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Visits one timeseries of the rrm model.
+ * Prepends '../' to every timeseries link it encounters.
  *
  * @author Gernot Belger
  */
-public interface ITimeseriesVisitor
+public class FixDotDotTimeseriesVisitor implements ITimeseriesVisitor
 {
-  IStatus visit( Feature feature, QName linkProperty );
+  @Override
+  public IStatus visit( final Feature feature, final QName linkProperty )
+  {
+    final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( linkProperty );
+    if( link == null )
+      return Status.OK_STATUS;
+
+    final String href = link.getHref();
+    if( StringUtils.isBlank( href ) )
+      return Status.OK_STATUS;
+
+    final String newHref = "../" + href;
+    link.setHref( newHref );
+
+    return Status.OK_STATUS;
+  }
 }

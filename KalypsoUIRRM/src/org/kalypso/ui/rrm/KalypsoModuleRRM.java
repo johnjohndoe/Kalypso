@@ -19,10 +19,10 @@ import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.module.welcome.SpecialImportProjectAction;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.newproject.KalypsoNAProjectWizard;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRRMOpenAction;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmNewProjectHandler;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmWelcomePageFrame;
-import org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard;
 
 public class KalypsoModuleRRM extends AbstractKalypsoModule
 {

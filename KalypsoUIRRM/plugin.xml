@@ -16,7 +16,7 @@
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
       <wizard
             category="org.kalypso.ui.newwizards.kalypso/org.kalypso.ui.newwizards.kalypso.rrm"
-            class="org.kalypso.ui.rrm.wizards.KalypsoNAProjectWizard"
+            class="org.kalypso.ui.rrm.internal.newproject.KalypsoNAProjectWizard"
             finalPerspective="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"
             hasPages="true"
             icon="icons/kalypso16.gif"
@@ -67,7 +67,7 @@
             </enabledWhen>
         </handler>
 	
-		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.internal.handler.RRMCreateHydrotopsHandler">
+		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler">
 			<activeWhen>
 				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
 			</activeWhen>
@@ -232,11 +232,11 @@
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
-         <handler class="org.kalypso.ui.rrm.internal.handler.StartCalculationActionDelegate" commandId="org.kalypso.ui.rrm.command.calccase.runCalcCase"/>
-         <handler class="org.kalypso.ui.rrm.internal.handler.UpdateCalcCaseTimeseries" commandId="org.kalypso.ui.rrm.command.calccase.updateCalcCaseTimeseries"/>
-         <handler class="org.kalypso.ui.rrm.internal.handler.CopyCalcCaseDelegate" commandId="org.kalypso.ui.rrm.command.calccase.copyCalcCase"/>
-         <handler class="org.kalypso.ui.rrm.internal.handler.NewCalcCaseAction" commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase"/>
-         <handler class="org.kalypso.ui.rrm.internal.handler.SetBasicModelDelegate" commandId="org.kalypso.ui.rrm.command.calccase.setBasicModel"/>
+         <handler class="org.kalypso.ui.rrm.internal.calccase.StartCalculationActionDelegate" commandId="org.kalypso.ui.rrm.command.calccase.runCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.internal.calccase.UpdateCalcCaseTimeseries" commandId="org.kalypso.ui.rrm.command.calccase.updateCalcCaseTimeseries"/>
+         <handler class="org.kalypso.ui.rrm.internal.calccase.CopyCalcCaseDelegate" commandId="org.kalypso.ui.rrm.command.calccase.copyCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.internal.calccase.NewCalcCaseAction" commandId="org.kalypso.ui.rrm.command.calccase.newCalcCase"/>
+         <handler class="org.kalypso.ui.rrm.internal.calccase.SetBasicModelDelegate" commandId="org.kalypso.ui.rrm.command.calccase.setBasicModel"/>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -286,7 +286,7 @@
    </extension>
    
   <extension point="org.kalypso.module.conversion">
-    <projectconversion module="KalypsRrmModel" class="org.kalypso.ui.rrm.wizards.conversion.RrmProjectConverterFactory"/>
+    <projectconversion module="KalypsRrmModel" class="org.kalypso.ui.rrm.internal.conversion.RrmProjectConverterFactory"/>
    </extension> 
 
    <extension point="org.kalypso.ui.typeHandlers">
@@ -309,17 +309,17 @@
    </extension>
    <extension point="org.kalypso.ui.importWizards">
       <wizard
-            class="org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard"
+            class="org.kalypso.ui.rrm.internal.hydrotops.ImportLanduseWizard"
             id="org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard"
             name="%command.name.0">
       </wizard>
       <wizard
-            class="org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard"
+            class="org.kalypso.ui.rrm.internal.hydrotops.ImportPedologyWizard"
             id="org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard"
             name="%command.name.1">
       </wizard>
       <wizard
-            class="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard"
+            class="org.kalypso.ui.rrm.internal.hydrotops.ImportGeologyWizard"
             id="org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard"
             name="%command.name.2">
       </wizard>

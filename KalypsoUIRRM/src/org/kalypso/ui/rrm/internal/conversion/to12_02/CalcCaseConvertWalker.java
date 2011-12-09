@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.to12_02;
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;

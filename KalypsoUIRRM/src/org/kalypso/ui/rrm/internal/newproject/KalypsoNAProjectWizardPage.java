@@ -43,7 +43,7 @@
  * Created on 31.01.2005
  *
  */
-package org.kalypso.ui.rrm.wizards;
+package org.kalypso.ui.rrm.internal.newproject;
 
 import java.io.File;
 import java.util.List;

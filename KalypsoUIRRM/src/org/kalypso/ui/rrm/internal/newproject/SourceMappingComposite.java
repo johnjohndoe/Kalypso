@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards;
+package org.kalypso.ui.rrm.internal.newproject;
 
 import java.util.ArrayList;
 import java.util.HashMap;

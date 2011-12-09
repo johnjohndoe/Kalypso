@@ -27,7 +27,7 @@
  *
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.rrm.wizards;
+package org.kalypso.ui.rrm.internal.preferences;
 
 import java.util.ArrayList;
 import java.util.List;

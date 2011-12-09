@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.to12_02;
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 
@@ -47,8 +47,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.module.conversion.AbstractProjectConverter;
+import org.kalypso.ui.rrm.internal.conversion.ChooseExeConverter;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.wizards.conversion.ChooseExeConverter;
 import org.osgi.framework.Version;
 
 /**
