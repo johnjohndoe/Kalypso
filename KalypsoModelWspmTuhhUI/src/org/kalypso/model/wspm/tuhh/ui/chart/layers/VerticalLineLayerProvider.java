@@ -50,8 +50,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * This layer provider can create vertical line layers.
@@ -81,6 +79,6 @@ public class VerticalLineLayerProvider extends AbstractLayerProvider
     if( bankfullHeight == null )
       return null;
 
-    return new VerticalLineLayer( this, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), new BigDecimal[] { bankfullHeight } ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new VerticalLineLayer( this, getStyleSet(), new BigDecimal[] { bankfullHeight } ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

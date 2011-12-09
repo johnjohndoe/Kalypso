@@ -48,6 +48,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
@@ -91,7 +92,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
   public BuildingParameterLayer( final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId, final IStyleSet styleSet )
   {
-    super( null );
+    super( null,new StyleSet() );
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
     final TupleResult result = obs.getResult();
