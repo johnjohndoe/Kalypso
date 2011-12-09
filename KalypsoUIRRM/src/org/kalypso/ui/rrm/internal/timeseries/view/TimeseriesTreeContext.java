@@ -80,4 +80,9 @@ public class TimeseriesTreeContext
   {
     m_workspace.removeModellListener( modelListener );
   }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_workspace;
+  }
 }

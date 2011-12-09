@@ -66,11 +66,11 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
 
   private final Station m_station;
 
-  private final TimeseriesNode m_parentNode;
+  private final TimeseriesTreeContext m_context;
 
-  public ParameterUiHandler( final TimeseriesNode parentNode, final Station station, final String parameterType, final Timeseries[] timeseries )
+  public ParameterUiHandler( final TimeseriesTreeContext context, final Station station, final String parameterType, final Timeseries[] timeseries )
   {
-    m_parentNode = parentNode;
+    m_context = context;
     m_station = station;
     m_parameterType = parameterType;
     m_timeseries = timeseries;
@@ -115,12 +115,12 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_station, m_parameterType ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_context, m_station, m_parameterType ) );
 
     /* Delete timeseries */
     final String stationLabel = m_station.getDescription();
     final String deleteMessage = String.format( "Delete all timeseries from parameter '%s' of station '%s'?", getTreeLabel(), stationLabel );
-    final IAction deleteAction = new DeleteTimeseriesAction( m_parentNode, deleteMessage, m_timeseries );
+    final IAction deleteAction = new DeleteTimeseriesAction( m_context, deleteMessage, m_timeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }
 }

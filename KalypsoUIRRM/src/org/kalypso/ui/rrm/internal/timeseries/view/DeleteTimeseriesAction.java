@@ -62,11 +62,11 @@ public class DeleteTimeseriesAction extends Action
 
   private final String m_deleteMessage;
 
-  private final TimeseriesNode m_parentNode;
+  private final TimeseriesTreeContext m_context;
 
-  public DeleteTimeseriesAction( final TimeseriesNode parentNode, final String deleteMessage, final Timeseries... timeseries )
+  public DeleteTimeseriesAction( final TimeseriesTreeContext context, final String deleteMessage, final Timeseries... timeseries )
   {
-    m_parentNode = parentNode;
+    m_context = context;
     m_timeseries = timeseries;
     m_deleteMessage = deleteMessage;
 
@@ -96,14 +96,14 @@ public class DeleteTimeseriesAction extends Action
       for( final Timeseries timeseries : m_timeseries )
         timeseries.deleteDataFile();
 
-      final TimeseriesTreeContext context = m_parentNode.getContext();
-
       /* Select parent node */
-      context.setSelection( m_parentNode );
+      final Object parentStation = m_timeseries[0].getParent();
+      final TimeseriesNode parentNode = new TimeseriesNode( m_context, null, null, parentStation );
+      m_context.setSelection( parentNode );
 
       /* Delete feature */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeseries );
-      context.postCommand( deleteCommand );
+      m_context.postCommand( deleteCommand );
     }
     catch( final Exception e )
     {

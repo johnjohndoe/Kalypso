@@ -42,31 +42,42 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
-import org.kalypso.zml.ui.imports.ImportTimeseriesOperation;
 
 /**
  * @author Gernot Belger
  */
 public class TimeseriesImportWizard extends Wizard
 {
-  private final ImportObservationData m_data;
+  private final ICoreRunnableWithProgress m_importOperation;
 
-  public TimeseriesImportWizard( final ImportObservationData data )
+  public TimeseriesImportWizard( final ICoreRunnableWithProgress importOperation, final ImportObservationData data, final TimeseriesBean bean )
   {
-    m_data = data;
+    m_importOperation = importOperation;
 
-    addPage( new ImportObservationSourcePage( "sourcePage", data ) );
+    addPage( new ImportObservationSourcePage( "sourcePage", data ) ); //$NON-NLS-1$
+    addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
+    {
+      @Override
+      protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
+      {
+        return new TimeseriesNewComposite( parent, bean, binding );
+      }
+    } );
   }
 
   @Override
   public boolean performFinish( )
   {
-    final ImportTimeseriesOperation importOperation = new ImportTimeseriesOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, importOperation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
 

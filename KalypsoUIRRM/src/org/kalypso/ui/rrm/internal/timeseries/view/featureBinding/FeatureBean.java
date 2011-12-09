@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,6 +51,8 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
@@ -71,6 +74,12 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
 
   private F m_feature;
 
+  private IFeatureType m_featureType;
+
+  public FeatureBean( final QName featureType )
+  {
+    m_featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureType );
+  }
 
   public FeatureBean( final F feature )
   {
@@ -87,6 +96,8 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
     if( m_feature == null )
       return;
 
+    m_featureType = m_feature.getFeatureType();
+
     final IPropertyType[] properties = m_feature.getFeatureType().getProperties();
     for( final IPropertyType pt : properties )
     {
@@ -95,6 +106,11 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
         setProperty( pt.getQName(), m_feature.getProperty( pt ) );
       }
     }
+  }
+
+  public IFeatureType getFeatureType( )
+  {
+    return m_featureType;
   }
 
   public F getFeature( )
@@ -107,16 +123,18 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
     return m_properties.get( property );
   }
 
-  void setProperty( final QName property, final Object value )
+  public void setProperty( final QName property, final Object value )
   {
     final Object oldValue = getProperty( property );
 
     m_properties.put( property, value );
 
-    final Object oldFeatureValue = m_feature.getProperty( property );
-
-    if( !ObjectUtils.equals( value, oldFeatureValue ) )
-      m_dirtyProperties.add( property );
+    if( m_feature != null )
+    {
+      final Object oldFeatureValue = m_feature.getProperty( property );
+      if( !ObjectUtils.equals( value, oldFeatureValue ) )
+        m_dirtyProperties.add( property );
+    }
 
     firePropertyChanged( oldValue, value );
   }
@@ -155,6 +173,15 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
     m_dirtyProperties.clear();
 
     return composite;
+  }
+
+  /**
+   * Returns the currently stored properties in this bean.<br/>
+   * The returned {@link Map} is not modifiable.
+   */
+  public Map<QName, Object> getProperties( )
+  {
+    return Collections.unmodifiableMap( m_properties );
   }
 
   public void revert( )

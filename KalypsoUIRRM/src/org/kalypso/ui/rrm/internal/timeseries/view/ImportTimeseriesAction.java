@@ -40,19 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -70,10 +63,13 @@ public class ImportTimeseriesAction extends Action
 
   private final String m_parameterType;
 
-  public ImportTimeseriesAction( final Station station, final String parameterType )
+  private final TimeseriesTreeContext m_context;
+
+  public ImportTimeseriesAction( final TimeseriesTreeContext context, final Station station, final String parameterType )
   {
     m_station = station;
     m_parameterType = parameterType;
+    m_context = context;
 
     setText( "Import Timeseries" );
     setToolTipText( "Imports a timeseries from an external data source and adds it to the selected station." );
@@ -86,61 +82,40 @@ public class ImportTimeseriesAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    try
-    {
-      /* Prepare data */
-      final ImportObservationData data = prepareData();
+    /* Prepare data */
+    final ImportObservationData data = prepareData();
 
-      if( !showWizard( shell, data ) )
-        return;
+    final Timeseries timeseries = showWizard( shell, data );
 
-      // create timeseries feature and set properties
-
-      // select tree with pseudo node
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      StatusDialog.open( shell, e.getStatus(), getText() );
-    }
+    // select tree with pseudo node
+    final TimeseriesNode pseudoNode = new TimeseriesNode( m_context, null, null, timeseries );
+    m_context.setSelection( pseudoNode );
   }
 
-  private ImportObservationData prepareData( ) throws CoreException
+  private ImportObservationData prepareData( )
   {
-    final TimeseriesBean bean = new TimeseriesBean( null );
     final IAxis[] allowedAxes = StationClasses.findAllowedClasses( m_station );
 
-    final ImportObservationData data = new ImportObservationData( allowedAxes );
-
-    final IFile dataFile = createDataFile( bean );
-    data.setTargetFile( dataFile );
-
-    return data;
+    return new ImportObservationData( allowedAxes );
   }
 
-  private boolean showWizard( final Shell shell, final ImportObservationData data )
+  private Timeseries showWizard( final Shell shell, final ImportObservationData data )
   {
-    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( data );
+    final CommandableWorkspace workspace = m_context.getWorkspace();
+
+    final TimeseriesBean bean = new TimeseriesBean();
+    if( m_parameterType != null )
+      bean.setProperty( Timeseries.PROPERTY_PARAMETER_TYPE, m_parameterType );
+
+    final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( workspace, m_station, data, bean );
+
+    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean );
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
-    return dialog.open() == Window.OK;
-  }
+    if( dialog.open() == Window.OK )
+      return operation.getTimeseries();
 
-  private IFile createDataFile( final TimeseriesBean bean ) throws CoreException
-  {
-    final Object parameterType = bean.getProperty( Timeseries.PROPERTY_PARAMETER_TYPE );
-    final Object quality = bean.getProperty( Timeseries.PROPERTY_QUALITY );
-    final String periodText = bean.getPeriodText();
-
-    final String stationFoldername = m_station.getTimeseriesFoldername();
-    final String timeseriesFilename = String.format( "%s_%s_%s.zml", parameterType, periodText, quality );
-
-    final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
-    final IProject project = scenarioDataProvider.getScenarioFolder().getProject();
-    final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
-    final IFolder stationFolder = timeseriesFolder.getFolder( stationFoldername );
-
-    return stationFolder.getFile( timeseriesFilename );
+    return null;
   }
 }
