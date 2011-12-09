@@ -414,6 +414,14 @@
             class="org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries"
             qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}Timeseries">
       </feature>
+      <feature
+            class="org.kalypso.ui.rrm.internal.timeseries.binding.StationClasses"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClasses">
+      </feature>
+      <feature
+            class="org.kalypso.ui.rrm.internal.timeseries.binding.StationClass"
+            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClass">
+      </feature>
    </extension>
    
    <!-- Handler for workflow -->
