@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.handler;
+package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
 import java.io.IOException;

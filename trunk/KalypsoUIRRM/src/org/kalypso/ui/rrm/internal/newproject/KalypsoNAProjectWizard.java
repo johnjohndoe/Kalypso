@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.ui.rrm.wizards;
+package org.kalypso.ui.rrm.internal.newproject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,6 +98,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.rrm.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.preferences.KalypsoNAProjectPreferences;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmNewProjectHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

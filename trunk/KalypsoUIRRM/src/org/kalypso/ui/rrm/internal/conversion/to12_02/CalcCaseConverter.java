@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion.to12_02;
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,10 +55,10 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.conversion.ConverterData;
+import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
+import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.wizards.conversion.ConverterData;
-import org.kalypso.ui.rrm.wizards.conversion.ITimeseriesVisitor;
-import org.kalypso.ui.rrm.wizards.conversion.TimeseriesWalker;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**

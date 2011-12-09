@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.wizards.conversion;
+package org.kalypso.ui.rrm.internal.conversion;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -53,8 +53,8 @@ import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.ui.rrm.KalypsoModuleRRM;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.conversion.to12_02.RrmProjectConverter11_06to12_02;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.wizards.conversion.to12_02.RrmProjectConverter11_06to12_02;
 import org.osgi.framework.Version;
 
 /**

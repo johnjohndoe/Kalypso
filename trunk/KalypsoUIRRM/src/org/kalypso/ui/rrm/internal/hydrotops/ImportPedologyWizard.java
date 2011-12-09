@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.ui.rrm.wizards.importPedologyData;
+package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
 import java.util.HashMap;

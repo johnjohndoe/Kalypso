@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.ui.rrm.wizards.importGeologyData;
+package org.kalypso.ui.rrm.internal.hydrotops;
 
 import java.io.File;
 
@@ -59,11 +59,12 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage;
-import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
-import org.kalypso.model.hydrology.operation.hydrotope.GeologyImportOperation;
-import org.kalypso.model.hydrology.operation.hydrotope.GeologyImportOperation.InputDescriptor;
-import org.kalypso.model.hydrology.operation.hydrotope.GeologyShapeInputDescriptor;
+import org.kalypso.model.hydrology.operation.hydrotope.DefaultLanduseClassDelegate;
+import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation;
+import org.kalypso.model.hydrology.operation.hydrotope.LanduseImportOperation.InputDescriptor;
+import org.kalypso.model.hydrology.operation.hydrotope.LanduseShapeInputDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -76,20 +77,22 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dejan Antanaskovic
  */
-public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
+public class ImportLanduseWizard extends Wizard implements IWorkbenchWizard
 {
-  private final static String PROPERTY_MAX_PERC_RATE = Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.12" ); //$NON-NLS-1$
+  private final static String PROPERTY_LANDUSE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.12" ); //$NON-NLS-1$
 
-  private final static String PROPERTY_GW_FACTOR = Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.14" ); //$NON-NLS-1$
+  private final static String PROPERTY_SEALING_FACTOR = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.14" ); //$NON-NLS-1$
 
-  private ImportShapeWizardPage m_wizardPage;
+  private final static String PROPERTY_DRAINAGE_TYPE = Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.15" ); //$NON-NLS-1$
+
+  protected ImportShapeWizardPage m_wizardPage;
 
   private FeatureList m_featureList;
 
-  public ImportGeologyWizard( )
+  public ImportLanduseWizard( )
   {
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -101,10 +104,9 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
 
     m_featureList = ((IKalypsoFeatureTheme) themes[0]).getFeatureList();
 
-    final String[] properties = new String[] { PROPERTY_MAX_PERC_RATE, PROPERTY_GW_FACTOR };
+    final String[] properties = new String[] { PROPERTY_LANDUSE, PROPERTY_SEALING_FACTOR, PROPERTY_DRAINAGE_TYPE };
     m_wizardPage = new ImportShapeWizardPage( "shapePage", properties ); //$NON-NLS-1$
-
-    m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizardPage.3" ) ); //$NON-NLS-1$
+    m_wizardPage.setDescription( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizardPage.3" ) ); //$NON-NLS-1$
 
     addPage( m_wizardPage );
   }
@@ -115,32 +117,39 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
   @Override
   public boolean performFinish( )
   {
-    final String maxPerculationsRateProperty = m_wizardPage.getProperty( PROPERTY_MAX_PERC_RATE );
-    final String gwFactorProperty = m_wizardPage.getProperty( PROPERTY_GW_FACTOR );
+    final String landuseProperty = m_wizardPage.getProperty( PROPERTY_LANDUSE );
+    final String sealingFactorProperty = m_wizardPage.getProperty( PROPERTY_SEALING_FACTOR );
+    final String drainageTypeProperty = m_wizardPage.getProperty( PROPERTY_DRAINAGE_TYPE );
 
     final File shapeFile = m_wizardPage.getShapeFile();
-    final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, maxPerculationsRateProperty, gwFactorProperty );
+    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty, drainageTypeProperty );
 
     final Feature parentFeature = m_featureList.getParentFeature();
-    final GeologyCollection output = (GeologyCollection) parentFeature;
+    final LanduseCollection lc = (LanduseCollection) parentFeature;
 
-    final GMLWorkspace workspace = output.getWorkspace();
-    final IFile geologyFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
-    final IFile parameterFile = geologyFile.getParent().getFile( new Path( "parameter.gml" ) ); //$NON-NLS-1$
+    final GMLWorkspace landuseWorkspace = lc.getWorkspace();
+
+    final IFile landuseFile = ResourceUtilities.findFileFromURL( landuseWorkspace.getContext() );
+    final IFile parameterFile = landuseFile.getParent().getFile( new Path( "parameter.gml" ) ); //$NON-NLS-1$
     if( parameterFile.exists() )
     {
       try
       {
+        final GMLWorkspace landuseClassesWorkspace = GmlSerializer.createGMLWorkspace( parameterFile.getContents(), null, null );
+
+        final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
+        final DefaultLanduseClassDelegate delegate = new DefaultLanduseClassDelegate( landuseClassesWorkspace );
+
         // call importer
-        final GeologyImportOperation op = new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
+        final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
         new StatusDialog( getShell(), execute, getWindowTitle() ).open();
         if( execute.matches( IStatus.ERROR ) )
           return false;
 
-        final File outputFile = geologyFile.getLocation().toFile();
-        GmlSerializer.serializeWorkspace( outputFile, workspace, CharEncoding.UTF_8 );
-        geologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+        final File outputFile = landuseFile.getLocation().toFile();
+        GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, CharEncoding.UTF_8 );
+        landuseFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
       }
       catch( final Exception e )
       {
@@ -149,7 +158,7 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
           @Override
           public void run( )
           {
-            MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+            MessageDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage() );
           }
         } );
         return false;
@@ -157,16 +166,14 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
     }
     else
     {
+      Display.getDefault().asyncExec( new Runnable()
       {
-        Display.getDefault().asyncExec( new Runnable()
+        @Override
+        public void run( )
         {
-          @Override
-          public void run( )
-          {
-            MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          }
-        } );
-      }
+          MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+      } );
     }
     return true;
   }
