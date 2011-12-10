@@ -72,6 +72,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryContainerSingelton;
@@ -210,13 +211,13 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     m_importPage.addSelectionChangedListener( m_axisMappingPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
-    final ImportObservationData data = new ImportObservationData();
+    final String[] allowedTypes = new String[] { ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE,
+        ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_EVAPORATION };
+
+    final ImportObservationData data = new ImportObservationData( allowedTypes );
 
     /* Translate old selection to data */
     final ObservationImportSelection selection = (ObservationImportSelection) m_importPage.getSelection();
