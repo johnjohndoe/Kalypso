@@ -40,18 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
@@ -69,42 +59,6 @@ public class TimeseriesNewComposite extends FeatureBeanComposite<Timeseries>
   @Override
   protected void createContents( )
   {
-    createParameterTypeControl();
-
     createPropertyControl( Timeseries.PROPERTY_QUALITY );
-
-    createTimestepControl();
-  }
-
-  private void createParameterTypeControl( )
-  {
-    new Label( this, SWT.NONE ).setText( "Parameter Type" );
-
-    final Text field = new Text( this, SWT.BORDER | SWT.SINGLE );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setEnabled( false );
-
-    final String parameterType = (String) getBean().getProperty( Timeseries.PROPERTY_PARAMETER_TYPE );
-    final String parameterName = TimeseriesUtils.getName( parameterType );
-    final String parameterUnit = TimeseriesUtils.getUnit( parameterType );
-    final String parameterLabel = String.format( "%s (%s)", parameterName, parameterUnit );
-    field.setText( parameterLabel );
-  }
-
-  private void createTimestepControl( )
-  {
-    new Label( this, SWT.NONE ).setText( "Timestep" );
-
-    // FIXME: instead amount + field chooser; use binding?
-
-    final Text field = new Text( this, SWT.BORDER | SWT.SINGLE );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = BeansObservables.observeValue( getBean(), TimeseriesBean.PROPERTY_PERIOD_TEXT );
-
-    final DataBinder binder = new DataBinder( target, model );
-
-    getBinding().bindValue( binder );
   }
 }

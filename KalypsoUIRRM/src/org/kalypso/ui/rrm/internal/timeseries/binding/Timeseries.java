@@ -66,9 +66,9 @@ public class Timeseries extends Feature_Impl
 
   final static QName PROPERTY_DATA = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "data" ); //$NON-NLS-1$
 
-  final static QName PROPERTY_TIMESTEP_AMOUNT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepAmount" ); //$NON-NLS-1$
+  public final static QName PROPERTY_TIMESTEP_AMOUNT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepAmount" ); //$NON-NLS-1$
 
-  final static QName PROPERTY_TIMESTEP_FIELD = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepField" ); //$NON-NLS-1$
+  public final static QName PROPERTY_TIMESTEP_FIELD = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepField" ); //$NON-NLS-1$
 
   public Timeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
