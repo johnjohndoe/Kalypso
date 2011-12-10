@@ -46,7 +46,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
@@ -94,9 +93,9 @@ public class ImportTimeseriesAction extends Action
 
   private ImportObservationData prepareData( )
   {
-    final IAxis[] allowedAxes = StationClasses.findAllowedClasses( m_station );
+    final String[] allowedTypes = StationClasses.findAllowedParameterTypes( m_station );
 
-    return new ImportObservationData( allowedAxes );
+    return new ImportObservationData( allowedTypes );
   }
 
   private Timeseries showWizard( final Shell shell, final ImportObservationData data )

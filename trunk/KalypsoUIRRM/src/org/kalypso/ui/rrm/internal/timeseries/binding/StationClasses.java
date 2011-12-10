@@ -58,8 +58,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -90,7 +88,7 @@ public class StationClasses extends Feature_Impl
     return m_classes;
   }
 
-  public static synchronized IAxis[] findAllowedClasses( final Station station )
+  public static synchronized String[] findAllowedParameterTypes( final Station station )
   {
     Assert.isNotNull( station );
 
@@ -99,7 +97,7 @@ public class StationClasses extends Feature_Impl
     if( allowedTypes == null )
       throw new IllegalArgumentException( String.format( "Unknown station class: %s", station.getClass() ) );
 
-    return buildAxes( allowedTypes.toArray( new String[allowedTypes.size()] ) );
+    return allowedTypes.toArray( new String[allowedTypes.size()] );
   }
 
   private static Map<Class< ? extends Station>, Set<String>> getClassCatalog( )
@@ -172,15 +170,5 @@ public class StationClasses extends Feature_Impl
       e.printStackTrace();
       return null;
     }
-  }
-
-  private static IAxis[] buildAxes( final String[] types )
-  {
-    final IAxis[] axes = new IAxis[types.length];
-
-    for( int i = 0; i < axes.length; i++ )
-      axes[i] = TimeseriesUtils.createDefaultAxis( types[i] );
-
-    return axes;
   }
 }
