@@ -193,8 +193,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
       final File fileSource = m_data.getSourceFileData().getFile();
       final TimeZone timezone = m_data.getTimezoneParsed();
       final INativeObservationAdapter nativaAdapter = m_data.getAdapter();
+      final String parameterType = m_data.getParameterType();
 
-      return nativaAdapter.createObservationFromSource( fileSource, timezone, false );
+      return nativaAdapter.importTimeseries( fileSource, timezone, parameterType, false );
     }
     catch( final Exception e )
     {
