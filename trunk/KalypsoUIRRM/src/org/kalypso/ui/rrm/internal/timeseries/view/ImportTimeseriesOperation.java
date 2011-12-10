@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -58,13 +59,16 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -101,7 +105,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   {
     final IObservation observation = createObservation();
 
-    m_timeseries = createTimeseries();
+    final Period timestep = findTimestep( observation );
+
+    m_timeseries = createTimeseries( timestep );
 
     final IFile targetFile = createDataFile( m_timeseries );
 
@@ -112,6 +118,20 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
+  private Period findTimestep( final IObservation observation ) throws CoreException
+  {
+    try
+    {
+      return TimeseriesUtils.guessTimestep( observation.getValues( null ) );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to determine timestep", e );
+      throw new CoreException( status );
+    }
+  }
+
   private void updateMetadata( final IObservation observation, final Timeseries timeseries )
   {
     /* Timestep */
@@ -119,13 +139,24 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     MetadataHelper.setTimestep( metadataList, timeseries.getTimestep() );
   }
 
-  private Timeseries createTimeseries( ) throws CoreException
+  private Timeseries createTimeseries( final Period timestep ) throws CoreException
   {
     try
     {
       final IRelationType parentRelation = (IRelationType) m_station.getFeatureType().getProperty( Station.MEMBER_TIMESERIES );
 
-      final Map<QName, Object> properties = m_bean.getProperties();
+      final int timestepAmount = PeriodUtils.findCalendarAmount( timestep );
+      final FIELD timestepField = PeriodUtils.findCalendarField( timestep );
+
+      if( timestepAmount == Integer.MAX_VALUE || timestepField == null )
+      {
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to determine timestep of timeseries" );
+        throw new CoreException( status );
+      }
+
+      final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
+      properties.put( Timeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
+      properties.put( Timeseries.PROPERTY_TIMESTEP_FIELD, timestepField.getField() );
 
       final AddFeatureCommand command = new AddFeatureCommand( m_workspace, Timeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
 
