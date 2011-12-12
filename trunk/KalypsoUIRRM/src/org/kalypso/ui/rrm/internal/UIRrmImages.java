@@ -56,6 +56,8 @@ public class UIRrmImages
     GROUP("icons/timeseries/group.gif"), //$NON-NLS-1$
 
     STATION("icons/timeseries/station.gif"), //$NON-NLS-1$
+    STATION_NEW_METEOROLOGICAL("icons/timeseries/stationNewMeteorological.png"), //$NON-NLS-1$
+    STATION_NEW_HYDROLOGICAL("icons/timeseries/stationNewHydrological.png"), //$NON-NLS-1$
     STATION_METEOROLOGICAL("icons/timeseries/station_meteorological.png"), //$NON-NLS-1$
     STATION_HYDROLOGICAL("icons/timeseries/station_hydrological.png"), //$NON-NLS-1$
 
