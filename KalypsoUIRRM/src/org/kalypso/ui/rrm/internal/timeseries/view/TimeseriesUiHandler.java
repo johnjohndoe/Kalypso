@@ -65,11 +65,11 @@ public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
 {
   private final Timeseries m_timeseries;
 
-  private final TimeseriesTreeContext m_context;
+  private final ITimeseriesTreeModel m_model;
 
-  public TimeseriesUiHandler( final TimeseriesTreeContext context, final Timeseries timeseries )
+  public TimeseriesUiHandler( final ITimeseriesTreeModel model, final Timeseries timeseries )
   {
-    m_context = context;
+    m_model = model;
     m_timeseries = timeseries;
   }
 
@@ -124,7 +124,7 @@ public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
     /* Delete timeseries */
     final String stationLabel = m_timeseries.getParent().getDescription();
     final String deleteMessage = String.format( "Delete timeseries '%s' from station '%s'?", getTreeLabel(), stationLabel );
-    final IAction deleteAction = new DeleteTimeseriesAction( m_context, deleteMessage, m_timeseries );
+    final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }
 }

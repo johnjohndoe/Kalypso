@@ -143,6 +143,10 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   {
     try
     {
+      /* Prepare bean */
+      m_bean.setProperty( Timeseries.PROPERTY_PARAMETER_TYPE, m_data.getParameterType() );
+
+      /* Create timeseries feature */
       final IRelationType parentRelation = (IRelationType) m_station.getFeatureType().getProperty( Station.MEMBER_TIMESERIES );
 
       final int timestepAmount = PeriodUtils.findCalendarAmount( timestep );

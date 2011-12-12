@@ -62,13 +62,13 @@ public class ImportTimeseriesAction extends Action
 
   private final String m_parameterType;
 
-  private final TimeseriesTreeContext m_context;
+  private final ITimeseriesTreeModel m_model;
 
-  public ImportTimeseriesAction( final TimeseriesTreeContext context, final Station station, final String parameterType )
+  public ImportTimeseriesAction( final ITimeseriesTreeModel model, final Station station, final String parameterType )
   {
     m_station = station;
     m_parameterType = parameterType;
-    m_context = context;
+    m_model = model;
 
     setText( "Import Timeseries" );
     setToolTipText( "Imports a timeseries from an external data source and adds it to the selected station." );
@@ -87,8 +87,8 @@ public class ImportTimeseriesAction extends Action
     final Timeseries timeseries = showWizard( shell, data );
 
     // select tree with pseudo node
-    final TimeseriesNode pseudoNode = new TimeseriesNode( m_context, null, null, timeseries );
-    m_context.setSelection( pseudoNode );
+    final TimeseriesNode pseudoNode = new TimeseriesNode( m_model, null, null, timeseries );
+    m_model.setSelection( pseudoNode );
   }
 
   private ImportObservationData prepareData( )
@@ -100,11 +100,11 @@ public class ImportTimeseriesAction extends Action
 
   private Timeseries showWizard( final Shell shell, final ImportObservationData data )
   {
-    final CommandableWorkspace workspace = m_context.getWorkspace();
+    final CommandableWorkspace workspace = m_model.getWorkspace();
 
     final TimeseriesBean bean = new TimeseriesBean();
     if( m_parameterType != null )
-      bean.setProperty( Timeseries.PROPERTY_PARAMETER_TYPE, m_parameterType );
+      data.setParameterType( m_parameterType );
 
     final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( workspace, m_station, data, bean );
 

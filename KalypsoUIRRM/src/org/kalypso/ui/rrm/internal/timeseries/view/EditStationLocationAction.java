@@ -43,43 +43,33 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.ogc.gml.featureview.dialog.PointDialog;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
+import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
+import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteTimeseriesAction extends Action
+public class EditStationLocationAction extends Action
 {
-  private final Timeseries[] m_timeseries;
+  private final FeatureBean<Station> m_bean;
 
-  private final String m_deleteMessage;
-
-  private final ITimeseriesTreeModel m_model;
-
-  public DeleteTimeseriesAction( final ITimeseriesTreeModel model, final String deleteMessage, final Timeseries... timeseries )
+  public EditStationLocationAction( final FeatureBean<Station> bean )
   {
-    m_model = model;
-    m_timeseries = timeseries;
-    m_deleteMessage = deleteMessage;
+    m_bean = bean;
 
-    setText( "Delete Timeseries" );
-    setToolTipText( "Delete selected timeseries" );
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
-
-    if( timeseries.length == 0 )
-    {
-      setEnabled( false );
-      setToolTipText( "Element contains no timeseries" );
-    }
+    setText( "Edit Location" );
   }
 
   @Override
@@ -87,29 +77,36 @@ public class DeleteTimeseriesAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    if( !MessageDialog.openConfirm( shell, getText(), m_deleteMessage ) )
+    final String kalypsoCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    final GM_Point point = (GM_Point) m_bean.getProperty( Station.PROPERTY_LOCATION );
+
+    final double[] values = point == null ? new double[3] : point.getAsArray();
+    final String crs = point == null ? kalypsoCRS : point.getCoordinateSystem();
+
+    final PointDialog dialog = new PointDialog( shell, values, crs );
+    if( dialog.open() != Window.OK )
       return;
+
+    /* Create new point */
+    final String newCrs = dialog.getCS_CoordinateSystem();
+    final double[] newValues = dialog.getValues();
+    final GM_Position newPos = GeometryFactory.createGM_Position( newValues );
 
     try
     {
-      /* Delete data files */
-      for( final Timeseries timeseries : m_timeseries )
-        timeseries.deleteDataFile();
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( kalypsoCRS );
+      // REMARK: geometries MUST always be created in the current Kalypso coordinate system
+      final GM_Position newPosTransformed = geoTransformer.transform( newPos, newCrs );
+      final GM_Point newPoint = GeometryFactory.createGM_Point( newPosTransformed, kalypsoCRS );
 
-      /* Select parent node */
-      final Object parentStation = m_timeseries[0].getParent();
-      final TimeseriesNode parentNode = new TimeseriesNode( m_model, null, null, parentStation );
-      m_model.setSelection( parentNode );
-
-      /* Delete feature */
-      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeseries );
-      m_model.postCommand( deleteCommand );
+      /* Set to bean */
+      m_bean.setProperty( Station.PROPERTY_LOCATION, newPoint );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete timeseries", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "", e );
       StatusDialog.open( shell, status, getText() );
     }
   }

@@ -63,7 +63,7 @@ public class TimeseriesTreeContentProvider implements ITreeContentProvider
     }
   };
 
-  private StationsByStationModel m_model;
+  private ITimeseriesTreeModel m_model;
 
   private StructuredViewer m_viewer;
 
@@ -78,9 +78,9 @@ public class TimeseriesTreeContentProvider implements ITreeContentProvider
     m_viewer = (StructuredViewer) viewer;
 
     if( oldInput != null )
-      ((StationsByStationModel) oldInput).removeModellListener( m_modelListener );
+      ((TimeseriesTreeModel) oldInput).removeModellListener( m_modelListener );
 
-    m_model = (StationsByStationModel) newInput;
+    m_model = (TimeseriesTreeModel) newInput;
 
     if( m_model != null )
       m_model.addModellListener( m_modelListener );

@@ -40,48 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.eclipse.jface.action.Action;
 
 /**
  * @author Gernot Belger
  */
-public class StationsByStationModel
+public class AddStationAction extends Action
 {
-  private final StationCollection m_stations;
 
-  private TimeseriesNode[] m_nodes;
-
-  private final TimeseriesTreeContext m_context;
-
-  public StationsByStationModel( final TimeseriesTreeContext context, final StationCollection stations )
-  {
-    m_context = context;
-    m_stations = stations;
-  }
-
-  public TimeseriesNode[] getRootElements( )
-  {
-    if( m_nodes == null )
-    {
-      m_nodes = new StationsByStationsStrategy( m_context, m_stations ).buildNodes();
-    }
-
-    return m_nodes;
-  }
-
-  public void clear( )
-  {
-    m_nodes = null;
-  }
-
-  public void addModellListener( final ModellEventListener modelListener )
-  {
-    m_context.addModellListener( modelListener );
-  }
-
-  public void removeModellListener( final ModellEventListener modelListener )
-  {
-    m_context.removeModellListener( modelListener );
-  }
 }
