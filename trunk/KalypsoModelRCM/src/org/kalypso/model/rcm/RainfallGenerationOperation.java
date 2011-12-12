@@ -116,6 +116,9 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
   {
     IRainfallCatchmentModel rcm = null;
 
+    // FIXME: does not belong here -> instead the whole process (i.e. result status of the outer operation) should be
+    // save in one go into the log ->
+    // the log should also show information about the analysis of the available entries etc.
     GeoStatusLog log = null;
 
     try
@@ -128,6 +131,15 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       log = initializeLog( rcm );
 
       final ITarget targetDefinition = rcm.getTarget();
+
+      if( targetDefinition == null )
+      {
+        final String message = String.format( "Zeitreihenziel nicht definiert, Modell wird nicht berechnet." );
+        final Status status = new Status( IStatus.OK, KalypsoModelRcmActivator.PLUGIN_ID, message );
+        log.log( status );
+        return status;
+      }
+
       final Feature[] catchments = targetDefinition.getCatchments();
 
       final IMetadata[] metadata = rcm.getMetadata().toArray( new IMetadata[0] );
@@ -250,6 +262,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
         if( file == null )
           file = FileUtils.toFile( location );
 
+        file.getParentFile().mkdirs();
         ZmlFactory.writeToFile( filteredObs, file, request );
       }
     }
@@ -266,8 +279,6 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
     final NamespaceContext namespaceResolver = targetDefinition.getWorkspace().getNamespaceContext();
     final GMLXPath observationXPath = new GMLXPath( observationPath, namespaceResolver );
-
-// final FeaturePath featurePath = new FeaturePath( m_catchmentObservationPath );
 
     final TimeseriesLinkType[] links = new TimeseriesLinkType[catchments.length];
 
