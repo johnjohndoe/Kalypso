@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="org.kalypso.model.cm" xmlns:cm="org.kalypso.model.cm" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns:rcm="org.kalypso.model.rcm.v2" elementFormDefault="qualified">
+  <!-- Imports. -->
+  <xs:import namespace="http://www.w3.org/1999/xlink" />
+  <xs:import namespace="http://www.opengis.net/gml" />
+  <xs:import namespace="obslink.zml.kalypso.org" />
+  <xs:import namespace="org.kalypso.model.rcm.v2" />
+
+  <!-- CatchmentGenerator Element & Type -->
+  <xs:element name="CatchmentGenerator" type="cm:CatchmentGeneratorType" substitutionGroup="rcm:RainfallGenerator"/>
+  <xs:complexType name="CatchmentGeneratorType">
+    <xs:complexContent>
+      <xs:extension base="rcm:RainfallGeneratorType">
+        <xs:sequence>
+          <xs:element name="parameterType" type="xs:string" minOccurs="0" maxOccurs="1" />
+          <xs:element name="areaNameProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
+          <xs:element name="areaProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
+          <xs:element name="catchmentMember" minOccurs="1" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="cm:Catchment" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Catchment Element & Type -->
+  <xs:element name="Catchment" type="cm:CatchmentType" />
+  <xs:complexType name="CatchmentType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="areaLink" minOccurs="1" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence minOccurs="0" maxOccurs="0">
+                <xs:element ref="gml:_Feature" />
+              </xs:sequence>
+              <xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="factorizedTimeseriesMember" minOccurs="1" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="cm:FactorizedTimeseries" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- FactorizedTimeseries Element & Type -->
+  <xs:element name="FactorizedTimeseries" type="cm:FactorizedTimeseriesType" />
+  <xs:complexType name="FactorizedTimeseriesType">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="factor" type="xs:double" minOccurs="1" maxOccurs="1" />
+          <xs:element name="timeseriesLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
