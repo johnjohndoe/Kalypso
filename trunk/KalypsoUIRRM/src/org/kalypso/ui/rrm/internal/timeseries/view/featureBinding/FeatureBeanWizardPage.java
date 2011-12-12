@@ -65,6 +65,8 @@ public abstract class FeatureBeanWizardPage extends WizardPage
   public void createControl( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
+    // We do not want the white look and feel in a wizard page
+    toolkit.setBackground( parent.getBackground() );
 
     toolkit.adapt( parent );
 

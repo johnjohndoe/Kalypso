@@ -64,7 +64,7 @@ public class Timeseries extends Feature_Impl
 
   public final static QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
 
-  final static QName PROPERTY_DATA = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "data" ); //$NON-NLS-1$
+  public final static QName PROPERTY_DATA = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "data" ); //$NON-NLS-1$
 
   public final static QName PROPERTY_TIMESTEP_AMOUNT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepAmount" ); //$NON-NLS-1$
 

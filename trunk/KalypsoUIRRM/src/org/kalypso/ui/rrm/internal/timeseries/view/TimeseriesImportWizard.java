@@ -45,7 +45,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
@@ -57,9 +56,9 @@ import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
  */
 public class TimeseriesImportWizard extends Wizard
 {
-  private final ICoreRunnableWithProgress m_importOperation;
+  private final ImportTimeseriesOperation m_importOperation;
 
-  public TimeseriesImportWizard( final ICoreRunnableWithProgress importOperation, final ImportObservationData data, final TimeseriesBean bean )
+  public TimeseriesImportWizard( final ImportTimeseriesOperation importOperation, final ImportObservationData data, final TimeseriesBean bean )
   {
     m_importOperation = importOperation;
 
@@ -77,6 +76,8 @@ public class TimeseriesImportWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    m_importOperation.updateDataAfterFinish();
+
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
