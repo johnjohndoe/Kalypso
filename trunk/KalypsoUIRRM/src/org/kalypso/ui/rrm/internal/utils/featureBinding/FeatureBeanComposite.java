@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
+package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
 import javax.xml.namespace.QName;
 

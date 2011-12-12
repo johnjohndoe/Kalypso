@@ -396,33 +396,6 @@
          </scenarioDatum>
       </dataSet>
    </extension>
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationCollection">
-      </feature>
-      <feature
-            class="org.kalypso.ui.rrm.internal.timeseries.binding.HydrologicalStation"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}HydrologicalStation">
-      </feature>
-      <feature
-            class="org.kalypso.ui.rrm.internal.timeseries.binding.MeteorologicalStation"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}MeteorologicalStation">
-      </feature>
-      <feature
-            class="org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}Timeseries">
-      </feature>
-      <feature
-            class="org.kalypso.ui.rrm.internal.timeseries.binding.StationClasses"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClasses">
-      </feature>
-      <feature
-            class="org.kalypso.ui.rrm.internal.timeseries.binding.StationClass"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClass">
-      </feature>
-   </extension>
    
    <!-- Handler for workflow -->
    <extension point="org.eclipse.ui.commands">

@@ -38,43 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
+package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.property.value.ValueProperty;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public abstract class FeatureBeanWizardPage extends WizardPage
+public class FeatureBeanValueProperty<F extends Feature> extends ValueProperty
 {
-  protected FeatureBeanWizardPage( final String pageName )
-  {
-    super( pageName );
+  private final QName m_property;
 
-    setTitle( "Edit Properties" );
-    setDescription( "Change the properties of the selected element" );
+  private final Class< ? > m_valueType;
+
+  public FeatureBeanValueProperty( final Class< ? > valueType, final QName property )
+  {
+    m_valueType = valueType;
+    m_property = property;
   }
 
   @Override
-  public void createControl( final Composite parent )
+  public Object getValueType( )
   {
-    final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
-    // We do not want the white look and feel in a wizard page
-    toolkit.setBackground( parent.getBackground() );
-
-    toolkit.adapt( parent );
-
-    final IDataBinding binding = new DatabindingWizardPage( this, toolkit );
-
-    final Control control = createFeatureBeanControl( parent, binding );
-    setControl( control );
+    return m_valueType;
   }
 
-  protected abstract Control createFeatureBeanControl( Composite parent, IDataBinding binding );
+  @Override
+  public IObservableValue observe( final Realm realm, final Object source )
+  {
+    return new FeatureBeanObservableValue( (FeatureBean< ? >) source, m_property );
+  }
 }
