@@ -12,7 +12,8 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.ui,
  org.kalypso.ModelSimulationBase,
- org.eclipse.wst.xml.core;resolution:=optional
+ org.eclipse.wst.xml.core;resolution:=optional,
+ org.kalypso.model.rcm;bundle-version="11.6.4"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
