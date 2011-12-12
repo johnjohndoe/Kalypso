@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.rcm.RcmConstants;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -56,16 +53,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTimeseries
 {
-  /**
-   * The qname of the factor.
-   */
-  public static final QName QNAME_FACTOR = new QName( RcmConstants.NS_CM, "factor" );
-
-  /**
-   * The qname of the timeseries link.
-   */
-  public static final QName QNAME_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" );
-
   /**
    * The constructor.
    * 
@@ -86,7 +73,7 @@ public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTim
   @Override
   public Double getFactor( )
   {
-    return getProperty( QNAME_FACTOR, Double.class );
+    return getProperty( PROPERTY_FACTOR, Double.class );
   }
 
   /**
@@ -95,6 +82,6 @@ public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTim
   @Override
   public ZmlLink getTimeseriesLink( )
   {
-    return new ZmlLink( this, QNAME_TIMESERIES_LINK, getWorkspace().getContext() );
+    return new ZmlLink( this, PROPERTY_TIMESERIES_LINK, getWorkspace().getContext() );
   }
 }

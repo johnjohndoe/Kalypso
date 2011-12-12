@@ -41,7 +41,6 @@
 package org.kalypso.model.rcm.internal.binding;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,7 +71,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.utils.log.LogUtilities;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -81,6 +80,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -97,39 +97,27 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 {
-  public static final QName QNAME = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" );
+  static final QName FEATURE_OMBROMETER_RAINFALL_GENERATOR = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" );
 
-  public static final QName QNAME_PROP_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
+  static final QName MEMBER_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
 
-  public static final QName QNAME_PROP_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" );
+  static final QName PROPERTY_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" );
 
-  public static final QName QNAME_PROP_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
+  static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
 
-  public static final QName QNAME_PROP_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
+  static final QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
 
-  public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+  static final QName PROPERTY_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
-  /**
-   * @param parent
-   *          The parent.
-   * @param parentRelation
-   *          The parent relation.
-   * @param featureType
-   *          The feature type.
-   * @param id
-   *          The feature id.
-   * @param propValues
-   *          The property values.
-   */
+  static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+
+  private final FeatureBindingCollection<IZmlFilter> m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
+
   public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
-   *      org.kalypso.ogc.sensor.DateRange, org.eclipse.core.runtime.ILog, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
   {
@@ -147,12 +135,12 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
 
       /* Get the needed properties. */
-      final XLinkedFeature_Impl ombrometerCollectionLink = getProperty( QNAME_PROP_ombrometerCollection, XLinkedFeature_Impl.class );
+      final XLinkedFeature_Impl ombrometerCollectionLink = getProperty( MEMBER_ombrometerCollection, XLinkedFeature_Impl.class );
       final IOmbrometerCollection ombrometerCollection = (IOmbrometerCollection) ombrometerCollectionLink.getFeature();
-      final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
-      final String areaPath = getProperty( QNAME_PROP_areaPath, String.class );
-      final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
-      final String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
+      final String collectionPath = getProperty( PROPERTY_ombrometerFeaturePath, String.class );
+      final String areaPath = getProperty( PROPERTY_areaPath, String.class );
+      final String linkPath = getProperty( PROPERTY_timeseriesLinkPath, String.class );
+      final String catchmentAreaPath = getProperty( PROPERTY_catchmentAreaPath, String.class );
 
       /* Create the paths. */
       final GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
@@ -178,9 +166,9 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       monitor.worked( 100 );
       monitor.subTask( "Konvertiere und wende die Thiessenmethode an..." );
 
-      final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
-      final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
-      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, range, null, sourceContext );
+      final IZmlFilter[] filters = m_filters.toArray( new IZmlFilter[m_filters.size()] );
+
+      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Apply thiessen, if not yet done. */
       if( !ombrometerCollection.hasBeenProcessed() )
