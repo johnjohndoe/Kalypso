@@ -66,7 +66,7 @@ public class NewHydrologicalStationAction extends Action
     m_model = model;
     m_group = group;
 
-    setText( "New hydrological station" );
+    setText( "New Hydrological Station" );
     setToolTipText( "Creates a new hydrologcial station" );
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_HYDROLOGICAL ) );
   }
