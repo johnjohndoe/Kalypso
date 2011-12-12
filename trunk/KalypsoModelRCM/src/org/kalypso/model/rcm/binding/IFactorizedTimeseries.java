@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.rcm.RcmConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -51,16 +54,26 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface IFactorizedTimeseries extends Feature
 {
   /**
+   * The qname of the factor.
+   */
+  static QName PROPERTY_FACTOR = new QName( RcmConstants.NS_CM, "factor" ); //$NON-NLS-1$
+
+  /**
+   * The qname of the timeseries link.
+   */
+  static QName PROPERTY_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" ); //$NON-NLS-1$
+
+  /**
    * This function returns the factor.
    * 
    * @return The factor.
    */
-  public abstract Double getFactor( );
+  Double getFactor( );
 
   /**
    * This function returns the timeseries link.
    * 
    * @return The timeseries link.
    */
-  public abstract ZmlLink getTimeseriesLink( );
+  ZmlLink getTimeseriesLink( );
 }
