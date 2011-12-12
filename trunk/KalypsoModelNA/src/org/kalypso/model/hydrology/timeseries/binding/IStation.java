@@ -38,23 +38,37 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.model.hydrology.timeseries.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
  */
-public class HydrologicalStation extends Station
+public interface IStation extends Feature
 {
-  final static QName FEATURE_HYDROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "HydrologicalStation" ); //$NON-NLS-1$
+  static QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "_Station" ); //$NON-NLS-1$
 
-  public HydrologicalStation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  static QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
+
+  static QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
+
+  static QName PROPERTY_GROUP = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "group" ); //$NON-NLS-1$
+
+  static QName PROPERTY_LOCATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "location" ); //$NON-NLS-1$
+
+  IFeatureBindingCollection<ITimeseries> getTimeseries( );
+
+  String getComment( );
+
+  String getGroup( );
+
+  String getTimeseriesFoldername( );
+
+  GM_Point getStationLocation( );
 }

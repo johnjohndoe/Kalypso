@@ -38,9 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
-
-import javax.xml.namespace.QName;
+package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -49,37 +47,28 @@ import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class Timeseries extends Feature_Impl
+public class Timeseries extends Feature_Impl implements ITimeseries
 {
-  public final static QName FEATURE_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Timeseries" ); //$NON-NLS-1$
-
-  public final static QName PROPERTY_QUALITY = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "quality" ); //$NON-NLS-1$
-
-  public final static QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
-
-  public final static QName PROPERTY_DATA = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "data" ); //$NON-NLS-1$
-
-  public final static QName PROPERTY_TIMESTEP_AMOUNT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepAmount" ); //$NON-NLS-1$
-
-  public final static QName PROPERTY_TIMESTEP_FIELD = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepField" ); //$NON-NLS-1$
-
   public Timeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public String getQuality( )
   {
     return getProperty( PROPERTY_QUALITY, String.class );
   }
 
+  @Override
   public String getParameterType( )
   {
     return getProperty( PROPERTY_PARAMETER_TYPE, String.class );
@@ -95,6 +84,7 @@ public class Timeseries extends Feature_Impl
     return getProperty( PROPERTY_TIMESTEP_FIELD, String.class );
   }
 
+  @Override
   public Period getTimestep( )
   {
     final Integer amount = getTimestepAmount();
@@ -105,16 +95,19 @@ public class Timeseries extends Feature_Impl
     return PeriodUtils.getPeriod( field, amount );
   }
 
+  @Override
   public ZmlLink getDataLink( )
   {
     return new ZmlLink( this, PROPERTY_DATA );
   }
 
-  public Station getStation( )
+  @Override
+  public IStation getStation( )
   {
-    return (Station) getParent();
+    return (IStation) getParent();
   }
 
+  @Override
   public void deleteDataFile( ) throws CoreException
   {
     final ZmlLink dataLink = getDataLink();

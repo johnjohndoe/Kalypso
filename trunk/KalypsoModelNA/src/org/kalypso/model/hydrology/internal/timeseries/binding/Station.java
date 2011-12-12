@@ -38,17 +38,16 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import java.net.URISyntaxException;
-
-import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -57,35 +56,28 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * @author Gernot Belger
  */
-public abstract class Station extends Feature_Impl
+public abstract class Station extends Feature_Impl implements IStation
 {
-  final static QName FEATURE_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "Station" ); //$NON-NLS-1$
-
-  public static final QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_GROUP = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "group" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_LOCATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "location" ); //$NON-NLS-1$
-
-  private final IFeatureBindingCollection<Timeseries> m_timeseries = new FeatureBindingCollection<Timeseries>( this, Timeseries.class, MEMBER_TIMESERIES );
+  private final IFeatureBindingCollection<ITimeseries> m_timeseries = new FeatureBindingCollection<>( this, ITimeseries.class, MEMBER_TIMESERIES );
 
   public Station( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public IFeatureBindingCollection<Timeseries> getTimeseries( )
+  @Override
+  public IFeatureBindingCollection<ITimeseries> getTimeseries( )
   {
     return m_timeseries;
   }
 
+  @Override
   public String getComment( )
   {
     return getProperty( PROPERTY_COMMENT, String.class );
   }
 
+  @Override
   public String getGroup( )
   {
     final String group = getProperty( PROPERTY_GROUP, String.class );
@@ -97,6 +89,7 @@ public abstract class Station extends Feature_Impl
     return group;
   }
 
+  @Override
   public String getTimeseriesFoldername( )
   {
     try
@@ -112,6 +105,7 @@ public abstract class Station extends Feature_Impl
     }
   }
 
+  @Override
   public GM_Point getStationLocation( )
   {
     return getProperty( PROPERTY_LOCATION, GM_Point.class );

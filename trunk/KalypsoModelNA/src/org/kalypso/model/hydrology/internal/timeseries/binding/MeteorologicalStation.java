@@ -38,42 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
-
-import java.util.List;
-
-import javax.xml.namespace.QName;
+package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 
 /**
  * @author Gernot Belger
  */
-public class StationClass extends Feature_Impl
+public class MeteorologicalStation extends Station implements IMeteorologicalStation
 {
-  final static QName FEATURE_STATION_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClass" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "class" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
-
-  public StationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public MeteorologicalStation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
-  }
-
-  String getClassName( )
-  {
-    return getProperty( PROPERTY_CLASS, String.class );
-  }
-
-  String[] getParameterTypes( )
-  {
-    @SuppressWarnings("unchecked")
-    final List<String> types = getProperty( PROPERTY_PARAMETER_TYPE, List.class );
-    return types.toArray( new String[types.size()] );
   }
 }

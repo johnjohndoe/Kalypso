@@ -38,22 +38,18 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
-
-import javax.xml.namespace.QName;
+package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
 
 /**
  * @author Gernot Belger
  */
-public class MeteorologicalStation extends Station
+public class HydrologicalStation extends Station implements IHydrologicalStation
 {
-  final static QName FEATURE_METEOROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "MeteorologicalStation" ); //$NON-NLS-1$
-
-  public MeteorologicalStation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public HydrologicalStation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

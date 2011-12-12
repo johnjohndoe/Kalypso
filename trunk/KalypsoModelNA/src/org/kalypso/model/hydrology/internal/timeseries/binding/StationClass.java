@@ -38,42 +38,36 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.timeseries.binding;
 
-import javax.xml.namespace.QName;
+import java.util.List;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypso.model.hydrology.timeseries.binding.IStationClass;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class StationCollection extends Feature_Impl implements IModel
+public class StationClass extends Feature_Impl implements IStationClass
 {
-  final static QName FEATURE_STATION_COLLECTION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationCollection" ); //$NON-NLS-1$
-
-  private static final QName MEMBER_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "stationMember" ); //$NON-NLS-1$
-
-  private final IFeatureBindingCollection<Station> m_stations = new FeatureBindingCollection<Station>( this, Station.class, MEMBER_STATION );
-
-  public StationCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public StationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
-  public String getVersion( )
+  public String getClassName( )
   {
-    return NO_VERSION;
+    return getProperty( PROPERTY_CLASS, String.class );
   }
 
-  public IFeatureBindingCollection<Station> getStations( )
+  @Override
+  public String[] getParameterTypes( )
   {
-    return m_stations;
+    @SuppressWarnings("unchecked")
+    final List<String> types = getProperty( PROPERTY_PARAMETER_TYPE, List.class );
+    return types.toArray( new String[types.size()] );
   }
 }
