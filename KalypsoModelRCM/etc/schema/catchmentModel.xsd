@@ -6,30 +6,13 @@
   <xs:import namespace="obslink.zml.kalypso.org" />
   <xs:import namespace="org.kalypso.model.rcm.v2" />
 
-  <!-- Root Element & Type -->
-  <xs:element name="CatchmentModel" type="cm:CatchmentModelType" substitutionGroup="gml:_Feature" />
-  <xs:complexType name="CatchmentModelType">
-    <xs:complexContent>
-      <xs:extension base="gml:AbstractFeatureType">
-        <xs:sequence>
-          <xs:element name="catchmentGeneratorMember" minOccurs="1" maxOccurs="unbounded">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element ref="cm:CatchmentGenerator" />
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <!-- CatchmentGenerator Element & Type -->
   <xs:element name="CatchmentGenerator" type="cm:CatchmentGeneratorType" substitutionGroup="rcm:RainfallGenerator"/>
   <xs:complexType name="CatchmentGeneratorType">
     <xs:complexContent>
       <xs:extension base="rcm:RainfallGeneratorType">
         <xs:sequence>
+          <xs:element name="parameterType" type="xs:string" minOccurs="0" maxOccurs="1" />
           <xs:element name="areaNameProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="areaProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="catchmentMember" minOccurs="1" maxOccurs="unbounded">
