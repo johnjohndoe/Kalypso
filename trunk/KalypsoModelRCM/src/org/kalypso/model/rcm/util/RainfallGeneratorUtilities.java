@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.util;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +48,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -66,9 +64,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.TuppleModelsLinearAdd;
 import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHandler;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ogc.sensor.zml.ZmlURL;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.core.filter.ZmlFilterWorker;
+import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -121,26 +119,20 @@ public final class RainfallGeneratorUtilities
     return areas;
   }
 
-  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final DateRange range, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
+  public static IObservation[] readObservations( final Feature[] ombrometerFeatures, final GMLXPath linkXPath, final IZmlFilter[] filters, final DateRange dateRange ) throws SensorException
   {
-    final IRequest request = new ObservationRequest( range );
+    final IRequest request = new ObservationRequest( dateRange );
 
-    final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
-    for( int i = 0; i < ombrometerLinks.length; i++ )
+    final IObservation[] readObservations = new IObservation[ombrometerFeatures.length];
+    for( int i = 0; i < ombrometerFeatures.length; i++ )
     {
-      final TimeseriesLinkType link = ombrometerLinks[i];
-      if( link != null )
+      final ZmlLink link = new ZmlLink( ombrometerFeatures[i], linkXPath );
+      if( link.isLinkSet() )
       {
-        final String href = link.getHref();
-        if( href != null )
-        {
-          final String hrefFilter = ZmlURL.insertQueryPart( href, sourceFilter );
-
-          final String hrefRequest = ZmlURL.insertRequest( hrefFilter, request );
-          final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
-          if( zmlLocation != null )
-            readObservations[i] = ZmlFactory.parseXML( zmlLocation );
-        }
+        final IObservation source = link.loadObservation();
+        final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
+        final IObservation resolvedObservation = ObservationHelper.clone( filteredObservation, request );
+        readObservations[i] = resolvedObservation;
       }
     }
 
@@ -213,13 +205,13 @@ public final class RainfallGeneratorUtilities
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();
   }
 
-  public static String findTimeStep( IObservation[] observations )
+  public static String findTimeStep( final IObservation[] observations )
   {
     /* A bit of a hack: Search all observations for a valid timestep. */
-    for( IObservation observation : observations )
+    for( final IObservation observation : observations )
     {
       final MetadataList metadataList = observation.getMetadataList();
-      String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
+      final String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
       if( timestep != null )
         return timestep;
     }
