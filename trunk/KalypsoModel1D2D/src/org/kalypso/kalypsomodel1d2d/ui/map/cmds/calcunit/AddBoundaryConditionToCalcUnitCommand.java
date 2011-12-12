@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author madanago
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings({ "unchecked" })//$NON-NLS-1$ //$NON-NLS-2$
 public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dChangeCommand
 {
   private final IBoundaryCondition m_boundaryConditionToAdd;

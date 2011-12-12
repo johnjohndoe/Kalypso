@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Madanagopal
  * 
  */
-@SuppressWarnings("unchecked")
 public class InvariantOverlappingElements implements ICalculationValidateInterface
 {
   /**

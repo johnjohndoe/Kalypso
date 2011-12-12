@@ -92,7 +92,6 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
     return invariantErrorMessages;
   }
 
-  @SuppressWarnings("unchecked")
   private void invariant_CheckBC_On_EndNode( final List<IProblem> invariantErrorMessages, final ICalculationUnit1D calc )
   {
     final List<IFENetItem> elements = calc.getElements();
@@ -123,22 +122,20 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !foundEndBLine )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.0") + calc.getName(), calc, calc ) ); //$NON-NLS-1$
+        invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.0" ) + calc.getName(), calc, calc ) ); //$NON-NLS-1$
       }
       foundEndBLine = false;
     }
 
   }
 
-  @SuppressWarnings("unchecked")
   private void invariant_CheckForBLExist( final List<IProblem> invariantErrorMessages, final ICalculationUnit1D calc )
   {
     final List<IFELine> continuityLine2Ds = calc.getContinuityLines();
     if( continuityLine2Ds.size() == 0 )
-      invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.1") + calc.getName(), calc, calc ) ); //$NON-NLS-1$
+      invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.1" ) + calc.getName(), calc, calc ) ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
   private void invariant_CheckEachBLhasBC( final List<IProblem> invariantErrorMessages, final ICalculationUnit calcUnit )
   {
     final List<IFELine> continuityLine2Ds = calcUnit.getContinuityLines();
@@ -165,7 +162,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !hasBc )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null,Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.2", calcUnit.getName()), calcUnit, line ) ); //$NON-NLS-1$
+        invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.2", calcUnit.getName() ), calcUnit, line ) ); //$NON-NLS-1$
       }
     }
   }

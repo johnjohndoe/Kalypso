@@ -85,7 +85,7 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  @SuppressWarnings( { "unchecked", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   public void process( ) throws Exception
   {
     final IFeatureBindingCollection subUnits = m_parentCalculationUnit.getChangedSubUnits();

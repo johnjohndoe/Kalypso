@@ -41,7 +41,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Widget for creating 1d2d element
- *
+ * 
  * @author Patrice Congo
  */
 public class CreateFEElement1DWidget extends AbstractWidget
@@ -58,12 +58,11 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_node;
 
   public CreateFEElement1DWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -81,7 +80,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   {
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.2") ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.2" ) ); //$NON-NLS-1$
 
     final IMapModell mapModell = mapPanel.getMapModell();
     m_theme = UtilMap.findEditableTheme( mapPanel, IElement1D.QNAME );
@@ -119,7 +118,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
     /* If we have a node, take this position, else take the current one */
     final GM_Point currentPos = m_node == null ? MapUtilities.transform( mapPanel, p ) : m_node.getPoint();
 
-    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.3") ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.3" ) ); //$NON-NLS-1$
 
     try
     {
@@ -132,7 +131,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
       e.printStackTrace();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.4") + status.getMessage() ); //$NON-NLS-1$
+      mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.4" ) + status.getMessage() ); //$NON-NLS-1$
       reinit();
     }
   }
@@ -140,7 +139,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the xontext menu is opened, so the framework must know wether
    * this widget is editing something at the moment or not
-   *
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -166,7 +165,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         final IMapPanel mapPanel = getMapPanel();
-        mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.5") + status.getMessage() ); //$NON-NLS-1$
+        mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.5" ) + status.getMessage() ); //$NON-NLS-1$
         reinit();
       }
     }
@@ -217,7 +216,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
   private ICommand finishLine2( final GM_Curve curve ) throws GM_Exception
   {
-    final CompositeCommand command = new CompositeCommand( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.6") ); //$NON-NLS-1$
+    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.6" ) ); //$NON-NLS-1$
 
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final FeatureList featureList = m_theme.getFeatureList();
@@ -286,7 +285,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.7") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.7" ) ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
   }

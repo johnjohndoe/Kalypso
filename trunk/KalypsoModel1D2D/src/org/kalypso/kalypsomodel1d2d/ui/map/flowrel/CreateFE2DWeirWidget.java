@@ -145,7 +145,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     {
       m_builder = new ElementGeometryBuilder( 0, m_nodeTheme );
       initMembers();
-//      m_builder.setName( getName() );
+      // m_builder.setName( getName() );
     }
   }
 
@@ -210,7 +210,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     super.paint( g );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.8") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.8" ) ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -225,7 +225,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       final double z = snapNode.getPoint().getZ();
       if( !Double.isNaN( z ) )
       {
-        final String format = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.9" , z ); //$NON-NLS-1$
+        final String format = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.9", z ); //$NON-NLS-1$
         getMapPanel().setMessage( format );
       }
     }
@@ -274,7 +274,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -309,7 +308,6 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -393,11 +391,12 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       repaintMap();
     }
   }
-  private Object checkNewNode( final Point p ){
+
+  private Object checkNewNode( final Point p )
+  {
     return checkNewNode( p, true );
   }
 
-  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p, final boolean pBoolFinalPoint )
   {
     final IMapPanel mapPanel = getMapPanel();

@@ -189,7 +189,6 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     }
   }
 
-  @SuppressWarnings("unchecked")
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
     writeHeaderLine( formatter );
@@ -211,7 +210,6 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     formatter.format( "MESH2D%n" ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
   private void writeNodes( final Formatter formatter, final IFE1D2DNode[] nodes ) throws CoreException, IOException
   {
     for( final IFE1D2DNode node : nodes )
@@ -238,7 +236,6 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     }
   }
 
-  @SuppressWarnings("unchecked")
   private void checkElevation( final IFE1D2DNode node ) throws CoreException
   {
     // check if node elevation is assigned
@@ -364,7 +361,6 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n4: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
-  @SuppressWarnings("unchecked")
   private void writeQuadrangularElement( Formatter formatter, int id, int roughnessID, List<IFE1D2DNode> nodes )
   {
     // TODO: check orientation
@@ -390,7 +386,6 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n3: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
-  @SuppressWarnings("unchecked")
   private void writeTriangularElement( final Formatter formatter, final int id, final int roughnessID, final List<IFE1D2DNode> nodes )
   {
 
@@ -403,7 +398,6 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     formatter.format( "E3T%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, roughnessID ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
   private int getRoughnessID( final IFE1D2DElement element ) throws CoreException
   {
     final String roughnessClsID = element.getRoughnessClsID();

@@ -243,7 +243,6 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     super.keyPressed( e );
   }
 
-  @SuppressWarnings("unchecked")
   private final void paintElevationDataTooltip( final Graphics g, final Point p )
   {
     final Color color = g.getColor();

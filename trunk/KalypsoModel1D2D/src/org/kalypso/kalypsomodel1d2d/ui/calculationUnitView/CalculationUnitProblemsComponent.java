@@ -91,7 +91,6 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Madanagopal
  */
-@SuppressWarnings("unchecked")
 public class CalculationUnitProblemsComponent
 {
   private final CalculationUnitDataModel m_dataModel;
@@ -212,7 +211,7 @@ public class CalculationUnitProblemsComponent
       @Override
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.0"), 10 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.0" ), 10 ); //$NON-NLS-1$
 
         if( currentSelection != null )
         {
@@ -251,7 +250,7 @@ public class CalculationUnitProblemsComponent
     };
 
     final IStatus status = RunnableContextHelper.execute( workbench.getProgressService(), true, true, runnable );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.2"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.1" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public ICalculationUnit getCalculationUnit( )
