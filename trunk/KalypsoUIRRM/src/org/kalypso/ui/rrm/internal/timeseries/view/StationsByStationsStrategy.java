@@ -70,12 +70,21 @@ public class StationsByStationsStrategy
     final TimeseriesNode virtualRootNode = new TimeseriesNode( m_model, null, null, null );
 
     final Map<String, IStation[]> stationGroups = groupStations();
-    if( stationGroups.size() == 1 && stationGroups.containsKey( null ) )
+
+    if( stationGroups.size() == 0 )
+      buildEmptyNode( virtualRootNode );
+    else if( stationGroups.size() == 1 && stationGroups.containsKey( null ) )
       buildStations( virtualRootNode, stationGroups.get( null ) );
     else
       buildGroupNodes( virtualRootNode, stationGroups );
 
     return virtualRootNode;
+  }
+
+  private void buildEmptyNode( final TimeseriesNode parent )
+  {
+    final TimeseriesNode emptyNode = new TimeseriesNode( m_model, parent, new EmptyNodeUiHandler( m_model ), new Object() );
+    parent.addChild( emptyNode );
   }
 
   private void buildStations( final TimeseriesNode parent, final IStation[] stations )
