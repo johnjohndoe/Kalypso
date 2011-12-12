@@ -63,6 +63,7 @@ import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
@@ -163,7 +164,8 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
           ZmlLink timeseriesLink = factorizedTimeseries.getTimeseriesLink();
 
           /* Load the observation. */
-          IObservation observation = timeseriesLink.loadObservation();
+          IObservation[] readObservations = RainfallGeneratorUtilities.readObservations( new TimeseriesLinkType[] { timeseriesLink.getTimeseriesLink() }, range, null, factorizedTimeseries.getWorkspace().getContext() );
+          IObservation observation = readObservations[0];
 
           /* If the factor is valid and > 0.0, add the factor and its observation. */
           if( factor != null && factor.doubleValue() > 0.0 && !Double.isNaN( factor.doubleValue() ) && !Double.isInfinite( factor.doubleValue() ) )
