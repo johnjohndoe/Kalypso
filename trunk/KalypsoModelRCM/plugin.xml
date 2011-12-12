@@ -57,10 +57,6 @@
             qname="{org.kalypso.model.rcm.v2}Target">
       </feature>
       <feature
-            class="org.kalypso.model.rcm.internal.binding.CatchmentModel"
-            qname="{org.kalypso.model.cm}CatchmentModel">
-      </feature>
-      <feature
             class="org.kalypso.model.rcm.internal.binding.CatchmentGenerator"
             qname="{org.kalypso.model.cm}CatchmentGenerator">
       </feature>
