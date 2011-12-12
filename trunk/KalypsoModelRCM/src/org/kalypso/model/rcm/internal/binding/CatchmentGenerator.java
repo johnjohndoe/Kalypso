@@ -62,10 +62,10 @@ import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The catchment generator.
@@ -116,17 +116,17 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
    *          null.
    */
   @Override
-  public IObservation[] createRainfall( Feature[] catchmentFeatures, DateRange range, ILog log, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
   {
     /* Monitor. */
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
     /* Get the catchments. */
-    ICatchment[] catchments = getCatchments();
+    final ICatchment[] catchments = getCatchments();
 
     /* HINT: Keep in mind, that the results must match the order of the catchments array. */
-    IObservation[] results = new IObservation[catchments.length];
+    final IObservation[] results = new IObservation[catchments.length];
 
     try
     {
@@ -138,7 +138,7 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
       for( int i = 0; i < catchments.length; i++ )
       {
         /* Generate the message 1. */
-        String message1 = String.format( "Sammle gewichteten Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
+        final String message1 = String.format( "Sammle gewichteten Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
 
         /* Monitor. */
         monitor.subTask( message1 );
@@ -148,24 +148,27 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
           log.log( new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, message1 ) );
 
         /* Get the catchment. */
-        ICatchment catchment = catchments[i];
+        final ICatchment catchment = catchments[i];
 
         /* Memory for the factors and the observations of the catchments. */
-        List<Double> factors = new ArrayList<Double>();
-        List<IObservation> observations = new ArrayList<IObservation>();
+        final List<Double> factors = new ArrayList<Double>();
+        final List<IObservation> observations = new ArrayList<IObservation>();
 
         /* Get the factorized timeseries. */
-        for( IFactorizedTimeseries factorizedTimeseries : catchment.getFactorizedTimeseries() )
+        for( final IFactorizedTimeseries factorizedTimeseries : catchment.getFactorizedTimeseries() )
         {
           /* Get the factor. */
-          Double factor = factorizedTimeseries.getFactor();
+          final Double factor = factorizedTimeseries.getFactor();
 
           /* Get the timeseries link. */
-          ZmlLink timeseriesLink = factorizedTimeseries.getTimeseriesLink();
+          final GMLXPath linkPath = new GMLXPath( IFactorizedTimeseries.PROPERTY_TIMESERIES_LINK );
+
+          // TODO: get from gml
+          final IZmlFilter[] filters = new IZmlFilter[] {};
 
           /* Load the observation. */
-          IObservation[] readObservations = RainfallGeneratorUtilities.readObservations( new TimeseriesLinkType[] { timeseriesLink.getTimeseriesLink() }, range, null, factorizedTimeseries.getWorkspace().getContext() );
-          IObservation observation = readObservations[0];
+          final IObservation[] readObservations = RainfallGeneratorUtilities.readObservations( new Feature[] { factorizedTimeseries }, linkPath, filters, range );
+          final IObservation observation = readObservations[0];
 
           /* If the factor is valid and > 0.0, add the factor and its observation. */
           if( factor != null && factor.doubleValue() > 0.0 && !Double.isNaN( factor.doubleValue() ) && !Double.isInfinite( factor.doubleValue() ) )
@@ -176,7 +179,7 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
         }
 
         /* Generate the message 2. */
-        String message2 = String.format( "Erzeuge Zeitreihe %d mit %d gewichteten Zeitreihen...", i + 1, factors.size() );
+        final String message2 = String.format( "Erzeuge Zeitreihe %d mit %d gewichteten Zeitreihen...", i + 1, factors.size() );
 
         /* Monitor. */
         monitor.worked( 100 );
@@ -195,10 +198,10 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
 
       return results;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Create the error status. */
-      IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, ex.getLocalizedMessage(), ex );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, ex.getLocalizedMessage(), ex );
 
       /* If there is a log, log to it. */
       if( log != null )
@@ -255,12 +258,12 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
    *          The array of Doubles.
    * @return A array of doubles.
    */
-  private double[] convertDoubles( Double[] factors )
+  private double[] convertDoubles( final Double[] factors )
   {
-    double[] weights = new double[factors.length];
+    final double[] weights = new double[factors.length];
     for( int j = 0; j < factors.length; j++ )
     {
-      Double factor = factors[j];
+      final Double factor = factors[j];
       weights[j] = factor.doubleValue();
     }
 
