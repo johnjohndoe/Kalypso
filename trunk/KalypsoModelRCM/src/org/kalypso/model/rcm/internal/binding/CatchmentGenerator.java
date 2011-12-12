@@ -45,18 +45,33 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.RcmConstants;
+import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
+import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.ICatchmentGenerator;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
+import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The catchment generator.
  * 
  * @author Holger Albert
  */
-public class CatchmentGenerator extends Feature_Impl
+public class CatchmentGenerator extends AbstractRainfallGenerator implements ICatchmentGenerator
 {
   /**
    * The qname of the area name property.
@@ -93,31 +108,132 @@ public class CatchmentGenerator extends Feature_Impl
   }
 
   /**
-   * This function returns the area name property.
-   * 
-   * @return The area name property.
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.feature.Feature[],
+   *      org.kalypso.ogc.sensor.DateRange, org.eclipse.core.runtime.ILog, org.eclipse.core.runtime.IProgressMonitor)
+   * @param catchmentFeatures
+   *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them
+   *          null.
    */
+  @Override
+  public IObservation[] createRainfall( Feature[] catchmentFeatures, DateRange range, ILog log, IProgressMonitor monitor ) throws CoreException
+  {
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
+
+    /* Get the catchments. */
+    ICatchment[] catchments = getCatchments();
+
+    /* HINT: Keep in mind, that the results must match the order of the catchments array. */
+    IObservation[] results = new IObservation[catchments.length];
+
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( String.format( "Generiere Zeitreihen für %d Gebiete...", catchments.length ), catchments.length * 200 );
+      monitor.subTask( "Generiere Zeitreihen..." );
+
+      /* Generate one timeseries for each catchment. */
+      for( int i = 0; i < catchments.length; i++ )
+      {
+        /* Generate the message 1. */
+        String message1 = String.format( "Sammle gewichteten Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
+
+        /* Monitor. */
+        monitor.subTask( message1 );
+
+        /* Log. */
+        if( log != null )
+          log.log( new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, message1 ) );
+
+        /* Get the catchment. */
+        ICatchment catchment = catchments[i];
+
+        /* Memory for the factors and the observations of the catchments. */
+        List<Double> factors = new ArrayList<Double>();
+        List<IObservation> observations = new ArrayList<IObservation>();
+
+        /* Get the factorized timeseries. */
+        for( IFactorizedTimeseries factorizedTimeseries : catchment.getFactorizedTimeseries() )
+        {
+          /* Get the factor. */
+          Double factor = factorizedTimeseries.getFactor();
+
+          /* Get the timeseries link. */
+          ZmlLink timeseriesLink = factorizedTimeseries.getTimeseriesLink();
+
+          /* Load the observation. */
+          IObservation observation = timeseriesLink.loadObservation();
+
+          /* If the factor is valid and > 0.0, add the factor and its observation. */
+          if( factor != null && factor.doubleValue() > 0.0 && !Double.isNaN( factor.doubleValue() ) && !Double.isInfinite( factor.doubleValue() ) )
+          {
+            factors.add( factor );
+            observations.add( observation );
+          }
+        }
+
+        /* Generate the message 2. */
+        String message2 = String.format( "Erzeuge Zeitreihe %d mit %d gewichteten Zeitreihen...", i + 1, factors.size() );
+
+        /* Monitor. */
+        monitor.worked( 100 );
+        monitor.subTask( message2 );
+
+        /* Log. */
+        if( log != null )
+          log.log( new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, message2 ) );
+
+        /* Set the resulting observation for this catchment. */
+        results[i] = RainfallGeneratorUtilities.combineObses( observations.toArray( new IObservation[] {} ), convertDoubles( factors.toArray( new Double[] {} ) ), "catchmentGenerator://thiessen" );
+
+        /* Monitor. */
+        monitor.worked( 100 );
+      }
+
+      return results;
+    }
+    catch( Exception ex )
+    {
+      /* Create the error status. */
+      IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, ex.getLocalizedMessage(), ex );
+
+      /* If there is a log, log to it. */
+      if( log != null )
+        log.log( status );
+
+      throw new CoreException( status );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getAreaNameProperty()
+   */
+  @Override
   public String getAreaNameProperty( )
   {
     return getProperty( QNAME_AREA_NAME_PROPERTY, String.class );
   }
 
   /**
-   * This function returns the area property.
-   * 
-   * @return The area property.
+   * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getAreaProperty()
    */
+  @Override
   public String getAreaProperty( )
   {
     return getProperty( QNAME_AREA_PROPERTY, String.class );
   }
 
   /**
-   * This function returns all catchments.
-   * 
-   * @return All catchments.
+   * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getCatchments()
    */
-  public Catchment[] getCatchments( )
+  @Override
+  public ICatchment[] getCatchments( )
   {
     /* Memory for the results. */
     final List<Catchment> results = new ArrayList<Catchment>();
@@ -128,5 +244,24 @@ public class CatchmentGenerator extends Feature_Impl
       results.add( (Catchment) catchments.get( i ) );
 
     return results.toArray( new Catchment[] {} );
+  }
+
+  /**
+   * This function converts an array of Doubles to an array of doubles.
+   * 
+   * @param factors
+   *          The array of Doubles.
+   * @return A array of doubles.
+   */
+  private double[] convertDoubles( Double[] factors )
+  {
+    double[] weights = new double[factors.length];
+    for( int j = 0; j < factors.length; j++ )
+    {
+      Double factor = factors[j];
+      weights[j] = factor.doubleValue();
+    }
+
+    return weights;
   }
 }

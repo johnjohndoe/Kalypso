@@ -48,6 +48,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.RcmConstants;
+import org.kalypso.model.rcm.binding.ICatchmentGenerator;
+import org.kalypso.model.rcm.binding.ICatchmentModel;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -56,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Holger Albert
  */
-public class CatchmentModel extends Feature_Impl
+public class CatchmentModel extends Feature_Impl implements ICatchmentModel
 {
   /**
    * The qname of the generator member.
@@ -83,11 +85,10 @@ public class CatchmentModel extends Feature_Impl
   }
 
   /**
-   * This function returns all catchment generators.
-   * 
-   * @return All catchment generators.
+   * @see org.kalypso.model.rcm.binding.ICatchmentModel#getCatchmentGenerators()
    */
-  public CatchmentGenerator[] getCatchmentGenerators( )
+  @Override
+  public ICatchmentGenerator[] getCatchmentGenerators( )
   {
     /* Memory for the results. */
     final List<CatchmentGenerator> results = new ArrayList<CatchmentGenerator>();

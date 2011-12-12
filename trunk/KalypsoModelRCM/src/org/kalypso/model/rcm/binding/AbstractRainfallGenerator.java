@@ -68,9 +68,9 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
    * @see org.kalypso.model.rcm.binding.IRainfallGenerator#getPeriod()
    */
   @Override
-  public org.kalypso.model.rcm.internal.binding.DateRange getPeriod( )
+  public IDateRange getPeriod( )
   {
-    return getProperty( PROPERTY_PERIOD, org.kalypso.model.rcm.internal.binding.DateRange.class );
+    return getProperty( PROPERTY_PERIOD, IDateRange.class );
   }
 
   /**
@@ -79,7 +79,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   @Override
   public DateRange getPeriod( final IStringResolver variables )
   {
-    return getProperty( PROPERTY_PERIOD, org.kalypso.model.rcm.internal.binding.DateRange.class ).asDateRange( variables );
+    return getProperty( PROPERTY_PERIOD, IDateRange.class ).asDateRange( variables );
   }
 
   /**
