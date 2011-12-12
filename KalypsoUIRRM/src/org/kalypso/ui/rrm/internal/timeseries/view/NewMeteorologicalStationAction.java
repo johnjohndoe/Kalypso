@@ -66,7 +66,7 @@ public class NewMeteorologicalStationAction extends Action
     m_model = model;
     m_group = group;
 
-    setText( "New meteorological station" );
+    setText( "New Meteorological Station" );
     setToolTipText( "Creates a new meteorological station" );
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_METEOROLOGICAL ) );
   }

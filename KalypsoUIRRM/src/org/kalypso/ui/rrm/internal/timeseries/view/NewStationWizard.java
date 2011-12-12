@@ -55,7 +55,6 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -63,6 +62,8 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 
 /**
+ * FIXME: do not allow to add station with same name/reference-code
+ *
  * @author Gernot Belger
  */
 public class NewStationWizard extends Wizard
@@ -104,7 +105,9 @@ public class NewStationWizard extends Wizard
       final IStationCollection collection = (IStationCollection) m_workspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( IStationCollection.MEMBER_STATION );
 
-      final AddFeatureCommand command = new AddFeatureCommand( m_workspace, ITimeseries.FEATURE_TIMESERIES, collection, parentRelation, -1, properties, null, -1 );
+      final QName type = m_bean.getFeatureType().getQName();
+
+      final AddFeatureCommand command = new AddFeatureCommand( m_workspace, type, collection, parentRelation, -1, properties, null, -1 );
 
       m_workspace.postCommand( command );
 
@@ -115,9 +118,10 @@ public class NewStationWizard extends Wizard
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to create new station", e );
       StatusDialog.open( getShell(), status, getWindowTitle() );
+      return false;
     }
 
-    return false;
+    return true;
   }
 
   public IStation getNewStation( )
