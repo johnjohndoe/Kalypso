@@ -48,6 +48,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.RcmConstants;
+import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -59,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * 
  * @author Holger Albert
  */
-public class Catchment extends Feature_Impl
+public class Catchment extends Feature_Impl implements ICatchment
 {
   /**
    * The qname of the area link.
@@ -91,10 +93,9 @@ public class Catchment extends Feature_Impl
   }
 
   /**
-   * This function returns the area link.
-   * 
-   * @return The area link.
+   * @see org.kalypso.model.rcm.binding.ICatchment#getAreaLink()
    */
+  @Override
   public Feature getAreaLink( )
   {
     /* The xlinked feature. */
@@ -105,11 +106,10 @@ public class Catchment extends Feature_Impl
   }
 
   /**
-   * This function returns factorized timeseries.
-   * 
-   * @return All factorized timeseries.
+   * @see org.kalypso.model.rcm.binding.ICatchment#getFactorizedTimeseries()
    */
-  public FactorizedTimeseries[] getFactorizedTimeseries( )
+  @Override
+  public IFactorizedTimeseries[] getFactorizedTimeseries( )
   {
     /* Memory for the results. */
     final List<FactorizedTimeseries> results = new ArrayList<FactorizedTimeseries>();

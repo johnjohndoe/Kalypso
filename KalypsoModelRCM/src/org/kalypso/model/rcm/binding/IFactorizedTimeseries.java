@@ -38,63 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.internal.binding;
+package org.kalypso.model.rcm.binding;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.rcm.RcmConstants;
-import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * The factorized timeseries.
  * 
  * @author Holger Albert
  */
-public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTimeseries
+public interface IFactorizedTimeseries extends Feature
 {
   /**
-   * The qname of the factor.
-   */
-  public static final QName QNAME_FACTOR = new QName( RcmConstants.NS_CM, "factor" );
-
-  /**
-   * The qname of the timeseries link.
-   */
-  public static final QName QNAME_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" );
-
-  /**
-   * The constructor.
+   * This function returns the factor.
    * 
-   * @param parent
-   * @param parentRelation
-   * @param ft
-   * @param id
-   * @param propValues
+   * @return The factor.
    */
-  public FactorizedTimeseries( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  public abstract Double getFactor( );
 
   /**
-   * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getFactor()
+   * This function returns the timeseries link.
+   * 
+   * @return The timeseries link.
    */
-  @Override
-  public Double getFactor( )
-  {
-    return getProperty( QNAME_FACTOR, Double.class );
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getTimeseriesLink()
-   */
-  @Override
-  public ZmlLink getTimeseriesLink( )
-  {
-    return new ZmlLink( this, QNAME_TIMESERIES_LINK, getWorkspace().getContext() );
-  }
+  public abstract ZmlLink getTimeseriesLink( );
 }
