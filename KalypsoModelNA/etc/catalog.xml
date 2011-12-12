@@ -2,7 +2,9 @@
   PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
          "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
   <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" uri="schema/gml/timeseriesManagement.xsd" />
+  <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel" uri="schema/gml/catchmentModel.xsd" />
 
   <uri name="org.kalypso.na.control" uri="schema/gml/control.xsd" />
   <uri name="http://www.tuhh.de/kalypsoNA" uri="schema/gml/namodell.xsd" />

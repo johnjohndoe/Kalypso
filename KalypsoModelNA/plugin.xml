@@ -357,6 +357,12 @@
               qname="{http://kalypso.sorgeforge.net/schemata/hydrology/optimize}NaOptimizeConfig">
         </feature>
      </extension>
+     <extension point="org.kalypso.deegree.featureBinding">
+          <feature
+                class="org.kalypso.model.hydrology.internal.cm.binding.CatchmentModel"
+                qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}CatchmentModel">
+          </feature>
+     </extension>
      <extension
            point="org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution>
