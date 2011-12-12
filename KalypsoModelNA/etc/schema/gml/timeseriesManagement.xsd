@@ -12,7 +12,7 @@
             <element name="stationMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence minOccurs="1" maxOccurs="1">
-                  <element ref="tm:AbstractStation" />
+                  <element ref="tm:_Station" />
                 </sequence>
               </complexType>
             </element>
@@ -22,7 +22,7 @@
     </complexType>
   </element>
 
-  <element name="AbstractStation" type="tm:AbstractStationType" abstract="true" substitutionGroup="gml:_Feature" />
+  <element name="_Station" type="tm:AbstractStationType" abstract="true" substitutionGroup="gml:_Feature" />
   <complexType name="AbstractStationType" abstract="true">
     <complexContent>
       <extension base="gml:AbstractFeatureType">
@@ -51,7 +51,7 @@
     </complexContent>
   </complexType>
 
-  <element name="HydrologicalStation" substitutionGroup="tm:AbstractStation">
+  <element name="HydrologicalStation" substitutionGroup="tm:_Station">
     <complexType>
       <complexContent>
         <extension base="tm:AbstractStationType">
@@ -68,7 +68,7 @@
     </complexType>
   </element>
 
-  <element name="MeteorologicalStation" substitutionGroup="tm:AbstractStation">
+  <element name="MeteorologicalStation" substitutionGroup="tm:_Station">
     <complexType>
       <complexContent>
         <extension base="tm:AbstractStationType">

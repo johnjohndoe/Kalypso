@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.binding;
+package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import java.lang.ref.WeakReference;
 import java.net.URI;
@@ -57,6 +57,8 @@ import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.timeseries.binding.IStationClass;
+import org.kalypso.model.hydrology.timeseries.binding.IStationClasses;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -66,24 +68,21 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * @author Gernot Belger
  */
-public class StationClasses extends Feature_Impl
+public class StationClasses extends Feature_Impl implements IStationClasses
 {
-  private static final String STATION_CLASSES_URN = "urn:ogc:gml:kalypso:model:rrm:stationClasses"; //$NON-NLS-1$
-
   private static WeakReference<Map<Class< ? extends Station>, Set<String>>> m_hash = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( null );
-
-  final static QName FEATURE_STATION_CLASSES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClasses" ); //$NON-NLS-1$
 
   private static final QName MEMBER_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "classMember" ); //$NON-NLS-1$
 
-  private final IFeatureBindingCollection<StationClass> m_classes = new FeatureBindingCollection<StationClass>( this, StationClass.class, MEMBER_CLASS );
+  private final IFeatureBindingCollection<IStationClass> m_classes = new FeatureBindingCollection<>( this, IStationClass.class, MEMBER_CLASS );
 
   public StationClasses( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  IFeatureBindingCollection<StationClass> getClasses( )
+  @Override
+  public IFeatureBindingCollection<IStationClass> getClasses( )
   {
     return m_classes;
   }
@@ -118,8 +117,8 @@ public class StationClasses extends Feature_Impl
 
     final Map<Class< ? extends Station>, Set<String>> classCatalog = new HashMap<>();
 
-    final IFeatureBindingCollection<StationClass> classes = stationClasses.getClasses();
-    for( final StationClass stationClass : classes )
+    final IFeatureBindingCollection<IStationClass> classes = stationClasses.getClasses();
+    for( final IStationClass stationClass : classes )
     {
       try
       {
