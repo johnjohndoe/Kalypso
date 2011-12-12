@@ -56,20 +56,10 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface IRainfallGenerator extends Feature
 {
   /**
-   * This function generates the timeseries for the given catchments.
-   * 
-   * @param catchmentFeatures
-   *          The catchment features.
-   * @param range
-   *          The date range.
-   * @param log
-   *          The log.
-   * @param monitor
-   *          A progress monitor.
-   * @return The timeseries. The array contains one timeseries for each catchment. They will be ordered like the array
-   *         of catchments.
+   * @param sourceFilter
+   *          Enforces source timeseries to have equal properties (length, interval, ...). May be null.
    */
-  public IObservation[] createRainfall( Feature[] catchmentFeatures, DateRange range, ILog log, IProgressMonitor monitor ) throws CoreException;
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, ILog log, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * This function returns the period. This will be the unmodified period from the feature, containing strings, which
