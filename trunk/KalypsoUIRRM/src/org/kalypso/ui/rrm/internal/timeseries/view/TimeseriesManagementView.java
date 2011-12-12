@@ -47,8 +47,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 
 /**
  * @author Gernot Belger
@@ -88,7 +88,7 @@ public class TimeseriesManagementView extends ViewPart
     m_treeViewer.getControl().setFocus();
   }
 
-  public void setInput( final CommandableWorkspace workspace, final StationCollection stations )
+  public void setInput( final CommandableWorkspace workspace, final IStationCollection stations )
   {
     final TimeseriesTreeModel input = new TimeseriesTreeModel( stations, workspace, m_treeViewer );
 

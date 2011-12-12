@@ -63,6 +63,8 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -73,8 +75,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.imports.ImportObservationData;
@@ -86,15 +86,15 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 {
   private final ImportObservationData m_data;
 
-  private final Station m_station;
+  private final IStation m_station;
 
   private final TimeseriesBean m_bean;
 
   private final CommandableWorkspace m_workspace;
 
-  private Timeseries m_timeseries;
+  private ITimeseries m_timeseries;
 
-  public ImportTimeseriesOperation( final CommandableWorkspace workspace, final Station station, final ImportObservationData data, final TimeseriesBean bean )
+  public ImportTimeseriesOperation( final CommandableWorkspace workspace, final IStation station, final ImportObservationData data, final TimeseriesBean bean )
   {
     m_workspace = workspace;
     m_station = station;
@@ -108,10 +108,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
    */
   void updateDataAfterFinish( )
   {
-    m_bean.setProperty( Timeseries.PROPERTY_PARAMETER_TYPE, m_data.getParameterType() );
-
-    // TODO Auto-generated method stub
-
+    m_bean.setProperty( ITimeseries.PROPERTY_PARAMETER_TYPE, m_data.getParameterType() );
   }
 
   @Override
@@ -146,21 +143,21 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void updateMetadata( final IObservation observation, final Timeseries timeseries )
+  private void updateMetadata( final IObservation observation, final ITimeseries timeseries )
   {
     /* Timestep */
     final MetadataList metadataList = observation.getMetadataList();
     MetadataHelper.setTimestep( metadataList, timeseries.getTimestep() );
   }
 
-  private Timeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
+  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
   {
     try
     {
       final IPath relativeTargetPath = buildTargetPath( targetFile );
 
       /* Create timeseries feature */
-      final IRelationType parentRelation = (IRelationType) m_station.getFeatureType().getProperty( Station.MEMBER_TIMESERIES );
+      final IRelationType parentRelation = (IRelationType) m_station.getFeatureType().getProperty( IStation.MEMBER_TIMESERIES );
 
       final int timestepAmount = PeriodUtils.findCalendarAmount( timestep );
       final FIELD timestepField = PeriodUtils.findCalendarField( timestep );
@@ -175,15 +172,15 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
       dataLink.setHref( relativeTargetPath.toPortableString() );
 
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
-      properties.put( Timeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
-      properties.put( Timeseries.PROPERTY_TIMESTEP_FIELD, timestepField.name() );
-      properties.put( Timeseries.PROPERTY_DATA, dataLink );
+      properties.put( ITimeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
+      properties.put( ITimeseries.PROPERTY_TIMESTEP_FIELD, timestepField.name() );
+      properties.put( ITimeseries.PROPERTY_DATA, dataLink );
 
-      final AddFeatureCommand command = new AddFeatureCommand( m_workspace, Timeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
+      final AddFeatureCommand command = new AddFeatureCommand( m_workspace, ITimeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
 
       m_workspace.postCommand( command );
 
-      return (Timeseries) command.getNewFeature();
+      return (ITimeseries) command.getNewFeature();
     }
     catch( final Exception e )
     {
@@ -244,8 +241,8 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
   private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep ) throws CoreException
   {
-    final Object parameterType = timeseries.getProperty( Timeseries.PROPERTY_PARAMETER_TYPE );
-    final Object quality = timeseries.getProperty( Timeseries.PROPERTY_QUALITY );
+    final Object parameterType = timeseries.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
+    final Object quality = timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
 
     final String periodText = PeriodUtils.formatDefault( timestep );
 
@@ -260,7 +257,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     return stationFolder.getFile( timeseriesFilename );
   }
 
-  public Timeseries getTimeseries( )
+  public ITimeseries getTimeseries( )
   {
     return m_timeseries;
   }

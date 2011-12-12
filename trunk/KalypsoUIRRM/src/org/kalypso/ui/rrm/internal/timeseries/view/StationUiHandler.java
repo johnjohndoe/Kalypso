@@ -50,13 +50,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
+import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.HydrologicalStation;
-import org.kalypso.ui.rrm.internal.timeseries.binding.MeteorologicalStation;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -64,11 +64,11 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
 {
-  private final Station m_station;
+  private final IStation m_station;
 
   private final ITimeseriesTreeModel m_model;
 
-  public StationUiHandler( final ITimeseriesTreeModel model, final Station station )
+  public StationUiHandler( final ITimeseriesTreeModel model, final IStation station )
   {
     m_model = model;
     m_station = station;
@@ -99,10 +99,10 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    if( m_station instanceof MeteorologicalStation )
+    if( m_station instanceof IMeteorologicalStation )
       return UIRrmImages.id( DESCRIPTORS.STATION_METEOROLOGICAL );
 
-    if( m_station instanceof HydrologicalStation )
+    if( m_station instanceof IHydrologicalStation )
       return UIRrmImages.id( DESCRIPTORS.STATION_HYDROLOGICAL );
 
     return UIRrmImages.id( DESCRIPTORS.STATION );
@@ -111,7 +111,7 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    final FeatureBean<Station> bean = new FeatureBean<>( m_station );
+    final FeatureBean<IStation> bean = new FeatureBean<>( m_station );
 
     final StationComposite stationControl = new StationComposite( parent, bean, binding, false );
 
@@ -123,11 +123,14 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMeteorologicalStationAction( m_model, null ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewHydrologicalStationAction( m_model, null ) );
+
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_model, m_station, null ) );
 
     /* Delete timeseries */
-    final IFeatureBindingCollection<Timeseries> timeseries = m_station.getTimeseries();
-    final Timeseries[] allTimeseries = timeseries.toArray( new Timeseries[timeseries.size()] );
+    final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
+    final ITimeseries[] allTimeseries = timeseries.toArray( new ITimeseries[timeseries.size()] );
 
     final String deleteMessage = String.format( "Delete all timeseries from of station '%s'?", getTreeLabel() );
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, allTimeseries );

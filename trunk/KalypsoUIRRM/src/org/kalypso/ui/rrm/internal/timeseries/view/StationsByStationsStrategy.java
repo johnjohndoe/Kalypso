@@ -45,9 +45,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -55,11 +55,11 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class StationsByStationsStrategy
 {
-  private final StationCollection m_stations;
+  private final IStationCollection m_stations;
 
   private final ITimeseriesTreeModel m_model;
 
-  public StationsByStationsStrategy( final ITimeseriesTreeModel model, final StationCollection stations )
+  public StationsByStationsStrategy( final ITimeseriesTreeModel model, final IStationCollection stations )
   {
     m_model = model;
     m_stations = stations;
@@ -69,7 +69,7 @@ public class StationsByStationsStrategy
   {
     final TimeseriesNode virtualRootNode = new TimeseriesNode( m_model, null, null, null );
 
-    final Map<String, Station[]> stationGroups = groupStations();
+    final Map<String, IStation[]> stationGroups = groupStations();
     if( stationGroups.size() == 1 && stationGroups.containsKey( null ) )
       buildStations( virtualRootNode, stationGroups.get( null ) );
     else
@@ -78,23 +78,23 @@ public class StationsByStationsStrategy
     return virtualRootNode;
   }
 
-  private void buildStations( final TimeseriesNode parent, final Station[] stations )
+  private void buildStations( final TimeseriesNode parent, final IStation[] stations )
   {
-    for( final Station station : stations )
+    for( final IStation station : stations )
     {
       final TimeseriesNode stationNode = buildStationNode( parent, station );
       parent.addChild( stationNode );
     }
   }
 
-  private void buildGroupNodes( final TimeseriesNode parent, final Map<String, Station[]> stationGroups )
+  private void buildGroupNodes( final TimeseriesNode parent, final Map<String, IStation[]> stationGroups )
   {
-    for( final Entry<String, Station[]> entry : stationGroups.entrySet() )
+    for( final Entry<String, IStation[]> entry : stationGroups.entrySet() )
     {
       final String group = entry.getKey();
-      final Station[] stations = entry.getValue();
+      final IStation[] stations = entry.getValue();
 
-      final ITimeseriesNodeUiHandler uiHandler = new GroupUiHandler( group );
+      final ITimeseriesNodeUiHandler uiHandler = new GroupUiHandler( m_model, group );
 
       final TimeseriesNode groupNode = new TimeseriesNode( m_model, parent, uiHandler, entry );
 
@@ -104,34 +104,34 @@ public class StationsByStationsStrategy
     }
   }
 
-  private Map<String, Station[]> groupStations( )
+  private Map<String, IStation[]> groupStations( )
   {
-    final Map<String, Station[]> groups = new HashMap<>();
+    final Map<String, IStation[]> groups = new HashMap<>();
 
-    final IFeatureBindingCollection<Station> stations = m_stations.getStations();
-    for( final Station station : stations )
+    final IFeatureBindingCollection<IStation> stations = m_stations.getStations();
+    for( final IStation station : stations )
     {
       final String group = station.getGroup();
       if( !groups.containsKey( group ) )
-        groups.put( group, new Station[0] );
+        groups.put( group, new IStation[0] );
 
-      final Station[] oldStations = groups.get( group );
-      final Station[] newStations = ArrayUtils.add( oldStations, station );
+      final IStation[] oldStations = groups.get( group );
+      final IStation[] newStations = ArrayUtils.add( oldStations, station );
       groups.put( group, newStations );
     }
 
     return groups;
   }
 
-  private TimeseriesNode buildStationNode( final TimeseriesNode parent, final Station station )
+  private TimeseriesNode buildStationNode( final TimeseriesNode parent, final IStation station )
   {
     final ITimeseriesNodeUiHandler uiHandler = new StationUiHandler( m_model, station );
 
     final TimeseriesNode stationNode = new TimeseriesNode( m_model, parent, uiHandler, station );
 
-    final Map<String, Timeseries[]> parameters = groupByParameter( station );
+    final Map<String, ITimeseries[]> parameters = groupByParameter( station );
 
-    for( final Entry<String, Timeseries[]> entry : parameters.entrySet() )
+    for( final Entry<String, ITimeseries[]> entry : parameters.entrySet() )
     {
       final TimeseriesNode parameterNode = buildParameterNode( station, stationNode, entry );
       stationNode.addChild( parameterNode );
@@ -140,37 +140,37 @@ public class StationsByStationsStrategy
     return stationNode;
   }
 
-  private Map<String, Timeseries[]> groupByParameter( final Station station )
+  private Map<String, ITimeseries[]> groupByParameter( final IStation station )
   {
-    final Map<String, Timeseries[]> parameters = new HashMap<>();
+    final Map<String, ITimeseries[]> parameters = new HashMap<>();
 
-    final IFeatureBindingCollection<Timeseries> allTimeseries = station.getTimeseries();
+    final IFeatureBindingCollection<ITimeseries> allTimeseries = station.getTimeseries();
 
-    for( final Timeseries timeseries : allTimeseries )
+    for( final ITimeseries timeseries : allTimeseries )
     {
       final String parameterType = timeseries.getParameterType();
 
       if( !parameters.containsKey( parameterType ) )
-        parameters.put( parameterType, new Timeseries[0] );
+        parameters.put( parameterType, new ITimeseries[0] );
 
-      final Timeseries[] oldTimeseriesArray = parameters.get( parameterType );
+      final ITimeseries[] oldTimeseriesArray = parameters.get( parameterType );
 
-      final Timeseries[] newTimeseriesArray = ArrayUtils.add( oldTimeseriesArray, timeseries );
+      final ITimeseries[] newTimeseriesArray = ArrayUtils.add( oldTimeseriesArray, timeseries );
       parameters.put( parameterType, newTimeseriesArray );
     }
 
     return parameters;
   }
 
-  private TimeseriesNode buildParameterNode( final Station station, final TimeseriesNode parent, final Entry<String, Timeseries[]> entry )
+  private TimeseriesNode buildParameterNode( final IStation station, final TimeseriesNode parent, final Entry<String, ITimeseries[]> entry )
   {
     final String parameterType = entry.getKey();
-    final Timeseries[] timeseries = entry.getValue();
+    final ITimeseries[] timeseries = entry.getValue();
 
     final ITimeseriesNodeUiHandler uiHandler = new ParameterUiHandler( m_model, station, parameterType, timeseries );
     final TimeseriesNode parameterNode = new TimeseriesNode( m_model, parent, uiHandler, parameterType );
 
-    for( final Timeseries timeserie : timeseries )
+    for( final ITimeseries timeserie : timeseries )
     {
       final TimeseriesNode timeseriesNode = buildTimeseriesNode( parameterNode, timeserie );
       parameterNode.addChild( timeseriesNode );
@@ -179,7 +179,7 @@ public class StationsByStationsStrategy
     return parameterNode;
   }
 
-  private TimeseriesNode buildTimeseriesNode( final TimeseriesNode parent, final Timeseries timeseries )
+  private TimeseriesNode buildTimeseriesNode( final TimeseriesNode parent, final ITimeseries timeseries )
   {
     final ITimeseriesNodeUiHandler uiHandler = new TimeseriesUiHandler( m_model, timeseries );
 

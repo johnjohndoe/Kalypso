@@ -42,16 +42,16 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesNewComposite extends FeatureBeanComposite<Timeseries>
+public class TimeseriesNewComposite extends FeatureBeanComposite<ITimeseries>
 {
-  public TimeseriesNewComposite( final Composite parent, final FeatureBean<Timeseries> featureBean, final IDataBinding binding )
+  public TimeseriesNewComposite( final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding )
   {
     super( parent, featureBean, binding, true );
   }
@@ -59,6 +59,6 @@ public class TimeseriesNewComposite extends FeatureBeanComposite<Timeseries>
   @Override
   protected void createContents( )
   {
-    createPropertyControl( Timeseries.PROPERTY_QUALITY );
+    createPropertyControl( ITimeseries.PROPERTY_QUALITY );
   }
 }

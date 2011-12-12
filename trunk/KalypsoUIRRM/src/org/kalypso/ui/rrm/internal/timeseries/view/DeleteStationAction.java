@@ -47,23 +47,23 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
  * @author Gernot Belger
  */
 public class DeleteStationAction extends Action
 {
-  private final Station[] m_stations;
+  private final IStation[] m_stations;
 
   private final ITimeseriesTreeModel m_model;
 
-  public DeleteStationAction( final ITimeseriesTreeModel model, final Station... station )
+  public DeleteStationAction( final ITimeseriesTreeModel model, final IStation... station )
   {
     m_model = model;
     m_stations = station;
@@ -93,9 +93,9 @@ public class DeleteStationAction extends Action
     try
     {
       /* Delete data files */
-      for( final Station station : m_stations )
+      for( final IStation station : m_stations )
       {
-        for( final Timeseries timeseries : station.getTimeseries() )
+        for( final ITimeseries timeseries : station.getTimeseries() )
           timeseries.deleteDataFile();
       }
 

@@ -47,22 +47,22 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 
 /**
  * @author Gernot Belger
  */
 public class EditStationAction extends Action
 {
-  private final Station m_station;
+  private final IStation m_station;
 
   private final StationComposite m_stationControl;
 
   private final ITimeseriesTreeModel m_context;
 
-  public EditStationAction( final ITimeseriesTreeModel context, final Station station, final StationComposite stationControl )
+  public EditStationAction( final ITimeseriesTreeModel context, final IStation station, final StationComposite stationControl )
   {
     m_context = context;
     m_station = station;

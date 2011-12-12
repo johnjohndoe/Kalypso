@@ -47,12 +47,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.featureview.dialog.PointDialog;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -63,9 +63,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EditStationLocationAction extends Action
 {
-  private final FeatureBean<Station> m_bean;
+  private final FeatureBean<IStation> m_bean;
 
-  public EditStationLocationAction( final FeatureBean<Station> bean )
+  public EditStationLocationAction( final FeatureBean<IStation> bean )
   {
     m_bean = bean;
 
@@ -79,7 +79,7 @@ public class EditStationLocationAction extends Action
 
     final String kalypsoCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final GM_Point point = (GM_Point) m_bean.getProperty( Station.PROPERTY_LOCATION );
+    final GM_Point point = (GM_Point) m_bean.getProperty( IStation.PROPERTY_LOCATION );
 
     final double[] values = point == null ? new double[3] : point.getAsArray();
     final String crs = point == null ? kalypsoCRS : point.getCoordinateSystem();
@@ -101,7 +101,7 @@ public class EditStationLocationAction extends Action
       final GM_Point newPoint = GeometryFactory.createGM_Point( newPosTransformed, kalypsoCRS );
 
       /* Set to bean */
-      m_bean.setProperty( Station.PROPERTY_LOCATION, newPoint );
+      m_bean.setProperty( IStation.PROPERTY_LOCATION, newPoint );
     }
     catch( final Exception e )
     {

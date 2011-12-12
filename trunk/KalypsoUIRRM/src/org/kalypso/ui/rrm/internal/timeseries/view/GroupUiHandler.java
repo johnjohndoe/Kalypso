@@ -57,10 +57,14 @@ import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
  */
 public class GroupUiHandler extends AbstractTimeseriesNodeUiHandler
 {
+  static final String UNDEFINED_GROUP_LABEL = "<undefined group>";
   private final String m_group;
 
-  public GroupUiHandler( final String group )
+  private final ITimeseriesTreeModel m_model;
+
+  public GroupUiHandler( final ITimeseriesTreeModel model, final String group )
   {
+    m_model = model;
     m_group = group;
   }
 
@@ -80,7 +84,7 @@ public class GroupUiHandler extends AbstractTimeseriesNodeUiHandler
   public String getTreeLabel( )
   {
     if( StringUtils.isBlank( m_group ) )
-      return "<undefined group>";
+      return UNDEFINED_GROUP_LABEL;
 
     return m_group;
   }
@@ -104,6 +108,9 @@ public class GroupUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMeteorologicalStationAction( m_model, null ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewHydrologicalStationAction( m_model, null ) );
+
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new AddStationAction() );
 
     // TODO: import stations

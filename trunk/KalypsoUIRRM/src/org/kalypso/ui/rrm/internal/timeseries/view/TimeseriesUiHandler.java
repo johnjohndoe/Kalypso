@@ -54,20 +54,20 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  */
 public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
 {
-  private final Timeseries m_timeseries;
+  private final ITimeseries m_timeseries;
 
   private final ITimeseriesTreeModel m_model;
 
-  public TimeseriesUiHandler( final ITimeseriesTreeModel model, final Timeseries timeseries )
+  public TimeseriesUiHandler( final ITimeseriesTreeModel model, final ITimeseries timeseries )
   {
     m_model = model;
     m_timeseries = timeseries;
@@ -108,7 +108,7 @@ public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    final FeatureBean<Timeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
+    final FeatureBean<ITimeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
 
     final Composite timeseriesControl = new TimeseriesComposite( parent, timeseriesBean, binding, false );
 

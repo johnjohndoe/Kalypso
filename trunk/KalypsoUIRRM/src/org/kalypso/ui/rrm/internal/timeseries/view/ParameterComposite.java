@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
  * @author Gernot Belger
@@ -59,9 +59,9 @@ public class ParameterComposite extends Composite
 
   private final IDataBinding m_binding;
 
-  private final Timeseries[] m_timeseries;
+  private final ITimeseries[] m_timeseries;
 
-  public ParameterComposite( final Composite parent, final IDataBinding binding, final String parameterType, final Timeseries[] timeseries )
+  public ParameterComposite( final Composite parent, final IDataBinding binding, final String parameterType, final ITimeseries[] timeseries )
   {
     super( parent, SWT.NONE );
 

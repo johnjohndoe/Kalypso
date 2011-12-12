@@ -76,9 +76,11 @@ public class GroupComposite extends Composite
   {
     final FormToolkit toolkit = m_binding.getToolkit();
 
-    toolkit.createLabel( this, m_group );
+    toolkit.createLabel( this, "Name" );
 
-    final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
+    final String groupName = StringUtils.isBlank( m_group ) ? GroupUiHandler.UNDEFINED_GROUP_LABEL : m_group;
+
+    final Text field = toolkit.createText( this, groupName, SWT.BORDER | SWT.SINGLE );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setEnabled( false );
   }

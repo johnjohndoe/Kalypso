@@ -43,8 +43,8 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class TimeseriesTreeModel implements ITimeseriesTreeModel
 {
-  private final StationCollection m_stations;
+  private final IStationCollection m_stations;
 
   private TimeseriesNode[] m_nodes;
 
@@ -60,7 +60,7 @@ public class TimeseriesTreeModel implements ITimeseriesTreeModel
 
   private final StructuredViewer m_viewer;
 
-  public TimeseriesTreeModel( final StationCollection stations, final CommandableWorkspace workspace, final StructuredViewer viewer )
+  public TimeseriesTreeModel( final IStationCollection stations, final CommandableWorkspace workspace, final StructuredViewer viewer )
   {
     m_stations = stations;
     m_workspace = workspace;
