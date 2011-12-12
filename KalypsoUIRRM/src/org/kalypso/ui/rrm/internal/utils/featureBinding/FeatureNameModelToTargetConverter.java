@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
+package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.databinding.conversion.TypedConverter;
@@ -49,21 +48,22 @@ import org.kalypso.commons.databinding.conversion.TypedConverter;
  * @author Gernot Belger
  */
 @SuppressWarnings("rawtypes")
-public class FeatureNameTargetToModelConverter extends TypedConverter<String, List>
+public class FeatureNameModelToTargetConverter extends TypedConverter<List, String>
 {
-  public FeatureNameTargetToModelConverter( )
+  public FeatureNameModelToTargetConverter( )
   {
-    super( String.class, List.class );
+    super( List.class, String.class );
   }
 
   @Override
-  public List convertTyped( final String fromObject )
+  public String convertTyped( final List fromObject )
   {
-    final List<String> list = new ArrayList<>();
+    if( fromObject == null )
+      return null;
 
-    if( fromObject != null )
-      list.add( fromObject );
+    if( fromObject.isEmpty() )
+      return null;
 
-    return list;
+    return (String) fromObject.get( 0 );
   }
 }

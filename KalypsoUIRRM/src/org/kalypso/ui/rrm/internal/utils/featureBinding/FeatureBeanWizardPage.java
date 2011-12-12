@@ -38,32 +38,43 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
+package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
-import java.util.List;
-
-import org.kalypso.commons.databinding.conversion.TypedConverter;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("rawtypes")
-public class FeatureNameModelToTargetConverter extends TypedConverter<List, String>
+public abstract class FeatureBeanWizardPage extends WizardPage
 {
-  public FeatureNameModelToTargetConverter( )
+  protected FeatureBeanWizardPage( final String pageName )
   {
-    super( List.class, String.class );
+    super( pageName );
+
+    setTitle( "Edit Properties" );
+    setDescription( "Change the properties of the selected element" );
   }
 
   @Override
-  public String convertTyped( final List fromObject )
+  public void createControl( final Composite parent )
   {
-    if( fromObject == null )
-      return null;
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
+    // We do not want the white look and feel in a wizard page
+    toolkit.setBackground( parent.getBackground() );
 
-    if( fromObject.isEmpty() )
-      return null;
+    toolkit.adapt( parent );
 
-    return (String) fromObject.get( 0 );
+    final IDataBinding binding = new DatabindingWizardPage( this, toolkit );
+
+    final Control control = createFeatureBeanControl( parent, binding );
+    setControl( control );
   }
+
+  protected abstract Control createFeatureBeanControl( Composite parent, IDataBinding binding );
 }

@@ -38,39 +38,32 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.featureBinding;
+package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
-import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.core.databinding.observable.Realm;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.property.value.ValueProperty;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.commons.databinding.conversion.TypedConverter;
 
 /**
  * @author Gernot Belger
  */
-public class FeatureBeanValueProperty<F extends Feature> extends ValueProperty
+@SuppressWarnings("rawtypes")
+public class FeatureNameTargetToModelConverter extends TypedConverter<String, List>
 {
-  private final QName m_property;
-
-  private final Class< ? > m_valueType;
-
-  public FeatureBeanValueProperty( final Class< ? > valueType, final QName property )
+  public FeatureNameTargetToModelConverter( )
   {
-    m_valueType = valueType;
-    m_property = property;
+    super( String.class, List.class );
   }
 
   @Override
-  public Object getValueType( )
+  public List convertTyped( final String fromObject )
   {
-    return m_valueType;
-  }
+    final List<String> list = new ArrayList<>();
 
-  @Override
-  public IObservableValue observe( final Realm realm, final Object source )
-  {
-    return new FeatureBeanObservableValue( (FeatureBean< ? >) source, m_property );
+    if( fromObject != null )
+      list.add( fromObject );
+
+    return list;
   }
 }
