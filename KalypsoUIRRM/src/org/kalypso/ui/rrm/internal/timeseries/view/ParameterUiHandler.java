@@ -50,10 +50,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 
 /**
  * @author Gernot Belger
@@ -62,13 +62,13 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
 {
   private final String m_parameterType;
 
-  private final Timeseries[] m_timeseries;
+  private final ITimeseries[] m_timeseries;
 
-  private final Station m_station;
+  private final IStation m_station;
 
   private final ITimeseriesTreeModel m_model;
 
-  public ParameterUiHandler( final ITimeseriesTreeModel model, final Station station, final String parameterType, final Timeseries[] timeseries )
+  public ParameterUiHandler( final ITimeseriesTreeModel model, final IStation station, final String parameterType, final ITimeseries[] timeseries )
   {
     m_model = model;
     m_station = station;

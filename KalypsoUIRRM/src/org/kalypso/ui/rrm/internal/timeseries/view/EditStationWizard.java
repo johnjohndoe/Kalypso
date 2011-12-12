@@ -46,20 +46,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 
 /**
  * @author Gernot Belger
  */
 public class EditStationWizard extends Wizard
 {
-  private final FeatureBean<Station> m_stationBean;
+  private final FeatureBean<IStation> m_stationBean;
 
   private final ITimeseriesTreeModel m_model;
 
-  public EditStationWizard( final ITimeseriesTreeModel model, final Station station )
+  public EditStationWizard( final ITimeseriesTreeModel model, final IStation station )
   {
     m_model = model;
     m_stationBean = new FeatureBean<>( station );
@@ -68,7 +68,7 @@ public class EditStationWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final FeatureBean<Station> stationBean = m_stationBean;
+    final FeatureBean<IStation> stationBean = m_stationBean;
 
     final WizardPage page = new FeatureBeanWizardPage( "feature" ) //$NON-NLS-1$
     {

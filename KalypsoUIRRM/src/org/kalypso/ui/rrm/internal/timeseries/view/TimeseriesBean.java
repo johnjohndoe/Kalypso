@@ -44,15 +44,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesBean extends FeatureBean<Timeseries>
+public class TimeseriesBean extends FeatureBean<ITimeseries>
 {
   private static final Status STATUS_DATA_FILE_MISSING = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Data file missing" );
 
@@ -64,17 +64,17 @@ public class TimeseriesBean extends FeatureBean<Timeseries>
 
   public TimeseriesBean( )
   {
-    super( Timeseries.FEATURE_TIMESERIES );
+    super( ITimeseries.FEATURE_TIMESERIES );
   }
 
-  public TimeseriesBean( final Timeseries timeseries )
+  public TimeseriesBean( final ITimeseries timeseries )
   {
     super( timeseries );
   }
 
   public String getPeriodText( )
   {
-    final Timeseries timeseries = getFeature();
+    final ITimeseries timeseries = getFeature();
     if( timeseries == null )
       return null;
 
@@ -84,7 +84,7 @@ public class TimeseriesBean extends FeatureBean<Timeseries>
 
   public IStatus getDataStatus( )
   {
-    final Timeseries timeseries = getFeature();
+    final ITimeseries timeseries = getFeature();
     if( timeseries == null )
       return STATUS_LINK_NOT_SET;
 

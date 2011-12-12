@@ -54,17 +54,17 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
+public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
 {
-  public TimeseriesComposite( final Composite parent, final FeatureBean<Timeseries> featureBean, final IDataBinding binding, final boolean editable )
+  public TimeseriesComposite( final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean editable )
   {
     super( parent, featureBean, binding, editable );
   }
@@ -75,7 +75,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
     // createPropertyControl( Timeseries.QN_DESCRIPTION );
     // createPropertyControl( Timeseries.QN_NAME );
     createParameterTypeControl();
-    createPropertyControl( Timeseries.PROPERTY_QUALITY );
+    createPropertyControl( ITimeseries.PROPERTY_QUALITY );
 
     createTimestepControl();
 
@@ -98,7 +98,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<Timeseries>
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setEnabled( false );
 
-    final String parameterType = (String) getBean().getProperty( Timeseries.PROPERTY_PARAMETER_TYPE );
+    final String parameterType = (String) getBean().getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String parameterUnit = TimeseriesUtils.getUnit( parameterType );
     final String parameterLabel = String.format( "%s (%s)", parameterName, parameterUnit );

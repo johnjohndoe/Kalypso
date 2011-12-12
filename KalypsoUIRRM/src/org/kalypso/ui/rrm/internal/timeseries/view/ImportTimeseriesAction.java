@@ -47,12 +47,12 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationClasses;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
@@ -60,13 +60,13 @@ import org.kalypso.zml.ui.imports.ImportObservationData;
  */
 public class ImportTimeseriesAction extends Action
 {
-  private final Station m_station;
+  private final IStation m_station;
 
   private final String m_parameterType;
 
   private final ITimeseriesTreeModel m_model;
 
-  public ImportTimeseriesAction( final ITimeseriesTreeModel model, final Station station, final String parameterType )
+  public ImportTimeseriesAction( final ITimeseriesTreeModel model, final IStation station, final String parameterType )
   {
     m_station = station;
     m_parameterType = parameterType;
@@ -86,7 +86,7 @@ public class ImportTimeseriesAction extends Action
     /* Prepare data */
     final ImportObservationData data = prepareData();
 
-    final Timeseries timeseries = showWizard( shell, data );
+    final ITimeseries timeseries = showWizard( shell, data );
 
     // select tree with pseudo node
     final TimeseriesNode pseudoNode = new TimeseriesNode( m_model, null, null, timeseries );
@@ -95,12 +95,12 @@ public class ImportTimeseriesAction extends Action
 
   private ImportObservationData prepareData( )
   {
-    final String[] allowedTypes = StationClasses.findAllowedParameterTypes( m_station );
+    final String[] allowedTypes = StationClassesCatalog.findAllowedParameterTypes( m_station );
 
     return new ImportObservationData( allowedTypes );
   }
 
-  private Timeseries showWizard( final Shell shell, final ImportObservationData data )
+  private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
   {
     final CommandableWorkspace workspace = m_model.getWorkspace();
 

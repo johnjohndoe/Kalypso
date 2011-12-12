@@ -49,8 +49,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.timeseries.binding.StationCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -78,7 +78,7 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
     {
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( MODEL_KEY_STATIONS );
-      final StationCollection input = modelProvider.getModel( MODEL_KEY_STATIONS, StationCollection.class );
+      final IStationCollection input = modelProvider.getModel( MODEL_KEY_STATIONS, IStationCollection.class );
 
       view.setInput( workspace, input );
     }

@@ -50,16 +50,16 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
  * @author Gernot Belger
  */
-public class StationComposite extends FeatureBeanComposite<Station>
+public class StationComposite extends FeatureBeanComposite<IStation>
 {
-  public StationComposite( final Composite parent, final FeatureBean<Station> station, final IDataBinding binding, final boolean editable )
+  public StationComposite( final Composite parent, final FeatureBean<IStation> station, final IDataBinding binding, final boolean editable )
   {
     super( parent, station, binding, editable );
   }
@@ -75,10 +75,10 @@ public class StationComposite extends FeatureBeanComposite<Station>
   @Override
   protected void createContents( )
   {
-    createPropertyControl( Station.QN_DESCRIPTION );
-    createPropertyControl( Station.QN_NAME );
-    createPropertyControl( Station.PROPERTY_GROUP );
-    createPropertyControl( Station.PROPERTY_COMMENT );
+    createPropertyControl( IStation.QN_DESCRIPTION );
+    createPropertyControl( IStation.QN_NAME );
+    createPropertyControl( IStation.PROPERTY_GROUP );
+    createPropertyControl( IStation.PROPERTY_COMMENT );
 
     createLocationControl();
 
@@ -93,9 +93,9 @@ public class StationComposite extends FeatureBeanComposite<Station>
   private void createLocationControl( )
   {
     final FormToolkit toolkit = getToolkit();
-    final FeatureBean<Station> bean = getBean();
+    final FeatureBean<IStation> bean = getBean();
 
-    createPropertyLabel( this, Station.PROPERTY_LOCATION );
+    createPropertyLabel( this, IStation.PROPERTY_LOCATION );
 
     final Composite panel = toolkit.createComposite( this );
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
@@ -104,7 +104,7 @@ public class StationComposite extends FeatureBeanComposite<Station>
     final Text field = createPropertyTextField( panel );
     field.setEnabled( false );
 
-    bindTextField( field, Station.PROPERTY_LOCATION );
+    bindTextField( field, IStation.PROPERTY_LOCATION );
 
     if( isEditable() )
       ActionHyperlink.createHyperlink( toolkit, panel, SWT.PUSH, new EditStationLocationAction( bean ) );
