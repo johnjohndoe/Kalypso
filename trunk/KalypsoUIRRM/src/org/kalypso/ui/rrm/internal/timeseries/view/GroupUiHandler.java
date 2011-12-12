@@ -40,61 +40,73 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardPage;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.command.ICommand;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 
 /**
  * @author Gernot Belger
  */
-public class EditStationWizard extends Wizard
+public class GroupUiHandler extends AbstractTimeseriesNodeUiHandler
 {
-  private final FeatureBean<Station> m_stationBean;
+  private final String m_group;
 
-  private final ITimeseriesTreeModel m_model;
-
-  public EditStationWizard( final ITimeseriesTreeModel model, final Station station )
+  public GroupUiHandler( final String group )
   {
-    m_model = model;
-    m_stationBean = new FeatureBean<>( station );
+    m_group = group;
   }
 
   @Override
-  public void addPages( )
+  public String getTypeLabel( )
   {
-    final FeatureBean<Station> stationBean = m_stationBean;
-
-    final WizardPage page = new FeatureBeanWizardPage( "feature" ) //$NON-NLS-1$
-    {
-      @Override
-      protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
-      {
-        return new StationComposite( parent, stationBean, binding, true );
-      }
-    };
-
-    addPage( page );
+    return "Group";
   }
 
   @Override
-  public boolean performFinish( )
+  public String getIdentifier( )
   {
-    try
-    {
-      final ICommand command = m_stationBean.applyChanges();
-      m_model.postCommand( command );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    return m_group;
+  }
 
-    return true;
+  @Override
+  public String getTreeLabel( )
+  {
+    if( StringUtils.isBlank( m_group ) )
+      return "<undefined group>";
+
+    return m_group;
+  }
+
+  @Override
+  public ImageDescriptor getTreeImage( )
+  {
+    return UIRrmImages.id( DESCRIPTORS.GROUP );
+  }
+
+  @Override
+  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
+  {
+    final Control composite = new GroupComposite( parent, binding, m_group );
+
+    // TODO: edit action for group in toolbar
+
+    return composite;
+  }
+
+  @Override
+  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
+  {
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new AddStationAction() );
+
+    // TODO: import stations
+    // TODO: delete stations
   }
 }

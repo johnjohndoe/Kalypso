@@ -85,6 +85,11 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     createContents();
   }
 
+  protected final boolean isEditable( )
+  {
+    return m_editable;
+  }
+
   protected final FeatureBean<F> getBean( )
   {
     return m_featureBean;
@@ -104,23 +109,49 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected final void createPropertyControl( final QName property )
   {
+    createPropertyLabel( this, property );
+
+    final Text field = createPropertyTextField( this );
+
+    bindTextField( field, property );
+  }
+
+  /**
+   * Refresh the control from the state of the underlying feature.
+   */
+  public void refresh( )
+  {
+    m_featureBean.revert();
+  }
+
+  protected final void createPropertyLabel( final Composite parent, final QName property )
+  {
     final IPropertyType propertyType = m_featureBean.getFeatureType().getProperty( property );
     final String label = AnnotationUtilities.getAnnotation( propertyType.getAnnotation(), null, IAnnotation.ANNO_LABEL );
 
     final FormToolkit toolkit = m_binding.getToolkit();
 
-    toolkit.createLabel( this, label );
+    toolkit.createLabel( parent, label );
+  }
 
+  protected final Text createPropertyTextField( final Composite parent )
+  {
     int style = SWT.BORDER | SWT.SINGLE;
     if( !m_editable )
       style &= SWT.READ_ONLY;
 
-    final Text field = toolkit.createText( this, StringUtils.EMPTY, style );
+    final FormToolkit toolkit = m_binding.getToolkit();
+
+    final Text field = toolkit.createText( parent, StringUtils.EMPTY, style );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setEditable( m_editable );
-
     field.setEnabled( m_editable );
 
+    return field;
+  }
+
+  protected final void bindTextField( final Text field, final QName property )
+  {
     final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
 
@@ -135,13 +166,5 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     // TODO: restrictions!
 
     m_binding.bindValue( binder );
-  }
-
-  /**
-   * Refresh the control from the state of the underlying feature.
-   */
-  public void refresh( )
-  {
-    m_featureBean.revert();
   }
 }

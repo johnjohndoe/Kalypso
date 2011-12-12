@@ -90,9 +90,7 @@ public class TimeseriesManagementView extends ViewPart
 
   public void setInput( final CommandableWorkspace workspace, final StationCollection stations )
   {
-    final TimeseriesTreeContext context = new TimeseriesTreeContext( m_treeViewer, workspace );
-
-    final StationsByStationModel input = new StationsByStationModel( context, stations );
+    final TimeseriesTreeModel input = new TimeseriesTreeModel( stations, workspace, m_treeViewer );
 
     m_treeViewer.setInput( input );
   }

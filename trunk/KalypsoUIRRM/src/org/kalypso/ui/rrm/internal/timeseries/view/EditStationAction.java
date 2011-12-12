@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
@@ -58,9 +60,9 @@ public class EditStationAction extends Action
 
   private final StationComposite m_stationControl;
 
-  private final TimeseriesTreeContext m_context;
+  private final ITimeseriesTreeModel m_context;
 
-  public EditStationAction( final TimeseriesTreeContext context, final Station station, final StationComposite stationControl )
+  public EditStationAction( final ITimeseriesTreeModel context, final Station station, final StationComposite stationControl )
   {
     m_context = context;
     m_station = station;
@@ -77,12 +79,19 @@ public class EditStationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
+    final String oldGroup = m_station.getGroup();
+
     final Wizard wizard = new EditStationWizard( m_context, m_station );
     wizard.setWindowTitle( "Edit Properties" );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
-    dialog.open();
+    if( dialog.open() != Window.OK )
+      return;
 
     m_stationControl.refresh();
+
+    final String newGroup = m_station.getGroup();
+    if( !ObjectUtils.equals( oldGroup, newGroup ) )
+      m_context.refreshTree( m_station );
   }
 }

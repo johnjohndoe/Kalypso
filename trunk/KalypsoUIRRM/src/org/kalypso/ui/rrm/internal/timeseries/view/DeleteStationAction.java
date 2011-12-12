@@ -61,11 +61,11 @@ public class DeleteStationAction extends Action
 {
   private final Station[] m_stations;
 
-  private final TimeseriesTreeContext m_context;
+  private final ITimeseriesTreeModel m_model;
 
-  public DeleteStationAction( final TimeseriesTreeContext context, final Station... station )
+  public DeleteStationAction( final ITimeseriesTreeModel model, final Station... station )
   {
-    m_context = context;
+    m_model = model;
     m_stations = station;
 
     setText( "Delete Station" );
@@ -101,7 +101,7 @@ public class DeleteStationAction extends Action
 
       /* Delete feature */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_stations );
-      m_context.postCommand( deleteCommand );
+      m_model.postCommand( deleteCommand );
     }
     catch( final Exception e )
     {

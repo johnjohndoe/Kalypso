@@ -40,61 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardPage;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.command.ICommand;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanWizardPage;
 
 /**
  * @author Gernot Belger
  */
-public class EditStationWizard extends Wizard
+public class GroupComposite extends Composite
 {
-  private final FeatureBean<Station> m_stationBean;
+  private final IDataBinding m_binding;
 
-  private final ITimeseriesTreeModel m_model;
+  private final String m_group;
 
-  public EditStationWizard( final ITimeseriesTreeModel model, final Station station )
+  public GroupComposite( final Composite parent, final IDataBinding binding, final String group )
   {
-    m_model = model;
-    m_stationBean = new FeatureBean<>( station );
+    super( parent, SWT.NONE );
+
+    m_binding = binding;
+    m_group = group;
+
+    binding.getToolkit().adapt( this );
+
+    GridLayoutFactory.fillDefaults().applyTo( this );
+
+    createContents();
   }
 
-  @Override
-  public void addPages( )
+  private void createContents( )
   {
-    final FeatureBean<Station> stationBean = m_stationBean;
+    final FormToolkit toolkit = m_binding.getToolkit();
 
-    final WizardPage page = new FeatureBeanWizardPage( "feature" ) //$NON-NLS-1$
-    {
-      @Override
-      protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
-      {
-        return new StationComposite( parent, stationBean, binding, true );
-      }
-    };
+    toolkit.createLabel( this, m_group );
 
-    addPage( page );
-  }
-
-  @Override
-  public boolean performFinish( )
-  {
-    try
-    {
-      final ICommand command = m_stationBean.applyChanges();
-      m_model.postCommand( command );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return true;
+    final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
+    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    field.setEnabled( false );
   }
 }

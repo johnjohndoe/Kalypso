@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -49,40 +47,21 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * @author Gernot Belger
  */
-public class TimeseriesTreeContext
+public interface ITimeseriesTreeModel
 {
-  private final StructuredViewer m_viewer;
+  void addModellListener( ModellEventListener modelListener );
 
-  private final CommandableWorkspace m_workspace;
+  void removeModellListener( ModellEventListener modelListener );
 
-  public TimeseriesTreeContext( final StructuredViewer viewer, final CommandableWorkspace workspace )
-  {
-    m_viewer = viewer;
-    m_workspace = workspace;
-  }
+  void postCommand( ICommand command ) throws Exception;
 
-  public void postCommand( final ICommand command ) throws Exception
-  {
-    m_workspace.postCommand( command );
-  }
+  void setSelection( TimeseriesNode... selection );
 
-  public void setSelection( final TimeseriesNode... selection )
-  {
-    m_viewer.setSelection( new StructuredSelection( selection ) );
-  }
+  CommandableWorkspace getWorkspace( );
 
-  public void addModellListener( final ModellEventListener modelListener )
-  {
-    m_workspace.addModellListener( modelListener );
-  }
+  void refreshTree( Object treeDataToSelect );
 
-  public void removeModellListener( final ModellEventListener modelListener )
-  {
-    m_workspace.removeModellListener( modelListener );
-  }
+  TimeseriesNode[] getRootElements( );
 
-  public CommandableWorkspace getWorkspace( )
-  {
-    return m_workspace;
-  }
+  void clear( );
 }

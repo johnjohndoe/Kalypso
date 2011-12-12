@@ -40,9 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.featureBinding.FeatureBeanComposite;
@@ -70,9 +77,11 @@ public class StationComposite extends FeatureBeanComposite<Station>
   {
     createPropertyControl( Station.QN_DESCRIPTION );
     createPropertyControl( Station.QN_NAME );
+    createPropertyControl( Station.PROPERTY_GROUP );
     createPropertyControl( Station.PROPERTY_COMMENT );
 
     createLocationControl();
+
     createMeasurementControl();
     createTimeseriesControl();
 
@@ -83,8 +92,24 @@ public class StationComposite extends FeatureBeanComposite<Station>
 
   private void createLocationControl( )
   {
-    // TODO Auto-generated method stub
+    final FormToolkit toolkit = getToolkit();
+    final FeatureBean<Station> bean = getBean();
 
+    createPropertyLabel( this, Station.PROPERTY_LOCATION );
+
+    final Composite panel = toolkit.createComposite( this );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
+    panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final Text field = createPropertyTextField( panel );
+    field.setEnabled( false );
+
+    bindTextField( field, Station.PROPERTY_LOCATION );
+
+    if( isEditable() )
+      ActionHyperlink.createHyperlink( toolkit, panel, SWT.PUSH, new EditStationLocationAction( bean ) );
+    else
+      toolkit.createLabel( panel, StringUtils.EMPTY );
   }
 
   private void createMeasurementControl( )

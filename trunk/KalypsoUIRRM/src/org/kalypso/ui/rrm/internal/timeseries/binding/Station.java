@@ -44,11 +44,13 @@ import java.net.URISyntaxException;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -62,6 +64,10 @@ public abstract class Station extends Feature_Impl
   public static final QName MEMBER_TIMESERIES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timseriesMember" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_COMMENT = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "comment" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_GROUP = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "group" ); //$NON-NLS-1$
+
+  public static final QName PROPERTY_LOCATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "location" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<Timeseries> m_timeseries = new FeatureBindingCollection<Timeseries>( this, Timeseries.class, MEMBER_TIMESERIES );
 
@@ -80,6 +86,17 @@ public abstract class Station extends Feature_Impl
     return getProperty( PROPERTY_COMMENT, String.class );
   }
 
+  public String getGroup( )
+  {
+    final String group = getProperty( PROPERTY_GROUP, String.class );
+
+    // Treat all blank names as the same, empty group
+    if( StringUtils.isBlank( group ) )
+      return null;
+
+    return group;
+  }
+
   public String getTimeseriesFoldername( )
   {
     try
@@ -93,5 +110,10 @@ public abstract class Station extends Feature_Impl
       e.printStackTrace();
       throw new RuntimeException( e );
     }
+  }
+
+  public GM_Point getStationLocation( )
+  {
+    return getProperty( PROPERTY_LOCATION, GM_Point.class );
   }
 }

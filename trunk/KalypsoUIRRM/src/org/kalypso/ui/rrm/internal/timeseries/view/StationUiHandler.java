@@ -66,11 +66,11 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
 {
   private final Station m_station;
 
-  private final TimeseriesTreeContext m_context;
+  private final ITimeseriesTreeModel m_model;
 
-  public StationUiHandler( final TimeseriesTreeContext context, final Station station )
+  public StationUiHandler( final ITimeseriesTreeModel model, final Station station )
   {
-    m_context = context;
+    m_model = model;
     m_station = station;
   }
 
@@ -115,7 +115,7 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
 
     final StationComposite stationControl = new StationComposite( parent, bean, binding, false );
 
-    sectionToolbar.add( new EditStationAction( m_context, m_station, stationControl ) );
+    sectionToolbar.add( new EditStationAction( m_model, m_station, stationControl ) );
 
     return stationControl;
   }
@@ -123,18 +123,18 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_context, m_station, null ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_model, m_station, null ) );
 
     /* Delete timeseries */
     final IFeatureBindingCollection<Timeseries> timeseries = m_station.getTimeseries();
     final Timeseries[] allTimeseries = timeseries.toArray( new Timeseries[timeseries.size()] );
 
     final String deleteMessage = String.format( "Delete all timeseries from of station '%s'?", getTreeLabel() );
-    final IAction deleteAction = new DeleteTimeseriesAction( m_context, deleteMessage, allTimeseries );
+    final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, allTimeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
 
     /* Delete station */
-    final IAction deleteStationAction = new DeleteStationAction( m_context, m_station );
+    final IAction deleteStationAction = new DeleteStationAction( m_model, m_station );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteStationAction );
   }
 }
