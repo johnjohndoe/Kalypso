@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * The catchment model contains generators for timeseries generation for catchments.
- *
+ * 
  * @author Holger Albert
  */
 public interface ICatchmentModel extends Feature
@@ -57,13 +57,12 @@ public interface ICatchmentModel extends Feature
   /**
    * The qname of the generator member.
    */
-  static QName MEMBER_CATCHMENT_GENERATOR = new QName( RcmConstants.NS_CM, "catchmentGeneratorMember" );
+  public static QName MEMBER_CATCHMENT_GENERATOR = new QName( RcmConstants.NS_CM, "catchmentGeneratorMember" );
 
   /**
    * This function returns all catchment generators.
-   *
+   * 
    * @return All catchment generators.
    */
-  IFeatureBindingCollection<ICatchmentGenerator> getCatchmentGenerators( );
-// ICatchmentGenerator[] getCatchmentGenerators( );
+  public IFeatureBindingCollection<ICatchmentGenerator> getCatchmentGenerators( );
 }

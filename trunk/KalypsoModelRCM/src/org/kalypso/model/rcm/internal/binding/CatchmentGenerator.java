@@ -43,8 +43,6 @@ package org.kalypso.model.rcm.internal.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,7 +51,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.rcm.RcmConstants;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ICatchmentGenerator;
@@ -74,26 +71,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class CatchmentGenerator extends AbstractRainfallGenerator implements ICatchmentGenerator
 {
-  /**
-   * The qname of the area name property.
-   */
-  public static final QName QNAME_AREA_NAME_PROPERTY = new QName( RcmConstants.NS_CM, "areaNameProperty" );
-
-  /**
-   * The qname of the area property.
-   */
-  public static final QName QNAME_AREA_PROPERTY = new QName( RcmConstants.NS_CM, "areaProperty" );
-
-  /**
-   * The qname of the catchment member.
-   */
-  public static final QName QNAME_CATCHMENT_MEMBER = new QName( RcmConstants.NS_CM, "catchmentMember" );
-
-  /**
-   * The qname of the catchment.
-   */
-  public static final QName QNAME_CATCHMENT = new QName( RcmConstants.NS_CM, "Catchment" );
-
   /**
    * The constructor.
    * 
@@ -222,7 +199,7 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
   @Override
   public String getAreaNameProperty( )
   {
-    return getProperty( QNAME_AREA_NAME_PROPERTY, String.class );
+    return getProperty( PROPERTY_AREA_NAME, String.class );
   }
 
   /**
@@ -231,7 +208,7 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
   @Override
   public String getAreaProperty( )
   {
-    return getProperty( QNAME_AREA_PROPERTY, String.class );
+    return getProperty( PROPERTY_AREA, String.class );
   }
 
   /**
@@ -244,7 +221,7 @@ public class CatchmentGenerator extends AbstractRainfallGenerator implements ICa
     final List<Catchment> results = new ArrayList<Catchment>();
 
     /* Get all catchments. */
-    final FeatureList catchments = (FeatureList) getProperty( QNAME_CATCHMENT_MEMBER );
+    final FeatureList catchments = (FeatureList) getProperty( MEMBER_CATCHMENT );
     for( int i = 0; i < catchments.size(); i++ )
       results.add( (Catchment) catchments.get( i ) );
 

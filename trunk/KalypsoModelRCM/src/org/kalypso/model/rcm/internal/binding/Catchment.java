@@ -43,11 +43,8 @@ package org.kalypso.model.rcm.internal.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.rcm.RcmConstants;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypsodeegree.model.feature.Feature;
@@ -63,21 +60,6 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class Catchment extends Feature_Impl implements ICatchment
 {
-  /**
-   * The qname of the area link.
-   */
-  public static final QName QNAME_AREA_LINK = new QName( RcmConstants.NS_CM, "areaLink" );
-
-  /**
-   * The qname of the factorized timeseries member.
-   */
-  public static final QName QNAME_FACTORIZED_TIMESERIES_MEMBER = new QName( RcmConstants.NS_CM, "factorizedTimeseriesMember" );
-
-  /**
-   * The qname of the factorized timeseries.
-   */
-  public static final QName QNAME_FACTORIZED_TIMESERIES = new QName( RcmConstants.NS_CM, "FactorizedTimeseries" );
-
   /**
    * The constructor.
    * 
@@ -99,7 +81,7 @@ public class Catchment extends Feature_Impl implements ICatchment
   public Feature getAreaLink( )
   {
     /* The xlinked feature. */
-    final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) getProperty( QNAME_AREA_LINK );
+    final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) getProperty( PROPERTY_AREA_LINK );
 
     /* Resolve the feature. */
     return FeatureHelper.resolveLinkedFeature( null, xlink );
@@ -115,7 +97,7 @@ public class Catchment extends Feature_Impl implements ICatchment
     final List<FactorizedTimeseries> results = new ArrayList<FactorizedTimeseries>();
 
     /* Get all factorized timeseries. */
-    final FeatureList factorizedTimeseries = (FeatureList) getProperty( QNAME_FACTORIZED_TIMESERIES_MEMBER );
+    final FeatureList factorizedTimeseries = (FeatureList) getProperty( MEMBER_FACTORIZED_TIMESERIES );
     for( int i = 0; i < factorizedTimeseries.size(); i++ )
       results.add( (FactorizedTimeseries) factorizedTimeseries.get( i ) );
 

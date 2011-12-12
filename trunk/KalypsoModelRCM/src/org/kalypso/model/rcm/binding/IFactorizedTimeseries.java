@@ -54,26 +54,31 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface IFactorizedTimeseries extends Feature
 {
   /**
+   * The qname of the factorized timeseries.
+   */
+  public static QName FEATURE_FACTORIZED_TIMESERIES = new QName( RcmConstants.NS_CM, "FactorizedTimeseries" ); //$NON-NLS-1$
+
+  /**
    * The qname of the factor.
    */
-  static QName PROPERTY_FACTOR = new QName( RcmConstants.NS_CM, "factor" ); //$NON-NLS-1$
+  public static QName PROPERTY_FACTOR = new QName( RcmConstants.NS_CM, "factor" ); //$NON-NLS-1$
 
   /**
    * The qname of the timeseries link.
    */
-  static QName PROPERTY_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" ); //$NON-NLS-1$
+  public static QName PROPERTY_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" ); //$NON-NLS-1$
 
   /**
    * This function returns the factor.
    * 
    * @return The factor.
    */
-  Double getFactor( );
+  public Double getFactor( );
 
   /**
    * This function returns the timeseries link.
    * 
    * @return The timeseries link.
    */
-  ZmlLink getTimeseriesLink( );
+  public ZmlLink getTimeseriesLink( );
 }

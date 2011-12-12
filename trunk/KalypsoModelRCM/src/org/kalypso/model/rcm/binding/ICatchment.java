@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.rcm.RcmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -49,6 +52,21 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ICatchment extends Feature
 {
+  /**
+   * The qname of the catchment.
+   */
+  public static final QName FEATURE_CATCHMENT = new QName( RcmConstants.NS_CM, "Catchment" );
+
+  /**
+   * The qname of the area link.
+   */
+  public static final QName PROPERTY_AREA_LINK = new QName( RcmConstants.NS_CM, "areaLink" );
+
+  /**
+   * The qname of the factorized timeseries member.
+   */
+  public static final QName MEMBER_FACTORIZED_TIMESERIES = new QName( RcmConstants.NS_CM, "factorizedTimeseriesMember" );
+
   /**
    * This function returns the area link.
    * 

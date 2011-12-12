@@ -46,7 +46,7 @@ import org.kalypso.model.rcm.RcmConstants;
 
 /**
  * The catchment generator.
- *
+ * 
  * @author Holger Albert
  */
 public interface ICatchmentGenerator extends IRainfallGenerator
@@ -54,25 +54,40 @@ public interface ICatchmentGenerator extends IRainfallGenerator
   /**
    * The qname of the catchment generator.
    */
-  static QName FEATURE_CATCHMENT_GENERATOR = new QName( RcmConstants.NS_CM, "CatchmentGenerator" );
+  public static QName FEATURE_CATCHMENT_GENERATOR = new QName( RcmConstants.NS_CM, "CatchmentGenerator" );
+
+  /**
+   * The qname of the area name property.
+   */
+  public static final QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" );
+
+  /**
+   * The qname of the area property.
+   */
+  public static final QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" );
+
+  /**
+   * The qname of the catchment member.
+   */
+  public static final QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" );
 
   /**
    * This function returns the area name property.
-   *
+   * 
    * @return The area name property.
    */
   public abstract String getAreaNameProperty( );
 
   /**
    * This function returns the area property.
-   *
+   * 
    * @return The area property.
    */
   public abstract String getAreaProperty( );
 
   /**
    * This function returns all catchments.
-   *
+   * 
    * @return All catchments.
    */
   public abstract ICatchment[] getCatchments( );
