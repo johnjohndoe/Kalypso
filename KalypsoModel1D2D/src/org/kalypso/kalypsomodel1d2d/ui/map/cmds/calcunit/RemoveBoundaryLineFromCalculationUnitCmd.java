@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings( { "hiding", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings({ "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
 public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
 
@@ -161,7 +161,7 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
 
     GMLWorkspace workspace = calUnitFeature.getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
-                                                                                                // workspace,
+                                                                                               // workspace,
     model1d2dFeature,// Feature parentFeature,
     features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
     FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType

@@ -68,7 +68,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
 {
   
   private IObservation<TupleResult> m_observation;
-  
+
   private BOUNDARY_TYPE m_boundType = null;
 
   public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" ); //$NON-NLS-1$
@@ -103,7 +103,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) ); //$NON-NLS-1$
       setHasDirection( true );
     }
-    else 
+    else
     {
       setProperty( QNAME_P_DIRECTION, null );
       setProperty( QNAME_P_HASDIRECTION, null );
@@ -116,18 +116,21 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     else
       setIsAbsolute( null );
 
-    final String[] componentUrns; 
-    if( valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG ) ){
+    final String[] componentUrns;
+    if( valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG ) )
+    {
       m_boundType = BOUNDARY_TYPE.WavesBoundary;
-      componentUrns = new String[] { domainComponentUrn, valueComponentUrn, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DIR, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DD };
+      componentUrns = new String[] { domainComponentUrn, valueComponentUrn, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_PER, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DIR,
+          Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_DD };
       setProperty( QNAME_P_DIRECTION, null );
       setProperty( QNAME_P_HASDIRECTION, null );
     }
-    else{
+    else
+    {
       m_boundType = BOUNDARY_TYPE.HydroBoundary;
       componentUrns = new String[] { domainComponentUrn, valueComponentUrn };
     }
-    
+
     final IComponent[] components = new IComponent[componentUrns.length];
 
     for( int i = 0; i < components.length; i++ )
@@ -135,10 +138,10 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
 
-    //removed because of double declaration of components in all boundary conditions.
-//    final TupleResult result = obs.getResult();
-//    for( final IComponent component : components )
-//      result.addComponent( component );
+    // removed because of double declaration of components in all boundary conditions.
+    // final TupleResult result = obs.getResult();
+    // for( final IComponent component : components )
+    // result.addComponent( component );
 
     return obs;
   }
@@ -175,10 +178,11 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     final Object property = feature.getProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND );
     if( property instanceof Double )
     {
-//      return ((Double) property).doubleValue();
+      // return ((Double) property).doubleValue();
       return "" + ((Double) property).doubleValue(); //$NON-NLS-1$
     }
-    else if( property instanceof String ){
+    else if( property instanceof String )
+    {
       double parseQuietDouble = NumberUtils.parseQuietDouble( (String) property );
       if( !Double.isNaN( parseQuietDouble ) )
       {
@@ -200,15 +204,15 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public void setStationaryCondition( final String statCond )
   {
-//    Double dValue;
-//    if( statCond == null || "".equals( statCond ) )
-//    {
-//      dValue = null;
-//    }
-//    else 
-//    {   
-//      dValue = Double.valueOf( statCond );
-//    }
+    // Double dValue;
+    // if( statCond == null || "".equals( statCond ) )
+    // {
+    // dValue = null;
+    // }
+    // else
+    // {
+    // dValue = Double.valueOf( statCond );
+    // }
     final Feature feature = this;
     feature.setProperty( BoundaryCondition.OP1D2D_PROP_STATIONARY_COND, statCond.trim() );
   }
@@ -225,7 +229,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setParentElement(org.kalypsodeegree.model.feature.binding.Feature)
    */
-  @SuppressWarnings("unchecked")
   public void setParentElement( final Feature parentElement )
   {
     if( parentElement == null )
@@ -369,16 +372,18 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   @Override
   public BOUNDARY_TYPE getBoundaryType( )
   {
-    if( m_boundType == null ){
+    if( m_boundType == null )
+    {
       final IObservation<TupleResult> obs = getObservation();
       final TupleResult obsResult = obs.getResult();
       final IComponent abscissaComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
       final IComponent ordinateComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
-      if( getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) && abscissaComponent != null
-          && ordinateComponent != null ){
+      if( getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) && abscissaComponent != null && ordinateComponent != null )
+      {
         m_boundType = BOUNDARY_TYPE.WavesBoundary;
       }
-      else{
+      else
+      {
         m_boundType = BOUNDARY_TYPE.HydroBoundary;
       }
     }

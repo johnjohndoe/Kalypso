@@ -56,10 +56,10 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * Composite command used to change the discretisation command. This composite takes the responsibility to notify the
  * commandable workspace about the change introduced by its sub command
- *
- *
+ * 
+ * 
  * @author Patrice Congo
- *
+ * 
  */
 public class ChangeDiscretiationModelCommand implements ICommand
 {
@@ -113,7 +113,6 @@ public class ChangeDiscretiationModelCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
     final List<Feature> changedFeatures = new ArrayList<Feature>();

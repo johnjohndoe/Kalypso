@@ -279,7 +279,6 @@ public class IterationComposite extends Composite
     layout();
   }
 
-  @SuppressWarnings("unchecked")
   protected void updateControl( final IKalypsoSimulationRunnerComposite calculation )
   {
     final IIterationInfo iterationInfo = calculation.getIterationInfo();

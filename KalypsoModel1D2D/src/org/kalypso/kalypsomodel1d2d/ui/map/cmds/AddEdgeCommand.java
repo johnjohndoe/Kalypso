@@ -60,7 +60,6 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
 
   private final IFEDiscretisationModel1d2d model;
 
-  @SuppressWarnings("unchecked")
   private IFE1D2DEdge addedEdge;
 
   public AddEdgeCommand( IFEDiscretisationModel1d2d model, AddNodeCommand node1Command, AddNodeCommand node2Command )
@@ -76,7 +75,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -152,7 +151,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 128 );
-    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.1") ); //$NON-NLS-1$
+    buf.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.1" ) ); //$NON-NLS-1$
     buf.append( node1Command );
     buf.append( node2Command );
     buf.append( ']' );

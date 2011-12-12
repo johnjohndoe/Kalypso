@@ -115,7 +115,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private PointSnapper m_pointSnapper;
 
-  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
 
   private boolean m_snappingActive;
@@ -180,7 +179,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -235,7 +233,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     super.leftPressed( p );
   }
 
-  @SuppressWarnings("unchecked")
   private void collectFlowrelationsInformation( )
   {
     final IFE1D2DNode startNode = m_editor.getStartNode();
@@ -255,7 +252,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings( { "unchecked" })
+  @SuppressWarnings({})
   private void setNewPositionsOfFlowrelations( )
   {
 
@@ -362,7 +359,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {

@@ -126,7 +126,6 @@ public class GeometryRecalculator
     }
   }
 
-  @SuppressWarnings("unchecked")
   private void addToNodes( final IFE1D2DNode node )
   {
     final Feature feature = node;

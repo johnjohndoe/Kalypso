@@ -109,6 +109,7 @@ public class NodeResultHelper
   public static final String NODE_TYPE = "Node"; //$NON-NLS-1$
 
   private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<String, Map<String, Map<String, Object>>>();
+
   private static Map<String, Map<String, Object>> m_stepStyleSettings = new HashMap<String, Map<String, Object>>();
 
   public static final String[] NodeStyleTypes = new String[] { VELO_TYPE, WATERLEVEL_TYPE, DEPTH_TYPE, WAVE_HSIG_TYPE, WAVE_PERIOD_TYPE, WAVE_DIRECTION_TYPE };
@@ -354,7 +355,6 @@ public class NodeResultHelper
     return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
-  @SuppressWarnings("unchecked")
   public static GM_Point[] getLinePoints( final IContinuityLine2D continuityLine2D )
   {
     final List<IFE1D2DNode> nodes = continuityLine2D.getNodes();
@@ -373,7 +373,8 @@ public class NodeResultHelper
     if( mapStep != null )
     {
       Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
-      if( mapStyle == null ){
+      if( mapStyle == null )
+      {
         mapStyle = createMapStyle();
         mapStep.put( styleType.toLowerCase(), mapStyle );
       }
