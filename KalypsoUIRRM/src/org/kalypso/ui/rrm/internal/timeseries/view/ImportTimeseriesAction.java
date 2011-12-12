@@ -41,10 +41,12 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -108,7 +110,12 @@ public class ImportTimeseriesAction extends Action
 
     final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( workspace, m_station, data, bean );
 
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( null, TimeseriesImportWizard.class.getName() );
+    data.init( settings );
+
     final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean );
+
+    wizard.setDialogSettings( settings );
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );

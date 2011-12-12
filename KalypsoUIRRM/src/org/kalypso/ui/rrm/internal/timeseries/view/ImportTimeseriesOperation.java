@@ -51,6 +51,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -74,6 +75,7 @@ import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Station;
 import org.kalypso.ui.rrm.internal.timeseries.binding.Timeseries;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
@@ -100,6 +102,18 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     m_bean = bean;
   }
 
+  /**
+   * Updates some of the bean data before the execute method is called in another thread.<br/>
+   * This is needed, because the bean stuff is not allowed to be called outside the swt thread.
+   */
+  void updateDataAfterFinish( )
+  {
+    m_bean.setProperty( Timeseries.PROPERTY_PARAMETER_TYPE, m_data.getParameterType() );
+
+    // TODO Auto-generated method stub
+
+  }
+
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
@@ -107,9 +121,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
     final Period timestep = findTimestep( observation );
 
-    m_timeseries = createTimeseries( timestep );
+    final IFile targetFile = createDataFile( m_bean, timestep );
 
-    final IFile targetFile = createDataFile( m_timeseries );
+    m_timeseries = createTimeseries( timestep, targetFile );
 
     updateMetadata( observation, m_timeseries );
 
@@ -139,12 +153,11 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     MetadataHelper.setTimestep( metadataList, timeseries.getTimestep() );
   }
 
-  private Timeseries createTimeseries( final Period timestep ) throws CoreException
+  private Timeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
   {
     try
     {
-      /* Prepare bean */
-      m_bean.setProperty( Timeseries.PROPERTY_PARAMETER_TYPE, m_data.getParameterType() );
+      final IPath relativeTargetPath = buildTargetPath( targetFile );
 
       /* Create timeseries feature */
       final IRelationType parentRelation = (IRelationType) m_station.getFeatureType().getProperty( Station.MEMBER_TIMESERIES );
@@ -158,9 +171,13 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
         throw new CoreException( status );
       }
 
+      final TimeseriesLinkType dataLink = new TimeseriesLinkType();
+      dataLink.setHref( relativeTargetPath.toPortableString() );
+
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
       properties.put( Timeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
-      properties.put( Timeseries.PROPERTY_TIMESTEP_FIELD, timestepField.getField() );
+      properties.put( Timeseries.PROPERTY_TIMESTEP_FIELD, timestepField.name() );
+      properties.put( Timeseries.PROPERTY_DATA, dataLink );
 
       final AddFeatureCommand command = new AddFeatureCommand( m_workspace, Timeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
 
@@ -176,10 +193,25 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
+  private IPath buildTargetPath( final IFile targetFile )
+  {
+    final IProject project = targetFile.getProject();
+
+    final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
+    final IPath timeseriesFolderPath = timeseriesFolder.getFullPath();
+
+    final IPath targetFilePath = targetFile.getFullPath();
+
+    final IPath relativeTargetPath = targetFilePath.makeRelativeTo( timeseriesFolderPath );
+
+    return relativeTargetPath;
+  }
+
   private void writeResult( final IFile targetFile, final IObservation newObservation ) throws CoreException
   {
     try
     {
+      targetFile.getLocation().toFile().getParentFile().mkdirs();
       ZmlFactory.writeToFile( newObservation, targetFile );
     }
     catch( final Exception e )
@@ -210,11 +242,10 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IFile createDataFile( final Timeseries timeseries ) throws CoreException
+  private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep ) throws CoreException
   {
-    final Object parameterType = timeseries.getParameterType();
-    final Object quality = timeseries.getQuality();
-    final Period timestep = timeseries.getTimestep();
+    final Object parameterType = timeseries.getProperty( Timeseries.PROPERTY_PARAMETER_TYPE );
+    final Object quality = timeseries.getProperty( Timeseries.PROPERTY_QUALITY );
 
     final String periodText = PeriodUtils.formatDefault( timestep );
 
