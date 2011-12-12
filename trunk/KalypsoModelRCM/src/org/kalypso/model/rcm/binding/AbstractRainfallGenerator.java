@@ -88,7 +88,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   @Override
   public String[] getModels( )
   {
-    String property = getProperty( PROPERTY_MODEL, String.class );
+    final String property = getProperty( PROPERTY_MODEL, String.class );
     if( property == null || property.length() == 0 )
       return new String[] {};
 
