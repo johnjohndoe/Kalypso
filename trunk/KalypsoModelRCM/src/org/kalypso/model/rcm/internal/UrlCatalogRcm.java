@@ -66,7 +66,7 @@ public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
       e.printStackTrace();
     }
 
-    catalog.put( NS_CM, UrlCatalogRcm.class.getResource( "schema/catchmentModel.xsd" ) );
+    catalog.put( NS_CM, UrlCatalogRcm.class.getResource( "platform:/plugin/org.kalypso.model.rcm/etc/schema/catchmentModel.xsd" ) );
     prefixes.put( NS_CM, "cm" );
   }
 }
