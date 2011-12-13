@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -49,9 +48,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.timeseries.view.ParameterComposite;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -59,22 +57,16 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 /**
  * @author Gernot Belger
  */
-public class ParameterUiHandler extends AbstractTreeNodeUiHandler
+public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final String m_parameterType;
-
-  private final ITimeseries[] m_timeseries;
-
-  private final IStation m_station;
-
   private final ITreeNodeModel m_model;
 
-  public ParameterUiHandler( final ITreeNodeModel model, final IStation station, final String parameterType, final ITimeseries[] timeseries )
+  private final String m_parameterType;
+
+  public ParameterGeneratorUiHandler( final ITreeNodeModel model, final String parameterType )
   {
     m_model = model;
-    m_station = station;
     m_parameterType = parameterType;
-    m_timeseries = timeseries;
   }
 
   @Override
@@ -105,12 +97,9 @@ public class ParameterUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_model, m_station, m_parameterType ) );
+    // TODO add generator
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, m_parameterType ) );
 
-    /* Delete timeseries */
-    final String stationLabel = m_station.getDescription();
-    final String deleteMessage = String.format( "Delete all timeseries from parameter '%s' of station '%s'?", getTreeLabel(), stationLabel );
-    final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
+    // TODO remove generators
   }
 }

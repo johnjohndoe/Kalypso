@@ -49,26 +49,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView;
 
 /**
  * @author Gernot Belger
  */
 public class TreePropertiesView extends ViewPart
 {
-  final static String ID = "org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"; //$NON-NLS-1$
+  public final static String ID = "org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"; //$NON-NLS-1$
 
   private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
   {
@@ -98,30 +91,11 @@ public class TreePropertiesView extends ViewPart
     GridLayoutFactory.fillDefaults().applyTo( body );
 
     m_binding = new DatabindingForm( m_form, m_toolkit );
-
-    hookSelection();
   }
 
-  void hookSelection( )
+  public void hookSelection( final ISelectionProvider provider )
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( workbench.isClosing() )
-      return;
-
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = window.getActivePage();
-    if( page == null )
-      return;
-
-    final IViewPart managementView = page.findView( TimeseriesManagementView.ID );
-    if( managementView == null )
-      return;
-
-    final ISelectionProvider selectionProvider = managementView.getViewSite().getSelectionProvider();
-    if( selectionProvider == null )
-      return;
-
-    selectionProvider.addSelectionChangedListener( m_selectionListener );
+    provider.addSelectionChangedListener( m_selectionListener );
 
     setNode( null );
   }
@@ -184,11 +158,5 @@ public class TreePropertiesView extends ViewPart
       return (TreeNode) firstElement;
 
     return null;
-  }
-
-  protected void handlePartOpened( final IWorkbenchPartReference partRef )
-  {
-    if( TimeseriesManagementView.ID.equals( partRef.getId() ) )
-      hookSelection();
   }
 }

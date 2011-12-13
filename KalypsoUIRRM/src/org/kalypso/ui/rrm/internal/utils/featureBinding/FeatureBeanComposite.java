@@ -50,6 +50,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
@@ -83,6 +84,11 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     super.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     createContents();
+  }
+
+  @Override
+  public final void setLayout( final Layout layout )
+  {
   }
 
   protected final boolean isEditable( )

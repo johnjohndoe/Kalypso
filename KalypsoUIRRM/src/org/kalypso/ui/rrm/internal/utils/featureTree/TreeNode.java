@@ -60,6 +60,11 @@ public class TreeNode
 
   private final ITreeNodeModel m_model;
 
+  public TreeNode( final TreeNode parent, final ITreeNodeUiHandler uiHandler, final Object treeData )
+  {
+    this( parent.getModel(), parent, uiHandler, treeData );
+  }
+
   public TreeNode( final ITreeNodeModel model, final TreeNode parent, final ITreeNodeUiHandler uiHandler, final Object treeData )
   {
     m_model = model;

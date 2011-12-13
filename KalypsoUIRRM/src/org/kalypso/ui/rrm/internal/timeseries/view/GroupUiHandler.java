@@ -107,8 +107,6 @@ public class GroupUiHandler extends AbstractTreeNodeUiHandler
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMeteorologicalStationAction( m_model, m_group ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewHydrologicalStationAction( m_model, m_group ) );
 
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new AddStationAction() );
-
     // TODO: import stations
     // TODO: delete stations
   }

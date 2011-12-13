@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,28 +53,26 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 
 /**
- * FIXME: do not allow to add station with same name/reference-code
- *
  * @author Gernot Belger
  */
-public class NewStationWizard extends Wizard
+// FIXME: delete
+public class NewGeneratorLinearSumWizard extends Wizard
 {
-  private final FeatureBean<IStation> m_bean;
-
   private final CommandableWorkspace m_workspace;
 
-  private IStation m_newStation;
+  private final FeatureBean<ILinearSumGenerator> m_bean;
 
-  public NewStationWizard( final CommandableWorkspace workspace, final FeatureBean<IStation> bean )
+  public NewGeneratorLinearSumWizard( final CommandableWorkspace workspace, final FeatureBean<ILinearSumGenerator> bean )
   {
     m_workspace = workspace;
     m_bean = bean;
@@ -83,14 +81,16 @@ public class NewStationWizard extends Wizard
   @Override
   public void addPages( )
   {
-    final FeatureBean<IStation> bean = m_bean;
+    final FeatureBean<ILinearSumGenerator> bean = m_bean;
+
+    final String[] allowedParameterTypes = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE, ITimeseriesConstants.TYPE_EVAPORATION };
 
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
     {
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new StationComposite( parent, bean, binding, true );
+        return new LinearSumNewComposite( parent, bean, binding, allowedParameterTypes );
       }
     } );
   }
@@ -100,32 +100,28 @@ public class NewStationWizard extends Wizard
   {
     try
     {
+
+      // FIXME: copy catchments from model.gml
+
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
 
-      final IStationCollection collection = (IStationCollection) m_workspace.getRootFeature();
-      final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( IStationCollection.MEMBER_STATION );
+      final ICatchmentModel collection = (ICatchmentModel) m_workspace.getRootFeature();
+      final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
 
       final QName type = m_bean.getFeatureType().getQName();
 
       final AddFeatureCommand command = new AddFeatureCommand( m_workspace, type, collection, parentRelation, -1, properties, null, -1 );
 
       m_workspace.postCommand( command );
-
-      m_newStation = (IStation) command.getNewFeature();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to create new station", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to create new generator", e ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getWindowTitle() );
       return false;
     }
 
     return true;
-  }
-
-  public IStation getNewStation( )
-  {
-    return m_newStation;
   }
 }

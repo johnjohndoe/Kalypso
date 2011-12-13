@@ -45,7 +45,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -62,14 +61,6 @@ public class StationComposite extends FeatureBeanComposite<IStation>
   public StationComposite( final Composite parent, final FeatureBean<IStation> station, final IDataBinding binding, final boolean editable )
   {
     super( parent, station, binding, editable );
-  }
-
-  /**
-   * Overridden in order to prohibit change of layout. Does nothing.
-   */
-  @Override
-  public void setLayout( final Layout layout )
-  {
   }
 
   @Override

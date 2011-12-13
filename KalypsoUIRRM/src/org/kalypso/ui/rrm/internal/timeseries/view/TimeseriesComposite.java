@@ -55,7 +55,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
@@ -90,18 +90,13 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
 
   private void createParameterTypeControl( )
   {
-    final FormToolkit toolkit = getToolkit();
+    createPropertyLabel( this, ITimeseries.PROPERTY_PARAMETER_TYPE );
 
-    toolkit.createLabel( this, "Parameter Type" );
-
-    final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setEnabled( false );
+    final Text field = createPropertyTextField( this );
 
     final String parameterType = (String) getBean().getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
-    final String parameterName = TimeseriesUtils.getName( parameterType );
-    final String parameterUnit = TimeseriesUtils.getUnit( parameterType );
-    final String parameterLabel = String.format( "%s (%s)", parameterName, parameterUnit );
+    final String parameterLabel = ParameterTypeUtils.formatParameterType( parameterType );
+
     field.setText( parameterLabel );
   }
 
