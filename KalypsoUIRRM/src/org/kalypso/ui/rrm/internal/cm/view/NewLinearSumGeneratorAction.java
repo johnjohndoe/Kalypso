@@ -40,14 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -74,7 +84,7 @@ public class NewLinearSumGeneratorAction extends Action
 
     final CommandableWorkspace workspace = m_model.getWorkspace();
 
-    final LinearSumBean bean = new LinearSumBean();
+    final LinearSumBean bean = createEmptyBean();
     bean.setProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE, m_parameterType );
 
     final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, bean );
@@ -90,5 +100,42 @@ public class NewLinearSumGeneratorAction extends Action
 // /* Refresh tree */
 // final ILinearSumGenerator newGenerator = wizard.getNewGenerator();
 // m_model.refreshTree( newGenerator );
+  }
+
+  /**
+   * Create an empty bean with all catchments from the model gml.
+   */
+  private LinearSumBean createEmptyBean( )
+  {
+    try
+    {
+      final LinearSumBean bean = new LinearSumBean();
+
+      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
+      final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL, NaModell.class );
+      final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
+
+      final Collection<CatchmentBean> catchmentBeans = new ArrayList<>( catchments.size() );
+
+      for( final Catchment catchment : catchments )
+      {
+        final CatchmentBean catchmentBean = new CatchmentBean();
+
+        catchmentBean.setCatchmentRef( catchment.getId() );
+
+        catchmentBeans.add( catchmentBean );
+      }
+
+      final CatchmentBean[] beans = catchmentBeans.toArray( new CatchmentBean[catchmentBeans.size()] );
+      bean.setCatchments( beans );
+
+      return bean;
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      // If this happens, it's a bug!
+      return null;
+    }
   }
 }

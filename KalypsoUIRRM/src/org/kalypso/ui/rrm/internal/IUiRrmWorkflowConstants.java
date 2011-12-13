@@ -47,6 +47,9 @@ package org.kalypso.ui.rrm.internal;
  */
 public interface IUiRrmWorkflowConstants
 {
+  /** THE na model i.e. modell.gml */
+  String SCENARIO_DATA_MODEL = "model"; //$NON-NLS-1$
+
   String SCENARIO_DATA_STATIONS = "stations"; //$NON-NLS-1$
 
   String SCENARIO_DATA_CATCHMENT_MODELS = "catchmentModels"; //$NON-NLS-1$

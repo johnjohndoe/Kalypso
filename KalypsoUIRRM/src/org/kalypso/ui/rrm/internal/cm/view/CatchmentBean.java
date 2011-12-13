@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -53,7 +54,9 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class CatchmentBean extends FeatureBean<ICatchment>
 {
-  private FactorizedTimeseriesBean[] m_timeseries;
+  private final FactorizedTimeseriesBean[] m_timeseries;
+
+  private String m_catchmentRef;
 
   public CatchmentBean( )
   {
@@ -67,6 +70,10 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     super( catchment );
 
     m_timeseries = initFactorizedTimeseries();
+
+    final Feature areaLink = catchment.getAreaLink();
+
+    m_catchmentRef = areaLink == null ? null : areaLink.getId();
   }
 
   public String getName( )
@@ -81,12 +88,21 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private FactorizedTimeseriesBean[] initFactorizedTimeseries( )
   {
-    List<FactorizedTimeseriesBean> results = new ArrayList<FactorizedTimeseriesBean>();
-    ICatchment generator = getFeature();
-    IFactorizedTimeseries[] factorizedTimeseries = generator.getFactorizedTimeseries();
-    for( IFactorizedTimeseries timeseries : factorizedTimeseries )
+    final List<FactorizedTimeseriesBean> results = new ArrayList<FactorizedTimeseriesBean>();
+    final ICatchment generator = getFeature();
+    final IFactorizedTimeseries[] factorizedTimeseries = generator.getFactorizedTimeseries();
+    for( final IFactorizedTimeseries timeseries : factorizedTimeseries )
       results.add( new FactorizedTimeseriesBean( timeseries ) );
 
     return results.toArray( new FactorizedTimeseriesBean[] {} );
   }
+
+  public void setCatchmentRef( final String catchmentRef )
+  {
+    m_catchmentRef = catchmentRef;
+  }
+
+  // TODO: beim erzeugen der echten features:
+  // final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef;
+
 }
