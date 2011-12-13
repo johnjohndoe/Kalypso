@@ -81,12 +81,17 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   private CatchmentBean[] initCatchments( )
   {
-    List<CatchmentBean> results = new ArrayList<CatchmentBean>();
-    ILinearSumGenerator generator = getFeature();
-    ICatchment[] catchments = generator.getCatchments();
-    for( ICatchment catchment : catchments )
+    final List<CatchmentBean> results = new ArrayList<CatchmentBean>();
+    final ILinearSumGenerator generator = getFeature();
+    final ICatchment[] catchments = generator.getCatchments();
+    for( final ICatchment catchment : catchments )
       results.add( new CatchmentBean( catchment ) );
 
     return results.toArray( new CatchmentBean[] {} );
+  }
+
+  public void setCatchments( final CatchmentBean[] catchments )
+  {
+    m_catchments = catchments;
   }
 }
