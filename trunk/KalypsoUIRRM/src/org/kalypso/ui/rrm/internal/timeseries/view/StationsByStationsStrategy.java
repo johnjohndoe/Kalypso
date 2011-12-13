@@ -50,68 +50,67 @@ import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureTree.EmptyNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeUiHandler;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
  */
-public class StationsByStationsStrategy
+public class StationsByStationsStrategy implements ITreeNodeStrategy
 {
   private final IStationCollection m_stations;
 
-  private final ITreeNodeModel m_model;
-
-  public StationsByStationsStrategy( final ITreeNodeModel model, final IStationCollection stations )
+  public StationsByStationsStrategy( final IStationCollection stations )
   {
-    m_model = model;
     m_stations = stations;
   }
 
-  public TreeNode buildNodes( )
+  @Override
+  public TreeNode buildNodes( final TreeNodeModel model )
   {
-    final TreeNode virtualRootNode = new TreeNode( m_model, null, null, null );
+    final TreeNode virtualRootNode = new TreeNode( model, null, null, null );
 
     final Map<String, IStation[]> stationGroups = groupStations();
 
     if( stationGroups.size() == 0 )
-      buildEmptyNode( virtualRootNode );
+      buildEmptyNode( model, virtualRootNode );
     else if( stationGroups.size() == 1 && stationGroups.containsKey( null ) )
-      buildStations( virtualRootNode, stationGroups.get( null ) );
+      buildStations( model, virtualRootNode, stationGroups.get( null ) );
     else
-      buildGroupNodes( virtualRootNode, stationGroups );
+      buildGroupNodes( model, virtualRootNode, stationGroups );
 
     return virtualRootNode;
   }
 
-  private void buildEmptyNode( final TreeNode parent )
+  private void buildEmptyNode( final TreeNodeModel model, final TreeNode parent )
   {
-    final TreeNode emptyNode = new TreeNode( m_model, parent, new EmptyNodeUiHandler( m_model ), new Object() );
+    final TreeNode emptyNode = new TreeNode( model, parent, new EmptyNodeUiHandler( model ), new Object() );
     parent.addChild( emptyNode );
   }
 
-  private void buildStations( final TreeNode parent, final IStation[] stations )
+  private void buildStations( final TreeNodeModel model, final TreeNode parent, final IStation[] stations )
   {
     for( final IStation station : stations )
     {
-      final TreeNode stationNode = buildStationNode( parent, station );
+      final TreeNode stationNode = buildStationNode( model, parent, station );
       parent.addChild( stationNode );
     }
   }
 
-  private void buildGroupNodes( final TreeNode parent, final Map<String, IStation[]> stationGroups )
+  private void buildGroupNodes( final TreeNodeModel model, final TreeNode parent, final Map<String, IStation[]> stationGroups )
   {
     for( final Entry<String, IStation[]> entry : stationGroups.entrySet() )
     {
       final String group = entry.getKey();
       final IStation[] stations = entry.getValue();
 
-      final ITreeNodeUiHandler uiHandler = new GroupUiHandler( m_model, group );
+      final ITreeNodeUiHandler uiHandler = new GroupUiHandler( model, group );
 
-      final TreeNode groupNode = new TreeNode( m_model, parent, uiHandler, entry );
+      final TreeNode groupNode = new TreeNode( model, parent, uiHandler, entry );
 
-      buildStations( groupNode, stations );
+      buildStations( model, groupNode, stations );
 
       parent.addChild( groupNode );
     }
@@ -136,17 +135,17 @@ public class StationsByStationsStrategy
     return groups;
   }
 
-  private TreeNode buildStationNode( final TreeNode parent, final IStation station )
+  private TreeNode buildStationNode( final TreeNodeModel model, final TreeNode parent, final IStation station )
   {
-    final ITreeNodeUiHandler uiHandler = new StationUiHandler( m_model, station );
+    final ITreeNodeUiHandler uiHandler = new StationUiHandler( model, station );
 
-    final TreeNode stationNode = new TreeNode( m_model, parent, uiHandler, station );
+    final TreeNode stationNode = new TreeNode( model, parent, uiHandler, station );
 
     final Map<String, ITimeseries[]> parameters = groupByParameter( station );
 
     for( final Entry<String, ITimeseries[]> entry : parameters.entrySet() )
     {
-      final TreeNode parameterNode = buildParameterNode( station, stationNode, entry );
+      final TreeNode parameterNode = buildParameterNode( model, station, stationNode, entry );
       stationNode.addChild( parameterNode );
     }
 
@@ -175,27 +174,27 @@ public class StationsByStationsStrategy
     return parameters;
   }
 
-  private TreeNode buildParameterNode( final IStation station, final TreeNode parent, final Entry<String, ITimeseries[]> entry )
+  private TreeNode buildParameterNode( final TreeNodeModel model, final IStation station, final TreeNode parent, final Entry<String, ITimeseries[]> entry )
   {
     final String parameterType = entry.getKey();
     final ITimeseries[] timeseries = entry.getValue();
 
-    final ITreeNodeUiHandler uiHandler = new ParameterUiHandler( m_model, station, parameterType, timeseries );
-    final TreeNode parameterNode = new TreeNode( m_model, parent, uiHandler, parameterType );
+    final ITreeNodeUiHandler uiHandler = new ParameterUiHandler( model, station, parameterType, timeseries );
+    final TreeNode parameterNode = new TreeNode( model, parent, uiHandler, parameterType );
 
     for( final ITimeseries timeserie : timeseries )
     {
-      final TreeNode timeseriesNode = buildTimeseriesNode( parameterNode, timeserie );
+      final TreeNode timeseriesNode = buildTimeseriesNode( model, parameterNode, timeserie );
       parameterNode.addChild( timeseriesNode );
     }
 
     return parameterNode;
   }
 
-  private TreeNode buildTimeseriesNode( final TreeNode parent, final ITimeseries timeseries )
+  private TreeNode buildTimeseriesNode( final TreeNodeModel model, final TreeNode parent, final ITimeseries timeseries )
   {
-    final ITreeNodeUiHandler uiHandler = new TimeseriesUiHandler( m_model, timeseries );
+    final ITreeNodeUiHandler uiHandler = new TimeseriesUiHandler( model, timeseries );
 
-    return new TreeNode( m_model, parent, uiHandler, timeseries );
+    return new TreeNode( model, parent, uiHandler, timeseries );
   }
 }

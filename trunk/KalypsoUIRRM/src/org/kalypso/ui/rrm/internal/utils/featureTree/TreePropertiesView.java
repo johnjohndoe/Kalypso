@@ -68,7 +68,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView;
  */
 public class TreePropertiesView extends ViewPart
 {
-  final static String ID = "org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"; //$NON-NLS-1$
+  final static String ID = "org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"; //$NON-NLS-1$
 
   private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
   {

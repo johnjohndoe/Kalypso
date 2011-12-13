@@ -277,9 +277,17 @@
       </view>
       <view
             category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
+            icon="icons/timeseries/catchmentModelsView.png"
+            id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
+            name="Catchment Models"
+            restorable="true">
+      </view>
+      <view
+            category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
             icon="icons/timeseries/propertiesView.gif"
-            id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
+            id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
             name="Properties"
             restorable="false">
       </view>
@@ -375,7 +383,15 @@
                visible="false">
          </view>
          <view
-               id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
+               moveable="false"
+               closeable="false"
+               id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
+               relationship="stack"
+               relative="org.kalypso.ui.views.mapView"
+               visible="false">
+         </view>
+         <view
+               id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
                moveable="false"
                closeable="false"
                ratio="0.33"
@@ -387,28 +403,30 @@
    </extension>
    <extension
          point="org.kalypso.afgui.scenarioData">
-      <dataSet
-            id="org.kalypso.model.rrm.scenarioDataScope">
-         <scenarioDatum
-               classKey="org.kalypsodeegree.model.feature.Feature"
-               id="stations"
-               modelPath="project://.model/timeseries/stations.gml">
-         </scenarioDatum>
+      <dataSet id="org.kalypso.model.rrm.scenarioDataScope">
+         <scenarioDatum classKey="org.kalypso.model.hydrology.timeseries.binding.IStationCollection" id="stations" modelPath="project://.model/timeseries/stations.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.cm.binding.ICatchmentModel" id="catchmentModels" modelPath=".models/catchmentModels.gml"/>
       </dataSet>
    </extension>
    
    <!-- Handler for workflow -->
    <extension point="org.eclipse.ui.commands">
-            <command id="org.kalypso.model.rrm.timeseriesManagement" name="Test" />
+            <command id="org.kalypso.model.rrm.timeseriesManagement" name="Timeseries Management" />
+            <command id="org.kalypso.model.rrm.catchmentModels" name="Catchment Models" />
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
+            <image commandId="org.kalypso.model.rrm.catchmentModels" icon="icons/timeseries/catchmentModelsView.png"/>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
       <handler
             class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler"
             commandId="org.kalypso.model.rrm.timeseriesManagement">
+      </handler>
+      <handler
+            class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler"
+            commandId="org.kalypso.model.rrm.catchmentModels">
       </handler>
    </extension>
 </plugin>
