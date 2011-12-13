@@ -406,6 +406,7 @@
       <dataSet id="org.kalypso.model.rrm.scenarioDataScope">
          <scenarioDatum classKey="org.kalypso.model.hydrology.timeseries.binding.IStationCollection" id="stations" modelPath="project://.model/timeseries/stations.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.cm.binding.ICatchmentModel" id="catchmentModels" modelPath=".models/catchmentModels.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.model.NaModell" id="model" modelPath=".models/modell.gml"/>
       </dataSet>
    </extension>
    

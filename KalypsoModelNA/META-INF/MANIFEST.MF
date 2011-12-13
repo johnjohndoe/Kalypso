@@ -11,7 +11,7 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.junit;resolution:=optional,
  org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.ui,
- org.kalypso.ModelSimulationBase,
+ org.kalypso.ModelSimulationBase;visibility:=reexport,
  org.eclipse.wst.xml.core;resolution:=optional,
  org.kalypso.model.rcm;bundle-version="11.6.4"
 Bundle-ActivationPolicy: lazy
