@@ -56,12 +56,12 @@ public class UrlCatalogNA extends AbstractUrlCatalog
 {
   public static final String PREFIX_RRM = "rrm";//$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
+    catalog.put( NaModelConstants.NS_NAMETA_11_6, myClass.getResource( "/etc/schema/gml/11.6/control.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NACONTROL_11_6, myClass.getResource( "/etc/schema/gml/11.6/nacontrol.xsd" ) ); //$NON-NLS-1$
+
     catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "/etc/schema/gml/control.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "/etc/schema/gml/namodell.xsd" ) ); //$NON-NLS-1$
     catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "/etc/schema/gml/nacontrol.xsd" ) ); //$NON-NLS-1$

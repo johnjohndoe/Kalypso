@@ -233,6 +233,7 @@ public class NAControlConverter
     // writer.append( "n       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
 
     writer.append( getBoolean( controlFE.doGenerateHYD() ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
+
     // if "2": output of *.txt and *.bil
     if( controlFE.doGenerateBIL() )
       writer.append( "2" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$

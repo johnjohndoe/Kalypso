@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:na="org.kalypso.na.control_v2" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control_v2" elementFormDefault="qualified" version="1.0">
+<schema xmlns:na="org.kalypso.na.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control" elementFormDefault="qualified" version="1.0">
   <import namespace="http://www.opengis.net/gml" />
   <element name="NAControl" substitutionGroup="gml:_Feature">
     <complexType>

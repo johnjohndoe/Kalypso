@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding;
+package org.kalypso.model.hydrology.binding._11_6;
 
 import java.util.Date;
 import java.util.List;
@@ -53,13 +53,13 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {org.kalypso.namodell.control}NAModellControl.
+ * Binding class for the old version of {org.kalypso.namodell.control}NAModellControl.
  *
  * @author Gernot Belger
  */
 public class NAModellControl extends Feature_Impl
 {
-  public static final String NS_NACONTROL = NaModelConstants.NS_NACONTROL;
+  public static final String NS_NACONTROL = NaModelConstants.NS_NACONTROL_11_6;
 
   private static final QName PROP_INITIALVALUEDATE = new QName( NS_NACONTROL, "InitialValueDate" ); //$NON-NLS-1$
 
@@ -94,6 +94,9 @@ public class NAModellControl extends Feature_Impl
   private static final QName PROP_QGW = new QName( NS_NACONTROL, "qgw" ); //$NON-NLS-1$
 
   private static final QName PROP_VET = new QName( NS_NACONTROL, "vet" ); //$NON-NLS-1$
+
+  // Stil in model, but should not be used any more, as Mulden-Rigolen are now handled via SUDS.
+  //  private static final QName NACONTROL_QMR_PROP = new QName( NS_NACONTROL, "qmr" ); //$NON-NLS-1$
 
   private static final QName PROP_HYD = new QName( NS_NACONTROL, "hyd" ); //$NON-NLS-1$
 

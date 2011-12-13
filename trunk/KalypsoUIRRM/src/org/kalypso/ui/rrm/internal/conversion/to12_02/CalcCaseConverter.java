@@ -48,14 +48,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding._11_6.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.conversion.ConverterData;
 import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -104,8 +102,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     finally
     {
       ProgressUtilities.done( monitor );
-
-      m_data.dispose();
     }
   }
 
@@ -115,12 +111,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     copyBasicData();
 
-    m_data.load();
-
     renameOldResults();
 
-    /* Tweak model data */
-    tweakCalculation();
+    /* Convert old control files */
+    convertControls();
 
     fixTimeseriesLinks();
   }
@@ -204,20 +198,23 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
   }
 
-  private void tweakCalculation( ) throws Exception
+  private void convertControls( ) throws Exception
   {
-    tweakExeVersion();
+    final NAControl metaControl = m_data.loadMetaControl();
+
+    tweakExeVersion( metaControl );
+
+    // FIXME: convert both control models to new schema
+
+    m_data.saveModel( metaControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
   }
 
-  private void tweakExeVersion( ) throws IOException, GmlSerializeException
+  private void tweakExeVersion( final NAControl metaControl )
   {
-    final NAControl metaControl = m_data.getMetaControl();
     final String exeVersion = metaControl.getExeVersion();
     if( m_chosenExe != null )
     {
       metaControl.setExeVersion( m_chosenExe );
-
-      m_data.saveModel( metaControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
 
       final String statusMsg = Messages.getString( "CalcCaseConverter_2", m_chosenExe, exeVersion ); //$NON-NLS-1$
       getLog().add( IStatus.OK, statusMsg );
@@ -234,9 +231,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   /**
    * Add an additional '../' to every timeseries path.
    */
-  private void fixTimeseriesLinks( ) throws IOException, GmlSerializeException
+  private void fixTimeseriesLinks( ) throws Exception
   {
-    final NaModell naModel = m_data.getNaModel();
+    final NaModell naModel = m_data.loadNaModel();
 
     final IStatus log = fixTimeseriesLinks( naModel );
     getLog().add( log );
@@ -244,6 +241,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     getLog().add( IStatus.INFO, "Timeseries links have been updated." );
 
+    naModel.getWorkspace().dispose();
   }
 
   static IStatus fixTimeseriesLinks( final NaModell naModel )

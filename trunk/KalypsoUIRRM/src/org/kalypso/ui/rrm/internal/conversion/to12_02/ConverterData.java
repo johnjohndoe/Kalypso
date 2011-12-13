@@ -38,15 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.conversion;
+package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
-import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.NaSimulationDataFactory;
-import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding._11_6.NAControl;
+import org.kalypso.model.hydrology.binding._11_6.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
@@ -59,8 +57,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ConverterData
 {
-  private INaSimulationData m_data;
-
   private final File m_baseDir;
 
   public ConverterData( final File baseDir )
@@ -68,37 +64,32 @@ public class ConverterData
     m_baseDir = baseDir;
   }
 
-  public void dispose( )
+  public NAModellControl loadControl( ) throws Exception
   {
-    if( m_data != null )
-      m_data.dispose();
+    return loadModel( INaCalcCaseConstants.EXPERT_CONTROL_PATH );
   }
 
-  public void load( ) throws Exception
+  public NAControl loadMetaControl( ) throws Exception
   {
-    final File naModelFile = new File( m_baseDir, INaProjectConstants.GML_MODELL_PATH );
-    final File naControlFile = new File( m_baseDir, INaCalcCaseConstants.CALCULATION_GML_PATH );
-
-    final URL naModelLocation = naModelFile.toURI().toURL();
-    final URL naControlLocation = naControlFile.toURI().toURL();
-
-    m_data = NaSimulationDataFactory.load( naModelLocation, null, naControlLocation, null, null, null, null, null, null, null );
+    return loadModel( INaCalcCaseConstants.CALCULATION_GML_PATH );
   }
 
-  public NAControl getMetaControl( )
+  public NaModell loadNaModel( ) throws Exception
   {
-    return m_data.getMetaControl();
+    return loadModel( INaProjectConstants.GML_MODELL_PATH );
   }
 
-  public NaModell getNaModel( )
+  @SuppressWarnings("unchecked")
+  <F extends Feature> F loadModel( final String path ) throws Exception
   {
-    return m_data.getNaModel();
+    final File file = new File( m_baseDir, path );
+    return (F) GmlSerializer.createGMLWorkspace( file, null );
   }
 
-  public void saveModel( final Feature model, final String path ) throws IOException, GmlSerializeException
+  void saveModel( final Feature model, final String path ) throws IOException, GmlSerializeException
   {
-    // REMARK: we asume that all files are 'UTF-8'.
-    final File naControlFile = new File( m_baseDir, path );
-    GmlSerializer.serializeWorkspace( naControlFile, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
+    // REMARK: we assume that all files are 'UTF-8'.
+    final File file = new File( m_baseDir, path );
+    GmlSerializer.serializeWorkspace( file, model.getWorkspace(), "UTF-8" ); //$NON-NLS-1$
   }
 }

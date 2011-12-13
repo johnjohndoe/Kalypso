@@ -19,6 +19,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.model.hydrology,
  org.kalypso.model.hydrology.binding,
+ org.kalypso.model.hydrology.binding._11_6,
  org.kalypso.model.hydrology.binding.initialValues,
  org.kalypso.model.hydrology.binding.model,
  org.kalypso.model.hydrology.binding.model.channels,
