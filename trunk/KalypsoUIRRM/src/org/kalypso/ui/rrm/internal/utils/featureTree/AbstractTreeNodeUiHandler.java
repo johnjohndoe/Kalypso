@@ -72,8 +72,13 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
 
     /* Properties Section */
     final Control propertiesControl = createPropertiesControl( controlSection, binding, toolbar );
-    controlSection.setClient( propertiesControl );
-    toolbar.update( true );
+    if( propertiesControl == null )
+      controlSection.dispose();
+    else
+    {
+      controlSection.setClient( propertiesControl );
+      toolbar.update( true );
+    }
 
     /* Action section */
     final Section actionSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
@@ -81,10 +86,13 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
     actionSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final Composite actionPanel = toolkit.createComposite( actionSection );
-    actionSection.setClient( actionPanel );
     GridLayoutFactory.fillDefaults().applyTo( actionPanel );
+    actionSection.setClient( actionPanel );
 
     createHyperlinks( toolkit, actionPanel );
+
+    if( actionPanel.getChildren().length == 0 )
+      actionSection.dispose();
 
     return panel;
   }

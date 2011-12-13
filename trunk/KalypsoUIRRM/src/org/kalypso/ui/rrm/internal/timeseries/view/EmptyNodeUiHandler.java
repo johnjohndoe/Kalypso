@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.utils.featureTree;
+package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -48,13 +48,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.ui.rrm.internal.timeseries.view.NewHydrologicalStationAction;
-import org.kalypso.ui.rrm.internal.timeseries.view.NewMeteorologicalStationAction;
+import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
+class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
 {
   private final ITreeNodeModel m_model;
 
@@ -84,9 +84,7 @@ public class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    final FormToolkit toolkit = binding.getToolkit();
-    final Composite composite = toolkit.createComposite( parent );
-    return composite;
+    return null;
   }
 
   @Override

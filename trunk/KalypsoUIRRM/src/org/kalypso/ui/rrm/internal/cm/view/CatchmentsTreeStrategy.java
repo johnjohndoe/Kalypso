@@ -48,7 +48,6 @@ import java.util.TreeMap;
 
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.ui.rrm.internal.utils.featureTree.EmptyNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -112,8 +111,9 @@ public class CatchmentsTreeStrategy implements ITreeNodeStrategy
     {
       final String parameterType = entry.getKey();
       final Collection<IRainfallGenerator> generators = entry.getValue();
+      final IRainfallGenerator[] allGenerators = generators.toArray( new IRainfallGenerator[generators.size()] );
 
-      final TreeNode parameterNode = new TreeNode( parent, new ParameterGeneratorUiHandler( parent.getModel(), parameterType ), entry );
+      final TreeNode parameterNode = new TreeNode( parent, new ParameterGeneratorUiHandler( parent.getModel(), parameterType, allGenerators ), entry );
 
       buildGeneratorNodes( parameterNode, generators );
 

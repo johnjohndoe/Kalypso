@@ -106,9 +106,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   {
     final FeatureBean<ITimeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
 
-    final Composite timeseriesControl = new TimeseriesComposite( parent, timeseriesBean, binding, false );
-
-    return timeseriesControl;
+    return new TimeseriesComposite( parent, timeseriesBean, binding, false );
   }
 
   @Override
