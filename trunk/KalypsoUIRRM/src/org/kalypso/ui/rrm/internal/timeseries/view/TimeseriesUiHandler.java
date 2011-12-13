@@ -57,17 +57,19 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
+public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
 {
   private final ITimeseries m_timeseries;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public TimeseriesUiHandler( final ITimeseriesTreeModel model, final ITimeseries timeseries )
+  public TimeseriesUiHandler( final ITreeNodeModel model, final ITimeseries timeseries )
   {
     m_model = model;
     m_timeseries = timeseries;
@@ -77,12 +79,6 @@ public class TimeseriesUiHandler extends AbstractTimeseriesNodeUiHandler
   public String getTypeLabel( )
   {
     return "Timeseries";
-  }
-
-  @Override
-  public String getIdentifier( )
-  {
-    return StringUtils.EMPTY;
   }
 
   @Override

@@ -57,18 +57,20 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
  */
-public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
+public class StationUiHandler extends AbstractTreeNodeUiHandler
 {
   private final IStation m_station;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public StationUiHandler( final ITimeseriesTreeModel model, final IStation station )
+  public StationUiHandler( final ITreeNodeModel model, final IStation station )
   {
     m_model = model;
     m_station = station;
@@ -81,15 +83,9 @@ public class StationUiHandler extends AbstractTimeseriesNodeUiHandler
   }
 
   @Override
-  public String getIdentifier( )
-  {
-    return m_station.getName();
-  }
-
-  @Override
   public String getTreeLabel( )
   {
-    final String identifier = getIdentifier();
+    final String identifier = m_station.getName();
     if( StringUtils.isBlank( identifier ) )
       return m_station.getDescription();
 

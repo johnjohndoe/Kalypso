@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -54,11 +53,13 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
+public class ParameterUiHandler extends AbstractTreeNodeUiHandler
 {
   private final String m_parameterType;
 
@@ -66,9 +67,9 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
 
   private final IStation m_station;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public ParameterUiHandler( final ITimeseriesTreeModel model, final IStation station, final String parameterType, final ITimeseries[] timeseries )
+  public ParameterUiHandler( final ITreeNodeModel model, final IStation station, final String parameterType, final ITimeseries[] timeseries )
   {
     m_model = model;
     m_station = station;
@@ -80,12 +81,6 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
   public String getTypeLabel( )
   {
     return "Parameter Type";
-  }
-
-  @Override
-  public String getIdentifier( )
-  {
-    return StringUtils.EMPTY;
   }
 
   @Override
@@ -107,7 +102,7 @@ public class ParameterUiHandler extends AbstractTimeseriesNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    final Composite parameterControl = new ParameterComposite( parent, binding, m_parameterType, m_timeseries );
+    final Composite parameterControl = new ParameterComposite( parent, binding, m_parameterType );
 
     return parameterControl;
   }

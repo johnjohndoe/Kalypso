@@ -49,6 +49,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
@@ -57,9 +58,9 @@ public class EditStationWizard extends Wizard
 {
   private final FeatureBean<IStation> m_stationBean;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public EditStationWizard( final ITimeseriesTreeModel model, final IStation station )
+  public EditStationWizard( final ITreeNodeModel model, final IStation station )
   {
     m_model = model;
     m_stationBean = new FeatureBean<>( station );

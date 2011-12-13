@@ -49,6 +49,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 
 /**
  * @author Gernot Belger
@@ -75,9 +78,9 @@ public class TimeseriesManagementView extends ViewPart
   {
     m_treeViewer = new TreeViewer( panel );
 
-    m_treeViewer.setContentProvider( new TimeseriesTreeContentProvider() );
+    m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
 
-    m_treeViewer.setLabelProvider( new TimeseriesNodeLabelProvider() );
+    m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
 
     return m_treeViewer.getTree();
   }
@@ -90,7 +93,7 @@ public class TimeseriesManagementView extends ViewPart
 
   public void setInput( final CommandableWorkspace workspace, final IStationCollection stations )
   {
-    final TimeseriesTreeModel input = new TimeseriesTreeModel( stations, workspace, m_treeViewer );
+    final TreeNodeModel input = new TreeNodeModel( stations, workspace, m_treeViewer );
 
     m_treeViewer.setInput( input );
   }

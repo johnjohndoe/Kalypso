@@ -54,6 +54,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
@@ -65,9 +67,9 @@ public class ImportTimeseriesAction extends Action
 
   private final String m_parameterType;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public ImportTimeseriesAction( final ITimeseriesTreeModel model, final IStation station, final String parameterType )
+  public ImportTimeseriesAction( final ITreeNodeModel model, final IStation station, final String parameterType )
   {
     m_station = station;
     m_parameterType = parameterType;
@@ -90,7 +92,7 @@ public class ImportTimeseriesAction extends Action
     final ITimeseries timeseries = showWizard( shell, data );
 
     // select tree with pseudo node
-    final TimeseriesNode pseudoNode = new TimeseriesNode( m_model, null, null, timeseries );
+    final TreeNode pseudoNode = new TreeNode( m_model, null, null, timeseries );
     m_model.setSelection( pseudoNode );
   }
 
