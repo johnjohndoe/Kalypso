@@ -43,8 +43,8 @@ package org.kalypso.model.hydrology.cm.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.afgui.model.IModel;
-import org.kalypso.model.rcm.RcmConstants;
-import org.kalypso.model.rcm.binding.ICatchmentGenerator;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -57,12 +57,12 @@ public interface ICatchmentModel extends IModel
   /**
    * The qname of the generator member.
    */
-  public static QName MEMBER_CATCHMENT_GENERATOR = new QName( RcmConstants.NS_CM, "catchmentGeneratorMember" );
+  QName MEMBER_CATCHMENT_GENERATOR = new QName( NaModelConstants.NS_CATCHMENT_MODEL, "generatorMember" );
 
   /**
    * This function returns all catchment generators.
    *
    * @return All catchment generators.
    */
-  public IFeatureBindingCollection<ICatchmentGenerator> getCatchmentGenerators( );
+  IFeatureBindingCollection<IRainfallGenerator> getGenerators( );
 }
