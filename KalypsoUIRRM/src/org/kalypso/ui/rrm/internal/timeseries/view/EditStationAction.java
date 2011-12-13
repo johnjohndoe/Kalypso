@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
@@ -60,9 +61,9 @@ public class EditStationAction extends Action
 
   private final StationComposite m_stationControl;
 
-  private final ITimeseriesTreeModel m_context;
+  private final ITreeNodeModel m_context;
 
-  public EditStationAction( final ITimeseriesTreeModel context, final IStation station, final StationComposite stationControl )
+  public EditStationAction( final ITreeNodeModel context, final IStation station, final StationComposite stationControl )
   {
     m_context = context;
     m_station = station;

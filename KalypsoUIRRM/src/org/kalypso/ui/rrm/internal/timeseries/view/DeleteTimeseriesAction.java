@@ -52,6 +52,8 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Gernot Belger
@@ -62,9 +64,9 @@ public class DeleteTimeseriesAction extends Action
 
   private final String m_deleteMessage;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public DeleteTimeseriesAction( final ITimeseriesTreeModel model, final String deleteMessage, final ITimeseries... timeseries )
+  public DeleteTimeseriesAction( final ITreeNodeModel model, final String deleteMessage, final ITimeseries... timeseries )
   {
     m_model = model;
     m_timeseries = timeseries;
@@ -98,7 +100,7 @@ public class DeleteTimeseriesAction extends Action
 
       /* Select parent node */
       final Object parentStation = m_timeseries[0].getParent();
-      final TimeseriesNode parentNode = new TimeseriesNode( m_model, null, null, parentStation );
+      final TreeNode parentNode = new TreeNode( m_model, null, null, parentStation );
       m_model.setSelection( parentNode );
 
       /* Delete feature */

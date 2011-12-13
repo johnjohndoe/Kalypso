@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
@@ -61,9 +62,9 @@ public class DeleteStationAction extends Action
 {
   private final IStation[] m_stations;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public DeleteStationAction( final ITimeseriesTreeModel model, final IStation... station )
+  public DeleteStationAction( final ITreeNodeModel model, final IStation... station )
   {
     m_model = model;
     m_stations = station;

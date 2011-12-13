@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Gernot Belger
@@ -51,8 +52,8 @@ public class TimeseriesNodeLabelComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final TimeseriesNode n1 = (TimeseriesNode) e1;
-    final TimeseriesNode n2 = (TimeseriesNode) e2;
+    final TreeNode n1 = (TreeNode) e1;
+    final TreeNode n2 = (TreeNode) e2;
 
     final String l1 = n1.getLabel();
     final String l2 = n2.getLabel();

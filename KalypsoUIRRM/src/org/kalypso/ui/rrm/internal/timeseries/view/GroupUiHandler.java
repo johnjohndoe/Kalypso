@@ -51,18 +51,20 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class GroupUiHandler extends AbstractTimeseriesNodeUiHandler
+public class GroupUiHandler extends AbstractTreeNodeUiHandler
 {
   static final String UNDEFINED_GROUP_LABEL = "<undefined group>";
   private final String m_group;
 
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
-  public GroupUiHandler( final ITimeseriesTreeModel model, final String group )
+  public GroupUiHandler( final ITreeNodeModel model, final String group )
   {
     m_model = model;
     m_group = group;
@@ -72,12 +74,6 @@ public class GroupUiHandler extends AbstractTimeseriesNodeUiHandler
   public String getTypeLabel( )
   {
     return "Group";
-  }
-
-  @Override
-  public String getIdentifier( )
-  {
-    return m_group;
   }
 
   @Override

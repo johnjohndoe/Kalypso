@@ -51,17 +51,18 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
 public class NewMeteorologicalStationAction extends Action
 {
-  private final ITimeseriesTreeModel m_model;
+  private final ITreeNodeModel m_model;
 
   private final String m_group;
 
-  public NewMeteorologicalStationAction( final ITimeseriesTreeModel model, final String group )
+  public NewMeteorologicalStationAction( final ITreeNodeModel model, final String group )
   {
     m_model = model;
     m_group = group;
