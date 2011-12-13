@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import java.util.List;
-
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
@@ -51,8 +49,6 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 {
-  List<IFactorizedTimeseries> m_factorizedTimeseries;
-
   public FactorizedTimeseriesBean( )
   {
     super( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
