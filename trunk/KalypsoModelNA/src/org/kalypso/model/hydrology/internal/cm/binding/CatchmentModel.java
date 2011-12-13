@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.internal.cm.binding;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
-import org.kalypso.model.rcm.binding.ICatchmentGenerator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -55,13 +55,13 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class CatchmentModel extends Feature_Impl implements ICatchmentModel
 {
-  private final IFeatureBindingCollection<ICatchmentGenerator> m_generators;
+  private final IFeatureBindingCollection<IRainfallGenerator> m_generators;
 
   public CatchmentModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_generators = new FeatureBindingCollection<ICatchmentGenerator>( this, ICatchmentGenerator.class, MEMBER_CATCHMENT_GENERATOR );
+    m_generators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_CATCHMENT_GENERATOR );
   }
 
   @Override
@@ -71,7 +71,7 @@ public class CatchmentModel extends Feature_Impl implements ICatchmentModel
   }
 
   @Override
-  public IFeatureBindingCollection<ICatchmentGenerator> getCatchmentGenerators( )
+  public IFeatureBindingCollection<IRainfallGenerator> getGenerators( )
   {
     return m_generators;
   }
