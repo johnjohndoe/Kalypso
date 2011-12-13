@@ -77,9 +77,7 @@ public class TimeseriesManagementView extends ViewPart
   private Control createTree( final Composite panel )
   {
     m_treeViewer = new TreeViewer( panel );
-
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
-
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
 
     return m_treeViewer.getTree();
