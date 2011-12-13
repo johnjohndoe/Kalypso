@@ -46,7 +46,7 @@ import org.kalypso.model.rcm.RcmConstants;
 
 /**
  * The catchment generator.
- *
+ * 
  * @author Holger Albert
  */
 public interface ILinearSumGenerator extends IRainfallGenerator
@@ -55,6 +55,11 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * The qname of the catchment generator.
    */
   QName FEATURE_LINEAR_SUM_GENERATOR = new QName( RcmConstants.NS_CM, "LinearSumGenerator" );
+
+  /**
+   * The qname of the comment.
+   */
+  QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" );
 
   /**
    * The qname of the area name property.
@@ -72,22 +77,29 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" );
 
   /**
+   * This function returns the comment.
+   * 
+   * @return The comment.
+   */
+  String getComment( );
+
+  /**
    * This function returns the area name property.
-   *
+   * 
    * @return The area name property.
    */
   String getAreaNameProperty( );
 
   /**
    * This function returns the area property.
-   *
+   * 
    * @return The area property.
    */
   String getAreaProperty( );
 
   /**
    * This function returns all catchments.
-   *
+   * 
    * @return All catchments.
    */
   ICatchment[] getCatchments( );

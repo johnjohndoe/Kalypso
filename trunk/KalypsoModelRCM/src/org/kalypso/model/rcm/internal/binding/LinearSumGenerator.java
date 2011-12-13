@@ -53,8 +53,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The catchment generator.
- *
+ * 
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -183,6 +183,15 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getComment()
+   */
+  @Override
+  public String getComment( )
+  {
+    return getProperty( PROPERTY_COMMENT, String.class );
+  }
+
+  /**
    * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getAreaNameProperty()
    */
   @Override
@@ -219,7 +228,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * This function converts an array of Doubles to an array of doubles.
-   *
+   * 
    * @param factors
    *          The array of Doubles.
    * @return A array of doubles.

@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -59,8 +60,8 @@ public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
     super( factorizedTimeseries );
   }
 
-  public String getName( )
+  public String getLabel( )
   {
-    return getFeature().getName();
+    return (String) getProperty( Feature.QN_DESCRIPTION );
   }
 }

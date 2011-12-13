@@ -61,13 +61,13 @@ public class CatchmentsLabelProvider extends LabelProvider
   public String getText( Object element )
   {
     if( element instanceof LinearSumBean )
-      return ((LinearSumBean) element).getName();
+      return ((LinearSumBean) element).getLabel();
 
     if( element instanceof CatchmentBean )
-      return ((CatchmentBean) element).getName();
+      return ((CatchmentBean) element).getLabel();
 
     if( element instanceof FactorizedTimeseriesBean )
-      return ((FactorizedTimeseriesBean) element).getName();
+      return ((FactorizedTimeseriesBean) element).getLabel();
 
     return super.getText( element );
   }
