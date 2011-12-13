@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -69,9 +70,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     m_catchments = initCatchments();
   }
 
-  public String getName( )
+  public String getLabel( )
   {
-    return getFeature().getName();
+    return (String) getProperty( Feature.QN_DESCRIPTION );
   }
 
   public CatchmentBean[] getCatchments( )

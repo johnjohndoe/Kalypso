@@ -114,7 +114,7 @@ public class EditCatchmentsDialog extends TrayDialog
     m_mainGroup = new Group( main, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
     m_mainGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_mainGroup.setText( "Details" );
+    m_mainGroup.setText( "Generator" );
 
     /* Create the content of the main group. */
     createMainContent( m_mainGroup );

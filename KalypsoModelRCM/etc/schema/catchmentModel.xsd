@@ -7,11 +7,12 @@
   <xs:import namespace="org.kalypso.model.rcm.v2" />
 
   <!-- CatchmentGenerator Element & Type -->
-  <xs:element name="LinearSumGenerator" type="cm:LinearSumGeneratorType" substitutionGroup="rcm:RainfallGenerator"/>
+  <xs:element name="LinearSumGenerator" type="cm:LinearSumGeneratorType" substitutionGroup="rcm:RainfallGenerator" />
   <xs:complexType name="LinearSumGeneratorType">
     <xs:complexContent>
       <xs:extension base="rcm:RainfallGeneratorType">
         <xs:sequence>
+          <xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="areaNameProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="areaProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="catchmentMember" minOccurs="0" maxOccurs="unbounded">

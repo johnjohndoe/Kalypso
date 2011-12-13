@@ -76,9 +76,9 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_catchmentRef = areaLink == null ? null : areaLink.getId();
   }
 
-  public String getName( )
+  public String getLabel( )
   {
-    return getFeature().getName();
+    return (String) getProperty( Feature.QN_DESCRIPTION );
   }
 
   public FactorizedTimeseriesBean[] getTimeseries( )
