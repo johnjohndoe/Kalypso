@@ -277,7 +277,7 @@
       </view>
       <view
             category="org.kalypso.ui.kalypso"
-            class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
+            class="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
             icon="icons/timeseries/propertiesView.gif"
             id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView"
             name="Properties"
