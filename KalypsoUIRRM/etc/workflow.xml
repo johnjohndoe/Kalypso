@@ -18,12 +18,12 @@
 
       <con:WorkbenchSiteContext id="TimeseriesManagementContext" parent="ContextHydrology">
         <con:ViewContext id="TimeseriesManagementView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="TimeseriesManagementContext"/>
-        <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView" parent="TimeseriesManagementContext"/>
+        <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="TimeseriesManagementContext"/>
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="CatchmentModelsContext" parent="ContextHydrology">
         <con:ViewContext id="CatchmentModelsView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="CatchmentModelsContext"/>
-        <con:ViewContext id="CatchmentModelsPropertiesView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesView" parent="CatchmentModelsContext"/>
+        <con:ViewContext id="CatchmentModelsPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="CatchmentModelsContext"/>
       </con:WorkbenchSiteContext>
       
       <con:WorkbenchSiteContext id="MapContext" parent="ContextHydrology">
