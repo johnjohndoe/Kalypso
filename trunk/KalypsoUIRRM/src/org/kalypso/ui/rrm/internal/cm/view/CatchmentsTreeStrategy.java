@@ -40,10 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ui.rrm.internal.utils.featureTree.EmptyNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -60,11 +69,64 @@ public class CatchmentsTreeStrategy implements ITreeNodeStrategy
   @Override
   public TreeNode buildNodes( final TreeNodeModel model )
   {
-    // Hash by parameter
+    final Map<String, Collection<IRainfallGenerator>> byParameterType = hashByParameterType();
 
-    // parameter -> model
+    final TreeNode rootNode = new TreeNode( model, null, null, this );
 
-    // TODO Auto-generated method stub
-    return null;
+    if( byParameterType.size() == 0 )
+      buildEmptyNode( rootNode );
+    else
+      buildParameterNodes( rootNode, byParameterType );
+
+    return rootNode;
+  }
+
+  private Map<String, Collection<IRainfallGenerator>> hashByParameterType( )
+  {
+    final Map<String, Collection<IRainfallGenerator>> byParameterType = new TreeMap<>();
+
+    final IFeatureBindingCollection<IRainfallGenerator> generators = m_model.getGenerators();
+    for( final IRainfallGenerator generator : generators )
+    {
+      final String parameterType = generator.getParameterType();
+
+      if( !byParameterType.containsKey( parameterType ) )
+        byParameterType.put( parameterType, new LinkedList<IRainfallGenerator>() );
+
+      final Collection<IRainfallGenerator> generatorsOfType = byParameterType.get( parameterType );
+      generatorsOfType.add( generator );
+    }
+
+    return byParameterType;
+  }
+
+  private void buildEmptyNode( final TreeNode parent )
+  {
+    final TreeNode emptyNode = new TreeNode( parent, new EmptyNodeUiHandler( parent.getModel() ), new Object() );
+    parent.addChild( emptyNode );
+  }
+
+  private void buildParameterNodes( final TreeNode parent, final Map<String, Collection<IRainfallGenerator>> byParameterType )
+  {
+    for( final Entry<String, Collection<IRainfallGenerator>> entry : byParameterType.entrySet() )
+    {
+      final String parameterType = entry.getKey();
+      final Collection<IRainfallGenerator> generators = entry.getValue();
+
+      final TreeNode parameterNode = new TreeNode( parent, new ParameterGeneratorUiHandler( parent.getModel(), parameterType ), entry );
+
+      buildGeneratorNodes( parameterNode, generators );
+
+      parent.addChild( parameterNode );
+    }
+  }
+
+  private void buildGeneratorNodes( final TreeNode parent, final Collection<IRainfallGenerator> generators )
+  {
+    for( final IRainfallGenerator generator : generators )
+    {
+      final TreeNode generatorNode = new TreeNode( parent, new GeneratorUiHandler( parent.getModel(), generator ), generator );
+      parent.addChild( generatorNode );
+    }
   }
 }

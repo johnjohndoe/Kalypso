@@ -278,7 +278,7 @@
       <view
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
-            icon="icons/timeseries/catchmentModelsView.png"
+            icon="icons/cm/catchmentModelsView.png"
             id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
             name="Catchment Models"
             restorable="true">
@@ -416,7 +416,7 @@
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
-            <image commandId="org.kalypso.model.rrm.catchmentModels" icon="icons/timeseries/catchmentModelsView.png"/>
+            <image commandId="org.kalypso.model.rrm.catchmentModels" icon="icons/cm/catchmentModelsView.png"/>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">

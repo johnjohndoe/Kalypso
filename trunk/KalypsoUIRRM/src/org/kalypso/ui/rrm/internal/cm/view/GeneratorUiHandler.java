@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -48,69 +47,67 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class ParameterUiHandler extends AbstractTreeNodeUiHandler
+public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
 {
-  private final String m_parameterType;
-
-  private final ITimeseries[] m_timeseries;
-
-  private final IStation m_station;
-
   private final ITreeNodeModel m_model;
 
-  public ParameterUiHandler( final ITreeNodeModel model, final IStation station, final String parameterType, final ITimeseries[] timeseries )
+  private final IRainfallGenerator m_generator;
+
+  public GeneratorUiHandler( final ITreeNodeModel model, final IRainfallGenerator generator )
   {
     m_model = model;
-    m_station = station;
-    m_parameterType = parameterType;
-    m_timeseries = timeseries;
+    m_generator = generator;
   }
 
   @Override
   public String getTypeLabel( )
   {
-    return "Parameter Type";
+    return "Catchment Model";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return ParameterTypeUtils.formatParameterType( m_parameterType );
+    return m_generator.getDescription();
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    final String imageLocation = UIRrmImages.DESCRIPTORS.PARAMETER_TYPE_BASE.getImagePath() + "_" + m_parameterType + ".png"; //$NON-NLS-1$ //$NON-NLS-2$
-    return UIRrmImages.id( imageLocation );
+    if( m_generator instanceof ILinearSumGenerator )
+      return UIRrmImages.id( DESCRIPTORS.GENERATOR_LINEAR_SUM );
+
+    return null;
   }
 
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
-    return new ParameterComposite( parent, binding, m_parameterType );
+    if( m_generator instanceof ILinearSumGenerator )
+    {
+      final FeatureBean<ILinearSumGenerator> bean = new FeatureBean<ILinearSumGenerator>( (ILinearSumGenerator) m_generator );
+      return new LinearSumComposite( parent, bean, binding, false );
+    }
+
+    sectionToolbar.add( new EditGeneratorAction( m_model, m_generator ) );
+
+    return new Composite( parent, SWT.NONE );
   }
 
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_model, m_station, m_parameterType ) );
-
-    /* Delete timeseries */
-    final String stationLabel = m_station.getDescription();
-    final String deleteMessage = String.format( "Delete all timeseries from parameter '%s' of station '%s'?", getTreeLabel(), stationLabel );
-    final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
+    // TODO Auto-generated method stub
   }
 }

@@ -45,6 +45,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -52,6 +53,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -67,10 +69,18 @@ public class CatchmentModelsTaskHandler extends AbstractHandler
 
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
-    final CatchmentModelsView view = (CatchmentModelsView) page.findView( CatchmentModelsView.ID );
 
-    if( view == null )
+    final CatchmentModelsView managementView = (CatchmentModelsView) page.findView( CatchmentModelsView.ID );
+    if( managementView == null )
       throw new ExecutionException( "Failed to access timeseries view" ); //$NON-NLS-1$
+
+    /* Hook properties view and management view */
+    final TreePropertiesView propertiesView = (TreePropertiesView) page.findView( TreePropertiesView.ID );
+    if( propertiesView == null )
+      throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
+
+    final ISelectionProvider selectionProvider = managementView.getViewSite().getSelectionProvider();
+    propertiesView.hookSelection( selectionProvider );
 
     try
     {
@@ -80,7 +90,9 @@ public class CatchmentModelsTaskHandler extends AbstractHandler
 
       final ICatchmentModel input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS, ICatchmentModel.class );
 
-      view.setInput( workspace, input );
+      // FIXME: check integrity of catchment model against model.gml
+
+      managementView.setInput( workspace, input );
     }
     catch( final CoreException e )
     {

@@ -112,6 +112,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     final StationComposite stationControl = new StationComposite( parent, bean, binding, false );
 
     sectionToolbar.add( new EditStationAction( m_model, m_station, stationControl ) );
+    sectionToolbar.add( new DeleteStationAction( m_model, m_station ) );
 
     return stationControl;
   }
@@ -134,8 +135,8 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, allTimeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
 
-    /* Delete station */
-    final IAction deleteStationAction = new DeleteStationAction( m_model, m_station );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteStationAction );
+// /* Delete station */
+// final IAction deleteStationAction = new DeleteStationAction( m_model, m_station );
+// ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteStationAction );
   }
 }

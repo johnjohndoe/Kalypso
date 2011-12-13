@@ -38,14 +38,27 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.utils;
 
-import org.eclipse.jface.action.Action;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Gernot Belger
  */
-public class AddStationAction extends Action
+public final class ParameterTypeUtils
 {
+  public ParameterTypeUtils( )
+  {
+    throw new UnsupportedOperationException();
+  }
 
+  /**
+   * Formats the human readable label of a parameter type as 'name [unit]'
+   */
+  public static String formatParameterType( final String parameterType )
+  {
+    final String parameterName = TimeseriesUtils.getName( parameterType );
+    final String parameterUnit = TimeseriesUtils.getUnit( parameterType );
+    return String.format( "%s [%s]", parameterName, parameterUnit );
+  }
 }
