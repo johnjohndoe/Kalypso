@@ -52,6 +52,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
 
 /**
  * This dialog allowes the editing of catchments of a catchment model.
@@ -76,6 +80,11 @@ public class EditCatchmentsDialog extends TrayDialog
   private Group m_detailsGroup;
 
   /**
+   * The data binding.
+   */
+  private IDataBinding m_dataBinding;
+
+  /**
    * The constructor.
    * 
    * @param parentShell
@@ -91,6 +100,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_dataBinding = null;
   }
 
   /**
@@ -104,14 +114,25 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
-    main.setLayout( new GridLayout( 2, true ) );
+    main.setLayout( new GridLayout( 1, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 400;
     mainData.widthHint = 550;
     main.setLayoutData( mainData );
 
+    /* Create the form. */
+    Form form = new Form( main, SWT.NONE );
+    form.setLayoutData( mainData );
+
+    /* Create the data binding. */
+    m_dataBinding = new DatabindingForm( form, new FormToolkit( getShell().getDisplay() ) );
+
+    /* Get the body. */
+    Composite body = form.getBody();
+    body.setLayout( new GridLayout( 2, true ) );
+
     /* Create the main group. */
-    m_mainGroup = new Group( main, SWT.NONE );
+    m_mainGroup = new Group( body, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
     m_mainGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_mainGroup.setText( "Generator" );
@@ -120,7 +141,7 @@ public class EditCatchmentsDialog extends TrayDialog
     createMainContent( m_mainGroup );
 
     /* Create the details group. */
-    m_detailsGroup = new Group( main, SWT.NONE );
+    m_detailsGroup = new Group( body, SWT.NONE );
     m_detailsGroup.setLayout( new GridLayout( 1, false ) );
     m_detailsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_detailsGroup.setText( "Details" );
@@ -174,6 +195,10 @@ public class EditCatchmentsDialog extends TrayDialog
    */
   private void createMainContent( final Composite parent )
   {
+    /* Create the linear sum composite. */
+    LinearSumComposite composite = new LinearSumComposite( parent, m_bean, m_dataBinding, true );
+    composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
     /* Create a viewer. */
     ListViewer viewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
     viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -215,5 +240,6 @@ public class EditCatchmentsDialog extends TrayDialog
   {
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_dataBinding = null;
   }
 }
