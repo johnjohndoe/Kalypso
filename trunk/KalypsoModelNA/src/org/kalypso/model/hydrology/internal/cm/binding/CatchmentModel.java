@@ -65,6 +65,12 @@ public class CatchmentModel extends Feature_Impl implements ICatchmentModel
   }
 
   @Override
+  public String getVersion( )
+  {
+    return NO_VERSION;
+  }
+
+  @Override
   public IFeatureBindingCollection<ICatchmentGenerator> getCatchmentGenerators( )
   {
     return m_generators;

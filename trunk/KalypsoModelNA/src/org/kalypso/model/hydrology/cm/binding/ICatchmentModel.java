@@ -42,17 +42,17 @@ package org.kalypso.model.hydrology.cm.binding;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.model.rcm.RcmConstants;
 import org.kalypso.model.rcm.binding.ICatchmentGenerator;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * The catchment model contains generators for timeseries generation for catchments.
- * 
+ *
  * @author Holger Albert
  */
-public interface ICatchmentModel extends Feature
+public interface ICatchmentModel extends IModel
 {
   /**
    * The qname of the generator member.
@@ -61,7 +61,7 @@ public interface ICatchmentModel extends Feature
 
   /**
    * This function returns all catchment generators.
-   * 
+   *
    * @return All catchment generators.
    */
   public IFeatureBindingCollection<ICatchmentGenerator> getCatchmentGenerators( );
