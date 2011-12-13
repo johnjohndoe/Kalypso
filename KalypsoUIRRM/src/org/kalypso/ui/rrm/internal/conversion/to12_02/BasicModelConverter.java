@@ -54,9 +54,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.conversion.ConverterData;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
@@ -100,8 +98,6 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyBasicTimeseries();
 
       copyObservationConf();
-
-      m_data.load();
 
       fixTimeseries();
     }
@@ -147,9 +143,9 @@ public class BasicModelConverter extends AbstractLoggingOperation
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
   }
 
-  private void fixTimeseries( ) throws IOException, GmlSerializeException
+  private void fixTimeseries( ) throws Exception
   {
-    final NaModell naModel = m_data.getNaModel();
+    final NaModell naModel = m_data.loadNaModel();
 
     final IStatus log = CalcCaseConverter.fixTimeseriesLinks( naModel );
     getLog().add( log );

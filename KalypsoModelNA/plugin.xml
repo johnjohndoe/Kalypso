@@ -248,16 +248,28 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.model.hydrology.binding.NAModellControl"
+              class="org.kalypso.model.hydrology.binding._11_6.NAModellControl"
               qname="{org.kalypso.namodell.control}NAModellControl">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.InitialValues"
+              class="org.kalypso.model.hydrology.binding._11_6.InitialValues"
               qname="{org.kalypso.namodell.control}initialValues">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.NAControl"
+              class="org.kalypso.model.hydrology.binding.NAModellControl"
+              qname="{org.kalypso.namodell.control_v2}NAModellControl">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.InitialValues"
+              qname="{org.kalypso.namodell.control_v2}initialValues">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding._11_6.NAControl"
               qname="{org.kalypso.na.control}NAControl">
+        </feature>
+        <feature
+              class="org.kalypso.model.hydrology.binding.NAControl"
+              qname="{org.kalypso.na.control_v2}NAControl">
         </feature>
      </extension>
      <extension
