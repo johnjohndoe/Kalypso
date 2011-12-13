@@ -79,7 +79,7 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTreeLabel( )
   {
-    return m_generator.getDescription();
+    return m_generator.getName();
   }
 
   @Override
@@ -94,13 +94,13 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
+    sectionToolbar.add( new EditGeneratorAction( m_model, m_generator ) );
+
     if( m_generator instanceof ILinearSumGenerator )
     {
       final FeatureBean<ILinearSumGenerator> bean = new FeatureBean<ILinearSumGenerator>( (ILinearSumGenerator) m_generator );
       return new LinearSumComposite( parent, bean, binding, false );
     }
-
-    sectionToolbar.add( new EditGeneratorAction( m_model, m_generator ) );
 
     return new Composite( parent, SWT.NONE );
   }
