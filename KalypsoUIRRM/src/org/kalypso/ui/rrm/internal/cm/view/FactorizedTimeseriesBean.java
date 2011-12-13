@@ -42,25 +42,25 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.List;
 
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
+public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 {
-  List<CatchmentBean> m_catchments;
+  List<IFactorizedTimeseries> m_factorizedTimeseries;
 
-  public LinearSumBean( )
+  public FactorizedTimeseriesBean( )
   {
-    super( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR );
+    super( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
   }
 
-  public LinearSumBean( final ILinearSumGenerator generator )
+  public FactorizedTimeseriesBean( final IFactorizedTimeseries factorizedTimeseries )
   {
-    super( generator );
+    super( factorizedTimeseries );
   }
 
   public String getName( )

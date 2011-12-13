@@ -41,9 +41,10 @@
 package org.kalypso.ui.rrm.internal.cm.view;
 
 import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -54,28 +55,33 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * This dialog allowes the editing of catchments of a catchment model.
- *
+ * 
  * @author Holger Albert
  */
 public class EditCatchmentsDialog extends TrayDialog
 {
   /**
-   * The viewer.
+   * The bean to edit.
    */
-  private TreeViewer m_viewer;
+  private final LinearSumBean m_bean;
+
+  /**
+   * The main group.
+   */
+  private Group m_mainGroup;
 
   /**
    * The details group.
    */
   private Group m_detailsGroup;
 
-  private final LinearSumBean m_bean;
-
   /**
    * The constructor.
-   *
+   * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
+   * @param bean
+   *          The bean to edit.
    */
   public EditCatchmentsDialog( final Shell shell, final LinearSumBean bean )
   {
@@ -83,7 +89,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     m_bean = bean;
 
-    m_viewer = null;
+    m_mainGroup = null;
     m_detailsGroup = null;
   }
 
@@ -104,33 +110,14 @@ public class EditCatchmentsDialog extends TrayDialog
     mainData.widthHint = 550;
     main.setLayoutData( mainData );
 
-    /* Get the input. */
-    // TODO
+    /* Create the main group. */
+    m_mainGroup = new Group( main, SWT.NONE );
+    m_mainGroup.setLayout( new GridLayout( 1, false ) );
+    m_mainGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_mainGroup.setText( "Details" );
 
-    /* Create a viewer. */
-    /* The selection of this viewer will determine the content of the details composite. */
-    m_viewer = new TreeViewer( main, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
-    m_viewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_viewer.getTree().setLinesVisible( true );
-    m_viewer.getTree().setHeaderVisible( true );
-    // m_viewer.setContentProvider( new TreeNodeContentProvider() );
-    // m_viewer.setLabelProvider( new TreeNodeLabelProvider() );
-
-    /* Set the input. */
-    // TODO
-
-    /* Add a listener. */
-    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-       */
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        // TODO
-      }
-    } );
+    /* Create the content of the main group. */
+    createMainContent( m_mainGroup );
 
     /* Create the details group. */
     m_detailsGroup = new Group( main, SWT.NONE );
@@ -180,8 +167,39 @@ public class EditCatchmentsDialog extends TrayDialog
   }
 
   /**
+   * This function creates the content of the main group.
+   * 
+   * @param parent
+   *          The parent composite.
+   */
+  private void createMainContent( final Composite parent )
+  {
+    /* Create a viewer. */
+    ListViewer viewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
+    viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new CatchmentsLabelProvider() );
+
+    /* Set the input. */
+    // TODO
+
+    /* Add a listener. */
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        // TODO
+      }
+    } );
+  }
+
+  /**
    * This function creates the content of the details group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -195,7 +213,7 @@ public class EditCatchmentsDialog extends TrayDialog
    */
   private void dispose( )
   {
-    m_viewer = null;
+    m_mainGroup = null;
     m_detailsGroup = null;
   }
 }
