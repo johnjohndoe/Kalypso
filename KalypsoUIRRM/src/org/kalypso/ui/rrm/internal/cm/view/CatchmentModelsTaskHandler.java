@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.cm.view;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -49,7 +49,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 
@@ -58,7 +58,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 /**
  * @author Gernot Belger
  */
-public class TimeseriesManagementTaskHandler extends AbstractHandler
+public class CatchmentModelsTaskHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
@@ -67,7 +67,7 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
 
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
-    final TimeseriesManagementView view = (TimeseriesManagementView) page.findView( TimeseriesManagementView.ID );
+    final CatchmentModelsView view = (CatchmentModelsView) page.findView( CatchmentModelsView.ID );
 
     if( view == null )
       throw new ExecutionException( "Failed to access timeseries view" ); //$NON-NLS-1$
@@ -75,8 +75,10 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
     try
     {
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-      final IStationCollection input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, IStationCollection.class );
+
+      final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
+
+      final ICatchmentModel input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS, ICatchmentModel.class );
 
       view.setInput( workspace, input );
     }

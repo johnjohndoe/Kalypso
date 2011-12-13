@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.cm.view;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -47,8 +47,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeStrategy;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -56,9 +57,9 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
 /**
  * @author Gernot Belger
  */
-public class TimeseriesManagementView extends ViewPart
+public class CatchmentModelsView extends ViewPart
 {
-  public static String ID = "org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"; //$NON-NLS-1$
+  public static String ID = "org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"; //$NON-NLS-1$
 
   private TreeViewer m_treeViewer;
 
@@ -91,9 +92,9 @@ public class TimeseriesManagementView extends ViewPart
     m_treeViewer.getControl().setFocus();
   }
 
-  public void setInput( final CommandableWorkspace workspace, final IStationCollection stations )
+  public void setInput( final CommandableWorkspace workspace, final ICatchmentModel model )
   {
-    final StationsByStationsStrategy strategy = new StationsByStationsStrategy( stations );
+    final ITreeNodeStrategy strategy = new CatchmentsTreeStrategy( model );
 
     final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
 

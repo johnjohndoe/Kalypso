@@ -43,9 +43,7 @@ package org.kalypso.ui.rrm.internal.utils.featureTree;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
@@ -53,17 +51,17 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class TreeNodeModel implements ITreeNodeModel
 {
-  private final IStationCollection m_stations;
-
   private TreeNode[] m_nodes;
 
   private final CommandableWorkspace m_workspace;
 
   private final StructuredViewer m_viewer;
 
-  public TreeNodeModel( final IStationCollection stations, final CommandableWorkspace workspace, final StructuredViewer viewer )
+  private final ITreeNodeStrategy m_strategy;
+
+  public TreeNodeModel( final ITreeNodeStrategy strategy, final CommandableWorkspace workspace, final StructuredViewer viewer )
   {
-    m_stations = stations;
+    m_strategy = strategy;
     m_workspace = workspace;
     m_viewer = viewer;
   }
@@ -73,8 +71,7 @@ public class TreeNodeModel implements ITreeNodeModel
   {
     if( m_nodes == null )
     {
-      // TODO: get strategy from outside
-      final TreeNode rootNode = new StationsByStationsStrategy( this, m_stations ).buildNodes();
+      final TreeNode rootNode = m_strategy.buildNodes( this );
       m_nodes = rootNode.getChildren();
     }
 
