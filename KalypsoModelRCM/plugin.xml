@@ -57,8 +57,8 @@
             qname="{org.kalypso.model.rcm.v2}Target">
       </feature>
       <feature
-            class="org.kalypso.model.rcm.internal.binding.CatchmentGenerator"
-            qname="{org.kalypso.model.cm}CatchmentGenerator">
+            class="org.kalypso.model.rcm.internal.binding.LinearSumGenerator"
+            qname="{org.kalypso.model.cm}LinearSumGenerator">
       </feature>
       <feature
             class="org.kalypso.model.rcm.internal.binding.Catchment"
