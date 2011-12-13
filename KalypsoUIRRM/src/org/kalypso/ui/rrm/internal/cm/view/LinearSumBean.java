@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
@@ -51,20 +53,40 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 {
-  List<CatchmentBean> m_catchments;
+  private CatchmentBean[] m_catchments;
 
   public LinearSumBean( )
   {
     super( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR );
+
+    m_catchments = new CatchmentBean[] {};
   }
 
   public LinearSumBean( final ILinearSumGenerator generator )
   {
     super( generator );
+
+    m_catchments = initCatchments();
   }
 
   public String getName( )
   {
     return getFeature().getName();
+  }
+
+  public CatchmentBean[] getCatchments( )
+  {
+    return m_catchments;
+  }
+
+  private CatchmentBean[] initCatchments( )
+  {
+    List<CatchmentBean> results = new ArrayList<CatchmentBean>();
+    ILinearSumGenerator generator = getFeature();
+    ICatchment[] catchments = generator.getCatchments();
+    for( ICatchment catchment : catchments )
+      results.add( new CatchmentBean( catchment ) );
+
+    return results.toArray( new CatchmentBean[] {} );
   }
 }

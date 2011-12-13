@@ -181,7 +181,7 @@ public class EditCatchmentsDialog extends TrayDialog
     viewer.setLabelProvider( new CatchmentsLabelProvider() );
 
     /* Set the input. */
-    // TODO
+    viewer.setInput( m_bean.getCatchments() );
 
     /* Add a listener. */
     viewer.addSelectionChangedListener( new ISelectionChangedListener()

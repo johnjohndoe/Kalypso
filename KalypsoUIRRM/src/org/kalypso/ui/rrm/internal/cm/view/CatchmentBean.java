@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
@@ -51,20 +53,40 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class CatchmentBean extends FeatureBean<ICatchment>
 {
-  List<FactorizedTimeseriesBean> m_timeseries;
+  private FactorizedTimeseriesBean[] m_timeseries;
 
   public CatchmentBean( )
   {
     super( ICatchment.FEATURE_CATCHMENT );
+
+    m_timeseries = new FactorizedTimeseriesBean[] {};
   }
 
   public CatchmentBean( final ICatchment catchment )
   {
     super( catchment );
+
+    m_timeseries = initFactorizedTimeseries();
   }
 
   public String getName( )
   {
     return getFeature().getName();
+  }
+
+  public FactorizedTimeseriesBean[] getTimeseries( )
+  {
+    return m_timeseries;
+  }
+
+  private FactorizedTimeseriesBean[] initFactorizedTimeseries( )
+  {
+    List<FactorizedTimeseriesBean> results = new ArrayList<FactorizedTimeseriesBean>();
+    ICatchment generator = getFeature();
+    IFactorizedTimeseries[] factorizedTimeseries = generator.getFactorizedTimeseries();
+    for( IFactorizedTimeseries timeseries : factorizedTimeseries )
+      results.add( new FactorizedTimeseriesBean( timeseries ) );
+
+    return results.toArray( new FactorizedTimeseriesBean[] {} );
   }
 }
