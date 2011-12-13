@@ -104,6 +104,11 @@
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
+          <element name="parameterType" type="string" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation xml:lang="en"><![CDATA[The type of timeseries (i.e. rainfall, temperature, ...) this generator is producing.]]></documentation>
+            </annotation>
+          </element>
           <!-- TODO: would be nice to use TimePeriodPropertyType here -->
           <element name="period" type="rcm:DateRangePropertyType">
             <annotation>
