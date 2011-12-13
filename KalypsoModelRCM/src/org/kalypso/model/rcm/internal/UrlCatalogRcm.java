@@ -61,7 +61,7 @@ public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
       catalog.put( NS_RCM, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/rainfallCatchmentModel_v2.xsd" ) ); //$NON-NLS-1$
       prefixes.put( NS_RCM, "rcm" ); //$NON-NLS-1$
 
-      catalog.put( NS_CM, UrlCatalogRcm.class.getResource( "platform:/plugin/org.kalypso.model.rcm/etc/schema/catchmentModel.xsd" ) ); //$NON-NLS-1$
+      catalog.put( NS_CM, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/catchmentModel.xsd" ) ); //$NON-NLS-1$
       prefixes.put( NS_CM, "cm" ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
