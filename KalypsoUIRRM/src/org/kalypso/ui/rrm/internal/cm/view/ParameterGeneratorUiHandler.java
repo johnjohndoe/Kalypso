@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.timeseries.view.ParameterComposite;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
@@ -63,10 +64,13 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
 
   private final String m_parameterType;
 
-  public ParameterGeneratorUiHandler( final ITreeNodeModel model, final String parameterType )
+  private final IRainfallGenerator[] m_generators;
+
+  public ParameterGeneratorUiHandler( final ITreeNodeModel model, final String parameterType, final IRainfallGenerator[] generators )
   {
     m_model = model;
     m_parameterType = parameterType;
+    m_generators = generators;
   }
 
   @Override
@@ -97,9 +101,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    // TODO add generator
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, m_parameterType ) );
-
-    // TODO remove generators
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteGeneratorAction( m_model, m_generators ) );
   }
 }

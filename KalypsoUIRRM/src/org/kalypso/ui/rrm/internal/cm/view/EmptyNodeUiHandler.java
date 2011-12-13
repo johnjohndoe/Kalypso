@@ -38,9 +38,8 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -49,46 +48,37 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class GroupUiHandler extends AbstractTreeNodeUiHandler
+class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
 {
-  static final String UNDEFINED_GROUP_LABEL = "<undefined group>";
-  private final String m_group;
-
   private final ITreeNodeModel m_model;
 
-  public GroupUiHandler( final ITreeNodeModel model, final String group )
+  public EmptyNodeUiHandler( final ITreeNodeModel model )
   {
     m_model = model;
-    m_group = group;
   }
 
   @Override
   public String getTypeLabel( )
   {
-    return "Group";
+    return "<Empty>";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    if( StringUtils.isBlank( m_group ) )
-      return UNDEFINED_GROUP_LABEL;
-
-    return m_group;
+    return "<empty database>";
   }
 
   @Override
   public ImageDescriptor getTreeImage( )
   {
-    return UIRrmImages.id( DESCRIPTORS.GROUP );
+    return null;
   }
 
   @Override
@@ -100,10 +90,6 @@ public class GroupUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMeteorologicalStationAction( m_model, m_group ) );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewHydrologicalStationAction( m_model, m_group ) );
-
-    // TODO: import stations
-    // TODO: delete stations
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, null ) );
   }
 }

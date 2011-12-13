@@ -95,6 +95,7 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
     sectionToolbar.add( new EditGeneratorAction( m_model, m_generator ) );
+    sectionToolbar.add( new DeleteGeneratorAction( m_model, m_generator ) );
 
     if( m_generator instanceof ILinearSumGenerator )
     {
