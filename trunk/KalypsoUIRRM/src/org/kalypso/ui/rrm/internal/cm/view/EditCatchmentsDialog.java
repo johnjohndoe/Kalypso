@@ -49,9 +49,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,6 +69,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
@@ -103,6 +109,11 @@ public class EditCatchmentsDialog extends TrayDialog
   private Group m_detailsGroup;
 
   /**
+   * The selected catchment.
+   */
+  protected CatchmentBean m_catchmentBean;
+
+  /**
    * The data binding.
    */
   private IDataBinding m_dataBinding;
@@ -126,6 +137,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_catchmentBean = null;
     m_dataBinding = null;
   }
 
@@ -143,7 +155,7 @@ public class EditCatchmentsDialog extends TrayDialog
     main.setLayout( new GridLayout( 1, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 400;
-    mainData.widthHint = 550;
+    mainData.widthHint = 750;
     main.setLayoutData( mainData );
 
     /* Create the form. */
@@ -155,12 +167,14 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Get the body. */
     Composite body = form.getBody();
-    body.setLayout( new GridLayout( 2, true ) );
+    body.setLayout( new GridLayout( 2, false ) );
 
     /* Create the main group. */
     m_mainGroup = new Group( body, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
-    m_mainGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    mainGroupData.widthHint = 250;
+    m_mainGroup.setLayoutData( mainGroupData );
     m_mainGroup.setText( "Generator" );
 
     /* Create the content of the main group. */
@@ -173,7 +187,7 @@ public class EditCatchmentsDialog extends TrayDialog
     m_detailsGroup.setText( "Details" );
 
     /* Create the content of the details group. */
-    createDetailsContent( m_detailsGroup );
+    createDetailsContent( m_detailsGroup, null );
 
     return main;
   }
@@ -249,7 +263,24 @@ public class EditCatchmentsDialog extends TrayDialog
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        // TODO
+        ISelection selection = event.getSelection();
+        if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
+        {
+          m_catchmentBean = null;
+          updateDetailsGroup( null );
+          return;
+        }
+
+        Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+        if( !(firstElement instanceof CatchmentBean) )
+        {
+          m_catchmentBean = null;
+          updateDetailsGroup( null );
+          return;
+        }
+
+        m_catchmentBean = (CatchmentBean) firstElement;
+        updateDetailsGroup( m_catchmentBean );
       }
     } );
   }
@@ -259,20 +290,73 @@ public class EditCatchmentsDialog extends TrayDialog
    * 
    * @param parent
    *          The parent composite.
+   * @param catchmentBean
+   *          The selected catchment.
    */
-  private void createDetailsContent( final Composite parent )
+  private void createDetailsContent( final Composite parent, final CatchmentBean catchmentBean )
   {
-    // TODO
+    /* Create a table viewer. */
+    TableViewer viewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
+    viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    viewer.getTable().setLinesVisible( true );
+    viewer.getTable().setHeaderVisible( true );
+    viewer.setContentProvider( new ArrayContentProvider() );
+
+    /* Create the columns. */
+    createColumns( viewer );
+
+    /* Set the input. */
+    if( catchmentBean != null )
+      viewer.setInput( catchmentBean.getTimeseries() );
+  }
+
+  private void createColumns( final TableViewer viewer )
+  {
+    /* Create the station column. */
+    TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    stationColumn.getColumn().setText( "Station" );
+    stationColumn.getColumn().setWidth( 150 );
+    // stationColumn.setLabelProvider( new StationColumnLabelProvider( ) );
+
+    /* Create the timestep column. */
+    TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    timestepColumn.getColumn().setText( "Timestep" );
+    timestepColumn.getColumn().setWidth( 75 );
+    // timestepColumn.setLabelProvider( new TimestepColumnLabelProvider( ) );
+
+    /* Create the quality column. */
+    TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    qualityColumn.getColumn().setText( "Quality" );
+    qualityColumn.getColumn().setWidth( 150 );
+    // qualityColumn.setLabelProvider( new QualityColumnLabelProvider( ) );
+
+    /* Create the factor column. */
+    TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    factorColumn.getColumn().setText( "Factor" );
+    factorColumn.getColumn().setWidth( 75 );
+    // factorColumn.setLabelProvider( new FactorColumnLabelProvider( ) );
   }
 
   /**
-   * This function disposes the dialog.
+   * This function updates the details group.
+   * 
+   * @param catchmentBean
+   *          The selected catchment.
    */
-  private void dispose( )
+  public void updateDetailsGroup( CatchmentBean catchmentBean )
   {
-    m_mainGroup = null;
-    m_detailsGroup = null;
-    m_dataBinding = null;
+    /* Cannot do anything. */
+    if( m_detailsGroup == null || m_detailsGroup.isDisposed() )
+      return;
+
+    /* Dispose all children. */
+    ControlUtils.disposeChildren( m_detailsGroup );
+
+    /* Create the content of the details group. */
+    createDetailsContent( m_detailsGroup, catchmentBean );
+
+    /* Layout. */
+    m_detailsGroup.layout();
   }
 
   private void performOk( )
@@ -363,5 +447,16 @@ public class EditCatchmentsDialog extends TrayDialog
         m_model.postCommand( command );
       }
     }
+  }
+
+  /**
+   * This function disposes the dialog.
+   */
+  private void dispose( )
+  {
+    m_mainGroup = null;
+    m_detailsGroup = null;
+    m_catchmentBean = null;
+    m_dataBinding = null;
   }
 }
