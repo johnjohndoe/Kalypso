@@ -48,7 +48,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.binding._11_6.NAControl;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
@@ -58,6 +60,8 @@ import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Converts one calc case.
@@ -200,21 +204,67 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void convertControls( ) throws Exception
   {
-    final NAControl metaControl = m_data.loadMetaControl();
+    /* Convert Meta control */
+    final org.kalypso.model.hydrology.binding._11_6.NAControl metaControl = m_data.loadMetaControl();
+    final NAControl newMetaControl = convertMetaControl( metaControl );
 
-    tweakExeVersion( metaControl );
+    tweakExeVersion( newMetaControl );
 
-    // FIXME: convert both control models to new schema
+    m_data.saveModel( newMetaControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
 
-    m_data.saveModel( metaControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
+    /* Convert modell control */
+    final org.kalypso.model.hydrology.binding._11_6.NAModellControl modelControl = m_data.loadControl();
+    final NAModellControl newModelControl = convertModelControl( modelControl );
+
+    m_data.saveModel( newModelControl, INaCalcCaseConstants.EXPERT_CONTROL_PATH );
   }
 
-  private void tweakExeVersion( final NAControl metaControl )
+  private NAControl convertMetaControl( final org.kalypso.model.hydrology.binding._11_6.NAControl oldControl ) throws GMLSchemaException
   {
-    final String exeVersion = metaControl.getExeVersion();
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NAControl.FEATURE_NACONTROL, null, null );
+    final NAControl newControl = (NAControl) workspace.getRootFeature();
+
+    /* Metadata */
+    newControl.setDescription( oldControl.getDescription2() );
+    newControl.setEditor( oldControl.getEditor() );
+    newControl.setComment( oldControl.getComment() );
+    newControl.setCreationTime( oldControl.getCalcTime() );
+
+    /* Control parameters */
+    newControl.setSimulationEnd( oldControl.getSimulationEnd() );
+    newControl.setSimulationStart( oldControl.getSimulationStart() );
+    newControl.setReturnPeriod( oldControl.getReturnPeriod() );
+    newControl.setExeVersion( oldControl.getExeVersion() );
+    newControl.setMinutesOfTimestep( oldControl.getMinutesOfTimestep() );
+
+    /* Synthetic precipitation */
+    newControl.setDurationMinutes( oldControl.getDurationMinutes() );
+    newControl.setUsePrecipitationForm( oldControl.isUsePrecipitationForm() );
+    newControl.setPrecipitationForm( oldControl.getPrecipitationForm() );
+
+    getLog().add( IStatus.OK, "Control parameters have been converted" );
+
+    return newControl;
+  }
+
+  private NAModellControl convertModelControl( final org.kalypso.model.hydrology.binding._11_6.NAModellControl oldControl ) throws GMLSchemaException
+  {
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NAModellControl.FEATURE_NA_MODELL_CONTROL, null, null );
+    final NAModellControl newControl = (NAModellControl) workspace.getRootFeature();
+
+    // TODO Auto-generated method stub
+
+    getLog().add( IStatus.OK, "Output control parameters have been converted" );
+
+    return newControl;
+  }
+
+  private void tweakExeVersion( final NAControl newMetaControl )
+  {
+    final String exeVersion = newMetaControl.getExeVersion();
     if( m_chosenExe != null )
     {
-      metaControl.setExeVersion( m_chosenExe );
+      newMetaControl.setExeVersion( m_chosenExe );
 
       final String statusMsg = Messages.getString( "CalcCaseConverter_2", m_chosenExe, exeVersion ); //$NON-NLS-1$
       getLog().add( IStatus.OK, statusMsg );
@@ -225,7 +275,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       getLog().add( IStatus.OK, statusMsg );
     }
 
-    metaControl.getWorkspace().dispose();
+    newMetaControl.getWorkspace().dispose();
   }
 
   /**

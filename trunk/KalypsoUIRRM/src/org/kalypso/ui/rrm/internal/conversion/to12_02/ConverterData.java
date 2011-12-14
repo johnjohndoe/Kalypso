@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
@@ -83,7 +84,8 @@ public class ConverterData
   <F extends Feature> F loadModel( final String path ) throws Exception
   {
     final File file = new File( m_baseDir, path );
-    return (F) GmlSerializer.createGMLWorkspace( file, null );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( file, null );
+    return (F) workspace.getRootFeature();
   }
 
   void saveModel( final Feature model, final String path ) throws IOException, GmlSerializeException
