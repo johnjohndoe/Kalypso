@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
@@ -47,9 +49,13 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -79,7 +85,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     m_binding = binding;
     m_editable = editable;
 
-    m_binding.getToolkit().adapt( this );
+    FormToolkit toolkit = m_binding.getToolkit();
+    if( toolkit != null )
+      toolkit.adapt( this );
 
     super.setLayout( GridLayoutFactory.fillDefaults().create() );
 
@@ -134,10 +142,15 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
   {
     final IPropertyType propertyType = m_featureBean.getFeatureType().getProperty( property );
     final String label = AnnotationUtilities.getAnnotation( propertyType.getAnnotation(), null, IAnnotation.ANNO_LABEL );
-
     final FormToolkit toolkit = m_binding.getToolkit();
-
-    toolkit.createLabel( parent, label );
+    if( toolkit != null )
+      toolkit.createLabel( parent, label );
+    else
+    {
+      Label propertyLabel = new Label( parent, SWT.NONE );
+      propertyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      propertyLabel.setText( label );
+    }
   }
 
   protected final Text createPropertyTextField( final Composite parent )
@@ -147,13 +160,47 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       style &= SWT.READ_ONLY;
 
     final FormToolkit toolkit = m_binding.getToolkit();
+    Text field = null;
+    if( toolkit != null )
+      field = toolkit.createText( parent, StringUtils.EMPTY, style );
+    else
+      field = new Text( parent, style );
 
-    final Text field = toolkit.createText( parent, StringUtils.EMPTY, style );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     field.setEditable( m_editable );
     field.setEnabled( m_editable );
 
     return field;
+  }
+
+  protected final ComboViewer createPropertyCombo( final Composite parent, final Map<String, String> allowedValues )
+  {
+    ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY );
+    viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    viewer.getCombo().setEnabled( m_editable );
+    viewer.setContentProvider( new ArrayContentProvider() );
+    viewer.setLabelProvider( new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        if( element instanceof String )
+          return allowedValues.get( element );
+
+        return super.getText( element );
+      }
+    } );
+
+    viewer.setInput( allowedValues.keySet().toArray( new String[] {} ) );
+
+    FormToolkit toolkit = m_binding.getToolkit();
+    if( toolkit != null )
+      toolkit.adapt( viewer.getCombo() );
+
+    return viewer;
   }
 
   protected final void bindTextField( final Text field, final QName property )
@@ -171,6 +218,15 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
     // TODO: restrictions!
 
+    m_binding.bindValue( binder );
+  }
+
+  protected final void bindCombo( final ComboViewer viewer, final QName property )
+  {
+    final ISWTObservableValue target = SWTObservables.observeSelection( viewer.getCombo() );
+    final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
+
+    final DataBinder binder = new DataBinder( target, model );
     m_binding.bindValue( binder );
   }
 }

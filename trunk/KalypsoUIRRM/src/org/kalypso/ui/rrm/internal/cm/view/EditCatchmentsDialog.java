@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 
@@ -125,7 +124,7 @@ public class EditCatchmentsDialog extends TrayDialog
     form.setLayoutData( mainData );
 
     /* Create the data binding. */
-    m_dataBinding = new DatabindingForm( form, new FormToolkit( getShell().getDisplay() ) );
+    m_dataBinding = new DatabindingForm( form, null );
 
     /* Get the body. */
     Composite body = form.getBody();
@@ -196,7 +195,7 @@ public class EditCatchmentsDialog extends TrayDialog
   private void createMainContent( final Composite parent )
   {
     /* Create the linear sum composite. */
-    LinearSumComposite composite = new LinearSumComposite( parent, m_bean, m_dataBinding, true );
+    LinearSumNewComposite composite = new LinearSumNewComposite( parent, m_bean, m_dataBinding );
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create a viewer. */
