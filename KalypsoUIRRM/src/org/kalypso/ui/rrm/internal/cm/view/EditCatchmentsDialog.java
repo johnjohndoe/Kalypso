@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -51,10 +58,20 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * This dialog allowes the editing of catchments of a catchment model.
@@ -63,6 +80,11 @@ import org.kalypso.commons.databinding.forms.DatabindingForm;
  */
 public class EditCatchmentsDialog extends TrayDialog
 {
+  /**
+   * The model.
+   */
+  private final ITreeNodeModel m_model;
+
   /**
    * The bean to edit.
    */
@@ -88,13 +110,16 @@ public class EditCatchmentsDialog extends TrayDialog
    * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
+   * @param model
+   *          The model.
    * @param bean
    *          The bean to edit.
    */
-  public EditCatchmentsDialog( final Shell shell, final LinearSumBean bean )
+  public EditCatchmentsDialog( final Shell shell, final ITreeNodeModel model, final LinearSumBean bean )
   {
     super( shell );
 
+    m_model = model;
     m_bean = bean;
 
     m_mainGroup = null;
@@ -109,7 +134,7 @@ public class EditCatchmentsDialog extends TrayDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Zeitreihenablage konfigurieren" );
+    getShell().setText( "Edit Catchment Generator" );
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -166,7 +191,8 @@ public class EditCatchmentsDialog extends TrayDialog
   @Override
   protected void okPressed( )
   {
-    // TODO
+    /* Perform ok. */
+    performOk();
 
     /* Dispose the dialog. */
     dispose();
@@ -194,9 +220,14 @@ public class EditCatchmentsDialog extends TrayDialog
    */
   private void createMainContent( final Composite parent )
   {
-    /* Create the linear sum composite. */
+    /* Create the linear sum new composite. */
     LinearSumNewComposite composite = new LinearSumNewComposite( parent, m_bean, m_dataBinding );
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    /* Create a label. */
+    Label label = new Label( parent, SWT.NONE );
+    label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    label.setText( "Catchments" );
 
     /* Create a viewer. */
     ListViewer viewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
@@ -240,5 +271,57 @@ public class EditCatchmentsDialog extends TrayDialog
     m_mainGroup = null;
     m_detailsGroup = null;
     m_dataBinding = null;
+  }
+
+  private void performOk( )
+  {
+    try
+    {
+      /* Apply the changes to the generator feature, */
+      applyGeneratorFeature();
+
+      /* Apply the changes to the catchments. */
+      // TODO
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the generator", e ); //$NON-NLS-1$
+      StatusDialog.open( getShell(), status, getShell().getText() );
+    }
+  }
+
+  private void applyGeneratorFeature( ) throws Exception
+  {
+    CommandableWorkspace workspace = m_model.getWorkspace();
+    ILinearSumGenerator feature = m_bean.getFeature();
+    if( feature == null )
+    {
+      /* The generator feature does not exist. */
+      Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
+      ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
+      IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
+      QName type = m_bean.getFeatureType().getQName();
+
+      /* Create the add feature command. */
+      AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+
+      /* Post the command. */
+      m_model.postCommand( command );
+
+      /* Refresh the tree. */
+      m_model.refreshTree( command.getNewFeature() );
+
+      return;
+    }
+
+    /* The generator feature does already exist. */
+    ICommand command = m_bean.applyChanges();
+
+    /* Post the command. */
+    m_model.postCommand( command );
+
+    /* Refresh the tree. */
+    m_model.refreshTree( m_bean.getFeature() );
   }
 }

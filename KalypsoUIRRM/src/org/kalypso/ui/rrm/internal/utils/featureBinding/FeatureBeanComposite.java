@@ -48,6 +48,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -223,7 +225,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected final void bindCombo( final ComboViewer viewer, final QName property )
   {
-    final ISWTObservableValue target = SWTObservables.observeSelection( viewer.getCombo() );
+    final IViewerObservableValue target = ViewersObservables.observeSingleSelection( viewer );
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
 
     final DataBinder binder = new DataBinder( target, model );

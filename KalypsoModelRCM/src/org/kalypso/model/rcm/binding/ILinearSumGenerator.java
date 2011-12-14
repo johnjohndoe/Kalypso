@@ -45,14 +45,14 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.rcm.RcmConstants;
 
 /**
- * The catchment generator.
+ * The linear sum generator.
  * 
  * @author Holger Albert
  */
 public interface ILinearSumGenerator extends IRainfallGenerator
 {
   /**
-   * The qname of the catchment generator.
+   * The qname of the linear sum generator.
    */
   QName FEATURE_LINEAR_SUM_GENERATOR = new QName( RcmConstants.NS_CM, "LinearSumGenerator" );
 

@@ -52,7 +52,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -73,7 +72,7 @@ public class NewLinearSumGeneratorAction extends Action
     m_model = model;
     m_parameterType = parameterType;
 
-    setText( "New Catchment Model (Linear Sum)" );
+    setText( "New Catchment Generator (Linear Sum)" );
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
   }
 
@@ -82,24 +81,11 @@ public class NewLinearSumGeneratorAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
-
     final LinearSumBean bean = createEmptyBean();
     bean.setProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE, m_parameterType );
 
-    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, bean );
+    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, m_model, bean );
     dialog.open();
-
-// final NewGeneratorLinearSumWizard wizard = new NewGeneratorLinearSumWizard( workspace, bean );
-// wizard.setWindowTitle( getText() );
-
-// final WizardDialog dialog = new WizardDialog( shell, wizard );
-// if( dialog.open() != Window.OK )
-// return;
-
-// /* Refresh tree */
-// final ILinearSumGenerator newGenerator = wizard.getNewGenerator();
-// m_model.refreshTree( newGenerator );
   }
 
   /**
