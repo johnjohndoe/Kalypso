@@ -38,47 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm.binding;
+package org.kalypso.ui.rrm.internal.cm.view;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.rcm.RcmConstants;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**
- * The factorized timeseries.
+ * A column label provider.
  * 
  * @author Holger Albert
  */
-public interface IFactorizedTimeseries extends Feature
+public class GroupColumnLabelProvider extends ColumnLabelProvider
 {
   /**
-   * The qname of the factorized timeseries.
+   * The constructor.
    */
-  public static QName FEATURE_FACTORIZED_TIMESERIES = new QName( RcmConstants.NS_CM, "FactorizedTimeseries" ); //$NON-NLS-1$
+  public GroupColumnLabelProvider( )
+  {
+  }
 
   /**
-   * The qname of the factor.
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
-  public static QName PROPERTY_FACTOR = new QName( RcmConstants.NS_CM, "factor" ); //$NON-NLS-1$
+  @Override
+  public String getText( Object element )
+  {
+    if( element instanceof FactorizedTimeseriesBean )
+    {
+      FactorizedTimeseriesBean bean = (FactorizedTimeseriesBean) element;
+      return bean.getGroupText();
+    }
 
-  /**
-   * The qname of the timeseries link.
-   */
-  public static QName PROPERTY_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" ); //$NON-NLS-1$
-
-  /**
-   * This function returns the factor.
-   * 
-   * @return The factor.
-   */
-  public Double getFactor( );
-
-  /**
-   * This function returns the timeseries link.
-   * 
-   * @return The timeseries link.
-   */
-  public ZmlLink getTimeseriesLink( );
+    return super.getText( element );
+  }
 }

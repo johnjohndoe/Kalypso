@@ -73,7 +73,7 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Catchment Generator";
+    return "Catchment Model";
   }
 
   @Override
@@ -109,6 +109,6 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
-    // TODO Auto-generated method stub
+    // TODO
   }
 }

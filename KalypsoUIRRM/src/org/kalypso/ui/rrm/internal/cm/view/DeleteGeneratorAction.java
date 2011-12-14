@@ -68,15 +68,15 @@ public class DeleteGeneratorAction extends Action
     m_model = model;
     m_generators = generators;
 
-    setText( "Delete Catchment Generator(s)" );
-    setToolTipText( "Delete selected catchment generator(s)" );
+    setText( "Delete Catchment Model(s)" );
+    setToolTipText( "Delete selected catchment model(s)" );
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
     if( generators.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( "Element contains no generators" );
+      setToolTipText( "Element contains no models" );
     }
   }
 
@@ -100,7 +100,7 @@ public class DeleteGeneratorAction extends Action
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete generator(s)", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete model(s)", e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
   }
@@ -108,8 +108,8 @@ public class DeleteGeneratorAction extends Action
   private String getDeleteMessage( )
   {
     if( m_generators.length > 1 )
-      return "Delete selected catchment generator(s)? This operation cannot made undone!";
+      return "Delete selected catchment model(s)? This operation cannot made undone!";
 
-    return String.format( "Delete catchment generator '%s'? This operation cannot made undone!", m_generators[0].getDescription() );
+    return String.format( "Delete catchment model '%s'? This operation cannot made undone!", m_generators[0].getDescription() );
   }
 }

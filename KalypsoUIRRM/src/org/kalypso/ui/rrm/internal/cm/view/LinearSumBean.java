@@ -47,7 +47,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ICatchment;
@@ -107,29 +106,18 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   public ILinearSumGenerator apply( CommandableWorkspace workspace ) throws Exception
   {
-    ILinearSumGenerator feature = getFeature();
-    if( feature == null )
-    {
-      Map<QName, Object> properties = new HashMap<>( getProperties() );
-      ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
-      IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
-      QName type = getFeatureType().getQName();
+    // TODO Delete all catchments
+    Map<QName, Object> properties = new HashMap<>( getProperties() );
+    ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
+    IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
+    QName type = getFeatureType().getQName();
 
-      AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
-      workspace.postCommand( command );
-
-      for( CatchmentBean catchment : m_catchments )
-        catchment.apply( workspace, this );
-
-      return (ILinearSumGenerator) command.getNewFeature();
-    }
-
-    ICommand command = applyChanges();
+    AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
     workspace.postCommand( command );
 
     for( CatchmentBean catchment : m_catchments )
-      catchment.apply( workspace, this );
+      catchment.apply( workspace, command.getNewFeature() );
 
-    return feature;
+    return (ILinearSumGenerator) command.getNewFeature();
   }
 }
