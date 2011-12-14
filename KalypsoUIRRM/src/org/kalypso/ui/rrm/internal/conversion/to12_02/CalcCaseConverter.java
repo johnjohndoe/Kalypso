@@ -42,6 +42,9 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -49,8 +52,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.model.hydrology.binding.InitialValue;
 import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding._11_6.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
@@ -61,6 +69,7 @@ import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -252,7 +261,37 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( NAModellControl.FEATURE_NA_MODELL_CONTROL, null, null );
     final NAModellControl newControl = (NAModellControl) workspace.getRootFeature();
 
-    // TODO Auto-generated method stub
+    /* Copy all boolean values that exists in both models */
+    final IFeatureType oldType = oldControl.getFeatureType();
+    final IFeatureType newType = newControl.getFeatureType();
+
+    final IPropertyType[] oldTypes = oldType.getProperties();
+    for( final IPropertyType oldProperty : oldTypes )
+    {
+      final IPropertyType newProperty = newType.getProperty( new QName( NAModellControl.NS_NACONTROL, oldProperty.getQName().getLocalPart() ) );
+      if( oldProperty instanceof IValuePropertyType && newProperty instanceof IValuePropertyType )
+      {
+        if( ((IValuePropertyType) oldProperty).getValueClass() == Boolean.class )
+        {
+          final Object oldValue = oldControl.getProperty( oldProperty );
+          newControl.setProperty( newProperty, oldValue );
+        }
+      }
+    }
+
+    /* Copy initial values */
+    final IFeatureBindingCollection<InitialValue> newInitialValues = newControl.getInitialValues();
+    final IFeatureBindingCollection<InitialValues> oldInitialValues = oldControl.getInitialValues();
+    for( final InitialValues oldInitialValue : oldInitialValues )
+    {
+      final InitialValue newInitialValue = newInitialValues.addNew( InitialValue.FEATURE_INITIAL_VALUE );
+
+      final Date date = oldInitialValue.getInitialDate();
+      final boolean isActive = oldInitialValue.doWrite();
+
+      newInitialValue.setInitialDate( date );
+      newInitialValue.setActive( isActive );
+    }
 
     getLog().add( IStatus.OK, "Output control parameters have been converted" );
 

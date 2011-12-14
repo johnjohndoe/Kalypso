@@ -50,6 +50,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -63,7 +65,7 @@ public class NAModellControl extends Feature_Impl
 
   public static final QName FEATURE_NA_MODELL_CONTROL = new QName( NS_NACONTROL, "NAModellControl" ); //$NON-NLS-1$
 
-  private static final QName PROP_INITIALVALUEDATE = new QName( NS_NACONTROL, "InitialValueDate" ); //$NON-NLS-1$
+  private static final QName MEMBER_INITIAL_VALUE = new QName( NS_NACONTROL, "initialValueMember" ); //$NON-NLS-1$
 
   private static final QName PROP_TMP = new QName( NS_NACONTROL, "tmp" ); //$NON-NLS-1$
 
@@ -107,9 +109,16 @@ public class NAModellControl extends Feature_Impl
 
   private static final QName PROP_SUP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
 
+  private final IFeatureBindingCollection<InitialValue> m_initialValues = new FeatureBindingCollection<InitialValue>( this, InitialValue.class, MEMBER_INITIAL_VALUE );
+
   public NAModellControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public IFeatureBindingCollection<InitialValue> getInitialValues( )
+  {
+    return m_initialValues;
   }
 
   public boolean doGenerateTMP( )
@@ -223,15 +232,15 @@ public class NAModellControl extends Feature_Impl
    */
   public Date[] getInitialDatesToBeWritten( )
   {
-    final List< ? > dateList = (List< ? >) getProperty( PROP_INITIALVALUEDATE );
+    final List< ? > dateList = (List< ? >) getProperty( MEMBER_INITIAL_VALUE );
     if( dateList == null )
       return new Date[0];
 
     final SortedSet<Date> dateWriteSet = new TreeSet<Date>();
     for( final Object object : dateList )
     {
-      final InitialValues fe = (InitialValues) object;
-      if( fe.doWrite() )
+      final InitialValue fe = (InitialValue) object;
+      if( fe.isActive() )
       {
         final Date initialDate = fe.getInitialDate();
         dateWriteSet.add( initialDate );

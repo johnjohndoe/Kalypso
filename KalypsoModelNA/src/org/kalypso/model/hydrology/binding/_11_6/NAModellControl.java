@@ -50,6 +50,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -108,9 +110,16 @@ public class NAModellControl extends Feature_Impl
 
   private static final QName PROP_SUP = new QName( NS_NACONTROL, "sup" ); //$NON-NLS-1$
 
+  private final IFeatureBindingCollection<InitialValues> m_initialValues = new FeatureBindingCollection<InitialValues>( this, InitialValues.class, PROP_INITIALVALUEDATE );
+
   public NAModellControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public IFeatureBindingCollection<InitialValues> getInitialValues( )
+  {
+    return m_initialValues;
   }
 
   public boolean doGenerateTMP( )
