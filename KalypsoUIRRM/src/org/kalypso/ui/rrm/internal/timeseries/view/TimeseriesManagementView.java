@@ -68,7 +68,6 @@ public class TimeseriesManagementView extends ViewPart
     final Composite panel = new Composite( parent, SWT.NONE );
 
     GridLayoutFactory.fillDefaults().applyTo( panel );
-
     createTree( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     getSite().setSelectionProvider( m_treeViewer );
