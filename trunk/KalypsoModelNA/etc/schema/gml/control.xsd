@@ -6,25 +6,22 @@
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
-            <element name="scenarioId" type="string" minOccurs="0" />
             <element name="startsimulation" type="dateTime" />
-            <element name="startOptimization" type="dateTime" minOccurs="0"/>
-            <element name="startforecast" type="dateTime" />
-            <element name="daysSimulationDuration" type="int" minOccurs="0" />
-            <element name="hoursforecast" type="int" minOccurs="0" />
+            <element name="endsimulation" type="dateTime" />
+
             <element name="minutesTimestep" type="int" minOccurs="0" />
             <element name="versionKalypsoNA" type="na:versionKalypsoNAType" />
+            
             <element name="editor" type="string" />
-            <element name="description" type="string" />
             <element name="comment" type="string" />
-            <element name="calctime" type="dateTime" />
-            <element name="mergeCasePath" type="string" />
+            <element name="creationTime" type="dateTime" />
+            
             <element name="pns" type="boolean" />
             <!--In der Oberfläche wird die Wiederkehrzeit verwendet - für das Modell wird dies zur Jährlichkeit umgerechnet -->
             <element name="xjah" type="double" />
             <element name="xwahl2" type="double" />
             <element name="ipver" type="na:ipverEnumerationType" />
-            <element name="returnPeriod" type="na:PositiveIntType" default="1" /> <!-- default = "1" only for backward compatibility -->
+            <element name="returnPeriod" type="na:PositiveIntType" default="1" minOccurs="0"/> <!-- default = "1" only for backward compatibility -->
           </sequence>
         </extension>
       </complexContent>
