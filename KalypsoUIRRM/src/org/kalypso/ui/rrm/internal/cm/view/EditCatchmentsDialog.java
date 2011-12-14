@@ -316,25 +316,25 @@ public class EditCatchmentsDialog extends TrayDialog
     TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
     stationColumn.getColumn().setText( "Station" );
     stationColumn.getColumn().setWidth( 150 );
-    // stationColumn.setLabelProvider( new StationColumnLabelProvider( ) );
+    stationColumn.setLabelProvider( new StationColumnLabelProvider() );
 
     /* Create the timestep column. */
     TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
     timestepColumn.getColumn().setText( "Timestep" );
     timestepColumn.getColumn().setWidth( 75 );
-    // timestepColumn.setLabelProvider( new TimestepColumnLabelProvider( ) );
+    timestepColumn.setLabelProvider( new TimestepColumnLabelProvider() );
 
     /* Create the quality column. */
     TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
     qualityColumn.getColumn().setText( "Quality" );
     qualityColumn.getColumn().setWidth( 150 );
-    // qualityColumn.setLabelProvider( new QualityColumnLabelProvider( ) );
+    qualityColumn.setLabelProvider( new QualityColumnLabelProvider() );
 
     /* Create the factor column. */
     TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
     factorColumn.getColumn().setText( "Factor" );
     factorColumn.getColumn().setWidth( 75 );
-    // factorColumn.setLabelProvider( new FactorColumnLabelProvider( ) );
+    factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
   }
 
   /**
