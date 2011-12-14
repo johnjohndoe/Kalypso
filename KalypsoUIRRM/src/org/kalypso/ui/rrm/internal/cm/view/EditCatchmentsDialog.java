@@ -338,12 +338,12 @@ public class EditCatchmentsDialog extends TrayDialog
     CatchmentBean[] catchments = m_bean.getCatchments();
     for( CatchmentBean catchment : catchments )
     {
+      /* Get the feature. */
       ICatchment feature = catchment.getFeature();
       if( feature == null )
       {
         /* The catchment feature does not exist. */
         Map<QName, Object> properties = new HashMap<>( catchment.getProperties() );
-
         ILinearSumGenerator collection = (ILinearSumGenerator) generator;
         IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
         QName type = catchment.getFeatureType().getQName();
