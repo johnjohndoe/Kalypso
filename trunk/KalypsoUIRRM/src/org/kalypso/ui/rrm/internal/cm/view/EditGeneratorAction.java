@@ -100,7 +100,7 @@ public class EditGeneratorAction extends Action
   {
     final LinearSumBean bean = new LinearSumBean( (ILinearSumGenerator) m_generator );
 
-    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, bean );
+    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, m_model, bean );
     dialog.open();
 
     // FIXME: apply changes + refresh tree

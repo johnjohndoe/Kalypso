@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * The catchment generator.
+ * The linear sum generator.
  * 
  * @author Holger Albert
  */
@@ -192,7 +192,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getAreaNameProperty()
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaNameProperty()
    */
   @Override
   public String getAreaNameProperty( )
@@ -201,7 +201,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getAreaProperty()
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaProperty()
    */
   @Override
   public String getAreaProperty( )
@@ -210,7 +210,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.ICatchmentGenerator#getCatchments()
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getCatchments()
    */
   @Override
   public ICatchment[] getCatchments( )

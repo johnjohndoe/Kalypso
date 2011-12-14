@@ -73,13 +73,13 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Catchment Model";
+    return "Catchment Generator";
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return m_generator.getName();
+    return m_generator.getDescription();
   }
 
   @Override
