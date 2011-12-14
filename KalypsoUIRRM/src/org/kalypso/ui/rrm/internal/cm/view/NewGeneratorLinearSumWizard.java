@@ -56,7 +56,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -83,14 +82,12 @@ public class NewGeneratorLinearSumWizard extends Wizard
   {
     final FeatureBean<ILinearSumGenerator> bean = m_bean;
 
-    final String[] allowedParameterTypes = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE, ITimeseriesConstants.TYPE_EVAPORATION };
-
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
     {
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new LinearSumNewComposite( parent, bean, binding, allowedParameterTypes );
+        return new LinearSumNewComposite( parent, bean, binding );
       }
     } );
   }
@@ -104,14 +101,10 @@ public class NewGeneratorLinearSumWizard extends Wizard
       // FIXME: copy catchments from model.gml
 
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
-
       final ICatchmentModel collection = (ICatchmentModel) m_workspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
-
       final QName type = m_bean.getFeatureType().getQName();
-
       final AddFeatureCommand command = new AddFeatureCommand( m_workspace, type, collection, parentRelation, -1, properties, null, -1 );
-
       m_workspace.postCommand( command );
     }
     catch( final Exception e )

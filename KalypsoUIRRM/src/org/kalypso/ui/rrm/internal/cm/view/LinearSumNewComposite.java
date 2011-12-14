@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.LinkedHashMap;
+
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
@@ -53,33 +56,31 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
  */
 public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenerator>
 {
-  private final String[] m_allowedParameterTypes;
+  private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE, ITimeseriesConstants.TYPE_EVAPORATION };
 
-  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> bean, final IDataBinding binding, final String[] allowedParameterTypes )
+  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> bean, final IDataBinding binding )
   {
     super( parent, bean, binding, true );
-
-    m_allowedParameterTypes = allowedParameterTypes;
   }
 
   @Override
   protected void createContents( )
   {
     createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
+    createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
     createParameterTypeControl();
   }
 
   private void createParameterTypeControl( )
   {
-    // FIXME: show parameter type combo
+    final LinkedHashMap<String, String> allowedValues = new LinkedHashMap<String, String>();
+    for( String allowedParameterType : ALLOWED_PARAMETER_TYPES )
+    {
+      final String allowedParameterLabel = ParameterTypeUtils.formatParameterType( allowedParameterType );
+      allowedValues.put( allowedParameterType, allowedParameterLabel );
+    }
 
-    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
-
-    final Text field = createPropertyTextField( this );
-
-    final String parameterType = (String) getBean().getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
-    final String parameterLabel = ParameterTypeUtils.formatParameterType( parameterType );
-
-    field.setText( parameterLabel );
+    final ComboViewer comboViewer = createPropertyCombo( this, allowedValues );
+    bindCombo( comboViewer, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
   }
 }

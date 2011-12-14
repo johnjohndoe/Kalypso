@@ -63,6 +63,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     super( ICatchment.FEATURE_CATCHMENT );
 
     m_timeseries = new FactorizedTimeseriesBean[] {};
+    m_catchmentRef = null;
   }
 
   public CatchmentBean( final ICatchment catchment )
@@ -72,8 +73,17 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_timeseries = initFactorizedTimeseries();
 
     final Feature areaLink = catchment.getAreaLink();
-
     m_catchmentRef = areaLink == null ? null : areaLink.getId();
+  }
+
+  public FactorizedTimeseriesBean[] getTimeseries( )
+  {
+    return m_timeseries;
+  }
+
+  public String getCatchmentRef( )
+  {
+    return m_catchmentRef;
   }
 
   public String getLabel( )
@@ -81,9 +91,9 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return (String) getProperty( Feature.QN_DESCRIPTION );
   }
 
-  public FactorizedTimeseriesBean[] getTimeseries( )
+  public void setCatchmentRef( final String catchmentRef )
   {
-    return m_timeseries;
+    m_catchmentRef = catchmentRef;
   }
 
   private FactorizedTimeseriesBean[] initFactorizedTimeseries( )
@@ -95,11 +105,6 @@ public class CatchmentBean extends FeatureBean<ICatchment>
       results.add( new FactorizedTimeseriesBean( timeseries ) );
 
     return results.toArray( new FactorizedTimeseriesBean[] {} );
-  }
-
-  public void setCatchmentRef( final String catchmentRef )
-  {
-    m_catchmentRef = catchmentRef;
   }
 
   // TODO: beim erzeugen der echten features:
