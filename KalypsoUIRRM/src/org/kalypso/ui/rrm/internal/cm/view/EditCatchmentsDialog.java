@@ -67,11 +67,13 @@ import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This dialog allowes the editing of catchments of a catchment model.
@@ -278,10 +280,13 @@ public class EditCatchmentsDialog extends TrayDialog
     try
     {
       /* Apply the changes to the generator feature, */
-      applyGeneratorFeature();
+      Feature generator = applyGeneratorFeature();
 
       /* Apply the changes to the catchments. */
-      // TODO
+      applyCatchmentFeatures( generator );
+
+      /* Refresh the tree. */
+      m_model.refreshTree( generator );
     }
     catch( final Exception e )
     {
@@ -291,7 +296,7 @@ public class EditCatchmentsDialog extends TrayDialog
     }
   }
 
-  private void applyGeneratorFeature( ) throws Exception
+  private Feature applyGeneratorFeature( ) throws Exception
   {
     CommandableWorkspace workspace = m_model.getWorkspace();
     ILinearSumGenerator feature = m_bean.getFeature();
@@ -309,10 +314,7 @@ public class EditCatchmentsDialog extends TrayDialog
       /* Post the command. */
       m_model.postCommand( command );
 
-      /* Refresh the tree. */
-      m_model.refreshTree( command.getNewFeature() );
-
-      return;
+      return command.getNewFeature();
     }
 
     /* The generator feature does already exist. */
@@ -321,7 +323,39 @@ public class EditCatchmentsDialog extends TrayDialog
     /* Post the command. */
     m_model.postCommand( command );
 
-    /* Refresh the tree. */
-    m_model.refreshTree( m_bean.getFeature() );
+    return m_bean.getFeature();
+  }
+
+  private void applyCatchmentFeatures( Feature generator ) throws Exception
+  {
+    CommandableWorkspace workspace = m_model.getWorkspace();
+    CatchmentBean[] catchments = m_bean.getCatchments();
+    for( CatchmentBean catchment : catchments )
+    {
+      ICatchment feature = catchment.getFeature();
+      if( feature == null )
+      {
+        /* The catchment feature does not exist. */
+        Map<QName, Object> properties = new HashMap<>( catchment.getProperties() );
+
+        ILinearSumGenerator collection = (ILinearSumGenerator) generator;
+        IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
+        QName type = catchment.getFeatureType().getQName();
+
+        /* Create the add feature command. */
+        AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+
+        /* Post the command. */
+        m_model.postCommand( command );
+      }
+      else
+      {
+        /* The catchment feature does already exist. */
+        ICommand command = catchment.applyChanges();
+
+        /* Post the command. */
+        m_model.postCommand( command );
+      }
+    }
   }
 }
