@@ -72,7 +72,7 @@ public class NewLinearSumGeneratorAction extends Action
     m_model = model;
     m_parameterType = parameterType;
 
-    setText( "New Catchment Generator (Linear Sum)" );
+    setText( "New Catchment Model (Linear Sum)" );
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
   }
 

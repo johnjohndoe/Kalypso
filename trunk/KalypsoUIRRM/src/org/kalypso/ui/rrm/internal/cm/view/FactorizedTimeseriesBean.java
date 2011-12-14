@@ -46,30 +46,34 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.joda.time.Period;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * ATTENTION: This bean does not wrap {@link IFactorizedTimeseries} features. It wraps the {@link ITimeseries} features.
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
+public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
 {
+  private double m_factor;
+
   public FactorizedTimeseriesBean( )
   {
-    super( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
+    super( ITimeseries.FEATURE_TIMESERIES );
   }
 
-  public FactorizedTimeseriesBean( final IFactorizedTimeseries factorizedTimeseries )
+  public FactorizedTimeseriesBean( final ITimeseries timeseries )
   {
-    super( factorizedTimeseries );
+    super( timeseries );
   }
 
   public String getLabel( )
@@ -79,22 +83,37 @@ public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 
   public double getFactor( )
   {
-    return (double) getProperty( IFactorizedTimeseries.PROPERTY_FACTOR );
+    return m_factor;
   }
 
   public void setFactor( double factor )
   {
-    setProperty( IFactorizedTimeseries.PROPERTY_FACTOR, factor );
+    m_factor = factor;
+  }
+
+  public String getGroupText( )
+  {
+    ITimeseries timeseries = getFeature();
+    if( timeseries == null )
+      return null;
+
+    IStation station = timeseries.getStation();
+    return station.getGroup();
   }
 
   public String getStationText( )
   {
-    return getLabel();
+    ITimeseries timeseries = getFeature();
+    if( timeseries == null )
+      return null;
+
+    IStation station = timeseries.getStation();
+    return station.getName();
   }
 
   public String getTimestepText( )
   {
-    final IFactorizedTimeseries timeseries = getFeature();
+    final ITimeseries timeseries = getFeature();
     if( timeseries == null )
       return null;
 
@@ -104,7 +123,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 
   public String getQualityText( )
   {
-    final IFactorizedTimeseries timeseries = getFeature();
+    final ITimeseries timeseries = getFeature();
     if( timeseries == null )
       return null;
 
@@ -113,30 +132,25 @@ public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 
   public String getFactorText( )
   {
-    double factor = getFactor();
-    if( Double.isNaN( factor ) || Double.isInfinite( factor ) )
+    if( Double.isNaN( m_factor ) || Double.isInfinite( m_factor ) )
       return null;
 
-    return String.format( "%f", factor );
+    return String.format( "%f", m_factor );
   }
 
-  public void apply( CommandableWorkspace workspace, CatchmentBean parent ) throws Exception
+  /**
+   * ATTENTION: This workspace is another workspace then the one of the feature of this class.
+   */
+  public void apply( CommandableWorkspace workspace, Feature parent ) throws Exception
   {
-    IFactorizedTimeseries feature = getFeature();
-    if( feature == null )
-    {
-      Map<QName, Object> properties = new HashMap<>( getProperties() );
-      ICatchment collection = parent.getFeature();
-      IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchment.MEMBER_FACTORIZED_TIMESERIES );
-      QName type = getFeatureType().getQName();
+    // TODO
 
-      AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
-      workspace.postCommand( command );
-    }
-    else
-    {
-      ICommand command = applyChanges();
-      workspace.postCommand( command );
-    }
+    Map<QName, Object> properties = new HashMap<>( getProperties() );
+    ICatchment collection = (ICatchment) parent;
+    IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchment.MEMBER_FACTORIZED_TIMESERIES );
+    QName type = getFeatureType().getQName();
+
+    AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+    workspace.postCommand( command );
   }
 }

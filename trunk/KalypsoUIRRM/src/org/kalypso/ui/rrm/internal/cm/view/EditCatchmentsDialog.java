@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -136,14 +135,14 @@ public class EditCatchmentsDialog extends TrayDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Edit Catchment Generator" );
+    getShell().setText( "Edit Catchment Model" );
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    mainData.heightHint = 400;
-    mainData.widthHint = 750;
+    mainData.heightHint = 550;
+    mainData.widthHint = 900;
     main.setLayoutData( mainData );
 
     /* Create the form. */
@@ -284,7 +283,7 @@ public class EditCatchmentsDialog extends TrayDialog
   private void createDetailsContent( final Composite parent, final CatchmentBean catchmentBean )
   {
     /* Create a table viewer. */
-    TableViewer viewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
+    TableViewer viewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
     viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     viewer.getTable().setLinesVisible( true );
     viewer.getTable().setHeaderVisible( true );
@@ -300,6 +299,12 @@ public class EditCatchmentsDialog extends TrayDialog
 
   private void createColumns( final TableViewer viewer )
   {
+    /* Create the group column. */
+    TableViewerColumn groupColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    groupColumn.getColumn().setText( "Group" );
+    groupColumn.getColumn().setWidth( 150 );
+    groupColumn.setLabelProvider( new GroupColumnLabelProvider() );
+
     /* Create the station column. */
     TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
     stationColumn.getColumn().setText( "Station" );
@@ -327,6 +332,38 @@ public class EditCatchmentsDialog extends TrayDialog
   }
 
   /**
+   * This function saves the changes.
+   */
+  private void performOk( )
+  {
+    try
+    {
+      /* Apply the changes. */
+      Feature generator = m_bean.apply( m_model.getWorkspace() );
+
+      /* Refresh the tree. */
+      m_model.refreshTree( generator );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ); //$NON-NLS-1$
+      StatusDialog.open( getShell(), status, getShell().getText() );
+    }
+  }
+
+  /**
+   * This function disposes the dialog.
+   */
+  private void dispose( )
+  {
+    m_mainGroup = null;
+    m_detailsGroup = null;
+    m_catchmentBean = null;
+    m_dataBinding = null;
+  }
+
+  /**
    * This function updates the details group.
    * 
    * @param catchmentBean
@@ -346,37 +383,5 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Layout. */
     m_detailsGroup.layout();
-  }
-
-  /**
-   * This function saves the changes.
-   */
-  private void performOk( )
-  {
-    try
-    {
-      /* Apply the changes. */
-      Feature generator = m_bean.apply( m_model.getWorkspace() );
-
-      /* Refresh the tree. */
-      m_model.refreshTree( generator );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the generator", e ); //$NON-NLS-1$
-      StatusDialog.open( getShell(), status, getShell().getText() );
-    }
-  }
-
-  /**
-   * This function disposes the dialog.
-   */
-  private void dispose( )
-  {
-    m_mainGroup = null;
-    m_detailsGroup = null;
-    m_catchmentBean = null;
-    m_dataBinding = null;
   }
 }
