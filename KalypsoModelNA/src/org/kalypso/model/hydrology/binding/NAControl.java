@@ -2,45 +2,44 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -53,19 +52,19 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {org.kalypso.na.control}NAControl.
- * 
+ * Binding class for {org.kalypso.na.control_v2}NAControl.
+ *
  * @author Gernot Belger
  */
 public class NAControl extends Feature_Impl
 {
   private static final String NS_NAMETA = NaModelConstants.NS_NAMETA;
 
+  public static final QName FEATURE_NACONTROL = new QName( NS_NAMETA, "NAControl" ); //$NON-NLS-1$
+
   private static final QName PROP_STARTSIMULATION = new QName( NS_NAMETA, "startsimulation" ); //$NON-NLS-1$
 
-  private static final QName PROP_FORECAST = new QName( NS_NAMETA, "startforecast" ); //$NON-NLS-1$
-
-  private static final QName PROP_HOURS_FORECAST = new QName( NS_NAMETA, "hoursforecast" ); //$NON-NLS-1$
+  private static final QName PROP_ENDSIMULATION = new QName( NS_NAMETA, "endsimulation" ); //$NON-NLS-1$
 
   private static final QName PROP_MINUTES_TIMESTEP = new QName( NS_NAMETA, "minutesTimestep" ); //$NON-NLS-1$
 
@@ -81,7 +80,11 @@ public class NAControl extends Feature_Impl
 
   private static final QName PROP_RETURN_PERIOD = new QName( NS_NAMETA, "returnPeriod" ); //$NON-NLS-1$
 
-  private static final QName PROP_OPTIMIZATION_START = new QName( NS_NAMETA, "startOptimization" ); //$NON-NLS-1$;
+  private static final QName PROP_EDITOR = new QName( NS_NAMETA, "editor" ); //$NON-NLS-1$
+
+  private static final QName PROP_COMMENT = new QName( NS_NAMETA, "comment" ); //$NON-NLS-1$
+
+  private static final QName PROP_CREATION_TIME = new QName( NS_NAMETA, "creationTime" ); //$NON-NLS-1$
 
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -98,27 +101,14 @@ public class NAControl extends Feature_Impl
     setProperty( PROP_STARTSIMULATION, DateUtilities.toXMLGregorianCalendar( simulationStart ) );
   }
 
-  public Date getStartForecast( )
-  {
-    return DateUtilities.toDate( getProperty( PROP_FORECAST, XMLGregorianCalendar.class ) );
-  }
-
   public Date getSimulationEnd( )
   {
-    final Date startForecast = getStartForecast();
-    if( startForecast == null )
-      return null;
+    return DateUtilities.toDate( getProperty( PROP_ENDSIMULATION, XMLGregorianCalendar.class ) );
+  }
 
-    final Integer hoursOfForecast = getProperty( PROP_HOURS_FORECAST, Integer.class );
-    if( hoursOfForecast == null )
-      return startForecast;
-
-    final int hoursForecast = hoursOfForecast.intValue();
-
-    final Calendar c = Calendar.getInstance();
-    c.setTime( startForecast );
-    c.add( Calendar.HOUR, hoursForecast );
-    return c.getTime();
+  public void setSimulationEnd( final Date simulationEnd )
+  {
+    setProperty( PROP_ENDSIMULATION, DateUtilities.toXMLGregorianCalendar( simulationEnd ) );
   }
 
   public Integer getMinutesOfTimestep( )
@@ -131,6 +121,11 @@ public class NAControl extends Feature_Impl
     return minutesOfTimeStep.intValue();
   }
 
+  public void setMinutesOfTimestep( final Integer minutesOfTimestep )
+  {
+    setProperty( PROP_MINUTES_TIMESTEP, minutesOfTimestep );
+  }
+
   public boolean isUsePrecipitationForm( )
   {
     final Boolean value = getProperty( PROP_PNS, Boolean.class );
@@ -138,6 +133,11 @@ public class NAControl extends Feature_Impl
       return false;
 
     return value.booleanValue();
+  }
+
+  public void setUsePrecipitationForm( final boolean usePrecipitationForm )
+  {
+    setProperty( PROP_PNS, usePrecipitationForm );
   }
 
   public double getAnnuality( )
@@ -155,6 +155,11 @@ public class NAControl extends Feature_Impl
     return (Double) getProperty( PROP_XWAHL2 );
   }
 
+  public void setDurationMinutes( final Double durationMinutes )
+  {
+    setProperty( PROP_XWAHL2, durationMinutes );
+  }
+
   public double getDurationHours( )
   {
     final Double durationMinutes = getDurationMinutes();
@@ -167,6 +172,11 @@ public class NAControl extends Feature_Impl
   public String getPrecipitationForm( )
   {
     return getProperty( PROP_IPVER, String.class );
+  }
+
+  public void setPrecipitationForm( final String precipitationForm )
+  {
+    setProperty( PROP_IPVER, precipitationForm );
   }
 
   public String getExeVersion( )
@@ -184,11 +194,40 @@ public class NAControl extends Feature_Impl
     return getProperty( PROP_RETURN_PERIOD, Integer.class );
   }
 
-  public Date getOptimizationStart( )
+  public void setReturnPeriod( final Integer returnPeriod )
   {
-    final XMLGregorianCalendar optimizationStartProperty = getProperty( PROP_OPTIMIZATION_START, XMLGregorianCalendar.class );
-    if( optimizationStartProperty != null )
-      return DateUtilities.toDate( optimizationStartProperty );
-    return getSimulationStart();
+    setProperty( PROP_RETURN_PERIOD, returnPeriod );
+  }
+
+  public String getEditor( )
+  {
+    return getProperty( PROP_EDITOR, String.class );
+  }
+
+  public void setEditor( final String editor )
+  {
+    setProperty( PROP_EDITOR, editor );
+  }
+
+  public String getComment( )
+  {
+    return getProperty( PROP_COMMENT, String.class );
+  }
+
+  public void setComment( final String comment )
+  {
+    setProperty( PROP_COMMENT, comment );
+  }
+
+  public Date getCreationTime( )
+  {
+    final XMLGregorianCalendar calendar = getProperty( PROP_CREATION_TIME, XMLGregorianCalendar.class );
+    return DateUtilities.toDate( calendar );
+  }
+
+  public void setCreationTime( final Date creationTime )
+  {
+    final XMLGregorianCalendar calendar = DateUtilities.toXMLGregorianCalendar( creationTime );
+    setProperty( PROP_CREATION_TIME, calendar );
   }
 }

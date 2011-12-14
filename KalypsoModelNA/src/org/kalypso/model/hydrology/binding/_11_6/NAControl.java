@@ -83,6 +83,14 @@ public class NAControl extends Feature_Impl
 
   private static final QName PROP_OPTIMIZATION_START = new QName( NS_NAMETA, "startOptimization" ); //$NON-NLS-1$;
 
+  private static final QName PROP_EDITOR = new QName( NS_NAMETA, "editor" ); //$NON-NLS-1$
+
+  private static final QName PROP_DESCRIPTION = new QName( NS_NAMETA, "description" ); //$NON-NLS-1$
+
+  private static final QName PROP_COMMENT = new QName( NS_NAMETA, "comment" ); //$NON-NLS-1$
+
+  private static final QName PROP_CALCTIME = new QName( NS_NAMETA, "calctime" ); //$NON-NLS-1$
+
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -150,7 +158,7 @@ public class NAControl extends Feature_Impl
     return 1d / returnPeriod;
   }
 
-  private Double getDurationMinutes( )
+  public Double getDurationMinutes( )
   {
     return (Double) getProperty( PROP_XWAHL2 );
   }
@@ -190,5 +198,26 @@ public class NAControl extends Feature_Impl
     if( optimizationStartProperty != null )
       return DateUtilities.toDate( optimizationStartProperty );
     return getSimulationStart();
+  }
+
+  public String getEditor( )
+  {
+    return getProperty( PROP_EDITOR, String.class );
+  }
+
+  public String getDescription2( )
+  {
+    return getProperty( PROP_DESCRIPTION, String.class );
+  }
+
+  public String getComment( )
+  {
+    return getProperty( PROP_COMMENT, String.class );
+  }
+
+  public Date getCalcTime( )
+  {
+    final XMLGregorianCalendar calendar = getProperty( PROP_CALCTIME, XMLGregorianCalendar.class );
+    return DateUtilities.toDate( calendar );
   }
 }

@@ -53,13 +53,15 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {org.kalypso.namodell.control}NAModellControl.
+ * Binding class for {org.kalypso.namodell.control_v2}NAModellControl.
  *
  * @author Gernot Belger
  */
 public class NAModellControl extends Feature_Impl
 {
   public static final String NS_NACONTROL = NaModelConstants.NS_NACONTROL;
+
+  public static final QName FEATURE_NA_MODELL_CONTROL = new QName( NS_NACONTROL, "NAModellControl" ); //$NON-NLS-1$
 
   private static final QName PROP_INITIALVALUEDATE = new QName( NS_NACONTROL, "InitialValueDate" ); //$NON-NLS-1$
 
