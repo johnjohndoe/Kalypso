@@ -110,6 +110,6 @@ public class DeleteGeneratorAction extends Action
     if( m_generators.length > 1 )
       return "Delete selected catchment generator(s)? This operation cannot made undone!";
 
-    return String.format( "Delete catchment generator '%s'? This operation cannot made undone!", m_generators[0].getName() );
+    return String.format( "Delete catchment generator '%s'? This operation cannot made undone!", m_generators[0].getDescription() );
   }
 }
