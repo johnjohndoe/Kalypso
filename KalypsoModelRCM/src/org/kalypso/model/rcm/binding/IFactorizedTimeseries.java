@@ -42,6 +42,7 @@ package org.kalypso.model.rcm.binding;
 
 import javax.xml.namespace.QName;
 
+import org.joda.time.Period;
 import org.kalypso.model.rcm.RcmConstants;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -69,6 +70,21 @@ public interface IFactorizedTimeseries extends Feature
   public static QName PROPERTY_TIMESERIES_LINK = new QName( RcmConstants.NS_CM, "timeseriesLink" ); //$NON-NLS-1$
 
   /**
+   * The qname of the quality.
+   */
+  public static QName PROPERTY_QUALITY = new QName( RcmConstants.NS_CM, "quality" ); //$NON-NLS-1$
+
+  /**
+   * The qname of the timestep amount.
+   */
+  public static QName PROPERTY_TIMESTEP_AMOUNT = new QName( RcmConstants.NS_CM, "timestepAmount" ); //$NON-NLS-1$
+
+  /**
+   * The qname of the timestep field.
+   */
+  public static QName PROPERTY_TIMESTEP_FIELD = new QName( RcmConstants.NS_CM, "timestepField" ); //$NON-NLS-1$
+
+  /**
    * This function returns the factor.
    * 
    * @return The factor.
@@ -81,4 +97,32 @@ public interface IFactorizedTimeseries extends Feature
    * @return The timeseries link.
    */
   public ZmlLink getTimeseriesLink( );
+
+  /**
+   * This function returns the quality.
+   * 
+   * @return The quality.
+   */
+  public String getQuality( );
+
+  /**
+   * This function returns the timestep amount.
+   * 
+   * @return The timestep amount.
+   */
+  public Integer getTimestepAmount( );
+
+  /**
+   * This function returns the timestep field.
+   * 
+   * @return The timestep field.
+   */
+  public String getTimestepField( );
+
+  /**
+   * This function returns the timestep.
+   * 
+   * @return The timestep.
+   */
+  public Period getTimestep( );
 }
