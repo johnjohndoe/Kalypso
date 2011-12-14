@@ -298,7 +298,10 @@ public class EditCatchmentsDialog extends TrayDialog
 
   private Feature applyGeneratorFeature( ) throws Exception
   {
+    /* Get the workspace. */
     CommandableWorkspace workspace = m_model.getWorkspace();
+
+    /* Get the feature of the generator. */
     ILinearSumGenerator feature = m_bean.getFeature();
     if( feature == null )
     {
@@ -328,7 +331,10 @@ public class EditCatchmentsDialog extends TrayDialog
 
   private void applyCatchmentFeatures( Feature generator ) throws Exception
   {
+    /* Get the workspace. */
     CommandableWorkspace workspace = m_model.getWorkspace();
+
+    /* Get the catchments. */
     CatchmentBean[] catchments = m_bean.getCatchments();
     for( CatchmentBean catchment : catchments )
     {
