@@ -79,19 +79,12 @@ public class SimulationKalypsoRisk_InnundationDifferenceCalculation implements I
 
   private final static String OUTPUT_RASTER_FOLDER = "OUTPUT_RASTER_FOLDER"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {
     return getClass().getResource( "Specification_InnundationDifferenceCalculation.xml" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {

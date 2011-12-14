@@ -98,10 +98,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     return getClass().getResource( "Specification_SpecificDamageCalculation.xml" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
