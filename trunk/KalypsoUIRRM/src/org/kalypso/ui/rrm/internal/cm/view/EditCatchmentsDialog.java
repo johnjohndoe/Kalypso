@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -66,17 +61,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
-import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -296,7 +284,7 @@ public class EditCatchmentsDialog extends TrayDialog
   private void createDetailsContent( final Composite parent, final CatchmentBean catchmentBean )
   {
     /* Create a table viewer. */
-    TableViewer viewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
+    TableViewer viewer = CheckboxTableViewer.newCheckList( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
     viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     viewer.getTable().setLinesVisible( true );
     viewer.getTable().setHeaderVisible( true );
@@ -335,6 +323,7 @@ public class EditCatchmentsDialog extends TrayDialog
     factorColumn.getColumn().setText( "Factor" );
     factorColumn.getColumn().setWidth( 75 );
     factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
+    factorColumn.setEditingSupport( new FactorEditingSupport( viewer ) );
   }
 
   /**
@@ -359,15 +348,15 @@ public class EditCatchmentsDialog extends TrayDialog
     m_detailsGroup.layout();
   }
 
+  /**
+   * This function saves the changes.
+   */
   private void performOk( )
   {
     try
     {
-      /* Apply the changes to the generator feature, */
-      Feature generator = applyGeneratorFeature();
-
-      /* Apply the changes to the catchments. */
-      applyCatchmentFeatures( generator );
+      /* Apply the changes. */
+      Feature generator = m_bean.apply( m_model.getWorkspace() );
 
       /* Refresh the tree. */
       m_model.refreshTree( generator );
@@ -377,75 +366,6 @@ public class EditCatchmentsDialog extends TrayDialog
       e.printStackTrace();
       IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the generator", e ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getShell().getText() );
-    }
-  }
-
-  private Feature applyGeneratorFeature( ) throws Exception
-  {
-    /* Get the workspace. */
-    CommandableWorkspace workspace = m_model.getWorkspace();
-
-    /* Get the feature of the generator. */
-    ILinearSumGenerator feature = m_bean.getFeature();
-    if( feature == null )
-    {
-      /* The generator feature does not exist. */
-      Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
-      ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
-      IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
-      QName type = m_bean.getFeatureType().getQName();
-
-      /* Create the add feature command. */
-      AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
-
-      /* Post the command. */
-      m_model.postCommand( command );
-
-      return command.getNewFeature();
-    }
-
-    /* The generator feature does already exist. */
-    ICommand command = m_bean.applyChanges();
-
-    /* Post the command. */
-    m_model.postCommand( command );
-
-    return m_bean.getFeature();
-  }
-
-  private void applyCatchmentFeatures( Feature generator ) throws Exception
-  {
-    /* Get the workspace. */
-    CommandableWorkspace workspace = m_model.getWorkspace();
-
-    /* Get the catchments. */
-    CatchmentBean[] catchments = m_bean.getCatchments();
-    for( CatchmentBean catchment : catchments )
-    {
-      /* Get the feature. */
-      ICatchment feature = catchment.getFeature();
-      if( feature == null )
-      {
-        /* The catchment feature does not exist. */
-        Map<QName, Object> properties = new HashMap<>( catchment.getProperties() );
-        ILinearSumGenerator collection = (ILinearSumGenerator) generator;
-        IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
-        QName type = catchment.getFeatureType().getQName();
-
-        /* Create the add feature command. */
-        AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
-
-        /* Post the command. */
-        m_model.postCommand( command );
-      }
-      else
-      {
-        /* The catchment feature does already exist. */
-        ICommand command = catchment.applyChanges();
-
-        /* Post the command. */
-        m_model.postCommand( command );
-      }
     }
   }
 

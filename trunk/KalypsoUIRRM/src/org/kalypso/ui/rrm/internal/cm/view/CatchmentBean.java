@@ -41,10 +41,21 @@
 package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -86,14 +97,58 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentRef;
   }
 
+  public void setCatchmentRef( final String catchmentRef )
+  {
+    m_catchmentRef = catchmentRef;
+  }
+
   public String getLabel( )
   {
     return (String) getProperty( Feature.QN_DESCRIPTION );
   }
 
-  public void setCatchmentRef( final String catchmentRef )
+  public void apply( CommandableWorkspace workspace, LinearSumBean parent ) throws Exception
   {
-    m_catchmentRef = catchmentRef;
+    /* Memory for the commands. */
+    CompositeCommand commands = new CompositeCommand( "Applying catchments..." );
+
+    /* Get the catchments. */
+    CatchmentBean[] catchments = parent.getCatchments();
+    for( CatchmentBean catchment : catchments )
+    {
+      /* Get the feature. */
+      ICatchment feature = catchment.getFeature();
+      if( feature == null )
+      {
+        /* The catchment feature does not exist. */
+        Map<QName, Object> properties = new HashMap<>( catchment.getProperties() );
+        properties.put( ICatchment.PROPERTY_AREA_LINK, INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef );
+        ILinearSumGenerator collection = parent.getFeature();
+        IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
+        QName type = catchment.getFeatureType().getQName();
+
+        /* Create the add feature command. */
+        AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+
+        /* Store the command. */
+        commands.addCommand( command );
+      }
+      else
+      {
+        /* The catchment feature does already exist. */
+        ICommand command = catchment.applyChanges();
+
+        /* Store the command. */
+        commands.addCommand( command );
+      }
+    }
+
+    /* Post the commands. */
+    workspace.postCommand( commands );
+
+    /* Apply also all contained timeseries. */
+    for( FactorizedTimeseriesBean timeseriesBean : m_timeseries )
+      timeseriesBean.apply( workspace, this );
   }
 
   private FactorizedTimeseriesBean[] initFactorizedTimeseries( )
@@ -106,8 +161,4 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
     return results.toArray( new FactorizedTimeseriesBean[] {} );
   }
-
-  // TODO: beim erzeugen der echten features:
-  // final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef;
-
 }

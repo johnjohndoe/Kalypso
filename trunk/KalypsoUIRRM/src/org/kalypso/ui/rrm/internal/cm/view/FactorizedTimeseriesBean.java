@@ -40,8 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.joda.time.Period;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -51,25 +62,29 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 {
-  private TimeseriesBean m_timeseriesBean;
-
   public FactorizedTimeseriesBean( )
   {
     super( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
-
-    m_timeseriesBean = null;
   }
 
   public FactorizedTimeseriesBean( final IFactorizedTimeseries factorizedTimeseries )
   {
     super( factorizedTimeseries );
-
-    m_timeseriesBean = null;
   }
 
   public String getLabel( )
   {
     return (String) getProperty( Feature.QN_DESCRIPTION );
+  }
+
+  public double getFactor( )
+  {
+    return (double) getProperty( IFactorizedTimeseries.PROPERTY_FACTOR );
+  }
+
+  public void setFactor( double factor )
+  {
+    setProperty( IFactorizedTimeseries.PROPERTY_FACTOR, factor );
   }
 
   public String getStationText( )
@@ -79,24 +94,49 @@ public class FactorizedTimeseriesBean extends FeatureBean<IFactorizedTimeseries>
 
   public String getTimestepText( )
   {
-    // TODO
+    final IFactorizedTimeseries timeseries = getFeature();
+    if( timeseries == null )
+      return null;
 
-    return "";
+    final Period timestep = timeseries.getTimestep();
+    return PeriodUtils.formatDefault( timestep );
   }
 
   public String getQualityText( )
   {
-    // TODO
+    final IFactorizedTimeseries timeseries = getFeature();
+    if( timeseries == null )
+      return null;
 
-    return "";
+    return timeseries.getQuality();
   }
 
   public String getFactorText( )
   {
-    Double factor = getFeature().getFactor();
-    if( factor != null && !factor.isNaN() && !factor.isInfinite() )
-      return String.format( "%f", factor.doubleValue() );
+    double factor = getFactor();
+    if( Double.isNaN( factor ) || Double.isInfinite( factor ) )
+      return null;
 
-    return "0.0";
+    return String.format( "%f", factor );
+  }
+
+  public void apply( CommandableWorkspace workspace, CatchmentBean parent ) throws Exception
+  {
+    IFactorizedTimeseries feature = getFeature();
+    if( feature == null )
+    {
+      Map<QName, Object> properties = new HashMap<>( getProperties() );
+      ICatchment collection = parent.getFeature();
+      IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchment.MEMBER_FACTORIZED_TIMESERIES );
+      QName type = getFeatureType().getQName();
+
+      AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+      workspace.postCommand( command );
+    }
+    else
+    {
+      ICommand command = applyChanges();
+      workspace.postCommand( command );
+    }
   }
 }

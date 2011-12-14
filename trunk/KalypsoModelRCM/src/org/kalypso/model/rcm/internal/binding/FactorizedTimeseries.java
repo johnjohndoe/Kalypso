@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import org.joda.time.Period;
+import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
@@ -83,5 +86,44 @@ public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTim
   public ZmlLink getTimeseriesLink( )
   {
     return new ZmlLink( this, PROPERTY_TIMESERIES_LINK, getWorkspace().getContext() );
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getQuality()
+   */
+  @Override
+  public String getQuality( )
+  {
+    return getProperty( PROPERTY_QUALITY, String.class );
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getTimestepAmount()
+   */
+  @Override
+  public Integer getTimestepAmount( )
+  {
+    return getProperty( PROPERTY_TIMESTEP_AMOUNT, Integer.class );
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getTimestepField()
+   */
+  @Override
+  public String getTimestepField( )
+  {
+    return getProperty( PROPERTY_TIMESTEP_FIELD, String.class );
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getTimestep()
+   */
+  @Override
+  public Period getTimestep( )
+  {
+    final Integer amount = getTimestepAmount();
+    final String fieldName = getTimestepField();
+    final int field = CalendarUtilities.getCalendarField( fieldName );
+    return PeriodUtils.getPeriod( field, amount );
   }
 }

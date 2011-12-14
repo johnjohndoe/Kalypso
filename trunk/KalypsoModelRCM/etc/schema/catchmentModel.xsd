@@ -61,6 +61,9 @@
         <xs:sequence>
           <xs:element name="factor" type="xs:double" minOccurs="1" maxOccurs="1" />
           <xs:element name="timeseriesLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1" maxOccurs="1" />
+          <xs:element name="quality" type="xs:string" minOccurs="0" />
+          <xs:element name="timestepAmount" type="xs:int" />
+          <xs:element name="timestepField" type="xs:string" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
