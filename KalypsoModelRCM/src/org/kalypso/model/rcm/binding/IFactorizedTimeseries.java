@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.RcmConstants;
@@ -73,7 +75,7 @@ public interface IFactorizedTimeseries extends Feature
    * 
    * @return The factor.
    */
-  public Double getFactor( );
+  public BigDecimal getFactor( );
 
   /**
    * This function returns the timeseries link.

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import java.math.BigDecimal;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
@@ -71,9 +73,9 @@ public class FactorizedTimeseries extends Feature_Impl implements IFactorizedTim
    * @see org.kalypso.model.rcm.binding.IFactorizedTimeseries#getFactor()
    */
   @Override
-  public Double getFactor( )
+  public BigDecimal getFactor( )
   {
-    return getProperty( PROPERTY_FACTOR, Double.class );
+    return getProperty( PROPERTY_FACTOR, BigDecimal.class );
   }
 
   /**

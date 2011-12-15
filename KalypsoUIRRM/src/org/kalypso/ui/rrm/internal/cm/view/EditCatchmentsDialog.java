@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -51,6 +54,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,6 +68,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -73,7 +78,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Holger Albert
  */
-public class EditCatchmentsDialog extends TrayDialog
+public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeListener
 {
   /**
    * The model.
@@ -94,6 +99,11 @@ public class EditCatchmentsDialog extends TrayDialog
    * The details group.
    */
   private Group m_detailsGroup;
+
+  /**
+   * The table viewer.
+   */
+  private TableViewer m_viewer;
 
   /**
    * The selected catchment.
@@ -124,8 +134,11 @@ public class EditCatchmentsDialog extends TrayDialog
 
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_viewer = null;
     m_catchmentBean = null;
     m_dataBinding = null;
+
+    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), this );
   }
 
   /**
@@ -146,14 +159,14 @@ public class EditCatchmentsDialog extends TrayDialog
     main.setLayoutData( mainData );
 
     /* Create the form. */
-    Form form = new Form( main, SWT.NONE );
+    final Form form = new Form( main, SWT.NONE );
     form.setLayoutData( mainData );
 
     /* Create the data binding. */
     m_dataBinding = new DatabindingForm( form, null );
 
     /* Get the body. */
-    Composite body = form.getBody();
+    final Composite body = form.getBody();
     body.setLayout( new GridLayout( 2, false ) );
 
     /* Create the main group. */
@@ -224,16 +237,16 @@ public class EditCatchmentsDialog extends TrayDialog
   private void createMainContent( final Composite parent )
   {
     /* Create the linear sum new composite. */
-    LinearSumNewComposite composite = new LinearSumNewComposite( parent, m_bean, m_dataBinding );
+    final LinearSumNewComposite composite = new LinearSumNewComposite( parent, m_bean, m_dataBinding );
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create a label. */
-    Label label = new Label( parent, SWT.NONE );
+    final Label label = new Label( parent, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     label.setText( "Catchments" );
 
     /* Create a viewer. */
-    ListViewer viewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
+    final ListViewer viewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
     viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new CatchmentsLabelProvider() );
@@ -250,7 +263,7 @@ public class EditCatchmentsDialog extends TrayDialog
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        ISelection selection = event.getSelection();
+        final ISelection selection = event.getSelection();
         if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
         {
           m_catchmentBean = null;
@@ -258,7 +271,7 @@ public class EditCatchmentsDialog extends TrayDialog
           return;
         }
 
-        Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
         if( !(firstElement instanceof CatchmentBean) )
         {
           m_catchmentBean = null;
@@ -282,50 +295,51 @@ public class EditCatchmentsDialog extends TrayDialog
    */
   private void createDetailsContent( final Composite parent, final CatchmentBean catchmentBean )
   {
-    /* Create a table viewer. */
-    TableViewer viewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
-    viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    viewer.getTable().setLinesVisible( true );
-    viewer.getTable().setHeaderVisible( true );
-    viewer.setContentProvider( new ArrayContentProvider() );
+    /* Create a viewer. */
+    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
+    m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_viewer.getTable().setLinesVisible( true );
+    m_viewer.getTable().setHeaderVisible( true );
+    m_viewer.setContentProvider( new ArrayContentProvider() );
+    m_viewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) ) } );
 
     /* Create the columns. */
-    createColumns( viewer );
+    createColumns( m_viewer );
 
     /* Set the input. */
     if( catchmentBean != null )
-      viewer.setInput( catchmentBean.getTimeseries() );
+      m_viewer.setInput( catchmentBean.getTimeseries() );
   }
 
   private void createColumns( final TableViewer viewer )
   {
     /* Create the group column. */
-    TableViewerColumn groupColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    final TableViewerColumn groupColumn = new TableViewerColumn( viewer, SWT.LEFT );
     groupColumn.getColumn().setText( "Group" );
     groupColumn.getColumn().setWidth( 150 );
     groupColumn.setLabelProvider( new GroupColumnLabelProvider() );
 
     /* Create the station column. */
-    TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    final TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
     stationColumn.getColumn().setText( "Station" );
     stationColumn.getColumn().setWidth( 150 );
     stationColumn.setLabelProvider( new StationColumnLabelProvider() );
 
     /* Create the timestep column. */
-    TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    final TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
     timestepColumn.getColumn().setText( "Timestep" );
     timestepColumn.getColumn().setWidth( 75 );
     timestepColumn.setLabelProvider( new TimestepColumnLabelProvider() );
 
     /* Create the quality column. */
-    TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    final TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
     qualityColumn.getColumn().setText( "Quality" );
     qualityColumn.getColumn().setWidth( 150 );
     qualityColumn.setLabelProvider( new QualityColumnLabelProvider() );
 
     /* Create the factor column. */
-    TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    factorColumn.getColumn().setText( "Factor" );
+    final TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    factorColumn.getColumn().setText( "Factor [%]" );
     factorColumn.getColumn().setWidth( 75 );
     factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
     factorColumn.setEditingSupport( new FactorEditingSupport( viewer ) );
@@ -339,7 +353,7 @@ public class EditCatchmentsDialog extends TrayDialog
     try
     {
       /* Apply the changes. */
-      Feature generator = m_bean.apply( m_model.getWorkspace() );
+      final Feature generator = m_bean.apply( m_model.getWorkspace(), (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) );
 
       /* Refresh the tree. */
       m_model.refreshTree( generator );
@@ -347,7 +361,7 @@ public class EditCatchmentsDialog extends TrayDialog
     catch( final Exception e )
     {
       e.printStackTrace();
-      IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ); //$NON-NLS-1$
       StatusDialog.open( getShell(), status, getShell().getText() );
     }
   }
@@ -359,6 +373,7 @@ public class EditCatchmentsDialog extends TrayDialog
   {
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_viewer = null;
     m_catchmentBean = null;
     m_dataBinding = null;
   }
@@ -369,7 +384,7 @@ public class EditCatchmentsDialog extends TrayDialog
    * @param catchmentBean
    *          The selected catchment.
    */
-  public void updateDetailsGroup( CatchmentBean catchmentBean )
+  public void updateDetailsGroup( final CatchmentBean catchmentBean )
   {
     /* Cannot do anything. */
     if( m_detailsGroup == null || m_detailsGroup.isDisposed() )
@@ -383,5 +398,16 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Layout. */
     m_detailsGroup.layout();
+  }
+
+  /**
+   * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+   */
+  @Override
+  public void propertyChange( final PropertyChangeEvent evt )
+  {
+    final String parameterType = (String) evt.getNewValue();
+    if( m_viewer != null && !m_viewer.getTable().isDisposed() )
+      m_viewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
   }
 }

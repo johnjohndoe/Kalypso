@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.Locale;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -92,11 +94,11 @@ public class FactorEditingSupport extends EditingSupport
   {
     if( element instanceof FactorizedTimeseriesBean )
     {
-      final double factor = ((FactorizedTimeseriesBean) element).getFactor();
-      return String.format( "%f", factor );
+      final int factor = ((FactorizedTimeseriesBean) element).getFactor();
+      return String.format( Locale.PRC, "%d", factor );
     }
 
-    return "0.0";
+    return "";
   }
 
   /**
@@ -106,7 +108,7 @@ public class FactorEditingSupport extends EditingSupport
   protected void setValue( final Object element, final Object value )
   {
     if( element instanceof FactorizedTimeseriesBean )
-      ((FactorizedTimeseriesBean) element).setFactor( NumberUtils.parseQuietDouble( (String) value ) );
+      ((FactorizedTimeseriesBean) element).setFactor( NumberUtils.parseQuietInteger( (String) value ) );
 
     getViewer().update( element, null );
   }

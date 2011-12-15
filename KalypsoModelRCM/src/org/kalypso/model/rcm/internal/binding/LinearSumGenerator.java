@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         for( final IFactorizedTimeseries factorizedTimeseries : catchment.getFactorizedTimeseries() )
         {
           /* Get the factor. */
-          final Double factor = factorizedTimeseries.getFactor();
+          final BigDecimal factor = factorizedTimeseries.getFactor();
 
           /* Get the timeseries link. */
           final GMLXPath linkPath = new GMLXPath( IFactorizedTimeseries.PROPERTY_TIMESERIES_LINK );
@@ -136,10 +137,10 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
           final IObservation[] readObservations = RainfallGeneratorUtilities.readObservations( new Feature[] { factorizedTimeseries }, linkPath, filters, range );
           final IObservation observation = readObservations[0];
 
-          /* If the factor is valid and > 0.0, add the factor and its observation. */
-          if( factor != null && factor.doubleValue() > 0.0 && !Double.isNaN( factor.doubleValue() ) && !Double.isInfinite( factor.doubleValue() ) )
+          /* If the factor is valid, add the factor and its observation. */
+          if( factor != null && factor.intValue() > 0 && factor.intValue() <= 100 )
           {
-            factors.add( factor );
+            factors.add( new Double( factor.doubleValue() / 100 ) );
             observations.add( observation );
           }
         }

@@ -96,19 +96,19 @@ public class NewLinearSumGeneratorAction extends Action
     try
     {
       final LinearSumBean bean = new LinearSumBean();
-
       final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL, NaModell.class );
       final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
-
       final Collection<CatchmentBean> catchmentBeans = new ArrayList<>( catchments.size() );
 
       for( final Catchment catchment : catchments )
       {
+        final String catchmentId = catchment.getId();
+        final String catchmentName = catchment.getDescription();
+
         final CatchmentBean catchmentBean = new CatchmentBean();
-
-        catchmentBean.setCatchmentRef( catchment.getId() );
-
+        catchmentBean.setCatchmentRef( catchmentId );
+        catchmentBean.setCatchmentName( catchmentName );
         catchmentBeans.add( catchmentBean );
       }
 

@@ -59,7 +59,7 @@
     <xs:complexContent>
       <xs:extension base="gml:AbstractFeatureType">
         <xs:sequence>
-          <xs:element name="factor" type="xs:double" minOccurs="1" maxOccurs="1" />
+          <xs:element name="factor" type="xs:decimal" minOccurs="1" maxOccurs="1" />
           <xs:element name="timeseriesLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="1" maxOccurs="1" />
         </xs:sequence>
       </xs:extension>

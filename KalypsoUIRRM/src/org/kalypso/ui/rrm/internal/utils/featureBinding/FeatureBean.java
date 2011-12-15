@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * REMARK: extends {@link AbstractModelObject}, so implementors can add additonal properties to a bean.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureBean<F extends Feature> extends AbstractModelObject
@@ -136,15 +136,18 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
         m_dirtyProperties.add( property );
     }
 
-    firePropertyChanged( oldValue, value );
+    doFirePropertyChanged( property.toString(), oldValue, value );
   }
 
-  private void firePropertyChanged( final Object oldValue, final Object newValue )
+  private void doFirePropertyChanged( final String propertyName, final Object oldValue, final Object newValue )
   {
+    // FIXME: instead, add observables as listeners to AbstractModelObject and remove this method
     for( final FeatureBeanObservableValue observable : m_observables )
     {
       observable.firePropertyChanged( oldValue, newValue );
     }
+
+    firePropertyChange( propertyName, oldValue, newValue );
   }
 
   void addObservable( final FeatureBeanObservableValue observable )
