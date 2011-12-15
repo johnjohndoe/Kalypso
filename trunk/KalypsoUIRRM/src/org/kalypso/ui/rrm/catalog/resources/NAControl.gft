@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview xmlns:rrmMeta="org.kalypso.na.control_v2" typename="rrmMeta:NAControl" style="SWT.NONE" tooltip="" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc">
+  <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+
+  <gridLayout numColumns="2" makeColumnsEqualWidth="false" horizontalSpacing="10" />
+
+  <!-- Allgemeines: -->
+  <group text="%control.gft.general" style="0">
+    <gridData verticalSpan="2" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+    <gridLayout numColumns="2" horizontalSpacing="10" />
+
+    <label property="editor" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="editor" style="SWT.BORDER">
+      <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+    </text>
+
+    <label property="description" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="description" style="SWT.BORDER">
+      <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+    </text>
+
+    <label property="creationTime" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="creationTime" style="SWT.BORDER">
+      <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" />
+    </text>
+
+    <label property="comment" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="comment" style="SWT.BORDER">
+      <gridData heightHint="75" horizontalAlignment="4" verticalAlignment="4" grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
+    </text>
+  </group>
+
+  <!-- Simulationszeit: -->
+  <group text="%control.gft.simulation" style="SWT.NONE">
+    <gridData verticalSpan="2" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    <gridLayout numColumns="3" />
+    <!-- FIXME: validate! -->
+
+    <label property="startsimulation" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="startsimulation" style="SWT.BORDER">
+      <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="startsimulation" visible="true" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </validatorlabel>
+
+    <label property="endsimulation" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="endsimulation" style="SWT.BORDER">
+      <gridData horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="endsimulation" visible="true" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </validatorlabel>
+
+    <label property="minutesTimestep" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="minutesTimestep" style="SWT.BORDER">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="minutesTimestep" visible="true" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </validatorlabel>
+
+    <label property="versionKalypsoNA" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text style="SWT.BORDER | SWT.RIGHT" property="versionKalypsoNA" enabled="false">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <extensioncontrol style="SWT.NONE" property="versionKalypsoNA" extension-id="org.kalypso.kalypsosimulationmodel.ui.calccore.ChooseExeControlFactory">
+      <param name="label" value="NA·Kalypso" />
+      <param name="exePattern" value="Kalypso-NA_(.*).exe" />
+    </extensioncontrol>
+
+    <label property="returnPeriod" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </label>
+    <text property="returnPeriod" style="SWT.BORDER">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="returnPeriod" visible="true" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.BEGINNING" />
+    </validatorlabel>
+
+    <group text="%control.gft.syntheticPrecipitation" style="SWT.NONE">
+      <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="true" />
+      <gridLayout numColumns="3" />
+
+      <checkbox editable="true" property="pns" style="SWT.NONE">
+        <gridData horizontalSpan="3" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </checkbox>
+      <label property="xjah" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+      </label>
+      <text property="xjah" style="SWT.BORDER">
+        <gridData horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
+        <enabledOperation>
+          <and>
+            <ogc:PropertyIsEqualTo>
+              <ogc:Literal>true</ogc:Literal>
+              <ogc:PropertyName>pns</ogc:PropertyName>
+            </ogc:PropertyIsEqualTo>
+            <ogc:PropertyIsNull>
+              <ogc:PropertyName>returnPeriod</ogc:PropertyName>
+            </ogc:PropertyIsNull>
+          </and>
+        </enabledOperation>
+      </text>
+      <label property="xwahl2" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+      </label>
+      <text property="xwahl2" style="SWT.BORDER">
+        <gridData horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" />
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+      </text>
+      <label property="ipver" style="SWT.NONE">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+      </label>
+      <combo property="ipver" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gridData horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        <enabledOperation>
+          <ogc:PropertyIsEqualTo>
+            <ogc:Literal>true</ogc:Literal>
+            <ogc:PropertyName>pns</ogc:PropertyName>
+          </ogc:PropertyIsEqualTo>
+        </enabledOperation>
+      </combo>
+    </group>
+  </group>
+  <translator id="commons.msgGetString">
+    <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
+  </translator>
+</featureview>
