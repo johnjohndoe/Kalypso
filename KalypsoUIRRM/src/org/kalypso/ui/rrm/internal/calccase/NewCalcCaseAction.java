@@ -43,10 +43,13 @@ package org.kalypso.ui.rrm.internal.calccase;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
@@ -54,7 +57,11 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard;
 
@@ -93,7 +100,22 @@ public class NewCalcCaseAction extends AbstractHandler
       }
     };
 
-    dlg.open();
+    if( dlg.open() != Window.OK )
+      return null;
+
+    if( wizard.isUpdate() )
+    {
+      final IStatus updateStatus = doUpdateTimeseries( wizard.getNewFolder() );
+      if( !updateStatus.isOK() )
+        StatusDialog.open( shell, updateStatus, HandlerUtils.getCommandName( event ) );
+    }
+
     return null;
+  }
+
+  private IStatus doUpdateTimeseries( final IFolder newFolder )
+  {
+    final WorkspaceModifyOperation operation = new UpdateCalcCaseOperation( new IFolder[] { newFolder } );
+    return ProgressUtilities.busyCursorWhile( operation, "Update calc case" );
   }
 }
