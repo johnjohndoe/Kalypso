@@ -48,7 +48,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -94,17 +93,6 @@ public class ChooseExeControl extends AbstractFeatureControl
     m_alignment = alignment;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -179,26 +167,12 @@ public class ChooseExeControl extends AbstractFeatureControl
     return matcher.group( 1 );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
