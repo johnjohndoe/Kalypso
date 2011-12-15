@@ -9,7 +9,7 @@
             <element name="startsimulation" type="dateTime" />
             <element name="endsimulation" type="dateTime" />
 
-            <element name="minutesTimestep" type="int" minOccurs="0" />
+            <element name="minutesTimestep" type="int"/>
             <element name="versionKalypsoNA" type="na:versionKalypsoNAType" />
             
             <element name="editor" type="string" />
