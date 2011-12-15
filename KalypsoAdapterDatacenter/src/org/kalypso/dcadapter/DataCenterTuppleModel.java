@@ -166,67 +166,85 @@ public class DataCenterTuppleModel implements ITupleModel
         + " is not part of this model" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITupleModel#accept(org.kalypso.ogc.sensor.visitor.ITupleModelVisitor)
-   */
   @Override
-  public void accept( final ITupleModelVisitor visitor ) throws SensorException
+  public void accept( final ITupleModelVisitor visitor, final int direction ) throws SensorException
   {
 
-    for( int i = 0; i < m_tupples.length; i++ )
+    if( direction >= 0 )
     {
-      final int index = i;
-
-      try
+      for( int index = 0; index < m_tupples.length; index++ )
       {
-        visitor.visit( new ITupleModelValueContainer()
+        try
         {
-          @Override
-          public int getIndex( )
-          {
-            return index;
-          }
-
-          @Override
-          public Object get( final IAxis axis )
-          {
-            if( AxisUtils.isDateAxis( axis ) )
-              return m_tupples[index].getDate();
-            else if( AxisUtils.isStatusAxis( axis ) )
-              return m_tupples[index].getStatus();
-
-            return m_tupples[index].getValue();
-          }
-
-          @Override
-          public boolean hasAxis( final String... types )
-          {
-            return true;
-          }
-
-          @Override
-          public IAxis[] getAxes( )
-          {
-            return DataCenterTuppleModel.this.getAxes();
-          }
-
-          @Override
-          public void set( final IAxis axis, final Object value )
-          {
-            if( AxisUtils.isDateAxis( axis ) )
-              m_tupples[index].setDate( (Date) value );
-            else if( AxisUtils.isStatusAxis( axis ) )
-              m_tupples[index].setStatus( (String) value );
-
-            m_tupples[index].setValue( ((Number) value).doubleValue() );
-          }
-        } );
-      }
-      catch( final CancelVisitorException e )
-      {
-        return;
+          doVisit( visitor, index );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
       }
     }
+    else
+    {
+      for( int index = m_tupples.length - 1; index >= 0; index-- )
+      {
+        try
+        {
+          doVisit( visitor, index );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
+      }
+    }
+
+  }
+
+  private void doVisit( final ITupleModelVisitor visitor, final int index ) throws SensorException, CancelVisitorException
+  {
+    visitor.visit( new ITupleModelValueContainer()
+    {
+      @Override
+      public int getIndex( )
+      {
+        return index;
+      }
+
+      @Override
+      public Object get( final IAxis axis )
+      {
+        if( AxisUtils.isDateAxis( axis ) )
+          return m_tupples[index].getDate();
+        else if( AxisUtils.isStatusAxis( axis ) )
+          return m_tupples[index].getStatus();
+
+        return m_tupples[index].getValue();
+      }
+
+      @Override
+      public boolean hasAxis( final String... types )
+      {
+        return true;
+      }
+
+      @Override
+      public IAxis[] getAxes( )
+      {
+        return DataCenterTuppleModel.this.getAxes();
+      }
+
+      @Override
+      public void set( final IAxis axis, final Object value )
+      {
+        if( AxisUtils.isDateAxis( axis ) )
+          m_tupples[index].setDate( (Date) value );
+        else if( AxisUtils.isStatusAxis( axis ) )
+          m_tupples[index].setStatus( (String) value );
+
+        m_tupples[index].setValue( ((Number) value).doubleValue() );
+      }
+    } );
 
   }
 
