@@ -61,13 +61,6 @@
 			stopsimTime.add(java.util.Calendar.MINUTE, 3*intervalAmount);
 			project.setProperty("stopsim", javax.xml.bind.DatatypeConverter.printDateTime( stopsimTime ));
 		</script>
-
-		<echo message="Getting time series from ${startsim} to ${stopsim}" />
-
-		<property name="interval.field" value="MINUTE" />
-
-		<echo message="interval.field:  ${interval.field}" />
-		<echo message="interval.amount: ${interval.amount}" />
 	</target>
 
 	<target name="updateOmbrometer" depends="setProperties">
