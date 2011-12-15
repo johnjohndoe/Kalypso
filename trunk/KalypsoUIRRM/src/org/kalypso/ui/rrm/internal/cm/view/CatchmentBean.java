@@ -44,11 +44,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -64,6 +67,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -139,6 +143,27 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     /* The feature may or may not exist here. */
     /* So we cant use it to resolve the area. */
     return m_catchmentName;
+  }
+
+  public IStatus checkFactor( )
+  {
+    int completeFactor = 0;
+    for( final FactorizedTimeseriesBean timeseries : m_timeseries )
+    {
+      final int factor = timeseries.getFactor();
+      completeFactor += factor;
+    }
+
+    if( completeFactor <= 0 )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, "The sum of factors (%d%%) is not allowed to be zero or negative.", completeFactor ) );
+
+    if( completeFactor > 100 )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, "The sum of factors (%d%%) is not allowed to be greater than 100.", completeFactor ) );
+
+    if( completeFactor > 0 && completeFactor < 100 )
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, "The sum of factors (%d%%) is not 100%%.", completeFactor ) );
+
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "100 Percent" );
   }
 
   /**
