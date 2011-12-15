@@ -251,9 +251,9 @@
           <command commandId="org.kalypso.ui.rrm.command.calccase.runCalcCase" style="push"/>
           <separator name="additions" visible="false"/>
           <visibleWhen checkEnabled="false">
-            <with variable="activePartId">
-              <equals value="org.eclipse.ui.views.ResourceNavigator" />
-            </with>
+             <with variable="activeWorkbenchWindow.activePerspective">
+                <equals value="org.kalypso.ui.perspectives.ModelerPerspectiveFactory"/>
+             </with>
           </visibleWhen>
        </menu>
     </menuContribution>
