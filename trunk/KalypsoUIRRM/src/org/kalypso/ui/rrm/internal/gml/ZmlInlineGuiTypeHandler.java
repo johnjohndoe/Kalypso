@@ -177,7 +177,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     final CopyObservationVisitor visitor = new CopyObservationVisitor( newAxis );
     final Map<String, String> nameMapping = createCheckObservationNameMapping();
     visitor.setNameMapping( nameMapping );
-    model.accept( visitor );
+    model.accept( visitor, 1 );
 
     /* copy the rest */
     final String href = o.getHref();

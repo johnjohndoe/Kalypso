@@ -78,7 +78,7 @@ public class StorageChannelValidator
   public IStatus validate( )
   {
     if( m_wvqObservation == null )
-      m_log.add( IStatus.ERROR, Messages.getString("StorageChannelValidator.0") ); //$NON-NLS-1$
+      m_log.add( IStatus.ERROR, Messages.getString( "StorageChannelValidator.0" ) ); //$NON-NLS-1$
     else
     {
       validateWaterlevel();
@@ -143,7 +143,7 @@ public class StorageChannelValidator
     try
     {
       final HasValuesVisitor visitor = new HasValuesVisitor( axis );
-      wvqObservation.accept( visitor, null );
+      wvqObservation.accept( visitor, null, 1 );
       return visitor.hasValues();
     }
     catch( final SensorException e )
