@@ -67,6 +67,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -309,6 +310,28 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     /* Set the input. */
     if( catchmentBean != null )
       m_viewer.setInput( catchmentBean.getTimeseries() );
+
+    /* Create the status composite. */
+    final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
+    statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    /* Set the status. */
+    if( catchmentBean == null )
+      statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+    else
+      statusComposite.setStatus( catchmentBean.checkFactor() );
+
+    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        statusComposite.setStatus( catchmentBean.checkFactor() );
+      }
+    } );
   }
 
   private void createColumns( final TableViewer viewer )
