@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:na="org.kalypso.na.control_v2" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control_v2" elementFormDefault="qualified" version="1.0">
+<schema xmlns:na="org.kalypso.na.control_v2" xmlns:gml="http://www.opengis.net/gml" xmlns:rcm="org.kalypso.model.rcm.v2" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="org.kalypso.na.control_v2" elementFormDefault="qualified" version="1.0">
+
   <import namespace="http://www.opengis.net/gml" />
+  <import namespace="org.kalypso.model.rcm.v2" />
+
   <element name="NAControl" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
@@ -9,24 +12,42 @@
             <element name="startsimulation" type="dateTime" />
             <element name="endsimulation" type="dateTime" />
 
-            <element name="minutesTimestep" type="int"/>
+            <element name="minutesTimestep" type="int" />
             <element name="versionKalypsoNA" type="na:versionKalypsoNAType" />
-            
+
             <element name="editor" type="string" />
             <element name="comment" type="string" />
             <element name="creationTime" type="dateTime" />
-            
+
             <element name="pns" type="boolean" />
             <!--In der Oberfläche wird die Wiederkehrzeit verwendet - für das Modell wird dies zur Jährlichkeit umgerechnet -->
             <element name="xjah" type="double" />
             <element name="xwahl2" type="double" />
             <element name="ipver" type="na:ipverEnumerationType" />
-            <element name="returnPeriod" type="na:PositiveIntType" default="1" minOccurs="0"/> <!-- default = "1" only for backward compatibility -->
+            <element name="returnPeriod" type="na:PositiveIntType" default="1" minOccurs="0" /> <!-- default = "1" only for backward compatibility -->
+
+            <!-- Catchment models -->
+            <element name="generatorN" type="na:generatorLinkProperty" />
+            <element name="generatorT" type="na:generatorLinkProperty" />
+            <element name="generatorE" type="na:generatorLinkProperty" />
           </sequence>
         </extension>
       </complexContent>
     </complexType>
   </element>
+
+  <complexType name="generatorLinkProperty">
+    <annotation>
+      <appinfo xmlns:kapp="org.kalypso.appinfo">
+        <kapp:documentReference>catchmentModels.gml</kapp:documentReference>
+      </appinfo>
+    </annotation>
+    <sequence>
+      <element ref="rcm:RainfallGenerator" minOccurs="0" maxOccurs="0" />
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup" />
+  </complexType>
+
   <simpleType name="PositiveIntType">
     <restriction base="int">
       <minInclusive value="1" />
