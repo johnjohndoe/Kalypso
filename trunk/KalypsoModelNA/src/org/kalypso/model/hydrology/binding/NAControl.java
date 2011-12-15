@@ -49,7 +49,9 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
@@ -85,6 +87,12 @@ public class NAControl extends Feature_Impl
   private static final QName PROP_COMMENT = new QName( NS_NAMETA, "comment" ); //$NON-NLS-1$
 
   private static final QName PROP_CREATION_TIME = new QName( NS_NAMETA, "creationTime" ); //$NON-NLS-1$
+
+  private static final QName PROP_GENERATOR_N = new QName( NS_NAMETA, "generatorN" ); //$NON-NLS-1$
+
+  private static final QName PROP_GENERATOR_T = new QName( NS_NAMETA, "generatorT" ); //$NON-NLS-1$
+
+  private static final QName PROP_GENERATOR_E = new QName( NS_NAMETA, "generatorE" ); //$NON-NLS-1$
 
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -229,5 +237,29 @@ public class NAControl extends Feature_Impl
   {
     final XMLGregorianCalendar calendar = DateUtilities.toXMLGregorianCalendar( creationTime );
     setProperty( PROP_CREATION_TIME, calendar );
+  }
+
+  public IRainfallGenerator getGeneratorN( )
+  {
+    return getGenerator( PROP_GENERATOR_N );
+  }
+
+  public IRainfallGenerator getGeneratorT( )
+  {
+    return getGenerator( PROP_GENERATOR_T );
+  }
+
+  public IRainfallGenerator getGeneratorE( )
+  {
+    return getGenerator( PROP_GENERATOR_E );
+  }
+
+  private IRainfallGenerator getGenerator( final QName prop )
+  {
+    final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) getProperty( prop );
+    if( xlink == null )
+      return null;
+
+    return (IRainfallGenerator) xlink.getFeature();
   }
 }
