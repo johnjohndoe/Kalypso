@@ -44,19 +44,18 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
-import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
@@ -80,44 +79,10 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
     if( calcCases == null )
       return null;
 
-    // die Rechenfälle sollen nacheinander aktualisiert werden
-    // parallelität macht hier keinen Sinn
-    // final MutexRule mutexRule = new MutexRule();
-
-    // changed by doemming: jobrule is now calcCase folder, otherwise the job conflicts with the project rule.
-    // jobs can now run parallel
-
-    // alle Rechenfälle aktualisieren
-    for( final IFolder calcCase : calcCases )
-    {
-      final Job job = new Job( Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_2" ) + calcCase.getName() ) //$NON-NLS-1$
-      {
-        @Override
-        protected IStatus run( final IProgressMonitor monitor )
-        {
-          try
-          {
-            final ModelNature nature = (ModelNature) calcCase.getProject().getNature( ModelNature.ID );
-
-            final IStatus status = nature.updateCalcCase( calcCase, monitor );
-
-            return status;
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-
-            return e.getStatus();
-          }
-        }
-      };
-
-      // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, title, Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_4" ), false, IStatus.ERROR, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      job.setUser( true );
-      job.setRule( calcCase.getProject() );
-      job.schedule();
-    }
+    final WorkspaceModifyOperation operation = new UpdateCalcCaseOperation( calcCases );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, "Update calc cases" );
+    if( !status.isOK() )
+      StatusDialog.open( shell, status, HandlerUtils.getCommandName( event ) );
 
     return null;
   }
