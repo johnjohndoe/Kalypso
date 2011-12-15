@@ -47,10 +47,13 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -104,20 +107,63 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     m_catchments = catchments;
   }
 
-  public ILinearSumGenerator apply( CommandableWorkspace workspace ) throws Exception
+  /**
+   * This function applies the changes of this linear sum generator. It will create or update the linear sum generator
+   * feature. If the linear sum generator feature is existing, its (probaply) existing catchment features will be
+   * deleted. So always new ones will be generated.
+   * 
+   * @param workspace
+   *          The workspace.
+   * @param parameterType
+   *          The selected parameter type.
+   */
+  public ILinearSumGenerator apply( final CommandableWorkspace workspace, final String parameterType ) throws Exception
   {
-    // TODO Delete all catchments
-    Map<QName, Object> properties = new HashMap<>( getProperties() );
-    ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
-    IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
-    QName type = getFeatureType().getQName();
+    /* Get the feature. */
+    final ILinearSumGenerator feature = getFeature();
+    if( feature == null )
+    {
+      /* The linear sum generator feature does not exist. */
+      final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
+      properties.put( ILinearSumGenerator.PROPERTY_AREA_NAME, "gml:description" );
+      final ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
+      final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
+      final QName type = getFeatureType().getQName();
 
-    AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+      /* Create the add feature command. */
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+
+      /* Post the command. */
+      workspace.postCommand( command );
+
+      /* Apply also all contained catchments. */
+      for( final CatchmentBean catchment : m_catchments )
+        catchment.apply( workspace, command.getNewFeature(), parameterType );
+
+      return (ILinearSumGenerator) command.getNewFeature();
+    }
+
+    /* Apply the changes. */
+    final ICommand command = applyChanges();
+
+    /* Post the command. */
     workspace.postCommand( command );
 
-    for( CatchmentBean catchment : m_catchments )
-      catchment.apply( workspace, command.getNewFeature() );
+    /* The delete commands. */
+    final CompositeCommand deleteCommands = new CompositeCommand( "Updating catchments..." );
 
-    return (ILinearSumGenerator) command.getNewFeature();
+    /* Get all catchments. */
+    final ICatchment[] catchments = feature.getCatchments();
+    for( final ICatchment catchment : catchments )
+      deleteCommands.addCommand( new DeleteFeatureCommand( catchment ) );
+
+    /* Post the command. */
+    workspace.postCommand( deleteCommands );
+
+    /* Apply also all contained catchments. */
+    for( final CatchmentBean catchment : m_catchments )
+      catchment.apply( workspace, feature, parameterType );
+
+    return feature;
   }
 }

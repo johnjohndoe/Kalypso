@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
@@ -59,6 +59,7 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
@@ -66,6 +67,9 @@ import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Gernot Belger
@@ -79,6 +83,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private String m_catchmentRef;
 
+  private String m_catchmentName;
+
   public CatchmentBean( )
   {
     super( ICatchment.FEATURE_CATCHMENT );
@@ -86,6 +92,9 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_cache = new HashMap<String, FactorizedTimeseriesBean>();
     m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
     m_catchmentRef = null;
+    m_catchmentName = null;
+
+    initTimeseries();
   }
 
   public CatchmentBean( final ICatchment catchment )
@@ -94,8 +103,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
     m_cache = new HashMap<String, FactorizedTimeseriesBean>();
     m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
-    final Feature areaLink = catchment.getAreaLink();
-    m_catchmentRef = areaLink == null ? null : areaLink.getId();
+    m_catchmentRef = resolveRef( catchment );
+    m_catchmentName = resolveName( catchment );
 
     initTimeseries();
   }
@@ -110,53 +119,104 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentRef;
   }
 
+  public String getCatchmentName( )
+  {
+    return m_catchmentName;
+  }
+
   public void setCatchmentRef( final String catchmentRef )
   {
     m_catchmentRef = catchmentRef;
   }
 
-  public String getLabel( )
+  public void setCatchmentName( final String catchmentName )
   {
-    return (String) getProperty( Feature.QN_DESCRIPTION );
+    m_catchmentName = catchmentName;
   }
 
-  public void apply( CommandableWorkspace workspace, Feature parent ) throws Exception
+  public String getLabel( )
   {
-    // TODO
+    /* The feature may or may not exist here. */
+    /* So we cant use it to resolve the area. */
+    return m_catchmentName;
+  }
 
-    /* Get the feature. */
-    ICatchment feature = getFeature();
-    if( feature == null )
+  /**
+   * This function applies the changes of this catchment. It assumes, that the catchment does not exist or does not
+   * exist anymore, because it will create a new catchment feature.
+   * 
+   * @param workspace
+   *          The workspace.
+   * @param parent
+   *          The parent feature.
+   * @param parameterType
+   *          The selected parameter type.
+   */
+  public void apply( final CommandableWorkspace workspace, final Feature parent, final String parameterType ) throws Exception
+  {
+    /* The catchment feature does not exist. */
+    final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
+    final ILinearSumGenerator collection = (ILinearSumGenerator) parent;
+    final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
+    final QName type = getFeatureType().getQName();
+
+    /* Create the add feature command. */
+    final AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+
+    /* Post the command. */
+    workspace.postCommand( command );
+
+    /* Get the new feature. */
+    final Feature newFeature = command.getNewFeature();
+
+    /* Build the area link. */
+    final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef;
+    final IRelationType relation = (IRelationType) getFeatureType().getProperty( ICatchment.PROPERTY_AREA_LINK );
+    final XLinkedFeature_Impl areaLink = new XLinkedFeature_Impl( newFeature, relation, null, href );
+
+    /* Create the change feature command. */
+    final ChangeFeatureCommand changeCommand = new ChangeFeatureCommand( newFeature, relation, areaLink );
+
+    /* Post the command. */
+    workspace.postCommand( changeCommand );
+
+    /* Apply also all contained timeseries. */
+    for( final FactorizedTimeseriesBean timeseriesBean : m_timeseries )
+      timeseriesBean.apply( workspace, newFeature, parameterType );
+  }
+
+  private String resolveRef( final ICatchment catchment )
+  {
+    final Feature areaLink = catchment.getAreaLink();
+    if( areaLink instanceof XLinkedFeature_Impl )
     {
-      /* The catchment feature does not exist. */
-      Map<QName, Object> properties = new HashMap<>( getProperties() );
-      properties.put( ICatchment.PROPERTY_AREA_LINK, INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef );
-      ILinearSumGenerator collection = (ILinearSumGenerator) parent;
-      IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ILinearSumGenerator.MEMBER_CATCHMENT );
-      QName type = getFeatureType().getQName();
-
-      /* Create the add feature command. */
-      AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
-
-      /* Post the command. */
-      workspace.postCommand( command );
-
-      /* Apply also all contained timeseries. */
-      for( FactorizedTimeseriesBean timeseriesBean : m_timeseries )
-        timeseriesBean.apply( workspace, command.getNewFeature() );
+      final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) areaLink;
+      return xlink.getFeatureId();
     }
-    else
-    {
-      /* The catchment feature does already exist. */
-      ICommand command = applyChanges();
 
-      /* Post the command. */
-      workspace.postCommand( command );
+    return null;
+  }
 
-      /* Apply also all contained timeseries. */
-      for( FactorizedTimeseriesBean timeseriesBean : m_timeseries )
-        timeseriesBean.apply( workspace, feature );
-    }
+  private String resolveName( final ICatchment catchment )
+  {
+    /* Get the parent. */
+    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getParent();
+
+    /* Get the name property. */
+    final String nameProperty = parent.getAreaNameProperty();
+    if( nameProperty == null || nameProperty.length() == 0 )
+      return null;
+
+    /* Get the area. */
+    final Feature area = catchment.getAreaLink();
+    if( area == null )
+      return null;
+
+    /* Build the xpath. */
+    final GMLXPath xPath = new GMLXPath( nameProperty, catchment.getWorkspace().getNamespaceContext() );
+
+    /* Query. */
+    return (String) GMLXPathUtilities.queryQuiet( xPath, area );
   }
 
   private void initTimeseries( )
@@ -167,42 +227,45 @@ public class CatchmentBean extends FeatureBean<ICatchment>
       final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IStationCollection stationCollection = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, IStationCollection.class );
       final IFeatureBindingCollection<IStation> stations = stationCollection.getStations();
-      for( IStation station : stations )
+      for( final IStation station : stations )
       {
         /* Get the timeseries. */
-        IFeatureBindingCollection<ITimeseries> timeseries = station.getTimeseries();
-        for( ITimeseries oneTimeseries : timeseries )
+        final IFeatureBindingCollection<ITimeseries> timeseries = station.getTimeseries();
+        for( final ITimeseries oneTimeseries : timeseries )
         {
-          FactorizedTimeseriesBean factorizedTimeseries = new FactorizedTimeseriesBean( oneTimeseries );
-          m_cache.put( oneTimeseries.getDataLink().getHref(), factorizedTimeseries );
-          m_timeseries.add( factorizedTimeseries );
+          final FactorizedTimeseriesBean factorizedTimeseries = new FactorizedTimeseriesBean( oneTimeseries );
+          final ZmlLink dataLink = oneTimeseries.getDataLink();
+          if( dataLink != null && dataLink.isLinkSet() )
+          {
+            m_cache.put( dataLink.getHref(), factorizedTimeseries );
+            m_timeseries.add( factorizedTimeseries );
+          }
         }
       }
 
       /* Get the feature. */
-      ICatchment feature = getFeature();
+      final ICatchment feature = getFeature();
       if( feature == null )
         return;
 
       /* Initialize with factors. */
-      IFactorizedTimeseries[] factorizedTimeseries = feature.getFactorizedTimeseries();
-      for( IFactorizedTimeseries oneFactorizedTimeseries : factorizedTimeseries )
+      final IFactorizedTimeseries[] factorizedTimeseries = feature.getFactorizedTimeseries();
+      for( final IFactorizedTimeseries oneFactorizedTimeseries : factorizedTimeseries )
       {
-        ZmlLink timeseriesLink = oneFactorizedTimeseries.getTimeseriesLink();
+        final ZmlLink timeseriesLink = oneFactorizedTimeseries.getTimeseriesLink();
         if( timeseriesLink == null )
           continue;
 
-        String href = timeseriesLink.getHref();
-        FactorizedTimeseriesBean bean = m_cache.get( href );
+        final FactorizedTimeseriesBean bean = m_cache.get( timeseriesLink.getHref() );
         if( bean == null )
           continue;
 
-        Double factor = oneFactorizedTimeseries.getFactor();
+        final BigDecimal factor = oneFactorizedTimeseries.getFactor();
         if( factor != null )
-          bean.setFactor( factor.doubleValue() );
+          bean.setFactor( factor.intValue() );
       }
     }
-    catch( CoreException ex )
+    catch( final CoreException ex )
     {
       ex.printStackTrace();
     }

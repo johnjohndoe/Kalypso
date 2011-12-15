@@ -87,7 +87,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     m_binding = binding;
     m_editable = editable;
 
-    FormToolkit toolkit = m_binding.getToolkit();
+    final FormToolkit toolkit = m_binding.getToolkit();
     if( toolkit != null )
       toolkit.adapt( this );
 
@@ -135,7 +135,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
   /**
    * Refresh the control from the state of the underlying feature.
    */
-  public void refresh( )
+  public final void refresh( )
   {
     m_featureBean.revert();
   }
@@ -149,7 +149,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       toolkit.createLabel( parent, label );
     else
     {
-      Label propertyLabel = new Label( parent, SWT.NONE );
+      final Label propertyLabel = new Label( parent, SWT.NONE );
       propertyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       propertyLabel.setText( label );
     }
@@ -177,7 +177,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected final ComboViewer createPropertyCombo( final Composite parent, final Map<String, String> allowedValues )
   {
-    ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY );
+    final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.getCombo().setEnabled( m_editable );
     viewer.setContentProvider( new ArrayContentProvider() );
@@ -187,7 +187,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         if( element instanceof String )
           return allowedValues.get( element );
@@ -198,7 +198,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
     viewer.setInput( allowedValues.keySet().toArray( new String[] {} ) );
 
-    FormToolkit toolkit = m_binding.getToolkit();
+    final FormToolkit toolkit = m_binding.getToolkit();
     if( toolkit != null )
       toolkit.adapt( viewer.getCombo() );
 

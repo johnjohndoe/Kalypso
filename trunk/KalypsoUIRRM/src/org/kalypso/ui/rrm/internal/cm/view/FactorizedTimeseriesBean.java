@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -51,9 +53,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -64,7 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
 {
-  private double m_factor;
+  private int m_factor;
 
   public FactorizedTimeseriesBean( )
   {
@@ -81,33 +85,33 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
     return (String) getProperty( Feature.QN_DESCRIPTION );
   }
 
-  public double getFactor( )
+  public int getFactor( )
   {
     return m_factor;
   }
 
-  public void setFactor( double factor )
+  public void setFactor( final int factor )
   {
     m_factor = factor;
   }
 
   public String getGroupText( )
   {
-    ITimeseries timeseries = getFeature();
+    final ITimeseries timeseries = getFeature();
     if( timeseries == null )
       return null;
 
-    IStation station = timeseries.getStation();
+    final IStation station = timeseries.getStation();
     return station.getGroup();
   }
 
   public String getStationText( )
   {
-    ITimeseries timeseries = getFeature();
+    final ITimeseries timeseries = getFeature();
     if( timeseries == null )
       return null;
 
-    IStation station = timeseries.getStation();
+    final IStation station = timeseries.getStation();
     return station.getName();
   }
 
@@ -132,25 +136,45 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
 
   public String getFactorText( )
   {
-    if( Double.isNaN( m_factor ) || Double.isInfinite( m_factor ) )
-      return null;
+    if( m_factor <= 0 || m_factor > 100 )
+      return "";
 
-    return String.format( "%f", m_factor );
+    return String.format( Locale.PRC, "%d", m_factor );
   }
 
   /**
+   * This function applies the changes of this factorized timeseries. It assumes, that the factorized timeseries does
+   * not exist or does not exist anymore, because it will create a new factorized timeseries feature. <br/>
+   * <br/>
    * ATTENTION: This workspace is another workspace then the one of the feature of this class.
+   * 
+   * @param workspace
+   *          The workspace.
+   * @param parent
+   *          The parent feature.
+   * @param parameterType
+   *          The selected parameter type.
    */
-  public void apply( CommandableWorkspace workspace, Feature parent ) throws Exception
+  public void apply( final CommandableWorkspace workspace, final Feature parent, final String parameterType ) throws Exception
   {
-    // TODO
+    if( m_factor <= 0 || m_factor > 100 )
+      return;
 
-    Map<QName, Object> properties = new HashMap<>( getProperties() );
-    ICatchment collection = (ICatchment) parent;
-    IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchment.MEMBER_FACTORIZED_TIMESERIES );
-    QName type = getFeatureType().getQName();
+    if( parameterType == null || !parameterType.equals( getFeature().getParameterType() ) )
+      return;
 
-    AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
+    final TimeseriesLinkType timeseriesLink = new TimeseriesLinkType();
+    timeseriesLink.setHref( getFeature().getDataLink().getHref() );
+
+    final Map<QName, Object> properties = new HashMap<QName, Object>();
+    properties.put( IFactorizedTimeseries.PROPERTY_FACTOR, new BigDecimal( m_factor ) );
+    properties.put( IFactorizedTimeseries.PROPERTY_TIMESERIES_LINK, timeseriesLink );
+
+    final ICatchment collection = (ICatchment) parent;
+    final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchment.MEMBER_FACTORIZED_TIMESERIES );
+    final QName type = IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES;
+
+    final AddFeatureCommand command = new AddFeatureCommand( workspace, type, collection, parentRelation, -1, properties, null, -1 );
     workspace.postCommand( command );
   }
 }

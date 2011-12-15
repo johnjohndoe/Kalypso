@@ -40,29 +40,52 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 
 /**
  * @author Holger Albert
  */
-public class CatchmentsLabelProvider extends LabelProvider
+public class ParameterTypeViewerFilter extends ViewerFilter
 {
   /**
-   * The constructor.
+   * The desired parameter type.
    */
-  public CatchmentsLabelProvider( )
+  private final String m_parameterType;
+
+  /**
+   * The constructor.
+   * 
+   * @param parameterType
+   *          The desired parameter type.
+   */
+  public ParameterTypeViewerFilter( final String parameterType )
   {
+    m_parameterType = parameterType;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( element instanceof CatchmentBean )
-      return ((CatchmentBean) element).getLabel();
+    if( element instanceof FactorizedTimeseriesBean )
+    {
+      final FactorizedTimeseriesBean bean = (FactorizedTimeseriesBean) element;
+      final ITimeseries feature = bean.getFeature();
+      if( feature == null )
+        return false;
 
-    return super.getText( element );
+      final String parameterType = feature.getParameterType();
+      if( parameterType == null || !parameterType.equals( m_parameterType ) )
+        return false;
+
+      return true;
+    }
+
+    return false;
   }
 }
