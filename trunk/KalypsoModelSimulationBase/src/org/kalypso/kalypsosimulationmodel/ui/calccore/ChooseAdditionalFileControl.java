@@ -92,9 +92,6 @@ public class ChooseAdditionalFileControl extends AbstractFeatureControl
     button.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChooseExeControl.0" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
