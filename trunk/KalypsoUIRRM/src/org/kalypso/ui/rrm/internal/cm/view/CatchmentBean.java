@@ -89,6 +89,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private String m_catchmentName;
 
+  private String m_catchmentDescription;
+
   public CatchmentBean( )
   {
     super( ICatchment.FEATURE_CATCHMENT );
@@ -97,6 +99,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
     m_catchmentRef = null;
     m_catchmentName = null;
+    m_catchmentDescription = null;
 
     initTimeseries();
   }
@@ -109,6 +112,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
     m_catchmentRef = resolveRef( catchment );
     m_catchmentName = resolveName( catchment );
+    m_catchmentDescription = resolveDescription( catchment );
 
     initTimeseries();
   }
@@ -128,6 +132,11 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentName;
   }
 
+  public String getCatchmentDescription( )
+  {
+    return m_catchmentDescription;
+  }
+
   public void setCatchmentRef( final String catchmentRef )
   {
     m_catchmentRef = catchmentRef;
@@ -136,6 +145,11 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   public void setCatchmentName( final String catchmentName )
   {
     m_catchmentName = catchmentName;
+  }
+
+  public void setCatchmentDescription( final String catchmentDescription )
+  {
+    m_catchmentDescription = catchmentDescription;
   }
 
   public String getLabel( )
@@ -241,7 +255,52 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     final GMLXPath xPath = new GMLXPath( nameProperty, catchment.getWorkspace().getNamespaceContext() );
 
     /* Query. */
-    return (String) GMLXPathUtilities.queryQuiet( xPath, area );
+    final Object queryQuiet = GMLXPathUtilities.queryQuiet( xPath, area );
+    if( queryQuiet == null )
+      return null;
+
+    if( queryQuiet instanceof String )
+      return (String) queryQuiet;
+
+    if( queryQuiet instanceof List )
+    {
+      final List< ? > names = (List< ? >) queryQuiet;
+      if( names.size() == 0 )
+        return null;
+
+      return (String) names.get( 0 );
+    }
+
+    return null;
+  }
+
+  private String resolveDescription( final ICatchment catchment )
+  {
+    /* Get the parent. */
+    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getParent();
+
+    /* Get the description property. */
+    final String descriptionProperty = parent.getAreaDescriptionProperty();
+    if( descriptionProperty == null || descriptionProperty.length() == 0 )
+      return null;
+
+    /* Get the area. */
+    final Feature area = catchment.getAreaLink();
+    if( area == null )
+      return null;
+
+    /* Build the xpath. */
+    final GMLXPath xPath = new GMLXPath( descriptionProperty, catchment.getWorkspace().getNamespaceContext() );
+
+    /* Query. */
+    final Object queryQuiet = GMLXPathUtilities.queryQuiet( xPath, area );
+    if( queryQuiet == null )
+      return null;
+
+    if( queryQuiet instanceof String )
+      return (String) queryQuiet;
+
+    return null;
   }
 
   private void initTimeseries( )

@@ -202,6 +202,15 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaDescriptionProperty()
+   */
+  @Override
+  public String getAreaDescriptionProperty( )
+  {
+    return getProperty( PROPERTY_AREA_DESCRIPTION, String.class );
+  }
+
+  /**
    * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaProperty()
    */
   @Override

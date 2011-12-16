@@ -14,6 +14,7 @@
         <xs:sequence>
           <xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="areaNameProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
+          <xs:element name="areaDescriptionProperty" type="xs:string" minOccurs="0" maxOccurs="1" />
           <xs:element name="areaProperty" type="xs:string" minOccurs="1" maxOccurs="1" />
           <xs:element name="catchmentMember" minOccurs="0" maxOccurs="unbounded">
             <xs:complexType>

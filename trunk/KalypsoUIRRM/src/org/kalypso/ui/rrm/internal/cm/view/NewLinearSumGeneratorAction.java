@@ -104,11 +104,13 @@ public class NewLinearSumGeneratorAction extends Action
       for( final Catchment catchment : catchments )
       {
         final String catchmentId = catchment.getId();
-        final String catchmentName = catchment.getDescription();
+        final String catchmentName = catchment.getName();
+        final String catchmentDescription = catchment.getDescription();
 
         final CatchmentBean catchmentBean = new CatchmentBean();
         catchmentBean.setCatchmentRef( catchmentId );
         catchmentBean.setCatchmentName( catchmentName );
+        catchmentBean.setCatchmentDescription( catchmentDescription );
         catchmentBeans.add( catchmentBean );
       }
 

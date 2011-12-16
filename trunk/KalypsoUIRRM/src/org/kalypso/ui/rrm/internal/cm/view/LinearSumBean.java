@@ -125,7 +125,8 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     {
       /* The linear sum generator feature does not exist. */
       final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
-      properties.put( ILinearSumGenerator.PROPERTY_AREA_NAME, "gml:description" );
+      properties.put( ILinearSumGenerator.PROPERTY_AREA_NAME, "gml:name" );
+      properties.put( ILinearSumGenerator.PROPERTY_AREA_DESCRIPTION, "gml:description" );
       final ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
       final QName type = getFeatureType().getQName();
@@ -165,5 +166,14 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       catchment.apply( workspace, feature, parameterType );
 
     return feature;
+  }
+
+  public boolean hasDescription( )
+  {
+    final Object property = getProperty( ILinearSumGenerator.QN_DESCRIPTION );
+    if( property == null )
+      return false;
+
+    return true;
   }
 }

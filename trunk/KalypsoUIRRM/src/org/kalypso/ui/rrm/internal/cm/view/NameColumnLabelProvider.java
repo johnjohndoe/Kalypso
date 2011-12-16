@@ -40,28 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 /**
  * @author Holger Albert
  */
-public class CatchmentsLabelProvider extends LabelProvider
+public class NameColumnLabelProvider extends ColumnLabelProvider
 {
   /**
    * The constructor.
    */
-  public CatchmentsLabelProvider( )
+  public NameColumnLabelProvider( )
   {
   }
 
   /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
   public String getText( final Object element )
   {
     if( element instanceof CatchmentBean )
-      return ((CatchmentBean) element).getLabel();
+      return ((CatchmentBean) element).getCatchmentName();
 
     return super.getText( element );
   }

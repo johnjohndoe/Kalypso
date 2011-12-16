@@ -108,7 +108,13 @@ public class FactorEditingSupport extends EditingSupport
   protected void setValue( final Object element, final Object value )
   {
     if( element instanceof FactorizedTimeseriesBean )
-      ((FactorizedTimeseriesBean) element).setFactor( NumberUtils.parseQuietInteger( (String) value ) );
+    {
+      final Integer integer = NumberUtils.parseQuietInteger( (String) value );
+      if( integer != null )
+        ((FactorizedTimeseriesBean) element).setFactor( integer );
+      else
+        ((FactorizedTimeseriesBean) element).setFactor( 0 );
+    }
 
     getViewer().update( element, null );
   }
