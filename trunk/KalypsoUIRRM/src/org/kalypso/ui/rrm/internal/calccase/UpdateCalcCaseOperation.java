@@ -53,6 +53,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -67,6 +68,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
@@ -78,7 +80,9 @@ import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.util.PlainRainfallModelProvider;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.merged.Source;
 import org.kalypso.simulation.core.ant.copyobservation.CopyObservationFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
@@ -89,6 +93,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -149,7 +154,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
    *             <source property="NRepository" from="${startsim}" to="${stopsim}" />
    *         </kalypso.copyObservation>
    *     </target>
-   *
+   * 
    *     <target name="updateObsT" depends="setProperties">
    *         <echo message="aktualisiere Temperaturen (Messung)" />
    *         <delete dir="${calc.dir}/Klima" />
@@ -158,7 +163,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
    *             <source property="inObservationLink" from="${startsim}" to="${stopsim}" />
    *         </kalypso.copyObservation>
    *     </target>
-   *
+   * 
    * </pre>
    */
   private IStatus updateCalcCase( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
@@ -182,9 +187,9 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     copyEvaporationTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
 
     // FIXME
-    // executeCatchmentModel( model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range );
-    // executeCatchmentModel( model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range );
-    // executeCatchmentModel( model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range );
+    executeCatchmentModel( model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL );
+    executeCatchmentModel( model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE );
+    executeCatchmentModel( model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION );
 
     return Status.OK_STATUS;
   }
@@ -335,12 +340,12 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range ) throws CoreException
+  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType ) throws CoreException
   {
     try
     {
-      initCatchmentTargetLinks( model, targetLink );
       // FIXME: init target links!
+      initCatchmentTargetLinks( model, targetLink, parameterType );
 
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
 
@@ -348,7 +353,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
 
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
-      operation.execute( null );
+      operation.execute( new NullProgressMonitor() );
     }
     catch( final Exception e )
     {
@@ -359,12 +364,17 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
-  private void initCatchmentTargetLinks( final NaModell model, final QName targetLink )
+  private void initCatchmentTargetLinks( final NaModell model, final QName targetLink, final String parameterType )
   {
     // alle links nach einem festen schema setzen
+    final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
+    for( final Catchment catchment : catchments )
+    {
+      final String name = TimeseriesUtils.getName( parameterType );
+      final String path = ""; // TODO
 
-    // TODO Auto-generated method stub
-
+      catchment.setProperty( targetLink, path );
+    }
   }
 
   private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
@@ -375,12 +385,10 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     // modelWorkspace.setNamespaceContext();
 
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
-
     rainfallModel.getGenerators().add( generator );
 
-    final ITarget target = rainfallModel.getTarget();
-
     /* Create link to catchment */
+    final ITarget target = rainfallModel.getTarget();
     target.setCatchmentPath( "CatchmentCollectionMember/CatchmentCollection/catchmentMember" );
     final IRelationType catchmentLinkRelation = (IRelationType) target.getFeatureType().getProperty( ITarget.PROPERTY_CATCHMENT_COLLECTION );
     final IFeatureType catchmentLinkType = GMLSchemaUtilities.getFeatureTypeQuiet( Feature.QNAME_FEATURE );
