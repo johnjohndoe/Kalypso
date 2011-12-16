@@ -43,12 +43,13 @@ package org.kalypso.ui.rrm.internal.utils.featureTree;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author Gernot Belger
  */
-public class TreeNode
+public class TreeNode implements IAdaptable
 {
   private final Collection<TreeNode> m_children = new ArrayList<>();
 
@@ -128,5 +129,14 @@ public class TreeNode
   public ITreeNodeModel getModel( )
   {
     return m_model;
+  }
+
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( !(m_treeData instanceof IAdaptable) )
+      return null;
+
+    return ((IAdaptable) m_treeData).getAdapter( adapter );
   }
 }

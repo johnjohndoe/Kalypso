@@ -50,6 +50,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -156,5 +159,24 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     final IFile file = dataLink.getFile();
     if( file != null && file.exists() )
       file.delete( false, true, null );
+  }
+
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if(adapter.isAssignableFrom( IObsProvider.class ) )
+    { 
+      final ZmlLink link = getDataLink();
+      final IObservation observation = link.getObservationFromPool();
+      
+      return new PlainObsProvider( observation, null );
+      
+    }else if (adapter.isAssignableFrom( IObservation.class ))
+    {
+      final ZmlLink link = getDataLink();
+      return  link.getObservationFromPool();
+    }
+
+    return super.getAdapter( adapter );
   }
 }

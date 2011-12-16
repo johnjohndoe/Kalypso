@@ -78,9 +78,7 @@ public class CatchmentModelsView extends ViewPart
   private Control createTree( final Composite panel )
   {
     m_treeViewer = new TreeViewer( panel );
-
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
-
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
 
     return m_treeViewer.getTree();
@@ -95,7 +93,6 @@ public class CatchmentModelsView extends ViewPart
   public void setInput( final CommandableWorkspace workspace, final ICatchmentModel model )
   {
     final ITreeNodeStrategy strategy = new CatchmentsTreeStrategy( model );
-
     final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
 
     m_treeViewer.setInput( input );
