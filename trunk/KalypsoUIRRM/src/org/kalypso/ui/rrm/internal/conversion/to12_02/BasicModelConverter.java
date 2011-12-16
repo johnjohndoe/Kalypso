@@ -49,12 +49,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
@@ -107,6 +104,38 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
   }
 
+  // FIXME: instead: build up timeseries management
+  private void copyBasicTimeseries( ) throws CoreException
+  {
+    final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
+    importer.readStations();
+
+    /* Copy known folders */
+    importer.copyTimeseries( "Klima" );
+    importer.copyTimeseries( "Climate" );
+
+    importer.copyTimeseries( "Ombrometer" );
+
+    importer.copyTimeseries( "Pegel" );
+    importer.copyTimeseries( "Gauge" );
+
+    importer.copyTimeseries( "Zufluss" );
+    importer.copyTimeseries( "Tributary" );
+
+// final File targetTimeseriesDir = new File( m_targetDir, INaProjectConstants.FOLDER_ZEITREIHEN );
+// if( !sourceTimeseriesDir.isDirectory() )
+// {
+// final String relativePath = FileUtilities.getRelativePathTo( m_sourceDir, sourceTimeseriesDir );
+//      final String msg = String.format( Messages.getString( "BasicModelConverter_4" ), relativePath ); //$NON-NLS-1$
+// final IStatus error = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
+// throw new CoreException( error );
+// // final File sourceOtherTimeseriesDir = new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
+// // TODO: vielleicht stattdessen nur log-warnung und noch mal prüfen, ob es der User nicht selbst verschoben hat.
+// }
+//
+// FileUtils.copyDirectory( sourceTimeseriesDir, targetTimeseriesDir, true );
+  }
+
   /**
    * Copy observationConf.
    */
@@ -116,23 +145,6 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final File sourceDir = new File( m_sourceDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
     final File targetDir = new File( m_targetDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
     FileUtils.copyDirectory( sourceDir, targetDir, true );
-  }
-
-  private void copyBasicTimeseries( ) throws CoreException, IOException
-  {
-    final File sourceTimeseriesDir = new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-    final File targetTimeseriesDir = new File( m_targetDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-    if( !sourceTimeseriesDir.isDirectory() )
-    {
-      final String relativePath = FileUtilities.getRelativePathTo( m_sourceDir, sourceTimeseriesDir );
-      final String msg = String.format( Messages.getString( "BasicModelConverter_4" ), relativePath ); //$NON-NLS-1$
-      final IStatus error = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
-      throw new CoreException( error );
-      // final File sourceOtherTimeseriesDir = new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-      // TODO: vielleicht stattdessen nur log-warnung und noch mal prüfen, ob es der User nicht selbst verschoben hat.
-    }
-
-    FileUtils.copyDirectory( sourceTimeseriesDir, targetTimeseriesDir, true );
   }
 
   private void copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException
