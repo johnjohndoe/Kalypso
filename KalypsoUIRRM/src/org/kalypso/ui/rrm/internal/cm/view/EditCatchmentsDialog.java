@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusComposite;
@@ -254,6 +255,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     catchmentViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     catchmentViewer.getTable().setLinesVisible( true );
     catchmentViewer.getTable().setHeaderVisible( true );
+    catchmentViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
     catchmentViewer.setContentProvider( new ArrayContentProvider() );
 
     /* Create the columns. */
@@ -300,6 +302,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     nameColumn.getColumn().setText( "Name" );
     nameColumn.getColumn().setWidth( 150 );
     nameColumn.setLabelProvider( new NameColumnLabelProvider() );
+    ColumnsResizeControlListener.setMinimumPackWidth( nameColumn.getColumn() );
     ColumnViewerSorter.registerSorter( nameColumn, new NameComparator() );
 
     /* Create the description column. */
@@ -309,6 +312,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
       descriptionColumn.getColumn().setText( "Description" );
       descriptionColumn.getColumn().setWidth( 150 );
       descriptionColumn.setLabelProvider( new DescriptionColumnLabelProvider() );
+      ColumnsResizeControlListener.setMinimumPackWidth( descriptionColumn.getColumn() );
       ColumnViewerSorter.registerSorter( descriptionColumn, new DescriptionComparator() );
     }
 
@@ -331,6 +335,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     m_timeseriesViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_timeseriesViewer.getTable().setLinesVisible( true );
     m_timeseriesViewer.getTable().setHeaderVisible( true );
+    m_timeseriesViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
     m_timeseriesViewer.setContentProvider( new ArrayContentProvider() );
     m_timeseriesViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) ) } );
 
@@ -384,6 +389,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     groupColumn.getColumn().setText( "Group" );
     groupColumn.getColumn().setWidth( 150 );
     groupColumn.setLabelProvider( new GroupColumnLabelProvider() );
+    ColumnsResizeControlListener.setMinimumPackWidth( groupColumn.getColumn() );
     ColumnViewerSorter.registerSorter( groupColumn, new GroupComparator() );
 
     /* Create the station column. */
@@ -391,6 +397,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     stationColumn.getColumn().setText( "Station" );
     stationColumn.getColumn().setWidth( 150 );
     stationColumn.setLabelProvider( new StationColumnLabelProvider() );
+    ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
     ColumnViewerSorter.registerSorter( stationColumn, new StationComparator() );
 
     /* Create the timestep column. */
@@ -398,6 +405,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     timestepColumn.getColumn().setText( "Timestep" );
     timestepColumn.getColumn().setWidth( 75 );
     timestepColumn.setLabelProvider( new TimestepColumnLabelProvider() );
+    ColumnsResizeControlListener.setMinimumPackWidth( timestepColumn.getColumn() );
     ColumnViewerSorter.registerSorter( timestepColumn, new TimestepComparator() );
 
     /* Create the quality column. */
@@ -405,6 +413,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     qualityColumn.getColumn().setText( "Quality" );
     qualityColumn.getColumn().setWidth( 150 );
     qualityColumn.setLabelProvider( new QualityColumnLabelProvider() );
+    ColumnsResizeControlListener.setMinimumPackWidth( qualityColumn.getColumn() );
     ColumnViewerSorter.registerSorter( qualityColumn, new QualityComparator() );
 
     /* Create the factor column. */
@@ -413,6 +422,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     factorColumn.getColumn().setWidth( 75 );
     factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
     factorColumn.setEditingSupport( new FactorEditingSupport( viewer ) );
+    ColumnsResizeControlListener.setMinimumPackWidth( factorColumn.getColumn() );
     ColumnViewerSorter.registerSorter( factorColumn, new FactorComparator() );
 
     /* Define a initial order. */

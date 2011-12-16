@@ -92,7 +92,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
 
   public void setFactor( final int factor )
   {
-    m_factor = factor;
+    m_factor = Math.max( 0, factor );
   }
 
   public String getGroupText( )
@@ -136,7 +136,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
 
   public String getFactorText( )
   {
-    if( m_factor <= 0 || m_factor > 100 )
+    if( m_factor <= 0 )
       return "";
 
     return String.format( Locale.PRC, "%d", m_factor );
