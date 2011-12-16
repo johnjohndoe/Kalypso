@@ -45,11 +45,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -69,9 +71,21 @@ public class Timeseries extends Feature_Impl implements ITimeseries
   }
 
   @Override
+  public void setQuality( final String quality )
+  {
+    setProperty( PROPERTY_QUALITY, quality );
+  }
+
+  @Override
   public String getParameterType( )
   {
     return getProperty( PROPERTY_PARAMETER_TYPE, String.class );
+  }
+
+  @Override
+  public void setParameterType( final String parameterType )
+  {
+    setProperty( PROPERTY_PARAMETER_TYPE, parameterType );
   }
 
   private Integer getTimestepAmount( )
@@ -79,9 +93,19 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     return getProperty( PROPERTY_TIMESTEP_AMOUNT, Integer.class );
   }
 
+  private void setTimestepAmount( final int amount )
+  {
+    setProperty( PROPERTY_TIMESTEP_AMOUNT, amount );
+  }
+
   private String getTimestepField( )
   {
     return getProperty( PROPERTY_TIMESTEP_FIELD, String.class );
+  }
+
+  private void setTimestepField( final String field )
+  {
+    setProperty( PROPERTY_TIMESTEP_FIELD, field );
   }
 
   @Override
@@ -96,9 +120,27 @@ public class Timeseries extends Feature_Impl implements ITimeseries
   }
 
   @Override
+  public void setTimestep( final Period period )
+  {
+    final int amount = PeriodUtils.findCalendarAmount( period );
+    final FIELD field = PeriodUtils.findCalendarField( period );
+
+    setTimestepAmount( amount );
+    setTimestepField( field.name() );
+  }
+
+  @Override
   public ZmlLink getDataLink( )
   {
     return new ZmlLink( this, PROPERTY_DATA );
+  }
+
+  @Override
+  public void setDataLink( final String href )
+  {
+    final TimeseriesLinkType link = new TimeseriesLinkType();
+    link.setHref( href );
+    setProperty( PROPERTY_DATA, link );
   }
 
   @Override

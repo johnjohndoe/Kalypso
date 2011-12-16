@@ -97,4 +97,6 @@ public interface INaProjectConstants
   String GML_PEDOLOGIE_PATH = FOLDER_MODELS + "/" + GML_PEDOLOGIE_FILE;
 
   String CALC_CASE_TEMPLATE_DIR = ".model/calcCaseTemplate"; //$NON-NLS-1$
+
+  String GML_STATIONS = "stations.gml"; //$NON-NLS-1$
 }
