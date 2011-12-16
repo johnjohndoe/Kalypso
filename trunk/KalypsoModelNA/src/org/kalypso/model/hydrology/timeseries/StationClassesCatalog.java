@@ -92,9 +92,9 @@ public class StationClassesCatalog
       if( entry.getValue().contains( parameterType ) )
       {
         final Class< ? extends IStation> key = entry.getKey();
-        if( key == IMeteorologicalStation.class )
+        if( IMeteorologicalStation.class.isAssignableFrom( key ) )
           return IMeteorologicalStation.FEATURE_METEOROLOGICAL_STATION;
-        if( key == IHydrologicalStation.class )
+        if( IHydrologicalStation.class.isAssignableFrom( key ) )
           return IHydrologicalStation.FEATURE_HYDROLOGICAL_STATION;
       }
     }
