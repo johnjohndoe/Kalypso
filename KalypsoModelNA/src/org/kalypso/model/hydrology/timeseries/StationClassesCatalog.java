@@ -47,11 +47,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
+import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationClass;
 import org.kalypso.model.hydrology.timeseries.binding.IStationClasses;
@@ -66,7 +71,7 @@ public class StationClassesCatalog
 {
   private static WeakReference<Map<Class< ? extends IStation>, Set<String>>> m_hash = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( null );
 
-  public static synchronized String[] findAllowedParameterTypes( final IStation station )
+  public static String[] findAllowedParameterTypes( final IStation station )
   {
     Assert.isNotNull( station );
 
@@ -78,7 +83,26 @@ public class StationClassesCatalog
     return allowedTypes.toArray( new String[allowedTypes.size()] );
   }
 
-  private static Map<Class< ? extends IStation>, Set<String>> getClassCatalog( )
+  public static QName getTypeFor( final String parameterType )
+  {
+    final Map<Class< ? extends IStation>, Set<String>> classCatalog = getClassCatalog();
+
+    for( final Entry<Class< ? extends IStation>, Set<String>> entry : classCatalog.entrySet() )
+    {
+      if( entry.getValue().contains( parameterType ) )
+      {
+        final Class< ? extends IStation> key = entry.getKey();
+        if( key == IMeteorologicalStation.class )
+          return IMeteorologicalStation.FEATURE_METEOROLOGICAL_STATION;
+        if( key == IHydrologicalStation.class )
+          return IHydrologicalStation.FEATURE_HYDROLOGICAL_STATION;
+      }
+    }
+
+    return null;
+  }
+
+  private static synchronized Map<Class< ? extends IStation>, Set<String>> getClassCatalog( )
   {
     final Map<Class< ? extends IStation>, Set<String>> classCatalog = m_hash.get();
     if( classCatalog != null )

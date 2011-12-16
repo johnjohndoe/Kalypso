@@ -78,6 +78,12 @@ public abstract class Station extends Feature_Impl implements IStation
   }
 
   @Override
+  public void setComment( final String comment )
+  {
+    setProperty( PROPERTY_COMMENT, comment );
+  }
+
+  @Override
   public String getGroup( )
   {
     final String group = getProperty( PROPERTY_GROUP, String.class );
@@ -87,6 +93,12 @@ public abstract class Station extends Feature_Impl implements IStation
       return null;
 
     return group;
+  }
+
+  @Override
+  public void setGroup( final String groupName )
+  {
+    setProperty( PROPERTY_GROUP, groupName );
   }
 
   @Override

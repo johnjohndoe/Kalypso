@@ -67,11 +67,19 @@ public interface ITimeseries extends Feature
 
   String getQuality( );
 
+  void setQuality( String quality );
+
   String getParameterType( );
+
+  void setParameterType( String parameterType );
 
   Period getTimestep( );
 
+  void setTimestep( Period period );
+
   ZmlLink getDataLink( );
+
+  void setDataLink( String href );
 
   IStation getStation( );
 

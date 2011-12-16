@@ -66,7 +66,11 @@ public interface IStation extends Feature
 
   String getComment( );
 
+  void setComment( String comment );
+
   String getGroup( );
+
+  void setGroup( String groupName );
 
   String getTimeseriesFoldername( );
 
