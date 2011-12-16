@@ -168,6 +168,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     /* Read models */
     monitor.subTask( "Reading control file..." );
     final NAControl control = readControlFile( calcCaseFolder );
+    final NaModell model = readModelFile( calcCaseFolder );
     ProgressUtilities.worked( monitor, 20 );
 
     final DateRange range = getRange( control );
@@ -179,9 +180,6 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
 
     /* Execute catchment models */
     copyEvaporationTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
-
-    // TODO: read model
-    final NaModell model = null;
 
     // FIXME
     // executeCatchmentModel( model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range );
@@ -211,6 +209,22 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read control file", e );
+      throw new CoreException( status );
+    }
+  }
+
+  private NaModell readModelFile( final IFolder calcCaseFolder ) throws CoreException
+  {
+    try
+    {
+      final IFile controlFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
+      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlFile );
+      return (NaModell) controlWorkspace.getRootFeature();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read model file", e );
       throw new CoreException( status );
     }
   }
@@ -325,6 +339,8 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
   {
     try
     {
+      // FIXME: init target links!
+
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
 
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
