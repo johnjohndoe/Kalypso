@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.calccase;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
 
@@ -61,12 +62,20 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.NAControl;
-import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.rcm.IRainfallModelProvider;
+import org.kalypso.model.rcm.RainfallGenerationOperation;
+import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.model.rcm.binding.ITarget;
+import org.kalypso.model.rcm.util.PlainRainfallModelProvider;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -80,6 +89,8 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
@@ -159,22 +170,33 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     final NAControl control = readControlFile( calcCaseFolder );
     ProgressUtilities.worked( monitor, 20 );
 
-    /* Copy observations for pegel and zufluss */
-    copyPegelTimeseries( control, calcCaseFolder, new SubProgressMonitor( monitor, 20 ) );
+    final DateRange range = getRange( control );
 
-    copyZuflussTimeseries( control, calcCaseFolder, new SubProgressMonitor( monitor, 20 ) );
+    /* Copy observations for pegel and zufluss */
+    copyPegelTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
+
+    copyZuflussTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
 
     /* Execute catchment models */
-    copyEvaporationTimeseries( control, calcCaseFolder, new SubProgressMonitor( monitor, 20 ) );
+    copyEvaporationTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
 
     // TODO: read model
     final NaModell model = null;
 
-    executeCatchmentModel( model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK );
-    executeCatchmentModel( model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK );
-    executeCatchmentModel( model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK );
+    // FIXME
+    // executeCatchmentModel( model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range );
+    // executeCatchmentModel( model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range );
+    // executeCatchmentModel( model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range );
 
     return Status.OK_STATUS;
+  }
+
+  private DateRange getRange( final NAControl control )
+  {
+    final Date simulationStart = control.getSimulationStart();
+    final Date simulationEnd = control.getSimulationEnd();
+
+    return new DateRange( simulationStart, simulationEnd );
   }
 
   private NAControl readControlFile( final IFolder calcCaseFolder ) throws CoreException
@@ -193,7 +215,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
-  private void copyPegelTimeseries( final NAControl control, final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  private void copyPegelTimeseries( final IFolder calcCaseFolder, final DateRange sourceRange, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -201,7 +223,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
       final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsQMapping.gml", MAPPING_MEMBER );
 
       /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( control, calcCaseFolder, "Pegel", "inObservationLink" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Pegel", "inObservationLink", sourceRange ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -216,7 +238,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
-  private void copyZuflussTimeseries( final NAControl control, final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  private void copyZuflussTimeseries( final IFolder calcCaseFolder, final DateRange sourceRange, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -224,7 +246,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
       final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsQZuMapping.gml", MAPPING_MEMBER );
 
       /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( control, calcCaseFolder, "Zufluss", "inObservationLink" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Zufluss", "inObservationLink", sourceRange ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -239,7 +261,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
-  private void copyEvaporationTimeseries( final NAControl control, final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  private void copyEvaporationTimeseries( final IFolder calcCaseFolder, final DateRange sourceRange, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -247,7 +269,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
       final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsEMapping.gml", MAPPING_MEMBER );
 
       /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( control, calcCaseFolder, "Klima", "inObservationLink" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Klima", "inObservationLink", sourceRange ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -272,18 +294,14 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     return (FeatureList) rootFeature.getProperty( memberProperty );
   }
 
-  private CopyObservationFeatureVisitor prepareVisitor( final NAControl control, final IFolder calcCaseFolder, final String outputDir, final String sourceLinkName )
+  private CopyObservationFeatureVisitor prepareVisitor( final IFolder calcCaseFolder, final String outputDir, final String sourceLinkName, final DateRange sourceRange )
   {
-    final Date simulationStart = control.getSimulationStart();
-    final Date simulationEnd = control.getSimulationEnd();
-
-    final DateRange targetRange = new DateRange( simulationStart, simulationEnd );
     final DateRange forecastRange = null;
 
     final Source source = new Source();
     source.setProperty( sourceLinkName ); //$NON-NLS-1$
-    source.setFrom( Long.toString( simulationStart.getTime() ) );
-    source.setTo( Long.toString( simulationEnd.getTime() ) );
+    source.setFrom( Long.toString( sourceRange.getFrom().getTime() ) );
+    source.setTo( Long.toString( sourceRange.getTo().getTime() ) );
 
     final GMLXPath targetPath = null;
 
@@ -293,7 +311,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     final URL context = ResourceUtilities.createQuietURL( calcCaseFolder );
     final String tokens = StringUtils.EMPTY;
 
-    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, targetObservationDir, targetRange, forecastRange );
+    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, targetObservationDir, sourceRange, forecastRange );
     final ICopyObservationSource obsSource = new FeatureCopyObservationSource( context, new Source[] { source }, tokens );
 
     final MetadataList metadata = new MetadataList();
@@ -303,11 +321,62 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink )
+  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range )
   {
+    try
+    {
+      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
 
+      final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
 
-    // TODO Auto-generated method stub
+      final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
+      operation.execute( null );
+    }
+    catch( final InvocationTargetException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( final GMLSchemaException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( final CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
+  {
+    final URL context = model.getWorkspace().getContext();
+    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL, context, null );
+
+    // modelWorkspace.setNamespaceContext();
+
+    final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
+
+    rainfallModel.getGenerators().add( generator );
+
+    final ITarget target = rainfallModel.getTarget();
+
+    /* Create link to catchment */
+    target.setCatchmentPath( "CatchmentCollectionMember/CatchmentCollection/catchmentMember" );
+    final IRelationType catchmentLinkRelation = (IRelationType) target.getFeatureType().getProperty( ITarget.PROPERTY_CATCHMENT_COLLECTION );
+    final IFeatureType catchmentLinkType = GMLSchemaUtilities.getFeatureTypeQuiet( Feature.QNAME_FEATURE );
+    final String catchmentLinkRef = "modell.gml#root"; //$NON-NLS-1$
+    final XLinkedFeature_Impl catchmentXLink = new XLinkedFeature_Impl( target, catchmentLinkRelation, catchmentLinkType, catchmentLinkRef );
+    target.setCatchmentFeature( catchmentXLink );
+
+    /* Target range */
+    target.setPeriod( targetRange );
+
+    /* Observation path */
+    target.setObservationPath( targetLink.getLocalPart() );
+
+    return rainfallModel;
   }
 }
