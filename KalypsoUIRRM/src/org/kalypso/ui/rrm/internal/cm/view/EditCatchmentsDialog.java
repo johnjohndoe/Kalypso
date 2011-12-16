@@ -47,6 +47,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
+import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -348,15 +351,28 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     else
       statusComposite.setStatus( catchmentBean.checkFactor() );
 
-    m_timeseriesViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    /* Add a listener. */
+    m_timeseriesViewer.getColumnViewerEditor().addEditorActivationListener( new ColumnViewerEditorActivationListener()
     {
-      /**
-       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-       */
       @Override
-      public void selectionChanged( final SelectionChangedEvent event )
+      public void beforeEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
+      {
+      }
+
+      @Override
+      public void beforeEditorActivated( final ColumnViewerEditorActivationEvent event )
+      {
+      }
+
+      @Override
+      public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
         statusComposite.setStatus( catchmentBean.checkFactor() );
+      }
+
+      @Override
+      public void afterEditorActivated( final ColumnViewerEditorActivationEvent event )
+      {
       }
     } );
   }
