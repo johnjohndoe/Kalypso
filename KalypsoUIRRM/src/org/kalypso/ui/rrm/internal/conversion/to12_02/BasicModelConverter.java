@@ -104,36 +104,24 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
   }
 
-  // FIXME: instead: build up timeseries management
   private void copyBasicTimeseries( ) throws CoreException
   {
     final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
     importer.readStations();
 
     /* Copy known folders */
-    importer.copyTimeseries( "Klima" );
-    importer.copyTimeseries( "Climate" );
+    importer.copyTimeseries( "Klima" ); //$NON-NLS-1$
+    importer.copyTimeseries( "Climate" ); //$NON-NLS-1$
 
-    importer.copyTimeseries( "Ombrometer" );
+    importer.copyTimeseries( "Ombrometer" ); //$NON-NLS-1$
 
-    importer.copyTimeseries( "Pegel" );
-    importer.copyTimeseries( "Gauge" );
+    importer.copyTimeseries( "Pegel" ); //$NON-NLS-1$
+    importer.copyTimeseries( "Gauge" ); //$NON-NLS-1$
 
-    importer.copyTimeseries( "Zufluss" );
-    importer.copyTimeseries( "Tributary" );
+    importer.copyTimeseries( "Zufluss" ); //$NON-NLS-1$
+    importer.copyTimeseries( "Tributary" ); //$NON-NLS-1$
 
-// final File targetTimeseriesDir = new File( m_targetDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-// if( !sourceTimeseriesDir.isDirectory() )
-// {
-// final String relativePath = FileUtilities.getRelativePathTo( m_sourceDir, sourceTimeseriesDir );
-//      final String msg = String.format( Messages.getString( "BasicModelConverter_4" ), relativePath ); //$NON-NLS-1$
-// final IStatus error = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg );
-// throw new CoreException( error );
-// // final File sourceOtherTimeseriesDir = new File( m_sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
-// // TODO: vielleicht stattdessen nur log-warnung und noch mal prüfen, ob es der User nicht selbst verschoben hat.
-// }
-//
-// FileUtils.copyDirectory( sourceTimeseriesDir, targetTimeseriesDir, true );
+    importer.saveStations();
   }
 
   /**

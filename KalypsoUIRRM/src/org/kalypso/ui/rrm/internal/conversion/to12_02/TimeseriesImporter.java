@@ -75,6 +75,8 @@ import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
+import com.google.common.base.Charsets;
+
 /**
  * Helper that imports the timeserties from the old 'Zeitreihen' folder into the new timeseries management.
  *
@@ -114,9 +116,28 @@ public class TimeseriesImporter
     }
   }
 
+  public void saveStations( ) throws CoreException
+  {
+    try
+    {
+      final File stationsFile = new File( m_timeseriesDir, INaProjectConstants.GML_STATIONS );
+      GmlSerializer.serializeWorkspace( stationsFile, m_stations.getWorkspace(), Charsets.UTF_8.name() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read stations.gml", e );
+      throw new CoreException( status );
+    }
+  }
+
   public void copyTimeseries( final String folder )
   {
     final File sourceTimeseriesDir = new File( m_sourceDir, folder );
+
+    /* Return, if directory does not exist */
+    if( !sourceTimeseriesDir.isDirectory() )
+      return;
 
     final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -124,9 +145,10 @@ public class TimeseriesImporter
     final Iterator<File> zmlIterator = FileUtils.iterateFiles( sourceTimeseriesDir, new String[] { "zml" }, true );
     for( final Iterator<File> iterator = zmlIterator; iterator.hasNext(); )
     {
+      final File zmlFile = iterator.next();
+
       try
       {
-        final File zmlFile = iterator.next();
         importZml( sourceTimeseriesDir, zmlFile );
       }
       catch( final MalformedURLException e )
@@ -143,10 +165,13 @@ public class TimeseriesImporter
       {
         stati.add( e.getStatus() );
       }
-      catch( final IOException e )
+      catch( final Exception e )
       {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        final String relativePath = FileUtilities.getRelativePathTo( sourceTimeseriesDir, zmlFile );
+
+        final String message = String.format( "Failed to convert timeseries '%s'", relativePath );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message, e );
+        stati.add( status );
       }
     }
 
@@ -183,7 +208,7 @@ public class TimeseriesImporter
       throw new CoreException( status );
     }
 
-    if( valueAxes.length > 0 )
+    if( valueAxes.length > 1 )
     {
       final String message = String.format( "Failed to import timeseries '%s': more than one value axis.", relativePath );
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
@@ -198,12 +223,12 @@ public class TimeseriesImporter
     /* Assign station and timeseries parameters */
     final String stationDescription = baseName;
     final String timeseriesDescription = baseName;
-    final String groupName = relativePath;
+    final String groupName = relativePath.substring( 0, relativePath.length() - zmlFile.getName().length() - 1 );
 
     /* Copy zml file */
 
     /* Add to timeseries management */
-    final IStation station = findOrCreateStation( stationDescription, groupName, parameterType );
+    final IStation station = findOrCreateStation( stationDescription, groupName, parameterType, relativePath );
 
     /* Always create a new timeseries */
     final ITimeseries newTimeseries = createTimeseries( station, timeseriesDescription, parameterType, timestep );
@@ -214,12 +239,12 @@ public class TimeseriesImporter
     FileUtils.copyFile( zmlFile, timeseriesFile );
   }
 
-  private IStation findOrCreateStation( final String description, final String group, final String parameterType ) throws CoreException
+  private IStation findOrCreateStation( final String description, final String group, final String parameterType, final String relativePath ) throws CoreException
   {
     final QName stationType = StationClassesCatalog.getTypeFor( parameterType );
     if( stationType == null )
     {
-      final String message = String.format( "Unsupported parameter type '%s' for timeseries '%s'", parameterType );
+      final String message = String.format( "Unsupported parameter type '%s' for timeseries '%s'", parameterType, relativePath );
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
