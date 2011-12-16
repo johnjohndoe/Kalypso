@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public interface IRainfallCatchmentModel extends Feature
 {
-  QName QNAME = new QName( UrlCatalogRcm.NS_RCM, "RainfallCatchmentModel" ); //$NON-NLS-1$
+  QName FEATURE_FAINFALL_CATCHMENT_MODEL = new QName( UrlCatalogRcm.NS_RCM, "RainfallCatchmentModel" ); //$NON-NLS-1$
 
   String getLogPath( );
 
