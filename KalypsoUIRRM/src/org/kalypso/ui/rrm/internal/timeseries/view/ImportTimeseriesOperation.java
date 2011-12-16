@@ -241,13 +241,11 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
   private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep ) throws CoreException
   {
-    final Object parameterType = timeseries.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
-    final Object quality = timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
-
-    final String periodText = PeriodUtils.formatDefault( timestep );
+    final String parameterType = (String) timeseries.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
+    final String quality = (String) timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
 
     final String stationFoldername = m_station.getTimeseriesFoldername();
-    final String timeseriesFilename = String.format( "%s_%s_%s.zml", parameterType, periodText, quality );
+    final String timeseriesFilename = TimeseriesBean.formatTimeseriesFilename( parameterType, quality, timestep );
 
     final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
     final IProject project = scenarioDataProvider.getScenarioFolder().getProject();

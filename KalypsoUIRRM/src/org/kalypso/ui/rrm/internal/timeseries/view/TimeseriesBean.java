@@ -141,4 +141,10 @@ public class TimeseriesBean extends FeatureBean<ITimeseries>
 // return new StatusWithEquals( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
 // }
   }
+
+  public static String formatTimeseriesFilename( final String parameterType, final String quality, final Period timestep )
+  {
+    final String periodText = PeriodUtils.formatDefault( timestep );
+    return String.format( "%s_%s_%s.zml", parameterType, periodText, quality );
+  }
 }
