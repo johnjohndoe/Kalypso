@@ -41,7 +41,6 @@
 package org.kalypso.ui.rrm.internal.calccase;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Date;
 
@@ -60,6 +59,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -335,10 +335,11 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range )
+  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range ) throws CoreException
   {
     try
     {
+      initCatchmentTargetLinks( model, targetLink );
       // FIXME: init target links!
 
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
@@ -349,21 +350,21 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
 
       operation.execute( null );
     }
-    catch( final InvocationTargetException e )
+    catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
+
+      final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to execute catchment model" );
+      throw new CoreException( status );
     }
-    catch( final GMLSchemaException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( final CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  }
+
+  private void initCatchmentTargetLinks( final NaModell model, final QName targetLink )
+  {
+    // alle links nach einem festen schema setzen
+
+    // TODO Auto-generated method stub
+
   }
 
   private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
