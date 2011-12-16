@@ -291,6 +291,14 @@
             name="Properties"
             restorable="false">
       </view>
+      <view
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
+            icon="icons/timeseries/table.gif"
+            id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
+            name="Zeitreihen-Diagramm"
+            restorable="true">
+      </view>
    </extension>
    
   <extension point="org.kalypso.module.conversion">
@@ -397,6 +405,15 @@
                ratio="0.33"
                relationship="right"
                relative="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
+               visible="false">
+         </view>
+         <view
+         	   id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
+               moveable="false"
+               closeable="false"
+               ratio="0.20"
+               relationship="bottom"
+               relative="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
                visible="false">
          </view>
       </perspectiveExtension>

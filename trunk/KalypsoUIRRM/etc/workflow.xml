@@ -19,6 +19,7 @@
       <con:WorkbenchSiteContext id="TimeseriesManagementContext" parent="ContextHydrology">
         <con:ViewContext id="TimeseriesManagementView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="TimeseriesManagementContext"/>
         <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="TimeseriesManagementContext"/>
+        <con:ViewContext id="TimeseriesDiagramView" partId="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" parent="TimeseriesManagementContext"/>
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="CatchmentModelsContext" parent="ContextHydrology">

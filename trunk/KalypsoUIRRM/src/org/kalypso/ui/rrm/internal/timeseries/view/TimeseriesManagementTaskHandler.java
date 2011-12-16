@@ -53,6 +53,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
+import org.kalypso.ui.rrm.internal.diagram.RrmDiagramView;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -73,13 +74,21 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
     if( managementView == null )
       throw new ExecutionException( "Failed to access timeseries view" ); //$NON-NLS-1$
 
+    final ISelectionProvider selectionProvider = managementView.getViewSite().getSelectionProvider();
+
     /* Hook properties view and management view */
     final TreePropertiesView propertiesView = (TreePropertiesView) page.findView( TreePropertiesView.ID );
     if( propertiesView == null )
       throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
 
-    final ISelectionProvider selectionProvider = managementView.getViewSite().getSelectionProvider();
     propertiesView.hookSelection( selectionProvider );
+
+    /* hook rrm diagram view */
+    final RrmDiagramView diagramView = (RrmDiagramView) page.findView( RrmDiagramView.ID );
+    if( diagramView == null )
+      throw new ExecutionException( "Failed to access diagram view" ); //$NON-NLS-1$
+
+    diagramView.hookSelection( selectionProvider );
 
     try
     {
