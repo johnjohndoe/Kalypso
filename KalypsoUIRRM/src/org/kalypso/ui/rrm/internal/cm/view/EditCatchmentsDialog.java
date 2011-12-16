@@ -50,7 +50,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -66,6 +65,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
@@ -102,9 +102,9 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
   private Group m_detailsGroup;
 
   /**
-   * The table viewer.
+   * The timeseries viewer.
    */
-  private TableViewer m_viewer;
+  private TableViewer m_timeseriesViewer;
 
   /**
    * The selected catchment.
@@ -135,7 +135,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
 
     m_mainGroup = null;
     m_detailsGroup = null;
-    m_viewer = null;
+    m_timeseriesViewer = null;
     m_catchmentBean = null;
     m_dataBinding = null;
 
@@ -246,17 +246,21 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     label.setText( "Catchments" );
 
-    /* Create a viewer. */
-    final ListViewer viewer = new ListViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE );
-    viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new CatchmentsLabelProvider() );
+    /* Create the catchment viewer. */
+    final TableViewer catchmentViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
+    catchmentViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    catchmentViewer.getTable().setLinesVisible( true );
+    catchmentViewer.getTable().setHeaderVisible( true );
+    catchmentViewer.setContentProvider( new ArrayContentProvider() );
+
+    /* Create the columns. */
+    createCatchmentViewerColumns( catchmentViewer );
 
     /* Set the input. */
-    viewer.setInput( m_bean.getCatchments() );
+    catchmentViewer.setInput( m_bean.getCatchments() );
 
     /* Add a listener. */
-    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    catchmentViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -286,6 +290,29 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     } );
   }
 
+  private void createCatchmentViewerColumns( final TableViewer viewer )
+  {
+    /* Create the name column. */
+    final TableViewerColumn nameColumn = new TableViewerColumn( viewer, SWT.LEFT );
+    nameColumn.getColumn().setText( "Name" );
+    nameColumn.getColumn().setWidth( 150 );
+    nameColumn.setLabelProvider( new NameColumnLabelProvider() );
+    ColumnViewerSorter.registerSorter( nameColumn, new NameComparator() );
+
+    /* Create the description column. */
+    if( m_bean.hasDescription() )
+    {
+      final TableViewerColumn descriptionColumn = new TableViewerColumn( viewer, SWT.LEFT );
+      descriptionColumn.getColumn().setText( "Description" );
+      descriptionColumn.getColumn().setWidth( 150 );
+      descriptionColumn.setLabelProvider( new DescriptionColumnLabelProvider() );
+      ColumnViewerSorter.registerSorter( descriptionColumn, new DescriptionComparator() );
+    }
+
+    /* Define a initial order. */
+    ColumnViewerSorter.setSortState( nameColumn, Boolean.FALSE );
+  }
+
   /**
    * This function creates the content of the details group.
    * 
@@ -296,20 +323,20 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
    */
   private void createDetailsContent( final Composite parent, final CatchmentBean catchmentBean )
   {
-    /* Create a viewer. */
-    m_viewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
-    m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_viewer.getTable().setLinesVisible( true );
-    m_viewer.getTable().setHeaderVisible( true );
-    m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) ) } );
+    /* Create the timeseries viewer. */
+    m_timeseriesViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
+    m_timeseriesViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_timeseriesViewer.getTable().setLinesVisible( true );
+    m_timeseriesViewer.getTable().setHeaderVisible( true );
+    m_timeseriesViewer.setContentProvider( new ArrayContentProvider() );
+    m_timeseriesViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE ) ) } );
 
     /* Create the columns. */
-    createColumns( m_viewer );
+    createTimeseriesViewerColumns( m_timeseriesViewer );
 
     /* Set the input. */
     if( catchmentBean != null )
-      m_viewer.setInput( catchmentBean.getTimeseries() );
+      m_timeseriesViewer.setInput( catchmentBean.getTimeseries() );
 
     /* Create the status composite. */
     final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
@@ -321,7 +348,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     else
       statusComposite.setStatus( catchmentBean.checkFactor() );
 
-    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    m_timeseriesViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -334,31 +361,35 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     } );
   }
 
-  private void createColumns( final TableViewer viewer )
+  private void createTimeseriesViewerColumns( final TableViewer viewer )
   {
     /* Create the group column. */
     final TableViewerColumn groupColumn = new TableViewerColumn( viewer, SWT.LEFT );
     groupColumn.getColumn().setText( "Group" );
     groupColumn.getColumn().setWidth( 150 );
     groupColumn.setLabelProvider( new GroupColumnLabelProvider() );
+    ColumnViewerSorter.registerSorter( groupColumn, new GroupComparator() );
 
     /* Create the station column. */
     final TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
     stationColumn.getColumn().setText( "Station" );
     stationColumn.getColumn().setWidth( 150 );
     stationColumn.setLabelProvider( new StationColumnLabelProvider() );
+    ColumnViewerSorter.registerSorter( stationColumn, new StationComparator() );
 
     /* Create the timestep column. */
     final TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
     timestepColumn.getColumn().setText( "Timestep" );
     timestepColumn.getColumn().setWidth( 75 );
     timestepColumn.setLabelProvider( new TimestepColumnLabelProvider() );
+    ColumnViewerSorter.registerSorter( timestepColumn, new TimestepComparator() );
 
     /* Create the quality column. */
     final TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
     qualityColumn.getColumn().setText( "Quality" );
     qualityColumn.getColumn().setWidth( 150 );
     qualityColumn.setLabelProvider( new QualityColumnLabelProvider() );
+    ColumnViewerSorter.registerSorter( qualityColumn, new QualityComparator() );
 
     /* Create the factor column. */
     final TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
@@ -366,6 +397,10 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     factorColumn.getColumn().setWidth( 75 );
     factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
     factorColumn.setEditingSupport( new FactorEditingSupport( viewer ) );
+    ColumnViewerSorter.registerSorter( factorColumn, new FactorComparator() );
+
+    /* Define a initial order. */
+    ColumnViewerSorter.setSortState( factorColumn, Boolean.TRUE );
   }
 
   /**
@@ -396,7 +431,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
   {
     m_mainGroup = null;
     m_detailsGroup = null;
-    m_viewer = null;
+    m_timeseriesViewer = null;
     m_catchmentBean = null;
     m_dataBinding = null;
   }
@@ -430,7 +465,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
   public void propertyChange( final PropertyChangeEvent evt )
   {
     final String parameterType = (String) evt.getNewValue();
-    if( m_viewer != null && !m_viewer.getTable().isDisposed() )
-      m_viewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
+    if( m_timeseriesViewer != null && !m_timeseriesViewer.getTable().isDisposed() )
+      m_timeseriesViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
   }
 }

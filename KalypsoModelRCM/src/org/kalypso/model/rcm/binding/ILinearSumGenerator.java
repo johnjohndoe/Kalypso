@@ -67,6 +67,11 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" );
 
   /**
+   * The qname of the area description property.
+   */
+  QName PROPERTY_AREA_DESCRIPTION = new QName( RcmConstants.NS_CM, "areaDescriptionProperty" );
+
+  /**
    * The qname of the area property.
    */
   QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" );
@@ -89,6 +94,13 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * @return The area name property.
    */
   String getAreaNameProperty( );
+
+  /**
+   * This function returns the area description property.
+   * 
+   * @return The area description property.
+   */
+  String getAreaDescriptionProperty( );
 
   /**
    * This function returns the area property.
