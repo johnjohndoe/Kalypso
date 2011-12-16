@@ -70,4 +70,5 @@ public interface INaCalcCaseConstants
 
   String AKTUELL_DIR = ERGEBNISSE_DIR + '/' + "Aktuell"; //$NON-NLS-1$
 
+  String CATCHMENT_FILE = "catchmentModels.gml"; //$NON-NLS-1$
 }

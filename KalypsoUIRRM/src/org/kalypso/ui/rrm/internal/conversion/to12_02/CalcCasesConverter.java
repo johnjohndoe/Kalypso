@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -136,6 +137,13 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   {
     final File calcCaseTemplateDir = new File( m_targetDir, INaProjectConstants.CALC_CASE_TEMPLATE_DIR );
     FileUtils.copyDirectory( calcCaseTemplateDir, calcCaseDir );
+
+    final File basisDir = new File( m_targetDir, INaProjectConstants.FOLDER_BASIS );
+    final File basisModelDir = new File( basisDir, INaProjectConstants.FOLDER_MODELS );
+    final File calcCaseModelDir = new File( calcCaseDir, INaProjectConstants.FOLDER_MODELS );
+
+    calcCaseModelDir.mkdirs();
+    FileUtils.copyFile( new File( basisModelDir, INaCalcCaseConstants.CATCHMENT_FILE ), new File( calcCaseModelDir, INaCalcCaseConstants.CATCHMENT_FILE ) );
   }
 
   private File determineTargetDir( final File directory )
