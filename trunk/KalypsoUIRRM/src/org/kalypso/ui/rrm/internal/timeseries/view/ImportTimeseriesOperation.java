@@ -73,7 +73,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
