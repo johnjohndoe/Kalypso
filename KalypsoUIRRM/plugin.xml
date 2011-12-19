@@ -431,6 +431,7 @@
    <extension point="org.eclipse.ui.commands">
             <command id="org.kalypso.model.rrm.timeseriesManagement" name="Timeseries Management" />
             <command id="org.kalypso.model.rrm.catchmentModels" name="Catchment Models" />
+            <command id="org.kalypso.model.rrm.simulationManagement" name="Simulation Management"/>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
@@ -441,10 +442,14 @@
       <handler
             class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler"
             commandId="org.kalypso.model.rrm.timeseriesManagement">
-      </handler>
+      </handler>    
       <handler
             class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler"
             commandId="org.kalypso.model.rrm.catchmentModels">
+      </handler>
+      <handler
+            class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler"
+            commandId="org.kalypso.model.rrm.simulationManagement">
       </handler>
    </extension>
 </plugin>

@@ -73,8 +73,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.editor.gmleditor.command.GmltreeHandlerUtils;
 import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
-import org.kalypso.ui.editor.gmleditor.util.command.GmltreeHandlerUtils;
 
 /**
  * @author Gernot Belger
