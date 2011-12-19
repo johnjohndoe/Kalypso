@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.ModelSimulationBase,
  org.kalypso.gml.ui,
  org.kalypso.zml.ui;bundle-version="11.6.4",
- org.kalypso.model.rcm;bundle-version="11.6.4"
+ org.kalypso.model.rcm;bundle-version="11.6.4",
+ org.kalypso.featureview;bundle-version="11.6.4"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.ui.rrm
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
