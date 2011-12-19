@@ -42,6 +42,7 @@ package org.kalypso.model.rcm.binding;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.tokenreplace.IStringResolver;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.DateRange;
@@ -71,6 +72,19 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
       return null;
 
     return property.asDateRange( variables );
+  }
+
+  @Override
+  public void setPeriod( final DateRange period )
+  {
+    final IRelationType relation = (IRelationType) getFeatureType().getProperty( PROPERTY_PERIOD );
+    final IFeatureType type = GMLSchemaUtilities.getFeatureTypeQuiet( IDateRange.FEATURE_DATE_RANGE );
+    final org.kalypso.model.rcm.internal.binding.DateRange periodFeature = (org.kalypso.model.rcm.internal.binding.DateRange) getWorkspace().createFeature( this, relation, type );
+
+    periodFeature.setFrom( period.getFrom() );
+    periodFeature.setTo( period.getTo() );
+
+    setProperty( PROPERTY_PERIOD, periodFeature );
   }
 
   @Override

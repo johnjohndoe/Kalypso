@@ -60,9 +60,13 @@ public interface IDateRange extends Feature
 
   String getFrom( );
 
+  void setFrom( String from );
+
   void setFrom( Date from );
 
   String getTo( );
+
+  void setTo( String to );
 
   void setTo( Date to );
 

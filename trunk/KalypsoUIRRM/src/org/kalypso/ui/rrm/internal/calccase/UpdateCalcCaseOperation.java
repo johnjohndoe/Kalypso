@@ -277,29 +277,6 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
-  private void copyEvaporationTimeseries( final IFolder calcCaseFolder, final DateRange sourceRange, final IProgressMonitor monitor ) throws CoreException
-  {
-    try
-    {
-      /* Read mapping */
-      final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsEMapping.gml", MAPPING_MEMBER );
-
-      /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Klima", "inObservationLink", sourceRange ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      /* Execute visitor */
-      final int count = mappingFeatures.size();
-      final MonitorFeatureVisitor wrappedVisitor = new MonitorFeatureVisitor( monitor, count, visitor );
-      mappingFeatures.accept( wrappedVisitor );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute zufluss mapping", e );
-      throw new CoreException( status );
-    }
-  }
-
   private FeatureList readMapping( final IFolder calcCaseFolder, final String filename, final QName memberProperty ) throws Exception
   {
     final IProject project = calcCaseFolder.getProject();
@@ -341,6 +318,8 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
   {
     try
     {
+      generator.setPeriod( range );
+
       initCatchmentTargetLinks( model, targetLink, parameterType );
 
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( calcCaseFolder, model, generator, targetLink, range );
@@ -367,7 +346,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     for( final Catchment catchment : catchments )
     {
       final String name = TimeseriesUtils.getName( parameterType );
-      final String path = String.format( "../%s/%s.zml", name, catchment.getName() );
+      final String path = String.format( "../%s/%s_%s.zml", name, catchment.getId(), catchment.getName() );
 
       catchment.setProperty( targetLink, path );
     }
