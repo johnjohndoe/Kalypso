@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="diagram" legend="true">
+    <Layers>
+      <Layer id="W" legend="false">
+        <Title>Wasserstand</Title>
+        <Layers>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#Wasserstand" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
+        </MapperRefs>
+      </Layer>
+
+      <Layer id="Q" legend="false">
+        <Title>Abfluss</Title>
+        <Layers>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#Abfluss" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
+        </MapperRefs>
+      </Layer>
+
+      <Layer id="V" legend="false">
+        <Title>Volumen</Title>
+        <Layers>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#Volumen" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#V" />
+        </MapperRefs>
+      </Layer>
+
+      <Layer id="N" legend="false">
+        <Title>Niederschlag</Title>
+        <Layers>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#Niederschlag" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#N" />
+        </MapperRefs>
+      </Layer>
+      <!-- Selektionslayer unten drunter -->
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#selectionLayer" />
+    </Layers>
+  </Chart>
+</ChartConfiguration>

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.gml;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.kalypso.core.catalog.CatalogManager;
@@ -54,8 +55,15 @@ public class DictionaryCatalog implements ICatalogContribution
   @Override
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "/etc/catalog.xml" ); //$NON-NLS-1$
-    final ICatalog baseCatalog = catalogManager.getBaseCatalog();
-    baseCatalog.addNextCatalog( catalogURL );
+    try
+    {
+      final URL catalogURL = new URL( "platform:/plugin/org.kalypso.model.rrm.core/etc/catalog.xml" ); //$NON-NLS-1$
+      final ICatalog baseCatalog = catalogManager.getBaseCatalog();
+      baseCatalog.addNextCatalog( catalogURL );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 }
