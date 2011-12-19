@@ -52,6 +52,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -223,7 +224,7 @@ public class TimeseriesImporter
     /* Assign station and timeseries parameters */
     final String stationDescription = baseName;
     final String timeseriesDescription = baseName;
-    final String groupName = relativePath.substring( 0, relativePath.length() - zmlFile.getName().length() - 1 );
+    final String groupName = findGroupName( relativePath );
 
     /* Copy zml file */
 
@@ -237,6 +238,17 @@ public class TimeseriesImporter
     final ZmlLink dataLink = newTimeseries.getDataLink();
     final File timeseriesFile = dataLink.getJavaFile();
     FileUtils.copyFile( zmlFile, timeseriesFile );
+  }
+
+  private String findGroupName( final String relativePath )
+  {
+    final Path path = new Path( relativePath );
+    if( path.segmentCount() < 2 )
+      return null;
+
+    final IPath relativeFolders = path.removeLastSegments( 1 );
+    final String portableRelativeFolders = relativeFolders.toPortableString();
+    return portableRelativeFolders.replace( Path.SEPARATOR, '_' );
   }
 
   private IStation findOrCreateStation( final String description, final String group, final String parameterType, final String relativePath ) throws CoreException
