@@ -33,7 +33,7 @@
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="SimulationManagementContext" parent="ContextHydrology">
-        <con:ViewContext id="FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ContextHydrology"/>
+        <con:ViewContext id="GttView" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart" parent="ContextHydrology"/>
       </con:WorkbenchSiteContext>
       
       <con:WorkbenchSiteContext id="MapContext" parent="ContextHydrology">
