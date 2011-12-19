@@ -42,12 +42,16 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -55,8 +59,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
@@ -79,7 +85,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeserties from the old 'Zeitreihen' folder into the new timeseries management.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -286,7 +292,7 @@ public class TimeseriesImporter
     return newStation;
   }
 
-  private ITimeseries createTimeseries( final IStation station, final String timeseriesDescription, final String parameterType, final Period timestep )
+  private ITimeseries createTimeseries( final IStation station, final String timeseriesDescription, final String parameterType, final Period timestep ) throws MalformedURLException
   {
     final ITimeseries newTimeseries = station.getTimeseries().addNew( ITimeseries.FEATURE_TIMESERIES );
     newTimeseries.setDescription( timeseriesDescription );
@@ -302,7 +308,13 @@ public class TimeseriesImporter
 
     final String timeseriesPath = stationFoldername + IPath.SEPARATOR + timeseriesFilename;
 
-    newTimeseries.setDataLink( timeseriesPath );
+    final IPath path = ResourceUtilities.findPathFromURL( m_timeseriesDir.toURI().toURL() );
+    final IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember( path );
+    final IProject project = member.getProject();
+    final String projectRelativePath = project.getName() + "/" + INaProjectConstants.PATH_TIMESERIES + "/" + timeseriesPath;
+    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath;
+
+    newTimeseries.setDataLink( projectPath );
 
     return newTimeseries;
   }
