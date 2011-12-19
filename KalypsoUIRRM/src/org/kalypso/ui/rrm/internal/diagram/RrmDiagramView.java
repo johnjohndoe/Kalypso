@@ -49,6 +49,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -89,6 +91,15 @@ public class RrmDiagramView extends ViewPart
 // getSite().setSelectionProvider( m_treeViewer );
   }
 
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    super.init( site );
+
+    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+    m_chartPart.init( site );
+  }
+
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
     final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( selection );
@@ -105,14 +116,6 @@ public class RrmDiagramView extends ViewPart
   private void setNode( final TreeNode node )
   {
     m_node = node;
-
-    updateControl();
-  }
-
-  private void updateControl( )
-  {
-    // TODO Auto-generated method stub
-
   }
 
   private void createDiagram( final Composite panel )
@@ -125,7 +128,6 @@ public class RrmDiagramView extends ViewPart
     base.setLayout( layout );
     base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
     m_chartPart.createControl( base, toolkit );
   }
 
