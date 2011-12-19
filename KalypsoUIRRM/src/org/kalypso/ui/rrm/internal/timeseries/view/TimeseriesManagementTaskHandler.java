@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -84,11 +85,11 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
     propertiesView.hookSelection( selectionProvider );
 
     /* hook rrm diagram view */
-    final RrmDiagramView diagramView = (RrmDiagramView) page.findView( RrmDiagramView.ID );
-    if( diagramView == null )
+    final IViewPart diagramView = page.findView( RrmDiagramView.ID );
+    if( !(diagramView instanceof RrmDiagramView) )
       throw new ExecutionException( "Failed to access diagram view" ); //$NON-NLS-1$
 
-    diagramView.hookSelection( selectionProvider );
+    ((RrmDiagramView) diagramView).hookSelection( selectionProvider );
 
     try
     {
