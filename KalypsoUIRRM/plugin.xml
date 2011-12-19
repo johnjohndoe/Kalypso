@@ -322,6 +322,30 @@
                 </visibleWhen>
             </command>
         </menuContribution>
+        <menuContribution
+              locationURI="toolbar:org.kalypso.ui.rrm.internal.diagram.RrmDiagramView">
+           <command
+                 commandId="org.kalypso.chart.ui.commands.maximizeView"
+                 style="push">
+           </command>
+           <command
+                 commandId="org.kalypso.chart.ui.commands.export"
+                 style="push">
+           </command>
+           <command
+                 commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+                 style="push">
+           </command>
+           <separator
+                 name="diagram.seperator1"
+                 visible="true">
+           </separator>
+           <command
+                 commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
+                 label="Debug"
+                 style="push">
+           </command>
+        </menuContribution>
    </extension>
    <extension point="org.kalypso.ui.importWizards">
       <wizard

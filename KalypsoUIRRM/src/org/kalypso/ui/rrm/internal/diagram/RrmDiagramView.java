@@ -128,7 +128,7 @@ public class RrmDiagramView extends ViewPart
     base.setLayout( layout );
     base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    m_chartPart.createControl( base, toolkit );
+    m_chartPart.createControl( base );
   }
 
   @Override
