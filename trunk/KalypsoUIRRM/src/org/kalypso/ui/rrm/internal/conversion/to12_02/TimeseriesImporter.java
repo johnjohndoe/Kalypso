@@ -42,7 +42,6 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -151,16 +150,6 @@ public class TimeseriesImporter
       try
       {
         importZml( sourceTimeseriesDir, zmlFile );
-      }
-      catch( final MalformedURLException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( final SensorException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
       }
       catch( final CoreException e )
       {
