@@ -55,7 +55,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 import org.kalypso.zml.ui.chart.view.ZmlDiagramChartPartComposite;
@@ -75,8 +74,6 @@ public class RrmDiagramView extends ViewPart
       handleSelectionChanged( (IStructuredSelection) event.getSelection() );
     }
   };
-
-  private TreeNode m_node;
 
   private ZmlDiagramChartPartComposite m_chartPart;
 
@@ -109,13 +106,6 @@ public class RrmDiagramView extends ViewPart
   public void hookSelection( final ISelectionProvider provider )
   {
     provider.addSelectionChangedListener( m_selectionListener );
-
-    setNode( null );
-  }
-
-  private void setNode( final TreeNode node )
-  {
-    m_node = node;
   }
 
   private void createDiagram( final Composite panel )

@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -169,7 +170,17 @@ public class Timeseries extends Feature_Impl implements ITimeseries
   @Override
   public Object getAdapter( final Class adapter )
   {
-    if( adapter.isAssignableFrom( IObsProvider.class ) )
+    if( adapter.isAssignableFrom( IZmlSourceElement.class ) )
+    {
+      return new TimeseriesSource( this );
+    }
+    else if( adapter.isAssignableFrom( TimeseriesLinkType.class ) )
+    {
+      final ZmlLink link = getDataLink();
+
+      return link.getTimeseriesLink();
+    }
+    else if( adapter.isAssignableFrom( IObsProvider.class ) )
     {
       final ZmlLink link = getDataLink();
       final IObservation observation = link.getObservationFromPool();
