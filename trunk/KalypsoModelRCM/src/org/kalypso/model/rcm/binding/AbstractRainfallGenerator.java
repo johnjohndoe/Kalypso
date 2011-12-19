@@ -66,7 +66,11 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   @Override
   public DateRange getPeriod( final IStringResolver variables )
   {
-    return getProperty( PROPERTY_PERIOD, IDateRange.class ).asDateRange( variables );
+    final IDateRange property = getProperty( PROPERTY_PERIOD, IDateRange.class );
+    if( property == null )
+      return null;
+
+    return property.asDateRange( variables );
   }
 
   @Override

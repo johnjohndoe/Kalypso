@@ -119,7 +119,10 @@ public class DateRange extends Feature_Impl implements IDateRange
 
     final Date date = DateUtilities.toDate( value );
     if( date != null )
-      return null;
+      return date;
+
+    if( variables == null )
+      return DateUtilities.parseDateTime( value.toString() );
 
     final String replace = variables.resolve( value.toString() );
     return DateUtilities.parseDateTime( replace );
