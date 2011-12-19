@@ -60,6 +60,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
@@ -154,7 +155,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      final IPath relativeTargetPath = buildTargetPath( targetFile );
+      final String projectPath = buildTargetPath( targetFile );
 
       /* Create timeseries feature */
       final IRelationType parentRelation = (IRelationType) m_station.getFeatureType().getProperty( IStation.MEMBER_TIMESERIES );
@@ -169,7 +170,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
       }
 
       final TimeseriesLinkType dataLink = new TimeseriesLinkType();
-      dataLink.setHref( relativeTargetPath.toPortableString() );
+      dataLink.setHref( projectPath );
 
       final Map<QName, Object> properties = new HashMap<>( m_bean.getProperties() );
       properties.put( ITimeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
@@ -190,18 +191,19 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IPath buildTargetPath( final IFile targetFile )
+  private String buildTargetPath( final IFile targetFile )
   {
-    final IProject project = targetFile.getProject();
+    // final IProject project = targetFile.getProject();
+    // final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
+    // final IPath timeseriesFolderPath = timeseriesFolder.getFullPath();
+    // final IPath targetFilePath = targetFile.getFullPath();
+    // final IPath relativeTargetPath = targetFilePath.makeRelativeTo( timeseriesFolderPath );
+    // return relativeTargetPath;
 
-    final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
-    final IPath timeseriesFolderPath = timeseriesFolder.getFullPath();
+    final IPath projectRelativePath = targetFile.getProjectRelativePath();
+    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath.toPortableString();
 
-    final IPath targetFilePath = targetFile.getFullPath();
-
-    final IPath relativeTargetPath = targetFilePath.makeRelativeTo( timeseriesFolderPath );
-
-    return relativeTargetPath;
+    return projectPath;
   }
 
   private void writeResult( final IFile targetFile, final IObservation newObservation ) throws CoreException

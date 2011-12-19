@@ -179,17 +179,14 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     final DateRange range = getRange( control );
 
     /* Copy observations for pegel and zufluss */
-    copyPegelTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
+    copyPegelTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 30 ) );
 
-    copyZuflussTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
+    copyZuflussTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 30 ) );
 
     /* Execute catchment models */
-    copyEvaporationTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 20 ) );
-
-    // FIXME
-    executeCatchmentModel( model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL );
-    executeCatchmentModel( model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE );
-    executeCatchmentModel( model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION );
+    executeCatchmentModel( calcCaseFolder, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL );
+    executeCatchmentModel( calcCaseFolder, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE );
+    executeCatchmentModel( calcCaseFolder, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION );
 
     return Status.OK_STATUS;
   }
@@ -340,14 +337,13 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType ) throws CoreException
+  private void executeCatchmentModel( final IFolder calcCaseFolder, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType ) throws CoreException
   {
     try
     {
-      // FIXME: init target links!
       initCatchmentTargetLinks( model, targetLink, parameterType );
 
-      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
+      final IRainfallCatchmentModel rainfallModel = createRainfallModel( calcCaseFolder, model, generator, targetLink, range );
 
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
 
@@ -371,28 +367,34 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     for( final Catchment catchment : catchments )
     {
       final String name = TimeseriesUtils.getName( parameterType );
-      final String path = ""; // TODO
+      final String path = String.format( "../%s/%s.zml", name, catchment.getName() );
 
       catchment.setProperty( targetLink, path );
     }
   }
 
-  private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
+  private IRainfallCatchmentModel createRainfallModel( final IFolder calcCaseFolder, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
   {
-    final URL context = model.getWorkspace().getContext();
-    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL, context, null );
-
-    // modelWorkspace.setNamespaceContext();
-
+    /* Rainfall model. */
+    final IFolder folder = calcCaseFolder.getFolder( INaProjectConstants.FOLDER_MODELS );
+    final URL context = ResourceUtilities.createQuietURL( folder );
+    final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL, context, GmlSerializer.DEFAULT_FACTORY );
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
     rainfallModel.getGenerators().add( generator );
 
+    /* Create a target. */
+    final IRelationType parentRelation = (IRelationType) rainfallModel.getFeatureType().getProperty( IRainfallCatchmentModel.PROPERTY_TARGET_MEMBER );
+    final IFeatureType type = GMLSchemaUtilities.getFeatureTypeQuiet( ITarget.FEATURE_TARGET );
+    final ITarget target = (ITarget) modelWorkspace.createFeature( rainfallModel, parentRelation, type );
+    target.setCatchmentPath( "CatchmentCollectionMember/catchmentMember" );
+
+    /* Set the target. */
+    rainfallModel.setTarget( target );
+
     /* Create link to catchment */
-    final ITarget target = rainfallModel.getTarget();
-    target.setCatchmentPath( "CatchmentCollectionMember/CatchmentCollection/catchmentMember" );
     final IRelationType catchmentLinkRelation = (IRelationType) target.getFeatureType().getProperty( ITarget.PROPERTY_CATCHMENT_COLLECTION );
     final IFeatureType catchmentLinkType = GMLSchemaUtilities.getFeatureTypeQuiet( Feature.QNAME_FEATURE );
-    final String catchmentLinkRef = "modell.gml#root"; //$NON-NLS-1$
+    final String catchmentLinkRef = "modell.gml#" + model.getId(); //$NON-NLS-1$
     final XLinkedFeature_Impl catchmentXLink = new XLinkedFeature_Impl( target, catchmentLinkRelation, catchmentLinkType, catchmentLinkRef );
     target.setCatchmentFeature( catchmentXLink );
 
