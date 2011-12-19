@@ -147,7 +147,8 @@ public class RainfallGenerationOp
       {
         final String msg = String.format( "Niederschlagserzeugung für Generator '%s' fehlgeschlagen", generatorLabel );
         final IStatus status = m_generatorStati.add( IStatus.WARNING, msg, e );
-        m_log.log( status );
+        if( m_log != null )
+          m_log.log( status );
       }
     }
 
