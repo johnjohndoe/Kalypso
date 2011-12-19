@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * GML-binding for the rcm:RainfallGenerator's.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IRainfallGenerator extends Feature
@@ -73,24 +73,37 @@ public interface IRainfallGenerator extends Feature
   /**
    * This function returns the period. This will be the unmodified period from the feature, containing strings, which
    * may be variables, which needs to be resolved.
-   *
+   * 
    * @return The period.
    */
   IDateRange getPeriod( );
 
   /**
    * This function returns the period. This will be a modified period, containing already resolved dates.
-   *
+   * 
    * @return The period.
    */
   DateRange getPeriod( IStringResolver variables );
 
   /**
+   * This function sets the period.
+   * 
+   * @param period
+   *          The period.
+   */
+  void setPeriod( DateRange period );
+
+  /**
    * This function returns the models this generator handles.
-   *
+   * 
    * @return The models.
    */
   String[] getModels( );
 
+  /**
+   * This function returns the parameter type.
+   * 
+   * @return The parameter type.
+   */
   String getParameterType( );
 }

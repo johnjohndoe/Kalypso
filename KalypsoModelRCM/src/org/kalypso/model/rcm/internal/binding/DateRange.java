@@ -74,6 +74,12 @@ public class DateRange extends Feature_Impl implements IDateRange
   }
 
   @Override
+  public void setFrom( final String from )
+  {
+    setProperty( PROPERTY_FROM, from );
+  }
+
+  @Override
   public void setFrom( final Date from )
   {
     final String xmlDate = DateUtilities.printDateTime( from, KalypsoCorePlugin.getDefault().getTimeZone() );
@@ -84,6 +90,12 @@ public class DateRange extends Feature_Impl implements IDateRange
   public String getTo( )
   {
     return getProperty( PROPERTY_TO, String.class );
+  }
+
+  @Override
+  public void setTo( final String to )
+  {
+    setProperty( PROPERTY_TO, to );
   }
 
   @Override
