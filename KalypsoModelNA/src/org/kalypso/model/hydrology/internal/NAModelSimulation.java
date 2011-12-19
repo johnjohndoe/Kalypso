@@ -48,9 +48,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.model.hydrology.INaSimulationData;
-import org.kalypso.model.hydrology.binding.NAControl;
-import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
+import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.NaPostProcessor;
 import org.kalypso.model.hydrology.internal.preprocessing.NAModelPreprocessor;
