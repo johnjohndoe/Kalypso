@@ -47,6 +47,7 @@ import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.rcm.binding.IDateRange;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.ogc.sensor.DateRange;
@@ -151,7 +152,7 @@ public class Target extends Feature_Impl implements ITarget
   public void setPeriod( final DateRange range )
   {
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( PROPERTY_PERIOD );
-    final IFeatureType type = GMLSchemaUtilities.getFeatureTypeQuiet( ITarget.FEATURE_TARGET );
+    final IFeatureType type = GMLSchemaUtilities.getFeatureTypeQuiet( IDateRange.FEATURE_DATE_RANGE );
     final org.kalypso.model.rcm.internal.binding.DateRange periodFeature = (org.kalypso.model.rcm.internal.binding.DateRange) getWorkspace().createFeature( this, relation, type );
 
     periodFeature.setFrom( range.getFrom() );

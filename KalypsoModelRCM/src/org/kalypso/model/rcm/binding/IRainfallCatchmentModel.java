@@ -58,11 +58,15 @@ public interface IRainfallCatchmentModel extends Feature
 {
   QName FEATURE_FAINFALL_CATCHMENT_MODEL = new QName( UrlCatalogRcm.NS_RCM, "RainfallCatchmentModel" ); //$NON-NLS-1$
 
+  QName PROPERTY_TARGET_MEMBER = new QName( UrlCatalogRcm.NS_RCM, "targetMember" ); //$NON-NLS-1$
+
   String getLogPath( );
 
   URL getLogLocation( ) throws MalformedURLException;
 
   ITarget getTarget( );
+
+  void setTarget( ITarget target );
 
   IFeatureBindingCollection<IMetadata> getMetadata( );
 

@@ -42,17 +42,22 @@ package org.kalypso.model.rcm.binding;
 
 import java.util.Date;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.commons.tokenreplace.IStringResolver;
+import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * GML-binding for {org.kalypso.model.rcm.v2}DateRange
- *
+ * 
  * @author Gernot Belger
  */
 public interface IDateRange extends Feature
 {
+  QName FEATURE_DATE_RANGE = new QName( UrlCatalogRcm.NS_RCM, "DateRange" );
+
   String getFrom( );
 
   void setFrom( Date from );
