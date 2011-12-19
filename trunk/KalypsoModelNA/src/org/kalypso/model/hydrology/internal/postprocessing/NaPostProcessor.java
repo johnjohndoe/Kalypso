@@ -55,7 +55,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.model.hydrology.binding.NAModellControl;
+import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;

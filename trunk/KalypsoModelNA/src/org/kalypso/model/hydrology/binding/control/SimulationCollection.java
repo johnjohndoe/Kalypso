@@ -38,59 +38,48 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.binding;
-
-import java.util.Date;
+package org.kalypso.model.hydrology.binding.control;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for {org.kalypso.namodell.control_v2}InitialValue.
+ * Binding class for {org.kalypso.na.control_v2}SimulationCollection
  *
  * @author Gernot Belger
  */
-public class InitialValue extends Feature_Impl
+public class SimulationCollection extends Feature_Impl implements IModel
 {
-  public static final QName FEATURE_INITIAL_VALUE = new QName( NAModellControl.NS_NACONTROL, "InitialValue" ); //$NON-NLS-1$
+  private static final String NS_CONTROL = NaModelConstants.NS_NAMETA;
 
-  private static final QName PROP_IS_ACTIVE = new QName( NAModellControl.NS_NACONTROL, "isActive" ); //$NON-NLS-1$
+  public static final QName FEATURE_SIMULATION_COLLECTION = new QName( NS_CONTROL, "SimulationCollection" ); //$NON-NLS-1$
 
-  private static final QName PROP_INITIALDATE = new QName( NAModellControl.NS_NACONTROL, "initialDate" ); //$NON-NLS-1$
+  public static final QName MEMBER_SIMULATION = new QName( NS_CONTROL, "simulationMember" ); //$NON-NLS-1$
 
+  private final IFeatureBindingCollection<NAControl> m_simulations;
 
-  public InitialValue( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public SimulationCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    m_simulations = new FeatureBindingCollection<NAControl>( this, NAControl.class, MEMBER_SIMULATION );
   }
 
-  public boolean isActive( )
+  @Override
+  public String getVersion( )
   {
-    final Boolean doWrite = getProperty( PROP_IS_ACTIVE, Boolean.class );
-    if( doWrite == null )
-      return false;
-
-    return doWrite;
+    return NO_VERSION;
   }
 
-  public void setActive( final boolean isActive )
+  public IFeatureBindingCollection<NAControl> getSimulations( )
   {
-    setProperty( PROP_IS_ACTIVE, isActive );
+    return m_simulations;
   }
-
-  public Date getInitialDate( )
-  {
-    return DateUtilities.toDate( getProperty( PROP_INITIALDATE ) );
-  }
-
-  public void setInitialDate( final Date date )
-  {
-    setProperty( PROP_INITIALDATE, DateUtilities.toXMLGregorianCalendar( date ) );
-  }
-
 }
