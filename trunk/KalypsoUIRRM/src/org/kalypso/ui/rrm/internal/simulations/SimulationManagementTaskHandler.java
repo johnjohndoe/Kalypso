@@ -44,10 +44,16 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.featureview.views.FeatureView;
+import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.model.hydrology.project.ScenarioAccessor;
+import org.kalypso.ui.editor.gistableeditor.GttViewPart;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Gernot Belger
@@ -62,9 +68,18 @@ public class SimulationManagementTaskHandler extends AbstractHandler
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
 
-    final FeatureView featureView = (FeatureView) page.findView( FeatureView.ID );
-    if( featureView == null )
-      throw new ExecutionException( "Failed to access timeseries view" ); //$NON-NLS-1$
+    final GttViewPart gttView = (GttViewPart) page.findView( GttViewPart.ID );
+    if( gttView == null )
+      throw new ExecutionException( "Failed to access table view" ); //$NON-NLS-1$
+
+    final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+
+    final ScenarioAccessor accessor = new ScenarioAccessor( szenarioFolder );
+
+    final IFile gttFile = accessor.getSimulationsGtt();
+
+    final FileEditorInput input = new FileEditorInput( gttFile );
+    gttView.setInput( input );
 
 // try
 // {
