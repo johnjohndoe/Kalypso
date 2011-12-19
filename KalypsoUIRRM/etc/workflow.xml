@@ -13,6 +13,11 @@
     <Help>%catchmentModels_help</Help>
   </Task>
 
+  <Task URI="org.kalypso.model.rrm.simulationManagement" context="SimulationManagementContext">
+    <Name>%simulationManagement</Name>
+    <Help>%simulationManagement_help</Help>
+  </Task>
+
   <Perspectives>
     <con:PerspectiveContext id="ContextHydrology" perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
 
@@ -25,6 +30,10 @@
       <con:WorkbenchSiteContext id="CatchmentModelsContext" parent="ContextHydrology">
         <con:ViewContext id="CatchmentModelsView" partId="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView" parent="CatchmentModelsContext"/>
         <con:ViewContext id="CatchmentModelsPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="CatchmentModelsContext"/>
+      </con:WorkbenchSiteContext>
+
+      <con:WorkbenchSiteContext id="SimulationManagementContext" parent="ContextHydrology">
+        <con:ViewContext id="FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ContextHydrology"/>
       </con:WorkbenchSiteContext>
       
       <con:WorkbenchSiteContext id="MapContext" parent="ContextHydrology">
