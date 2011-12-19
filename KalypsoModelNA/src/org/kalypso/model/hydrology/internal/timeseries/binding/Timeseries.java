@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.timeseries.binding;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.joda.time.Period;
@@ -117,6 +118,9 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     final Integer amount = getTimestepAmount();
     final String fieldName = getTimestepField();
 
+    if( amount == null || StringUtils.isBlank( fieldName ) )
+      return null;
+
     final int field = CalendarUtilities.getCalendarField( fieldName );
 
     return PeriodUtils.getPeriod( field, amount );
@@ -161,20 +165,22 @@ public class Timeseries extends Feature_Impl implements ITimeseries
       file.delete( false, true, null );
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public Object getAdapter( final Class adapter )
   {
-    if(adapter.isAssignableFrom( IObsProvider.class ) )
-    { 
-      final ZmlLink link = getDataLink();
-      final IObservation observation = link.getObservationFromPool();
-      
-      return new PlainObsProvider( observation, null );
-      
-    }else if (adapter.isAssignableFrom( IObservation.class ))
+    if( adapter.isAssignableFrom( IObsProvider.class ) )
     {
       final ZmlLink link = getDataLink();
-      return  link.getObservationFromPool();
+      final IObservation observation = link.getObservationFromPool();
+
+      return new PlainObsProvider( observation, null );
+
+    }
+    else if( adapter.isAssignableFrom( IObservation.class ) )
+    {
+      final ZmlLink link = getDataLink();
+      return link.getObservationFromPool();
     }
 
     return super.getAdapter( adapter );
