@@ -90,6 +90,7 @@ import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObserva
 import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -219,9 +220,9 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
   {
     try
     {
-      final IFile controlFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
-      final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlFile );
-      return (NaModell) controlWorkspace.getRootFeature();
+      final IFile modelFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
+      final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelFile );
+      return (NaModell) modelWorkspace.getRootFeature();
     }
     catch( final Exception e )
     {
@@ -320,7 +321,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     {
       generator.setPeriod( range );
 
-      initCatchmentTargetLinks( model, targetLink, parameterType );
+      initCatchmentTargetLinks( calcCaseFolder, model, targetLink, parameterType );
 
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( calcCaseFolder, model, generator, targetLink, range );
 
@@ -339,17 +340,27 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
-  private void initCatchmentTargetLinks( final NaModell model, final QName targetLink, final String parameterType )
+  private void initCatchmentTargetLinks( final IFolder calcCaseFolder, final NaModell model, final QName targetLink, final String parameterType ) throws Exception
   {
     // alle links nach einem festen schema setzen
     final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
     for( final Catchment catchment : catchments )
     {
       final String name = TimeseriesUtils.getName( parameterType );
-      final String path = String.format( "../%s/%s_%s.zml", name, catchment.getId(), catchment.getName() );
 
-      catchment.setProperty( targetLink, path );
+      // TODO Only works, because the context is the full path to modell.gml
+      final String path = String.format( "../../%s/%s_%s.zml", name, catchment.getId(), catchment.getName() );
+
+      final TimeseriesLinkType link = new TimeseriesLinkType();
+      link.setHref( path );
+
+      catchment.setProperty( targetLink, link );
     }
+
+    // TODO Is this ok?
+    final GMLWorkspace workspace = model.getWorkspace();
+    final IFile modelFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
+    GmlSerializer.saveWorkspace( workspace, modelFile );
   }
 
   private IRainfallCatchmentModel createRainfallModel( final IFolder calcCaseFolder, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
