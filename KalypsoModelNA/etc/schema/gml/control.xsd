@@ -4,6 +4,25 @@
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="org.kalypso.model.rcm.v2" />
 
+  <element name="SimulationCollection" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="simulationMember">
+              <complexType>
+                <sequence>
+                  <element ref="na:NAControl" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
   <element name="NAControl" substitutionGroup="gml:_Feature">
     <complexType>
       <complexContent>
