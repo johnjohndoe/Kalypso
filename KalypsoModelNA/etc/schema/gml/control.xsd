@@ -9,10 +9,10 @@
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
-            <element name="simulationMember">
+            <element name="simulationMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element ref="na:NAControl" minOccurs="0" maxOccurs="unbounded"/>
+                  <element ref="na:NAControl" minOccurs="0" maxOccurs="1"/>
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup" />
               </complexType>
