@@ -46,11 +46,17 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
+import org.kalypso.zml.ui.chart.view.ZmlDiagramChartPartComposite;
 
 /**
  * @author Gernot Belger
@@ -70,6 +76,8 @@ public class RrmDiagramView extends ViewPart
 
   private TreeNode m_node;
 
+  private ZmlDiagramChartPartComposite m_chartPart;
+
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -83,13 +91,8 @@ public class RrmDiagramView extends ViewPart
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
-
     final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( selection );
-
-    final int asdfasdf = 0;
-
-    // TODO Auto-generated method stub
-
+    m_chartPart.setSelection( sources );
   }
 
   public void hookSelection( final ISelectionProvider provider )
@@ -114,19 +117,22 @@ public class RrmDiagramView extends ViewPart
 
   private void createDiagram( final Composite panel )
   {
-// m_treeViewer = new TreeViewer( panel );
-// m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
-// m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
-//
-// .setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) )
-// return m_treeViewer.getTree();
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( panel );
 
+    final Composite base = toolkit.createComposite( panel, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
+    final GridLayout layout = Layouts.createGridLayout();
+    layout.verticalSpacing = 0;
+    base.setLayout( layout );
+    base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+    m_chartPart.createControl( base, toolkit );
   }
 
   @Override
   public void setFocus( )
   {
-// m_treeViewer.getControl().setFocus();
+    final Composite composite = (Composite) m_chartPart.getChartComposite();
+    composite.setFocus();
   }
-
 }

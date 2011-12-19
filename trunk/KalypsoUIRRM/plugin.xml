@@ -297,7 +297,7 @@
             icon="icons/timeseries/table.gif"
             id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
             name="Zeitreihen-Diagramm"
-            restorable="true">
+            restorable="false">
       </view>
    </extension>
    
