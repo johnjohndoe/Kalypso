@@ -41,6 +41,7 @@
 package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
@@ -94,7 +95,7 @@ public class TimeseriesSource implements IZmlSourceElement
   @Override
   public String getLabel( )
   {
-    throw new UnsupportedOperationException();
+    return Timeserieses.getTreeLabel( m_timeseries );
   }
 
   @Override

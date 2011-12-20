@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -48,10 +47,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.joda.time.Period;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -82,16 +80,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTreeLabel( )
   {
-    final Period timestep = m_timeseries.getTimestep();
-
-    final String quality = m_timeseries.getQuality();
-
-    final String periodName = PeriodUtils.formatDefault( timestep );
-
-    if( StringUtils.isBlank( quality ) )
-      return periodName;
-
-    return String.format( "%s (%s)", periodName, quality );
+    return Timeserieses.getTreeLabel( m_timeseries );
   }
 
   @Override
