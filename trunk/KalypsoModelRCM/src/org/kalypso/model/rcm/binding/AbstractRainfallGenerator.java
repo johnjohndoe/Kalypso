@@ -145,7 +145,6 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
     filter.setProperty( InterpolationZmlFilter.QNAME_FORCE_FILL, new Boolean( forceFill ) );
     filter.setProperty( InterpolationZmlFilter.QNAME_DEFAULT_VALUE, defaultValue );
     filter.setProperty( InterpolationZmlFilter.QNAME_DEFAULT_STATUS, new Integer( defaultStatus ) );
-    // filter.setProperty( InterpolationZmlFilter.QNAME_FILL_LAST_WITH_VALID, new Boolean( fillLastWithValid ) );
   }
 
   /**
