@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.calccase;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
@@ -347,7 +348,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     for( final Catchment catchment : catchments )
     {
       final String name = TimeseriesUtils.getName( parameterType );
-      final String path = String.format( "../ZR_%s/%s.zml", name, catchment.getName() );
+      final String path = String.format( "../ZR_%s/%s.zml", name, URLEncoder.encode( catchment.getName(), "UTF-8" ) );
 
       final TimeseriesLinkType link = new TimeseriesLinkType();
       link.setHref( path );
