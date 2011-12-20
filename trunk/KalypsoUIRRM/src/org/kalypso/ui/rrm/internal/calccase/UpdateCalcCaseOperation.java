@@ -108,14 +108,13 @@ import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
  */
 public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
 {
-  final QName MAPPING_MEMBER = new QName( "http://org.kalypso.updateObservationMapping", "mappingMember" );
+  public static final QName MAPPING_MEMBER = new QName( "http://org.kalypso.updateObservationMapping", "mappingMember" );
 
   private final IFolder[] m_calcCases;
 
   public UpdateCalcCaseOperation( final IFolder[] calcCases )
   {
     // Find least common container and use as scheduling rule
-
     m_calcCases = calcCases;
   }
 
@@ -296,14 +295,14 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     final DateRange forecastRange = null;
 
     final Source source = new Source();
-    source.setProperty( sourceLinkName ); //$NON-NLS-1$
+    source.setProperty( sourceLinkName );
     source.setFrom( Long.toString( sourceRange.getFrom().getTime() ) );
     source.setTo( Long.toString( sourceRange.getTo().getTime() ) );
 
     final GMLXPath targetPath = null;
 
     final File calcDir = calcCaseFolder.getLocation().toFile();
-    final File targetObservationDir = new File( calcDir, outputDir ); //$NON-NLS-1$
+    final File targetObservationDir = new File( calcDir, outputDir );
 
     final URL context = ResourceUtilities.createQuietURL( calcCaseFolder );
     final String tokens = StringUtils.EMPTY;
@@ -322,27 +321,18 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
   {
     try
     {
-      /* Configure the generator. */
-      generator.setPeriod( range );
-
-      /* Get the timestep. */
-      final Integer timestep = control.getMinutesOfTimestep();
-      final String calendarField = CalendarUtilities.getName( Calendar.MINUTE );
-      final int amount = timestep.intValue();
-
-      /* Add a source filter. */
-      if( Catchment.PROP_TEMPERATURE_LINK.equals( parameterType ) )
-        generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 );
-      else
-        generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
+      /* Initialize the generator. */
+      initGenerator( control, generator, range, parameterType );
 
       /* Initialize the catchment target links. */
       initCatchmentTargetLinks( calcCaseFolder, model, targetLink, parameterType );
 
+      /* Create the rainfall generation operation. */
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( calcCaseFolder, model, generator, targetLink, range );
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
+      /* Execute the rainfall generation operation. */
       operation.execute( new NullProgressMonitor() );
     }
     catch( final Exception e )
@@ -354,6 +344,23 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     }
   }
 
+  private void initGenerator( final NAControl control, final IRainfallGenerator generator, final DateRange range, final String parameterType )
+  {
+    /* Configure the generator. */
+    generator.setPeriod( range );
+
+    /* Get the timestep. */
+    final Integer timestep = control.getMinutesOfTimestep();
+    final String calendarField = CalendarUtilities.getName( Calendar.MINUTE );
+    final int amount = timestep.intValue();
+
+    /* Add a source filter. */
+    if( Catchment.PROP_TEMPERATURE_LINK.equals( parameterType ) )
+      generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 );
+    else
+      generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
+  }
+
   private void initCatchmentTargetLinks( final IFolder calcCaseFolder, final NaModell model, final QName targetLink, final String parameterType ) throws Exception
   {
     /* Set all links. */
@@ -361,7 +368,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     for( final Catchment catchment : catchments )
     {
       final String name = TimeseriesUtils.getName( parameterType );
-      final String path = String.format( "../ZR_%s/%s.zml", name, URLEncoder.encode( catchment.getName(), "UTF-8" ) );
+      final String path = String.format( "../ZR_%s/%s.zml", name, URLEncoder.encode( catchment.getName(), "UTF-8" ) ); //$NON-NLS-1$
 
       final TimeseriesLinkType link = new TimeseriesLinkType();
       link.setHref( path );
@@ -388,22 +395,22 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     final IRelationType parentRelation = (IRelationType) rainfallModel.getFeatureType().getProperty( IRainfallCatchmentModel.PROPERTY_TARGET_MEMBER );
     final IFeatureType type = GMLSchemaUtilities.getFeatureTypeQuiet( ITarget.FEATURE_TARGET );
     final ITarget target = (ITarget) modelWorkspace.createFeature( rainfallModel, parentRelation, type );
-    target.setCatchmentPath( "CatchmentCollectionMember/catchmentMember" );
+    target.setCatchmentPath( "CatchmentCollectionMember/catchmentMember" ); //$NON-NLS-1$
 
     /* Set the target. */
     rainfallModel.setTarget( target );
 
-    /* Create link to catchment */
+    /* Create the link to the catchment. */
     final IRelationType catchmentLinkRelation = (IRelationType) target.getFeatureType().getProperty( ITarget.PROPERTY_CATCHMENT_COLLECTION );
     final IFeatureType catchmentLinkType = GMLSchemaUtilities.getFeatureTypeQuiet( Feature.QNAME_FEATURE );
     final String catchmentLinkRef = "modell.gml#" + model.getId(); //$NON-NLS-1$
     final XLinkedFeature_Impl catchmentXLink = new XLinkedFeature_Impl( target, catchmentLinkRelation, catchmentLinkType, catchmentLinkRef );
     target.setCatchmentFeature( catchmentXLink );
 
-    /* Target range */
+    /* Target range. */
     target.setPeriod( targetRange );
 
-    /* Observation path */
+    /* Observation path. */
     target.setObservationPath( targetLink.getLocalPart() );
 
     return rainfallModel;
