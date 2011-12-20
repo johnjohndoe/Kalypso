@@ -156,7 +156,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   public void addIntervalFilter( final String mode, final String calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final double defaultValue, final int defaultStatus )
   {
     final IntervalZmlFilter filter = (IntervalZmlFilter) m_filters.addNew( IntervalZmlFilter.FEATURE_INTERVAL_ZML_FILTER );
-    filter.setProperty( IntervalZmlFilter.PROPERTY_MODE, mode );
+    // filter.setProperty( IntervalZmlFilter.PROPERTY_MODE, mode );
     filter.setProperty( IntervalZmlFilter.PROPERTY_CALENDAR_FIELD, calendarField );
     filter.setProperty( IntervalZmlFilter.PROPERTY_CALENDAR_AMOUNT, new Integer( amount ) );
     filter.setProperty( IntervalZmlFilter.PROPERTY_DEFAULT_VALUE, new Double( defaultValue ) );
