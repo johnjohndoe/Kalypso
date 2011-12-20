@@ -347,10 +347,10 @@
 					partId="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
 					parent="TimeSeriesContext" />
 				<con:ViewContext id="TimeSeriesDiagramView"
-					partId="org.kalypso.ogc.sensor.view.DiagramViewPart"
+					partId="org.kalypso.zml.ui.chart.view.DiagramViewPart"
 					parent="TimeSeriesContext" />
 				<con:ViewContext id="TimeSeriesTableView"
-					partId="org.kalypso.ogc.sensor.view.TableViewPart"
+					partId="org.kalypso.zml.ui.table.view.TableViewPart"
 					parent="TimeSeriesContext" />
 			</con:WorkbenchSiteContext>
 			<con:WorkbenchSiteContext id="MapContext"
