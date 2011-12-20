@@ -126,4 +126,29 @@ public interface IRainfallGenerator extends Feature
    * @return The filters.
    */
   List<IZmlFilter> getFilters( );
+
+  /**
+   * This function adds a filter, which will be applied to the source timeseries.
+   * 
+   * @param calendarField
+   * @param amount
+   * @param forceFill
+   * @param defaultValue
+   * @param defaultStatus
+   * @param fillLastWithValid
+   */
+  void addInterpolationFilter( String calendarField, int amount, boolean forceFill, String defaultValue, int defaultStatus, boolean fillLastWithValid );
+
+  /**
+   * This function adds a filter, which will be applied to the source timeseries.
+   * 
+   * @param mode
+   * @param calendarField
+   * @param amount
+   * @param startCalendarValue
+   * @param startCalendarField
+   * @param defaultValue
+   * @param defaultStatus
+   */
+  void addIntervalFilter( String mode, String calendarField, int amount, int startCalendarValue, String startCalendarField, double defaultValue, int defaultStatus );
 }
