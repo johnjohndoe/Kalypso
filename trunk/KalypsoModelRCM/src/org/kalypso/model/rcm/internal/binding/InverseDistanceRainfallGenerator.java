@@ -101,8 +101,6 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
   static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
 
-  static final QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
-
   static final QName PROPERTY_stationLocationPath = new QName( UrlCatalogRcm.NS_RCM, "stationLocationPath" );
 
   static final QName PROPERTY_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );

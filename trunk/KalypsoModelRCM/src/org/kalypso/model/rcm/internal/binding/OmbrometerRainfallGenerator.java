@@ -105,8 +105,6 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
   static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
 
-  static final QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
-
   static final QName PROPERTY_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
   static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );

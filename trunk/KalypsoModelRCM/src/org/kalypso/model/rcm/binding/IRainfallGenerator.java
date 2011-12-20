@@ -49,6 +49,7 @@ import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -58,6 +59,8 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IRainfallGenerator extends Feature
 {
+  QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
+
   QName PROPERTY_PERIOD = new QName( UrlCatalogRcm.NS_RCM, "period" ); //$NON-NLS-1$
 
   QName PROPERTY_MODEL = new QName( UrlCatalogRcm.NS_RCM, "model" ); //$NON-NLS-1$
@@ -106,4 +109,12 @@ public interface IRainfallGenerator extends Feature
    * @return The parameter type.
    */
   String getParameterType( );
+
+  /**
+   * This function adds a filter, which will be applied to the source timeseries.
+   * 
+   * @param filter
+   *          A filter, which will be applied to the source timeseries.
+   */
+  void addFilter( IZmlFilter filter );
 }

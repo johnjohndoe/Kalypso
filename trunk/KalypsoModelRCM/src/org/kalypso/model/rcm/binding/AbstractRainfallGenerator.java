@@ -46,6 +46,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -101,5 +102,14 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   public String getParameterType( )
   {
     return getProperty( PROPERTY_PARAMETER_TYPE, String.class );
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addFilter(org.kalypso.zml.core.filter.binding.IZmlFilter)
+   */
+  @Override
+  public void addFilter( final IZmlFilter filter )
+  {
+    // TODO
   }
 }

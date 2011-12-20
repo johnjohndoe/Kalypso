@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
@@ -72,9 +73,16 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
 {
+  /**
+   * Filters, which will be applied to the source timeseries.
+   */
+  private final FeatureBindingCollection<IZmlFilter> m_filters;
+
   public LinearSumGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
   }
 
   /**
@@ -130,8 +138,8 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
           /* Get the timeseries link. */
           final GMLXPath linkPath = new GMLXPath( IFactorizedTimeseries.PROPERTY_TIMESERIES_LINK );
 
-          // TODO: get from gml
-          final IZmlFilter[] filters = new IZmlFilter[] {};
+          /* Get the filters from the gml. */
+          final IZmlFilter[] filters = m_filters.toArray( new IZmlFilter[m_filters.size()] );
 
           /* Load the observation. */
           final IObservation[] readObservations = RainfallGeneratorUtilities.readObservations( new Feature[] { factorizedTimeseries }, linkPath, filters, range );
