@@ -354,7 +354,10 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     if( catchmentBean == null )
       statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
     else
-      statusComposite.setStatus( catchmentBean.checkFactor() );
+    {
+      catchmentBean.updateStatus();
+      statusComposite.setStatus( catchmentBean.getStatus() );
+    }
 
     /* Add a listener. */
     m_timeseriesViewer.getColumnViewerEditor().addEditorActivationListener( new ColumnViewerEditorActivationListener()
@@ -372,7 +375,8 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
       @Override
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
-        statusComposite.setStatus( catchmentBean.checkFactor() );
+        catchmentBean.updateStatus();
+        statusComposite.setStatus( catchmentBean.getStatus() );
       }
 
       @Override
