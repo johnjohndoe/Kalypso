@@ -80,7 +80,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeserties from the old 'Zeitreihen' folder into the new timeseries management.
- * 
+ *
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -226,8 +226,9 @@ public class TimeseriesImporter
 
     /* copy observation file */
     final ZmlLink dataLink = newTimeseries.getDataLink();
-    final File timeseriesFile = dataLink.getJavaFile();
-    FileUtils.copyFile( zmlFile, timeseriesFile );
+    // FIXME: add source and status axes
+    // We write the file from the read observation (instead of copy) in order to compress the data
+    dataLink.saveObservation( observation );
   }
 
   private String findGroupName( final String relativePath )
