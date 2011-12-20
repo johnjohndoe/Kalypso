@@ -137,7 +137,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
    *      java.lang.String, int, boolean)
    */
   @Override
-  public void addInterpolationFilter( final String calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus, final boolean fillLastWithValid )
+  public void addInterpolationFilter( final String calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus )
   {
     final InterpolationZmlFilter filter = (InterpolationZmlFilter) m_filters.addNew( InterpolationZmlFilter.QNAME_INTERPOLATION_ZML_FILTER );
     filter.setProperty( InterpolationZmlFilter.QNAME_CALENDAR_FIELD, calendarField );
@@ -145,7 +145,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
     filter.setProperty( InterpolationZmlFilter.QNAME_FORCE_FILL, new Boolean( forceFill ) );
     filter.setProperty( InterpolationZmlFilter.QNAME_DEFAULT_VALUE, defaultValue );
     filter.setProperty( InterpolationZmlFilter.QNAME_DEFAULT_STATUS, new Integer( defaultStatus ) );
-    filter.setProperty( InterpolationZmlFilter.QNAME_FILL_LAST_WITH_VALID, new Boolean( fillLastWithValid ) );
+    // filter.setProperty( InterpolationZmlFilter.QNAME_FILL_LAST_WITH_VALID, new Boolean( fillLastWithValid ) );
   }
 
   /**
@@ -153,19 +153,12 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
    *      int, java.lang.String, double, int)
    */
   @Override
-  public void addIntervalFilter( final String mode, final String calendarField, final int amount, final int startCalendarValue, final String startCalendarField, final double defaultValue, final int defaultStatus )
+  public void addIntervalFilter( final String calendarField, final int amount, final double defaultValue, final int defaultStatus )
   {
     final IntervalZmlFilter filter = (IntervalZmlFilter) m_filters.addNew( IntervalZmlFilter.FEATURE_INTERVAL_ZML_FILTER );
-    // filter.setProperty( IntervalZmlFilter.PROPERTY_MODE, mode );
     filter.setProperty( IntervalZmlFilter.PROPERTY_CALENDAR_FIELD, calendarField );
     filter.setProperty( IntervalZmlFilter.PROPERTY_CALENDAR_AMOUNT, new Integer( amount ) );
     filter.setProperty( IntervalZmlFilter.PROPERTY_DEFAULT_VALUE, new Double( defaultValue ) );
     filter.setProperty( IntervalZmlFilter.PROPERTY_DEFAULT_STATUS, new Integer( defaultStatus ) );
-
-    if( startCalendarValue > 0 )
-      filter.setProperty( IntervalZmlFilter.PROPERTY_START_CALENDAR_VALUE, new Integer( startCalendarValue ) );
-
-    if( startCalendarField != null )
-      filter.setProperty( IntervalZmlFilter.PROPERTY_START_CALENDAR_FIELD, startCalendarField );
   }
 }
