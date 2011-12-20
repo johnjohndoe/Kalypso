@@ -193,13 +193,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
   private String buildTargetPath( final IFile targetFile )
   {
-    // final IProject project = targetFile.getProject();
-    // final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
-    // final IPath timeseriesFolderPath = timeseriesFolder.getFullPath();
-    // final IPath targetFilePath = targetFile.getFullPath();
-    // final IPath relativeTargetPath = targetFilePath.makeRelativeTo( timeseriesFolderPath );
-    // return relativeTargetPath;
-
     final IPath projectRelativePath = targetFile.getProjectRelativePath();
     final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath.toPortableString();
 

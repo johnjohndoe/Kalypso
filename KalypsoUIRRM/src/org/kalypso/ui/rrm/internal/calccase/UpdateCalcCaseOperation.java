@@ -342,14 +342,12 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
 
   private void initCatchmentTargetLinks( final IFolder calcCaseFolder, final NaModell model, final QName targetLink, final String parameterType ) throws Exception
   {
-    // alle links nach einem festen schema setzen
+    /* Set all links. */
     final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
     for( final Catchment catchment : catchments )
     {
       final String name = TimeseriesUtils.getName( parameterType );
-
-      // TODO Only works, because the context is the full path to modell.gml
-      final String path = String.format( "../../%s/%s_%s.zml", name, catchment.getId(), catchment.getName() );
+      final String path = String.format( "../ZR_%s/%s.zml", name, catchment.getName() );
 
       final TimeseriesLinkType link = new TimeseriesLinkType();
       link.setHref( path );
@@ -357,7 +355,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
       catchment.setProperty( targetLink, link );
     }
 
-    // TODO Is this ok?
+    /* Save the workspace, because it is reloaded in the rainfall operation. */
     final GMLWorkspace workspace = model.getWorkspace();
     final IFile modelFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
     GmlSerializer.saveWorkspace( workspace, modelFile );
