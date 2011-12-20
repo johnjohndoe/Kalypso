@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.calccase;
 import java.io.File;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
@@ -63,6 +64,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -186,9 +188,9 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     copyZuflussTimeseries( calcCaseFolder, range, new SubProgressMonitor( monitor, 30 ) );
 
     /* Execute catchment models */
-    executeCatchmentModel( calcCaseFolder, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL );
-    executeCatchmentModel( calcCaseFolder, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE );
-    executeCatchmentModel( calcCaseFolder, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION );
+    executeCatchmentModel( calcCaseFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL );
+    executeCatchmentModel( calcCaseFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE );
+    executeCatchmentModel( calcCaseFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION );
 
     return Status.OK_STATUS;
   }
@@ -316,13 +318,23 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final IFolder calcCaseFolder, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType ) throws CoreException
+  private void executeCatchmentModel( final IFolder calcCaseFolder, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType ) throws CoreException
   {
     try
     {
       /* Configure the generator. */
       generator.setPeriod( range );
-      // TODO Set a source filter...
+
+      /* Get the timestep. */
+      final Integer timestep = control.getMinutesOfTimestep();
+      final String calendarField = CalendarUtilities.getName( Calendar.MINUTE );
+      final int amount = timestep.intValue();
+
+      /* Add a source filter. */
+      if( Catchment.PROP_TEMPERATURE_LINK.equals( parameterType ) )
+        generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0, false );
+      else
+        generator.addIntervalFilter( "intensity", calendarField, amount, 0, null, 0.0, 0 );
 
       /* Initialize the catchment target links. */
       initCatchmentTargetLinks( calcCaseFolder, model, targetLink, parameterType );
