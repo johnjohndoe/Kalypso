@@ -320,14 +320,15 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
   {
     try
     {
+      /* Configure the generator. */
       generator.setPeriod( range );
+      // TODO Set a source filter...
 
+      /* Initialize the catchment target links. */
       initCatchmentTargetLinks( calcCaseFolder, model, targetLink, parameterType );
 
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( calcCaseFolder, model, generator, targetLink, range );
-
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
-
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
       operation.execute( new NullProgressMonitor() );

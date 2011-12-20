@@ -104,6 +104,16 @@
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
+          <element name="filterMember" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation xml:lang="en"><![CDATA[Filters that will be applied to the read timeseries. Multiple filters will be applied in the given order.]]></documentation>
+            </annotation>
+            <complexType>
+              <sequence>
+                <element ref="filter:AbstractZmlFilter" />
+              </sequence>
+            </complexType>
+          </element>
           <element name="parameterType" type="string" minOccurs="0" maxOccurs="1">
             <annotation>
               <documentation xml:lang="en"><![CDATA[The type of timeseries (i.e. rainfall, temperature, ...) this generator is producing.]]></documentation>
@@ -144,16 +154,6 @@
                 <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
               </annotation>
             </element>
-            <element name="filterMember" minOccurs="0" maxOccurs="unbounded">
-              <annotation>
-                <documentation xml:lang="en"><![CDATA[Filters that will be applied to the read timeseries. Multiple filters will be applied in the given order.]]></documentation>
-              </annotation>
-              <complexType>
-                <sequence>
-                  <element ref="filter:AbstractZmlFilter" />
-                </sequence>
-              </complexType>
-            </element>
             <element name="areaPath" type="string">
               <annotation>
                 <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes the affected area of the corresponding ombrometer.]]></documentation>
@@ -193,16 +193,6 @@
               <annotation>
                 <documentation xml:lang="en"><![CDATA[Feature path relative to an ombrometer feature. Denotes a timeseries link that contains the attached timeserie of this ombrometer.]]></documentation>
               </annotation>
-            </element>
-            <element name="filterMember" minOccurs="0" maxOccurs="unbounded">
-              <annotation>
-                <documentation xml:lang="en"><![CDATA[Filters that will be applied to the read timeseries. Multiple filters will be applied in the given order.]]></documentation>
-              </annotation>
-              <complexType>
-                <sequence>
-                  <element ref="filter:AbstractZmlFilter" />
-                </sequence>
-              </complexType>
             </element>
             <element name="stationLocationPath" type="string">
               <annotation>
