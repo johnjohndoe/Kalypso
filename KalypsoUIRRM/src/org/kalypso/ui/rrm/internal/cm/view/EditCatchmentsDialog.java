@@ -106,6 +106,11 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
   private Group m_detailsGroup;
 
   /**
+   * The catchment viewer.
+   */
+  protected TableViewer m_catchmentViewer;
+
+  /**
    * The timeseries viewer.
    */
   private TableViewer m_timeseriesViewer;
@@ -139,6 +144,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
 
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_catchmentViewer = null;
     m_timeseriesViewer = null;
     m_catchmentBean = null;
     m_dataBinding = null;
@@ -251,21 +257,21 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     label.setText( "Catchments" );
 
     /* Create the catchment viewer. */
-    final TableViewer catchmentViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
-    catchmentViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    catchmentViewer.getTable().setLinesVisible( true );
-    catchmentViewer.getTable().setHeaderVisible( true );
-    catchmentViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
-    catchmentViewer.setContentProvider( new ArrayContentProvider() );
+    m_catchmentViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
+    m_catchmentViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_catchmentViewer.getTable().setLinesVisible( true );
+    m_catchmentViewer.getTable().setHeaderVisible( true );
+    m_catchmentViewer.getTable().addControlListener( new ColumnsResizeControlListener() );
+    m_catchmentViewer.setContentProvider( new ArrayContentProvider() );
 
     /* Create the columns. */
-    createCatchmentViewerColumns( catchmentViewer );
+    createCatchmentViewerColumns( m_catchmentViewer );
 
     /* Set the input. */
-    catchmentViewer.setInput( m_bean.getCatchments() );
+    m_catchmentViewer.setInput( m_bean.getCatchments() );
 
     /* Add a listener. */
-    catchmentViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    m_catchmentViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -377,6 +383,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
       {
         catchmentBean.updateStatus();
         statusComposite.setStatus( catchmentBean.getStatus() );
+        m_catchmentViewer.refresh();
       }
 
       @Override
@@ -461,6 +468,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
   {
     m_mainGroup = null;
     m_detailsGroup = null;
+    m_catchmentViewer = null;
     m_timeseriesViewer = null;
     m_catchmentBean = null;
     m_dataBinding = null;
