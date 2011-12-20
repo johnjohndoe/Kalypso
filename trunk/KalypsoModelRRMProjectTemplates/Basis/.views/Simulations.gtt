@@ -4,7 +4,7 @@
     <column name="gml:description" editable="true" width="120" alignment="16384"/>
     <column name="rrmMeta:startsimulation" editable="true" width="129" alignment="16384"/>
     <column name="rrmMeta:endsimulation" editable="true" width="124" alignment="16384"/>
-    <column name="rrmMeta:minutesTimestep" editable="true" width="76" alignment="16384"/>
+    <column name="rrmMeta:minutesTimestep" editable="true" width="100" alignment="16384"/>
     <column name="rrmMeta:generatorN" editable="true" width="128" alignment="16384"/>
     <column name="rrmMeta:generatorT" editable="true" width="118" alignment="16384"/>
     <column name="rrmMeta:generatorE" editable="true" width="126" alignment="16384"/>
