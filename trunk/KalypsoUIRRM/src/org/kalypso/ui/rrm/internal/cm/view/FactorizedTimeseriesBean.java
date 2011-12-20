@@ -112,7 +112,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
       return null;
 
     final IStation station = timeseries.getStation();
-    return station.getName();
+    return station.getDescription();
   }
 
   public String getTimestepText( )
