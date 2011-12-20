@@ -332,9 +332,9 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
 
       /* Add a source filter. */
       if( Catchment.PROP_TEMPERATURE_LINK.equals( parameterType ) )
-        generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0, false );
+        generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 );
       else
-        generator.addIntervalFilter( "intensity", calendarField, amount, 0, null, 0.0, 0 );
+        generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
 
       /* Initialize the catchment target links. */
       initCatchmentTargetLinks( calcCaseFolder, model, targetLink, parameterType );
