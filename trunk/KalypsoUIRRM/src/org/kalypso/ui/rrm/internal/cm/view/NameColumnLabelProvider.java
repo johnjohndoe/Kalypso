@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.core.status.StatusComposite;
 
 /**
  * @author Holger Albert
@@ -52,6 +55,22 @@ public class NameColumnLabelProvider extends ColumnLabelProvider
    */
   public NameColumnLabelProvider( )
   {
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+   */
+  @Override
+  public Image getImage( final Object element )
+  {
+    if( element instanceof CatchmentBean )
+    {
+      final CatchmentBean catchment = (CatchmentBean) element;
+      final IStatus status = catchment.getStatus();
+      return StatusComposite.getStatusImage( status.getSeverity() );
+    }
+
+    return super.getImage( element );
   }
 
   /**

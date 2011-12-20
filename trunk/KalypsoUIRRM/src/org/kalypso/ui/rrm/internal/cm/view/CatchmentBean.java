@@ -91,6 +91,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private String m_catchmentDescription;
 
+  private IStatus m_status;
+
   public CatchmentBean( )
   {
     super( ICatchment.FEATURE_CATCHMENT );
@@ -100,6 +102,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_catchmentRef = null;
     m_catchmentName = null;
     m_catchmentDescription = null;
+    m_status = null;
 
     initTimeseries();
   }
@@ -113,6 +116,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_catchmentRef = resolveRef( catchment );
     m_catchmentName = resolveName( catchment );
     m_catchmentDescription = resolveDescription( catchment );
+    m_status = null;
 
     initTimeseries();
   }
@@ -159,7 +163,20 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentName;
   }
 
-  public IStatus checkFactor( )
+  public IStatus getStatus( )
+  {
+    if( m_status == null )
+      m_status = checkFactor();
+
+    return m_status;
+  }
+
+  public void updateStatus( )
+  {
+    m_status = checkFactor();
+  }
+
+  private IStatus checkFactor( )
   {
     int completeFactor = 0;
     for( final FactorizedTimeseriesBean timeseries : m_timeseries )
