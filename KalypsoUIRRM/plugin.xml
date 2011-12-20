@@ -465,24 +465,34 @@
             <command id="org.kalypso.model.rrm.timeseriesManagement" name="Timeseries Management" />
             <command id="org.kalypso.model.rrm.catchmentModels" name="Catchment Models" />
             <command id="org.kalypso.model.rrm.simulationManagement" name="Simulation Management"/>
+            <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="Create Simulations"/>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
             <image commandId="org.kalypso.model.rrm.catchmentModels" icon="icons/cm/catchmentModelsView.png"/>
+            <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
-      <handler
-            class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler"
-            commandId="org.kalypso.model.rrm.timeseriesManagement">
-      </handler>    
-      <handler
-            class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler"
-            commandId="org.kalypso.model.rrm.catchmentModels">
-      </handler>
-      <handler
-            class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler"
-            commandId="org.kalypso.model.rrm.simulationManagement">
+      <handler class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler" commandId="org.kalypso.model.rrm.timeseriesManagement"/>
+      <handler class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler" commandId="org.kalypso.model.rrm.catchmentModels"/>
+      <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
+      <handler class="org.kalypso.ui.rrm.internal.simulations.RefreshSimulationsTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations">
+         <enabledWhen>
+            <with variable="activeGmlTable">
+                <!-- -refernece not null -->
+                <!-- Fixme: introduce tests -->
+                <instanceof value="java.lang.Object"/>
+            </with>
+         </enabledWhen>
       </handler>
    </extension>
+   
+    <!-- View menu for GML-Table -->
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution locationURI="toolbar:org.kalypso.ui.editor.gistableeditor.GttViewPart?after=additions">
+            <command commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" style="push"/>
+        </menuContribution>
+     </extension>
+   
 </plugin>
