@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
@@ -117,4 +119,11 @@ public interface IRainfallGenerator extends Feature
    *          A filter, which will be applied to the source timeseries.
    */
   void addFilter( IZmlFilter filter );
+
+  /**
+   * This function returns the filters.
+   * 
+   * @return The filters.
+   */
+  List<IZmlFilter> getFilters( );
 }

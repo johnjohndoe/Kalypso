@@ -80,7 +80,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -108,8 +107,6 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
   static final QName PROPERTY_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
   static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
-
-  private final FeatureBindingCollection<IZmlFilter> m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
 
   public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
@@ -164,8 +161,8 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       monitor.worked( 100 );
       monitor.subTask( "Konvertiere und wende die Thiessenmethode an..." );
 
-      final IZmlFilter[] filters = m_filters.toArray( new IZmlFilter[m_filters.size()] );
-
+      /* Read the observations. */
+      final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Apply thiessen, if not yet done. */

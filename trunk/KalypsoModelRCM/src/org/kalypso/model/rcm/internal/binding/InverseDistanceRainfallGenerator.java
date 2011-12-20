@@ -77,7 +77,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -106,8 +105,6 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
   static final QName PROPERTY_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );
 
   static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
-
-  private final FeatureBindingCollection<IZmlFilter> m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
 
   public InverseDistanceRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
@@ -174,8 +171,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       monitor.subTask( "Konvertiere..." );
 
       /* Convert to zml observations . */
-      final IZmlFilter[] filters = m_filters.toArray( new IZmlFilter[m_filters.size()] );
-
+      final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Monitor. */
