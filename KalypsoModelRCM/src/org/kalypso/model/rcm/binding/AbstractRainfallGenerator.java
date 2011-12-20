@@ -134,7 +134,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
 
   /**
    * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addInterpolationFilter(java.lang.String, int, boolean,
-   *      java.lang.String, int, boolean)
+   *      java.lang.String, int)
    */
   @Override
   public void addInterpolationFilter( final String calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus )
@@ -148,8 +148,7 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   }
 
   /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addIntervalFilter(java.lang.String, java.lang.String, int,
-   *      int, java.lang.String, double, int)
+   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addIntervalFilter(java.lang.String, int, double, int)
    */
   @Override
   public void addIntervalFilter( final String calendarField, final int amount, final double defaultValue, final int defaultStatus )
