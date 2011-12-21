@@ -259,8 +259,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getParent();
 
     /* Get the name property. */
-    final String nameProperty = parent.getAreaNameProperty();
-    if( nameProperty == null || nameProperty.length() == 0 )
+    final GMLXPath namePath = parent.getAreaNamePath();
+    if( namePath == null )
       return null;
 
     /* Get the area. */
@@ -268,14 +268,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     if( area == null )
       return null;
 
-    /* Build the xpath. */
-    final GMLXPath xPath = new GMLXPath( nameProperty, catchment.getWorkspace().getNamespaceContext() );
-
     /* Query. */
-    final Object queryQuiet = GMLXPathUtilities.queryQuiet( xPath, area );
-    if( queryQuiet == null )
-      return null;
-
+    final Object queryQuiet = GMLXPathUtilities.queryQuiet( namePath, area );
     if( queryQuiet instanceof String )
       return (String) queryQuiet;
 
@@ -297,8 +291,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getParent();
 
     /* Get the description property. */
-    final String descriptionProperty = parent.getAreaDescriptionProperty();
-    if( descriptionProperty == null || descriptionProperty.length() == 0 )
+    final GMLXPath descriptionPath = parent.getAreaDescriptionPath();
+    if( descriptionPath == null )
       return null;
 
     /* Get the area. */
@@ -306,14 +300,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     if( area == null )
       return null;
 
-    /* Build the xpath. */
-    final GMLXPath xPath = new GMLXPath( descriptionProperty, catchment.getWorkspace().getNamespaceContext() );
-
     /* Query. */
-    final Object queryQuiet = GMLXPathUtilities.queryQuiet( xPath, area );
-    if( queryQuiet == null )
-      return null;
-
+    final Object queryQuiet = GMLXPathUtilities.queryQuiet( descriptionPath, area );
     if( queryQuiet instanceof String )
       return (String) queryQuiet;
 
