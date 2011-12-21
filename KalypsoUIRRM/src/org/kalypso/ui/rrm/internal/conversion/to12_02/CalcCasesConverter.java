@@ -73,13 +73,16 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   private final String m_chosenExe;
 
-  public CalcCasesConverter( final File sourceDir, final File targetDir, final String chosenExe )
+  private final TimeseriesIndex m_timeseriesIndex;
+
+  public CalcCasesConverter( final File sourceDir, final File targetDir, final String chosenExe, final TimeseriesIndex timeseriesIndex )
   {
     super( Messages.getString( "CalcCasesConverter_0" ) ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
     m_chosenExe = chosenExe;
+    m_timeseriesIndex = timeseriesIndex;
   }
 
   @Override
@@ -109,7 +112,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           prepareCalcCase( targetDir );
 
-          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe, catchmentModel );
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe, catchmentModel, m_timeseriesIndex );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
         }

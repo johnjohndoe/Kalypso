@@ -95,8 +95,10 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
       final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
       getLog().add( basicStatus );
 
+      final TimeseriesIndex timeseriesIndex = basicModelConverter.getTimeseriesIndex();
+
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_3" ) ); //$NON-NLS-1$
-      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, m_chosenExe );
+      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, m_chosenExe, timeseriesIndex );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().add( calcCaseStatus );
     }
