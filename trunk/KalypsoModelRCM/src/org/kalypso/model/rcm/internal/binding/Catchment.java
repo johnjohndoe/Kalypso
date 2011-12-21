@@ -40,16 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * The catchment.
@@ -58,9 +57,13 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Catchment extends Feature_Impl implements ICatchment
 {
+  private final IFeatureBindingCollection<IFactorizedTimeseries> m_timeseries;
+
   public Catchment( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    m_timeseries = new FeatureBindingCollection<IFactorizedTimeseries>( this, IFactorizedTimeseries.class, MEMBER_FACTORIZED_TIMESERIES );
   }
 
   @Override
@@ -70,16 +73,21 @@ public class Catchment extends Feature_Impl implements ICatchment
   }
 
   @Override
-  public IFactorizedTimeseries[] getFactorizedTimeseries( )
+  public void setAreaLink( final String href )
   {
-    /* Memory for the results. */
-    final List<FactorizedTimeseries> results = new ArrayList<FactorizedTimeseries>();
+    final IFeatureType featureType = getFeatureType();
 
-    /* Get all factorized timeseries. */
-    final FeatureList factorizedTimeseries = (FeatureList) getProperty( MEMBER_FACTORIZED_TIMESERIES );
-    for( int i = 0; i < factorizedTimeseries.size(); i++ )
-      results.add( (FactorizedTimeseries) factorizedTimeseries.get( i ) );
+    final IRelationType linkProperty = (IRelationType) featureType.getProperty( PROPERTY_AREA_LINK );
+    final IFeatureType areaLinkFeatureType = linkProperty.getTargetFeatureType();
 
-    return results.toArray( new FactorizedTimeseries[] {} );
+    final XLinkedFeature_Impl link = new XLinkedFeature_Impl( this, linkProperty, areaLinkFeatureType, href );
+    setProperty( PROPERTY_AREA_LINK, link );
+  }
+
+
+  @Override
+  public IFeatureBindingCollection<IFactorizedTimeseries> getFactorizedTimeseries( )
+  {
+    return m_timeseries;
   }
 }
