@@ -50,12 +50,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -357,23 +357,33 @@ public class UpdateSimulationWorker
     final ILinearSumGenerator linearSumGenerator = (ILinearSumGenerator) generator;
 
     /* Hash for the already created links. */
-    final Map<Integer, String> linkHash = new HashMap<Integer, String>();
+    final Map<String, String> linkHash = new HashMap<String, String>();
+
+    /* The workspace to save. */
+    GMLWorkspace workspaceToSave = null;
 
     /* Get the catchments. */
     final ICatchment[] generatorCatchments = linearSumGenerator.getCatchments();
     for( final ICatchment generatorCatchment : generatorCatchments )
     {
       /* Get the area. */
-      final Catchment catchment = (Catchment) generatorCatchment.getAreaLink();
+      final XLinkedFeature_Impl areaLink = (XLinkedFeature_Impl) generatorCatchment.getAreaLink();
+      final Catchment catchment = (Catchment) areaLink.getFeature();
 
-      /* Build the hash code. */
-      final int hashCode = buildHashCode( generatorCatchment );
+      /* Find the workspace to save. */
+      if( workspaceToSave == null )
+        workspaceToSave = catchment.getWorkspace();
+
+      /* Build the hash. */
+      final String hash = buildHash( generatorCatchment );
+      if( hash == null || hash.length() == 0 )
+        continue;
 
       /* If the link hash contains this hash code, the corresponding link will be used. */
-      if( linkHash.containsKey( new Integer( hashCode ) ) )
+      if( linkHash.containsKey( hash ) )
       {
         /* Create the link. */
-        final String link = linkHash.get( new Integer( hashCode ) );
+        final String link = linkHash.get( hash );
 
         /* Create the timeseries link type. */
         final TimeseriesLinkType tsLink = new TimeseriesLinkType();
@@ -395,17 +405,16 @@ public class UpdateSimulationWorker
       catchment.setProperty( targetLink, tsLink );
 
       /* Store the hash code. */
-      linkHash.put( new Integer( hashCode ), link );
+      linkHash.put( hash, link );
     }
 
     /* Save the workspace, because it is reloaded in the rainfall operation. */
     /* HINT: This is the linked workspace of the modell.gml, not the loaded one here. */
-    final GMLWorkspace workspace = generator.getWorkspace();
     final IFile modelFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
-    GmlSerializer.saveWorkspace( workspace, modelFile );
+    GmlSerializer.saveWorkspace( workspaceToSave, modelFile );
   }
 
-  private int buildHashCode( final ICatchment catchment )
+  private String buildHash( final ICatchment catchment )
   {
     /* Memory for the single values. */
     final List<String> values = new ArrayList<String>();
@@ -416,17 +425,13 @@ public class UpdateSimulationWorker
     {
       final BigDecimal factor = timeseries.getFactor();
       final ZmlLink link = timeseries.getTimeseriesLink();
-      values.add( String.format( "%d_%s", factor.intValue(), link.getHref() ) );
+      values.add( String.format( Locale.PRC, "%d_%s", factor.intValue(), link.getHref() ) );
     }
 
     /* Join the values. */
     final String joinedValues = StringUtils.join( values.toArray( new String[] {} ), ";" );
 
-    /* Build the hash code. */
-    final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( joinedValues );
-
-    return builder.toHashCode();
+    return joinedValues;
   }
 
   private String buildLink( final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
