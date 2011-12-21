@@ -41,9 +41,11 @@
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -54,6 +56,7 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -126,8 +129,27 @@ public class CatchmentModelBuilder
     final String href = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelCatchment.getId() );
     newCatchment.setAreaLink( href );
 
-    // TODO: guess one timeseries for each catchment
+    /* Guess timeseries link... */
+    final String timeseriesPath = guessTimeseries( modelCatchment, modelTimeseriesLink, parameterType );
+    if( StringUtils.isBlank( timeseriesPath ) )
+    {
+      final String message = String.format( "Failed to guess timeseries for catchment: %s", modelCatchment.getName() );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
+    }
+
+    /* ...and set to catchment */
+    final IFeatureBindingCollection<IFactorizedTimeseries> timeseriesList = newCatchment.getFactorizedTimeseries();
+    final IFactorizedTimeseries timeseries = timeseriesList.addNew( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
+    timeseries.setFactor( new BigDecimal( 100 ) );
+    timeseries.setTimeseriesLink( timeseriesPath );
 
     return Status.OK_STATUS;
+  }
+
+  private String guessTimeseries( final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType ) throws CoreException
+  {
+
+    // TODO Auto-generated method stub
+    return null;
   }
 }
