@@ -99,4 +99,8 @@ public interface INaProjectConstants
   String CALC_CASE_TEMPLATE_DIR = ".model/calcCaseTemplate"; //$NON-NLS-1$
 
   String GML_STATIONS = "stations.gml"; //$NON-NLS-1$
+
+  String GML_CATCHMENT_MODEL_FILE = "catchmentModels.gml"; //$NON-NLS-1$
+
+  String GML_CATCHMENT_MODEL_PATH = FOLDER_MODELS + "/" + GML_CATCHMENT_MODEL_FILE; //$NON-NLS-1$
 }

@@ -52,10 +52,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+import com.google.common.base.Charsets;
 
 /**
  * @author Gernot Belger
@@ -84,6 +89,8 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     {
       final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "CalcCasesConverter_1" ), 101 ); //$NON-NLS-1$
 
+      final ICatchmentModel catchmentModel = readCatchmentModel();
+
       final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_sourceDir );
       final File[] calcCases = walker.execute();
       ProgressUtilities.worked( progress, 1 );
@@ -102,7 +109,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           prepareCalcCase( targetDir );
 
-          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe );
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe, catchmentModel );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
         }
@@ -124,11 +131,49 @@ public class CalcCasesConverter extends AbstractLoggingOperation
           getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_4" ), e, calcCaseName ); //$NON-NLS-1$
         }
       }
+
+      saveCatchmentModel( catchmentModel );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_5" ), e ); //$NON-NLS-1$
+    }
+  }
+
+  private ICatchmentModel readCatchmentModel( )
+  {
+    try
+    {
+      final File catchmentModelFile = new File( m_targetDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+
+      final GMLWorkspace catchmentModelWorkspace = GmlSerializer.createGMLWorkspace( catchmentModelFile, GmlSerializer.DEFAULT_FACTORY );
+
+      return (ICatchmentModel) catchmentModelWorkspace.getRootFeature();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      getLog().add( IStatus.ERROR, "Failed to read catchment model file. Unable to guess catchment models for converted simulations", e );
+      return null;
+    }
+  }
+
+  private void saveCatchmentModel( final ICatchmentModel catchmentModel )
+  {
+    if( catchmentModel == null )
+      return;
+
+    try
+    {
+      final File catchmentModelFile = new File( m_targetDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+
+      GmlSerializer.serializeWorkspace( catchmentModelFile, catchmentModel.getWorkspace(), Charsets.UTF_8.name() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      getLog().add( IStatus.ERROR, "Failed to save catchment model file. Unable to guess catchment models for converted simulations", e );
     }
   }
 

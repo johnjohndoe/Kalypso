@@ -92,7 +92,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
 
-      copyBasicTimeseries();
+      final TimeseriesImporter importer = copyBasicTimeseries();
 
       copyObservationConf();
 
@@ -104,7 +104,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
   }
 
-  private void copyBasicTimeseries( ) throws CoreException
+  private TimeseriesImporter copyBasicTimeseries( ) throws CoreException
   {
     final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
     importer.readStations();
@@ -122,6 +122,8 @@ public class BasicModelConverter extends AbstractLoggingOperation
     importer.copyTimeseries( "Tributary" ); //$NON-NLS-1$
 
     importer.saveStations();
+
+    return importer;
   }
 
   /**
