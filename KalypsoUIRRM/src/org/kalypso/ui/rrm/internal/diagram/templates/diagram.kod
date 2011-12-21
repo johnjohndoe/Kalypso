@@ -2,6 +2,10 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="diagram" legend="true">
     <Layers>
+      <CascadingParameters>
+        <Parameter name="request.strategy" value="request.strategy.observation.provider" />
+      </CascadingParameters>
+
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Q" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rainfall#N" />
