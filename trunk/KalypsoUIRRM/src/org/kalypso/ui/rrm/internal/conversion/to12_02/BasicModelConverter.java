@@ -65,6 +65,8 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private final ConverterData m_data;
 
+  private TimeseriesIndex m_timeseriesIndex;
+
   public BasicModelConverter( final File sourceDir, final File targetDir )
   {
     super( Messages.getString( "BasicModelConverter_1" ) ); //$NON-NLS-1$
@@ -92,7 +94,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
 
-      final TimeseriesImporter importer = copyBasicTimeseries();
+      m_timeseriesIndex = copyBasicTimeseries();
 
       copyObservationConf();
 
@@ -104,7 +106,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
   }
 
-  private TimeseriesImporter copyBasicTimeseries( ) throws CoreException
+  private TimeseriesIndex copyBasicTimeseries( ) throws CoreException
   {
     final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
     importer.readStations();
@@ -123,7 +125,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     importer.saveStations();
 
-    return importer;
+    return importer.getIndex();
   }
 
   /**
@@ -153,5 +155,10 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     getLog().add( IStatus.INFO, "Timeseries links have been updated." );
+  }
+
+  public TimeseriesIndex getTimeseriesIndex( )
+  {
+    return m_timeseriesIndex;
   }
 }

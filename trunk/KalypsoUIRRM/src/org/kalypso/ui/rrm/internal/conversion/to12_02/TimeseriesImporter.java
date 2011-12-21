@@ -87,6 +87,8 @@ import com.google.common.base.Charsets;
  */
 public class TimeseriesImporter
 {
+  private final TimeseriesIndex m_timeseriesIndex = new TimeseriesIndex();
+
   private final File m_sourceDir;
 
   private final File m_timeseriesDir;
@@ -94,6 +96,7 @@ public class TimeseriesImporter
   private IStationCollection m_stations;
 
   private final IStatusCollector m_log;
+
 
   public TimeseriesImporter( final File sourceDir, final File targetDir, final IStatusCollector log )
   {
@@ -212,7 +215,6 @@ public class TimeseriesImporter
     final String parameterType = valueAxis.getType();
 
     final ITupleModel values = observation.getValues( null );
-    // if( )
 
     final Period timestep = TimeseriesUtils.guessTimestep( values );
 
@@ -238,6 +240,11 @@ public class TimeseriesImporter
     final IObservation observationWithSource = cleanupWorker.convert();
 
     dataLink.saveObservation( observationWithSource );
+
+    /* Add as new entry into timeseries index (used later for catchment guessing) */
+    final String sourceRef = zmlFile.getAbsolutePath();
+    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( sourceRef, dataLink.getHref(), parameterType, timestep );
+    m_timeseriesIndex.addEntry( newEntry );
   }
 
   private String findGroupName( final String relativePath )
@@ -325,5 +332,10 @@ public class TimeseriesImporter
     final String projectRelativePath = INaProjectConstants.PATH_TIMESERIES + "/" + timeseriesPath;
     final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath;
     return projectPath;
+  }
+
+  public TimeseriesIndex getIndex( )
+  {
+    return m_timeseriesIndex;
   }
 }

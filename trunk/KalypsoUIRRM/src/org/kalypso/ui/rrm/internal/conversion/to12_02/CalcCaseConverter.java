@@ -101,7 +101,9 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final ICatchmentModel m_catchmentModel;
 
-  public CalcCaseConverter( final File sourceDir, final File targetCalcCaseDir, final String chosenExe, final ICatchmentModel catchmentModel )
+  private final TimeseriesIndex m_timeseriesIndex;
+
+  public CalcCaseConverter( final File sourceDir, final File targetCalcCaseDir, final String chosenExe, final ICatchmentModel catchmentModel, final TimeseriesIndex timeseriesIndex )
   {
     super( sourceDir.getName() );
 
@@ -109,6 +111,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     m_targetCalcCaseDir = targetCalcCaseDir;
     m_chosenExe = chosenExe;
     m_catchmentModel = catchmentModel;
+    m_timeseriesIndex = timeseriesIndex;
+
     m_data = new ConverterData( m_targetCalcCaseDir );
   }
 
@@ -350,7 +354,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     if( m_catchmentModel == null )
       return;
 
-    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, m_catchmentModel, m_targetCalcCaseDir );
+    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, m_catchmentModel, m_targetCalcCaseDir, m_timeseriesIndex );
 
     getLog().add( builder.execute( Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL ) );
     getLog().add( builder.execute( Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION ) );
