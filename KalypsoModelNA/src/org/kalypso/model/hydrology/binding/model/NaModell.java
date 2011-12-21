@@ -80,6 +80,8 @@ public class NaModell extends Feature_Impl implements IModel
 
   private static final QName MEMBER_NODE = new QName( NS_NAMODELL, "nodeMember" ); //$NON-NLS-1$
 
+  public static final QName PROPERTY_LOCATION = new QName( NS_NAMODELL, "Ort" ); //$NON-NLS-1$
+
   // <element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType"/>
 
   private IFeatureBindingCollection<Catchment> m_catchments = null;
