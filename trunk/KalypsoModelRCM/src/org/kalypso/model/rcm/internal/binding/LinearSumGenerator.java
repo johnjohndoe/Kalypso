@@ -44,6 +44,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -202,21 +205,56 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   @Override
-  public String getAreaNameProperty( )
+  public GMLXPath getAreaNamePath( )
   {
-    return getProperty( PROPERTY_AREA_NAME, String.class );
+    return getPath( PROPERTY_AREA_NAME );
   }
 
   @Override
-  public String getAreaDescriptionProperty( )
+  public void setAreaNamePath( final GMLXPath path )
   {
-    return getProperty( PROPERTY_AREA_DESCRIPTION, String.class );
+    setPath( PROPERTY_AREA_NAME, path );
   }
 
   @Override
-  public String getAreaProperty( )
+  public GMLXPath getAreaDescriptionPath( )
   {
-    return getProperty( PROPERTY_AREA, String.class );
+    return getPath( PROPERTY_AREA_DESCRIPTION );
+  }
+
+  @Override
+  public void setAreaDescriptionPath( final GMLXPath path )
+  {
+    setPath( PROPERTY_AREA_DESCRIPTION, path );
+  }
+
+  @Override
+  public GMLXPath getAreaPath( )
+  {
+    return getPath( PROPERTY_AREA );
+  }
+
+  @Override
+  public void setAreaPath( final GMLXPath path )
+  {
+    setPath( PROPERTY_AREA, path );
+  }
+
+  private GMLXPath getPath( final QName property )
+  {
+    final String value = getProperty( property, String.class );
+    if( StringUtils.isBlank( value ) )
+      return null;
+
+    return new GMLXPath( value, getWorkspace().getNamespaceContext() );
+  }
+
+  private void setPath( final QName property, final GMLXPath path )
+  {
+    if( path == null )
+      setProperty( property, null );
+    else
+      setProperty( property, path.toString() );
   }
 
   @Override

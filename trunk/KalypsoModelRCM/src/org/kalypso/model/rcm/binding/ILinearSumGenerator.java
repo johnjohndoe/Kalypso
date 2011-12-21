@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.RcmConstants;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
@@ -96,21 +97,27 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    *
    * @return The area name property.
    */
-  String getAreaNameProperty( );
+  GMLXPath getAreaNamePath( );
+
+  void setAreaNamePath( GMLXPath path );
 
   /**
    * This function returns the area description property.
    *
    * @return The area description property.
    */
-  String getAreaDescriptionProperty( );
+  GMLXPath getAreaDescriptionPath( );
+
+  void setAreaDescriptionPath( GMLXPath path );
 
   /**
    * This function returns the area property.
    *
    * @return The area property.
    */
-  String getAreaProperty( );
+  GMLXPath getAreaPath( );
+
+  void setAreaPath( GMLXPath path );
 
   /**
    * This function returns all catchments.
