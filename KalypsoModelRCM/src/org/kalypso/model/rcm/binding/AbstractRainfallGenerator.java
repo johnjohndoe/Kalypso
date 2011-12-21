@@ -114,28 +114,24 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
     return getProperty( PROPERTY_PARAMETER_TYPE, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#getFilters()
-   */
+  @Override
+  public void setParameterType( final String parameterType )
+  {
+    setProperty( PROPERTY_PARAMETER_TYPE, parameterType );
+  }
+
   @Override
   public List<IZmlFilter> getFilters( )
   {
     return m_filters;
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addFilter(org.kalypso.zml.core.filter.binding.IZmlFilter)
-   */
   @Override
   public void addFilter( final IZmlFilter filter )
   {
     m_filters.add( filter );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addInterpolationFilter(java.lang.String, int, boolean,
-   *      java.lang.String, int)
-   */
   @Override
   public void addInterpolationFilter( final String calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus )
   {
@@ -147,9 +143,6 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
     filter.setProperty( InterpolationZmlFilter.QNAME_DEFAULT_STATUS, new Integer( defaultStatus ) );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallGenerator#addIntervalFilter(java.lang.String, int, double, int)
-   */
   @Override
   public void addIntervalFilter( final String calendarField, final int amount, final double defaultValue, final int defaultStatus )
   {

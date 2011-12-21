@@ -62,19 +62,24 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
- * 
+ *
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
 {
+  private final IFeatureBindingCollection<ICatchment> m_catchments;
+
   public LinearSumGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    m_catchments = new FeatureBindingCollection<ICatchment>( this, ICatchment.class, MEMBER_CATCHMENT );
   }
 
   /**
@@ -90,20 +95,23 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       monitor = new NullProgressMonitor();
 
     /* Get the catchments. */
-    final ICatchment[] catchments = getCatchments();
+    final List<ICatchment> catchments = getCatchments();
 
     /* HINT: Keep in mind, that the results must match the order of the catchments array. */
-    final IObservation[] results = new IObservation[catchments.length];
+    final IObservation[] results = new IObservation[catchments.size()];
 
     try
     {
       /* Monitor. */
-      monitor.beginTask( String.format( "Generiere Zeitreihen für %d Gebiete...", catchments.length ), catchments.length * 200 );
+      monitor.beginTask( String.format( "Generiere Zeitreihen für %d Gebiete...", catchments.size() ), catchments.size() * 200 );
       monitor.subTask( "Generiere Zeitreihen..." );
 
       /* Generate one timeseries for each catchment. */
-      for( int i = 0; i < catchments.length; i++ )
+      for( int i = 0; i < catchments.size(); i++ )
       {
+        /* Get the catchment. */
+        final ICatchment catchment = catchments.get( i );
+
         /* Generate the message 1. */
         final String message1 = String.format( "Sammle gewichteten Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
 
@@ -114,8 +122,6 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         if( log != null )
           log.log( new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, message1 ) );
 
-        /* Get the catchment. */
-        final ICatchment catchment = catchments[i];
 
         /* Memory for the factors and the observations of the catchments. */
         final List<Double> factors = new ArrayList<Double>();
@@ -183,62 +189,45 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     }
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getComment()
-   */
   @Override
   public String getComment( )
   {
     return getProperty( PROPERTY_COMMENT, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaNameProperty()
-   */
+  @Override
+  public void setComment( final String comment )
+  {
+    setProperty( PROPERTY_COMMENT, comment );
+  }
+
   @Override
   public String getAreaNameProperty( )
   {
     return getProperty( PROPERTY_AREA_NAME, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaDescriptionProperty()
-   */
   @Override
   public String getAreaDescriptionProperty( )
   {
     return getProperty( PROPERTY_AREA_DESCRIPTION, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getAreaProperty()
-   */
   @Override
   public String getAreaProperty( )
   {
     return getProperty( PROPERTY_AREA, String.class );
   }
 
-  /**
-   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getCatchments()
-   */
   @Override
-  public ICatchment[] getCatchments( )
+  public IFeatureBindingCollection<ICatchment> getCatchments( )
   {
-    /* Memory for the results. */
-    final List<Catchment> results = new ArrayList<Catchment>();
-
-    /* Get all catchments. */
-    final FeatureList catchments = (FeatureList) getProperty( MEMBER_CATCHMENT );
-    for( int i = 0; i < catchments.size(); i++ )
-      results.add( (Catchment) catchments.get( i ) );
-
-    return results.toArray( new Catchment[] {} );
+    return m_catchments;
   }
 
   /**
    * This function converts an array of Doubles to an array of doubles.
-   * 
+   *
    * @param factors
    *          The array of Doubles.
    * @return A array of doubles.

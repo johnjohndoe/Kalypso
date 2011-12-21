@@ -43,10 +43,11 @@ package org.kalypso.model.rcm.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.RcmConstants;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * The linear sum generator.
- * 
+ *
  * @author Holger Albert
  */
 public interface ILinearSumGenerator extends IRainfallGenerator
@@ -83,36 +84,38 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the comment.
-   * 
+   *
    * @return The comment.
    */
   String getComment( );
 
+  void setComment( String comment );
+
   /**
    * This function returns the area name property.
-   * 
+   *
    * @return The area name property.
    */
   String getAreaNameProperty( );
 
   /**
    * This function returns the area description property.
-   * 
+   *
    * @return The area description property.
    */
   String getAreaDescriptionProperty( );
 
   /**
    * This function returns the area property.
-   * 
+   *
    * @return The area property.
    */
   String getAreaProperty( );
 
   /**
    * This function returns all catchments.
-   * 
+   *
    * @return All catchments.
    */
-  ICatchment[] getCatchments( );
+  IFeatureBindingCollection<ICatchment> getCatchments( );
 }
