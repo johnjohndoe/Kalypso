@@ -72,7 +72,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -115,7 +117,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IObservation observation = createObservation();
+    final File fileSource = m_data.getSourceFileData().getFile();
+
+    final IObservation observation = createObservation( fileSource );
 
     final Period timestep = findTimestep( observation );
 
@@ -125,9 +129,17 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
     updateMetadata( observation, m_timeseries );
 
-    writeResult( targetFile, observation );
+    final IObservation observationWithSource = addSourceAndStatus( observation, fileSource.getAbsolutePath() );
+
+    writeResult( targetFile, observationWithSource );
 
     return Status.OK_STATUS;
+  }
+
+  private IObservation addSourceAndStatus( final IObservation observation, final String sourceName )
+  {
+    final int defaultStatus = KalypsoStati.BIT_OK;
+    return new DataSourceProxyObservation( observation, sourceName, sourceName, defaultStatus );
   }
 
   private Period findTimestep( final IObservation observation ) throws CoreException
@@ -203,6 +215,11 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   {
     try
     {
+      // XXX
+
+// axes.add( KalypsoStatusUtils.createStatusAxisFor( eTargetAxis, true ) );
+// axes.add( DataSourceHelper.createSourceAxis( eTargetAxis ) );
+
       targetFile.getLocation().toFile().getParentFile().mkdirs();
       ZmlFactory.writeToFile( newObservation, targetFile );
     }
@@ -214,11 +231,10 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IObservation createObservation( ) throws CoreException
+  private IObservation createObservation( final File fileSource ) throws CoreException
   {
     try
     {
-      final File fileSource = m_data.getSourceFileData().getFile();
       final TimeZone timezone = m_data.getTimezoneParsed();
       final INativeObservationAdapter nativaAdapter = m_data.getAdapter();
       final String parameterType = m_data.getParameterType();
