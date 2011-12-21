@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
+import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -68,10 +69,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -235,17 +234,11 @@ public class TimeseriesImporter
 
     // We write the file from the read observation (instead of copy) in order to compress the data and add status and
     // source axes (now required)
-    final IObservation observationWithSourc = addSourceAndStatus( observation, m_sourceDir.getAbsolutePath() );
+    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, m_sourceDir.getAbsolutePath() );
+    final IObservation observationWithSource = cleanupWorker.convert();
 
-    dataLink.saveObservation( observationWithSourc );
+    dataLink.saveObservation( observationWithSource );
   }
-
-  private IObservation addSourceAndStatus( final IObservation observation, final String sourceName )
-  {
-    final int defaultStatus = KalypsoStati.BIT_OK;
-    return new DataSourceProxyObservation( observation, sourceName, sourceName, defaultStatus );
-  }
-
 
   private String findGroupName( final String relativePath )
   {

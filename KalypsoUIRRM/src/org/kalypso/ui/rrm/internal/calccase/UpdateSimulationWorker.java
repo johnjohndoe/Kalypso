@@ -112,8 +112,8 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
 /**
- * The worker that actualyl updates a simulation.
- *
+ * The worker that actually updates a simulation.
+ * 
  * @author Gernot Belger
  */
 public class UpdateSimulationWorker
