@@ -113,7 +113,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
 /**
  * The worker that actualyl updates a simulation.
- * 
+ *
  * @author Gernot Belger
  */
 public class UpdateSimulationWorker
@@ -138,7 +138,7 @@ public class UpdateSimulationWorker
    *             <source property="NRepository" from="${startsim}" to="${stopsim}" />
    *         </kalypso.copyObservation>
    *     </target>
-   * 
+   *
    *     <target name="updateObsT" depends="setProperties">
    *         <echo message="aktualisiere Temperaturen (Messung)" />
    *         <delete dir="${calc.dir}/Klima" />
@@ -147,7 +147,7 @@ public class UpdateSimulationWorker
    *             <source property="inObservationLink" from="${startsim}" to="${stopsim}" />
    *         </kalypso.copyObservation>
    *     </target>
-   * 
+   *
    * </pre>
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
@@ -280,6 +280,7 @@ public class UpdateSimulationWorker
     source.setFrom( Long.toString( sourceRange.getFrom().getTime() ) );
     source.setTo( Long.toString( sourceRange.getTo().getTime() ) );
 
+    // REMARK: must be null, so the special NA-ObservationTarget is created
     final GMLXPath targetPath = null;
 
     final File calcDir = calcCaseFolder.getLocation().toFile();
