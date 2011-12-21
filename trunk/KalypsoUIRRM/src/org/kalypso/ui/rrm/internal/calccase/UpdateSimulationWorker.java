@@ -106,6 +106,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -113,7 +114,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
 /**
  * The worker that actually updates a simulation.
- * 
+ *
  * @author Gernot Belger
  */
 public class UpdateSimulationWorker
@@ -364,7 +365,7 @@ public class UpdateSimulationWorker
     GMLWorkspace workspaceToSave = null;
 
     /* Get the catchments. */
-    final ICatchment[] generatorCatchments = linearSumGenerator.getCatchments();
+    final List<ICatchment> generatorCatchments = linearSumGenerator.getCatchments();
     for( final ICatchment generatorCatchment : generatorCatchments )
     {
       /* Get the area. */
@@ -421,7 +422,7 @@ public class UpdateSimulationWorker
     final List<String> values = new ArrayList<String>();
 
     /* Build the hash. */
-    final IFactorizedTimeseries[] factorizedTimeseries = catchment.getFactorizedTimeseries();
+    final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries = catchment.getFactorizedTimeseries();
     for( final IFactorizedTimeseries timeseries : factorizedTimeseries )
     {
       final BigDecimal factor = timeseries.getFactor();

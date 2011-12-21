@@ -88,12 +88,14 @@ public class CatchmentsTreeStrategy implements ITreeNodeStrategy
     for( final IRainfallGenerator generator : generators )
     {
       final String parameterType = generator.getParameterType();
+      if( parameterType != null )
+      {
+        if( !byParameterType.containsKey( parameterType ) )
+          byParameterType.put( parameterType, new LinkedList<IRainfallGenerator>() );
 
-      if( !byParameterType.containsKey( parameterType ) )
-        byParameterType.put( parameterType, new LinkedList<IRainfallGenerator>() );
-
-      final Collection<IRainfallGenerator> generatorsOfType = byParameterType.get( parameterType );
-      generatorsOfType.add( generator );
+        final Collection<IRainfallGenerator> generatorsOfType = byParameterType.get( parameterType );
+        generatorsOfType.add( generator );
+      }
     }
 
     return byParameterType;
