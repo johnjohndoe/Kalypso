@@ -200,7 +200,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   /**
    * This function applies the changes of this catchment. It assumes, that the catchment does not exist or does not
    * exist anymore, because it will create a new catchment feature.
-   * 
+   *
    * @param workspace
    *          The workspace.
    * @param parent
@@ -350,7 +350,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
         return;
 
       /* Initialize with factors. */
-      final IFactorizedTimeseries[] factorizedTimeseries = feature.getFactorizedTimeseries();
+      final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries = feature.getFactorizedTimeseries();
       for( final IFactorizedTimeseries oneFactorizedTimeseries : factorizedTimeseries )
       {
         final ZmlLink timeseriesLink = oneFactorizedTimeseries.getTimeseriesLink();
