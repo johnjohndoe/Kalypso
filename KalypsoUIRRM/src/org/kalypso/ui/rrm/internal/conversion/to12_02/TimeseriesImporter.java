@@ -66,9 +66,12 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -209,7 +212,10 @@ public class TimeseriesImporter
     final IAxis valueAxis = valueAxes[0];
     final String parameterType = valueAxis.getType();
 
-    final Period timestep = TimeseriesUtils.guessTimestep( observation.getValues( null ) );
+    final ITupleModel values = observation.getValues( null );
+    // if( )
+
+    final Period timestep = TimeseriesUtils.guessTimestep( values );
 
     /* Assign station and timeseries parameters */
     final String stationDescription = baseName;
@@ -226,10 +232,20 @@ public class TimeseriesImporter
 
     /* copy observation file */
     final ZmlLink dataLink = newTimeseries.getDataLink();
-    // FIXME: add source and status axes
-    // We write the file from the read observation (instead of copy) in order to compress the data
-    dataLink.saveObservation( observation );
+
+    // We write the file from the read observation (instead of copy) in order to compress the data and add status and
+    // source axes (now required)
+    final IObservation observationWithSourc = addSourceAndStatus( observation, m_sourceDir.getAbsolutePath() );
+
+    dataLink.saveObservation( observationWithSourc );
   }
+
+  private IObservation addSourceAndStatus( final IObservation observation, final String sourceName )
+  {
+    final int defaultStatus = KalypsoStati.BIT_OK;
+    return new DataSourceProxyObservation( observation, sourceName, sourceName, defaultStatus );
+  }
+
 
   private String findGroupName( final String relativePath )
   {
