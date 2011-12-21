@@ -50,6 +50,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -59,11 +60,13 @@ import org.kalypso.model.hydrology.binding.InitialValue;
 import org.kalypso.model.hydrology.binding._11_6.InitialValues;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.conversion.ITimeseriesVisitor;
 import org.kalypso.ui.rrm.internal.conversion.TimeseriesWalker;
@@ -133,9 +136,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     /* Convert old control files */
     convertControls();
 
-    fixTimeseriesLinks();
+    final NaModell naModel = m_data.loadNaModel();
 
-    guessCatchmentModel();
+    fixTimeseriesLinks( naModel, getLog() );
+    getLog().add( IStatus.INFO, "Timeseries links have been updated." );
+
+    guessCatchmentModel( naModel );
+
+    m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
+    naModel.getWorkspace().dispose();
   }
 
   private void copyBasicData( ) throws IOException
@@ -326,34 +335,25 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   /**
    * Add an additional '../' to every timeseries path.
    */
-  private void fixTimeseriesLinks( ) throws Exception
-  {
-    final NaModell naModel = m_data.loadNaModel();
-
-    final IStatus log = fixTimeseriesLinks( naModel );
-    getLog().add( log );
-
-    m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
-    getLog().add( IStatus.INFO, "Timeseries links have been updated." );
-
-    naModel.getWorkspace().dispose();
-  }
-
-  static IStatus fixTimeseriesLinks( final NaModell naModel )
+  static void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
   {
     final ITimeseriesVisitor visitor = new FixDotDotTimeseriesVisitor();
 
     final TimeseriesWalker walker = new TimeseriesWalker( visitor );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
-    return walker.getStatus();
+    final IStatus status = walker.getStatus();
+    log.add( status );
   }
 
-  private void guessCatchmentModel( )
+  private void guessCatchmentModel( final NaModell naModel )
   {
-    final CatchmentModelBuilder builder = new CatchmentModelBuilder( m_catchmentModel, m_targetCalcCaseDir );
+    if( m_catchmentModel == null )
+      return;
 
-    final IStatus status = builder.execute();
+    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, m_catchmentModel, m_targetCalcCaseDir );
 
-    getLog().add( status );
+    getLog().add( builder.execute( Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL ) );
+    getLog().add( builder.execute( Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION ) );
+    getLog().add( builder.execute( Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE ) );
   }
 }
