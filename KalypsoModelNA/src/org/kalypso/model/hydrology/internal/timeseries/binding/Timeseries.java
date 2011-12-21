@@ -98,7 +98,7 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     return getProperty( PROPERTY_TIMESTEP_AMOUNT, Integer.class );
   }
 
-  private void setTimestepAmount( final int amount )
+  private void setTimestepAmount( final Integer amount )
   {
     setProperty( PROPERTY_TIMESTEP_AMOUNT, amount );
   }
@@ -130,6 +130,13 @@ public class Timeseries extends Feature_Impl implements ITimeseries
   @Override
   public void setTimestep( final Period period )
   {
+    if( period == null )
+    {
+      setTimestepAmount( null );
+      setTimestepField( null );
+      return;
+    }
+
     final int amount = PeriodUtils.findCalendarAmount( period );
     final FIELD field = PeriodUtils.findCalendarField( period );
 
