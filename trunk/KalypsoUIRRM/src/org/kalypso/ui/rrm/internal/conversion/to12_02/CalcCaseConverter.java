@@ -60,6 +60,7 @@ import org.kalypso.model.hydrology.binding._11_6.InitialValues;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
@@ -95,13 +96,16 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final String m_chosenExe;
 
-  public CalcCaseConverter( final File sourceDir, final File targetcalcCaseDir, final String chosenExe )
+  private final ICatchmentModel m_catchmentModel;
+
+  public CalcCaseConverter( final File sourceDir, final File targetCalcCaseDir, final String chosenExe, final ICatchmentModel catchmentModel )
   {
     super( sourceDir.getName() );
 
     m_sourceDir = sourceDir;
-    m_targetCalcCaseDir = targetcalcCaseDir;
+    m_targetCalcCaseDir = targetCalcCaseDir;
     m_chosenExe = chosenExe;
+    m_catchmentModel = catchmentModel;
     m_data = new ConverterData( m_targetCalcCaseDir );
   }
 
@@ -130,6 +134,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     convertControls();
 
     fixTimeseriesLinks();
+
+    guessCatchmentModel();
   }
 
   private void copyBasicData( ) throws IOException
@@ -340,5 +346,14 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final TimeseriesWalker walker = new TimeseriesWalker( visitor );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
     return walker.getStatus();
+  }
+
+  private void guessCatchmentModel( )
+  {
+    final CatchmentModelBuilder builder = new CatchmentModelBuilder( m_catchmentModel, m_targetCalcCaseDir );
+
+    final IStatus status = builder.execute();
+
+    getLog().add( status );
   }
 }
