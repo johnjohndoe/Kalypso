@@ -145,6 +145,6 @@ public class TimeseriesBean extends FeatureBean<ITimeseries>
   public static String formatTimeseriesFilename( final String parameterType, final String quality, final Period timestep )
   {
     final String periodText = PeriodUtils.formatDefault( timestep );
-    return String.format( "%s_%s_%s.zmlz", parameterType, periodText, quality );
+    return String.format( "%s_%s_%s.zml", parameterType, periodText, quality );
   }
 }
