@@ -145,7 +145,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   {
     try
     {
-      final File catchmentModelFile = new File( m_targetDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+      final File catchmentModelFile = getCatchmentModelFile();
 
       final GMLWorkspace catchmentModelWorkspace = GmlSerializer.createGMLWorkspace( catchmentModelFile, GmlSerializer.DEFAULT_FACTORY );
 
@@ -154,7 +154,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     catch( final Exception e )
     {
       e.printStackTrace();
-      getLog().add( IStatus.ERROR, "Failed to read catchment model file. Unable to guess catchment models for converted simulations", e );
+      getLog().add( IStatus.WARNING, "Failed to read catchment model file. Unable to guess catchment models for converted simulations", e );
       return null;
     }
   }
@@ -166,15 +166,22 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
     try
     {
-      final File catchmentModelFile = new File( m_targetDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+      final File catchmentModelFile = getCatchmentModelFile();
 
       GmlSerializer.serializeWorkspace( catchmentModelFile, catchmentModel.getWorkspace(), Charsets.UTF_8.name() );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      getLog().add( IStatus.ERROR, "Failed to save catchment model file. Unable to guess catchment models for converted simulations", e );
+      getLog().add( IStatus.WARNING, "Failed to save catchment model file. Unable to guess catchment models for converted simulations", e );
     }
+  }
+
+  private File getCatchmentModelFile( )
+  {
+    final File basisDir = new File( m_targetDir, INaProjectConstants.FOLDER_BASIS );
+    final File catchmentModelFile = new File( basisDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
+    return catchmentModelFile;
   }
 
   /** Copy calc-case template of target */

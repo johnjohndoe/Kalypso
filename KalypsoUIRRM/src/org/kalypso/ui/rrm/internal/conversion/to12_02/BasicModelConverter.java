@@ -149,8 +149,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
   {
     final NaModell naModel = m_data.loadNaModel();
 
-    final IStatus log = CalcCaseConverter.fixTimeseriesLinks( naModel );
-    getLog().add( log );
+    CalcCaseConverter.fixTimeseriesLinks( naModel, getLog() );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     getLog().add( IStatus.INFO, "Timeseries links have been updated." );
