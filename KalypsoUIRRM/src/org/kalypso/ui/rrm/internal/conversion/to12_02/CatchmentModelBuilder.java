@@ -49,6 +49,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.MutablePeriod;
+import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -108,20 +110,28 @@ public class CatchmentModelBuilder
     generator.setAreaNamePath( new GMLXPath( NaModell.QN_NAME ) );
     generator.setAreaDescriptionPath( new GMLXPath( NaModell.QN_DESCRIPTION ) );
 
+
     /* Add catchments */
+    // very big period, so everything is smaller
+    final MutablePeriod smallestPeriod = Period.days( 10000 ).toMutablePeriod();
     final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-        final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType );
+      final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod );
         m_log.add( status );
     }
+
+    /* Use the smallest period of all involved timeseries as timestep for the generator */
+    final int timestepMinutes = smallestPeriod.toPeriod().toStandardMinutes().getMinutes();
+    if( timestepMinutes > 0 )
+      generator.setTimestep( timestepMinutes );
 
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String message = String.format( "Convert catchment model '%s' from existing timeseries references", parameterName );
     return m_log.asMultiStatusOrOK( message, message );
   }
 
-  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType )
+  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep )
   {
     final ZmlLink modelTargetLink = new ZmlLink( modelCatchment, modelTimeseriesLink );
 
@@ -137,6 +147,7 @@ public class CatchmentModelBuilder
     final CatchmentTimeseriesGuesser timeseriesGuesser = new CatchmentTimeseriesGuesser( modelTargetLink, parameterType, m_timeseriesIndex );
     final IStatus guessStatus = timeseriesGuesser.execute();
     final String timeseriesPath = timeseriesGuesser.getResult();
+    final Period timestep = timeseriesGuesser.getResultTimestep();
 
     if( !StringUtils.isBlank( timeseriesPath ) )
     {
@@ -145,6 +156,12 @@ public class CatchmentModelBuilder
       final IFactorizedTimeseries timeseries = timeseriesList.addNew( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
       timeseries.setFactor( new BigDecimal( 100 ) );
       timeseries.setTimeseriesLink( timeseriesPath );
+    }
+
+    if( timestep != null )
+    {
+      if( timestep.toStandardSeconds().getSeconds() < smallestTimestep.toPeriod().toStandardSeconds().getSeconds() )
+        smallestTimestep.setPeriod( timestep );
     }
 
     return guessStatus;
