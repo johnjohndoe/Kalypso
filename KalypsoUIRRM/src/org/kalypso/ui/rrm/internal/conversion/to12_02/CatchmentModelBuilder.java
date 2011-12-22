@@ -42,6 +42,8 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -72,6 +74,8 @@ public class CatchmentModelBuilder
 {
   private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
+  private final Map<String, String> m_generatorIds = new HashMap<>();
+
   private final ICatchmentModel m_catchmentModel;
 
   private final File m_simulationDir;
@@ -79,6 +83,7 @@ public class CatchmentModelBuilder
   private final NaModell m_naModel;
 
   private final TimeseriesIndex m_timeseriesIndex;
+
 
   public CatchmentModelBuilder( final NaModell naModel, final ICatchmentModel catchmentModel, final File simulationDir, final TimeseriesIndex timeseriesIndex )
   {
@@ -93,6 +98,8 @@ public class CatchmentModelBuilder
     /* Create and add new generator */
     final IFeatureBindingCollection<IRainfallGenerator> generators = m_catchmentModel.getGenerators();
     final ILinearSumGenerator generator = generators.addNew( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR, ILinearSumGenerator.class );
+
+    m_generatorIds.put( parameterType, generator.getId() );
 
     generator.setParameterType( parameterType );
     generator.setDescription( m_simulationDir.getName() );
@@ -141,5 +148,14 @@ public class CatchmentModelBuilder
     }
 
     return guessStatus;
+  }
+
+  public String getGeneratorPath( final String parameterType )
+  {
+    final String id = m_generatorIds.get( parameterType );
+    if( id == null )
+      return null;
+
+    return String.format( "%s#%s", INaProjectConstants.GML_CATCHMENT_MODEL_FILE, id );
   }
 }
