@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
-import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.runtime.IPath;
 import org.joda.time.Period;
 
 /**
@@ -56,11 +56,11 @@ public class TimeseriesIndexEntry
 
   private final Period m_timestep;
 
-  private final String m_sourceRef;
+  private final IPath m_relativeSourcePath;
 
-  public TimeseriesIndexEntry( final String sourceRef, final String href, final String parameterType, final Period timestep )
+  public TimeseriesIndexEntry( final IPath relativeSourcePath, final String href, final String parameterType, final Period timestep )
   {
-    m_sourceRef = sourceRef;
+    m_relativeSourcePath = relativeSourcePath;
     m_href = href;
     m_parameterType = parameterType;
     m_timestep = timestep;
@@ -68,7 +68,7 @@ public class TimeseriesIndexEntry
 
   public String getSourceFilename( )
   {
-    return FilenameUtils.getName( m_sourceRef );
+    return m_relativeSourcePath.lastSegment();
   }
 
   public String getHref( )
@@ -84,5 +84,10 @@ public class TimeseriesIndexEntry
   public Period getTimestep( )
   {
     return m_timestep;
+  }
+
+  public String getOldProjectRelativePath( )
+  {
+    return m_relativeSourcePath.toPortableString();
   }
 }
