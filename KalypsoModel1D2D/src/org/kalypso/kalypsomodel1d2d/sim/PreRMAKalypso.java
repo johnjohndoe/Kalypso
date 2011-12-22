@@ -147,12 +147,19 @@ public class PreRMAKalypso implements ISimulation
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
         for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection )
         {
-          final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
-          if( existingCalculationUnit.getGmlID().equals( calcUnitID ) )
+          try
           {
-            controlModel = existingControlModel;
-            calculationUnit = existingControlModel.getCalculationUnit();
-            break;
+            final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
+            if( existingCalculationUnit.getGmlID().equals( calcUnitID ) )
+            {
+              controlModel = existingControlModel;
+              calculationUnit = existingControlModel.getCalculationUnit();
+              break;
+            }
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
           }
         }
       }
