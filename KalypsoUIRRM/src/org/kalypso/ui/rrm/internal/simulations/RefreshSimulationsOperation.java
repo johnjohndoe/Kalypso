@@ -41,7 +41,6 @@
 package org.kalypso.ui.rrm.internal.simulations;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,8 +69,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
-import com.google.common.base.Charsets;
 
 /**
  * @author Gernot Belger
@@ -134,7 +131,10 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
     monitor.beginTask( String.format( "Refreshing simulation: %s", name ), 100 );
 
     /* Build simulation folder */
-    final String encodedName = URLEncoder.encode( name, Charsets.UTF_8.name() );
+    // FIXME: encode does not work, as the gmlSerializer creates URLs from files without encoding, so the encoding will
+    // be lost then
+    // final String encodedName = URLEncoder.encode( name, Charsets.UTF_8.name() );
+    final String encodedName = name;
     final IFolder simulationFolder = m_baseFolder.getFolder( new Path( encodedName ) );
 
     /* Delete existing data */

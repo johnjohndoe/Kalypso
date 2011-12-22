@@ -164,14 +164,15 @@ public class UpdateSimulationWorker
     final DateRange range = getRange( control );
 
     /* Copy observations for pegel and zufluss */
-    copyPegelTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 30 ) );
+    copyPegelTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 20 ) );
 
-    copyZuflussTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 30 ) );
+    copyZuflussTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 20 ) );
 
     /* Execute catchment models */
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL );
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE );
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION );
+    // FIXME: progress monitor
+    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
 
     return Status.OK_STATUS;
   }
@@ -300,10 +301,14 @@ public class UpdateSimulationWorker
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final IFolder calcCaseFolder, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType ) throws CoreException
+  private void executeCatchmentModel( final IFolder calcCaseFolder, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
+      monitor.beginTask( "Apply catchment model", 100 );
+      final String name = TimeseriesUtils.getName( parameterType );
+      monitor.subTask( name );
+
       /* Initialize the generator. */
       initGenerator( control, generator, range, parameterType );
 
@@ -325,6 +330,10 @@ public class UpdateSimulationWorker
       final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to execute catchment model" );
       throw new CoreException( status );
     }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   private void initGenerator( final NAControl control, final IRainfallGenerator generator, final DateRange range, final String parameterType )
@@ -338,8 +347,8 @@ public class UpdateSimulationWorker
     final int amount = timestep.intValue();
 
     /* Add a source filter. */
-    if( Catchment.PROP_TEMPERATURE_LINK.equals( parameterType ) )
-      generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 );
+    if( ITimeseriesConstants.TYPE_TEMPERATURE.equals( parameterType ) )
+      generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 ); //$NON-NLS-1$
     else
       generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
   }
