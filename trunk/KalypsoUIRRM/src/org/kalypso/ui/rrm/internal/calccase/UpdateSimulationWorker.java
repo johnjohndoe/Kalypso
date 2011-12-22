@@ -63,7 +63,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -114,7 +113,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
 /**
  * The worker that actually updates a simulation.
- *
+ * 
  * @author Gernot Belger
  */
 public class UpdateSimulationWorker
@@ -139,7 +138,7 @@ public class UpdateSimulationWorker
    *             <source property="NRepository" from="${startsim}" to="${stopsim}" />
    *         </kalypso.copyObservation>
    *     </target>
-   *
+   * 
    *     <target name="updateObsT" depends="setProperties">
    *         <echo message="aktualisiere Temperaturen (Messung)" />
    *         <delete dir="${calc.dir}/Klima" />
@@ -148,7 +147,7 @@ public class UpdateSimulationWorker
    *             <source property="inObservationLink" from="${startsim}" to="${stopsim}" />
    *         </kalypso.copyObservation>
    *     </target>
-   *
+   * 
    * </pre>
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
@@ -321,7 +320,7 @@ public class UpdateSimulationWorker
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
       /* Execute the rainfall generation operation. */
-      operation.execute( new NullProgressMonitor() );
+      operation.execute( new SubProgressMonitor( monitor, 100 ) );
     }
     catch( final Exception e )
     {
@@ -338,19 +337,30 @@ public class UpdateSimulationWorker
 
   private void initGenerator( final NAControl control, final IRainfallGenerator generator, final DateRange range, final String parameterType )
   {
-    /* Configure the generator. */
-    generator.setPeriod( range );
+    /* The timestep is only defined in linear sum generators for now. */
+    if( !(generator instanceof ILinearSumGenerator) )
+      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." );
 
-    /* Get the timestep. */
-    final Integer timestep = control.getMinutesOfTimestep();
+    /* Cast. */
+    final ILinearSumGenerator gen = (ILinearSumGenerator) generator;
+
+    /* Set the period. */
+    gen.setPeriod( range );
+
+    /* If a timestep in the generator is set, this one is used. */
+    Integer timestep = gen.getTimestep();
+    if( timestep == null )
+      timestep = control.getMinutesOfTimestep();
+
+    /* Get the calendar field and the amount. */
     final String calendarField = CalendarUtilities.getName( Calendar.MINUTE );
     final int amount = timestep.intValue();
 
     /* Add a source filter. */
     if( ITimeseriesConstants.TYPE_TEMPERATURE.equals( parameterType ) )
-      generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 ); //$NON-NLS-1$
+      gen.addInterpolationFilter( calendarField, amount, true, "0.0", 0 ); //$NON-NLS-1$
     else
-      generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
+      gen.addIntervalFilter( calendarField, amount, 0.0, 0 );
   }
 
   private void initTargetLinks( final IFolder calcCaseFolder, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception

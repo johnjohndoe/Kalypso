@@ -68,6 +68,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
   {
     createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
     createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
+    createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
     createParameterTypeControl();
   }
 
@@ -76,7 +77,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
     createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
 
     final LinkedHashMap<String, String> allowedValues = new LinkedHashMap<String, String>();
-    for( String allowedParameterType : ALLOWED_PARAMETER_TYPES )
+    for( final String allowedParameterType : ALLOWED_PARAMETER_TYPES )
     {
       final String allowedParameterLabel = ParameterTypeUtils.formatParameterType( allowedParameterType );
       allowedValues.put( allowedParameterType, allowedParameterLabel );
