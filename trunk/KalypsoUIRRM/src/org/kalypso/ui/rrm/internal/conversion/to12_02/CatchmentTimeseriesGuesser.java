@@ -45,6 +45,7 @@ import java.io.File;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -63,7 +64,7 @@ public class CatchmentTimeseriesGuesser
 
   private final String m_parameterType;
 
-  private String m_result;
+  private TimeseriesIndexEntry m_result;
 
   private final TimeseriesIndex m_index;
 
@@ -76,13 +77,30 @@ public class CatchmentTimeseriesGuesser
 
   public String getResult( )
   {
-    return m_result;
+    if( m_result == null )
+      return null;
+
+    return m_result.getHref();
+  }
+
+  public Period getResultTimestep( )
+  {
+    if( m_result == null )
+      return null;
+
+    return m_result.getTimestep();
   }
 
   public IStatus execute( )
   {
     if( validateTargetLink() )
       m_result = guessTimeseries();
+
+    if( m_result != null )
+    {
+      final String href = m_result.getHref();
+      m_log.add( IStatus.OK, "Found timeseries: %s", null, href );
+    }
 
     // TODO: validate: check if values of existing timeseries correspond to guessed timeseries
 
@@ -108,32 +126,32 @@ public class CatchmentTimeseriesGuesser
     return true;
   }
 
-  private String guessTimeseries( )
+  private TimeseriesIndexEntry guessTimeseries( )
   {
-    final String guess1 = guessByMapping();
+    final TimeseriesIndexEntry guess1 = guessByMapping();
     if( guess1 != null )
       return guess1;
 
-    final String guess2 = guessByValues();
+    final TimeseriesIndexEntry guess2 = guessByValues();
     if( guess2 != null )
       return guess2;
 
     return guessByFilename();
   }
 
-  private String guessByMapping( )
+  private TimeseriesIndexEntry guessByMapping( )
   {
     // TODO: try 1: use mapping file
     return null;
   }
 
-  private String guessByValues( )
+  private TimeseriesIndexEntry guessByValues( )
   {
     // TODO: try 2: search a timeseries that has the right values
     return null;
   }
 
-  private String guessByFilename( )
+  private TimeseriesIndexEntry guessByFilename( )
   {
     m_log.add( IStatus.INFO, "Try to find timeseries by filename" );
 
@@ -147,16 +165,7 @@ public class CatchmentTimeseriesGuesser
 
     // TODO find timeseries with same name and parameterType
     final TimeseriesIndexEntry infos[] = m_index.findTimeseries( existingTimeseriesFilename );
-    final TimeseriesIndexEntry bestGuess = findBuestGuess( infos );
-
-    if( bestGuess == null )
-      return null;
-
-    final String href = bestGuess.getHref();
-
-    m_log.add( IStatus.OK, "Found timeseries: %s", null, href );
-
-    return href;
+    return findBuestGuess( infos );
   }
 
   private TimeseriesIndexEntry findBuestGuess( final TimeseriesIndexEntry[] infos )
