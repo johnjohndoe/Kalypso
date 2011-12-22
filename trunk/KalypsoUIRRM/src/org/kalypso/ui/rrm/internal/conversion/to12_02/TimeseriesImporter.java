@@ -252,8 +252,11 @@ public class TimeseriesImporter
     dataLink.saveObservation( observationWithSource );
 
     /* Add as new entry into timeseries index (used later for catchment guessing) */
-    final String sourceRef = zmlFile.getAbsolutePath();
-    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( sourceRef, dataLink.getHref(), parameterType, timestep );
+    final IPath sourceDirPath = new Path( m_sourceDir.getParent() );
+    final IPath sourcePath = new Path( zmlFile.getAbsolutePath() );
+    final IPath relativeSourcePath = sourcePath.makeRelativeTo( sourceDirPath );
+
+    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep );
     m_timeseriesIndex.addEntry( newEntry );
   }
 

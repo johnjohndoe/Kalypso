@@ -59,9 +59,14 @@ public class TimeseriesIndex
 
   private final Map<String, TimeseriesIndexEntry[]> m_filenameHash = new HashMap<>();
 
+  private final Map<String, TimeseriesIndexEntry> m_oldHrefIndex = new HashMap<>();
+
   public void addEntry( final TimeseriesIndexEntry entry )
   {
     m_entries.add( entry );
+
+    /* Fill old href index */
+    m_oldHrefIndex.put( entry.getOldProjectRelativePath(), entry );
 
     /* Add into filename hash */
     final String filename = entry.getSourceFilename();
@@ -75,5 +80,10 @@ public class TimeseriesIndex
   public TimeseriesIndexEntry[] findTimeseries( final String filename )
   {
     return m_filenameHash.get( filename );
+  }
+
+  public TimeseriesIndexEntry findTimeseriesByOldHref( final String projectRelativePath )
+  {
+    return m_oldHrefIndex.get( projectRelativePath );
   }
 }

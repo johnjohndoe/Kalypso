@@ -98,7 +98,6 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
 
-      copyObservationConf();
       monitor.worked( 5 );
 
       /* Copy timeseries */
@@ -107,6 +106,9 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
       /* timeseries links */
       monitor.subTask( "convert timeseries links" );
+
+      copyObservationConf( m_timeseriesIndex );
+
       fixTimeseries();
       monitor.worked( 5 );
     }
@@ -153,12 +155,12 @@ public class BasicModelConverter extends AbstractLoggingOperation
   /**
    * Copy observationConf.
    */
-  private void copyObservationConf( ) throws IOException
+  private void copyObservationConf( final TimeseriesIndex timeseriesIndex ) throws IOException
   {
-    /* copy observationConfig */
-    final File sourceDir = new File( m_sourceDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
-    final File targetDir = new File( m_targetDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
-    FileUtils.copyDirectory( sourceDir, targetDir, true );
+    final ObservationconfConverter converter = new ObservationconfConverter( timeseriesIndex, m_sourceDir, m_targetDir );
+
+    getLog().add( converter.execute( "ObsQZuMapping.gml" ) );
+    getLog().add( converter.execute( "ObsQMapping.gml" ) );
   }
 
   private void copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException
