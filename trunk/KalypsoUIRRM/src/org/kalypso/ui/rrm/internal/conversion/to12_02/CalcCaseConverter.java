@@ -141,12 +141,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     fixTimeseriesLinks( naModel, getLog() );
     getLog().add( IStatus.INFO, "Timeseries links have been updated." );
 
-    guessCatchmentModel( naModel );
+    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
 
-    addSimulation( newControl );
+    addSimulation( newControl, catchmentModelBuilder );
   }
 
   private void copyBasicData( ) throws IOException
@@ -350,22 +350,30 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     log.add( status );
   }
 
-  private void guessCatchmentModel( final NaModell naModel )
+  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel )
   {
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     if( catchmentModel == null )
-      return;
+      return null;
 
     final TimeseriesIndex timeseriesIndex = m_globalData.getTimeseriesIndex();
 
     final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, m_targetCalcCaseDir, timeseriesIndex );
 
-    getLog().add( builder.execute( Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL ) );
-    getLog().add( builder.execute( Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION ) );
-    getLog().add( builder.execute( Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE ) );
+    gueCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
+    gueCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION );
+    gueCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE );
+
+    return builder;
   }
 
-  private void addSimulation( final NAControl newControl )
+  private void gueCatchmentModel( final CatchmentModelBuilder builder, final QName propLink, final String parameterType )
+  {
+    final IStatus status = builder.execute( propLink, parameterType );
+    getLog().add( status );
+  }
+
+  private void addSimulation( final NAControl newControl, final CatchmentModelBuilder catchmentModelBuilder )
   {
     try
     {
@@ -373,6 +381,18 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       final NAControl simulation = simulations.getSimulations().addNew( NAControl.FEATURE_NACONTROL );
 
       FeatureHelper.copyData( newControl, simulation );
+
+      if( catchmentModelBuilder != null )
+      {
+        final String cmRefN = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_RAINFALL );
+        simulation.setGeneratorReferenceN( cmRefN );
+
+        final String cmRefE = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_EVAPORATION );
+        simulation.setGeneratorReferenceE( cmRefE );
+
+        final String cmRefT = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_TEMPERATURE );
+        simulation.setGeneratorReferenceT( cmRefT );
+      }
 
       simulation.setDescription( m_targetCalcCaseDir.getName() );
     }
