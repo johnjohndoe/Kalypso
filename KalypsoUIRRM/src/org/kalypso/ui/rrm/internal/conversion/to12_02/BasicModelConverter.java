@@ -155,7 +155,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
   /**
    * Copy observationConf.
    */
-  private void copyObservationConf( final TimeseriesIndex timeseriesIndex ) throws IOException
+  private void copyObservationConf( final TimeseriesIndex timeseriesIndex )
   {
     final ObservationconfConverter converter = new ObservationconfConverter( timeseriesIndex, m_sourceDir, m_targetDir );
 
