@@ -168,7 +168,6 @@ public class UpdateSimulationWorker
     copyZuflussTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 20 ) );
 
     /* Execute catchment models */
-    // FIXME: progress monitor
     executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
     executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
     executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
