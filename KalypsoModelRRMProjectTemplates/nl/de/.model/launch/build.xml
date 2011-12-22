@@ -138,8 +138,10 @@
 			<input id="Hydrotop" path=".models/hydrotop.gml" relativeToCalcCase="true" />
 			<input id="Parameter" path=".models/parameter.gml" relativeToCalcCase="true" />
 
-			<input id="NiederschlagDir" path="Niederschlag" relativeToCalcCase="true" />
-			<input id="KlimaDir" path="Klima" relativeToCalcCase="true" />
+			<input id="PrecipitationTimeseries" path="ZR_Niederschlag" relativeToCalcCase="true" />
+			<input id="TemperatureTimeseries" path="ZR_Temperatur" relativeToCalcCase="true" />
+			<input id="EvaporationTimeseries" path="ZR_Verdunstung" relativeToCalcCase="true" />
+			
 			<input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true" />
 			<input id="PegelDir" path="Pegel" relativeToCalcCase="true" />
 			<input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true" />
