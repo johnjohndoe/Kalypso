@@ -52,15 +52,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import com.google.common.base.Charsets;
 
 /**
  * @author Gernot Belger
@@ -71,18 +66,15 @@ public class CalcCasesConverter extends AbstractLoggingOperation
 
   private final File m_targetDir;
 
-  private final String m_chosenExe;
+  private final GlobalConversionData m_globalData;
 
-  private final TimeseriesIndex m_timeseriesIndex;
-
-  public CalcCasesConverter( final File sourceDir, final File targetDir, final String chosenExe, final TimeseriesIndex timeseriesIndex )
+  public CalcCasesConverter( final File sourceDir, final File targetDir, final GlobalConversionData globalData )
   {
     super( Messages.getString( "CalcCasesConverter_0" ) ); //$NON-NLS-1$
 
     m_sourceDir = sourceDir;
     m_targetDir = targetDir;
-    m_chosenExe = chosenExe;
-    m_timeseriesIndex = timeseriesIndex;
+    m_globalData = globalData;
   }
 
   @Override
@@ -92,7 +84,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
     {
       final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "CalcCasesConverter_1" ), 101 ); //$NON-NLS-1$
 
-      final ICatchmentModel catchmentModel = readCatchmentModel();
+      m_globalData.readGlobalModels( m_targetDir, getLog() );
 
       final CalcCaseConvertWalker walker = new CalcCaseConvertWalker( m_sourceDir );
       final File[] calcCases = walker.execute();
@@ -112,7 +104,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         {
           prepareCalcCase( targetDir );
 
-          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_chosenExe, catchmentModel, m_timeseriesIndex );
+          final CalcCaseConverter calcCaseConverter = new CalcCaseConverter( sourceDir, targetDir, m_globalData );
           final IStatus status = calcCaseConverter.execute( progress.newChild( 1 ) );
           getLog().add( status );
         }
@@ -135,56 +127,13 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         }
       }
 
-      saveCatchmentModel( catchmentModel );
+      m_globalData.saveGlobalModels( m_targetDir, getLog() );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       getLog().add( IStatus.ERROR, Messages.getString( "CalcCasesConverter_5" ), e ); //$NON-NLS-1$
     }
-  }
-
-  private ICatchmentModel readCatchmentModel( )
-  {
-    try
-    {
-      final File catchmentModelFile = getCatchmentModelFile();
-
-      final GMLWorkspace catchmentModelWorkspace = GmlSerializer.createGMLWorkspace( catchmentModelFile, GmlSerializer.DEFAULT_FACTORY );
-
-      return (ICatchmentModel) catchmentModelWorkspace.getRootFeature();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      getLog().add( IStatus.WARNING, "Failed to read catchment model file. Unable to guess catchment models for converted simulations", e );
-      return null;
-    }
-  }
-
-  private void saveCatchmentModel( final ICatchmentModel catchmentModel )
-  {
-    if( catchmentModel == null )
-      return;
-
-    try
-    {
-      final File catchmentModelFile = getCatchmentModelFile();
-
-      GmlSerializer.serializeWorkspace( catchmentModelFile, catchmentModel.getWorkspace(), Charsets.UTF_8.name() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      getLog().add( IStatus.WARNING, "Failed to save catchment model file. Unable to guess catchment models for converted simulations", e );
-    }
-  }
-
-  private File getCatchmentModelFile( )
-  {
-    final File basisDir = new File( m_targetDir, INaProjectConstants.FOLDER_BASIS );
-    final File catchmentModelFile = new File( basisDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
-    return catchmentModelFile;
   }
 
   /** Copy calc-case template of target */

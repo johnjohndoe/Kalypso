@@ -60,6 +60,7 @@ import org.kalypso.model.hydrology.binding.InitialValue;
 import org.kalypso.model.hydrology.binding._11_6.InitialValues;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
@@ -75,6 +76,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts one calc case.
@@ -97,21 +99,15 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final ConverterData m_data;
 
-  private final String m_chosenExe;
+  private final GlobalConversionData m_globalData;
 
-  private final ICatchmentModel m_catchmentModel;
-
-  private final TimeseriesIndex m_timeseriesIndex;
-
-  public CalcCaseConverter( final File sourceDir, final File targetCalcCaseDir, final String chosenExe, final ICatchmentModel catchmentModel, final TimeseriesIndex timeseriesIndex )
+  public CalcCaseConverter( final File sourceDir, final File targetCalcCaseDir, final GlobalConversionData globalData )
   {
     super( sourceDir.getName() );
 
     m_sourceDir = sourceDir;
     m_targetCalcCaseDir = targetCalcCaseDir;
-    m_chosenExe = chosenExe;
-    m_catchmentModel = catchmentModel;
-    m_timeseriesIndex = timeseriesIndex;
+    m_globalData = globalData;
 
     m_data = new ConverterData( m_targetCalcCaseDir );
   }
@@ -138,7 +134,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     renameOldResults();
 
     /* Convert old control files */
-    convertControls();
+    final NAControl newControl = convertControls();
 
     final NaModell naModel = m_data.loadNaModel();
 
@@ -149,6 +145,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
+
+    addSimulation( newControl );
   }
 
   private void copyBasicData( ) throws IOException
@@ -230,7 +228,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
   }
 
-  private void convertControls( ) throws Exception
+  private NAControl convertControls( ) throws Exception
   {
     /* Convert Meta control */
     final org.kalypso.model.hydrology.binding._11_6.NAControl metaControl = m_data.loadMetaControl();
@@ -245,6 +243,8 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final NAModellControl newModelControl = convertModelControl( modelControl );
 
     m_data.saveModel( newModelControl, INaCalcCaseConstants.EXPERT_CONTROL_PATH );
+
+    return newMetaControl;
   }
 
   private NAControl convertMetaControl( final org.kalypso.model.hydrology.binding._11_6.NAControl oldControl ) throws GMLSchemaException
@@ -320,11 +320,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
   private void tweakExeVersion( final NAControl newMetaControl )
   {
     final String exeVersion = newMetaControl.getExeVersion();
-    if( m_chosenExe != null )
+    final String chosenExe = m_globalData.getChosenExe();
+    if( chosenExe != null )
     {
-      newMetaControl.setExeVersion( m_chosenExe );
+      newMetaControl.setExeVersion( chosenExe );
 
-      final String statusMsg = Messages.getString( "CalcCaseConverter_2", m_chosenExe, exeVersion ); //$NON-NLS-1$
+      final String statusMsg = Messages.getString( "CalcCaseConverter_2", chosenExe, exeVersion ); //$NON-NLS-1$
       getLog().add( IStatus.OK, statusMsg );
     }
     else
@@ -351,13 +352,34 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void guessCatchmentModel( final NaModell naModel )
   {
-    if( m_catchmentModel == null )
+    final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
+    if( catchmentModel == null )
       return;
 
-    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, m_catchmentModel, m_targetCalcCaseDir, m_timeseriesIndex );
+    final TimeseriesIndex timeseriesIndex = m_globalData.getTimeseriesIndex();
+
+    final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, m_targetCalcCaseDir, timeseriesIndex );
 
     getLog().add( builder.execute( Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL ) );
     getLog().add( builder.execute( Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION ) );
     getLog().add( builder.execute( Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE ) );
+  }
+
+  private void addSimulation( final NAControl newControl )
+  {
+    try
+    {
+      final SimulationCollection simulations = m_globalData.getSimulations();
+      final NAControl simulation = simulations.getSimulations().addNew( NAControl.FEATURE_NACONTROL );
+
+      FeatureHelper.copyData( newControl, simulation );
+
+      simulation.setDescription( m_targetCalcCaseDir.getName() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      getLog().add( IStatus.WARNING, "Failed to add new entry to global simulation table", e );
+    }
   }
 }

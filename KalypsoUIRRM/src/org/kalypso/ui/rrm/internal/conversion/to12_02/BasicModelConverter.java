@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.module.conversion.AbstractLoggingOperation;
@@ -81,11 +82,14 @@ public class BasicModelConverter extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
+    monitor.beginTask( "convert basic data", 100 );
+
     try
     {
+      /* Copy basic .gml files */
+      monitor.subTask( "copy gml files" );
       final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
 
-      /* Copy basic .gml files */
       copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
@@ -94,11 +98,17 @@ public class BasicModelConverter extends AbstractLoggingOperation
       copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
 
-      m_timeseriesIndex = copyBasicTimeseries();
-
       copyObservationConf();
+      monitor.worked( 5 );
 
+      /* Copy timeseries */
+      monitor.subTask( "copy and convert timeseries files" );
+      m_timeseriesIndex = copyBasicTimeseries( new SubProgressMonitor( monitor, 90 ) );
+
+      /* timeseries links */
+      monitor.subTask( "convert timeseries links" );
       fixTimeseries();
+      monitor.worked( 5 );
     }
     finally
     {
@@ -106,26 +116,38 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
   }
 
-  private TimeseriesIndex copyBasicTimeseries( ) throws CoreException
+  private TimeseriesIndex copyBasicTimeseries( final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Converting timeseries", 100 );
+
+    monitor.subTask( "read station file" );
     final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
     importer.readStations();
+    monitor.worked( 5 );
 
     /* Copy known folders */
-    importer.copyTimeseries( "Klima" ); //$NON-NLS-1$
-    importer.copyTimeseries( "Climate" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Klima" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Climate" ); //$NON-NLS-1$
 
-    importer.copyTimeseries( "Ombrometer" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Ombrometer" ); //$NON-NLS-1$
 
-    importer.copyTimeseries( "Pegel" ); //$NON-NLS-1$
-    importer.copyTimeseries( "Gauge" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Pegel" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Gauge" ); //$NON-NLS-1$
 
-    importer.copyTimeseries( "Zufluss" ); //$NON-NLS-1$
-    importer.copyTimeseries( "Tributary" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Zufluss" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, "Tributary" ); //$NON-NLS-1$
 
+    monitor.subTask( "save station file" );
     importer.saveStations();
+    monitor.worked( 5 );
 
     return importer.getIndex();
+  }
+
+  private void copyTimeseries( final TimeseriesImporter importer, final IProgressMonitor monitor, final String folder )
+  {
+    monitor.subTask( String.format( "convert timeseries from folder '%s'", folder ) );
+    importer.copyTimeseries( folder, new SubProgressMonitor( monitor, (90 / 7) ) ); //$NON-NLS-1$
   }
 
   /**

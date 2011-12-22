@@ -90,15 +90,19 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
 
     try
     {
+      /* Convert basic model */
       final BasicModelConverter basicModelConverter = new BasicModelConverter( m_sourceDir, m_targetDir );
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_2" ) ); //$NON-NLS-1$
       final IStatus basicStatus = basicModelConverter.execute( new SubProgressMonitor( monitor, 33 ) );
       getLog().add( basicStatus );
 
+      /* Build global data */
       final TimeseriesIndex timeseriesIndex = basicModelConverter.getTimeseriesIndex();
+      final GlobalConversionData globalData = new GlobalConversionData( m_chosenExe, timeseriesIndex );
 
+      /* Convert calc cases */
       monitor.subTask( Messages.getString( "RrmProjectConverter103to230_3" ) ); //$NON-NLS-1$
-      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, m_chosenExe, timeseriesIndex );
+      final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, globalData );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().add( calcCaseStatus );
     }

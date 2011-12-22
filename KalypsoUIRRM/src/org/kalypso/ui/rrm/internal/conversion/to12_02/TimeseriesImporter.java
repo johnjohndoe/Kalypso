@@ -50,6 +50,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -137,8 +138,11 @@ public class TimeseriesImporter
     }
   }
 
-  public void copyTimeseries( final String folder )
+  public void copyTimeseries( final String folder, final IProgressMonitor monitor )
   {
+    final String name = String.format( "Converting timeseries: %s", folder );
+    monitor.beginTask( name, IProgressMonitor.UNKNOWN );
+
     final File sourceTimeseriesDir = new File( m_sourceDir, folder );
 
     /* Return, if directory does not exist */
@@ -152,6 +156,8 @@ public class TimeseriesImporter
     for( final Iterator<File> iterator = zmlIterator; iterator.hasNext(); )
     {
       final File zmlFile = iterator.next();
+
+      monitor.subTask( zmlFile.getName() );
 
       try
       {
@@ -169,12 +175,16 @@ public class TimeseriesImporter
         final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message, e );
         stati.add( status );
       }
+
+      monitor.worked( 1 );
     }
 
     /* Log it */
     final String message = String.format( "Importing timeseries from '%s'", folder );
     final IStatus status = stati.asMultiStatusOrOK( message, message );
     m_log.add( status );
+
+    monitor.done();
   }
 
   private void importZml( final File baseDir, final File zmlFile ) throws SensorException, CoreException, IOException
