@@ -70,7 +70,6 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
-import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
@@ -116,6 +115,11 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
   private TableViewer m_timeseriesViewer;
 
   /**
+   * The status composite.
+   */
+  protected StatusComposite m_statusComposite;
+
+  /**
    * The selected catchment.
    */
   protected CatchmentBean m_catchmentBean;
@@ -146,6 +150,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     m_detailsGroup = null;
     m_catchmentViewer = null;
     m_timeseriesViewer = null;
+    m_statusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
 
@@ -283,7 +288,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
         if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
         {
           m_catchmentBean = null;
-          updateDetailsGroup( null );
+          updateDetailsGroup();
           return;
         }
 
@@ -291,12 +296,12 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
         if( !(firstElement instanceof CatchmentBean) )
         {
           m_catchmentBean = null;
-          updateDetailsGroup( null );
+          updateDetailsGroup();
           return;
         }
 
         m_catchmentBean = (CatchmentBean) firstElement;
-        updateDetailsGroup( m_catchmentBean );
+        updateDetailsGroup();
       }
     } );
   }
@@ -353,16 +358,16 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
       m_timeseriesViewer.setInput( catchmentBean.getTimeseries() );
 
     /* Create the status composite. */
-    final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
-    statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    m_statusComposite = new StatusComposite( parent, SWT.NONE );
+    m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Set the status. */
     if( catchmentBean == null )
-      statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
     else
     {
       catchmentBean.updateStatus();
-      statusComposite.setStatus( catchmentBean.getStatus() );
+      m_statusComposite.setStatus( catchmentBean.getStatus() );
     }
 
     /* Add a listener. */
@@ -381,8 +386,14 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
       @Override
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
-        catchmentBean.updateStatus();
-        statusComposite.setStatus( catchmentBean.getStatus() );
+        if( m_catchmentBean != null )
+        {
+          m_catchmentBean.updateStatus();
+          m_statusComposite.setStatus( m_catchmentBean.getStatus() );
+        }
+        else
+          m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+
         m_catchmentViewer.refresh();
       }
 
@@ -470,30 +481,41 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     m_detailsGroup = null;
     m_catchmentViewer = null;
     m_timeseriesViewer = null;
+    m_statusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
   }
 
   /**
    * This function updates the details group.
-   * 
-   * @param catchmentBean
-   *          The selected catchment.
    */
-  public void updateDetailsGroup( final CatchmentBean catchmentBean )
+  public void updateDetailsGroup( )
   {
     /* Cannot do anything. */
     if( m_detailsGroup == null || m_detailsGroup.isDisposed() )
       return;
 
-    /* Dispose all children. */
-    ControlUtils.disposeChildren( m_detailsGroup );
+    /* Set the input. */
+    if( m_catchmentBean != null )
+    {
+      m_timeseriesViewer.setInput( m_catchmentBean.getTimeseries() );
+      m_catchmentBean.updateStatus();
+      m_statusComposite.setStatus( m_catchmentBean.getStatus() );
+    }
+    else
+    {
+      m_timeseriesViewer.setInput( new FactorizedTimeseriesBean[] {} );
+      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+    }
 
-    /* Create the content of the details group. */
-    createDetailsContent( m_detailsGroup, catchmentBean );
-
-    /* Layout. */
-    m_detailsGroup.layout();
+    // /* Dispose all children. */
+    // ControlUtils.disposeChildren( m_detailsGroup );
+    //
+    // /* Create the content of the details group. */
+    // createDetailsContent( m_detailsGroup, catchmentBean );
+    //
+    // /* Layout. */
+    // m_detailsGroup.layout();
   }
 
   /**
