@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
- *
+ * 
  * @author Holger Albert
  */
 public interface ILinearSumGenerator extends IRainfallGenerator
@@ -62,6 +62,11 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * The qname of the comment.
    */
   QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" );
+
+  /**
+   * The qname of the timestep.
+   */
+  QName PROPERTY_TIMESTEP = new QName( RcmConstants.NS_CM, "timestep" );
 
   /**
    * The qname of the area name property.
@@ -85,7 +90,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the comment.
-   *
+   * 
    * @return The comment.
    */
   String getComment( );
@@ -93,8 +98,17 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   void setComment( String comment );
 
   /**
+   * This function returns the timestep.
+   * 
+   * @return The timestep.
+   */
+  Integer getTimestep( );
+
+  void setTimestep( Integer timestep );
+
+  /**
    * This function returns the area name property.
-   *
+   * 
    * @return The area name property.
    */
   GMLXPath getAreaNamePath( );
@@ -103,7 +117,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the area description property.
-   *
+   * 
    * @return The area description property.
    */
   GMLXPath getAreaDescriptionPath( );
@@ -112,7 +126,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the area property.
-   *
+   * 
    * @return The area property.
    */
   GMLXPath getAreaPath( );
@@ -121,7 +135,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns all catchments.
-   *
+   * 
    * @return All catchments.
    */
   IFeatureBindingCollection<ICatchment> getCatchments( );

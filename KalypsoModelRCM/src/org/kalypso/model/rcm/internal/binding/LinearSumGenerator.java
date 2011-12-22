@@ -71,7 +71,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
- *
+ * 
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -124,7 +124,6 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         /* Log. */
         if( log != null )
           log.log( new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, message1 ) );
-
 
         /* Memory for the factors and the observations of the catchments. */
         final List<Double> factors = new ArrayList<Double>();
@@ -205,6 +204,18 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   @Override
+  public Integer getTimestep( )
+  {
+    return getProperty( PROPERTY_TIMESTEP, Integer.class );
+  }
+
+  @Override
+  public void setTimestep( final Integer timestep )
+  {
+    setProperty( PROPERTY_TIMESTEP, timestep );
+  }
+
+  @Override
   public GMLXPath getAreaNamePath( )
   {
     return getPath( PROPERTY_AREA_NAME );
@@ -265,7 +276,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * This function converts an array of Doubles to an array of doubles.
-   *
+   * 
    * @param factors
    *          The array of Doubles.
    * @return A array of doubles.
