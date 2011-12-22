@@ -60,7 +60,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -185,13 +184,7 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
       final GMLWorkspace simulationWorkspace = FeatureFactory.createGMLWorkspace( simulationType, null, null );
       final Feature targetFeature = simulationWorkspace.getRootFeature();
 
-      final IPropertyType[] properties = simulationType.getProperties();
-      for( final IPropertyType pt : properties )
-      {
-        final Object value = simulation.getProperty( pt );
-        final Object clonedValue = FeatureHelper.cloneData( simulation, targetFeature, pt, value, null );
-        targetFeature.setProperty( pt, clonedValue );
-      }
+      FeatureHelper.copyData( simulation, targetFeature );
 
       GmlSerializer.saveWorkspace( simulationWorkspace, simulationFile );
     }
