@@ -45,6 +45,7 @@ import java.util.Date;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -244,14 +245,29 @@ public class NAControl extends Feature_Impl
     return getGenerator( PROP_GENERATOR_N );
   }
 
+  public void setGeneratorReferenceN( final String href )
+  {
+    setGeneratorReference( PROP_GENERATOR_N, href );
+  }
+
   public IRainfallGenerator getGeneratorT( )
   {
     return getGenerator( PROP_GENERATOR_T );
   }
 
+  public void setGeneratorReferenceT( final String href )
+  {
+    setGeneratorReference( PROP_GENERATOR_T, href );
+  }
+
   public IRainfallGenerator getGeneratorE( )
   {
     return getGenerator( PROP_GENERATOR_E );
+  }
+
+  public void setGeneratorReferenceE( final String href )
+  {
+    setGeneratorReference( PROP_GENERATOR_E, href );
   }
 
   private IRainfallGenerator getGenerator( final QName prop )
@@ -262,4 +278,18 @@ public class NAControl extends Feature_Impl
 
     return (IRainfallGenerator) xlink.getFeature();
   }
+
+  private void setGeneratorReference( final QName property, final String href )
+  {
+    if( StringUtils.isBlank( href ) )
+    {
+      setProperty( property, null );
+      return;
+    }
+
+    final IRelationType relation = (IRelationType) getFeatureType().getProperty( property );
+    final XLinkedFeature_Impl reference = new XLinkedFeature_Impl( this, relation, relation.getTargetFeatureType(), href );
+    setProperty( property, reference );
+  }
+
 }
