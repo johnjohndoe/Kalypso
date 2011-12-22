@@ -71,7 +71,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
- * 
+ *
  * @author Holger Albert
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
@@ -115,8 +115,11 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         /* Get the catchment. */
         final ICatchment catchment = catchments.get( i );
 
+        // TODO: schöner als die Zahl währe der Name/Beschreibung des Catchments (über die catchment property)
+        // zusätzlich: auch die Gesamtanzahl wäre schön
+
         /* Generate the message 1. */
-        final String message1 = String.format( "Sammle gewichteten Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
+        final String message1 = String.format( "Sammle gewichtete Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
 
         /* Monitor. */
         monitor.subTask( message1 );
@@ -276,7 +279,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   /**
    * This function converts an array of Doubles to an array of doubles.
-   * 
+   *
    * @param factors
    *          The array of Doubles.
    * @return A array of doubles.
