@@ -63,6 +63,7 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
   {
     createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
     createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
+    createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
     createParameterTypeControl();
   }
 
