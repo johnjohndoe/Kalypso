@@ -49,6 +49,9 @@
             <element name="generatorN" type="na:generatorLinkProperty" />
             <element name="generatorT" type="na:generatorLinkProperty" />
             <element name="generatorE" type="na:generatorLinkProperty" />
+
+            <!-- Source for initial values -->
+            <element name="initialValueSource" type="string" minOccurs="0" />
           </sequence>
         </extension>
       </complexContent>
