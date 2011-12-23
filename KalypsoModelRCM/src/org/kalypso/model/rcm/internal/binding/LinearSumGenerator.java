@@ -53,6 +53,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalTime;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
@@ -294,5 +300,41 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     }
 
     return weights;
+  }
+
+  @Override
+  public LocalTime getTimeStamp( )
+  {
+    final String timestampText = getProperty( PROPERTY_TIMESTAMP, String.class );
+    if( StringUtils.isBlank( timestampText ) )
+      return null;
+
+    try
+    {
+      final DateTimeZone zone = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+      final DateTimeFormatter parser = ISODateTimeFormat.localTimeParser().withZone( zone );
+      final LocalTime utcTime = parser.parseLocalTime( timestampText );
+
+      final int offset = zone.getOffset( utcTime.toDateTimeToday().getMillis() );
+
+      final Period offsetPeriod = Period.millis( offset ).normalizedStandard();
+
+      return utcTime.plus( offsetPeriod );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Override
+  public void setTimeStamp( final LocalTime timestamp )
+  {
+    // TODO: check: is zone correctly considered?
+    if( timestamp == null )
+      setProperty( PROPERTY_TIMESTAMP, null );
+    else
+      setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm" ) ); //$NON-NLS-1$
   }
 }

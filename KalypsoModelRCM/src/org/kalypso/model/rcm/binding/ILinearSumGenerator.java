@@ -42,13 +42,14 @@ package org.kalypso.model.rcm.binding;
 
 import javax.xml.namespace.QName;
 
+import org.joda.time.LocalTime;
 import org.kalypso.model.rcm.RcmConstants;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
- * 
+ *
  * @author Holger Albert
  */
 public interface ILinearSumGenerator extends IRainfallGenerator
@@ -56,41 +57,43 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   /**
    * The qname of the linear sum generator.
    */
-  QName FEATURE_LINEAR_SUM_GENERATOR = new QName( RcmConstants.NS_CM, "LinearSumGenerator" );
+  QName FEATURE_LINEAR_SUM_GENERATOR = new QName( RcmConstants.NS_CM, "LinearSumGenerator" ); //$NON-NLS-1$
 
   /**
    * The qname of the comment.
    */
-  QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" );
+  QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" );//$NON-NLS-1$
 
   /**
    * The qname of the timestep.
    */
-  QName PROPERTY_TIMESTEP = new QName( RcmConstants.NS_CM, "timestep" );
+  QName PROPERTY_TIMESTEP = new QName( RcmConstants.NS_CM, "timestep" );//$NON-NLS-1$
+
+  QName PROPERTY_TIMESTAMP = new QName( RcmConstants.NS_CM, "timestamp" );//$NON-NLS-1$
 
   /**
    * The qname of the area name property.
    */
-  QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" );
+  QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" );//$NON-NLS-1$
 
   /**
    * The qname of the area description property.
    */
-  QName PROPERTY_AREA_DESCRIPTION = new QName( RcmConstants.NS_CM, "areaDescriptionProperty" );
+  QName PROPERTY_AREA_DESCRIPTION = new QName( RcmConstants.NS_CM, "areaDescriptionProperty" );//$NON-NLS-1$
 
   /**
    * The qname of the area property.
    */
-  QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" );
+  QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" );//$NON-NLS-1$
 
   /**
    * The qname of the catchment member.
    */
-  QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" );
+  QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" );//$NON-NLS-1$
 
   /**
    * This function returns the comment.
-   * 
+   *
    * @return The comment.
    */
   String getComment( );
@@ -99,12 +102,22 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the timestep.
-   * 
+   *
    * @return The timestep.
    */
   Integer getTimestep( );
 
   void setTimestep( Integer timestep );
+
+  /**
+   * Timestamp for daily values.
+   */
+  LocalTime getTimeStamp( );
+
+  /**
+   * Set the timestamp for daily values.
+   */
+  void setTimeStamp( LocalTime timestamp );
 
   /**
    * This function returns the area name property.
@@ -117,7 +130,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the area description property.
-   * 
+   *
    * @return The area description property.
    */
   GMLXPath getAreaDescriptionPath( );
@@ -126,7 +139,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns the area property.
-   * 
+   *
    * @return The area property.
    */
   GMLXPath getAreaPath( );
@@ -135,7 +148,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
 
   /**
    * This function returns all catchments.
-   * 
+   *
    * @return All catchments.
    */
   IFeatureBindingCollection<ICatchment> getCatchments( );
