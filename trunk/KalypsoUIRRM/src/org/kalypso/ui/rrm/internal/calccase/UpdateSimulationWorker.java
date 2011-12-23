@@ -46,7 +46,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,15 +59,20 @@ import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.Period;
+import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -111,9 +115,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
+import com.google.common.base.Charsets;
+
 /**
  * The worker that actually updates a simulation.
- * 
+ *
  * @author Gernot Belger
  */
 public class UpdateSimulationWorker
@@ -127,29 +133,6 @@ public class UpdateSimulationWorker
     m_simulationFolder = simulationFolder;
   }
 
-  /**
-   * <pre>
-   *     <target name="updateOmbrometer" depends="setProperties">
-   *         <!-- updateOmbrometer: ombrometer von Datacenter (oder lokal)-abholen -->
-   *         <echo message="aktualisiere Ombrometer Zeitreihen im Rechenfall" />
-   *         <delete dir="${calc.dir}/Niederschlag" />
-   *         <mkdir dir="${calc.dir}/Niederschlag" />
-   *         <kalypso.copyObservation gml="${project.url}/.model/observationConf/ombrometer.gml" featurePath="ombrometerMember" context="${calc.url}" targetobservationdir="${calc.dir}/Niederschlag" >
-   *             <source property="NRepository" from="${startsim}" to="${stopsim}" />
-   *         </kalypso.copyObservation>
-   *     </target>
-   * 
-   *     <target name="updateObsT" depends="setProperties">
-   *         <echo message="aktualisiere Temperaturen (Messung)" />
-   *         <delete dir="${calc.dir}/Klima" />
-   *         <mkdir dir="${calc.dir}/Klima" />
-   *         <kalypso.copyObservation gml="${project.url}/.model/observationConf/ObsTMapping.gml" featurePath="mappingMember" context="${calc.url}" targetobservationdir="${calc.dir}/Klima">
-   *             <source property="inObservationLink" from="${startsim}" to="${stopsim}" />
-   *         </kalypso.copyObservation>
-   *     </target>
-   * 
-   * </pre>
-   */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Updating calc case", 120 );
@@ -160,27 +143,16 @@ public class UpdateSimulationWorker
     final NaModell model = readModelFile( m_simulationFolder );
     ProgressUtilities.worked( monitor, 20 );
 
-    final DateRange range = getRange( control );
-
     /* Copy observations for pegel and zufluss */
-    copyPegelTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 20 ) );
-
-    copyZuflussTimeseries( m_simulationFolder, range, new SubProgressMonitor( monitor, 20 ) );
+    copyPegelTimeseries( m_simulationFolder, control, new SubProgressMonitor( monitor, 20 ) );
+    copyZuflussTimeseries( m_simulationFolder, control, new SubProgressMonitor( monitor, 20 ) );
 
     /* Execute catchment models */
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, range, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, range, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, range, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
 
     return Status.OK_STATUS;
-  }
-
-  private DateRange getRange( final NAControl control )
-  {
-    final Date simulationStart = control.getSimulationStart();
-    final Date simulationEnd = control.getSimulationEnd();
-
-    return new DateRange( simulationStart, simulationEnd );
   }
 
   private NAControl readControlFile( final IFolder calcCaseFolder ) throws CoreException
@@ -215,7 +187,7 @@ public class UpdateSimulationWorker
     }
   }
 
-  private void copyPegelTimeseries( final IFolder calcCaseFolder, final DateRange sourceRange, final IProgressMonitor monitor ) throws CoreException
+  private void copyPegelTimeseries( final IFolder calcCaseFolder, final NAControl control, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -223,7 +195,8 @@ public class UpdateSimulationWorker
       final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsQMapping.gml", MAPPING_MEMBER );
 
       /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Pegel", "inObservationLink", sourceRange ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Pegel", "inObservationLink", control ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -238,7 +211,7 @@ public class UpdateSimulationWorker
     }
   }
 
-  private void copyZuflussTimeseries( final IFolder calcCaseFolder, final DateRange sourceRange, final IProgressMonitor monitor ) throws CoreException
+  private void copyZuflussTimeseries( final IFolder calcCaseFolder, final NAControl control, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -246,7 +219,7 @@ public class UpdateSimulationWorker
       final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsQZuMapping.gml", MAPPING_MEMBER );
 
       /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Zufluss", "inObservationLink", sourceRange ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Zufluss", "inObservationLink", control ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -271,14 +244,19 @@ public class UpdateSimulationWorker
     return (FeatureList) rootFeature.getProperty( memberProperty );
   }
 
-  private CopyObservationFeatureVisitor prepareVisitor( final IFolder calcCaseFolder, final String outputDir, final String sourceLinkName, final DateRange sourceRange )
+  private CopyObservationFeatureVisitor prepareVisitor( final IFolder calcCaseFolder, final String outputDir, final String sourceLinkName, final NAControl control )
   {
     final DateRange forecastRange = null;
 
+    /* *Calculate range */
+    final Integer timestepMinutes = control.getMinutesOfTimestep();
+    final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
+    final DateRange targetRange = getRange( control, timestep, null );
+
     final Source source = new Source();
     source.setProperty( sourceLinkName );
-    source.setFrom( Long.toString( sourceRange.getFrom().getTime() ) );
-    source.setTo( Long.toString( sourceRange.getTo().getTime() ) );
+    source.setFrom( Long.toString( targetRange.getFrom().getTime() ) );
+    source.setTo( Long.toString( targetRange.getTo().getTime() ) );
 
     // REMARK: must be null, so the special NA-ObservationTarget is created
     final GMLXPath targetPath = null;
@@ -289,7 +267,7 @@ public class UpdateSimulationWorker
     final URL context = ResourceUtilities.createQuietURL( calcCaseFolder );
     final String tokens = StringUtils.EMPTY;
 
-    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, targetObservationDir, sourceRange, forecastRange );
+    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, targetObservationDir, targetRange, forecastRange );
     final ICopyObservationSource obsSource = new FeatureCopyObservationSource( context, new Source[] { source }, tokens );
 
     final MetadataList metadata = new MetadataList();
@@ -299,16 +277,31 @@ public class UpdateSimulationWorker
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final IFolder calcCaseFolder, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange range, final String parameterType, final IProgressMonitor monitor ) throws CoreException
+  private void executeCatchmentModel( final IFolder calcCaseFolder, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
   {
+    /* The timestep is only defined in linear sum generators for now. */
+    if( !(generator instanceof ILinearSumGenerator) )
+      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." );
+
+    /* Cast. */
+    final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) generator;
+
     try
     {
       monitor.beginTask( "Apply catchment model", 100 );
       final String name = TimeseriesUtils.getName( parameterType );
       monitor.subTask( name );
 
+      /* Calculate date range for filter */
+      final int timestepMinutes = getTimestepMinutes( linearGenerator, control );
+      final LocalTime time = linearGenerator.getTimeStamp();
+      final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
+      // REMARK: TODO: check: we use the timestep of each generator to adjust the range,
+      // this is not exactly what happened before
+      final DateRange range = getRange( control, timestep, time );
+
       /* Initialize the generator. */
-      initGenerator( control, generator, range, parameterType );
+      initGenerator( linearGenerator, range, timestep, parameterType );
 
       /* Initialize the catchment target links. */
       initTargetLinks( calcCaseFolder, generator, targetLink, parameterType );
@@ -331,35 +324,43 @@ public class UpdateSimulationWorker
     finally
     {
       monitor.done();
+
+      try
+      {
+        calcCaseFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+      }
+      catch( final CoreException e )
+      {
+        // REAMRK: give priority to other exception, so we just system out'it
+        e.printStackTrace();
+      }
     }
   }
 
-  private void initGenerator( final NAControl control, final IRainfallGenerator generator, final DateRange range, final String parameterType )
+  private int getTimestepMinutes( final ILinearSumGenerator generator, final NAControl control )
   {
-    /* The timestep is only defined in linear sum generators for now. */
-    if( !(generator instanceof ILinearSumGenerator) )
-      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." );
-
-    /* Cast. */
-    final ILinearSumGenerator gen = (ILinearSumGenerator) generator;
-
-    /* Set the period. */
-    gen.setPeriod( range );
-
     /* If a timestep in the generator is set, this one is used. */
-    Integer timestep = gen.getTimestep();
+    final Integer timestep = generator.getTimestep();
     if( timestep == null )
-      timestep = control.getMinutesOfTimestep();
+      return control.getMinutesOfTimestep();
+
+    return timestep;
+  }
+
+  private void initGenerator( final ILinearSumGenerator generator, final DateRange range, final Period timestep, final String parameterType )
+  {
+    /* Set the period. */
+    generator.setPeriod( range );
 
     /* Get the calendar field and the amount. */
-    final String calendarField = CalendarUtilities.getName( Calendar.MINUTE );
-    final int amount = timestep.intValue();
+    final String calendarField = PeriodUtils.findCalendarField( timestep ).name();
+    final int amount = PeriodUtils.findCalendarAmount( timestep );
 
     /* Add a source filter. */
     if( ITimeseriesConstants.TYPE_TEMPERATURE.equals( parameterType ) )
-      gen.addInterpolationFilter( calendarField, amount, true, "0.0", 0 ); //$NON-NLS-1$
+      generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 ); //$NON-NLS-1$
     else
-      gen.addIntervalFilter( calendarField, amount, 0.0, 0 );
+      generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
   }
 
   private void initTargetLinks( final IFolder calcCaseFolder, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
@@ -456,9 +457,24 @@ public class UpdateSimulationWorker
 
   private String buildLink( final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
   {
-    final String name = TimeseriesUtils.getName( parameterType );
-    final String path = String.format( "../ZR_%s/%s.zml", name, URLEncoder.encode( catchment.getName(), "UTF-8" ) ); //$NON-NLS-1$
-    return path;
+    final String folderName = getTargetLinkFolderName( parameterType );
+
+    return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+  }
+
+  private String getTargetLinkFolderName( final String parameterType )
+  {
+    switch( parameterType )
+    {
+      case ITimeseriesConstants.TYPE_RAINFALL:
+        return "Niederschlag"; // TODO i18n; en = 'Precipitation'
+
+      case ITimeseriesConstants.TYPE_TEMPERATURE:
+      case ITimeseriesConstants.TYPE_EVAPORATION:
+        return "Klima"; // TODO i18n; en = 'Climate'
+    }
+
+    throw new IllegalArgumentException();
   }
 
   private IRainfallCatchmentModel createRainfallModel( final IFolder calcCaseFolder, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
@@ -493,5 +509,48 @@ public class UpdateSimulationWorker
     target.setObservationPath( targetLink.getLocalPart() );
 
     return rainfallModel;
+  }
+
+  /**
+   * Calculates the range for the timeseries to be generated. The range equals the range defined in the simulation
+   * adjusted as follows:
+   * <ul>
+   * <li>1 timestep earlier</li>
+   * <li>3 timesteps later</li>
+   * </ul>
+   */
+  private DateRange getRange( final NAControl control, final Period timestep, final LocalTime timestamp )
+  {
+    final Date simulationStart = control.getSimulationStart();
+    final Date simulationEnd = control.getSimulationEnd();
+
+    final DateTime start = new DateTime( simulationStart );
+    final DateTime end = new DateTime( simulationEnd );
+
+    final DateTime adjustedStart = start.minus( timestep );
+    final DateTime adjustedEnd = end.plus( timestep ).plus( timestep ).plus( timestep );
+
+    if( timestep.getDays() == 0 || timestamp == null )
+      return new DateRange( adjustedStart.toDate(), adjustedEnd.toDate() );
+
+    /* Further adjust range by predefined time */
+    final DateTime startWithTime = adjustedStart.withTime( timestamp.getHourOfDay(), timestamp.getMinuteOfHour(), timestamp.getSecondOfMinute(), timestamp.getMillisOfSecond() );
+    final DateTime endWithTime = adjustedEnd.withTime( timestamp.getHourOfDay(), timestamp.getMinuteOfHour(), timestamp.getSecondOfMinute(), timestamp.getMillisOfSecond() );
+
+    /* New start must always be before unadjusted start, fix, if this is not the case */
+    DateTime startWithTimeFixed;
+    if( startWithTime.isAfter( adjustedStart ) )
+      startWithTimeFixed = startWithTime.minus( timestep );
+    else
+      startWithTimeFixed = startWithTime;
+
+    /* New end must always be after unadjusted end, fix, if this is not the case */
+    DateTime endWithTimeFixed;
+    if( endWithTime.isBefore( adjustedEnd ) )
+      endWithTimeFixed = endWithTime.plus( timestep );
+    else
+      endWithTimeFixed = endWithTime;
+
+    return new DateRange( startWithTimeFixed.toDate(), endWithTimeFixed.toDate() );
   }
 }
