@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,10 +108,6 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
       {
         m_log.add( IStatus.ERROR, "%s: failed to create simulation", e, name );
       }
-      catch( final UnsupportedEncodingException e )
-      {
-        m_log.add( IStatus.ERROR, "%s: Bad folder name", e, name );
-      }
 
       // check for cancel, only after completion of one simulation to avoid inconsistent simulations
       ProgressUtilities.worked( monitor, 0 );
@@ -122,7 +117,7 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
     throw new CoreException( status );
   }
 
-  private IStatus refreshSimulation( final NAControl simulation, final IProgressMonitor monitor ) throws CoreException, UnsupportedEncodingException
+  private IStatus refreshSimulation( final NAControl simulation, final IProgressMonitor monitor ) throws CoreException
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -139,6 +134,7 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
 
     /* Delete existing data */
     // TODO: should we always do that? What about existing results etc.?
+    // TODO: give warning to user!
     if( simulationFolder.exists() )
     {
       monitor.subTask( "delete existing data" );

@@ -84,8 +84,6 @@ public class RrmDiagramView extends ViewPart
     GridLayoutFactory.fillDefaults().applyTo( panel );
 
     createDiagram( panel );
-
-// getSite().setSelectionProvider( m_treeViewer );
   }
 
   @Override
