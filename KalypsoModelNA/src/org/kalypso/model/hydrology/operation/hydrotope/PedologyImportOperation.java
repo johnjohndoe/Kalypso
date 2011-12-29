@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Imports pedology into a 'pedology.gml' file from another gml-workspace (probably a shape-file).
- * 
+ *
  * @author Gernot Belger, Dejan Antanaskovic
  */
 public class PedologyImportOperation extends AbstractImportOperation
@@ -99,9 +99,8 @@ public class PedologyImportOperation extends AbstractImportOperation
     m_soilTypes = soilTypes;
     m_importType = importType;
 
-    final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    m_lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) ); //$NON-NLS-1$
-    m_pt = (IRelationType) schema.getFeatureType( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
+    m_lcFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) ); //$NON-NLS-1$
+    m_pt = (IRelationType) GMLSchemaUtilities.getFeatureTypeQuiet( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
   }
 
   @Override

@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.Geology;
@@ -213,8 +213,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
       int count = 0;
 
-      final IGMLSchema gmlSchema = m_workspace.getGMLSchema();
-      final IFeatureType hydrotopeFT = gmlSchema.getFeatureType( IHydrotope.QNAME );
+      final IFeatureType hydrotopeFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.QNAME );
       final IRelationType sudsMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_SUD_MEMBERS );
       final IRelationType catchmentMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_CATCHMENT_MEMBER );
 

@@ -56,6 +56,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAOptimize;
@@ -280,7 +281,7 @@ public class TsFileWriter
     // Kostra-Kachel/ synth. N gebietsabängig
     final String synthNKey = catchment.getSynthZR();
 
-    final IFeatureType syntNft = m_synthNWorkspace.getGMLSchema().getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
+    final IFeatureType syntNft = GMLSchemaUtilities.getFeatureTypeQuiet( NaModelConstants.SYNTHN_STATN_FT );
     statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( syntNft ) ) );
 
     // Performance & readability: linear search loop; first hash the snyt-definitions; then write....

@@ -48,7 +48,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -96,7 +96,7 @@ public class ElementGeometryHelper
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
-   * 
+   *
    * @param command
    *          the {@link CompositeCommand} to be filled
    * @param workspace
@@ -113,13 +113,11 @@ public class ElementGeometryHelper
    */
   public static Feature createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
   {
-    final IGMLSchema schema = workspace.getGMLSchema();
-
-    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFeatureType nodeFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
     final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
 
-    final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
+    final IFeatureType edgeFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( IFE1D2DEdge.QNAME );
     final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
 
     final Feature parentFeature = discModel;
@@ -155,7 +153,7 @@ public class ElementGeometryHelper
   /**
    * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
    * The new {@link IFE1D2DElement} is specified by its geometry.
-   * 
+   *
    * @param command
    *          the {@link CompositeCommand} to be filled
    * @param workspace
@@ -169,9 +167,7 @@ public class ElementGeometryHelper
   @SuppressWarnings("unchecked")
   public static void createAdd1dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
   {
-    final IGMLSchema schema = workspace.getGMLSchema();
-
-    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFeatureType nodeFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
 
     final IFeatureType parentType = parentFeature.getFeatureType();
@@ -234,7 +230,7 @@ public class ElementGeometryHelper
    * {@link CompositeCommand} with the {@link AddFeatureCommand}s for the new nodes. Via a given search distance it is
    * checked, if there are already existing {@link IFE1D2DNode}s in the neighborhood. If this is the case,no new nodes
    * will be generated.
-   * 
+   *
    * @param points
    *          the points
    * @param command

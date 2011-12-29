@@ -63,6 +63,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
@@ -96,7 +97,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class HydrographUtils
 {
@@ -199,10 +200,10 @@ public class HydrographUtils
     }
     return null;
   }
-  
+
   public static IHydrograph createNewHydrographFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final String name, final String description )
   {
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
+    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrograph.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
 
     /* set the observation components */
@@ -214,7 +215,7 @@ public class HydrographUtils
 
     return hydrograph;
   }
-  
+
   // FIXME: handle saving via pool
   public static Feature createNewHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, GmlSerializeException, IOException, GMLSchemaException
   {

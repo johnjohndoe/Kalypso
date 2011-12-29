@@ -51,6 +51,7 @@ import java.awt.event.KeyEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -294,7 +295,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   /**
    * Return one 2D-Element.
-   * 
+   *
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
@@ -352,7 +353,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the context menu is opened, so the framework must know whether
    * this widget is editing something at the moment or not
-   * 
+   *
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -438,9 +439,9 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
    *      org.kalypsodeegree.model.feature.binding.Feature)
    */
   @Override
-  protected IFlowRelationship createNewFeature( CommandableWorkspace workspace, Feature parentFeature, IRelationType parentRelation, Feature modelElement )
+  protected IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation2D.QNAME );
+    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IWeirFlowRelation2D.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
     final IWeirFlowRelation2D weirRelation = (IWeirFlowRelation2D) newFeature.getAdapter( IWeirFlowRelation2D.class );
     /* Call getObservation once to initialize it */

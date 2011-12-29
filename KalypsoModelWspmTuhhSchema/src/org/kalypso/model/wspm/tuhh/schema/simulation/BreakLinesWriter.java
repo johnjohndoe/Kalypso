@@ -79,7 +79,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * Triangulates the given profile (segments) suing the indicated waterlevel as height. // * @return The min/max range of
  * the waterlevel. <code>null</code>, if no triangulation has been created.
- * 
+ *
  * @author Monika Thül
  */
 public class BreakLinesWriter implements IWspmConstants
@@ -133,7 +133,7 @@ public class BreakLinesWriter implements IWspmConstants
     m_breaklinesWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), null, null ); //$NON-NLS-1$
     final Feature rootFeature = m_breaklinesWorkspace.getRootFeature();
 
-    final String gmlVersion = m_breaklinesWorkspace.getGMLSchema().getGMLVersion();
+    final String gmlVersion = rootFeature.getFeatureType().getGMLSchema().getGMLVersion();
 
     // debug
     GM_Curve lastProfile = null;
