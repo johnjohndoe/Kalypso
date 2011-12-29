@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.model.product"
       label="%Feature.featureName"
-      version="11.6.4.qualifier"
+      version="12.2.0.qualifier"
       provider-name="%Feature.providerName"
       plugin="org.kalypso.model.product">
 
@@ -169,26 +169,10 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.wst.common.core.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.wst.common.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.model.wspm.tuhh.project.template"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
          unpack="false"/>
 
    <plugin
@@ -302,5 +286,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.kalypso.model.wspm.tuhh.project.template"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
