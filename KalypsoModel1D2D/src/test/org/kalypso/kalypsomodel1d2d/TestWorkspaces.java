@@ -47,10 +47,8 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -143,14 +141,8 @@ public class TestWorkspaces
 
   public static GMLWorkspace loadGMLWorkspace( final URL gmlURL, final String schemaLocation ) throws Exception
   {
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final IGMLSchema modelGmlSchema = GMLSchemaUtilities.getSchemaQuiet( UrlCatalogModelSimulationBase.SIM_MODEL_NS );
 
-    final GMLSchema modelGmlSchema = schemaCatalog.getSchema( UrlCatalogModelSimulationBase.SIM_MODEL_NS, (String) null );
-
-    final IFeatureType[] featureTypes = modelGmlSchema.getAllFeatureTypes();
-
-    final GMLWorkspace modelWorkspace = new GMLWorkspace_Impl( modelGmlSchema, featureTypes, null, gmlURL, null, schemaLocation, null );
-
-    return modelWorkspace;
+    return new GMLWorkspace_Impl( modelGmlSchema, null, gmlURL, null, schemaLocation, null );
   }
 }
