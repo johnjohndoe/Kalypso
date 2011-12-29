@@ -164,7 +164,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     // We should change that in Kalypso-NA and get number of parameters from the user
     final int paramCount = 5;
 
-    final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
+    final IFeatureType kmFT = GMLSchemaUtilities.getFeatureTypeQuiet( KMChannel.FEATURE_KM_CHANNEL );
 
     final IPropertyType kmKMStartPT = kmFT.getProperty( KMChannel.PROP_KMSTART );
     final IPropertyType kmKMEndPT = kmFT.getProperty( KMChannel.PROP_KMEND );
