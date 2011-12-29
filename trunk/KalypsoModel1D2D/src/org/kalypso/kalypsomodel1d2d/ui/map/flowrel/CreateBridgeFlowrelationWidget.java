@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
@@ -66,7 +67,7 @@ public class CreateBridgeFlowrelationWidget extends AbstractCreateFlowrelationWi
   protected IBridgeFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
   {
     // TODO: use newAdd method in FeatureWrapperCollection instead?
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IBridgeFlowRelation.QNAME );
+    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IBridgeFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
     final IBridgeFlowRelation buildingRelation = (IBridgeFlowRelation) newFeature.getAdapter( IBridgeFlowRelation.class );
     /* Call getObservation once to initialize it */
@@ -76,7 +77,7 @@ public class CreateBridgeFlowrelationWidget extends AbstractCreateFlowrelationWi
 
 //  /**
 //   * Return one 1D-Element.
-//   * 
+//   *
 //   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
 //   *      org.kalypsodeegree.model.geometry.GM_Point, double)
 //   */

@@ -62,6 +62,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -450,7 +451,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final Feature feature = flowRel;
     final Feature flowRelParentFeature = feature;
     final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
-    final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
+    final IFeatureType flowRelFT = GMLSchemaUtilities.getFeatureTypeQuiet( ITeschkeFlowRelation.QNAME );
     final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
 

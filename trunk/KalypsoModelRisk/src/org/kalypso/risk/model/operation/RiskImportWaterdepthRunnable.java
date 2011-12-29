@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.ConvertAscii2Binary;
@@ -85,7 +86,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( Messages.getString( "org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable.0" ) + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
-        final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
+        final IFeatureType rgcFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( RectifiedGridCoverage.QNAME );
         final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
         final Feature coverageFeature = workspace.createFeature( annualCoverageCollection, parentRelation, rgcFeatureType );
         final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;

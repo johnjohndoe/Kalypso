@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for CalculationReibConstWspmTuhhSteadyState AND CalculationWspmTuhhSteadyState
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalculation
@@ -82,8 +82,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     {
       // neues machen
       final GMLWorkspace workspace = getWorkspace();
-      final IGMLSchema schema = workspace.getGMLSchema();
-      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM, "CalcCreation" ) ); //$NON-NLS-1$
+      final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NS_WSPM, "CalcCreation" ) ); //$NON-NLS-1$
       final IRelationType parentRelation = (IRelationType) getFeatureType().getProperty( qname );
       calcCreationFeature = workspace.createFeature( this, parentRelation, featureType );
       setProperty( qname, calcCreationFeature );

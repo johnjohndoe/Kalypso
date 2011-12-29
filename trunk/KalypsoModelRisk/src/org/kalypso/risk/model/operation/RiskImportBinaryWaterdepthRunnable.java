@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.risk.i18n.Messages;
@@ -30,7 +31,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * Difference RiskImportWaterdepthRunnable: Ascii raster files are already converted to bin files
- * 
+ *
  * @author Thomas Jung
  * @author Dirk Kuch
  */
@@ -87,7 +88,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "HQ " + raster.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( raster.getReturnPeriod() );
-        final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
+        final IFeatureType rgcFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( RectifiedGridCoverage.QNAME );
         final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
         final Feature coverageFeature = workspace.createFeature( annualCoverageCollection, parentRelation, rgcFeatureType );
 

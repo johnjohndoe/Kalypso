@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.logviewer;
 
@@ -49,6 +49,7 @@ import java.util.Vector;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -81,7 +82,7 @@ public class LogFileReader
     {
       e.printStackTrace();
     }
-    final IFeatureType recordFT = logWorkspace.getGMLSchema().getFeatureType( new QName( "http://www.tuhh.de/NAFortranLog", "record" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFeatureType recordFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( "http://www.tuhh.de/NAFortranLog", "record" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final Feature[] recordFEs = logWorkspace.getFeatures( recordFT );
     for( final Feature feature : recordFEs )
     {

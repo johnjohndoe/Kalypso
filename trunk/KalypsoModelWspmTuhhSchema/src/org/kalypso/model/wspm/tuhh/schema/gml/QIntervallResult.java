@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -119,9 +119,8 @@ public class QIntervallResult extends Feature_Impl
       return ObservationFeatureFactory.toObservation( propertyValue );
 
     final GMLWorkspace workspace = getWorkspace();
-    final IGMLSchema schema = workspace.getGMLSchema();
-    final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
-    final IFeatureType ftObservation = schema.getFeatureType( QNAME_F_WPointsObservation );
+    final IFeatureType ftQIntervallResult = GMLSchemaUtilities.getFeatureTypeQuiet( QIntervallResult.QNAME_F_QIntervallResult );
+    final IFeatureType ftObservation = GMLSchemaUtilities.getFeatureTypeQuiet( QNAME_F_WPointsObservation );
     final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_pointsMember );
 
     final Feature obsFeature = workspace.createFeature( this, pointsObsRelation, ftObservation );
@@ -147,10 +146,9 @@ public class QIntervallResult extends Feature_Impl
    */
   public void setProfileLink( final IProfileFeature profile )
   {
-    final IGMLSchema schema = getWorkspace().getGMLSchema();
-    final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
+    final IFeatureType ftQIntervallResult = GMLSchemaUtilities.getFeatureTypeQuiet( QIntervallResult.QNAME_F_QIntervallResult );
 
-    final IFeatureType ftProfile = schema.getFeatureType( IProfileFeature.QN_PROFILE );
+    final IFeatureType ftProfile = GMLSchemaUtilities.getFeatureTypeQuiet( IProfileFeature.QN_PROFILE );
     final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_profileMember );
 
     final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
@@ -175,11 +173,10 @@ public class QIntervallResult extends Feature_Impl
   {
     final GMLWorkspace workspace = getWorkspace();
 
-    final IGMLSchema schema = workspace.getGMLSchema();
-    final IFeatureType resultFT = schema.getFeatureType( QNAME_F_QIntervallResult );
+    final IFeatureType resultFT = GMLSchemaUtilities.getFeatureTypeQuiet( QNAME_F_QIntervallResult );
     final IRelationType polynomialRelation = (IRelationType) resultFT.getProperty( QNAME_P_QIntervallResult_polynomialMember );
 
-    final IFeatureType polynomialFT = schema.getFeatureType( IPolynomial1D.QNAME );
+    final IFeatureType polynomialFT = GMLSchemaUtilities.getFeatureTypeQuiet( IPolynomial1D.QNAME );
 
     final Feature polynomialFeature = workspace.createFeature( this, polynomialRelation, polynomialFT );
     workspace.addFeatureAsComposition( this, polynomialRelation, -1, polynomialFeature );
@@ -204,9 +201,8 @@ public class QIntervallResult extends Feature_Impl
       return null;
 
     final GMLWorkspace workspace = getWorkspace();
-    final IGMLSchema schema = workspace.getGMLSchema();
-    final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
-    final IFeatureType ftObservation = schema.getFeatureType( QNAME_F_BuildingObservation );
+    final IFeatureType ftQIntervallResult = GMLSchemaUtilities.getFeatureTypeQuiet( QIntervallResult.QNAME_F_QIntervallResult );
+    final IFeatureType ftObservation = GMLSchemaUtilities.getFeatureTypeQuiet( QNAME_F_BuildingObservation );
     final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_buildingMember );
 
     final Feature obsFeature = workspace.createFeature( this, pointsObsRelation, ftObservation );
