@@ -62,6 +62,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -110,7 +111,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * The handler that converts the RMA-Kalypso element events into discretisation model elements and links
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  * @author ilya
@@ -285,7 +286,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   /**
    * reconstructs 2d flow parameters (2d weir elements)
-   * 
+   *
    * this function implements the reconstruction of 2d parameters with according poly elements
    */
   private void createFlowRels2d( )
@@ -303,15 +304,15 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   /**
    * merges all poly elements of the same building type( weir id > 900 ) into one poly element and creates a new weir
    * flow relationship on this element.
-   * 
+   *
    * after creating of weir flow relationship on new poly element the flow direction is reconstructed from 2d file, the
    * observation is not reconstructed, only initialized
-   * 
-   * 
-   * 
+   *
+   *
+   *
    * lNodePrev lNodeAct +--------->+--------->+ |lPolyPrev | lPoly | | | | | | | | lCommonEdge | | | | | | |
    * +<---------+<---------+ lNodeBckPrev lNodeBckAct
-   * 
+   *
    */
   private IPolyElement< ? , ? > mergeElementsToWeir( final List<Integer> pListElementsIdsRma, final int pIntDegrees )
   {
@@ -452,9 +453,9 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     return null;
   }
 
-  protected IWeirFlowRelation createNew2dWeirFeature( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final int pIntDegrees )
+  protected IWeirFlowRelation createNew2dWeirFeature( final Feature parentFeature, final IRelationType parentRelation, final int pIntDegrees )
   {
-    final IFeatureType newFT = m_flowWorkspace.getFeatureType( IWeirFlowRelation.QNAME );
+    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IWeirFlowRelation.QNAME );
     final Feature newFeature = m_flowWorkspace.createFeature( parentFeature, parentRelation, newFT, -1 );
     final IWeirFlowRelation weirRelation = (IWeirFlowRelation) newFeature.getAdapter( IWeirFlowRelation.class );
 
@@ -468,7 +469,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     final GM_Position flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( pPoly );
     final IRelationType parentRelation = m_flowModel.getFlowRelationsShips().getFeatureList().getPropertyType();
-    final IFlowRelationship flowRel = createNew2dWeirFeature( m_flowWorkspace, m_flowModel, parentRelation, pIntDegrees );
+    final IFlowRelationship flowRel = createNew2dWeirFeature( m_flowModel, parentRelation, pIntDegrees );
 
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
@@ -478,11 +479,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   /**
    * creates 1d flow parameters that was found on 2d model
-   * 
+   *
    * this function implements the reconstruction of 1d parameters on the according 1d elements, profile data are not
    * handled in 2d file, so only the polynomials are created and the flow relationships are not connected to any
    * profiles
-   * 
+   *
    */
   private int createFlowRels1d( )
   {
