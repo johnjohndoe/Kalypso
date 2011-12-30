@@ -27,7 +27,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
 
   protected final IFeatureBindingCollection<IFE1D2DNode> m_nodes = new FeatureBindingCollection<IFE1D2DNode>( this, IFE1D2DNode.class, WB1D2D_PROP_DIRECTEDNODE );
 
-  public FE1D2DEdge( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FE1D2DEdge( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -43,7 +43,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     curEdge.addNode( node1.getId() );
     node1.addContainer( edgeGmlID );
 
-    curEdge.invalidEnvelope();
+    curEdge.setEnvelopesUpdated();
 
     return curEdge;
 
@@ -109,7 +109,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
     nodeList.add( node0.getId() );
     nodeList.add( node1.getId() );
     nodeList.invalidate();
-    invalidEnvelope();
+    setEnvelopesUpdated();
   }
 
   /**
@@ -159,7 +159,7 @@ public class FE1D2DEdge extends Feature_Impl implements IFE1D2DEdge<IFE1D2DEleme
 
     // changeing the nodes invalidates my geometry
     wrappedList.invalidate();
-    invalidEnvelope();
+    setEnvelopesUpdated();
   }
 
   /**

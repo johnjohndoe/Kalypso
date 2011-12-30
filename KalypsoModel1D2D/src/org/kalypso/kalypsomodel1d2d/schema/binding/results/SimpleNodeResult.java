@@ -191,7 +191,7 @@ public class SimpleNodeResult implements INodeResult
    *      double)
    */
   @Override
-  public void setResultPrevStepValues( double vxPrevStep, double vyPrevStep, double virtDepPrevStep )
+  public void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep )
   {
     m_vxPrevStep = vxPrevStep;
     m_vyPrevStep = vyPrevStep;
@@ -204,7 +204,7 @@ public class SimpleNodeResult implements INodeResult
    *      double)
    */
   @Override
-  public void setTimeDerivativeValues( double vxWRTt, double vyWRTt, double virtDepWRTt )
+  public void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt )
   {
     m_dvxdt = vxWRTt;
     m_dvydt = vyWRTt;
@@ -217,7 +217,7 @@ public class SimpleNodeResult implements INodeResult
    *      double, double)
    */
   @Override
-  public void setTimeDerivativeValuesPrevStep( double vxWRTtPrevStep, double vyWRTtPrevStep, double virtDepWRTtPrevStep )
+  public void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep )
   {
     m_dvxdtPrevStep = vxWRTtPrevStep;
     m_dvydtPrevStep = vyWRTtPrevStep;
@@ -487,7 +487,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTime(java.util.List)
    */
   @Override
-  public void setVelOverTime( List<Double> velOverTime )
+  public void setVelOverTime( final List<Double> velOverTime )
   {
     m_dVelDt = velOverTime;
     m_dvxdt = velOverTime.get( 0 );
@@ -499,7 +499,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTimePrevStep(java.util.List)
    */
   @Override
-  public void setVelOverTimePrevStep( List<Double> velOverTimePrevStep )
+  public void setVelOverTimePrevStep( final List<Double> velOverTimePrevStep )
   {
     m_dVelDtPrevStep = velOverTimePrevStep;
     m_dvxdtPrevStep = velOverTimePrevStep.get( 0 );
@@ -511,7 +511,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelPrevStep(java.util.List)
    */
   @Override
-  public void setVelPrevStep( List<Double> velPrevStep )
+  public void setVelPrevStep( final List<Double> velPrevStep )
   {
     m_velocityPrevStep = velPrevStep;
     m_vxPrevStep = velPrevStep.get( 0 );
@@ -523,7 +523,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTime(double)
    */
   @Override
-  public void setVirtDepOverTime( double virtDepOverTime )
+  public void setVirtDepOverTime( final double virtDepOverTime )
   {
     m_dDepthDt = virtDepOverTime;
   }
@@ -532,7 +532,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTimePrevStep(double)
    */
   @Override
-  public void setVirtDepOverTimePrevStep( double virtDepOverTimePrevStep )
+  public void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep )
   {
     m_dDepthDtPrevStep = virtDepOverTimePrevStep;
   }
@@ -541,7 +541,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepPrevStep(double)
    */
   @Override
-  public void setVirtDepPrevStep( double virtDepthPrevStep )
+  public void setVirtDepPrevStep( final double virtDepthPrevStep )
   {
     m_depthPrevStep = virtDepthPrevStep;
   }
@@ -631,7 +631,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveDirection(double)
    */
   @Override
-  public void setWaveDirection( double direction )
+  public void setWaveDirection( final double direction )
   {
     m_waveDir = direction;
   }
@@ -640,7 +640,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveHsig(double)
    */
   @Override
-  public void setWaveHsig( double hsig )
+  public void setWaveHsig( final double hsig )
   {
     m_waveHsig = hsig;
   }
@@ -649,7 +649,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWavePeriod(double)
    */
   @Override
-  public void setWavePeriod( double period )
+  public void setWavePeriod( final double period )
   {
     m_wavePer = period;
   }
@@ -659,7 +659,7 @@ public class SimpleNodeResult implements INodeResult
     return m_vxPrevStep;
   }
 
-  public final void setVxPrevStep( double vxPrevStep )
+  public final void setVxPrevStep( final double vxPrevStep )
   {
     m_vxPrevStep = vxPrevStep;
   }
@@ -669,7 +669,7 @@ public class SimpleNodeResult implements INodeResult
     return m_vyPrevStep;
   }
 
-  public final void setVyPrevStep( double vyPrevStep )
+  public final void setVyPrevStep( final double vyPrevStep )
   {
     m_vyPrevStep = vyPrevStep;
   }
@@ -679,7 +679,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvxdt;
   }
 
-  public final void setDvxdt( double dvxdt )
+  public final void setDvxdt( final double dvxdt )
   {
     m_dvxdt = dvxdt;
   }
@@ -689,7 +689,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvydt;
   }
 
-  public final void setDvydt( double dvydt )
+  public final void setDvydt( final double dvydt )
   {
     m_dvydt = dvydt;
   }
@@ -699,7 +699,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvxdtPrevStep;
   }
 
-  public final void setDvxdtPrevStep( double dvxdtPrevStep )
+  public final void setDvxdtPrevStep( final double dvxdtPrevStep )
   {
     m_dvxdtPrevStep = dvxdtPrevStep;
   }
@@ -709,7 +709,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvydtPrevStep;
   }
 
-  public final void setDvydtPrevStep( double dvydtPrevStep )
+  public final void setDvydtPrevStep( final double dvydtPrevStep )
   {
     m_dvydtPrevStep = dvydtPrevStep;
   }
@@ -718,27 +718,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  public Object getProperty( IPropertyType propertyType )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometryProperties()
-   */
-  @Override
-  public GM_Object[] getGeometryProperties( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getDefaultGeometryProperty()
-   */
-  @Override
-  public GM_Object getDefaultGeometryProperty( )
+  public Object getProperty( final IPropertyType propertyType )
   {
     // TODO Auto-generated method stub
     return null;
@@ -789,7 +769,7 @@ public class SimpleNodeResult implements INodeResult
    *      java.lang.Object)
    */
   @Override
-  public void setProperty( IPropertyType propertyType, Object value )
+  public void setProperty( final IPropertyType propertyType, final Object value )
   {
     // TODO Auto-generated method stub
 
@@ -799,7 +779,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(javax.xml.namespace.QName, java.lang.Object)
    */
   @Override
-  public void setProperty( QName propQName, Object value )
+  public void setProperty( final QName propQName, final Object value )
   {
     // TODO Auto-generated method stub
 
@@ -809,7 +789,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(java.lang.String)
    */
   @Override
-  public Object getProperty( String propLocalName )
+  public Object getProperty( final String propLocalName )
   {
     // TODO Auto-generated method stub
     return null;
@@ -819,7 +799,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(java.lang.String, java.lang.Object)
    */
   @Override
-  public void setProperty( String propLocalName, Object value )
+  public void setProperty( final String propLocalName, final Object value )
   {
     // TODO Auto-generated method stub
 
@@ -829,37 +809,21 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(javax.xml.namespace.QName)
    */
   @Override
-  public Object getProperty( QName propQName )
+  public Object getProperty( final QName propQName )
   {
     // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
   @Override
-  public void setWorkspace( GMLWorkspace workspace )
+  public void setWorkspace( final GMLWorkspace workspace )
   {
     // TODO Auto-generated method stub
 
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#invalidEnvelope()
-   */
   @Override
-  public void invalidEnvelope( )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     // TODO Auto-generated method stub
     return null;
@@ -879,7 +843,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
   @Override
-  public void setId( String fid )
+  public void setId( final String fid )
   {
     // TODO Auto-generated method stub
 
@@ -899,7 +863,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  public void setFeatureType( IFeatureType ft )
+  public void setFeatureType( final IFeatureType ft )
   {
     // TODO Auto-generated method stub
 

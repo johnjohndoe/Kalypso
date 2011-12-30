@@ -19,12 +19,12 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * TODO: also make interface for this element
- * 
+ *
  * Provide the default implementation for {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}. Those
  * classes kann be used as java abtract for the subtituable of wb1d2d:FE1D2D_2DElement: wb1d2d:FE1D2DQuadriElement,
  * wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
- * 
- * 
+ *
+ *
  * @author Gernot Belger, Patrice Congo
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
@@ -33,7 +33,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
 {
   private final IFeatureBindingCollection<IFE1D2DEdge> m_edges = new FeatureBindingCollection<IFE1D2DEdge>( this, IFE1D2DEdge.class, WB1D2D_PROP_DIRECTEDEDGE );
 
-  public PolyElement( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public PolyElement( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -61,7 +61,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     }
 
     edgeList.invalidate();
-    invalidEnvelope();
+    setEnvelopesUpdated();
   }
 
   /**
@@ -77,7 +77,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
       return;
     edgeFeatureList.add( edgeID );
     edgeFeatureList.invalidate();
-    invalidEnvelope();
+    setEnvelopesUpdated();
   }
 
   /**

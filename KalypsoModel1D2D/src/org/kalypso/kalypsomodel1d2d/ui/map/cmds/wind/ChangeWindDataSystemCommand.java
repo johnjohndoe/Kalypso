@@ -66,10 +66,10 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * Composite command used to change the wind data model command. This composite takes the responsibility to notifies the
  * commandable workspace about the changes introduced by its sub command
- * 
- * 
+ *
+ *
  * @author ig
- * 
+ *
  */
 public class ChangeWindDataSystemCommand implements ICommand
 {
@@ -106,6 +106,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
+  @Override
   public String getDescription( )
   {
     return m_description;
@@ -114,6 +115,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
+  @Override
   public boolean isUndoable( )
   {
     return isUndoable;
@@ -122,6 +124,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @Override
   @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
@@ -142,7 +145,7 @@ public class ChangeWindDataSystemCommand implements ICommand
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
-                wrappedFeature.invalidEnvelope();
+                wrappedFeature.setEnvelopesUpdated();
               }
             }
           }
@@ -167,6 +170,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
+  @Override
   public void redo( ) throws Exception
   {
     for( final IFeatureChangeCommand command : m_commands )
@@ -185,6 +189,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
+  @Override
   public void undo( ) throws Exception
   {
 
@@ -217,15 +222,15 @@ public class ChangeWindDataSystemCommand implements ICommand
         IFile lIFile;
         try
         {
-          File lFile = new File( lWindDataWrapper.getDataFileURL().toURI() );
-          IPath path = new Path( lFile.getAbsolutePath() );
+          final File lFile = new File( lWindDataWrapper.getDataFileURL().toURI() );
+          final IPath path = new Path( lFile.getAbsolutePath() );
           lIFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
 //          lFile = new IFile( lWindDataWrapper.getDataFileURL().toURI() );
         }
-        catch( URISyntaxException e )
+        catch( final URISyntaxException e )
         {
-          File lFile = new File( lWindDataWrapper.getDataFileURL().getPath() );
-          IPath path = new Path( lFile.getAbsolutePath() );
+          final File lFile = new File( lWindDataWrapper.getDataFileURL().getPath() );
+          final IPath path = new Path( lFile.getAbsolutePath() );
           lIFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
         }
         m_files.add( lIFile );

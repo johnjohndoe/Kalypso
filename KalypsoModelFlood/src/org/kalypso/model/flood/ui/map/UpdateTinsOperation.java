@@ -275,7 +275,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           final Feature fRoot = sourceWorkspace.getRootFeature();
           final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-          final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
+          final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryPropertyValue();
           gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
 
           if( geom instanceof GM_MultiSurface )
@@ -287,7 +287,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
               if( object instanceof Feature )
               {
                 final Feature feat = (Feature) object;
-                final GM_Object[] geometryProperties = feat.getGeometryProperties();
+                final GM_Object[] geometryProperties = feat.getGeometryPropertyValues();
                 if( geometryProperties[0] instanceof GM_MultiSurface )
                 {
                   final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometryProperties[0];
