@@ -94,7 +94,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       /* Add new feature */
       final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class.getName() );
       final Feature parentFeature = events.getParentFeature();
-      final IRelationType parentRelation = events.getFeatureList().getParentFeatureTypeProperty();
+      final IRelationType parentRelation = events.getFeatureList().getPropertyType();
       final IFeatureType featureType = parentRelation.getTargetFeatureType();
       final Feature newEventFeature = workspace.createFeature( parentFeature, parentRelation, featureType, 1 );
 

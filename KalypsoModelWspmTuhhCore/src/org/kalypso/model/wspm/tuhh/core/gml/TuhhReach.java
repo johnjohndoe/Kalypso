@@ -212,7 +212,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   {
     final GMLWorkspace workspace = getWorkspace();
 
-    final IRelationType markerRelation = markerList.getParentFeatureTypeProperty();
+    final IRelationType markerRelation = markerList.getPropertyType();
     final IFeatureType markerFT = markerRelation.getTargetFeatureType();
     final Feature markerFeature = workspace.createFeature( this, markerRelation, markerFT );
 

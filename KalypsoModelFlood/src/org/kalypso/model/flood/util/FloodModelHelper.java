@@ -96,7 +96,7 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList != null && featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
+        if( featureList != null && featureList.getPropertyType().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
           final Feature parentFeature = featureList.getOwner();
           if( parentFeature.getId().equals( runoffEvent.getId() ) )
@@ -154,7 +154,7 @@ public class FloodModelHelper
         final FeatureList featureList = ft.getFeatureList();
         if( featureList == null )
           continue;
-        final QName memberFT = featureList.getParentFeatureTypeProperty().getQName();
+        final QName memberFT = featureList.getPropertyType().getQName();
         if( eventsToRemove != null )
         {
           for( final IRunoffEvent runoffEvent : eventsToRemove )
