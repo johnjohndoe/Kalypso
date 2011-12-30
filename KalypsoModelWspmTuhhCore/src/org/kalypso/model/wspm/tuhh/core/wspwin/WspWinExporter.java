@@ -85,7 +85,7 @@ public final class WspWinExporter
 
   /**
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
-   * 
+   *
    * @param context
    *          Context to resolve links inside the gml structure.
    */
@@ -122,7 +122,7 @@ public final class WspWinExporter
       if( runOffEvent == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12" ) ); //$NON-NLS-1$
 
-      final WspmWaterBody runoffWater = runOffEvent.getParent();
+      final WspmWaterBody runoffWater = runOffEvent.getOwner();
       if( runoffWater != reachWater )
       {
         final String error = String.format( Messages.getString( "WspWinExporter.2" ), runOffEvent.getName(), runoffWater.getName(), reach.getName(), reachWater.getName() ); //$NON-NLS-1$

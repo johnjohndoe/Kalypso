@@ -184,7 +184,7 @@ public class Transformer implements ICoreRunnableWithProgress
 
     // fire event for roughness changes
     // TODO Patrice check it
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getParent(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getOwner(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // TODO: also post the adds as commands to the dataProvider
 
     //

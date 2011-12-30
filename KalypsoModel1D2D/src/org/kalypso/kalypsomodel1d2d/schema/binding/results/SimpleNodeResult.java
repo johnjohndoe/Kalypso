@@ -744,19 +744,6 @@ public class SimpleNodeResult implements INodeResult
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getParent()
-   */
-  @Override
-  public Feature getParent( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getParentRelation()
-   */
   @Override
   public IRelationType getParentRelation( )
   {
@@ -764,10 +751,6 @@ public class SimpleNodeResult implements INodeResult
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(org.kalypso.gmlschema.property.IPropertyType,
-   *      java.lang.Object)
-   */
   @Override
   public void setProperty( final IPropertyType propertyType, final Object value )
   {

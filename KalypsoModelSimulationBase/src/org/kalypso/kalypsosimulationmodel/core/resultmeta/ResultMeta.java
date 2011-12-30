@@ -52,31 +52,25 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public abstract class ResultMeta extends UnversionedModel implements IResultMeta
 {
   private final IFeatureBindingCollection<IResultMeta> m_children = new FeatureBindingCollection<IResultMeta>( this, IResultMeta.class, QNAME_PROP_CHILDREN );
 
-  public ResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public ResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getChildren()
-   */
   @Override
   public IFeatureBindingCollection<IResultMeta> getChildren( )
   {
     return m_children;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getParent()
-   */
   @Override
-  public IResultMeta getParent( )
+  public IResultMeta getOwner( )
   {
     final Feature parentFeature = getOwner();
     if( parentFeature == null )
@@ -134,14 +128,11 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta#getFullPath()
-   */
   @Override
   public IPath getFullPath( )
   {
     final IPath path = getPath();
-    final IResultMeta parent = getParent();
+    final IResultMeta parent = getOwner();
     if( parent == null )
       return path;
 

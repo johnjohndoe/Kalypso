@@ -110,7 +110,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * TODO: remove processing of the map This job processed one 2d-result file. *
- * 
+ *
  * @author Gernot Belger
  */
 public class ProcessResult2DOperation implements ICoreRunnableWithProgress
@@ -447,7 +447,7 @@ public class ProcessResult2DOperation implements ICoreRunnableWithProgress
               if( m_stepResultMeta != null && !ResultMeta1d2dHelper.containsTerrain( m_stepResultMeta ) )
               {
                 /* check if there exists already an entry for terrainTin */
-                final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) m_stepResultMeta.getParent();
+                final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) m_stepResultMeta.getOwner();
 
                 min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
                 max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );

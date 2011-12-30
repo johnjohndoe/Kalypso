@@ -67,7 +67,7 @@ import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class ResultMetaInfoViewer extends Viewer
 {
@@ -257,7 +257,7 @@ public class ResultMetaInfoViewer extends Viewer
     /*
      * if( scenarioResult != null ) { buf.append( "<p>" ); buf.append( "<span color=\"header\" font=\"header\">" +
      * "Szenario: " + scenarioName + "</span>" ); buf.append( "</p>" );
-     * 
+     *
      * buf.append( "<p>" ); buf.append( scenarioDescription ); buf.append( "</p>" ); }
      */
     // CalcUnit
@@ -381,7 +381,7 @@ public class ResultMetaInfoViewer extends Viewer
       return (IScenarioResultMeta) result;
     else
     {
-      final IResultMeta parent = result.getParent();
+      final IResultMeta parent = result.getOwner();
       if( parent != null )
       {
         return getScenarioResultMeta( parent );
@@ -399,7 +399,7 @@ public class ResultMetaInfoViewer extends Viewer
       return (IStepResultMeta) result;
     else
     {
-      final IResultMeta parent = result.getParent();
+      final IResultMeta parent = result.getOwner();
       if( parent != null )
       {
         return getStepResultMeta( parent );

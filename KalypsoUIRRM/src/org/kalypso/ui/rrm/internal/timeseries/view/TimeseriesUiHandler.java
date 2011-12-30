@@ -104,7 +104,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
     // TODO: copy timeseries
 
     /* Delete timeseries */
-    final String stationLabel = m_timeseries.getParent().getDescription();
+    final String stationLabel = m_timeseries.getOwner().getDescription();
     final String deleteMessage = String.format( "Delete timeseries '%s' from station '%s'?", getTreeLabel(), stationLabel );
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );

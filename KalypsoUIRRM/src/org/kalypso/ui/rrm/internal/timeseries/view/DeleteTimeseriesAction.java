@@ -99,7 +99,7 @@ public class DeleteTimeseriesAction extends Action
         timeseries.deleteDataFile();
 
       /* Select parent node */
-      final Object parentStation = m_timeseries[0].getParent();
+      final Object parentStation = m_timeseries[0].getOwner();
       final TreeNode parentNode = new TreeNode( m_model, null, null, parentStation );
       m_model.setSelection( parentNode );
 

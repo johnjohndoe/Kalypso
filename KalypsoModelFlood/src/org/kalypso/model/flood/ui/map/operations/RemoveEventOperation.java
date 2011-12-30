@@ -159,7 +159,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
               final Feature feature = (Feature) object;
 
               // the papa papa of the coverage is the event
-              final Feature parent = feature.getParent().getParent();
+              final Feature parent = feature.getOwner().getOwner();
               if( parent != null )
               {
                 if( parent.getId().equals( event.getId() ) )

@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public interface IResultMeta extends IModel
 {
@@ -73,7 +73,7 @@ public interface IResultMeta extends IModel
   void setStatus( IStatus status );
 
   @Override
-  IResultMeta getParent( );
+  IResultMeta getOwner( );
 
   IFeatureBindingCollection<IResultMeta> getChildren( );
 

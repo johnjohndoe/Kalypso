@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 public class TinReference extends Feature_Impl implements ITinReference
 {
 
-  public TinReference( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public TinReference( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -213,13 +213,10 @@ public class TinReference extends Feature_Impl implements ITinReference
     setProperty( QNAME_PROP_SOURCE_DATE, DateUtilities.toXMLGregorianCalendar( date ) );
   }
 
-  /**
-   * @see org.kalypso.model.flood.binding.ITinReference#getRunoffEvent()
-   */
   @Override
   public IRunoffEvent getRunoffEvent( )
   {
-    final Feature parent = getParent();
+    final Feature parent = getOwner();
     if( parent == null )
       return null;
 

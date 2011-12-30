@@ -90,9 +90,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * 
+ *
  * @author ig
- * 
+ *
  */
 public class WindDataModelSystemEditorComponent
 {
@@ -109,7 +109,7 @@ public class WindDataModelSystemEditorComponent
     {
       if( element instanceof IWindDataModelSystem )
       {
-        String lStrName = ((IWindDataModelSystem) element).getName();
+        final String lStrName = ((IWindDataModelSystem) element).getName();
         final String name = lStrName;
         if( name != null )
           return name;
@@ -118,8 +118,8 @@ public class WindDataModelSystemEditorComponent
       }
       else if( element instanceof IWindDataModel )
       {
-        String lStrName = ((IWindDataModel) element).getName();
-        String lStrDate = ((IWindDataModel) element).getDateStep().toString();
+        final String lStrName = ((IWindDataModel) element).getName();
+        final String lStrDate = ((IWindDataModel) element).getDateStep().toString();
         final String name = lStrName + " " + lStrDate; //$NON-NLS-1$
         if( name != null )
           return name;
@@ -127,7 +127,7 @@ public class WindDataModelSystemEditorComponent
           return ((IWindDataModel) element).getId();
       }
       else
-        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.0" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ 
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.0" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -160,16 +160,17 @@ public class WindDataModelSystemEditorComponent
   {
     m_windModel = (IWindModel) m_dataModel.getData( IWindModel.class.toString() );
     m_arrInternalWindSystemsFeatures = new Feature[m_windModel.getWindDataModelSystems().size()];
-    List<IWindDataModelSystem> lListSystems = m_windModel.getWindDataModelSystems();
+    final List<IWindDataModelSystem> lListSystems = m_windModel.getWindDataModelSystems();
     Collections.sort( lListSystems, new Comparator<IWindDataModelSystem>()
     {
-      public int compare( IWindDataModelSystem o1, IWindDataModelSystem o2 )
+      @Override
+      public int compare( final IWindDataModelSystem o1, final IWindDataModelSystem o2 )
       {
         try
         {
           return o1.getOrder() - o2.getOrder();
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           return -1;
         }
@@ -184,7 +185,7 @@ public class WindDataModelSystemEditorComponent
         m_arrInternalWindSystemsFeatures[i++] = lWindDataModelSystem;
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -192,7 +193,7 @@ public class WindDataModelSystemEditorComponent
 
   private void guiCreateSelectWindModel( final Composite windComposite )
   {
-    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
 
     FormData windSystemFormData = new FormData();
     windSystemFormData.left = new FormAttachment( 0, 5 );
@@ -200,13 +201,14 @@ public class WindDataModelSystemEditorComponent
 
     final Label windSystemModelLabel = new Label( windComposite, SWT.NONE );
 
-    windSystemModelLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.1" ) ); //$NON-NLS-1$ 
+    windSystemModelLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.1" ) ); //$NON-NLS-1$
     windSystemModelLabel.setLayoutData( windSystemFormData );
     //
     m_windSystemListViewer = new TableViewer( windComposite, SWT.FILL | SWT.BORDER | SWT.SCROLL_PAGE );
     final Table windSystemListTable = m_windSystemListViewer.getTable();
     m_windSystemListViewer.setContentProvider( new IStructuredContentProvider()
     {
+      @Override
       public Object[] getElements( final Object inputElement )
       {
         if( !(inputElement instanceof IWindModel) )
@@ -220,10 +222,12 @@ public class WindDataModelSystemEditorComponent
         return lWindSystems.toArray();
       }
 
+      @Override
       public void dispose( )
       {
       }
 
+      @Override
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
       }
@@ -246,6 +250,7 @@ public class WindDataModelSystemEditorComponent
 
     m_windSystemListViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleWindSystemSelectionChanged( (IStructuredSelection) event.getSelection() );
@@ -300,7 +305,7 @@ public class WindDataModelSystemEditorComponent
 
     final Label windModelLabel = new Label( windComposite, SWT.NONE );
 
-    windModelLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.2" ) ); //$NON-NLS-1$ 
+    windModelLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.2" ) ); //$NON-NLS-1$
     windModelLabel.setLayoutData( windFormData );
 
     windFormData = new FormData();
@@ -312,6 +317,7 @@ public class WindDataModelSystemEditorComponent
     final Table windListTable = m_windListViewer.getTable();
     m_windListViewer.setContentProvider( new IStructuredContentProvider()
     {
+      @Override
       public Object[] getElements( final Object inputElement )
       {
         if( !(inputElement instanceof IWindDataModelSystem) )
@@ -325,10 +331,12 @@ public class WindDataModelSystemEditorComponent
         return lWindModels.toArray();
       }
 
+      @Override
       public void dispose( )
       {
       }
 
+      @Override
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
       }
@@ -345,6 +353,7 @@ public class WindDataModelSystemEditorComponent
 
     m_windListViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection() );
@@ -357,7 +366,7 @@ public class WindDataModelSystemEditorComponent
 
     final Button buttonShowActualWindBounding = new Button( windComposite, SWT.PUSH );
 
-    buttonShowActualWindBounding.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.3" ) ); //$NON-NLS-1$ 
+    buttonShowActualWindBounding.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.3" ) ); //$NON-NLS-1$
 
     final Image showWindImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_SHOW );
 
@@ -375,7 +384,7 @@ public class WindDataModelSystemEditorComponent
           {
             m_dataModel.getMapPanel().setBoundingBox( lWindModelSystem.getGridDescriptor().getGM_Envelope( lWindModelSystem.getGridDescriptor().getCoordinateSystem() ) );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
           }
@@ -390,7 +399,7 @@ public class WindDataModelSystemEditorComponent
     windFormData.top = new FormAttachment( buttonShowActualWindBounding, 0 );
     final Button buttonDeleteWind = new Button( windComposite, SWT.PUSH );
 
-    buttonDeleteWind.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.4" ) ); //$NON-NLS-1$ 
+    buttonDeleteWind.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.4" ) ); //$NON-NLS-1$
 
     final Image deleteImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_DELETE );
 
@@ -409,7 +418,7 @@ public class WindDataModelSystemEditorComponent
     } );
 
     m_descriptionGroupText = new Group( windComposite, SWT.SCROLL_PAGE );
-    m_descriptionGroupText.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.5" ) );//$NON-NLS-1$ 
+    m_descriptionGroupText.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.5" ) );//$NON-NLS-1$
 
     windFormData = new FormData();
     windFormData.left = new FormAttachment( 0, 0 );
@@ -421,7 +430,7 @@ public class WindDataModelSystemEditorComponent
     final FormLayout formDescription = new FormLayout();
     m_descriptionGroupText.setLayout( formDescription );
     m_descriptionText = new Text( m_descriptionGroupText, SWT.MULTI | SWT.SCROLL_LINE );
-    m_descriptionText.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.6" ) ); //$NON-NLS-1$ 
+    m_descriptionText.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.WindDataModelSystemEditorComponent.6" ) ); //$NON-NLS-1$
 
     final FormData formDescripData = new FormData();
     formDescripData.left = new FormAttachment( 0, 0 );
@@ -476,7 +485,7 @@ public class WindDataModelSystemEditorComponent
         {
           final IWindDataModel firstElement = (IWindDataModel) selection.getFirstElement();
           m_dataModel.setWindDataModel( firstElement );
-          IWindDataModelSystem lWindSystemParent = (IWindDataModelSystem) firstElement.getParent().getAdapter( IWindDataModelSystem.class );
+          final IWindDataModelSystem lWindSystemParent = (IWindDataModelSystem) firstElement.getOwner().getAdapter( IWindDataModelSystem.class );
           m_descriptionText.setText( firstElement.getDateStep().toString() + "\n" + lWindSystemParent.getDescription() );//$NON-NLS-1$
           m_descriptionText.setToolTipText( lWindSystemParent.getDescription() + "\n" + firstElement.getDateStep().toString() );//$NON-NLS-1$
           m_descriptionText.redraw();
@@ -534,13 +543,14 @@ public class WindDataModelSystemEditorComponent
     /* Also refresh table AFTER models have been deleted */
     windTheme.postCommand( compositeCommand, new Runnable()
     {
+      @Override
       public void run( )
       {
         ViewerUtilities.refresh( windListTableViewer, true );
       }
     } );
 
-    MultiStatus deleteFiles = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, "", null ); //$NON-NLS-1$
+    final MultiStatus deleteFiles = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, "", null ); //$NON-NLS-1$
     if( deleteFiles.isOK() )
     {
       try
@@ -548,7 +558,7 @@ public class WindDataModelSystemEditorComponent
         m_dataModel.saveModels();
         deleteFiles.add( compositeCommand.deleteFiles() );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         deleteFiles.add( new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.4" ), null ) ); //$NON-NLS-1$
       }
@@ -605,6 +615,7 @@ public class WindDataModelSystemEditorComponent
     final TableViewer windListTableViewer = m_windListViewer;
     windTheme.postCommand( compositeCommand, new Runnable()
     {
+      @Override
       public void run( )
       {
         ViewerUtilities.refresh( windListTableViewer, true );
@@ -615,7 +626,7 @@ public class WindDataModelSystemEditorComponent
     {
       m_dataModel.saveModels();
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }

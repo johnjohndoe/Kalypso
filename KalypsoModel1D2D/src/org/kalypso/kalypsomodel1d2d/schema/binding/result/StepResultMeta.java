@@ -56,14 +56,11 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 public class StepResultMeta extends ResultMeta implements IStepResultMeta
 {
  
-  public StepResultMeta( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public StepResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepTime()
-   */
   @Override
   public Date getStepTime( )
   {
@@ -71,9 +68,6 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
     return DateUtilities.toDate( (XMLGregorianCalendar) getProperty( QNAME_PROP_STEP_TIME ) );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#getStepType()
-   */
   @Override
   public STEPTYPE getStepType( )
   {
@@ -82,7 +76,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
       final String value = (String) getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE );
       return value == null || value.isEmpty() ? STEPTYPE.error : STEPTYPE.valueOf( value );
     }
-    catch( IllegalArgumentException e )
+    catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
       
