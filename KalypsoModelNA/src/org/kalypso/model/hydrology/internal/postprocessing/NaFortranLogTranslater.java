@@ -48,14 +48,13 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Translates the id's of the error.gml (written by KalypsoNA.exe) into id's of the KalypsoHydrology model.
@@ -110,8 +109,7 @@ public class NaFortranLogTranslater
     if( m_workspace == null )
       return;
 
-    final IFeatureType recordFT = GMLSchemaUtilities.getFeatureTypeQuiet( QNAME_ERRLOG_RECORD ); //$NON-NLS-1$
-    final Feature[] recordFEs = m_workspace.getFeatures( recordFT );
+    final Feature[] recordFEs = FeatureHelper.getFeaturesWithName( m_workspace, QNAME_ERRLOG_RECORD );
 
     for( final Feature feature : recordFEs )
     {

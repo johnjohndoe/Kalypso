@@ -45,8 +45,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
@@ -70,6 +68,7 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts result timeseries of Kalypso-NA.exe to zml's.
@@ -113,8 +112,6 @@ public class ResultTimeseriesLoader
 
   private void loadTSResults( final TSResultDescriptor descriptor ) throws SensorException
   {
-    final IFeatureType resultFT = GMLSchemaUtilities.getFeatureTypeQuiet( descriptor.getFeatureType() );
-
     final String suffix = descriptor.name();
 
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*" + suffix + "*" }, false, false, true ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -127,7 +124,7 @@ public class ResultTimeseriesLoader
     final BlockTimeSeries ts = new BlockTimeSeries(m_resultsFormat);
     ts.importBlockFile( qgsFiles[0] );
 
-    final Feature[] resultFeatures = m_modelWorkspace.getFeatures( resultFT );
+    final Feature[] resultFeatures = FeatureHelper.getFeaturesWithName( m_modelWorkspace, descriptor.getFeatureType() );
     for( final Feature resultFeature : resultFeatures )
       processResultFeature( resultFeature, descriptor, ts );
   }
