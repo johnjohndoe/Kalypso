@@ -163,7 +163,7 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
       }
     }
     final FeatureList featureList = m_mapActiveTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     m_discretisationModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();

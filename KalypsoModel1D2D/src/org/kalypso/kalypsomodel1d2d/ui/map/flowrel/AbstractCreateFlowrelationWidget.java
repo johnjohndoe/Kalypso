@@ -162,7 +162,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       return;
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
   }
 

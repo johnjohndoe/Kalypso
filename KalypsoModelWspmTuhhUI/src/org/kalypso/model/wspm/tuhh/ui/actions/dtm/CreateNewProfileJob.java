@@ -77,7 +77,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
     final CommandableWorkspace workspace = theme.getWorkspace();
     final FeatureList profileFeatures = theme.getFeatureList();
-    final Feature parentFeature = profileFeatures.getParentFeature();
+    final Feature parentFeature = profileFeatures.getOwner();
     final WspmWaterBody water = ProfileUiUtils.findWaterbody( parentFeature );
     final TuhhReach reach = ProfileUiUtils.findReach( parentFeature );
 

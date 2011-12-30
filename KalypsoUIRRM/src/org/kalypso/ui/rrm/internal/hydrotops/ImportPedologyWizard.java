@@ -123,7 +123,7 @@ public class ImportPedologyWizard extends Wizard implements IWorkbenchWizard
     final File shapeFile = m_wizardPage.getShapeFile();
 
     final InputDescriptor inputDescriptor = new PedologyShapeInputDescriptor( shapeFile, soilTypeProperty );
-    final Feature parentFeature = m_featureList.getParentFeature();
+    final Feature parentFeature = m_featureList.getOwner();
     final SoilTypeCollection lc = (SoilTypeCollection) parentFeature;
 
     final GMLWorkspace pedologyWorkspace = lc.getWorkspace();

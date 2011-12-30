@@ -150,7 +150,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
       /* Convert to an array. */
       final List<Feature> featureList = new ArrayList<Feature>( ombrometerList.size() );
-      final GMLWorkspace workspace = ombrometerList.getParentFeature().getWorkspace();
+      final GMLWorkspace workspace = ombrometerList.getOwner().getWorkspace();
       for( final Object object : ombrometerList )
       {
         final Feature feature = FeatureHelper.getFeature( workspace, object );

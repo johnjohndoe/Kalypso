@@ -57,7 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * @author Gernot Belger
@@ -86,10 +86,10 @@ public class CreateProfileMapHandler extends AbstractHandler
         final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
         selectedProfiles.put( feature, rt );
       }
-      if( selectedObject instanceof IFeatureProperty )
+      if( selectedObject instanceof IFeatureRelation )
       {
-        final Feature feature = ((IFeatureProperty) selectedObject).getParentFeature();
-        final IRelationType rt = ((IFeatureProperty) selectedObject).getPropertyType();
+        final Feature feature = ((IFeatureRelation) selectedObject).getOwner();
+        final IRelationType rt = ((IFeatureRelation) selectedObject).getPropertyType();
         selectedProfiles.put( feature, rt );
       }
     }

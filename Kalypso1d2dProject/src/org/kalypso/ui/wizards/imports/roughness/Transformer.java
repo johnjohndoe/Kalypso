@@ -178,7 +178,7 @@ public class Transformer implements ICoreRunnableWithProgress
 
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
     final FeatureList wrappedList = roughnessPolygonCollection.getFeatureList();
-    final Feature parentFeature = wrappedList.getParentFeature();
+    final Feature parentFeature = wrappedList.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 

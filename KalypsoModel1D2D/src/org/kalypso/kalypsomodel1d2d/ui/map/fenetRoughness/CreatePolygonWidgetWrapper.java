@@ -140,7 +140,7 @@ public class CreatePolygonWidgetWrapper extends AbstractWidget
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = featureTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     if( parentFeature == null )
       return;
 

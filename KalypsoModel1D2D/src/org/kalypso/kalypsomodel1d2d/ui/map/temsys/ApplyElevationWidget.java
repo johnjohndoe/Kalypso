@@ -148,7 +148,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapPanel, NativeTerrainElevationModelWrapper.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     if( terrainElevationTheme != null )
     {
-      final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
+      final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getOwner();
       final ITerrainElevationModelSystem system = (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( ITerrainElevationModelSystem.class );
 
       m_dataModel.setElevationModelSystem( system );

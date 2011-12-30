@@ -98,7 +98,7 @@ public class FloodModelHelper
         final FeatureList featureList = ft.getFeatureList();
         if( featureList != null && featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
-          final Feature parentFeature = featureList.getParentFeature();
+          final Feature parentFeature = featureList.getOwner();
           if( parentFeature.getId().equals( runoffEvent.getId() ) )
             return i;
         }
@@ -123,9 +123,9 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList != null && featureList.getParentFeature() != null )
+        if( featureList != null && featureList.getOwner() != null )
         {
-          final Feature grandPa = featureList.getParentFeature();
+          final Feature grandPa = featureList.getOwner();
           if( grandPa != null && grandPa.getParentRelation() != null && grandPa.getParentRelation().getQName().equals( IRunoffEvent.QNAME_PROP_RESULT_COVERAGES ) )
           {
             final Feature grandGrandPa = grandPa.getOwner();
@@ -159,7 +159,7 @@ public class FloodModelHelper
         {
           for( final IRunoffEvent runoffEvent : eventsToRemove )
           {
-            Feature parentFeature = featureList.getParentFeature();
+            Feature parentFeature = featureList.getOwner();
             while( parentFeature != null )
             {
               if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) && runoffEvent.getId().equals( parentFeature.getId() ) )

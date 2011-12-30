@@ -145,7 +145,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
           final GM_Point maxPoint = MapUtilities.transform( mapPanel, pmax );
 
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition(), minPoint.getCoordinateSystem() );
-          final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
+          final GMLWorkspace workspace = m_featureList.getOwner().getWorkspace();
           final List< ? > result = m_featureList.query( envelope, null );
           final Feature[] selectedFeatures = new Feature[result.size()];
           for( int i = 0; i < selectedFeatures.length; i++ )

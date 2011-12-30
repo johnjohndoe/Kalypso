@@ -181,7 +181,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       if( m_flowTheme != null && m_discModel != null )
       {
         final FeatureList featureList = m_flowTheme.getFeatureList();
-        final Feature parentFeature = featureList.getParentFeature();
+        final Feature parentFeature = featureList.getOwner();
         m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
       }
     }

@@ -121,7 +121,7 @@ public class ImportGeologyWizard extends Wizard implements IWorkbenchWizard
     final File shapeFile = m_wizardPage.getShapeFile();
     final InputDescriptor inputDescriptor = new GeologyShapeInputDescriptor( shapeFile, maxPerculationsRateProperty, gwFactorProperty );
 
-    final Feature parentFeature = m_featureList.getParentFeature();
+    final Feature parentFeature = m_featureList.getOwner();
     final GeologyCollection output = (GeologyCollection) parentFeature;
 
     final GMLWorkspace workspace = output.getWorkspace();

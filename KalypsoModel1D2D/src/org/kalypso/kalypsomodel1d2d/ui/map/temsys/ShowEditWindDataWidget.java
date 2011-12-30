@@ -235,7 +235,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     // KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL );
     if( lWindDataTheme != null )
     {
-      final Feature lWindSystemFeature = lWindDataTheme.getFeatureList().getParentFeature();
+      final Feature lWindSystemFeature = lWindDataTheme.getFeatureList().getOwner();
       final IWindModel lWindModel = (IWindModel) lWindSystemFeature.getAdapter( IWindModel.class );
       if( lWindModel.getWindDataModelSystems().size() > 0 )
       {

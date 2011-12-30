@@ -145,7 +145,7 @@ public class UtilMap
     for( final IKalypsoFeatureTheme theme : loadedKalypsoFeatureThemes )
     {
       final FeatureList featureList = theme.getFeatureList();
-      final Feature modelFeature = featureList == null ? null : featureList.getParentFeature();
+      final Feature modelFeature = featureList == null ? null : featureList.getOwner();
       if( modelFeature != null )
       {
         final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );
