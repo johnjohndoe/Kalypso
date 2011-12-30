@@ -325,7 +325,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       public void run( )
       {
         final Feature parentFeature = m_flowRelCollection;
-        final IRelationType parentRelation = m_flowRelCollection.getFlowRelationsShips().getFeatureList().getParentFeatureTypeProperty();
+        final IRelationType parentRelation = m_flowRelCollection.getFlowRelationsShips().getFeatureList().getPropertyType();
         final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
         if( flowRel == null )

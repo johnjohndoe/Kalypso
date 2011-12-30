@@ -879,4 +879,15 @@ public class SimpleNodeResult implements INodeResult
 
   }
 
+  @Override
+  public Feature getMember( final IRelationType relation )
+  {
+    return null;
+  }
+
+  @Override
+  public Feature getMember( final QName relation )
+  {
+    return null;
+  }
 }

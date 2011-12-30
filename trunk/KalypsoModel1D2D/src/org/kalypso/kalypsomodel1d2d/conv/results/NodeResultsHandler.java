@@ -1289,7 +1289,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
     final Feature parentFeature = m_resultList.getOwner();
-    final IRelationType parentRelation = m_resultList.getParentFeatureTypeProperty();
+    final IRelationType parentRelation = m_resultList.getPropertyType();
 
     try
     {
