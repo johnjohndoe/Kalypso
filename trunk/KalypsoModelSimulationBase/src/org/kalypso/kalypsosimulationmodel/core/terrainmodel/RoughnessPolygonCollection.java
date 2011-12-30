@@ -19,7 +19,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * The default implementation of {@link IRoughnessPolygonCollection} based on {@link FeatureWrapperCollection}
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  */
@@ -27,7 +27,7 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
 {
   public static final QName SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" ); //$NON-NLS-1$
 
-  public RoughnessPolygonCollection( Feature parentFeature )
+  public RoughnessPolygonCollection( final Feature parentFeature )
   {
     super( parentFeature, IRoughnessPolygon.class, SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
   }
@@ -47,11 +47,11 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
       for( int i = 0; i < srcPolygonsList.size(); i++ )
       {
         feature1 = srcPolygonsList.get( i );
-        polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryProperty() );
+        polygon1 = (Polygon) JTSAdapter.export( feature1.getDefaultGeometryPropertyValue() );
         for( int j = i + 1; j < srcPolygonsList.size(); j++ )
         {
           feature2 = srcPolygonsList.get( j );
-          polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryProperty() );
+          polygon2 = (Polygon) JTSAdapter.export( feature2.getDefaultGeometryPropertyValue() );
           final Geometry jtsIntersection = polygon1.intersection( polygon2 );
           if( jtsIntersection.getArea() > 0 )
           {
@@ -83,12 +83,12 @@ public class RoughnessPolygonCollection extends FeatureBindingCollection<IRoughn
       {
         feature1 = srcPolygonsList.get( i );
         roughnessPolygon1 = (IRoughnessPolygon) feature1;
-        polygon1 = (MultiPolygon) JTSAdapter.export( feature1.getDefaultGeometryProperty() );
+        polygon1 = (MultiPolygon) JTSAdapter.export( feature1.getDefaultGeometryPropertyValue() );
         for( int j = i + 1; j < srcPolygonsList.size(); j++ )
         {
           feature2 = srcPolygonsList.get( j );
           roughnessPolygon2 = (IRoughnessPolygon) feature2;
-          polygon2 = (MultiPolygon) JTSAdapter.export( feature2.getDefaultGeometryProperty() );
+          polygon2 = (MultiPolygon) JTSAdapter.export( feature2.getDefaultGeometryPropertyValue() );
           final Geometry jtsIntersection = polygon1.intersection( polygon2 );
           if( jtsIntersection.getArea() > 0 )
           {

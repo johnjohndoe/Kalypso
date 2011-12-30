@@ -141,7 +141,7 @@ public class GeometryRecalculator
     final Feature feature = element;
     if( m_discretisationModelChanges.contains( feature ) )
       return;
-    feature.invalidEnvelope();
+    feature.setEnvelopesUpdated();
     m_discretisationModelChanges.add( feature );
     final String featureID = feature.getId();
     for( final Object object : m_flowRelCollection.getFlowRelationsShips() )
@@ -162,7 +162,7 @@ public class GeometryRecalculator
     final Feature feature = boundaryCondition;
     if( m_flowRelationshipsModelChanges.contains( feature ) )
       return;
-    feature.invalidEnvelope();
+    feature.setEnvelopesUpdated();
     final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( element instanceof IFELine )
     {

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class ContinuityLine1D extends FELine implements IContinuityLine1D
 {
-  public ContinuityLine1D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public ContinuityLine1D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -99,12 +99,12 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     {
       recalculateGeometry( continuityLineNode, neighbour1, neighbour2 );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     nodeList.invalidate();
-    invalidEnvelope();
+    setEnvelopesUpdated();
     return m_nodes;
   }
 
@@ -120,7 +120,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
       list.addAll( getNodes() );
       createFullNodesList( list );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
@@ -156,8 +156,8 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   private GM_Object getGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws GM_Exception
   {
     final GM_Point pointToCreateLineAt = node.getPoint();
-    double xcenter = pointToCreateLineAt.getX();
-    double ycenter = pointToCreateLineAt.getY();
+    final double xcenter = pointToCreateLineAt.getX();
+    final double ycenter = pointToCreateLineAt.getY();
     GM_Point p1 = neighbour1.getPoint();
     GM_Point p2 = neighbour2.getPoint();
 
@@ -169,8 +169,8 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
       p2 = GeometryFactory.createGM_Point( xcenter + (p2.getX() - xcenter) / length2 * length1, ycenter + (p2.getY() - ycenter) / length2 * length1, pointToCreateLineAt.getCoordinateSystem() );
 
     final GM_Point centerpoint = GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2.0, (p1.getY() + p2.getY()) / 2.0, node.getPoint().getCoordinateSystem() );
-    double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
-    double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
+    final double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
+    final double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
 
     GM_Point pointtocreatefrom = null;
     if( length1 >= length2 )
@@ -178,10 +178,10 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     else
       pointtocreatefrom = p2;
 
-    double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
-    double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
-    double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
-    double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
+    final double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
+    final double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
+    final double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
+    final double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
 
     final GM_Position[] positions = new GM_Position[] { GeometryFactory.createGM_Position( x1, y1 ), GeometryFactory.createGM_Position( x2, y2 ) };
     return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );

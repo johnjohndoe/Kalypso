@@ -71,11 +71,11 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * 
+ *
  * Handles the creation of a length section obs from several ({@link GM_TriangulatedSurface) data files and a river line (DAV format).
- * 
+ *
  * @author Thomas Jung
- * 
+ *
  */
 public class LengthSectionHandler2d
 {
@@ -124,7 +124,7 @@ public class LengthSectionHandler2d
       final BigDecimal from = getNumericProperty( feature, fromStationPropertyType );
       final BigDecimal to = getNumericProperty( feature, toStationPropertyType );
 
-      final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+      final GM_Object defaultGeometryProperty = feature.getDefaultGeometryPropertyValue();
       final GM_MultiCurve multiCurve = (GM_MultiCurve) defaultGeometryProperty;
 
       if( multiCurve == null )

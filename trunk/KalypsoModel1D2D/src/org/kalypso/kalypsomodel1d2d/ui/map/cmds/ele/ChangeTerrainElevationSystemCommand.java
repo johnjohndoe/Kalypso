@@ -64,10 +64,10 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 /**
  * Composite command used to change the discretisation command. This composite takes the responsibility to nodifies the
  * commandable workspace about the chnage introduced by its sub command
- * 
- * 
+ *
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class ChangeTerrainElevationSystemCommand implements ICommand
 {
@@ -82,18 +82,18 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   private boolean isUndoable = true;
 
   private boolean m_toDelete = false;
-  
+
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
   private final String m_description;
 
-  private ITerrainElevationModelSystem m_terrainModel;
+  private final ITerrainElevationModelSystem m_terrainModel;
 
   public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final ITerrainElevationModelSystem terrainModel )
   {
     this( commandableWorkspace, model1d2d, terrainModel, DEFAULT_DESCRIPTION );
   }
-  
+
   public ChangeTerrainElevationSystemCommand( final CommandableWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d )
   {
     this( commandableWorkspace, model1d2d, null, DEFAULT_DESCRIPTION );
@@ -154,7 +154,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
-                wrappedFeature.invalidEnvelope();
+                wrappedFeature.setEnvelopesUpdated();
               }
             }
           }
@@ -178,7 +178,7 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
     }
   }
 
-  private void fireElementsRemove( List<Feature> changedFeatures )
+  private void fireElementsRemove( final List<Feature> changedFeatures )
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );

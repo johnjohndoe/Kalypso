@@ -138,7 +138,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
- * 
+ *
  * @author Gernot Belger
  */
 public class ImportWspmWizard extends Wizard implements IWizard
@@ -327,7 +327,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
   /**
    * Searches an already imported profile-network for the given reach.<br>
    * REMARK: at the moment, we just search for a network with the same name as the reach... is there another criterion?
-   * 
+   *
    * @return <code>null</code>, if none was found.
    */
   private IRiverProfileNetwork findExistingNetwork( final IRiverProfileNetworkCollection profNetworkColl, final TuhhReach reach )
@@ -345,7 +345,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   /**
    * Reads a REIB_CONST result and creates polynomial and building parameters (aka 'flow-relations') from it.
-   * 
+   *
    * @param elements
    *          by station Must be sorted in the order of the flow direction
    */
@@ -387,7 +387,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         if( node == null )
         {
           final IStatus status = new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14", station ) ); //$NON-NLS-1$
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( status ); 
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
           flowRel = null;
         }
         else if( buildingObs != null )
@@ -433,7 +433,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return Status.OK_STATUS;
   }
 
- 
+
   private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
   {
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );
@@ -644,7 +644,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           }
         }
 
-        if( !found && ( nodesList.size() == 0 || !( node.getPoint().getX() == nodesList.get( 0 ).getPoint().getX() && node.getPoint().getY() == nodesList.get( 0 ).getPoint().getY() ) ) ) 
+        if( !found && ( nodesList.size() == 0 || !( node.getPoint().getX() == nodesList.get( 0 ).getPoint().getX() && node.getPoint().getY() == nodesList.get( 0 ).getPoint().getY() ) ) )
         {
           /* Create an edge between lastNode and node */
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
@@ -656,7 +656,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           lastNode.addContainer( edge.getId() );
           node.addContainer( edge.getId() );
 
-          edge.invalidEnvelope();
+          edge.setEnvelopesUpdated();
 
           edgeList.add( edge );
 

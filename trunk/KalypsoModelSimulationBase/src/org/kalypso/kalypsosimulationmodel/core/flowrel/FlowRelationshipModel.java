@@ -61,13 +61,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FlowRelationshipModel extends UnversionedModel implements IFlowRelationshipModel
 {
-  private IFeatureBindingCollection<IFlowRelationship> m_flowRelationsShips = new FeatureBindingCollection<IFlowRelationship>( this, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
+  private final IFeatureBindingCollection<IFlowRelationship> m_flowRelationsShips = new FeatureBindingCollection<IFlowRelationship>( this, IFlowRelationship.class, QNAME_PROP_FLOW_REL_MEMBER );
 
-  public FlowRelationshipModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FlowRelationshipModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-  
+
   @Override
   public IFeatureBindingCollection<IFlowRelationship> getFlowRelationsShips( )
   {
@@ -113,7 +113,7 @@ public class FlowRelationshipModel extends UnversionedModel implements IFlowRela
     for( int i = 0; i < foundFeatures.size(); i++ )
     {
       final Feature feature = foundFeatures.get( i );
-      final GM_Object geom = feature.getDefaultGeometryProperty();
+      final GM_Object geom = feature.getDefaultGeometryPropertyValue();
       if( geom != null )
       {
         final GM_Point point = GeometryFactory.createGM_Point( position, geom.getCoordinateSystem() );
