@@ -768,9 +768,6 @@ public class SimpleNodeResult implements INodeResult
 
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(java.lang.String)
-   */
   @Override
   public Object getProperty( final String propLocalName )
   {
@@ -778,19 +775,6 @@ public class SimpleNodeResult implements INodeResult
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(java.lang.String, java.lang.Object)
-   */
-  @Override
-  public void setProperty( final String propLocalName, final Object value )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(javax.xml.namespace.QName)
-   */
   @Override
   public Object getProperty( final QName propQName )
   {
