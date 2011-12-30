@@ -49,11 +49,10 @@ import java.util.Vector;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author huebsch
@@ -82,8 +81,9 @@ public class LogFileReader
     {
       e.printStackTrace();
     }
-    final IFeatureType recordFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( "http://www.tuhh.de/NAFortranLog", "record" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Feature[] recordFEs = logWorkspace.getFeatures( recordFT );
+
+    final QName recordName = new QName( "http://www.tuhh.de/NAFortranLog", "record" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Feature[] recordFEs = FeatureHelper.getFeaturesWithName( logWorkspace, recordName );
     for( final Feature feature : recordFEs )
     {
       final String levelString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "level" ) ); //$NON-NLS-1$ //$NON-NLS-2$

@@ -43,8 +43,7 @@ package org.kalypso.calculation.connector.utils;
 import java.net.URL;
 
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -93,19 +92,9 @@ public final class Connectors
   {
     final String runOffEventID = inputProvider.getInputForID( MODELSPEC_CONNECTOR_NA_WSPM.WSPM_RunoffEventID.name() ).toString();
 
-    final IFeatureType wspmRunoffEventFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( IRunOffEvent.FEATURE_RUNOFF_EVENT );
-    final Feature[] wspmRunoffEvents = workspaceWSPM.getFeatures( wspmRunoffEventFeatureType );
-    for( final Feature feature : wspmRunoffEvents )
-    {
-      if( !(feature instanceof IRunOffEvent) )
-      {
-        continue;
-      }
-
-      final IRunOffEvent event = (IRunOffEvent) feature;
-      if( runOffEventID.equals( event.getId() ) )
-        return event;
-    }
+    final Feature runoffFeature = workspaceWSPM.getFeature( runOffEventID );
+    if( runoffFeature instanceof IRunoffEvent )
+      return (IRunOffEvent) runoffFeature;
 
     return null;
   }

@@ -56,8 +56,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.NAOptimize;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -81,6 +79,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -281,10 +280,9 @@ public class TsFileWriter
     // Kostra-Kachel/ synth. N gebietsabängig
     final String synthNKey = catchment.getSynthZR();
 
-    final IFeatureType syntNft = GMLSchemaUtilities.getFeatureTypeQuiet( NaModelConstants.SYNTHN_STATN_FT );
-    statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( syntNft ) ) );
+    statNList.addAll( Arrays.asList( FeatureHelper.getFeaturesWithName( m_synthNWorkspace, NaModelConstants.SYNTHN_STATN_FT ) ) );
 
-    // Performance & readability: linear search loop; first hash the snyt-definitions; then write....
+    // Performance & readability: linear search loop; first hash the synth-definitions; then write....
 
     for( final Feature statNFE : statNList )
     {
