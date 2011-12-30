@@ -88,7 +88,7 @@ public class WspmTuhhProjectSelection
       return null;
 
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-    return fate.getParentFeature();
+    return fate.getOwner();
   }
 
   public boolean hasProject( )

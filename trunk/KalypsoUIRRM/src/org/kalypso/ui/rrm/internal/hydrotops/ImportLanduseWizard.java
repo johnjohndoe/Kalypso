@@ -124,7 +124,7 @@ public class ImportLanduseWizard extends Wizard implements IWorkbenchWizard
     final File shapeFile = m_wizardPage.getShapeFile();
     final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, landuseProperty, sealingFactorProperty, drainageTypeProperty );
 
-    final Feature parentFeature = m_featureList.getParentFeature();
+    final Feature parentFeature = m_featureList.getOwner();
     final LanduseCollection lc = (LanduseCollection) parentFeature;
 
     final GMLWorkspace landuseWorkspace = lc.getWorkspace();

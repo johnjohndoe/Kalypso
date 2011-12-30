@@ -345,7 +345,7 @@ public class EditWeir2DFlowrelationWidget extends AbstractDelegateWidget
       return;
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     m_flowRelModel = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
 
     final IMapModell mapModell = mapPanel.getMapModell();

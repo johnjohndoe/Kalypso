@@ -220,7 +220,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final FeatureList featureList = m_theme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;

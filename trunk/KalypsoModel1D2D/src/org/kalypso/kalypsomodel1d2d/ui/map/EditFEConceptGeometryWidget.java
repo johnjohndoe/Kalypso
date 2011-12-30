@@ -156,7 +156,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
       return;
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     m_flowRelModel = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
     m_flowWorkspace = m_flowTheme.getWorkspace();
     reinit();

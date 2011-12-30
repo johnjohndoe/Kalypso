@@ -178,7 +178,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
       final FeatureList featureList = ft.getFeatureList();
-      final Feature hydrographsFeature = featureList == null ? null : featureList.getParentFeature();
+      final Feature hydrographsFeature = featureList == null ? null : featureList.getOwner();
 
       if( hydrographsFeature == null )
         return false;
@@ -596,7 +596,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     {
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
       final FeatureList featureList = ft.getFeatureList();
-      final Feature hydrographsFeature = featureList == null ? null : featureList.getParentFeature();
+      final Feature hydrographsFeature = featureList == null ? null : featureList.getOwner();
       if( hydrographsFeature != null )
         setHydrographs( (IHydrographCollection) hydrographsFeature.getAdapter( IHydrographCollection.class ), ft );
     }

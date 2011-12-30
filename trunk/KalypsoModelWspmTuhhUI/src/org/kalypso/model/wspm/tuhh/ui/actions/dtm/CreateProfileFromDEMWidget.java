@@ -179,7 +179,7 @@ public class CreateProfileFromDEMWidget extends AbstractWidget
     if( featureList == null )
       return null;
 
-    final Feature coveragesFeature = featureList.getParentFeature();
+    final Feature coveragesFeature = featureList.getOwner();
 
     return (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }

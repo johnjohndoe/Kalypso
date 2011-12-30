@@ -350,7 +350,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
   private Feature[] getFeatures( final FeatureList featureList )
   {
-    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
 
     final Feature[] result = new Feature[featureList.size()];
     int counter = 0;

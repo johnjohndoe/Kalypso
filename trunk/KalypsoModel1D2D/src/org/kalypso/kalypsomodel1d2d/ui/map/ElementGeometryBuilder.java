@@ -143,7 +143,7 @@ public class ElementGeometryBuilder
   {
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;

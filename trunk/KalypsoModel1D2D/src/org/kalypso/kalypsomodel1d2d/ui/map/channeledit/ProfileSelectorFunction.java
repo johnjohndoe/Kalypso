@@ -107,7 +107,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
 
     // search profile within rectangle
     final FeatureList featureList = profileTheme.getFeatureList();
-    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
 
     final IProfileFeature[] selectedProfiles = m_data.getSelectedProfiles();
     final Set<IProfileFeature> selectedProfileSet = new HashSet<IProfileFeature>( Arrays.asList( selectedProfiles ) );

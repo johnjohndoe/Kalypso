@@ -171,7 +171,7 @@ public class DeleteFeElementsHelper
 
       final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
       final FeatureList lFeatureList = lFlowTheme.getFeatureList();
-      final Feature lParentFeature = lFeatureList.getParentFeature();
+      final Feature lParentFeature = lFeatureList.getOwner();
       final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
 
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )

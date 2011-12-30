@@ -80,7 +80,7 @@ public final class EditRelationUtils
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    final Feature parentFeature = features.getParentFeature();
+    final Feature parentFeature = features.getOwner();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : foundElements )
     {
