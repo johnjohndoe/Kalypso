@@ -783,37 +783,20 @@ public class SimpleNodeResult implements INodeResult
   }
 
   @Override
-  public void setWorkspace( final GMLWorkspace workspace )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public Object getAdapter( final Class adapter )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
-   */
   @Override
   public QName getQualifiedName( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
-   */
   @Override
   public void setId( final String fid )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
