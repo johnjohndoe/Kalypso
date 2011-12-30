@@ -225,7 +225,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       return m_resultParents.get( meta );
     }
 
-    return findScenario( meta.getParent() );
+    return findScenario( meta.getOwner() );
   }
 
   /**
@@ -384,7 +384,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     if( element instanceof IResultMeta )
     {
       final IResultMeta result = (IResultMeta) element;
-      final IResultMeta parentResult = result.getParent();
+      final IResultMeta parentResult = result.getOwner();
       if( parentResult != null )
       {
         return parentResult;

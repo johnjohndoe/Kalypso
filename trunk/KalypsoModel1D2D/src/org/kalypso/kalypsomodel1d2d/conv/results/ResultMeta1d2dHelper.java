@@ -307,7 +307,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * removes the specified result meta entry and all of its children. Files will be removed, too.
-   * 
+   *
    * @param resultMeta
    *          the result entry
    */
@@ -318,7 +318,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * removes the specified result meta entry and all of its children. Files will be removed, too.
-   * 
+   *
    * @param resultMeta
    *          the result entry
    * @param includeOriginal
@@ -330,7 +330,7 @@ public class ResultMeta1d2dHelper
     if( !removeResultMetaFile( resultMeta, removeOriginalRawRes ).isOK() )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.1" ) ); //$NON-NLS-1$
 
-    final IResultMeta parent = resultMeta.getParent();
+    final IResultMeta parent = resultMeta.getOwner();
     if( parent == null )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.2" ) ); //$NON-NLS-1$
 
@@ -341,7 +341,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
-   * 
+   *
    * @param resultMeta
    *          result meta to which the document result is added to
    * @param name
@@ -358,7 +358,7 @@ public class ResultMeta1d2dHelper
    *          min value of the document
    * @param maxValue
    *          max value of the document
-   * 
+   *
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
@@ -381,7 +381,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
-   * 
+   *
    * @param resultMeta
    *          result meta to which the document result is added to
    * @param name
@@ -398,7 +398,7 @@ public class ResultMeta1d2dHelper
    *          min value of the document
    * @param maxValue
    *          max value of the document
-   * 
+   *
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final NodeResultMinMaxCatcher minMaxCatcher )
   {
@@ -621,7 +621,7 @@ public class ResultMeta1d2dHelper
   {
     final IKalypsoTheme[] allThemes = modell.getAllThemes();
 
-    final IResultMeta calcUnitMeta = stepResult.getParent();
+    final IResultMeta calcUnitMeta = stepResult.getOwner();
     final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
 
     for( final IResultMeta stepChild : children )
@@ -714,15 +714,15 @@ public class ResultMeta1d2dHelper
 
   /**
    * parse the given {@link URL} for the standard(Kalypso-RMA-Results) time step pattern
-   * 
+   *
    * @return Date from given {@link URL}, if there is no matching pattern return null
    */
   public static Date interpreteDateFromURL( final URL url )
   {
     try
     {
-      final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP; 
-      final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP; 
+      final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP;
+      final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP;
       final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
       final SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
       final int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
@@ -747,9 +747,9 @@ public class ResultMeta1d2dHelper
   /**
    * parse the time string from the "2d" result file with according format, interprets the date given in Kalypso-RMA
    * format, checks the need for additional day in case of leap year
-   * 
+   *
    * @return {@link Date} interpreted from given line, in case of invalid format or bad string - null
-   * 
+   *
    */
   public static Date interpreteRMA10TimeLine( final String line )
   {
@@ -800,7 +800,7 @@ public class ResultMeta1d2dHelper
    * @param file
    *          {@link FileObject} is the file object to search in, with linePrefix {@link String} will be specified what
    *          kind of line should be found, e.g. "DA" - is the time line according to 2d-files documentation
-   * 
+   *
    * @return {@link String} the first matching line
    */
   public static String findFirstSpecifiedLine2dFile( final FileObject file, final String linePrefix ) throws IOException, URISyntaxException
@@ -946,7 +946,7 @@ public class ResultMeta1d2dHelper
 
   public static boolean containsTerrain( final IStepResultMeta stepResultMeta )
   {
-    for( final IResultMeta resultMetaStep : stepResultMeta.getParent().getChildren() )
+    for( final IResultMeta resultMetaStep : stepResultMeta.getOwner().getChildren() )
     {
       if( resultMetaStep instanceof IDocumentResultMeta )
       {
@@ -988,7 +988,7 @@ public class ResultMeta1d2dHelper
       return (ICalcUnitResultMeta) result;
     else
     {
-      final IResultMeta parent = result.getParent();
+      final IResultMeta parent = result.getOwner();
       if( parent != null )
       {
         return getCalcUnitResultMeta( parent );

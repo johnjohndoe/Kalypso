@@ -90,7 +90,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Wizard to show length sections to the chart view.
- * 
+ *
  * @author Thomas Jung
  */
 public class ConfigureLengthSectionWizard extends Wizard
@@ -223,7 +223,7 @@ public class ConfigureLengthSectionWizard extends Wizard
             }
 
             // for terrain values we have to ask the parent, because the terrain result is assigned to him
-            final IResultMeta parent = stepResult.getParent();
+            final IResultMeta parent = stepResult.getOwner();
             if( parent instanceof ICalcUnitResultMeta )
             {
               final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;

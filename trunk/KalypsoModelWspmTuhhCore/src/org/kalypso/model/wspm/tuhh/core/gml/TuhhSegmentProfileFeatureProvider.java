@@ -50,9 +50,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvider
 {
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public IProfileFeature getProfile( final Feature feature )
   {
@@ -73,16 +70,13 @@ public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvide
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public Object getResult( final Feature feature )
   {
     if( feature == null )
       return null;
 
-    final Feature parent = feature.getParent();
+    final Feature parent = feature.getOwner();
     return WspmResultFactory.createResultNode( null, parent );
   }
 

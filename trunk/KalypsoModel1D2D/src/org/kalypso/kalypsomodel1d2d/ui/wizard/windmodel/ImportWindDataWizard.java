@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.wizard.windmodel;
 
@@ -75,8 +75,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * 
- * 
+ *
+ *
  */
 public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWizardKalypsoImport */
 {
@@ -105,12 +105,13 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
    * <li/>Second element an instance of {@link IFolder}
    * <li/>third element an instance of {@link CommandableWorkspace}
    * </ul>
-   * 
+   *
    * @param workbench
    *          the current workbench
    * @param selection
    *          the current object selection
    */
+  @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     initialSelection = selection;
@@ -153,7 +154,7 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
             final File srcFile = getUTF_DecodedFile( sourcePath.toFile() );
 
             final IWindDataCollectionReader lWindDataConverter = (IWindDataCollectionReader) WindDataConverterFactory.getWindDataConverterForFileType( srcFile.toURI().toURL(), m_destFolder.getLocationURI().toURL(), strFileName.replace( ' ', '_' ), selectedCoordinateSystem );
-            boolean lBoolConvertResult = convertAndCopy( lWindDataConverter );
+            final boolean lBoolConvertResult = convertAndCopy( lWindDataConverter );
             if( !lBoolConvertResult )
             {
               throw new Exception( Messages.getString("ImportWindDataWizard.0") ); //$NON-NLS-1$
@@ -161,13 +162,13 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
 
             final IWindDataModelSystem lWindDataModelSystem = WindDataModelSystem.createWindSystemForWindModel( ImportWindDataWizard.this.m_windModel, lWindDataConverter.getGridDescriptor(), strFileName, strFileDescription );
 
-            List<IWindDataWrapper> lListImportedDataFiles = lWindDataConverter.getCollectionWindDataProviders();
+            final List<IWindDataWrapper> lListImportedDataFiles = lWindDataConverter.getCollectionWindDataProviders();
             m_modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
             for( int i = 0; i < lListImportedDataFiles.size(); ++i )
             {
-              IWindDataWrapper lActWindDataProvider = lListImportedDataFiles.get( i );
-              URL lUrlNewInternalWindDataFile = lActWindDataProvider.getDataFileURL();
-              String nativeTEMRelPath = modelFolderFile.toURI().relativize( lUrlNewInternalWindDataFile.toURI() ).toString(); //$NON-NLS-1$
+              final IWindDataWrapper lActWindDataProvider = lListImportedDataFiles.get( i );
+              final URL lUrlNewInternalWindDataFile = lActWindDataProvider.getDataFileURL();
+              final String nativeTEMRelPath = modelFolderFile.toURI().relativize( lUrlNewInternalWindDataFile.toURI() ).toString(); //$NON-NLS-1$
 
               final IWindDataModel lWindDataModel = NativeWindDataModelWrapper.createFeatureForTEMSystem( lWindDataModelSystem, nativeTEMRelPath, lActWindDataProvider.getDateStep() );
 
@@ -187,7 +188,7 @@ public class ImportWindDataWizard extends Wizard implements INewWizard/* INewWiz
               }
               final Feature temFeature = lWindDataModel;
               workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, lWindDataModelSystem, temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getOwner(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             }
             // TODO check why saving thow pool does not work
             final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();

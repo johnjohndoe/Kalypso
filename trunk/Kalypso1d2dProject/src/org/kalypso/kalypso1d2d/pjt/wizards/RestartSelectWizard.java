@@ -199,7 +199,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         final IStepResultMeta result = (IStepResultMeta) element;
         result.setRestart( true );
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
-        restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
+        restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getOwner()).getCalcUnit() );
         restartInfo.setStepResultMetaID( result.getId());
 
         // TODO: implement accessing zip file!

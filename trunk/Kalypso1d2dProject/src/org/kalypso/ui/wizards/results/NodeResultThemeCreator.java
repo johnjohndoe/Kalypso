@@ -65,7 +65,7 @@ import org.kalypso.ui.wizards.i18n.Messages;
 /**
  * @author Thomas Jung
  * @author ilya
- * 
+ *
  */
 public class NodeResultThemeCreator extends AbstractThemeCreator
 {
@@ -119,8 +119,8 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   public void updateThemeCommandData( )
   {
     /* get infos about calc unit */
-    final IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
-    final IResultMeta timeStepMeta = m_documentResult.getParent();
+    final IResultMeta calcUnitMeta = m_documentResult.getOwner().getOwner();
+    final IResultMeta timeStepMeta = m_documentResult.getOwner();
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     final String resFolder = resultsFolder.getFullPath().toPortableString();

@@ -161,7 +161,7 @@ public class Timeseries extends Feature_Impl implements ITimeseries
   @Override
   public IStation getStation( )
   {
-    return (IStation) getParent();
+    return (IStation) getOwner();
   }
 
   @Override

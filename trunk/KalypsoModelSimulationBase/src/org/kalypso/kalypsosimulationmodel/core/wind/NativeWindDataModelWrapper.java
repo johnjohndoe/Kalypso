@@ -65,13 +65,13 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
  * Provide the implementation of {@link IWindDataModel} for simBase:NativeWindDataModelWrapper model.
- * 
+ *
  * @author ig
- * 
+ *
  */
 public class NativeWindDataModelWrapper extends WindDataModel implements INativeWindDataModelWrapper
 {
-  public NativeWindDataModelWrapper( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public NativeWindDataModelWrapper( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -86,7 +86,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   private static final INativeWindDataModelWrapper createFeature( final Feature parentFeature, final QName propQName, final String sourceName, final Date date ) throws Exception
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
-    String lStrDate = (new Date()).toGMTString();
+    final String lStrDate = (new Date()).toGMTString();
     final Feature newFeature = Util.createFeatureAsProperty( parentFeature, propQName, SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, new Object[] { sourceName, gregorianCalendar,
         parentFeature.getName() + " imported on " + lStrDate }, new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME, QNAME_PROP_DATE, Feature.QN_DESCRIPTION } );
     return (INativeWindDataModelWrapper) newFeature;
@@ -134,6 +134,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return getWindDataProvider().getBoundingBox();
@@ -142,6 +143,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( ) throws Exception
   {
     return getWindDataProvider().getCoordinateSystem();
@@ -150,25 +152,23 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     getWindDataProvider().setCoordinateSystem( coordinateSystem );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModel#getWindDataModelSystem()
-   */
   @Override
   public IWindDataModelSystem getWindDataModelSystem( )
   {
-    return (IWindDataModelSystem) getParent();
+    return (IWindDataModelSystem) getOwner();
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#getWindAsSpeedAndDirection(org.kalypsodeegree.model.geometry.GM_Point)
    */
   @Override
-  public Pair<Double, Double> getWindAsSpeedAndDirection( GM_Point location )
+  public Pair<Double, Double> getWindAsSpeedAndDirection( final GM_Point location )
   {
     return getWindDataProvider().getWindAsSpeedAndDirection( location );
   }
@@ -177,7 +177,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
    * @see org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider#getWindAsVector(org.kalypsodeegree.model.geometry.GM_Point)
    */
   @Override
-  public Pair<Double, Double> getWindAsVector( GM_Point location )
+  public Pair<Double, Double> getWindAsVector( final GM_Point location )
   {
     return getWindDataProvider().getWindAsVector( location );
   }
@@ -220,7 +220,7 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
     {
       lUrlDataFile = getSourceFile().getLocationURI().toURL();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
     }
     return lUrlDataFile;

@@ -89,7 +89,7 @@ public class CreateJunctionElementCommand implements IDiscrModel1d2dChangeComman
         final Feature feature = m_junctionElement;
         feature.setEnvelopesUpdated();
         final GMLWorkspace workspace = feature.getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getParent(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getOwner(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
       catch( final Exception e )
       {

@@ -96,7 +96,7 @@ public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeComm
         final Feature feature = m_transitionElement;
         feature.setEnvelopesUpdated();
         final GMLWorkspace workspace = feature.getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getParent(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getOwner(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
       catch( final Exception e )
       {

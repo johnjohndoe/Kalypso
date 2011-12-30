@@ -256,7 +256,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   private String resolveName( final ICatchment catchment )
   {
     /* Get the parent. */
-    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getParent();
+    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getOwner();
 
     /* Get the name property. */
     final GMLXPath namePath = parent.getAreaNamePath();
@@ -288,7 +288,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   private String resolveDescription( final ICatchment catchment )
   {
     /* Get the parent. */
-    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getParent();
+    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getOwner();
 
     /* Get the description property. */
     final GMLXPath descriptionPath = parent.getAreaDescriptionPath();

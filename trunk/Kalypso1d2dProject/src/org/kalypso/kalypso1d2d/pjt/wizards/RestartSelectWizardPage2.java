@@ -111,7 +111,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       public String getText( final Object object )
       {
         final IResultMeta resultMeta = (IResultMeta) object;
-        return resultMeta.getParent().getName() + ", " + resultMeta.getName(); //$NON-NLS-1$
+        return resultMeta.getOwner().getName() + ", " + resultMeta.getName(); //$NON-NLS-1$
       }
     } );
     m_listViewer.addSelectionChangedListener( new ISelectionChangedListener()

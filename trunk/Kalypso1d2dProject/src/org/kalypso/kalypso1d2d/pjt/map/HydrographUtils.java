@@ -154,7 +154,7 @@ public class HydrographUtils
 
     for( final IDocumentResultMeta documentResultMeta : documents )
     {
-      final IResultMeta parent = documentResultMeta.getParent();
+      final IResultMeta parent = documentResultMeta.getOwner();
       if( parent instanceof IStepResultMeta )
       {
         final IStepResultMeta stepResult = (IStepResultMeta) parent;

@@ -92,7 +92,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class DeleteFeElementsHelper
 {
@@ -224,7 +224,7 @@ public class DeleteFeElementsHelper
     // IFlowRelationshipModel.class );
     //
     final IFE1D2DElement lElement = (IFE1D2DElement) pParentToRemoveFrom.getFeature().getAdapter( IFE1D2DElement.class );
-    List<Feature> lBuildingElements = new ArrayList<Feature>();
+    final List<Feature> lBuildingElements = new ArrayList<Feature>();
     if( lElement instanceof IPolyElement )
       lBuildingElements.add( FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lElement, lFlowRelCollection ) );
     else if( lElement instanceof IElement1D )
@@ -247,7 +247,7 @@ public class DeleteFeElementsHelper
           compositeCommand.addCommand( command );
         }
         lFlowTheme.getWorkspace().postCommand( compositeCommand );
-        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), lBuildingFeature.getParent(), lBuildingFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), lBuildingFeature.getOwner(), lBuildingFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
         lFlowTheme.getWorkspace().fireModellEvent( event );
       }
     }
