@@ -57,7 +57,7 @@ import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
@@ -140,7 +140,7 @@ public class NaSimulationData implements INaSimulationData
     if( location == null )
       return null;
 
-    final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
+    final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
     return provider.getWorkspace();
   }
 
@@ -215,7 +215,7 @@ public class NaSimulationData implements INaSimulationData
     if( file != null && !file.exists() )
       return null;
 
-    final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
+    final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
     return provider.getWorkspace();
   }
 
@@ -224,7 +224,7 @@ public class NaSimulationData implements INaSimulationData
     if( file != null && file.exists() )
     {
       final String uri = file.toURI().toString();
-      final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
+      final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
       return provider.getWorkspace();
     }
 
