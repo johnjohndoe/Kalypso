@@ -38,18 +38,33 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm;
+package org.kalypso.model.rcm.internal.binding;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.rcm.binding.IThiessenStation;
+import org.kalypso.model.rcm.binding.IThiessenStationCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public interface RcmConstants
+public class ThiessenStationCollection extends Feature_Impl implements IThiessenStationCollection
 {
-  String NS_OMBROMETER = "org.kalypso.model.rcm.ombrometer"; //$NON-NLS-1$
+  private final IFeatureBindingCollection<IThiessenStation> m_stations;
 
-  String NS_THIESSEN = "org.kalypso.model.rcm.thiessen"; //$NON-NLS-1$
+  public ThiessenStationCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
 
-  String NS_RCM = "org.kalypso.model.rcm.v2"; //$NON-NLS-1$
+    m_stations = new FeatureBindingCollection<IThiessenStation>( this, IThiessenStation.class, MEMBER_STATION );
+  }
 
-  String NS_CM = "org.kalypso.model.cm"; //$NON-NLS-1$
+  @Override
+  public IFeatureBindingCollection<IThiessenStation> getStations( )
+  {
+    return m_stations;
+  }
 }

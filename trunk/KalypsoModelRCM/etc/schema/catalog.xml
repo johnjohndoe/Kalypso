@@ -6,4 +6,5 @@
   <uri name="org.kalypso.model.cm" uri="catchmentModel.xsd" />
   <uri name="org.kalypso.model.rcm.v2" uri="rainfallCatchmentModel_v2.xsd" />
 
+  <uri name="org.kalypso.model.rcm.thiessen" uri="thiessenStations.xsd" />
 </catalog>

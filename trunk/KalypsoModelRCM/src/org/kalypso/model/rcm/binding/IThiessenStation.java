@@ -38,18 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm;
+package org.kalypso.model.rcm.binding;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
+ * GML-binding for the th:ThiessenStation
+ *
  * @author Gernot Belger
  */
-public interface RcmConstants
+public interface IThiessenStation extends Feature
 {
-  String NS_OMBROMETER = "org.kalypso.model.rcm.ombrometer"; //$NON-NLS-1$
+  QName FEATURE_OMBROMETER = new QName( UrlCatalogRcm.NS_THIESSEN, "ThiessenStation" ); //$NON-NLS-1$
 
-  String NS_THIESSEN = "org.kalypso.model.rcm.thiessen"; //$NON-NLS-1$
+  QName PROPERTY_ACTIVE = new QName( UrlCatalogRcm.NS_THIESSEN, "active" );
 
-  String NS_RCM = "org.kalypso.model.rcm.v2"; //$NON-NLS-1$
+  QName PROPERTY_THIESSEN_AREA = new QName( UrlCatalogRcm.NS_THIESSEN, "thiessenArea" );
 
-  String NS_CM = "org.kalypso.model.cm"; //$NON-NLS-1$
+  QName LINK_STATION = new QName( UrlCatalogRcm.NS_THIESSEN, "stationLink" );
+
+  boolean isActive( );
+
+  void setActive( boolean active );
+
+  GM_Surface<GM_SurfacePatch> getThiessenArea( );
+
+  void setThiessenArea( GM_Surface< ? > area );
+
+  Feature getStation( );
+
+  void setStation( String href );
 }

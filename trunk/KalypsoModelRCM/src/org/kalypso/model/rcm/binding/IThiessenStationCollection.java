@@ -38,18 +38,24 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.rcm;
+package org.kalypso.model.rcm.binding;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
+ * Collection of thiessen stations, binding for th:ThiessenStationCollection.<br>
+ *
  * @author Gernot Belger
  */
-public interface RcmConstants
+public interface IThiessenStationCollection extends Feature
 {
-  String NS_OMBROMETER = "org.kalypso.model.rcm.ombrometer"; //$NON-NLS-1$
+  QName FEATURE_THIESSEN_COLLECTION = new QName( UrlCatalogRcm.NS_THIESSEN, "ThiessenStationCollection" ); //$NON-NLS-1$
 
-  String NS_THIESSEN = "org.kalypso.model.rcm.thiessen"; //$NON-NLS-1$
+  QName MEMBER_STATION = new QName( UrlCatalogRcm.NS_THIESSEN, "stationMember" ); //$NON-NLS-1$
 
-  String NS_RCM = "org.kalypso.model.rcm.v2"; //$NON-NLS-1$
-
-  String NS_CM = "org.kalypso.model.cm"; //$NON-NLS-1$
+  IFeatureBindingCollection<IThiessenStation> getStations( );
 }
