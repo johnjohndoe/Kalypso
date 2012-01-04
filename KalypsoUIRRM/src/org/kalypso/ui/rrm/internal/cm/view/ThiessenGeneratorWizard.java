@@ -48,19 +48,19 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.core.layoutwizard.LayoutWizardPage;
-import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 
 /**
  * @author Gernot Belger
  */
 public class ThiessenGeneratorWizard extends Wizard
 {
-  private static final String URN_PAGE_LAYOUT = "urn:sourceforge:kalypso:hydrology:wizard:page:thiessen"; //$NON-NLS-1$
+  private static final String URN_PAGE_LAYOUT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:layout"; //$NON-NLS-1$
 
-  private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
+  private static final String URN_MAP_GMT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:mapgmt"; //$NON-NLS-1$
+
+  private static final String URN_TABLE_GTT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:tablegtt"; //$NON-NLS-1$
 
   private final LinearSumBean m_bean;
 
@@ -68,13 +68,11 @@ public class ThiessenGeneratorWizard extends Wizard
   {
     m_bean = bean;
 
-    m_commandTarget.dispose();
-
     final URL argumentLocation = getContext();
 
     final Arguments arguments = createPageDefinition();
 
-    final IWizardPage thiessenPage = new LayoutWizardPage( "thiessenPage", m_commandTarget, argumentLocation, arguments );
+    final IWizardPage thiessenPage = new LayoutWizardPage( "thiessenPage", argumentLocation, arguments );
 
     thiessenPage.setTitle( "Thiessen Method" );
     thiessenPage.setDescription( "Please select the timeseries tht should be used to generate the catchment model." );
@@ -102,19 +100,23 @@ public class ThiessenGeneratorWizard extends Wizard
 
     arguments.put( "pageLayout", URN_PAGE_LAYOUT );
 
-//    <arg name="pageLayout" value="project://.model/wizard/pages/10_Layout.xml" />
-//    <!-- MAP -->
-//    <arg name="gisMap.1">
-//      <arg name="mapTemplate" value="project://.model/wizard/pages/10_Ombrometer.gmt" />
-//      <arg name="maximizeMap" value="true" />
-//      <arg name="mapToolbar">
-//        <arg name="uri" value="toolbar:org.kalypso.hwv.calcWizard.map.basicNavigation" />
-//      </arg>
-//    </arg>
+    /* MAP */
+    final Arguments mapArguments = new Arguments();
+    arguments.put( "gisMap.1", mapArguments );
+
+    mapArguments.put( "mapTemplate", URN_MAP_GMT );
+
+    final Arguments mapToolbarArguments = new Arguments();
+    mapArguments.put( "mapToolbar", mapToolbarArguments );
+    // TODO:
+    // mapToolbarArguments.put( "uri", "toolbar:org.kalypso.hwv.calcWizard.map.basicNavigation" );
+
+    /* LIST */
+    final Arguments listArguments = new Arguments();
+    arguments.put( "gisTable.1", listArguments );
+    listArguments.put( "tableTemplate", URN_TABLE_GTT );
+
 //    <!-- FEATURE-VIEW -->
-//    <arg name="gisTable.1">
-//      <arg name="tableTemplate" value="project://.model/wizard/pages/10_Ombrometer.gtt" />
-//    </arg>
 //    <arg name="featureView.1">
 //      <arg name="featureTemplate" value="project://.model/wizard/pages/10_Ombrometer.gft" />
 //    </arg>
@@ -134,14 +136,6 @@ public class ThiessenGeneratorWizard extends Wizard
 //    </arg>
 
     return arguments;
-  }
-
-  @Override
-  public void dispose( )
-  {
-    m_commandTarget.dispose();
-
-    super.dispose();
   }
 
   // create gml layer for timeseries (aka stations)
