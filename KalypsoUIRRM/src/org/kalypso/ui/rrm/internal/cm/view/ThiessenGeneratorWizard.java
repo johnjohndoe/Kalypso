@@ -62,12 +62,18 @@ public class ThiessenGeneratorWizard extends Wizard
 
   private static final String URN_TABLE_GTT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:tablegtt"; //$NON-NLS-1$
 
+  private static final String URN_MAP_TOOLBAR = "toolbar:org.kalypso.model.rrm.ui.thiessen.maptoolbar"; //$NON-NLS-1$
+
   private final LinearSumBean m_bean;
 
   public ThiessenGeneratorWizard( final LinearSumBean bean )
   {
     m_bean = bean;
+  }
 
+  @Override
+  public void addPages( )
+  {
     final URL argumentLocation = getContext();
 
     final Arguments arguments = createPageDefinition();
@@ -75,7 +81,7 @@ public class ThiessenGeneratorWizard extends Wizard
     final IWizardPage thiessenPage = new LayoutWizardPage( "thiessenPage", argumentLocation, arguments );
 
     thiessenPage.setTitle( "Thiessen Method" );
-    thiessenPage.setDescription( "Please select the timeseries tht should be used to generate the catchment model." );
+    thiessenPage.setDescription( "Please select the timeseries that should be used to generate the catchment model." );
 
     addPage( thiessenPage );
   }
@@ -109,7 +115,7 @@ public class ThiessenGeneratorWizard extends Wizard
     final Arguments mapToolbarArguments = new Arguments();
     mapArguments.put( "mapToolbar", mapToolbarArguments );
     // TODO:
-    // mapToolbarArguments.put( "uri", "toolbar:org.kalypso.hwv.calcWizard.map.basicNavigation" );
+    mapToolbarArguments.put( "uri", URN_MAP_TOOLBAR );
 
     /* LIST */
     final Arguments listArguments = new Arguments();

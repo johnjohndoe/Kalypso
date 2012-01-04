@@ -3,9 +3,8 @@
   <SashContainer id="top" weights="45 55" style="SWT.HORIZONTAL">
     <!-- links: Stationsliste -->
     <GridContainer id="tableGrid" marginWidth="0" marginHeight="0" verticalSpacing="0">
-      <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="true" />
       <Part id="gisTable.1" style="SWT.V_SCROLL">
-        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="true" />
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
       </Part>
       <!-- <Part id="featureView.1"> <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" /> </Part> -->
     </GridContainer>

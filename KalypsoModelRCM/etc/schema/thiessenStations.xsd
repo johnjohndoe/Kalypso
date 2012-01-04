@@ -36,6 +36,7 @@
         <extension base="gml:AbstractFeatureType">
           <sequence>
             <element name="active" type="boolean" />
+            <element name="stationLocation" type="gml:PointPropertyType" />
             <element name="thiessenArea" type="gml:PolygonPropertyType" />
             <element name="stationLink">
               <complexType>

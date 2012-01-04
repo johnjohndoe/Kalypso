@@ -100,6 +100,8 @@ public interface INaProjectConstants
 
   String GML_STATIONS = "stations.gml"; //$NON-NLS-1$
 
+  String GML_STATIONS_PATH = PATH_TIMESERIES + "/" + GML_STATIONS; //$NON-NLS-1$
+
   String GML_CATCHMENT_MODEL_FILE = "catchmentModels.gml"; //$NON-NLS-1$
 
   String GML_CATCHMENT_MODEL_PATH = FOLDER_MODELS + "/" + GML_CATCHMENT_MODEL_FILE; //$NON-NLS-1$
@@ -107,4 +109,9 @@ public interface INaProjectConstants
   String GML_SIMULATIONS_FILE = "simulations.gml"; //$NON-NLS-1$
 
   String GML_SIMULATIONS_PATH = FOLDER_MODELS + "/" + GML_SIMULATIONS_FILE; //$NON-NLS-1$
+
+  /** Temporary thiessen stations; only used in thiessen wizard */
+  String GML_THIESSEN_STATION_FILE = ".thiessenStations.gml"; //$NON-NLS-1$
+
+  String GML_THIESSEN_STATION_PATH = FOLDER_MODELS + "/" + GML_THIESSEN_STATION_FILE; //$NON-NLS-1$
 }

@@ -49,6 +49,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
@@ -88,6 +90,15 @@ public final class ThiessenLinearSumHelper
 
   public static void showWizard( final Shell shell, final LinearSumBean bean, final ITreeNodeModel model, final String windowTitle )
   {
+    /* Init timeseries gml */
+    final ICoreRunnableWithProgress operation = new InitThiessenTimeseriesOperation( bean );
+    final IStatus initStatus = ProgressUtilities.busyCursorWhile( operation );
+    if( !initStatus.isOK() )
+    {
+      StatusDialog.open( shell, initStatus, windowTitle );
+      return;
+    }
+
     final Wizard wizard = new ThiessenGeneratorWizard( bean );
     wizard.setWindowTitle( windowTitle );
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FeatureTypeStyle xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>fts_node</Name>
-	<Title>%fts_node_title=Geometrie</Title>
+	<Title>%fts_node_title</Title>
 	<Rule>
 		<Name>rule_Ort</Name>
 		<Title>%rule_Ort_title</Title>
