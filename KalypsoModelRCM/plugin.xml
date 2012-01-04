@@ -33,6 +33,14 @@
             qname="{org.kalypso.model.rcm.ombrometer}OmbrometerCollection">
       </feature>
       <feature
+            class="org.kalypso.model.rcm.internal.binding.ThiessenStation"
+            qname="{org.kalypso.model.rcm.thiessen}ThiessenStation">
+      </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.ThiessenStationCollection"
+            qname="{org.kalypso.model.rcm.thiessen}ThiessenStationCollection">
+      </feature>
+      <feature
             class="org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator"
             qname="{org.kalypso.model.rcm.v2}OmbrometerRainfallGenerator">
       </feature>

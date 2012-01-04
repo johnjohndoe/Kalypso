@@ -58,6 +58,9 @@ public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
       catalog.put( NS_OMBROMETER, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/ombrometer.xsd" ) ); //$NON-NLS-1$
       prefixes.put( NS_OMBROMETER, "ombr" ); //$NON-NLS-1$
 
+      catalog.put( NS_THIESSEN, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/thiessenStations.xsd" ) ); //$NON-NLS-1$
+      prefixes.put( NS_THIESSEN, "th" ); //$NON-NLS-1$
+
       catalog.put( NS_RCM, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/rainfallCatchmentModel_v2.xsd" ) ); //$NON-NLS-1$
       prefixes.put( NS_RCM, "rcm" ); //$NON-NLS-1$
 
