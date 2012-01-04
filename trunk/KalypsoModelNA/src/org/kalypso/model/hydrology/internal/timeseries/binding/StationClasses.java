@@ -53,7 +53,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
@@ -152,8 +151,7 @@ public class StationClasses extends Feature_Impl implements IStationClasses
   {
     try
     {
-      final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-      final String uri = baseCatalog.resolve( STATION_CLASSES_URN, STATION_CLASSES_URN );
+      final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( STATION_CLASSES_URN, STATION_CLASSES_URN );
 
       if( uri.startsWith( "urn:" ) )
       {

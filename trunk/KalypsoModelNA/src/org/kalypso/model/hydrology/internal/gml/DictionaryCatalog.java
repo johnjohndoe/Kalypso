@@ -44,7 +44,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.catalog.ICatalogContribution;
 
 /**
@@ -58,8 +57,7 @@ public class DictionaryCatalog implements ICatalogContribution
     try
     {
       final URL catalogURL = new URL( "platform:/plugin/org.kalypso.model.rrm.core/etc/catalog.xml" ); //$NON-NLS-1$
-      final ICatalog baseCatalog = catalogManager.getBaseCatalog();
-      baseCatalog.addNextCatalog( catalogURL );
+      catalogManager.addNextCatalog( catalogURL );
     }
     catch( final MalformedURLException e )
     {
