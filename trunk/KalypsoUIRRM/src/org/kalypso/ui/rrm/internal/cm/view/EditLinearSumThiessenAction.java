@@ -77,6 +77,8 @@ public class EditLinearSumThiessenAction extends Action
 
     final LinearSumBean bean = new LinearSumBean( m_generator );
 
-    ThiessenLinearSumHelper.showWizard( shell, bean, m_model );
+    final String title = getText();
+
+    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, title );
   }
 }

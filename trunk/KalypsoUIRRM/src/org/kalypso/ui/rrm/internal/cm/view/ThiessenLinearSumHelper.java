@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -86,9 +86,10 @@ public final class ThiessenLinearSumHelper
     }
   }
 
-  public static void showWizard( final Shell shell, final LinearSumBean bean, final ITreeNodeModel model )
+  public static void showWizard( final Shell shell, final LinearSumBean bean, final ITreeNodeModel model, final String windowTitle )
   {
-    final IWizard wizard = new ThiessenGeneratorWizard( bean );
+    final Wizard wizard = new ThiessenGeneratorWizard( bean );
+    wizard.setWindowTitle( windowTitle );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() != Window.OK )

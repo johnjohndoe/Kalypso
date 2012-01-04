@@ -31,6 +31,8 @@
   <system uri="NAModellControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.namodell.control_v2:NAModellControl:featureview:default" />
   <system uri="NAControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.na.control_v2:NAControl:featureview:default" />
 
-  <system uri="ThiessenPage.xml" systemId="urn:sourceforge:kalypso:hydrology:wizard:page:thiessen" />
+  <system uri="ThiessenPage.xml" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:layout" />
+  <system uri="ThiessenMap.gmt" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:mapgmt" />
+  <system uri="ThiessenList.gtt" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:tablegtt" />
 
 </catalog>
