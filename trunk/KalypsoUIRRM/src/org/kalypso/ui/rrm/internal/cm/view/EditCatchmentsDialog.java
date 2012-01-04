@@ -78,8 +78,8 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * This dialog allowes the editing of catchments of a catchment model.
- * 
+ * This dialog allows the editing of catchments of a catchment model.
+ *
  * @author Holger Albert
  */
 public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeListener
@@ -131,7 +131,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param model
@@ -246,7 +246,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
 
   /**
    * This function creates the content of the main group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -333,7 +333,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
 
   /**
    * This function creates the content of the details group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param catchmentBean
@@ -507,20 +507,8 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
       m_timeseriesViewer.setInput( new FactorizedTimeseriesBean[] {} );
       m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
     }
-
-    // /* Dispose all children. */
-    // ControlUtils.disposeChildren( m_detailsGroup );
-    //
-    // /* Create the content of the details group. */
-    // createDetailsContent( m_detailsGroup, catchmentBean );
-    //
-    // /* Layout. */
-    // m_detailsGroup.layout();
   }
 
-  /**
-   * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-   */
   @Override
   public void propertyChange( final PropertyChangeEvent evt )
   {

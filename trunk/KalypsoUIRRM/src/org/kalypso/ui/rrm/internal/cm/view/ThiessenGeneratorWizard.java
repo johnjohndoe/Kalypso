@@ -40,51 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class EditGeneratorAction extends Action
+public class ThiessenGeneratorWizard extends Wizard
 {
-  private final ITreeNodeModel m_model;
+  private final LinearSumBean m_bean;
 
-  private final IRainfallGenerator m_generator;
-
-  public EditGeneratorAction( final ITreeNodeModel model, final IRainfallGenerator generator )
+  public ThiessenGeneratorWizard( final LinearSumBean bean )
   {
-    m_model = model;
-    m_generator = generator;
-
-    setText( "Edit" );
-    setToolTipText( "Edits the properties of the generator" );
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
+    m_bean = bean;
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public boolean performFinish( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
+    final String label = m_bean.getLabel();
+    m_bean.setProperty( Feature.QN_DESCRIPTION, label + "X" );
 
-    // FIXME: check integrity of generator with modell.gml
-
-    if( m_generator instanceof ILinearSumGenerator )
-      editLinearSum( shell );
-  }
-
-  private void editLinearSum( final Shell shell )
-  {
-    final LinearSumBean bean = new LinearSumBean( (ILinearSumGenerator) m_generator );
-
-    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, m_model, bean );
-    dialog.open();
+    return true;
   }
 }

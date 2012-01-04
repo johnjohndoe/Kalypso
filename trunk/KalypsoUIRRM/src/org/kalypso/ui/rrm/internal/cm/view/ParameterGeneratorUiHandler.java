@@ -102,6 +102,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, m_parameterType ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumThiessenAction( m_model, m_parameterType ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteGeneratorAction( m_model, m_generators ) );
   }
 }
