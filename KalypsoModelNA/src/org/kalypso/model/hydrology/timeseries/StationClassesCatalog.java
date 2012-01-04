@@ -54,7 +54,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
@@ -155,8 +154,7 @@ public class StationClassesCatalog
   {
     try
     {
-      final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-      final String uri = baseCatalog.resolve( IStationClasses.STATION_CLASSES_URN, IStationClasses.STATION_CLASSES_URN );
+      final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( IStationClasses.STATION_CLASSES_URN, IStationClasses.STATION_CLASSES_URN );
 
       if( uri.startsWith( "urn:" ) )
       {

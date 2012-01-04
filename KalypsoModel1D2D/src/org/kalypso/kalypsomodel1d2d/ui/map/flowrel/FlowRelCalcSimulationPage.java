@@ -238,7 +238,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     try
     {
-      final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog().resolve( URN_QRESULT_GFT, URN_QRESULT_GFT );
+      final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( URN_QRESULT_GFT, URN_QRESULT_GFT );
       featureviewFactory.addView( new URL( configurationUrl ) );
     }
     catch( final MalformedURLException e2 )
