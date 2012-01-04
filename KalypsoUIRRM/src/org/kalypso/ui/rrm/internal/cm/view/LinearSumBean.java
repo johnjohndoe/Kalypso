@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
@@ -58,6 +61,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -175,5 +179,34 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       return false;
 
     return true;
+  }
+
+  /**
+   * Create an empty bean with all catchments from the model.gml.
+   */
+  static LinearSumBean createFromModel( final NaModell model )
+  {
+    final LinearSumBean bean = new LinearSumBean();
+
+    final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
+    final Collection<CatchmentBean> catchmentBeans = new ArrayList<>( catchments.size() );
+
+    for( final Catchment catchment : catchments )
+    {
+      final String catchmentId = catchment.getId();
+      final String catchmentName = catchment.getName();
+      final String catchmentDescription = catchment.getDescription();
+
+      final CatchmentBean catchmentBean = new CatchmentBean();
+      catchmentBean.setCatchmentRef( catchmentId );
+      catchmentBean.setCatchmentName( catchmentName );
+      catchmentBean.setCatchmentDescription( catchmentDescription );
+      catchmentBeans.add( catchmentBean );
+    }
+
+    final CatchmentBean[] beans = catchmentBeans.toArray( new CatchmentBean[catchmentBeans.size()] );
+    bean.setCatchments( beans );
+
+    return bean;
   }
 }

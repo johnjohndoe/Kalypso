@@ -43,8 +43,6 @@ package org.kalypso.ui.rrm.internal.cm.view;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -52,21 +50,19 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 /**
  * @author Gernot Belger
  */
-public class EditGeneratorAction extends Action
+public class NewLinearSumThiessenAction extends Action
 {
   private final ITreeNodeModel m_model;
 
-  private final IRainfallGenerator m_generator;
+  private final String m_parameterType;
 
-  public EditGeneratorAction( final ITreeNodeModel model, final IRainfallGenerator generator )
+  public NewLinearSumThiessenAction( final ITreeNodeModel model, final String parameterType )
   {
     m_model = model;
-    m_generator = generator;
+    m_parameterType = parameterType;
 
-    setText( "Edit" );
-    setToolTipText( "Edits the properties of the generator" );
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
+    setText( "New Catchment Model (Linear Sum) via Thiessen-Method" );
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
   }
 
   @Override
@@ -74,17 +70,8 @@ public class EditGeneratorAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    // FIXME: check integrity of generator with modell.gml
+    final LinearSumBean bean = ThiessenLinearSumHelper.createFromCurrentScenario( m_parameterType );
 
-    if( m_generator instanceof ILinearSumGenerator )
-      editLinearSum( shell );
-  }
-
-  private void editLinearSum( final Shell shell )
-  {
-    final LinearSumBean bean = new LinearSumBean( (ILinearSumGenerator) m_generator );
-
-    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, m_model, bean );
-    dialog.open();
+    ThiessenLinearSumHelper.showWizard( shell, bean, m_model );
   }
 }

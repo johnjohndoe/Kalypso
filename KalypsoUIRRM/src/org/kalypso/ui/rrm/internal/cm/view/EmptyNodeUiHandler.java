@@ -91,5 +91,6 @@ class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, null ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumThiessenAction( m_model, null ) );
   }
 }

@@ -44,7 +44,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -52,19 +51,19 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 /**
  * @author Gernot Belger
  */
-public class EditGeneratorAction extends Action
+public class EditLinearSumThiessenAction extends Action
 {
   private final ITreeNodeModel m_model;
 
-  private final IRainfallGenerator m_generator;
+  private final ILinearSumGenerator m_generator;
 
-  public EditGeneratorAction( final ITreeNodeModel model, final IRainfallGenerator generator )
+  public EditLinearSumThiessenAction( final ITreeNodeModel model, final ILinearSumGenerator generator )
   {
     m_model = model;
     m_generator = generator;
 
-    setText( "Edit" );
-    setToolTipText( "Edits the properties of the generator" );
+    setText( "Edit Thiessen" );
+    setToolTipText( "Recalculate Thiessen factors of of the selected generator" );
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
   }
@@ -76,15 +75,8 @@ public class EditGeneratorAction extends Action
 
     // FIXME: check integrity of generator with modell.gml
 
-    if( m_generator instanceof ILinearSumGenerator )
-      editLinearSum( shell );
-  }
+    final LinearSumBean bean = new LinearSumBean( m_generator );
 
-  private void editLinearSum( final Shell shell )
-  {
-    final LinearSumBean bean = new LinearSumBean( (ILinearSumGenerator) m_generator );
-
-    final EditCatchmentsDialog dialog = new EditCatchmentsDialog( shell, m_model, bean );
-    dialog.open();
+    ThiessenLinearSumHelper.showWizard( shell, bean, m_model );
   }
 }
