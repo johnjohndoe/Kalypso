@@ -495,4 +495,50 @@
         </menuContribution>
      </extension>
    
+ <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="toolbar:org.kalypso.model.rrm.ui.thiessen.maptoolbar">
+        <command commandId="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand" style="radio">
+            <visibleWhen checkEnabled="true"/>
+        </command>
+        <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio" />
+        <command commandId="org.kalypso.ogc.gml.map.PanToCommand" style="radio"  />
+        <command commandId="org.kalypso.hwv.ui.commands.OpenLegendCommand" style="push">
+           <!--
+           <visibleWhen checkEnabled="false">
+              <with variable="activeMapPanel">
+                 <test args="isCascading" property="org.kalypso.ui.test.map.themeProperty.hasProperty" value="movieTheme"/>
+              </with>
+            
+           </visibleWhen>
+           -->
+        </command>
+        <separator name="actions" visible="true"/>
+        <command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push"/>
+        <!--
+        <command commandId="org.kalypso.ui.map.selectFirstFeatureCommand" style="push" />
+        <command commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" style="push" />
+        <command commandId="org.kalypso.ui.map.selectNextFeatureCommand" style="push" />
+        <command commandId="org.kalypso.ui.map.selectLastFeatureCommand" style="push" />
+        -->
+        <command commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" icon="icons/map/maximize2.gif" label="Ausschnitt maximieren" style="push" tooltip="maximiert den Kartenausschnitt"/>
+        <command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push" />
+        <command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push" />
+        <!--
+        <dynamic id="org.kalypso.ogc.gml.map.move">
+            <class class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
+                <parameter name="command1" value="org.kalypso.ogc.gml.map.MoveLeftCommand" />
+                <parameter name="command2" value="org.kalypso.ogc.gml.map.MoveUpCommand" />
+                <parameter name="command3" value="org.kalypso.ogc.gml.map.MoveDownCommand" />
+                <parameter name="command4" value="org.kalypso.ogc.gml.map.MoveRightCommand" />
+            </class>
+        </dynamic>
+        -->
+        <separator name="mapExport" visible="true" />
+        <command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push"  />
+        <command commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand" style="push"/>
+        
+        <separator name="additions"/>
+    </menuContribution>   
+   </extension>
+   
 </plugin>

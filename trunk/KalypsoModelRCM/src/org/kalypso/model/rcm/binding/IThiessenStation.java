@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
@@ -54,13 +55,15 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  */
 public interface IThiessenStation extends Feature
 {
-  QName FEATURE_OMBROMETER = new QName( UrlCatalogRcm.NS_THIESSEN, "ThiessenStation" ); //$NON-NLS-1$
+  QName FEATURE_THIESSEN_STATION = new QName( UrlCatalogRcm.NS_THIESSEN, "ThiessenStation" ); //$NON-NLS-1$
 
-  QName PROPERTY_ACTIVE = new QName( UrlCatalogRcm.NS_THIESSEN, "active" );
+  QName PROPERTY_ACTIVE = new QName( UrlCatalogRcm.NS_THIESSEN, "active" ); //$NON-NLS-1$
 
-  QName PROPERTY_THIESSEN_AREA = new QName( UrlCatalogRcm.NS_THIESSEN, "thiessenArea" );
+  QName PROPERTY_LOCATION = new QName( UrlCatalogRcm.NS_THIESSEN, "stationLocation" ); //$NON-NLS-1$
 
-  QName LINK_STATION = new QName( UrlCatalogRcm.NS_THIESSEN, "stationLink" );
+  QName PROPERTY_THIESSEN_AREA = new QName( UrlCatalogRcm.NS_THIESSEN, "thiessenArea" ); //$NON-NLS-1$
+
+  QName LINK_STATION = new QName( UrlCatalogRcm.NS_THIESSEN, "stationLink" ); //$NON-NLS-1$
 
   boolean isActive( );
 
@@ -73,4 +76,8 @@ public interface IThiessenStation extends Feature
   Feature getStation( );
 
   void setStation( String href );
+
+  GM_Point getStationLocation( );
+
+  void setStationLocation( GM_Point location );
 }
