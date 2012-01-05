@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,7 +52,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -61,11 +62,13 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * REMARK: extends {@link AbstractModelObject}, so implementors can add additonal properties to a bean.
- * 
+ *
  * @author Gernot Belger
  */
-public class FeatureBean<F extends Feature> extends AbstractModelObject
+public class FeatureBean<F extends Feature>
 {
+  private final PropertyChangeSupport m_pcs = new PropertyChangeSupport( this );
+
   private final Map<QName, Object> m_properties = new HashMap<>();
 
   private final Set<QName> m_dirtyProperties = new HashSet<>();
@@ -84,6 +87,26 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
   public FeatureBean( final F feature )
   {
     setFeature( feature );
+  }
+
+  public void addPropertyChangeListener( final PropertyChangeListener listener )
+  {
+    m_pcs.addPropertyChangeListener( listener );
+  }
+
+  public void addPropertyChangeListener( final String propertyName, final PropertyChangeListener listener )
+  {
+    m_pcs.addPropertyChangeListener( propertyName, listener );
+  }
+
+  public void removePropertyChangeListener( final PropertyChangeListener listener )
+  {
+    m_pcs.removePropertyChangeListener( listener );
+  }
+
+  public void removePropertyChangeListener( final String propertyName, final PropertyChangeListener listener )
+  {
+    m_pcs.removePropertyChangeListener( propertyName, listener );
   }
 
   public void setFeature( final F feature )
@@ -147,7 +170,7 @@ public class FeatureBean<F extends Feature> extends AbstractModelObject
       observable.firePropertyChanged( oldValue, newValue );
     }
 
-    firePropertyChange( propertyName, oldValue, newValue );
+    m_pcs.firePropertyChange( propertyName, oldValue, newValue );
   }
 
   void addObservable( final FeatureBeanObservableValue observable )
