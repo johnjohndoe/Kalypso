@@ -34,6 +34,7 @@
   <system uri="ThiessenPage.xml" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:layout" />
   <system uri="ThiessenMap.gmt" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:mapgmt" />
   <system uri="ThiessenList.gtt" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:tablegtt" />
+  <system uri="Thiessen.gft" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:featureviewgft" />
 
   <system uri="ThiessenStation.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:default" />
 

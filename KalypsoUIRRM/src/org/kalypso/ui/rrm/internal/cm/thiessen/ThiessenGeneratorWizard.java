@@ -63,7 +63,10 @@ public class ThiessenGeneratorWizard extends Wizard
 
   private static final String URN_TABLE_GTT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:tablegtt"; //$NON-NLS-1$
 
+  private static final String URN_THIESSEN_GFT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:featureviewgft"; //$NON-NLS-1$
+
   private static final String URN_MAP_TOOLBAR = "toolbar:org.kalypso.model.rrm.ui.thiessen.maptoolbar"; //$NON-NLS-1$
+
 
   private final LinearSumBean m_bean;
 
@@ -128,10 +131,16 @@ public class ThiessenGeneratorWizard extends Wizard
     arguments.put( "gisTable.1", listArguments );
     listArguments.put( "tableTemplate", URN_TABLE_GTT );
 
-//    <!-- FEATURE-VIEW -->
-//    <arg name="featureView.1">
-//      <arg name="featureTemplate" value="project://.model/wizard/pages/10_Ombrometer.gft" />
-//    </arg>
+    /* Feature View */
+    final Arguments featureviewArguments = new Arguments();
+    arguments.put( "featureView.1", featureviewArguments );
+    featureviewArguments.put( "featureTemplate", URN_THIESSEN_GFT );
+    //
+//    <arg name="reselectFeatureview" value="false" />
+//    <arg name="selectionFromFeatureview" value="false" />
+//    <arg name="featureControlStyle" value="SWT.NONE  | SWT.V_SCROLL" />
+
+
 //    <!-- Tabelle -->
 //    <arg name="zmlNewTable.1">
 //      <arg name="zmlTableTemplate" value="project://.model/wizard/pages/10_Tabelle.kot" />
