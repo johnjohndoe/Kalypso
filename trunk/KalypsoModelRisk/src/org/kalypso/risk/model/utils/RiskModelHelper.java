@@ -43,12 +43,11 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -134,7 +133,7 @@ public class RiskModelHelper
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -175,7 +174,7 @@ public class RiskModelHelper
   /**
    * Creates the specific damage coverage collection. <br>
    * The damage value for each grid cell is taken from the underlying polygon.
-   * 
+   *
    * @param scenarioFolder
    *          scenario folder
    * @param polygonCollection
@@ -356,7 +355,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   * 
+   *
    * @param parentKalypsoTheme
    *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -364,13 +363,13 @@ public class RiskModelHelper
    * @param scenarioFolder
    * @throws Exception
    */
-  public static void insertSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
+  public static void insertSpecificDamageMapLayer( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
   {
     final StyledLayerType layer = createMapLayer( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, coverageCollection );
     parentKalypsoTheme.addLayer( layer );
   }
 
-  public static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme )
+  public static void deleteExistingMapLayers( final IKalypsoCascadingTheme parentKalypsoTheme )
   {
     final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
     for( final IKalypsoTheme childTheme : childThemes )
@@ -380,7 +379,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   * 
+   *
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -405,9 +404,9 @@ public class RiskModelHelper
   }
 
   /**
-   * 
+   *
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   * 
+   *
    * @param scenarioFolder
    *          relative path needed for the output file path to append on
    * @param inputCoverages
@@ -504,7 +503,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   * 
+   *
    * @param waterDepthCoverageCollection
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -526,7 +525,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -538,8 +537,7 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__DAMAGE_POTENTIAL, THEME_ID__DAMAGE_POTENTIAL ); //$NON-NLS-1$
+    final IKalypsoCascadingTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__DAMAGE_POTENTIAL, THEME_ID__DAMAGE_POTENTIAL ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -549,12 +547,14 @@ public class RiskModelHelper
     /* add the coverage collections to the map */
     for( final IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
       insertSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection );
-    parentKalypsoTheme.saveFeatures( new NullProgressMonitor() );
+
+    if( parentKalypsoTheme instanceof IKalypsoSaveableTheme )
+      ((IKalypsoSaveableTheme) parentKalypsoTheme).saveFeatures( new NullProgressMonitor() );
   }
 
   /**
    * deletes the old layers and adds the new ones
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -566,7 +566,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__WATERDEPTH, THEME_ID__WATERDEPTH ); //$NON-NLS-1$
+    final IKalypsoCascadingTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__WATERDEPTH, THEME_ID__WATERDEPTH ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -600,7 +600,7 @@ public class RiskModelHelper
 
   }
 
-  private static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
+  private static void deleteExistingMapLayers( final IKalypsoCascadingTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
   {
     final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
 
@@ -617,7 +617,7 @@ public class RiskModelHelper
       parentKalypsoTheme.removeTheme( themeToRemove );
   }
 
-  private static void createWaterdepthLayer( final CascadingKalypsoTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws Exception
+  private static void createWaterdepthLayer( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws Exception
   {
     final StyledLayerType layer = createMapLayer( LAYER_TYPE.WATERLEVEL, annualCoverageCollection );
     parentKalypsoTheme.addLayer( layer );
@@ -635,7 +635,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for each landuse class<br>
    * The value is calculated by integrating the specific damage values.<br>
-   * 
+   *
    */
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
@@ -754,9 +754,9 @@ public class RiskModelHelper
 
   /**
    * Import new events into the risk model.<br>
-   * 
+   *
    * The parameters 'names', 'returnPeriods', 'grids' must eb of the same size.
-   * 
+   *
    * @param names
    *          The names of the events to import
    * @param descriptions
@@ -854,7 +854,7 @@ public class RiskModelHelper
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
     // activate cascading theme that contains the events
-    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
+    final IKalypsoCascadingTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
     if( byThemeId != null )
       return byThemeId;
 
@@ -863,7 +863,7 @@ public class RiskModelHelper
 
   /**
    * Finds and activates the event theme if present.
-   * 
+   *
    * @return <code>true</code>, if the theme was successfully activated.
    * */
   public static boolean activateEventTheme( final IMapPanel mapPanel )
