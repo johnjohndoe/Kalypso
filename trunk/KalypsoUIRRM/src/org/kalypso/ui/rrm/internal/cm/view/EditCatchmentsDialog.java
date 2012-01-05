@@ -82,8 +82,17 @@ import org.kalypsodeegree.model.feature.Feature;
  *
  * @author Holger Albert
  */
-public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeListener
+public class EditCatchmentsDialog extends TrayDialog
 {
+  private final PropertyChangeListener m_changeListener = new PropertyChangeListener()
+  {
+    @Override
+    public void propertyChange( final PropertyChangeEvent evt )
+    {
+      handleParameterTypeChanged( evt );
+    }
+  };
+
   /**
    * The model.
    */
@@ -154,12 +163,9 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     m_catchmentBean = null;
     m_dataBinding = null;
 
-    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), this );
+    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_changeListener );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -509,8 +515,7 @@ public class EditCatchmentsDialog extends TrayDialog implements PropertyChangeLi
     }
   }
 
-  @Override
-  public void propertyChange( final PropertyChangeEvent evt )
+  protected void handleParameterTypeChanged( final PropertyChangeEvent evt )
   {
     final String parameterType = (String) evt.getNewValue();
     if( m_timeseriesViewer != null && !m_timeseriesViewer.getTable().isDisposed() )
