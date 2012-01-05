@@ -23,7 +23,7 @@
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
    -->
-    <mapv:layer visible="true" name="%overview.gmt.xxx" featurePath="stationMember" id="ID_44" linktype="gml" xlink:actuate="onRequest" xlink:href=".models/.thiessenStations.gml" xlink:type="simple">
+    <mapv:layer visible="true" name="%thiessen.gmt.stations" featurePath="stationMember" id="ID_44" linktype="gml" xlink:actuate="onRequest" xlink:href=".models/.thiessenStations.gml" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
       
       <templ:property name="deleteable">false</templ:property>

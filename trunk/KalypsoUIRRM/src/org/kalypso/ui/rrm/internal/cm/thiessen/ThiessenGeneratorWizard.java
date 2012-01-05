@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.thiessen;
 
 import java.net.URL;
 
@@ -50,6 +50,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
+import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 
 /**
  * @author Gernot Belger
@@ -69,6 +70,11 @@ public class ThiessenGeneratorWizard extends Wizard
   public ThiessenGeneratorWizard( final LinearSumBean bean )
   {
     m_bean = bean;
+  }
+
+  LinearSumBean getGenerator( )
+  {
+    return m_bean;
   }
 
   @Override

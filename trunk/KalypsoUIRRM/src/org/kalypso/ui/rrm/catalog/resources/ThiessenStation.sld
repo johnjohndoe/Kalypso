@@ -22,7 +22,7 @@
           <WellKnownName>circle</WellKnownName>
           <Fill>
             <CssParameter name="fill-opacity">1.0</CssParameter>
-            <CssParameter name="fill">#10ff10</CssParameter>
+            <CssParameter name="fill">#009900</CssParameter>
           </Fill>
           <Stroke>
             <CssParameter name="stroke">#000000</CssParameter>
@@ -41,8 +41,8 @@
   </Rule>
 
   <Rule>
-    <Name>rule_Station_on</Name>
-    <Title>%rule_station_on_title</Title>
+    <Name>rule_Station_off</Name>
+    <Title>%rule_station_off_title</Title>
 
     <ElseFilter />
 

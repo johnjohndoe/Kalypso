@@ -38,43 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.thiessen;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.core.layoutwizard.ILayoutPageContext;
+import org.kalypso.core.layoutwizard.ILayoutPart;
+import org.kalypso.core.layoutwizard.ILayoutPartFactory;
 
 /**
  * @author Gernot Belger
  */
-public class NewLinearSumThiessenAction extends Action
+public class ThiessenWizardLayoutPartFactory implements ILayoutPartFactory
 {
-  private final ITreeNodeModel m_model;
-
-  private final String m_parameterType;
-
-  public NewLinearSumThiessenAction( final ITreeNodeModel model, final String parameterType )
-  {
-    m_model = model;
-    m_parameterType = parameterType;
-
-    setText( "New Catchment Model (Linear Sum) via Thiessen-Method" );
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
-  }
-
   @Override
-  public void runWithEvent( final Event event )
+  public ILayoutPart createLayoutPart( final String id, final ILayoutPageContext context )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final LinearSumBean bean = ThiessenLinearSumHelper.createFromCurrentScenario( m_parameterType );
-
-    final String text = getText();
-
-    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, text );
+    return new ThiessenWizardLayoutPart( id, context );
   }
 }
