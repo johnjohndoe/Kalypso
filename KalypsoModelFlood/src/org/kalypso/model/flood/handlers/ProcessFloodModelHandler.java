@@ -75,8 +75,8 @@ import org.kalypso.model.flood.core.SimulationKalypsoFlood;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.model.flood.util.RunoffEventForProcessingLabelProvider;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -147,7 +147,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
 
       // remove themes (processed coverages only)
       final IMapModell mapModell = mapPanel.getMapModell();
-      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.6" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IKalypsoCascadingTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.6" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
       FloodModelHelper.removeWspThemes( wspTheme, eventsToProcess );
 
       saveModel( shell, commandName, dataProvider );
@@ -249,7 +249,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     return eventsWithResults.toArray( new IRunoffEvent[eventsWithResults.size()] );
   }
 
-  private void runCalculation( final Shell shell, final IFolder scenarioFolder, final IRunoffEvent[] eventsToProcess, final AbstractCascadingLayerTheme wspTheme )
+  private void runCalculation( final Shell shell, final IFolder scenarioFolder, final IRunoffEvent[] eventsToProcess, final IKalypsoCascadingTheme wspTheme )
   {
     if( eventsToProcess.length == 0 )
     {
