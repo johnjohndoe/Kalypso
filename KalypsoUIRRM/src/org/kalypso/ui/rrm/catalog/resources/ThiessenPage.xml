@@ -3,6 +3,9 @@
   <SashContainer id="top" weights="45 55" style="SWT.HORIZONTAL">
     <!-- links: Stationsliste -->
     <GridContainer id="tableGrid" marginWidth="0" marginHeight="0" verticalSpacing="0">
+      <Part id="thiessenWizardPart.1" style="SWT.V_SCROLL">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      </Part>
       <Part id="gisTable.1" style="SWT.V_SCROLL">
         <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
       </Part>
@@ -10,7 +13,7 @@
     </GridContainer>
 
     <!-- rechts: Karte -->
-    <Part id="gisMap.1">
+    <Part id="gisMap.1" style="SWT.BORDER">
       <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
     </Part>
 

@@ -184,7 +184,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
   /**
    * Create an empty bean with all catchments from the model.gml.
    */
-  static LinearSumBean createFromModel( final NaModell model )
+  public static LinearSumBean createFromModel( final NaModell model )
   {
     final LinearSumBean bean = new LinearSumBean();
 
