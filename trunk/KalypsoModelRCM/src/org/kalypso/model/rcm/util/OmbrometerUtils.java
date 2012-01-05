@@ -46,12 +46,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -86,20 +87,6 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class OmbrometerUtils
 {
-  /**
-   * This special envelope provider is used for the geo-index on the ombrometer stations.<br>
-   * It only considers its stationLocations.
-   */
-  public static final IEnvelopeProvider OMBROMETER_ENVELOPE_PROVIDER = new IEnvelopeProvider()
-  {
-    @Override
-    public GM_Envelope getEnvelope( final Object o )
-    {
-      final IOmbrometer ombrometer = (IOmbrometer) o;
-      return ombrometer.getStationLocation().getEnvelope();
-    }
-  };
-
   private OmbrometerUtils( )
   {
     // helper class, do not instantiate
@@ -119,15 +106,30 @@ public class OmbrometerUtils
    *          Determines the size of the buffer; its the ratio of the size of the convex hull that is added to the
    *          buffer.
    */
-  public static Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> thiessenPolygons( final List< ? > ombrometerList, final double bufferRatio, final IProgressMonitor monitor ) throws CoreException, GM_Exception
+  public static Map<Feature, GM_Surface<GM_SurfacePatch>> thiessenPolygons( final List< ? > stations, final QName propertyLocation, final QName propertyActive, final IBoundaryCalculator boundaryCalculator, final IProgressMonitor monitor ) throws CoreException, GM_Exception
   {
     monitor.beginTask( "Thiessen Polygone ermitteln", 6 );
 
-    if( ombrometerList.isEmpty() )
+    if( stations.isEmpty() )
       return Collections.emptyMap();
 
-    final Feature parentFeature = ((Feature) ombrometerList.get( 0 )).getOwner();
-    final IRelationType parentRelation = ((Feature) ombrometerList.get( 0 )).getParentRelation();
+    final Feature parentFeature = ((Feature) stations.get( 0 )).getOwner();
+    final IRelationType parentRelation = ((Feature) stations.get( 0 )).getParentRelation();
+
+    /**
+     * This special envelope provider is used for the geo-index on the ombrometer stations.<br>
+     * It only considers its stationLocations.
+     */
+    final IEnvelopeProvider envelopeProvider = new IEnvelopeProvider()
+    {
+      @Override
+      public GM_Envelope getEnvelope( final Object o )
+      {
+        final Feature ombrometer = (Feature) o;
+        final GM_Point stationLocation = (GM_Point) ombrometer.getProperty( propertyLocation );
+        return stationLocation.getEnvelope();
+      }
+    };
 
     // Gather data:
     // - used point into point-list
@@ -135,18 +137,19 @@ public class OmbrometerUtils
     // - ombrometer into geo index for quicker search later
     // - feature changes for ombrometers to null, in order to delete old geometries
     final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
-    final FeatureList geoIndex = FeatureFactory.createFeatureList( parentFeature, parentRelation, OMBROMETER_ENVELOPE_PROVIDER );
-    final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> changeMap = new HashMap<IOmbrometer, GM_Surface<GM_SurfacePatch>>();
+    final FeatureList geoIndex = FeatureFactory.createFeatureList( parentFeature, parentRelation, envelopeProvider );
+    final Map<Feature, GM_Surface<GM_SurfacePatch>> changeMap = new HashMap<>();
     final List<Coordinate> crds = new ArrayList<Coordinate>();
     String crs = null;
-    for( final Object listEntry : ombrometerList )
+    for( final Object listEntry : stations )
     {
-      final IOmbrometer ombro = (IOmbrometer) listEntry;
-      final GM_Point stationLocation = ombro.getStationLocation();
+      final Feature ombro = (Feature) listEntry;
+      final GM_Point stationLocation = (GM_Point) ombro.getProperty( propertyLocation );
       if( stationLocation != null )
       {
         final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
-        if( ombro.isUsed() )
+        final Boolean isActive = (Boolean) ombro.getProperty( propertyActive );
+        if( isActive != null && isActive )
         {
           crs = stationLocation.getCoordinateSystem();
           points.add( point );
@@ -165,7 +168,7 @@ public class OmbrometerUtils
 
     ProgressUtilities.worked( monitor, 1 );
 
-    final Geometry thiessenBoundary = JTSUtilities.bufferWithRatio( boundary, bufferRatio );
+    final Geometry thiessenBoundary = boundaryCalculator.calculateBoundary( boundary );
     ProgressUtilities.worked( monitor, 1 );
 
     if( geoIndex.size() == 0 )
@@ -174,7 +177,7 @@ public class OmbrometerUtils
     }
     else if( geoIndex.size() == 1 )
     {
-      final IOmbrometer ombro = (IOmbrometer) geoIndex.get( 0 );
+      final Feature ombro = (Feature) geoIndex.get( 0 );
       final GM_Surface<GM_SurfacePatch> gmBoundary = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( thiessenBoundary, crs );
       gmBoundary.setCoordinateSystem( crs );
       changeMap.put( ombro, gmBoundary );
@@ -190,7 +193,7 @@ public class OmbrometerUtils
       for( final Polygon polygon : thiessenPolys )
       {
         final GM_Surface<GM_SurfacePatch> affectedArea = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( polygon, crs );
-        final IOmbrometer ombro = findOmbrometerFor( affectedArea, geoIndex );
+        final Feature ombro = findOmbrometerFor( affectedArea, geoIndex, propertyLocation );
         if( ombro == null )
           throw new GM_Exception( "Fehler bei der Ermittlung der Thiessen Polygone" );
         else
@@ -205,13 +208,14 @@ public class OmbrometerUtils
     return changeMap;
   }
 
-  private static IOmbrometer findOmbrometerFor( final GM_Surface< ? > surface, final FeatureList geoIndex )
+  private static Feature findOmbrometerFor( final GM_Surface< ? > surface, final FeatureList geoIndex, final QName propertyLocation )
   {
     final List< ? > query = geoIndex.query( surface.getEnvelope(), null );
     for( final Object object : query )
     {
-      final IOmbrometer ombro = (IOmbrometer) object;
-      if( surface.contains( ombro.getStationLocation() ) )
+      final Feature ombro = (Feature) object;
+      final GM_Point location = (GM_Point) ombro.getProperty( propertyLocation );
+      if( surface.contains( location ) )
         return ombro;
     }
 
