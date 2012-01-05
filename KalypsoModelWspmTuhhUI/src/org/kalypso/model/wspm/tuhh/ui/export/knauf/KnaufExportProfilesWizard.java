@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.export.knauf;
 
 import java.io.File;
-import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -49,27 +48,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.profile.export.AbstractCsvWriter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.CsvPointsWriter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.IProfileExportColumn;
-import org.kalypso.model.wspm.tuhh.core.profile.export.PatternReplacementColumn;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufProfileExporter;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public class KnaufExportProfilesWizard extends ExportProfilesWizard
 {
-  /** Tripple is ',' separated */
-  private static final String TOKEN_SEPARATOR = ","; //$NON-NLS-1$
-
   private static final String FILTER_LABEL = Messages.getString( "KnaufExportProfilesWizard_0" ); //$NON-NLS-1$
 
   private static final String EXTENSION = "wspr"; //$NON-NLS-1$
@@ -103,35 +94,20 @@ public class KnaufExportProfilesWizard extends ExportProfilesWizard
   @Override
   protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
-    final File file = m_profileFileChooserPage.getFile();
+    try
+    {
+      final File file = m_profileFileChooserPage.getFile();
 
-    /* Write profiles */
-    final AbstractCsvWriter csvSink = createWriter();
-    csvSink.export( profiles, file, monitor );
+      /* Write profiles */
+      final KnaufCalculation calculation = new KnaufCalculation( profiles );
+
+      final KnaufProfileExporter exporter = new KnaufProfileExporter( calculation, file );
+      exporter.execute( monitor );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
-  private AbstractCsvWriter createWriter( )
-  {
-    final IComponent rwComp = ComponentUtilities.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hwComp = ComponentUtilities.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent heightComp = ComponentUtilities.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
-
-    final String rwPattern = String.format( "<Component:%s>", IWspmConstants.POINT_PROPERTY_RECHTSWERT ); //$NON-NLS-1$
-    final String hwPattern = String.format( "<Component:%s>", IWspmConstants.POINT_PROPERTY_HOCHWERT ); //$NON-NLS-1$
-    final String heightPattern = String.format( "<Component:%s>", IWspmConstants.POINT_PROPERTY_HOEHE ); //$NON-NLS-1$
-
-    final PatternReplacementColumn station = new PatternReplacementColumn( Messages.getString( "CsvExportColumnsPage_5" ), "<Station>" ); //$NON-NLS-1$//$NON-NLS-2$
-    final IProfileExportColumn rw = new PatternReplacementColumn( rwComp.getName(), rwPattern );
-    final IProfileExportColumn hw = new PatternReplacementColumn( hwComp.getName(), hwPattern );
-    final IProfileExportColumn height = new PatternReplacementColumn( heightComp.getName(), heightPattern );
-    final IProfileExportColumn[] columns = new IProfileExportColumn[] { station, rw, hw, height };
-
-    /* Using US Local, in order to format numbers with '.', which is standard for tripple */
-    final Locale usLocale = Locale.US;
-
-    for( final IProfileExportColumn column : columns )
-      column.setLocale( usLocale );
-
-    return new CsvPointsWriter( columns, TOKEN_SEPARATOR );
-  }
 }
