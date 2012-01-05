@@ -40,23 +40,51 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.thiessen;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
+import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
-import org.kalypso.ui.rrm.internal.cm.view.LinearSumComposite;
+import org.kalypso.ui.rrm.internal.cm.view.LinearSumNewComposite;
 
 /**
  * @author Gernot Belger
  */
 public class ThiessenWizardLayoutPart extends AbstractLayoutPart
 {
+  private final PropertyChangeListener m_propertyListener = new PropertyChangeListener()
+  {
+    @Override
+    public void propertyChange( final PropertyChangeEvent evt )
+    {
+      handleParameterTypeChanged( evt );
+    }
+  };
+
+  private boolean m_ignoreNextChange = false;
+
   private final LinearSumBean m_generator;
 
   public ThiessenWizardLayoutPart( final String id, final ILayoutPageContext context )
@@ -81,13 +109,22 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     final Section section = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
     section.setText( "General Properties" );
 
+    final Composite body = toolkit.createComposite( section );
+    section.setClient( body );
+    GridLayoutFactory.fillDefaults().applyTo( body );
+
     // Linear sum control
-    final LinearSumComposite sumComposite = new LinearSumComposite( section, m_generator, binding, true );
-    section.setClient( sumComposite );
+    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding );
+    sumComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    toolkit.createLabel( body, StringUtils.EMPTY, SWT.NONE );
 
     // TODO: other stuff? buffer ratio, ...
 
     // TODO: if parameter type changes, we need to recalculate the available thiessen stations
+
+    /* Observe change of parameter type */
+    m_generator.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_propertyListener );
 
     return section;
   }
@@ -95,5 +132,50 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
   @Override
   public void dispose( )
   {
+  }
+
+  protected void handleParameterTypeChanged( final PropertyChangeEvent evt )
+  {
+    // Avoid loop, if we cancel the change
+    if( m_ignoreNextChange == true )
+    {
+      m_ignoreNextChange = false;
+      return;
+    }
+
+    final ILayoutPageContext context = getContext();
+    final Shell shell = context.getShell();
+    final IWizard wizard = context.getPage().getWizard();
+    final String windowTitle = wizard.getWindowTitle();
+
+    final String message = "Changing the parameter type needs to update the list of timeseries. Unsaved changes will be lost. Continue?";
+
+    if( !MessageDialog.openConfirm( shell, windowTitle, message ) )
+    {
+      m_ignoreNextChange = true;
+
+      final LinearSumBean generator = m_generator;
+      final Runnable revertOperation = new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          generator.setProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE, evt.getOldValue() );
+        }
+      };
+      shell.getDisplay().asyncExec( revertOperation );
+
+      return;
+    }
+
+    /* update timeseries gml file */
+    final IWizardContainer container = wizard.getContainer();
+    final ICoreRunnableWithProgress operation = new InitThiessenTimeseriesOperation( m_generator );
+    final IStatus updateStatus = RunnableContextHelper.execute( container, true, false, operation );
+    if( !updateStatus.isOK() )
+    {
+      StatusDialog.open( shell, updateStatus, windowTitle );
+      return;
+    }
   }
 }
