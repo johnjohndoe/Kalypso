@@ -100,7 +100,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   /**
    * The minimal number of profiles that the user needs to select. <code>1</code> by default.<br/>
    * Overwrite to change.
-   *
+   * 
    * @return <code>1</code>.
    */
   protected int getMinimumSelectionCount( )
@@ -126,7 +126,6 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   private IProfileFeature[] getChosenProfiles( final Object[] profilFeatures )
   {
     final Collection<IProfileFeature> profiles = new ArrayList<IProfileFeature>( profilFeatures.length );
-
     for( final Object profilFeature : profilFeatures )
     {
       if( profilFeature instanceof IProfileFeature )
@@ -138,6 +137,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
         }
       }
     }
+
     return profiles.toArray( new IProfileFeature[] {} );
   }
 

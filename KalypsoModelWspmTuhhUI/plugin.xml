@@ -608,6 +608,14 @@
         </wizard>
         <wizard
               category="exportWizards/profileExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard"
+              icon="icons/elcl16/export_csv.gif"
+              id="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.name">
+           <description>%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.description</description>
+        </wizard>
+        <wizard
+              category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
@@ -704,6 +712,13 @@
            </enablement>
         </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard">
+           <enablement>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard">
            <enablement>
                 <reference
                       definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">

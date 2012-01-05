@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.export.tripple;
+package org.kalypso.model.wspm.tuhh.ui.export.knauf;
 
 import java.io.File;
 import java.util.Locale;
@@ -65,18 +65,18 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author Gernot Belger
  */
-public class TrippleExportProfilesWizard extends ExportProfilesWizard
+public class KnaufExportProfilesWizard extends ExportProfilesWizard
 {
   /** Tripple is ',' separated */
   private static final String TOKEN_SEPARATOR = ","; //$NON-NLS-1$
 
-  private static final String FILTER_LABEL = Messages.getString( "TrippleExportProfilesWizard_0" ); //$NON-NLS-1$
+  private static final String FILTER_LABEL = Messages.getString( "KnaufExportProfilesWizard_0" ); //$NON-NLS-1$
 
-  private static final String EXTENSION = "txt"; //$NON-NLS-1$
+  private static final String EXTENSION = "wspr"; //$NON-NLS-1$
 
   private ExportFileChooserPage m_profileFileChooserPage;
 
-  public TrippleExportProfilesWizard( )
+  public KnaufExportProfilesWizard( )
   {
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
