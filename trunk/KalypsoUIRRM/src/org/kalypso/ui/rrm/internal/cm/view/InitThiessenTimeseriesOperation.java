@@ -70,6 +70,7 @@ import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -147,9 +148,13 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
     final IFeatureBindingCollection<IStation> stations = modelStations.getStations();
     for( final IStation station : stations )
     {
-      final IFeatureBindingCollection<ITimeseries> stationTimeseries = station.getTimeseries();
-      for( final ITimeseries timeseries : stationTimeseries )
-        addTimeseries( timeseries, thiessenStations, usedTimeseries );
+      final GM_Point location = station.getStationLocation();
+      if( location != null )
+      {
+        final IFeatureBindingCollection<ITimeseries> stationTimeseries = station.getTimeseries();
+        for( final ITimeseries timeseries : stationTimeseries )
+          addTimeseries( timeseries, thiessenStations, usedTimeseries );
+      }
     }
   }
 

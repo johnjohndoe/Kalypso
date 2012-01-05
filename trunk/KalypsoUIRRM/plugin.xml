@@ -531,5 +531,12 @@
           id="thiessenWizardPart">
     </layoutPartFactory>
  </extension>
+ <extension
+       point="org.kalypso.ui.featureViewExtensionControl">
+    <extensionControl
+          class="org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenWizardFeatureControlFactory"
+          id="thiesenWizardFeatureControl">
+    </extensionControl>
+ </extension>
    
 </plugin>

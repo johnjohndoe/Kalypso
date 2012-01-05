@@ -9,7 +9,9 @@
       <Part id="gisTable.1" style="SWT.V_SCROLL">
         <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
       </Part>
-      <!-- <Part id="featureView.1"> <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" /> </Part> -->
+      <Part id="featureView.1">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
+      </Part>
     </GridContainer>
 
     <!-- rechts: Karte -->
