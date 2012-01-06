@@ -38,57 +38,29 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wprof;
+package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.math.BigDecimal;
-import java.net.URI;
-
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 
 /**
  * @author Gernot Belger
  */
-public interface IWProfPoint
+class GoodBridgeProfileCreator extends BridgeProfileCreator
 {
-  String getRiverId( );
+  public GoodBridgeProfileCreator( final ProfileData data, final String soilPolygon, final String ukPoints, final String okPoints, final String bridgeWidthPoints, final String description )
+  {
+    super( data, soilPolygon, null, null, bridgeWidthPoints, description );
+  }
 
-  BigDecimal getStation( );
+  @Override
+  protected IWProfPoint[] fetchOkPoints( )
+  {
+    return getPointsForObjekttypPunkt( 41 );
+  }
 
-  GM_Point getLocation( );
-
-  String getComment( );
-
-  BigDecimal getDistance( );
-
-  double getValue( );
-
-  // TODO: rename
-  // TODO: 'Objekttyp Verbundprofil'
-  String getObjectType( );
-
-  // TODO: 'Objekttyp Punkt'
-  int getPunktattribut( );
-
-  // TODO: 'Objekttyp Profil'
-  WProfProfileType getProfileType( );
-
-  URI[] getPhotos( );
-
-  String getProfileComment( );
-
-  String getPNam( );
-
-  String getProfileName( );
-
-  /**
-   * The point number within one part of a profile ('ord')
-   */
-  Number getNumber( );
-
-  int getPartNumber( );
-
-  String getRiverName( );
-
-  Feature getFeature( );
+  @Override
+  protected IWProfPoint[] fetchUkPoints( )
+  {
+    return getPointsForObjekttypPunkt( 40 );
+  }
 }
