@@ -38,49 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 
 /**
- * First basic implementation of a KnaufReach. Implementation will be analog to
- * {@link org.kalypso.model.wspm.tuhh.core.gml.TuhhReach}
- * 
  * @author Dirk Kuch
  */
-public class KnaufReach
+public enum KNAUF_FLIESSGESETZ
 {
+  eManningStrickler(1, "Manning-Strickler"),
+  ePrandtlColeBrook(2, "Prandtl-Colebrook (Pc)"),
+  eEinstein(3, "Einstein (Manning-Strickler)"),
+  ePcBewuchsKaiser(4, "Prandtl-Colebrook und Bewuchs nach Kaiser"),
+  ePcBewuchsNuding(5, "Prandtl-Colebrook und Bewuchs nach Nuding"),
+  ePcBewuchsMertens(6, "Prandtl-Colebrook und Bewuchs nach Mertens"),
+  ePcBewuchsPasche(7, "Prandtl-Colebrook und Bewuchs nach Pasche"),
+  ePcEinstein(8, "Prandtl-Colebrook und Einstein - ohne Bewuchs");
 
-  private final IProfileFeature[] m_profiles;
+  private final Integer m_type;
 
-  public KnaufReach( final IProfileFeature[] profiles )
+  private final String m_name;
+
+  KNAUF_FLIESSGESETZ( final Integer type, final String name )
   {
-    m_profiles = profiles;
+    m_type = type;
+    m_name = name;
   }
 
-  public AbstractKnaufProjectBean[] toBeans( )
+  public Integer toInt( )
   {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA14Bean( this ) );
-
-    // TODO
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
+    return m_type;
   }
 
-  public KNAUF_FLIESSGESETZ getFliessgesetz( )
+  @Override
+  public String toString( )
   {
-    return KNAUF_FLIESSGESETZ.eEinstein; // TODO
+    return m_name;
   }
-
-  public IProfileFeature[] getProfiles( )
-  {
-    return m_profiles;
-  }
-
 }
