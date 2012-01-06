@@ -40,37 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
-import org.apache.commons.lang3.StringUtils;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractKnaufProjectBean
 {
-  protected abstract Integer getSatzart( );
+  public abstract Integer getSatzart( );
 
-  public CharSequence toAscii( )
-  {
-    final StringBuilder builder = new StringBuilder();
-    builder.append( String.format( "%2d", getSatzart() ) ); //$NON-NLS-1$
-    builder.append( getContent() );
+  public abstract IKnaufPrinter getPrinter( );
 
-    final String output = builder.toString();
-    if( StringUtils.length( output ) > getMaxRowSize() )
-    {
-      final CharSequence cutted = output.subSequence( 0, getMaxRowSize() );
-      System.out.println( "Knauf Export - too long output string has been detected - cutted:" );
-      System.out.println( output );
-      System.out.println( " -> " );
-      System.out.println( cutted );
-
-      return cutted;
-    }
-
-    return output;
-  }
-
-  protected abstract int getMaxRowSize( );
-
-  protected abstract String getContent( );
 }

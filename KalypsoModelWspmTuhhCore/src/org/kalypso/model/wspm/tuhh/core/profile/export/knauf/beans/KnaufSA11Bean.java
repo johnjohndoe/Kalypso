@@ -47,6 +47,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA11Printer;
 
 /**
  * Header
@@ -64,19 +66,12 @@ public class KnaufSA11Bean extends AbstractKnaufProjectBean
   }
 
   @Override
-  protected Integer getSatzart( )
+  public Integer getSatzart( )
   {
     return 11;
   }
 
-  @Override
-  protected int getMaxRowSize( )
-  {
-    return 62;
-  }
-
-  @Override
-  protected String getContent( )
+  public String getText( )
   {
     final WspmProject wspm = m_calculation.getProject();
     if( Objects.isNull( wspm ) )
@@ -86,5 +81,11 @@ public class KnaufSA11Bean extends AbstractKnaufProjectBean
     final IProject project = ResourceUtilities.findProjectFromURL( context );
 
     return String.format( "Projekt: %s", project.getName() );
+  }
+
+  @Override
+  public IKnaufPrinter getPrinter( )
+  {
+    return new KnaufSA11Printer( this );
   }
 }

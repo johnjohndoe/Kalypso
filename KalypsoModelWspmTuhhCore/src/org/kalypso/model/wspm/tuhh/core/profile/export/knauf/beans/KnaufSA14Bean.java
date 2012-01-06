@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,50 +38,63 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA14Printer;
 
 /**
- * First basic implementation of a KnaufReach. Implementation will be analog to
- * {@link org.kalypso.model.wspm.tuhh.core.gml.TuhhReach}
- * 
  * @author Dirk Kuch
  */
-public class KnaufReach
+public class KnaufSA14Bean extends AbstractKnaufProjectBean
 {
+  private int m_nhyd;
 
-  private final IProfileFeature[] m_profiles;
+  private final KnaufReach m_reach;
 
-  public KnaufReach( final IProfileFeature[] profiles )
+  private Integer m_numberOfProfiles;
+
+  public KnaufSA14Bean( final KnaufReach reach )
   {
-    m_profiles = profiles;
+    m_reach = reach;
+
+    // FIXME for later processing values should be initialized from the outside
+    m_nhyd = m_reach.getFliessgesetz().toInt();
+    m_numberOfProfiles = ArrayUtils.getLength( m_reach.getProfiles() );
   }
 
-  public AbstractKnaufProjectBean[] toBeans( )
+  @Override
+  public Integer getSatzart( )
   {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA14Bean( this ) );
-
-    // TODO
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
+    return 14;
   }
 
-  public KNAUF_FLIESSGESETZ getFliessgesetz( )
+  public int getNHyd( )
   {
-    return KNAUF_FLIESSGESETZ.eEinstein; // TODO
+    return m_nhyd;
   }
 
-  public IProfileFeature[] getProfiles( )
+  public void setNHyd( final int nhyd )
   {
-    return m_profiles;
+    m_nhyd = nhyd;
+  }
+
+  @Override
+  public IKnaufPrinter getPrinter( )
+  {
+    return new KnaufSA14Printer( this );
+  }
+
+  public Integer getNumberOfProfiles( )
+  {
+    return m_numberOfProfiles;
+  }
+
+  public void setNumberOfProfiles( final Integer profiles )
+  {
+    m_numberOfProfiles = profiles;
   }
 
 }
