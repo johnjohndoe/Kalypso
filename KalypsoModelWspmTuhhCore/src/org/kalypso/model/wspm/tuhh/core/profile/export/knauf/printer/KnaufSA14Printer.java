@@ -278,8 +278,7 @@ public class KnaufSA14Printer extends AbstractKnaufPrinter
      * char [71 - 76], type F6.0, Sinuosität von Mäanderabflüssen SM
      * </pre>
      */
-    // FIXME number format - 6 signifikate stellen
-    builder.append( String.format( Locale.US, "%4.0f", 0.0 ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%6.0f", 0.0 ) ); //$NON-NLS-1$
 
     builder.append( " " ); //$NON-NLS-1$
 
