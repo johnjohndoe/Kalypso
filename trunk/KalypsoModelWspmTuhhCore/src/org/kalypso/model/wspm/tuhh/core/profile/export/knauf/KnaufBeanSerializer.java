@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
 
 /**
  * @author Dirk Kuch
@@ -79,8 +80,9 @@ public class KnaufBeanSerializer implements ICoreRunnableWithProgress
       {
         for( final AbstractKnaufProjectBean bean : m_beans )
         {
-          writer.append( bean.toAscii() );
-          writer.append( "\r\n" );
+          final IKnaufPrinter printer = bean.getPrinter();
+          writer.append( printer.println() );
+
         }
       }
       finally

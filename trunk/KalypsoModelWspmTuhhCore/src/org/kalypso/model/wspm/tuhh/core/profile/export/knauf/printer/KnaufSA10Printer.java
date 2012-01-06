@@ -38,50 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA10Bean;
 
 /**
- * First basic implementation of a KnaufReach. Implementation will be analog to
- * {@link org.kalypso.model.wspm.tuhh.core.gml.TuhhReach}
- * 
- * @author Dirk Kuch
+ * @author kuch
  */
-public class KnaufReach
+public class KnaufSA10Printer extends AbstractKnaufPrinter
 {
 
-  private final IProfileFeature[] m_profiles;
-
-  public KnaufReach( final IProfileFeature[] profiles )
+  public KnaufSA10Printer( final KnaufSA10Bean bean )
   {
-    m_profiles = profiles;
+    super( bean );
   }
 
-  public AbstractKnaufProjectBean[] toBeans( )
+  @Override
+  protected KnaufSA10Bean getBean( )
   {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA14Bean( this ) );
-
-    // TODO
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
+    return (KnaufSA10Bean) super.getBean();
   }
 
-  public KNAUF_FLIESSGESETZ getFliessgesetz( )
+  @Override
+  protected int getMaxRowSize( )
   {
-    return KNAUF_FLIESSGESETZ.eEinstein; // TODO
+    return 62;
   }
 
-  public IProfileFeature[] getProfiles( )
+  @Override
+  protected String getContent( )
   {
-    return m_profiles;
+    return getBean().getTitle();
   }
 
 }

@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA10Printer;
 
 /**
  * Header
@@ -57,19 +59,19 @@ public class KnaufSA10Bean extends AbstractKnaufProjectBean
   }
 
   @Override
-  protected Integer getSatzart( )
+  public Integer getSatzart( )
   {
     return 10;
   }
 
   @Override
-  protected int getMaxRowSize( )
+  public IKnaufPrinter getPrinter( )
   {
-    return 62;
+    return new KnaufSA10Printer( this );
+
   }
 
-  @Override
-  protected String getContent( )
+  public String getTitle( )
   {
     return "Kalypso WSPM Knauf Profile Export";
   }

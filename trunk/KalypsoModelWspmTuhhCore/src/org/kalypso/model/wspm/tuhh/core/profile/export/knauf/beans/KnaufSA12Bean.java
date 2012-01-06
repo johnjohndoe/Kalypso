@@ -46,6 +46,8 @@ import java.util.Calendar;
 
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA12Printer;
 
 /**
  * Header
@@ -62,23 +64,22 @@ public class KnaufSA12Bean extends AbstractKnaufProjectBean
   }
 
   @Override
-  protected Integer getSatzart( )
+  public Integer getSatzart( )
   {
     return 12;
   }
 
-  @Override
-  protected int getMaxRowSize( )
-  {
-    return 62;
-  }
-
-  @Override
-  protected String getContent( )
+  protected String getText( )
   {
     final DateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
 
     return String.format( "Exportiert am: %s", sdf.format( calendar.getTime() ) );
+  }
+
+  @Override
+  public IKnaufPrinter getPrinter( )
+  {
+    return new KnaufSA12Printer( this );
   }
 }

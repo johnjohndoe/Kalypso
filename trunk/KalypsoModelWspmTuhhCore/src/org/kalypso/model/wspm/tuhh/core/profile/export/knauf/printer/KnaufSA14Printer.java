@@ -38,42 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer;
 
 import java.util.Locale;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
 
 import com.google.common.base.Strings;
 
 /**
  * @author Dirk Kuch
  */
-public class KnaufSA14Bean extends AbstractKnaufProjectBean
+public class KnaufSA14Printer extends AbstractKnaufPrinter
 {
 
-  private final KnaufReach m_reach;
-
-  public KnaufSA14Bean( final KnaufReach reach )
+  public KnaufSA14Printer( final KnaufSA14Bean bean )
   {
-    m_reach = reach;
+    super( bean );
   }
 
   @Override
-  protected Integer getSatzart( )
+  protected KnaufSA14Bean getBean( )
   {
-    return 14;
+    return (KnaufSA14Bean) super.getBean();
   }
 
   @Override
-  protected int getMaxRowSize( )
+  public int getMaxRowSize( )
   {
     return 78;
   }
 
   @Override
-  protected String getContent( )
+  public String getContent( )
   {
     final StringBuilder builder = new StringBuilder();
 
@@ -90,11 +87,11 @@ public class KnaufSA14Bean extends AbstractKnaufProjectBean
      * char [5-6], type I2,  Steuerparameter NHYD für das Fließgesetzes
      * </pre>
      */
-    builder.append( String.format( "%2d", m_reach.getFliessgesetz().toInt() ) ); //$NON-NLS-1$
+    builder.append( String.format( "%2d", getBean().getNHyd() ) ); //$NON-NLS-1$
 
     /**
      * <pre>
-     * char [7-8], type I2,   Steuerparameter für Erweiterungsverluste<br>
+     * char [7-8], type I2,  Steuerparameter für Erweiterungsverluste<br>
      * abgeminderter Stoßverlust nach BORDA-CARNOT
      * </pre>
      */
@@ -105,7 +102,7 @@ public class KnaufSA14Bean extends AbstractKnaufProjectBean
      * char [9-12], type I4,   Anzahl der Profile eines Berechnungsabschnittes IE
      * </pre>
      */
-    builder.append( String.format( "%4d", ArrayUtils.getLength( m_reach.getProfiles() ) ) ); //$NON-NLS-1$
+    builder.append( String.format( "%4d", getBean().getNumberOfProfiles() ) ); //$NON-NLS-1$
 
     /**
      * char [13-16], type I4, Steuerparameter IPR für die Ausgabe von Zwischenergebnissen,
@@ -282,7 +279,7 @@ public class KnaufSA14Bean extends AbstractKnaufProjectBean
      * </pre>
      */
     // FIXME number format - 6 signifikate stellen
-    builder.append( String.format( Locale.US, "%4.1f", 0.0 ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%4.0f", 0.0 ) ); //$NON-NLS-1$
 
     builder.append( " " ); //$NON-NLS-1$
 
@@ -296,4 +293,5 @@ public class KnaufSA14Bean extends AbstractKnaufProjectBean
 
     return builder.toString();
   }
+
 }

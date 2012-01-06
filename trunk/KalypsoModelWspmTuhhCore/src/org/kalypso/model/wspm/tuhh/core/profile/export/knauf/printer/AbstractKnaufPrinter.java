@@ -38,50 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
 
 /**
- * First basic implementation of a KnaufReach. Implementation will be analog to
- * {@link org.kalypso.model.wspm.tuhh.core.gml.TuhhReach}
- * 
  * @author Dirk Kuch
  */
-public class KnaufReach
+public abstract class AbstractKnaufPrinter implements IKnaufPrinter
 {
+  private final AbstractKnaufProjectBean m_bean;
 
-  private final IProfileFeature[] m_profiles;
-
-  public KnaufReach( final IProfileFeature[] profiles )
+  public AbstractKnaufPrinter( final AbstractKnaufProjectBean bean )
   {
-    m_profiles = profiles;
+    m_bean = bean;
   }
 
-  public AbstractKnaufProjectBean[] toBeans( )
+  protected AbstractKnaufProjectBean getBean( )
   {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA14Bean( this ) );
-
-    // TODO
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
+    return m_bean;
   }
 
-  public KNAUF_FLIESSGESETZ getFliessgesetz( )
+  @Override
+  public CharSequence println( )
   {
-    return KNAUF_FLIESSGESETZ.eEinstein; // TODO
+    final StringBuilder builder = new StringBuilder();
+
+    final AbstractKnaufPrinter printer = (AbstractKnaufPrinter) m_bean.getPrinter();
+
+    builder.append( String.format( "%2d", m_bean.getSatzart() ) ); //$NON-NLS-1$
+    builder.append( printer.getContent() );
+
+    final String output = builder.toString();
+    if( StringUtils.length( output ) > printer.getMaxRowSize() )
+    {
+      final CharSequence cutted = output.subSequence( 0, printer.getMaxRowSize() );
+      System.out.println( "Knauf Export - too long output string has been detected - cutted:" );
+      System.out.println( output );
+      System.out.println( " -> " );
+      System.out.println( cutted );
+
+      return cutted;
+    }
+
+    return String.format( "%s\r\n", output );
   }
 
-  public IProfileFeature[] getProfiles( )
-  {
-    return m_profiles;
-  }
+  protected abstract String getContent( );
 
+  protected abstract int getMaxRowSize( );
 }
