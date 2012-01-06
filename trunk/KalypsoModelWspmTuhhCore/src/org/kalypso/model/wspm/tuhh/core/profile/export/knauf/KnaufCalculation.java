@@ -102,8 +102,7 @@ public class KnaufCalculation
     final KnaufReach[] reaches = getReaches();
     for( final KnaufReach reach : reaches )
     {
-      // FIXME
-// Collections.addAll( beans, reach.toBeans() );
+      Collections.addAll( beans, reach.toBeans() );
     }
 
     Collections.addAll( beans, getFooter() );

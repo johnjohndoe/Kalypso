@@ -52,12 +52,20 @@ public abstract class AbstractKnaufProjectBean
   public CharSequence toAscii( )
   {
     final StringBuilder builder = new StringBuilder();
-    builder.append( String.format( "%2d", getSatzart() ) );
+    builder.append( String.format( "%2d", getSatzart() ) ); //$NON-NLS-1$
     builder.append( getContent() );
 
     final String output = builder.toString();
     if( StringUtils.length( output ) > getMaxRowSize() )
-      return output.subSequence( 0, getMaxRowSize() );
+    {
+      final CharSequence cutted = output.subSequence( 0, getMaxRowSize() );
+      System.out.println( "Knauf Export - too long output string has been detected - cutted:" );
+      System.out.println( output );
+      System.out.println( " -> " );
+      System.out.println( cutted );
+
+      return cutted;
+    }
 
     return output;
   }
