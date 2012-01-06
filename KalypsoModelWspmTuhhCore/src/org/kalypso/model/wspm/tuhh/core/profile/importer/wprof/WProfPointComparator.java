@@ -38,57 +38,26 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wprof;
+package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
-import java.math.BigDecimal;
-import java.net.URI;
+import java.util.Comparator;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 
 /**
  * @author Gernot Belger
  */
-public interface IWProfPoint
+public class WProfPointComparator implements Comparator<IWProfPoint>
 {
-  String getRiverId( );
+  @Override
+  public int compare( final IWProfPoint o1, final IWProfPoint o2 )
+  {
+    final Number n1 = o1.getNumber();
+    final Number n2 = o2.getNumber();
 
-  BigDecimal getStation( );
+    final double d1 = n1.doubleValue();
+    final double d2 = n2.doubleValue();
 
-  GM_Point getLocation( );
-
-  String getComment( );
-
-  BigDecimal getDistance( );
-
-  double getValue( );
-
-  // TODO: rename
-  // TODO: 'Objekttyp Verbundprofil'
-  String getObjectType( );
-
-  // TODO: 'Objekttyp Punkt'
-  int getPunktattribut( );
-
-  // TODO: 'Objekttyp Profil'
-  WProfProfileType getProfileType( );
-
-  URI[] getPhotos( );
-
-  String getProfileComment( );
-
-  String getPNam( );
-
-  String getProfileName( );
-
-  /**
-   * The point number within one part of a profile ('ord')
-   */
-  Number getNumber( );
-
-  int getPartNumber( );
-
-  String getRiverName( );
-
-  Feature getFeature( );
+    return Double.compare( d1, d2 );
+  }
 }
