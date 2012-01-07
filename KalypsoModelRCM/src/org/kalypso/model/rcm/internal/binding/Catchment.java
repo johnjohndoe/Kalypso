@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import java.util.List;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.ICatchment;
@@ -105,8 +107,18 @@ public class Catchment extends Feature_Impl implements ICatchment
   public GM_Surface< ? > resolveArea( )
   {
     final ILinearSumGenerator generator = getOwner();
+
+    /* Get the area property. */
     final GMLXPath areaPath = generator.getAreaPath();
-    final Object area = GMLXPathUtilities.queryQuiet( areaPath, this );
+    if( areaPath == null )
+      return null;
+
+    /* Check if catchment exists. */
+    final Feature catchment = getAreaLink();
+    if( catchment == null )
+      return null;
+
+    final Object area = GMLXPathUtilities.queryQuiet( areaPath, catchment );
     if( area instanceof GM_Surface )
       return (GM_Surface< ? >) area;
 
@@ -116,19 +128,32 @@ public class Catchment extends Feature_Impl implements ICatchment
   @Override
   public String resolveName( )
   {
-    final ILinearSumGenerator generator = getOwner();
-    final GMLXPath namePath = generator.getAreaNamePath();
-    final Object name = GMLXPathUtilities.queryQuiet( namePath, this );
-    if( name instanceof GM_Surface )
+    final ILinearSumGenerator parent = getOwner();
+
+    /* Get the name property. */
+    final GMLXPath namePath = parent.getAreaNamePath();
+    if( namePath == null )
+      return null;
+
+    /* Check if catchment exists. */
+    final Feature catchment = getAreaLink();
+    if( catchment == null )
+      return null;
+
+    /* Query. */
+    final Object name = GMLXPathUtilities.queryQuiet( namePath, catchment );
+    if( name instanceof String )
       return (String) name;
 
-    return null;
-  }
+    if( name instanceof List )
+    {
+      final List< ? > names = (List< ? >) name;
+      if( names.size() == 0 )
+        return null;
 
-  @Override
-  public void clearAllWeights( )
-  {
-    for( final IFactorizedTimeseries timeseries : m_timeseries )
-      timeseries.setFactor( null );
+      return (String) names.get( 0 );
+    }
+
+    return null;
   }
 }

@@ -47,6 +47,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * GML-binding for the th:ThiessenStation
@@ -73,7 +74,7 @@ public interface IThiessenStation extends Feature
 
   void setThiessenArea( GM_Surface< ? > area );
 
-  Feature getStation( );
+  XLinkedFeature_Impl getStation( );
 
   void setStation( String href );
 
