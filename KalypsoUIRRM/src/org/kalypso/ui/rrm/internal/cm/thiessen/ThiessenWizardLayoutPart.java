@@ -106,11 +106,15 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     final ILayoutWizardPage page = getContext().getPage();
     final DatabindingWizardPage binding = new DatabindingWizardPage( (WizardPage) page, toolkit );
 
-    final Section section = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
-    section.setText( "General Properties" );
+    final Composite panel = toolkit.createComposite( parent, getStyle() );
+    GridLayoutFactory.fillDefaults().applyTo( panel );
 
-    final Composite body = toolkit.createComposite( section );
-    section.setClient( body );
+    final Section propertiesSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
+    propertiesSection.setText( "General Properties" );
+    propertiesSection.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, true) );
+
+    final Composite body = toolkit.createComposite( propertiesSection );
+    propertiesSection.setClient( body );
     GridLayoutFactory.fillDefaults().applyTo( body );
 
     // Linear sum control
@@ -119,14 +123,16 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
 
     toolkit.createLabel( body, StringUtils.EMPTY, SWT.NONE );
 
-    // TODO: other stuff? buffer ratio, ...
+    /* header for gis table below */
+    final Section tableSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
+    tableSection.setText( "Timeseries used for Thiessen" );
+    tableSection.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false ) );
 
-    // TODO: if parameter type changes, we need to recalculate the available thiessen stations
 
     /* Observe change of parameter type */
     m_generator.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_propertyListener );
 
-    return section;
+    return panel;
   }
 
   @Override
