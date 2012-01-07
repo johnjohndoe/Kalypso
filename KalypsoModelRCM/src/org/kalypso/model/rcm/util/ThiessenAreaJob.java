@@ -60,7 +60,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @author Gernot Belger
@@ -75,25 +74,23 @@ public final class ThiessenAreaJob extends Job
 
   private final List< ? > m_stations;
 
-  private final QName m_propertyStation;
-
-  private final QName m_propertyActive;
-
   private final QName m_propertyArea;
 
   private final IBoundaryCalculator m_boundaryCalculator;
+
+  private final ThiessenAreaOperation m_worker;
 
   public ThiessenAreaJob( final boolean doThiessen, final IBoundaryCalculator boundaryCalculator, final GMLWorkspace workspace, final List< ? > stations, final QName propertyStation, final QName propertyArea, final QName propertyActive )
   {
     super( "Thiessen" );
 
+    m_worker = new ThiessenAreaOperation( propertyStation, propertyActive );
+
     m_doThiessen = doThiessen;
     m_boundaryCalculator = boundaryCalculator;
     m_workspace = workspace;
     m_stations = stations;
-    m_propertyStation = propertyStation;
     m_propertyArea = propertyArea;
-    m_propertyActive = propertyActive;
   }
 
   @Override
@@ -120,11 +117,11 @@ public final class ThiessenAreaJob extends Job
 
   protected void doThiessen( final IBoundaryCalculator boundaryCalculator, final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
-    final Map<Feature, GM_Surface<GM_SurfacePatch>> changeMap = OmbrometerUtils.thiessenPolygons( m_stations, m_propertyStation, m_propertyActive, boundaryCalculator, monitor );
+    final Map<Feature, GM_Surface< ? >> changeMap = m_worker.execute( m_stations, boundaryCalculator, monitor );
 
     final Collection<FeatureChange> changes = new ArrayList<>( changeMap.size() );
 
-    for( final Map.Entry<Feature, GM_Surface<GM_SurfacePatch>> entry : changeMap.entrySet() )
+    for( final Map.Entry<Feature, GM_Surface< ? >> entry : changeMap.entrySet() )
       changes.add( new FeatureChange( entry.getKey(), m_propertyArea, entry.getValue() ) );
 
     m_change = new ChangeFeaturesCommand( m_workspace, changes.toArray( new FeatureChange[changes.size()] ) );

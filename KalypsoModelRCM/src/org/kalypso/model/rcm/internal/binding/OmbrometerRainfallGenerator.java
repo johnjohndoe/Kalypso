@@ -67,6 +67,7 @@ import org.kalypso.model.rcm.util.BufferBoundaryCalculator;
 import org.kalypso.model.rcm.util.IBoundaryCalculator;
 import org.kalypso.model.rcm.util.OmbrometerUtils;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
+import org.kalypso.model.rcm.util.ThiessenAreaOperation;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -79,14 +80,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
@@ -177,21 +177,12 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       final GM_Surface< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaXPath, new GM_Surface[ombrometerFeatures.length] );
 
-      /* Convert to JTS geometries. */
-      final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
       final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      for( int i = 0; i < ombrometerAreas.length; i++ )
-      {
-        if( ombrometerAreas[i] != null )
-        {
-          final GM_Surface< ? > ombrometerArea = ombrometerAreas[i];
-          final GM_Object ombrometerTransformed = transformer.transform( ombrometerArea );
-          ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerTransformed );
-        }
+      final GM_Surface< ? >[] transformedAreas = GeometryUtilities.transform( ombrometerAreas, transformer );
 
-        /* Monitor. */
-        monitor.worked( 200 / ombrometerAreas.length );
-      }
+      /* Convert to JTS geometries. */
+      final Polygon[] ombrometerPolygons = JTSAdapter.export( transformedAreas, Polygon.class );
+      monitor.worked( 100 );
 
       /* Monitor. */
       monitor.subTask( "Hole Einzugsgebiete..." );
@@ -287,11 +278,10 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
     // not need to worry where to get the buffer as we don't save the result here. Mainly needed for the visualisation.
     final IBoundaryCalculator bufferCalculator = new BufferBoundaryCalculator( 10.0 );
 
-    final QName propertyLocation = IOmbrometer.QNAME_PROP_STATIONLOCATION;
-    final QName propertyActive = IOmbrometer.QNAME_PROP_ISUSED;
     /* Recalculate Thiessen */
-    final Map<Feature, GM_Surface<GM_SurfacePatch>> areas = OmbrometerUtils.thiessenPolygons( Arrays.asList( ombrometerFeatures ), propertyLocation, propertyActive, bufferCalculator, monitor );
-    for( final Entry<Feature, GM_Surface<GM_SurfacePatch>> entry : areas.entrySet() )
+    final ThiessenAreaOperation worker = new ThiessenAreaOperation( IOmbrometer.QNAME_PROP_STATIONLOCATION, IOmbrometer.QNAME_PROP_ISUSED );
+    final Map<Feature, GM_Surface< ? >> areas = worker.execute( Arrays.asList( ombrometerFeatures ), bufferCalculator, monitor );
+    for( final Entry<Feature, GM_Surface< ? >> entry : areas.entrySet() )
     {
       final IOmbrometer ombrometer = (IOmbrometer) entry.getKey();
       ombrometer.setAffectedArea( entry.getValue() );
