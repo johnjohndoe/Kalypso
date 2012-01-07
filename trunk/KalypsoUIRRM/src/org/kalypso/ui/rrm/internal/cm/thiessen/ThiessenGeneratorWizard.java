@@ -45,12 +45,14 @@ import java.net.URL;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
@@ -154,6 +156,20 @@ public class ThiessenGeneratorWizard extends Wizard
 //    </arg>
 
     return arguments;
+  }
+
+  @Override
+  public boolean performCancel( )
+  {
+    /* Save data in order to avoid the message that a gml should be saved */
+    final IWizardPage[] pages = getPages();
+    for( final IWizardPage page : pages )
+    {
+      if( page instanceof ILayoutWizardPage )
+        ((ILayoutWizardPage) page).saveData( true, new NullProgressMonitor() );
+    }
+
+    return super.performCancel();
   }
 
   @Override
