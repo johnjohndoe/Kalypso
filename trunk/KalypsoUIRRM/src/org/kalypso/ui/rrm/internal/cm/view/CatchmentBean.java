@@ -126,6 +126,11 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_timeseries.toArray( new FactorizedTimeseriesBean[] {} );
   }
 
+  public FactorizedTimeseriesBean getTimeseries( final String href )
+  {
+    return m_cache.get( href );
+  }
+
   public String getCatchmentRef( )
   {
     return m_catchmentRef;
@@ -308,6 +313,9 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return null;
   }
 
+  /**
+   * Make sure that the catchments always contains all stations.
+   */
   private void initTimeseries( )
   {
     try
