@@ -62,6 +62,7 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * @author Gernot Belger
@@ -115,7 +116,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
    * This function applies the changes of this linear sum generator. It will create or update the linear sum generator
    * feature. If the linear sum generator feature is existing, its (probably) existing catchment features will be
    * deleted. So always new ones will be generated.
-   * 
+   *
    * @param workspace
    *          The workspace.
    * @param parameterType
@@ -129,8 +130,6 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     {
       /* The linear sum generator feature does not exist. */
       final Map<QName, Object> properties = new HashMap<QName, Object>( getProperties() );
-      properties.put( ILinearSumGenerator.PROPERTY_AREA_NAME, "gml:name" );
-      properties.put( ILinearSumGenerator.PROPERTY_AREA_DESCRIPTION, "gml:description" );
       final ICatchmentModel collection = (ICatchmentModel) workspace.getRootFeature();
       final IRelationType parentRelation = (IRelationType) collection.getFeatureType().getProperty( ICatchmentModel.MEMBER_CATCHMENT_GENERATOR );
       final QName type = getFeatureType().getQName();
@@ -187,6 +186,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
   public static LinearSumBean createFromModel( final NaModell model )
   {
     final LinearSumBean bean = new LinearSumBean();
+    bean.setProperty( ILinearSumGenerator.PROPERTY_AREA_NAME, "gml:name" ); //$NON-NLS-1$
+    bean.setProperty( ILinearSumGenerator.PROPERTY_AREA_DESCRIPTION, "gml:description" ); //$NON-NLS-1$
+    bean.setProperty( ILinearSumGenerator.PROPERTY_AREA, Catchment.PROP_GEOM.getLocalPart() );
 
     final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
     final Collection<CatchmentBean> catchmentBeans = new ArrayList<>( catchments.size() );
@@ -196,11 +198,14 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       final String catchmentId = catchment.getId();
       final String catchmentName = catchment.getName();
       final String catchmentDescription = catchment.getDescription();
+      final GM_Surface< ? > catchmentArea = catchment.getGeometry();
 
       final CatchmentBean catchmentBean = new CatchmentBean();
       catchmentBean.setCatchmentRef( catchmentId );
       catchmentBean.setCatchmentName( catchmentName );
       catchmentBean.setCatchmentDescription( catchmentDescription );
+      catchmentBean.setCatchmentArea( catchmentArea );
+
       catchmentBeans.add( catchmentBean );
     }
 
