@@ -97,6 +97,4 @@ public interface ICatchment extends Feature
    * Returns the name from the underlying linked feature via the name property of the generator.
    */
   String resolveName( );
-
-  void clearAllWeights( );
 }
