@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
@@ -120,13 +119,17 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
     final Polygon[] polygons = thiessenPolygons.getThiessenPolygons();
     final String[] timeseries = thiessenPolygons.getTimeseries();
 
-    final ICatchment catchment = bean.getFeature();
     try
     {
-      catchment.clearAllWeights();
+      bean.clearAllWeights();
 
       /* calculate weights */
-      final GM_Surface< ? > catchmentArea = catchment.resolveArea();
+      final GM_Surface< ? > catchmentArea = bean.getCatchmentArea();
+      if( catchmentArea == null )
+      {
+        System.out.println( "sososo" );
+      }
+
       final Geometry catchmentPolygon = JTSAdapter.export( catchmentArea );
 
       final double[] weights = JTSUtilities.fractionAreasOf( catchmentPolygon, polygons );
@@ -147,8 +150,9 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      final String name = catchment.resolveName();
-      m_log.add( IStatus.ERROR, "Failed to calculate thiessen weights for catchment '%s'", e, name );
+      final String name = bean.getCatchmentName();
+      final String description = bean.getCatchmentDescription();
+      m_log.add( IStatus.ERROR, "Failed to calculate thiessen weights for catchment '%s (%s)'", e, name, description );
     }
   }
 }
