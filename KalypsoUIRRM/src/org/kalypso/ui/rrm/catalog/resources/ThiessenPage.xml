@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Page xmlns="http://www.sourceforge.net/projects/kalypsobase/layout" xmlns:swt="http://www.sourceforge.net/projects/kalypsobase/swt">
-  <SashContainer id="top" weights="45 55" style="SWT.HORIZONTAL">
+  <SashContainer id="top" weights="30 70" style="SWT.HORIZONTAL">
     <!-- links: Stationsliste -->
     <GridContainer id="tableGrid" marginWidth="0" marginHeight="0" verticalSpacing="0">
-      <Part id="thiessenWizardPart.1" style="SWT.V_SCROLL">
+      <Part id="thiessenWizardPart.1" style="SWT.NONE">
         <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
       </Part>
       <Part id="gisTable.1" style="SWT.V_SCROLL">

@@ -22,18 +22,18 @@
           <WellKnownName>circle</WellKnownName>
           <Fill>
             <CssParameter name="fill-opacity">1.0</CssParameter>
-            <CssParameter name="fill">#009900</CssParameter>
+            <CssParameter name="fill">#00cc00</CssParameter>
           </Fill>
           <Stroke>
             <CssParameter name="stroke">#000000</CssParameter>
-            <CssParameter name="stroke-width">1.0</CssParameter>
+            <CssParameter name="stroke-width">2.0</CssParameter>
             <CssParameter name="stroke-linejoin">round</CssParameter>
             <CssParameter name="stroke-opacity">1.0</CssParameter>
             <CssParameter name="stroke-linecap">butt</CssParameter>
           </Stroke>
         </Mark>
         <Opacity>1.0</Opacity>
-        <Size>10.0</Size>
+        <Size>15.0</Size>
         <Rotation>0.0</Rotation>
       </Graphic>
 
@@ -44,7 +44,12 @@
     <Name>rule_Station_off</Name>
     <Title>%rule_station_off_title</Title>
 
-    <ElseFilter />
+    <ogc:Filter>
+      <ogc:PropertyIsEqualTo>
+        <ogc:PropertyName>active</ogc:PropertyName>
+        <ogc:Literal>false</ogc:Literal>
+      </ogc:PropertyIsEqualTo>
+    </ogc:Filter>
 
     <PointSymbolizer>
       <Geometry>
@@ -55,18 +60,18 @@
           <WellKnownName>circle</WellKnownName>
           <Fill>
             <CssParameter name="fill-opacity">1.0</CssParameter>
-            <CssParameter name="fill">#cccccc</CssParameter>
+            <CssParameter name="fill">#ffcccc</CssParameter>
           </Fill>
           <Stroke>
             <CssParameter name="stroke">#000000</CssParameter>
-            <CssParameter name="stroke-width">1.0</CssParameter>
+            <CssParameter name="stroke-width">2.0</CssParameter>
             <CssParameter name="stroke-linejoin">round</CssParameter>
             <CssParameter name="stroke-opacity">1.0</CssParameter>
             <CssParameter name="stroke-linecap">butt</CssParameter>
           </Stroke>
         </Mark>
         <Opacity>1.0</Opacity>
-        <Size>10.0</Size>
+        <Size>15.0</Size>
         <Rotation>0.0</Rotation>
       </Graphic>
     </PointSymbolizer>
