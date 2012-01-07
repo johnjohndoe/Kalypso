@@ -45,11 +45,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -104,7 +104,8 @@ public final class ThiessenLinearSumHelper
     final Wizard wizard = new ThiessenGeneratorWizard( bean );
     wizard.setWindowTitle( windowTitle );
 
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
+    dialog.setRememberSize( true );
     if( dialog.open() != Window.OK )
       return;
 

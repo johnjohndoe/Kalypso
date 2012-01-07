@@ -51,10 +51,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 
 /**
@@ -77,6 +79,8 @@ public class ThiessenGeneratorWizard extends Wizard
   public ThiessenGeneratorWizard( final LinearSumBean bean )
   {
     m_bean = bean;
+
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() ) );
   }
 
   LinearSumBean getGenerator( )
