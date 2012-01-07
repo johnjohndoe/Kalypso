@@ -71,6 +71,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -93,6 +94,8 @@ public class CatchmentBean extends FeatureBean<ICatchment>
 
   private IStatus m_status;
 
+  private GM_Surface< ? > m_catchmentArea;
+
   public CatchmentBean( )
   {
     super( ICatchment.FEATURE_CATCHMENT );
@@ -114,8 +117,9 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_cache = new HashMap<String, FactorizedTimeseriesBean>();
     m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
     m_catchmentRef = resolveRef( catchment );
-    m_catchmentName = resolveName( catchment );
+    m_catchmentName = catchment.resolveName();
     m_catchmentDescription = resolveDescription( catchment );
+    m_catchmentArea = catchment.resolveArea();
     m_status = null;
 
     initTimeseries();
@@ -146,6 +150,11 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return m_catchmentDescription;
   }
 
+  public GM_Surface< ? > getCatchmentArea( )
+  {
+    return m_catchmentArea;
+  }
+
   public void setCatchmentRef( final String catchmentRef )
   {
     m_catchmentRef = catchmentRef;
@@ -159,6 +168,11 @@ public class CatchmentBean extends FeatureBean<ICatchment>
   public void setCatchmentDescription( final String catchmentDescription )
   {
     m_catchmentDescription = catchmentDescription;
+  }
+
+  public void setCatchmentArea( final GM_Surface< ? > catchmentArea )
+  {
+    m_catchmentArea = catchmentArea;
   }
 
   public String getLabel( )
@@ -258,38 +272,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return null;
   }
 
-  private String resolveName( final ICatchment catchment )
-  {
-    /* Get the parent. */
-    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getOwner();
-
-    /* Get the name property. */
-    final GMLXPath namePath = parent.getAreaNamePath();
-    if( namePath == null )
-      return null;
-
-    /* Get the area. */
-    final Feature area = catchment.getAreaLink();
-    if( area == null )
-      return null;
-
-    /* Query. */
-    final Object queryQuiet = GMLXPathUtilities.queryQuiet( namePath, area );
-    if( queryQuiet instanceof String )
-      return (String) queryQuiet;
-
-    if( queryQuiet instanceof List )
-    {
-      final List< ? > names = (List< ? >) queryQuiet;
-      if( names.size() == 0 )
-        return null;
-
-      return (String) names.get( 0 );
-    }
-
-    return null;
-  }
-
+  // FIXME: move to ICatchment
   private String resolveDescription( final ICatchment catchment )
   {
     /* Get the parent. */
@@ -366,5 +349,11 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     {
       ex.printStackTrace();
     }
+  }
+
+  public void clearAllWeights( )
+  {
+    for( final FactorizedTimeseriesBean timeseries : m_timeseries )
+      timeseries.setFactor( 0 );
   }
 }
