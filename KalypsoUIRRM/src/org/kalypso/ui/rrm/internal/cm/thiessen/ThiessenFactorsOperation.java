@@ -138,7 +138,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       for( int i = 0; i < weights.length; i++ )
       {
         final double weight = weights[i];
-        final int factor = (int) (weight * 100.0);
+        final int factor = (int) Math.round( weight * 100.0 );
 
         final String href = timeseries[i];
 
