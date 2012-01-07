@@ -125,6 +125,8 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
       feature.getWorkspace().addModellListener( m_modelListener );
 
       m_catchmentsExtent = calculateCatchmentsExtent();
+
+    restartThiessenJob();
   }
 
   private Geometry calculateCatchmentsExtent( )
@@ -173,6 +175,8 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
 
     if( feature != null )
       feature.getWorkspace().addModellListener( m_modelListener );
+
+    restartThiessenJob();
   }
 
   @Override
@@ -237,24 +241,29 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
       if( !shouldUpdate )
         return;
 
-      // reschedule last thiessen job
-      if( m_thiessenJob != null )
-        m_thiessenJob.cancel();
-
-      final Feature feature = getFeature();
-      final GMLWorkspace workspace = feature.getWorkspace();
-      final IPropertyType featureTypeProperty = getFeatureTypeProperty();
-      final List< ? > ombroFeatures = (List< ? >) feature.getProperty( featureTypeProperty );
-
-      final IBoundaryCalculator bufferCalculator = new UnionBoundaryCalculator( m_catchmentsExtent, 0.05 );
-
-      // TODO: rather an operation inside the wizard context?
-      m_thiessenJob = new ThiessenAreaJob( true, bufferCalculator, workspace, ombroFeatures, IThiessenStation.PROPERTY_LOCATION, IThiessenStation.PROPERTY_THIESSEN_AREA, IThiessenStation.PROPERTY_ACTIVE );
-      m_thiessenJob.setUser( true );
-      m_thiessenJob.addJobChangeListener( m_jobListener );
-
-      m_thiessenJob.schedule( 250 );
+      restartThiessenJob();
     }
+  }
+
+  private void restartThiessenJob( )
+  {
+    // reschedule last thiessen job
+    if( m_thiessenJob != null )
+      m_thiessenJob.cancel();
+
+    final Feature feature = getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final IPropertyType featureTypeProperty = getFeatureTypeProperty();
+    final List< ? > ombroFeatures = (List< ? >) feature.getProperty( featureTypeProperty );
+
+    final IBoundaryCalculator bufferCalculator = new UnionBoundaryCalculator( m_catchmentsExtent, 0.05 );
+
+    // TODO: rather an operation inside the wizard context?
+    m_thiessenJob = new ThiessenAreaJob( true, bufferCalculator, workspace, ombroFeatures, IThiessenStation.PROPERTY_LOCATION, IThiessenStation.PROPERTY_THIESSEN_AREA, IThiessenStation.PROPERTY_ACTIVE );
+    m_thiessenJob.setUser( true );
+    m_thiessenJob.addJobChangeListener( m_jobListener );
+
+    m_thiessenJob.schedule( 250 );
   }
 
   void changeIsUsed( final Boolean active )
