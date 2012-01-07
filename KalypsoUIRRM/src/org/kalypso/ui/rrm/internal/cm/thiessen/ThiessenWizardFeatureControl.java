@@ -252,6 +252,9 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
       m_thiessenJob.cancel();
 
     final Feature feature = getFeature();
+    if( feature == null )
+      return;
+
     final GMLWorkspace workspace = feature.getWorkspace();
     final IPropertyType featureTypeProperty = getFeatureTypeProperty();
     final List< ? > ombroFeatures = (List< ? >) feature.getProperty( featureTypeProperty );
