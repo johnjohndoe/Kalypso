@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.rcm.RcmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * The catchment.
@@ -86,4 +87,16 @@ public interface ICatchment extends Feature
    * @return All factorized timeseries.
    */
   IFeatureBindingCollection<IFactorizedTimeseries> getFactorizedTimeseries( );
+
+  /**
+   * Returns the area from the underlying linked feature via the area property of the generator.
+   */
+  GM_Surface< ? > resolveArea( );
+
+  /**
+   * Returns the name from the underlying linked feature via the name property of the generator.
+   */
+  String resolveName( );
+
+  void clearAllWeights( );
 }

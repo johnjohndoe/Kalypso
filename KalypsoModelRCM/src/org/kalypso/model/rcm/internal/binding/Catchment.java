@@ -44,11 +44,15 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * The catchment.
@@ -89,5 +93,42 @@ public class Catchment extends Feature_Impl implements ICatchment
   public IFeatureBindingCollection<IFactorizedTimeseries> getFactorizedTimeseries( )
   {
     return m_timeseries;
+  }
+
+  @Override
+  public ILinearSumGenerator getOwner( )
+  {
+    return (ILinearSumGenerator) super.getOwner();
+  }
+
+  @Override
+  public GM_Surface< ? > resolveArea( )
+  {
+    final ILinearSumGenerator generator = getOwner();
+    final GMLXPath areaPath = generator.getAreaPath();
+    final Object area = GMLXPathUtilities.queryQuiet( areaPath, this );
+    if( area instanceof GM_Surface )
+      return (GM_Surface< ? >) area;
+
+    return null;
+  }
+
+  @Override
+  public String resolveName( )
+  {
+    final ILinearSumGenerator generator = getOwner();
+    final GMLXPath namePath = generator.getAreaNamePath();
+    final Object name = GMLXPathUtilities.queryQuiet( namePath, this );
+    if( name instanceof GM_Surface )
+      return (String) name;
+
+    return null;
+  }
+
+  @Override
+  public void clearAllWeights( )
+  {
+    for( final IFactorizedTimeseries timeseries : m_timeseries )
+      timeseries.setFactor( null );
   }
 }
