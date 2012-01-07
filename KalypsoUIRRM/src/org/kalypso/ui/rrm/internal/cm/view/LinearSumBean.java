@@ -113,9 +113,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
   /**
    * This function applies the changes of this linear sum generator. It will create or update the linear sum generator
-   * feature. If the linear sum generator feature is existing, its (probaply) existing catchment features will be
+   * feature. If the linear sum generator feature is existing, its (probably) existing catchment features will be
    * deleted. So always new ones will be generated.
-   *
+   * 
    * @param workspace
    *          The workspace.
    * @param parameterType
