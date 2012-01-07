@@ -44,11 +44,14 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 
@@ -66,7 +69,6 @@ public class ThiessenGeneratorWizard extends Wizard
   private static final String URN_THIESSEN_GFT = "urn:sourceforge:kalypso:hydrology:thiessen:wizard:featureviewgft"; //$NON-NLS-1$
 
   private static final String URN_MAP_TOOLBAR = "toolbar:org.kalypso.model.rrm.ui.thiessen.maptoolbar"; //$NON-NLS-1$
-
 
   private final LinearSumBean m_bean;
 
@@ -135,11 +137,6 @@ public class ThiessenGeneratorWizard extends Wizard
     final Arguments featureviewArguments = new Arguments();
     arguments.put( "featureView.1", featureviewArguments );
     featureviewArguments.put( "featureTemplate", URN_THIESSEN_GFT );
-    //
-//    <arg name="reselectFeatureview" value="false" />
-//    <arg name="selectionFromFeatureview" value="false" />
-//    <arg name="featureControlStyle" value="SWT.NONE  | SWT.V_SCROLL" />
-
 
 //    <!-- Tabelle -->
 //    <arg name="zmlNewTable.1">
@@ -159,20 +156,16 @@ public class ThiessenGeneratorWizard extends Wizard
     return arguments;
   }
 
-  // create gml layer for timeseries (aka stations)
-  // - fill all timeseries of current parameter type
-  // - group somehow by station
-  // - preselect all, that are already referenced in current bean
-  // - on every feature change, recalculate thiessen polygons
-
   @Override
   public boolean performFinish( )
   {
-    // TODO: calculate thiessen weights and set to catchments
+    final IWizardPage[] pages = getPages();
 
-// final String label = m_bean.getLabel();
-// m_bean.setProperty( Feature.QN_DESCRIPTION, label + "X" );
+    final ThiessenFactorsOperation operation = new ThiessenFactorsOperation( pages, m_bean );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    if( !status.isOK() )
+      StatusDialog.open( getShell(), status, getWindowTitle() );
 
-    return true;
+    return !status.matches( IStatus.ERROR );
   }
 }
