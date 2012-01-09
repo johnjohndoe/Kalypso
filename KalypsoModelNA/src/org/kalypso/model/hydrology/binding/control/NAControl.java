@@ -95,6 +95,8 @@ public class NAControl extends Feature_Impl
 
   private static final QName PROP_GENERATOR_E = new QName( NS_CONTROL, "generatorE" ); //$NON-NLS-1$
 
+  private static final QName PROP_INITIAL_VALUE_SOURCE = new QName( NS_CONTROL, "initialValueSource" ); //$NON-NLS-1$
+
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -292,4 +294,8 @@ public class NAControl extends Feature_Impl
     setProperty( property, reference );
   }
 
+  public String getInitialValueSource( )
+  {
+    return (String) getProperty( PROP_INITIAL_VALUE_SOURCE );
+  }
 }
