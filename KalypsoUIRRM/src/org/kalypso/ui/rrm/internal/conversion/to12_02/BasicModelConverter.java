@@ -161,6 +161,8 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
     getLog().add( converter.execute( "ObsQZuMapping.gml" ) );
     getLog().add( converter.execute( "ObsQMapping.gml" ) );
+    // FIXME: remove everything from the mapping except sea evaporation timeseries
+    getLog().add( converter.execute( "ObsEMapping.gml" ) );
   }
 
   private void copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException
