@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufProfileBeanBuilder;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
@@ -66,14 +67,22 @@ import org.kalypsodeegree.model.feature.Feature;
 public class KnaufReach
 {
 
-  private final IProfileFeature[] m_profiles;
+  private final KnaufProfileWrapper[] m_profiles;
 
   public KnaufReach( final IProfileFeature[] profiles )
   {
-    m_profiles = profiles;
 
     final ProfileFeatureStationComparator comparator = new ProfileFeatureStationComparator( getDirection( profiles ) );
-    Arrays.sort( m_profiles, comparator );
+    Arrays.sort( profiles, comparator );
+
+    final Set<KnaufProfileWrapper> wrappers = new LinkedHashSet<>();
+
+    for( final IProfileFeature profile : profiles )
+    {
+      wrappers.add( new KnaufProfileWrapper( this, profile ) );
+    }
+
+    m_profiles = wrappers.toArray( new KnaufProfileWrapper[] {} );
   }
 
   private boolean getDirection( final IProfileFeature[] profiles )
@@ -101,8 +110,8 @@ public class KnaufReach
     beans.add( new KnaufSA15Bean( this ) );
     beans.add( new KnaufSA16Bean( this ) );
 
-    final IProfileFeature[] profiles = getProfiles();
-    for( final IProfileFeature profile : profiles )
+    final KnaufProfileWrapper[] profiles = getProfiles();
+    for( final KnaufProfileWrapper profile : profiles )
     {
       Collections.addAll( beans, KnaufProfileBeanBuilder.toBeans( this, profile ) );
     }
@@ -112,15 +121,15 @@ public class KnaufReach
 
   public KNAUF_FLIESSGESETZ getFliessgesetz( )
   {
-    return KNAUF_FLIESSGESETZ.eEinstein; // TODO
+    return KNAUF_FLIESSGESETZ.eManningStrickler; // TODO
   }
 
-  public IProfileFeature[] getProfiles( )
+  public KnaufProfileWrapper[] getProfiles( )
   {
     return m_profiles;
   }
 
-  public IProfileFeature findNextProfile( final IProfileFeature profile )
+  public KnaufProfileWrapper findNextProfile( final KnaufProfileWrapper profile )
   {
     final int index = ArrayUtils.indexOf( m_profiles, profile );
     if( index < 0 )

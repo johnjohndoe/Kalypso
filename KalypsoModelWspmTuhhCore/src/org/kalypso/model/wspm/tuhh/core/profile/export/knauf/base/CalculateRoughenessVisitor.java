@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 
 /**
  * @author Dirk Kuch
@@ -111,6 +112,15 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
       return 0.0;
 
     return m_kstValues / Integer.valueOf( m_pointsKstValues ).doubleValue();
+  }
+
+  public Double getRoughness( final KnaufReach reach )
+  {
+    final KNAUF_FLIESSGESETZ fliessgesetz = reach.getFliessgesetz();
+    if( KNAUF_FLIESSGESETZ.eManningStrickler.equals( fliessgesetz ) )
+      return m_kstValues;
+
+    return m_ksValues;
   }
 
 }

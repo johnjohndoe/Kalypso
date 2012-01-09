@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
@@ -54,9 +53,9 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
 {
   private final KnaufReach m_reach;
 
-  private final IProfileFeature m_profile;
+  private final KnaufProfileWrapper m_profile;
 
-  public KnaufSA20Bean( final KnaufReach reach, final IProfileFeature profile )
+  public KnaufSA20Bean( final KnaufReach reach, final KnaufProfileWrapper profile )
   {
     m_reach = reach;
     m_profile = profile;
@@ -78,13 +77,12 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
 
   public Integer getNumberOfProfilePoints( )
   {
-    final IProfil profile = m_profile.getProfil();
-    return profile.getResult().size();
+    return ArrayUtils.getLength( m_profile.getPoints() );
   }
 
   public Double getDistanceNextProfile( )
   {
-    final IProfileFeature next = m_reach.findNextProfile( m_profile );
+    final KnaufProfileWrapper next = m_reach.findNextProfile( m_profile );
     if( Objects.isNull( next ) )
       return null;
 
@@ -95,8 +93,7 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
 
   public ProfilePointWrapper findLowestPoint( )
   {
-    final ProfileWrapper profile = new ProfileWrapper( m_profile.getProfil() );
-    final ProfilePointWrapper point = profile.findLowestPoint();
+    final ProfilePointWrapper point = m_profile.findLowestPoint();
 
     return point;
   }

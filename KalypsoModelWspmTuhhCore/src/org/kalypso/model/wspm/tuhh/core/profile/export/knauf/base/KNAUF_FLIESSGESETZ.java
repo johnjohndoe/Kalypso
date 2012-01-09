@@ -74,4 +74,21 @@ public enum KNAUF_FLIESSGESETZ
   {
     return m_name;
   }
+
+  /**
+   * * 46 A1 ABSZETA bei ABSZETA = A wird ZETA als absolute Verlusthöhe in m eingesetzt <br>
+   * ABSZETA = S : Manning-Strickler<br>
+   * ABSZETA = P : Prandtl-Colebrook
+   */
+  public char toABSZeta( )
+  {
+    switch( this )
+    {
+      case eManningStrickler:
+        return 'S';
+
+      default:
+        return 'P';
+    }
+  }
 }
