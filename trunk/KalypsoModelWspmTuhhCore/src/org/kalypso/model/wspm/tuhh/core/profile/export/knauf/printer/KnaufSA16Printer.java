@@ -64,7 +64,7 @@ public class KnaufSA16Printer extends AbstractKnaufPrinter
   @Override
   public int getMaxRowSize( )
   {
-    return 80;
+    return 58;
   }
 
   @Override
