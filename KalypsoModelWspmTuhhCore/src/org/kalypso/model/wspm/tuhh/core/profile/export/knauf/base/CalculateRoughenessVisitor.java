@@ -81,7 +81,7 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
       m_pointsKsValues += 1;
     }
 
-    final Double kstValue = point.getKsValue();
+    final Double kstValue = point.getKstValue();
     if( Objects.isNotNull( kstValue ) && !Double.isNaN( kstValue ) )
     {
       m_kstValues += kstValue;

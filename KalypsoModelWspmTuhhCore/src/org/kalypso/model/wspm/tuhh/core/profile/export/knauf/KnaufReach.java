@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufProfileB
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA15Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA16Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA40Bean;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -115,6 +116,8 @@ public class KnaufReach
     {
       Collections.addAll( beans, KnaufProfileBeanBuilder.toBeans( this, profile ) );
     }
+
+    beans.add( new KnaufSA40Bean( this ) );
 
     return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }

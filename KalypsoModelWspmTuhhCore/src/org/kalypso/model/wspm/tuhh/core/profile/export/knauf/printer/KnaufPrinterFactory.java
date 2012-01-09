@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA16Bean
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA21Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA30Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA40Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA91Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA94Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA99Bean;
@@ -106,6 +107,10 @@ public final class KnaufPrinterFactory
     else if( bean instanceof KnaufSA30Bean )
     {
       return new KnaufSA30Printer( (KnaufSA30Bean) bean );
+    }
+    else if( bean instanceof KnaufSA40Bean )
+    {
+      return new KnaufSA40Printer( (KnaufSA40Bean) bean );
     }
     else if( bean instanceof KnaufSA91Bean )
     {
