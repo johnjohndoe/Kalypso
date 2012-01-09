@@ -45,6 +45,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.resources.IFile;
@@ -64,6 +66,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.joda.time.DateTime;
@@ -71,6 +74,8 @@ import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
@@ -126,6 +131,8 @@ public class UpdateSimulationWorker
 {
   public static final QName MAPPING_MEMBER = new QName( "http://org.kalypso.updateObservationMapping", "mappingMember" );
 
+  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
   private final IFolder m_simulationFolder;
 
   public UpdateSimulationWorker( final IFolder simulationFolder )
@@ -153,7 +160,10 @@ public class UpdateSimulationWorker
     executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
     executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
 
-    return Status.OK_STATUS;
+    /* Copy initial condition from long term simulation */
+    copyInitialCondition( control );
+
+    return m_log.asMultiStatusOrOK( m_simulationFolder.getName() );
   }
 
   private NAControl readControlFile( final IFolder calcCaseFolder ) throws CoreException
@@ -531,5 +541,59 @@ public class UpdateSimulationWorker
       endWithTimeFixed = endWithTime;
 
     return new DateRange( startWithTimeFixed.toDate(), endWithTimeFixed.toDate() );
+  }
+
+  private void copyInitialCondition( final NAControl control )
+  {
+    /* build source file name */
+    final String calcCaseNameSource = control.getInitialValueSource();
+
+    /* if not set, nothing to do */
+    if( StringUtils.isBlank( calcCaseNameSource ) )
+      return;
+
+    /* Does the source simulation exist? */
+    final IProject project = m_simulationFolder.getProject();
+    final IFolder basisFolder = project.getFolder( INaProjectConstants.FOLDER_BASIS );
+    final IFolder folderCalcCases = basisFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    final IFolder sourceCalcCase = folderCalcCases.getFolder( new Path( calcCaseNameSource ) );
+    if( !sourceCalcCase.exists() )
+    {
+      m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': simulation does not exist", null, sourceCalcCase.getName() );
+      return;
+    }
+
+    final IFolder currentSourceFolder = sourceCalcCase.getFolder( INaCalcCaseConstants.AKTUELL_DIR );
+    if( !currentSourceFolder.exists() )
+    {
+      m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': no results available", null, sourceCalcCase.getName() );
+      return;
+    }
+
+    final IFolder initialValuesSourceFolder = currentSourceFolder.getFolder( INaCalcCaseConstants.ANFANGSWERTE_DIR );
+    final Date startDate = control.getSimulationStart();
+    final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate );
+    final IFile initialValuesSourceFile = initialValuesSourceFolder.getFile( initialValuesSourceFilename );
+    if( !initialValuesSourceFile.exists() )
+    {
+      m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': initial values missing (%s)", null, sourceCalcCase.getName(), initialValuesSourceFilename );
+      return;
+    }
+
+    /* target file */
+    final IFolder initialValuesTargetFolder = m_simulationFolder.getFolder( INaCalcCaseConstants.ANFANGSWERTE_DIR );
+    final IFile initialValuesTargetFile = initialValuesTargetFolder.getFile( INaCalcCaseConstants.ANFANGSWERTE_FILE );
+
+    /* Copy it ! */
+    try
+    {
+      FileUtils.copyFile( initialValuesSourceFile.getLocation().toFile(), initialValuesTargetFile.getLocation().toFile() );
+      initialValuesTargetFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      m_log.add( IStatus.ERROR, "Failed to copy initial values from simulation '%s'", e, sourceCalcCase.getName() );
+    }
   }
 }
