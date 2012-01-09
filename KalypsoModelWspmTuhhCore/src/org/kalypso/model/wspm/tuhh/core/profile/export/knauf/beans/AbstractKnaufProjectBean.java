@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
 
 /**
  * @author Dirk Kuch
@@ -48,7 +47,5 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrint
 public abstract class AbstractKnaufProjectBean
 {
   public abstract Integer getSatzart( );
-
-  public abstract IKnaufPrinter getPrinter( );
 
 }

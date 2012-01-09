@@ -113,10 +113,10 @@ public class KnaufCalculation
   private AbstractKnaufProjectBean[] getHeader( )
   {
     final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA10Bean( this ) );
+    beans.add( new KnaufSA10Bean() );
     beans.add( new KnaufSA11Bean( this ) );
     beans.add( new KnaufSA12Bean( this ) );
-    beans.add( new KnaufSA13Bean( this ) );
+    beans.add( new KnaufSA13Bean() );
 
     return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }

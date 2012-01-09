@@ -38,30 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.gml;
 
+import java.math.BigDecimal;
+import java.util.Comparator;
+
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 
 /**
- * Header
- * 
  * @author Dirk Kuch
  */
-public class KnaufSA13Bean extends AbstractKnaufProjectBean
+public class ProfileFeatureStationComparator implements Comparator<IProfileFeature>
 {
+  private final TuhhStationComparator m_stationComparator;
 
-  public KnaufSA13Bean( )
+  public ProfileFeatureStationComparator( final boolean isDirectionUpstreams )
   {
+    m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
   }
 
   @Override
-  public Integer getSatzart( )
+  public int compare( final IProfileFeature feature1, final IProfileFeature feature2 )
   {
-    return 13;
-  }
+    final BigDecimal s1 = feature1.getBigStation();
+    final BigDecimal s2 = feature2.getBigStation();
 
-  public String getText( )
-  {
-    return "";
+    return m_stationComparator.compare( s1, s2 );
   }
-
 }

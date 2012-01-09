@@ -40,13 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA15Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA16Bean;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * First basic implementation of a KnaufReach. Implementation will be analog to
@@ -62,14 +68,35 @@ public class KnaufReach
   public KnaufReach( final IProfileFeature[] profiles )
   {
     m_profiles = profiles;
+
+    final ProfileFeatureStationComparator comparator = new ProfileFeatureStationComparator( getDirection( profiles ) );
+    Arrays.sort( m_profiles, comparator );
+  }
+
+  private boolean getDirection( final IProfileFeature[] profiles )
+  {
+
+    for( final IProfileFeature profile : profiles )
+    {
+      final Feature parent = profile.getOwner();
+
+      if( parent instanceof WspmWaterBody )
+      {
+        final WspmWaterBody waterBody = (WspmWaterBody) parent;
+        return waterBody.isDirectionUpstreams();
+      }
+    }
+
+    // TODO
+    throw new UnsupportedOperationException();
   }
 
   public AbstractKnaufProjectBean[] toBeans( )
   {
     final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
     beans.add( new KnaufSA14Bean( this ) );
-
-    // TODO
+    beans.add( new KnaufSA15Bean( this ) );
+    beans.add( new KnaufSA16Bean( this ) );
 
     return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
@@ -81,6 +108,7 @@ public class KnaufReach
 
   public IProfileFeature[] getProfiles( )
   {
+
     return m_profiles;
   }
 

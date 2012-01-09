@@ -46,8 +46,6 @@ import java.util.Calendar;
 
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA12Printer;
 
 /**
  * Header
@@ -77,9 +75,4 @@ public class KnaufSA12Bean extends AbstractKnaufProjectBean
     return String.format( "Exportiert am: %s", sdf.format( calendar.getTime() ) );
   }
 
-  @Override
-  public IKnaufPrinter getPrinter( )
-  {
-    return new KnaufSA12Printer( this );
-  }
 }

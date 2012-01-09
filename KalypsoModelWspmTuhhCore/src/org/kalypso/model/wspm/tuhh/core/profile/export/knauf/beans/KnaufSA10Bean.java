@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA10Printer;
 
 /**
  * Header
@@ -51,24 +48,15 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA10Pr
  */
 public class KnaufSA10Bean extends AbstractKnaufProjectBean
 {
-  private final KnaufCalculation m_calculation;
 
-  public KnaufSA10Bean( final KnaufCalculation calculation )
+  public KnaufSA10Bean( )
   {
-    m_calculation = calculation;
   }
 
   @Override
   public Integer getSatzart( )
   {
     return 10;
-  }
-
-  @Override
-  public IKnaufPrinter getPrinter( )
-  {
-    return new KnaufSA10Printer( this );
-
   }
 
   public String getTitle( )
