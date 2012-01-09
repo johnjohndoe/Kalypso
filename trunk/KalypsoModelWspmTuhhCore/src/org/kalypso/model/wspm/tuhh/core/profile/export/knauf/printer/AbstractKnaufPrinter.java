@@ -65,15 +65,13 @@ public abstract class AbstractKnaufPrinter implements IKnaufPrinter
   {
     final StringBuilder builder = new StringBuilder();
 
-    final AbstractKnaufPrinter printer = (AbstractKnaufPrinter) m_bean.getPrinter();
-
     builder.append( String.format( "%2d", m_bean.getSatzart() ) ); //$NON-NLS-1$
-    builder.append( printer.getContent() );
+    builder.append( getContent() );
 
     final String output = builder.toString();
-    if( StringUtils.length( output ) > printer.getMaxRowSize() )
+    if( StringUtils.length( output ) > getMaxRowSize() )
     {
-      final CharSequence cutted = output.subSequence( 0, printer.getMaxRowSize() );
+      final CharSequence cutted = output.subSequence( 0, getMaxRowSize() );
       System.out.println( "Knauf Export - too long output string has been detected - cutted:" );
       System.out.println( output );
       System.out.println( " -> " );

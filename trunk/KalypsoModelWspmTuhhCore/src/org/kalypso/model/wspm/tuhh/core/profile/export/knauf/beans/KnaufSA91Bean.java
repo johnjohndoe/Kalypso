@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA91Printer;
 
 /**
  * Ausgabe von Daten für Querprofile und Längsschnitte
@@ -67,12 +65,6 @@ public class KnaufSA91Bean extends AbstractKnaufProjectBean
   public String getText( )
   {
     return "";
-  }
-
-  @Override
-  public IKnaufPrinter getPrinter( )
-  {
-    return new KnaufSA91Printer( this );
   }
 
 }

@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA14Printer;
 
 /**
  * @author Dirk Kuch
@@ -79,12 +77,6 @@ public class KnaufSA14Bean extends AbstractKnaufProjectBean
   public void setNHyd( final int nhyd )
   {
     m_nhyd = nhyd;
-  }
-
-  @Override
-  public IKnaufPrinter getPrinter( )
-  {
-    return new KnaufSA14Printer( this );
   }
 
   public Integer getNumberOfProfiles( )

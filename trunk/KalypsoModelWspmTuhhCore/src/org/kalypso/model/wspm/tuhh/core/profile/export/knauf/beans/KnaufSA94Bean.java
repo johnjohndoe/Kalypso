@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufSA94Printer;
 
 /**
  * Ausgabe GIS-Schnittstelle
@@ -70,9 +68,4 @@ public class KnaufSA94Bean extends AbstractKnaufProjectBean
     return "";
   }
 
-  @Override
-  public IKnaufPrinter getPrinter( )
-  {
-    return new KnaufSA94Printer( this );
-  }
 }
