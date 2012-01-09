@@ -60,6 +60,7 @@ public final class KnaufProfileBeanBuilder
     final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
 
     beans.add( new KnaufSA20Bean( reach, profile ) );
+    beans.add( new KnaufSA21Bean( reach, profile ) );
 
     return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
