@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
@@ -78,12 +78,12 @@ public class KnaufSA15Bean extends AbstractKnaufProjectBean
 
   private void doInit( )
   {
-    final IProfileFeature[] profiles = m_reach.getProfiles();
+    final KnaufProfileWrapper[] profiles = m_reach.getProfiles();
 
     if( ArrayUtils.getLength( profiles ) >= 2 )
     {
-      final IProfileFeature p0 = profiles[0];
-      final IProfileFeature pn = profiles[ArrayUtils.getLength( profiles ) - 1];
+      final KnaufProfileWrapper p0 = profiles[0];
+      final KnaufProfileWrapper pn = profiles[ArrayUtils.getLength( profiles ) - 1];
 
       m_calculationDistance = Math.abs( pn.getStation() - p0.getStation() ) * 1000;
     }
@@ -141,7 +141,6 @@ public class KnaufSA15Bean extends AbstractKnaufProjectBean
 
   public Double getEPSH( )
   {
-    // TODO Auto-generated method stub
     return m_epsh;
   }
 

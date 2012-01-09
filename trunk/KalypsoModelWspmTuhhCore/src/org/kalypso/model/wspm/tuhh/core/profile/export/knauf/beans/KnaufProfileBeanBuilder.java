@@ -43,8 +43,9 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
@@ -55,12 +56,18 @@ public final class KnaufProfileBeanBuilder
   {
   }
 
-  public static AbstractKnaufProjectBean[] toBeans( final KnaufReach reach, final IProfileFeature profile )
+  public static AbstractKnaufProjectBean[] toBeans( final KnaufReach reach, final KnaufProfileWrapper profile )
   {
     final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
 
     beans.add( new KnaufSA20Bean( reach, profile ) );
     beans.add( new KnaufSA21Bean( reach, profile ) );
+
+    final ProfilePointWrapper[] points = profile.getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      beans.add( new KnaufSA30Bean( profile, point ) );
+    }
 
     return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }

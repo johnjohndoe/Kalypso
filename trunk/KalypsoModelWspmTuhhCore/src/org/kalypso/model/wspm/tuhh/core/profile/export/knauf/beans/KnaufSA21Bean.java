@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfilePointWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
@@ -51,11 +51,11 @@ public class KnaufSA21Bean extends AbstractKnaufProjectBean
 {
   private final KnaufReach m_reach;
 
-  private final IProfileFeature m_profile;
+  private final KnaufProfileWrapper m_profile;
 
   private Double m_localVerlustBeiwertZeta = 0.0;
 
-  public KnaufSA21Bean( final KnaufReach reach, final IProfileFeature profile )
+  public KnaufSA21Bean( final KnaufReach reach, final KnaufProfileWrapper profile )
   {
     m_reach = reach;
     m_profile = profile;
@@ -77,23 +77,17 @@ public class KnaufSA21Bean extends AbstractKnaufProjectBean
 
   public Double getRightForelandRoughness( )
   {
-    final KnaufProfilePointWrapper profile = new KnaufProfilePointWrapper( m_profile.getProfil() );
-
-    return profile.getRightForelandRoughness();
+    return m_profile.getRightForelandRoughness();
   }
 
   public Double getRiverbedRoughness( )
   {
-    final KnaufProfilePointWrapper profile = new KnaufProfilePointWrapper( m_profile.getProfil() );
-
-    return profile.getRiverbedRoughness();
+    return m_profile.getRiverbedRoughness();
   }
 
   public Double getLeftForelandRoughness( )
   {
-    final KnaufProfilePointWrapper profile = new KnaufProfilePointWrapper( m_profile.getProfil() );
-
-    return profile.getLeftForelandRoughness();
+    return m_profile.getLeftForelandRoughness();
   }
 
   /**
@@ -103,7 +97,9 @@ public class KnaufSA21Bean extends AbstractKnaufProjectBean
    */
   public char getABSZeta( )
   {
-    return 'S'; // FIXME
+    final KNAUF_FLIESSGESETZ fliessgesetz = m_reach.getFliessgesetz();
+    return fliessgesetz.toABSZeta();
+
   }
 
   public Double getLocalVerlustBeiwertZeta( )
