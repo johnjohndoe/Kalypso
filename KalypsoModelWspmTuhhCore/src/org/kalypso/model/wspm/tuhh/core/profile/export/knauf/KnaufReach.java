@@ -41,14 +41,17 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufProfileBeanBuilder;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA15Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA16Bean;
@@ -98,6 +101,12 @@ public class KnaufReach
     beans.add( new KnaufSA15Bean( this ) );
     beans.add( new KnaufSA16Bean( this ) );
 
+    final IProfileFeature[] profiles = getProfiles();
+    for( final IProfileFeature profile : profiles )
+    {
+      Collections.addAll( beans, KnaufProfileBeanBuilder.toBeans( this, profile ) );
+    }
+
     return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
 
@@ -108,8 +117,19 @@ public class KnaufReach
 
   public IProfileFeature[] getProfiles( )
   {
-
     return m_profiles;
+  }
+
+  public IProfileFeature findNextProfile( final IProfileFeature profile )
+  {
+    final int index = ArrayUtils.indexOf( m_profiles, profile );
+    if( index < 0 )
+      return null;
+
+    if( org.kalypso.commons.java.lang.Arrays.isLastItem( m_profiles, profile ) )
+      return null;
+
+    return m_profiles[index + 1];
   }
 
 }

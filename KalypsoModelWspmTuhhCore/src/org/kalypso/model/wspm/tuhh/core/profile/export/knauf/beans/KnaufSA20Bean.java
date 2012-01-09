@@ -1,0 +1,103 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
+
+/**
+ * @author Dirk Kuch
+ */
+public class KnaufSA20Bean extends AbstractKnaufProjectBean
+{
+  private final KnaufReach m_reach;
+
+  private final IProfileFeature m_profile;
+
+  public KnaufSA20Bean( final KnaufReach reach, final IProfileFeature profile )
+  {
+    m_reach = reach;
+    m_profile = profile;
+  }
+
+  @Override
+  public Integer getSatzart( )
+  {
+    return 20;
+  }
+
+  /**
+   * @return profile station in m
+   */
+  public Double getStation( )
+  {
+    return m_profile.getStation() * 1000.0;
+  }
+
+  public Integer getNumberOfProfilePoints( )
+  {
+    final IProfil profile = m_profile.getProfil();
+    return profile.getResult().size();
+  }
+
+  public Double getDistanceNextProfile( )
+  {
+    final IProfileFeature next = m_reach.findNextProfile( m_profile );
+    if( Objects.isNull( next ) )
+      return null;
+
+    final double distance = Math.abs( m_profile.getStation() - next.getStation() );
+
+    return distance * 1000.0; // distance in m
+  }
+
+  public ProfilePointWrapper findLowestPoint( )
+  {
+    final ProfileWrapper profile = new ProfileWrapper( m_profile.getProfil() );
+    final ProfilePointWrapper point = profile.findLowestPoint();
+
+    return point;
+  }
+}
