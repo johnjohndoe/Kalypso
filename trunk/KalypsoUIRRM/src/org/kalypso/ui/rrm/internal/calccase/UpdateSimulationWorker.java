@@ -144,8 +144,9 @@ public class UpdateSimulationWorker
     ProgressUtilities.worked( monitor, 20 );
 
     /* Copy observations for pegel and zufluss */
-    copyPegelTimeseries( m_simulationFolder, control, new SubProgressMonitor( monitor, 20 ) );
-    copyZuflussTimeseries( m_simulationFolder, control, new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( m_simulationFolder, control, "ObsQMapping.gml", "Pegel", new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( m_simulationFolder, control, "ObsQZuMapping.gml", "Zufluss", new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( m_simulationFolder, control, "ObsEMapping.gml", "Klima", new SubProgressMonitor( monitor, 20 ) );
 
     /* Execute catchment models */
     executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
@@ -187,16 +188,16 @@ public class UpdateSimulationWorker
     }
   }
 
-  private void copyPegelTimeseries( final IFolder calcCaseFolder, final NAControl control, final IProgressMonitor monitor ) throws CoreException
+  private void copyMappingTimeseries( final IFolder calcCaseFolder, final NAControl control, final String mappingFilename, final String outputFoldername, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
       /* Read mapping */
-      final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsQMapping.gml", MAPPING_MEMBER );
+      final FeatureList mappingFeatures = readMapping( calcCaseFolder, mappingFilename, MAPPING_MEMBER );
 
       /* Prepare visitor */
 
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Pegel", "inObservationLink", control ); //$NON-NLS-1$ //$NON-NLS-2$
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, outputFoldername, "inObservationLink", control ); //$NON-NLS-1$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -206,30 +207,8 @@ public class UpdateSimulationWorker
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute pegel mapping", e );
-      throw new CoreException( status );
-    }
-  }
-
-  private void copyZuflussTimeseries( final IFolder calcCaseFolder, final NAControl control, final IProgressMonitor monitor ) throws CoreException
-  {
-    try
-    {
-      /* Read mapping */
-      final FeatureList mappingFeatures = readMapping( calcCaseFolder, "ObsQZuMapping.gml", MAPPING_MEMBER );
-
-      /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, "Zufluss", "inObservationLink", control ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      /* Execute visitor */
-      final int count = mappingFeatures.size();
-      final MonitorFeatureVisitor wrappedVisitor = new MonitorFeatureVisitor( monitor, count, visitor );
-      mappingFeatures.accept( wrappedVisitor );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute zufluss mapping", e );
+      final String message = String.format( "Failed to execute mapping: %s", outputFoldername );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message, e );
       throw new CoreException( status );
     }
   }
