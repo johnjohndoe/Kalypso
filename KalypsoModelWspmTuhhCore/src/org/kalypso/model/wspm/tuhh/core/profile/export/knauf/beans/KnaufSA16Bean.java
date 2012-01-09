@@ -67,7 +67,6 @@ public class KnaufSA16Bean extends AbstractKnaufProjectBean
   public KnaufSA16Bean( final KnaufReach reach )
   {
     m_reach = reach;
-
   }
 
   @Override
