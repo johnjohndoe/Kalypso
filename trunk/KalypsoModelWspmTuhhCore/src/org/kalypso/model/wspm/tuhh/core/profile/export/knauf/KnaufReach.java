@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
@@ -68,22 +70,15 @@ import org.kalypsodeegree.model.feature.Feature;
 public class KnaufReach
 {
 
-  private final KnaufProfileWrapper[] m_profiles;
+  private final Set<KnaufProfileWrapper> m_profiles;
 
   public KnaufReach( final IProfileFeature[] profiles )
   {
-
-    final ProfileFeatureStationComparator comparator = new ProfileFeatureStationComparator( getDirection( profiles ) );
-    Arrays.sort( profiles, comparator );
-
-    final Set<KnaufProfileWrapper> wrappers = new LinkedHashSet<>();
-
+    m_profiles = new TreeSet<>( new ProfileFeatureStationComparator( getDirection( profiles ) ) );
     for( final IProfileFeature profile : profiles )
     {
-      wrappers.add( new KnaufProfileWrapper( this, profile ) );
+      m_profiles.add( new KnaufProfileWrapper( this, profile.getProfil() ) );
     }
-
-    m_profiles = wrappers.toArray( new KnaufProfileWrapper[] {} );
   }
 
   private boolean getDirection( final IProfileFeature[] profiles )
@@ -114,7 +109,10 @@ public class KnaufReach
     final KnaufProfileWrapper[] profiles = getProfiles();
     for( final KnaufProfileWrapper profile : profiles )
     {
-      Collections.addAll( beans, KnaufProfileBeanBuilder.toBeans( this, profile ) );
+      final KnaufProfileBeanBuilder builder = new KnaufProfileBeanBuilder( this, profile );
+      final IStatus status = builder.execute( new NullProgressMonitor() ); // TODO
+
+      Collections.addAll( beans, builder.getBeans() );
     }
 
     beans.add( new KnaufSA40Bean( this ) );
@@ -129,19 +127,21 @@ public class KnaufReach
 
   public KnaufProfileWrapper[] getProfiles( )
   {
-    return m_profiles;
+    return m_profiles.toArray( new KnaufProfileWrapper[] {} );
   }
 
   public KnaufProfileWrapper findNextProfile( final KnaufProfileWrapper profile )
   {
-    final int index = ArrayUtils.indexOf( m_profiles, profile );
+    final KnaufProfileWrapper[] profiles = getProfiles();
+
+    final int index = ArrayUtils.indexOf( profiles, profile );
     if( index < 0 )
       return null;
 
-    if( org.kalypso.commons.java.lang.Arrays.isLastItem( m_profiles, profile ) )
+    if( org.kalypso.commons.java.lang.Arrays.isLastItem( profiles, profile ) )
       return null;
 
-    return m_profiles[index + 1];
+    return profiles[index + 1];
   }
 
 }
