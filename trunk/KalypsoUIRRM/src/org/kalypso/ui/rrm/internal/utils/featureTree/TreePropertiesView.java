@@ -49,8 +49,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
@@ -72,7 +72,7 @@ public class TreePropertiesView extends ViewPart
     }
   };
 
-  private Form m_form;
+  private ScrolledForm m_form;
 
   private FormToolkit m_toolkit;
 
@@ -84,8 +84,8 @@ public class TreePropertiesView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_toolkit = ToolkitUtils.createToolkit( parent );
-    m_form = m_toolkit.createForm( parent );
-    m_toolkit.decorateFormHeading( m_form );
+    m_form = m_toolkit.createScrolledForm( parent );
+    m_toolkit.decorateFormHeading( m_form.getForm() );
 
     final Composite body = m_form.getBody();
     GridLayoutFactory.fillDefaults().applyTo( body );
@@ -124,7 +124,7 @@ public class TreePropertiesView extends ViewPart
     else
       updateNonNullNode( m_node );
 
-    m_form.getBody().layout();
+    m_form.reflow( true );
   }
 
   private void updateNullNode( )
