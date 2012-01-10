@@ -121,16 +121,9 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
   {
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final String name = simulation.getDescription();
+    final IFolder simulationFolder = createFolder( m_baseFolder, simulation );
 
-    monitor.beginTask( String.format( "Refreshing simulation: %s", name ), 100 );
-
-    /* Build simulation folder */
-    // FIXME: encode does not work, as the gmlSerializer creates URLs from files without encoding, so the encoding will
-    // be lost then
-    // final String encodedName = URLEncoder.encode( name, Charsets.UTF_8.name() );
-    final String encodedName = name;
-    final IFolder simulationFolder = m_baseFolder.getFolder( new Path( encodedName ) );
+    monitor.beginTask( String.format( "Refreshing simulation: %s", simulationFolder.getName() ), 100 );
 
     /* Delete existing data */
     // TODO: should we always do that? What about existing results etc.?
@@ -150,7 +143,19 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
     final IStatus updateStatus = updateWorker.execute( new SubProgressMonitor( monitor, 50 ) );
     log.add( updateStatus );
 
+    final String name = simulation.getDescription();
     return log.asMultiStatusOrOK( name, name );
+  }
+
+  static IFolder createFolder( final IContainer baseFolder, final NAControl simulation )
+  {
+    final String name = simulation.getDescription();
+    /* Build simulation folder */
+    // FIXME: encode does not work, as the gmlSerializer creates URLs from files without encoding, so the encoding will
+    // be lost then
+    // final String encodedName = URLEncoder.encode( name, Charsets.UTF_8.name() );
+    final String encodedName = name;
+    return baseFolder.getFolder( new Path( encodedName ) );
   }
 
   private IStatus createSimulation( final NAControl simulation, final IFolder simulationFolder, final IProgressMonitor monitor ) throws CoreException

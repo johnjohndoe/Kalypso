@@ -96,7 +96,11 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
 
     final ISelection selection = HandlerUtil.getCurrentSelection( event );
 
-    final NAControl[] chosenSimulations = chooseSimulations( shell, input, selection, title );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder simulationsFolder = szenarioFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+
+    final NAControl[] chosenSimulations = chooseSimulations( shell, simulationsFolder, input, selection, title );
     if( chosenSimulations == null || chosenSimulations.length == 0 )
       return null;
 
@@ -104,9 +108,6 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
       return null;
 
     /* Refresh it */
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final IFolder simulationsFolder = szenarioFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
 
     final RefreshSimulationsOperation operation = new RefreshSimulationsOperation( simulationsFolder, chosenSimulations );
 
@@ -116,7 +117,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
     return null;
   }
 
-  private NAControl[] chooseSimulations( final Shell shell, final ILayerTableInput input, final ISelection selection, final String title )
+  private NAControl[] chooseSimulations( final Shell shell, final IFolder simulationsFolder, final ILayerTableInput input, final ISelection selection, final String title )
   {
     final NAControl[] selectedSimulations = findSimulationsFromSelection( (IStructuredSelection) selection );
     final NAControl[] allSimulations = findAllSimulations( input );
@@ -132,7 +133,21 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
 
     // TODO: use special dialog / wizard
     // TODO: show dialog, which ones to refresh + other info (which ones get refreshed, which ones get created etc.)
-    final IBaseLabelProvider labelProvider = new GMLLabelProvider();
+    final IBaseLabelProvider labelProvider = new GMLLabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        final String text = super.getText( element );
+
+        final IFolder simulationFolder = RefreshSimulationsOperation.createFolder( simulationsFolder, (NAControl) element );
+        if( simulationFolder.exists() )
+          return String.format( "%s (exists)", text );
+
+        return text;
+      }
+    };
+
     final ListSelectionDialog<NAControl> dialog = new ListSelectionDialog<>( shell, "Please select the simulations to refresh", allSimulations, selectedSimulations, labelProvider, NAControl.class );
     if( dialog.open() != Window.OK )
       return null;
