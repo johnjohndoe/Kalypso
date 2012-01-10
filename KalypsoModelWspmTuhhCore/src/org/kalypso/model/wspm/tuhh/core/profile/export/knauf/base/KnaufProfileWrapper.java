@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
@@ -57,16 +57,13 @@ import org.kalypso.observation.result.IComponent;
 public class KnaufProfileWrapper extends ProfileWrapper
 {
 
-  private final IProfileFeature m_profileFeature;
-
   private final KnaufReach m_reach;
 
-  public KnaufProfileWrapper( final KnaufReach reach, final IProfileFeature profile )
+  public KnaufProfileWrapper( final KnaufReach reach, final IProfil profile )
   {
-    super( profile.getProfil() );
+    super( profile );
 
     m_reach = reach;
-    m_profileFeature = profile;
   }
 
   public Double getRightForelandRoughness( )

@@ -43,12 +43,12 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 import java.math.BigDecimal;
 import java.util.Comparator;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
  */
-public class ProfileFeatureStationComparator implements Comparator<IProfileFeature>
+public class ProfileFeatureStationComparator implements Comparator<KnaufProfileWrapper>
 {
   private final TuhhStationComparator m_stationComparator;
 
@@ -58,11 +58,11 @@ public class ProfileFeatureStationComparator implements Comparator<IProfileFeatu
   }
 
   @Override
-  public int compare( final IProfileFeature feature1, final IProfileFeature feature2 )
+  public int compare( final KnaufProfileWrapper p1, final KnaufProfileWrapper p2 )
   {
-    final BigDecimal s1 = feature1.getBigStation();
-    final BigDecimal s2 = feature2.getBigStation();
+    final Double s1 = p1.getStation();
+    final Double s2 = p2.getStation();
 
-    return m_stationComparator.compare( s1, s2 );
+    return m_stationComparator.compare( BigDecimal.valueOf( s1 ), BigDecimal.valueOf( s2 ) );
   }
 }

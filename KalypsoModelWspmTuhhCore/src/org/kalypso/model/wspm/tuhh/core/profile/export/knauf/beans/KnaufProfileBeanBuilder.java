@@ -40,36 +40,104 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
  */
-public final class KnaufProfileBeanBuilder
+public final class KnaufProfileBeanBuilder implements ICoreRunnableWithProgress
 {
-  private KnaufProfileBeanBuilder( )
+  private final KnaufReach m_reach;
+
+  private final KnaufProfileWrapper m_profile;
+
+  private final Set<AbstractKnaufProjectBean> m_beans = new LinkedHashSet<>();
+
+  public KnaufProfileBeanBuilder( final KnaufReach reach, final KnaufProfileWrapper profile )
   {
+    m_reach = reach;
+    m_profile = profile;
   }
 
-  public static AbstractKnaufProjectBean[] toBeans( final KnaufReach reach, final KnaufProfileWrapper profile )
+  @Override
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
+    final Set<IStatus> stati = new LinkedHashSet<>();
 
-    beans.add( new KnaufSA20Bean( reach, profile ) );
-    beans.add( new KnaufSA21Bean( reach, profile ) );
+    final IProfil profile = m_profile.getProfile();
+    final IProfileObject[] objects = profile.getProfileObjects();
+
+    // TODO handle sinousität
+
+    final IProfileBuilding building = findBuilding( objects );
+    if( Objects.isNull( building ) )
+      Collections.addAll( stati, buildDefaultBeans( m_reach, m_profile ) );
+    else if( building instanceof BuildingBruecke )
+      Collections.addAll( stati, buildBridgeBeans() );
+    else if( Objects.isNotNull( building ) )
+    {
+      final String message = String.format( "Achtung! Bauwerk am Profile %.3f wurde übersprungen. %s", m_profile.getStation(), building.getClass().getName() );
+      final Status status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.getID(), message );
+      stati.add( status );
+
+      Collections.addAll( stati, buildDefaultBeans( m_reach, m_profile ) );
+    }
+
+    return StatusUtilities.createStatus( stati, "Knauf-Profilexport Bean-Generierung" );
+  }
+
+  private static IProfileBuilding findBuilding( final IProfileObject[] objects )
+  {
+    for( final IProfileObject object : objects )
+    {
+      if( object instanceof IProfileBuilding )
+        return (IProfileBuilding) object;
+    }
+
+    return null;
+  }
+
+  private static IStatus[] buildBridgeBeans( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  private IStatus[] buildDefaultBeans( final KnaufReach reach, final KnaufProfileWrapper profile )
+  {
+    m_beans.add( new KnaufSA20Bean( reach, profile ) );
+    m_beans.add( new KnaufSA21Bean( reach, profile ) );
 
     final ProfilePointWrapper[] points = profile.getPoints();
     for( final ProfilePointWrapper point : points )
     {
-      beans.add( new KnaufSA30Bean( profile, point ) );
+      m_beans.add( new KnaufSA30Bean( profile, point ) );
     }
 
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
+    final Status status = new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "Default Knauf Profilexport Bean-Generierung erfolgreich" );
+    return new IStatus[] { status };
+  }
+
+  public AbstractKnaufProjectBean[] getBeans( )
+  {
+    return m_beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
 
 }
