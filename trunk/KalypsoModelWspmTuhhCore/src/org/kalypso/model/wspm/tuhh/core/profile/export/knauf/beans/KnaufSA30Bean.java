@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
@@ -84,13 +85,14 @@ public class KnaufSA30Bean extends AbstractKnaufProjectBean
     setStation( profile.getStation() * 1000.0 );
     setBreite( point.getBreite() );
     setHoehe( point.getHoehe() );
-    setBewuchsAx( (Double) Objects.firstNonNull( point.getBewuchsAx(), 0.0 ) );
-    setBewuchsAy( (Double) Objects.firstNonNull( point.getBewuchsAx(), 0.0 ) );
-    setBewuchsDp( (Double) Objects.firstNonNull( point.getBewuchsAx(), 0.0 ) );
-    setKsValue( (Double) Objects.firstNonNull( point.getKsValue(), 0.0 ) );
-    setKstValue( (Double) Objects.firstNonNull( point.getKstValue(), 0.0 ) );
-    setRechtswert( (Double) Objects.firstNonNull( point.getRechtswert(), 0.0 ) );
-    setHochwert( (Double) Objects.firstNonNull( point.getHochwert(), 0.0 ) );
+
+    setBewuchsAx( Doubles.firstNonNull( point.getBewuchsAx(), 0.0 ) );
+    setBewuchsAy( Doubles.firstNonNull( point.getBewuchsAx(), 0.0 ) );
+    setBewuchsDp( Doubles.firstNonNull( point.getBewuchsAx(), 0.0 ) );
+    setKsValue( Doubles.firstNonNull( point.getKsValue(), 0.0 ) );
+    setKstValue( Doubles.firstNonNull( point.getKstValue(), 0.0 ) );
+    setRechtswert( Doubles.firstNonNull( point.getRechtswert(), 0.0 ) );
+    setHochwert( Doubles.firstNonNull( point.getHochwert(), 0.0 ) );
   }
 
   @Override

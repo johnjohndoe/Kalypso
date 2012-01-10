@@ -84,7 +84,7 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
   {
     final KnaufProfileWrapper next = m_reach.findNextProfile( m_profile );
     if( Objects.isNull( next ) )
-      return null;
+      return 0.0;
 
     final double distance = Math.abs( m_profile.getStation() - next.getStation() );
 

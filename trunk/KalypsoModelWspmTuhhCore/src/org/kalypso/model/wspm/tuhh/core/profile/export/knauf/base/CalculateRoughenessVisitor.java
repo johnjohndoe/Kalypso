@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
@@ -62,6 +66,8 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
 
   private final double m_segmentEnd;
 
+  Set<ProfilePointWrapper> m_points = new LinkedHashSet<>();
+
   public CalculateRoughenessVisitor( final double segmentStart, final double segmentEnd )
   {
     m_segmentStart = segmentStart;
@@ -73,6 +79,8 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
   {
     if( !isBetween( point ) )
       return;
+
+    m_points.add( point );
 
     final Double ksValue = point.getKsValue();
     if( Objects.isNotNull( ksValue ) && !Double.isNaN( ksValue ) )
@@ -98,29 +106,44 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
     return true;
   }
 
-  public Double getKsValue( )
+  private double getDistance( final ProfilePointWrapper... points )
   {
-    if( m_pointsKsValues == 0 )
+    if( ArrayUtils.getLength( points ) == 1 )
       return 0.0;
 
-    return m_ksValues / Integer.valueOf( m_pointsKsValues ).doubleValue();
-  }
+    final ProfilePointWrapper p1 = points[0];
+    final ProfilePointWrapper p2 = points[ArrayUtils.getLength( points ) - 1];
 
-  public Double getKstValue( )
-  {
-    if( m_pointsKstValues == 0 )
-      return 0.0;
-
-    return m_kstValues / Integer.valueOf( m_pointsKstValues ).doubleValue();
+    return Math.abs( p2.getBreite() - p1.getBreite() );
   }
 
   public Double getRoughness( final KnaufReach reach )
   {
+    if( m_points.size() == 0 )
+      return 0.0;
+
     final KNAUF_FLIESSGESETZ fliessgesetz = reach.getFliessgesetz();
-    if( KNAUF_FLIESSGESETZ.eManningStrickler.equals( fliessgesetz ) )
-      return m_kstValues;
 
-    return m_ksValues;
+    final ProfilePointWrapper[] points = m_points.toArray( new ProfilePointWrapper[] {} );
+
+    final double distance = getDistance( points );
+    if( distance == 0.0 )
+      points[0].getKsValue();
+
+    double base = 0.0;
+
+    for( int index = 0; index < points.length - 1; index++ )
+    {
+      final ProfilePointWrapper p1 = points[index];
+      final ProfilePointWrapper p2 = points[index + 1];
+
+      final double d = getDistance( p1, p2 );
+
+      final Double value = fliessgesetz.getRoughnessValue( p1 );
+
+      base += d * value;
+    }
+
+    return base / distance;
   }
-
 }
