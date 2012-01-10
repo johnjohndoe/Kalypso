@@ -206,7 +206,6 @@ public class UpdateSimulationWorker
       final FeatureList mappingFeatures = readMapping( calcCaseFolder, mappingFilename, MAPPING_MEMBER );
 
       /* Prepare visitor */
-
       final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, outputFoldername, "inObservationLink", control ); //$NON-NLS-1$
 
       /* Execute visitor */
