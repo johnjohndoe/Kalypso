@@ -259,4 +259,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   {
     return m_timeseries;
   }
+
+  public ImportObservationData getData( )
+  {
+    return m_data;
+  }
 }
