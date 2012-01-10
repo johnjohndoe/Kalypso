@@ -156,12 +156,12 @@ public class KnaufSA20Printer extends AbstractKnaufPrinter
     /**
      * char [81-95], type F15.0 changed -> %15.2 - Rechtswert Gauss-Krüger für tiefsten Punkt
      */
-    builder.append( String.format( Locale.US, "%15.2f", point.getRechtswert() ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%15.3f", point.getRechtswert() ) ); //$NON-NLS-1$
 
     /**
      * char [96-110], type F15.0 changed -> %15.2 - Hochwert Gauss-Krüger für tiefsten Punkt
      */
-    builder.append( String.format( Locale.US, "%15.2f", point.getHochwert() ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%15.3f", point.getHochwert() ) ); //$NON-NLS-1$
 
     return builder.toString();
   }
