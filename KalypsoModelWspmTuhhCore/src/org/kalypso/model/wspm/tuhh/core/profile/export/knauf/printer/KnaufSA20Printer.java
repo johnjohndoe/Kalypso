@@ -141,6 +141,8 @@ public class KnaufSA20Printer extends AbstractKnaufPrinter
      */
     builder.append( String.format( Locale.US, "%7.2f", 0.0 ) ); //$NON-NLS-1$
 
+    builder.append( " " ); //$NON-NLS-1$
+
     /**
      * char [79-80] - Kennzeichnung von Mehrfeldbrücken<br>
      * MFB MFB= LL Zuordnung zum linken Vorland<br>
