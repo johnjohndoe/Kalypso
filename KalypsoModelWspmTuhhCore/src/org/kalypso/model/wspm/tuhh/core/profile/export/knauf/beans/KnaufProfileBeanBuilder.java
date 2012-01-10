@@ -117,7 +117,7 @@ public final class KnaufProfileBeanBuilder implements ICoreRunnableWithProgress
   private static IStatus[] buildBridgeBeans( )
   {
     // TODO Auto-generated method stub
-    return null;
+    return new IStatus[] {};
   }
 
   private IStatus[] buildDefaultBeans( final KnaufReach reach, final KnaufProfileWrapper profile )

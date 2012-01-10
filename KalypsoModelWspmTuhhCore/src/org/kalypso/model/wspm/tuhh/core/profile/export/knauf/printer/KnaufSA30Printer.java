@@ -111,10 +111,10 @@ public class KnaufSA30Printer extends AbstractKnaufPrinter
     builder.append( String.format( Locale.US, "%7.1f", getBean().getRoughness() ) ); //$NON-NLS-1$
 
     /** char [81-95] F15.0 change to %15.2f m Rechtswert Gauss-Krüger */
-    builder.append( String.format( Locale.US, "%15.2f", getBean().getRechtswert() ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%15.3f", getBean().getRechtswert() ) ); //$NON-NLS-1$
 
     /** char [96-110] F15.0 change to %15.2f m Hochwert Gauss-Krüger */
-    builder.append( String.format( Locale.US, "%15.2f", getBean().getHochwert() ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%15.3f", getBean().getHochwert() ) ); //$NON-NLS-1$
 
     return builder.toString();
   }
