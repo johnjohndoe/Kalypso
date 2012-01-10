@@ -74,8 +74,18 @@ public class TimeseriesImportWizard extends Wizard
   }
 
   @Override
+  public boolean performCancel( )
+  {
+    saveSettings();
+
+    return super.performCancel();
+  }
+
+  @Override
   public boolean performFinish( )
   {
+    saveSettings();
+
     m_importOperation.updateDataAfterFinish();
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
@@ -83,5 +93,10 @@ public class TimeseriesImportWizard extends Wizard
       StatusDialog.open( getShell(), status, getWindowTitle() );
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  private void saveSettings( )
+  {
+    m_importOperation.getData().storeSettings( getDialogSettings() );
   }
 }
