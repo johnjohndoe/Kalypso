@@ -38,77 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA29Bean;
 
 /**
  * @author Dirk Kuch
  */
-public class KnaufSA20Bean extends AbstractKnaufProjectBean
+public class KnaufSA29BeanInitializer extends KnaufBeanInitializer
 {
 
-  private final KnaufProfileWrapper m_profile;
-
-  private Double m_pfeilerFormBeiwert;
-
-  public KnaufSA20Bean( final KnaufProfileWrapper profile )
+  public static void init( final KnaufSA29Bean bean )
   {
-    m_profile = profile;
+    final IProfileBuilding building = getBuilding( bean.getProfile() );
+
+    if( building instanceof BuildingBruecke )
+    {
+      doInitBruecke( (BuildingBruecke) building, bean );
+    }
+    else
+      throw new IllegalStateException();
+
   }
 
-  public KnaufProfileWrapper getProfile( )
+  private static void doInitBruecke( final BuildingBruecke bridge, final KnaufSA29Bean bean )
   {
-    return m_profile;
-  }
+    final KnaufProfileWrapper profile = bean.getProfile();
 
-  @Override
-  public Integer getSatzart( )
-  {
-    return 20;
-  }
+    final FindBridgeBorderVisitor oberkante = new FindBridgeBorderVisitor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    profile.accept( oberkante, 1 );
+    bean.setHKrone( oberkante.getBorder() );
 
-  /**
-   * @return profile station in m
-   */
-  public Double getStation( )
-  {
-    return m_profile.getStation() * 1000.0;
-  }
+    final DetermineBridgeWidthVisitor width = new DetermineBridgeWidthVisitor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    profile.accept( width, 1 );
+    bean.setWebe( width.getWidth() );
 
-  public Integer getNumberOfProfilePoints( )
-  {
-    return ArrayUtils.getLength( m_profile.getPoints() );
-  }
-
-  public Double getDistanceNextProfile( )
-  {
-    final KnaufProfileWrapper next = m_profile.findNextProfile();
-    if( Objects.isNull( next ) )
-      return 0.0;
-
-    final double distance = Math.abs( m_profile.getStation() - next.getStation() );
-
-    return distance * 1000.0; // distance in m
-  }
-
-  public ProfilePointWrapper findLowestPoint( )
-  {
-    final ProfilePointWrapper point = m_profile.findLowestPoint();
-
-    return point;
-  }
-
-  public Double getPfeilerFormBeiwert( )
-  {
-    return m_pfeilerFormBeiwert;
-  }
-
-  public void setPfeilerFormBeiwert( final Double pfeilerFormBeiwert )
-  {
-    m_pfeilerFormBeiwert = pfeilerFormBeiwert;
+    bean.setMueBeiwert( 0.6 );
+    bean.setWHoehe( 0.8 );
+    bean.setHUfer( 0.0 );
   }
 }

@@ -40,32 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
  * @author Dirk Kuch
  */
-public class KnaufSA21Bean extends AbstractKnaufProjectBean
+public class KnaufSA29Bean extends AbstractKnaufProjectBean
 {
-
   private final KnaufProfileWrapper m_profile;
 
-  private Double m_localVerlustBeiwertZeta = 0.0;
+  private Double m_hUfer;
 
-  private Double m_dkuk;
+  private Double m_whoehe;
 
-  private Double m_rightForelandRoughness;
+  private Double m_mueBeiwert;
 
-  private Double m_riverbedRoughness;
+  private Double m_webe;
 
-  private Double m_leftForelandRoughness;
+  private Double m_hKrone;
 
-  private Integer m_idp;
-
-  private Integer m_kzd;
-
-  public KnaufSA21Bean( final KnaufProfileWrapper profile )
+  public KnaufSA29Bean( final KnaufProfileWrapper profile )
   {
     m_profile = profile;
   }
@@ -78,7 +72,7 @@ public class KnaufSA21Bean extends AbstractKnaufProjectBean
   @Override
   public Integer getSatzart( )
   {
-    return 21;
+    return 29;
   }
 
   /**
@@ -89,87 +83,54 @@ public class KnaufSA21Bean extends AbstractKnaufProjectBean
     return m_profile.getStation() * 1000.0;
   }
 
-  public Double getRightForelandRoughness( )
+  public Double getHKrone( )
   {
-    return m_rightForelandRoughness;
-
+    return m_hKrone;
   }
 
-  public Double getRiverbedRoughness( )
+  public Double getWebe( )
   {
-    return m_riverbedRoughness;
+    return m_webe;
   }
 
-  public Double getLeftForelandRoughness( )
+  public Double getMueBeiwert( )
   {
-    return m_leftForelandRoughness;
+    return m_mueBeiwert;
   }
 
-  /**
-   * 46 A1 ABSZETA bei ABSZETA = A wird ZETA als absolute Verlusthöhe in m eingesetzt <br>
-   * ABSZETA = S : Manning-Strickler<br>
-   * ABSZETA = P : Prandtl-Colebrook
-   */
-  public char getABSZeta( )
+  public Double getWHoehe( )
   {
-    final KNAUF_FLIESSGESETZ fliessgesetz = m_profile.getReach().getFliessgesetz();
-    return fliessgesetz.toABSZeta();
-
+    return m_whoehe;
   }
 
-  public Double getLocalVerlustBeiwertZeta( )
+  public Double getHUfer( )
   {
-    return m_localVerlustBeiwertZeta;
+    return m_hUfer;
   }
 
-  public void setLocalVerlustBeiwertZeta( final Double localVerlustBeiwertZeta )
+  public void setHKrone( final Double hKrone )
   {
-    m_localVerlustBeiwertZeta = localVerlustBeiwertZeta;
+    m_hKrone = hKrone;
   }
 
-  public Double getDKUK( )
+  public void setWebe( final Double webe )
   {
-    return m_dkuk;
+    m_webe = webe;
   }
 
-  public void setDKUK( final Double dkuk )
+  public void setMueBeiwert( final Double mueBeiwert )
   {
-    m_dkuk = dkuk;
+    m_mueBeiwert = mueBeiwert;
   }
 
-  public void setRightForelandRoughness( final Double rightForelandRoughness )
+  public void setWHoehe( final Double whoehe )
   {
-    m_rightForelandRoughness = rightForelandRoughness;
+    m_whoehe = whoehe;
   }
 
-  public void setRiverbedRoughness( final Double riverbedRoughness )
+  public void setHUfer( final Double hUfer )
   {
-    m_riverbedRoughness = riverbedRoughness;
-  }
-
-  public void setLeftForelandRoughness( final Double leftForelandRoughness )
-  {
-    m_leftForelandRoughness = leftForelandRoughness;
-  }
-
-  public Integer getIDP( )
-  {
-    return m_idp;
-  }
-
-  public Integer getKZD( )
-  {
-    return m_kzd;
-  }
-
-  public void setIDP( Integer idp )
-  {
-    m_idp = idp;
-  }
-
-  public void setKZD( Integer kzd )
-  {
-    m_kzd = kzd;
+    m_hUfer = hUfer;
   }
 
 }
