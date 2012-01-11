@@ -136,4 +136,25 @@ public final class WspmProfileHelper
     return ArrayUtils.isEmpty( profileObjects ) ? null : buildingType.cast( profileObjects[0] );
   }
 
+  public static ProfilePointWrapper getSohlpunktPoint( final ProfileWrapper wrapper )
+  {
+    final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    if( dbs.length != 2 )
+      throw new IllegalStateException();
+
+    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+
+    ProfilePointWrapper ptr = null;
+
+    for( final ProfilePointWrapper point : points )
+    {
+      if( ptr == null )
+        ptr = point;
+      else if( point.getHoehe() < ptr.getHoehe() )
+        ptr = point;
+    }
+
+    return ptr;
+  }
+
 }
