@@ -44,8 +44,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -59,6 +69,8 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 {
   private final Feature m_waterOrReach;
 
+  private Polygon m_mainChannel;
+
   public BanklineBuilder( final Feature waterOrReach )
   {
     m_waterOrReach = waterOrReach;
@@ -67,13 +79,90 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+    final WspmWaterBody water = getWaterBody();
+    final IProfileFeature[] profiles = getProfiles();
+
+    if( water == null )
+    {
+      final String message = String.format( "Failed to find water body for element: %s", m_waterOrReach.getName() );
+      return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+    }
+
+    final GM_Curve centerLine = water.getCenterLine();
+    if( centerLine == null )
+    {
+      final String message = String.format( "Unable to build bank lines for element '%s': no center line defined in water body", m_waterOrReach.getName() );
+      return new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+    }
+
+    if( profiles == null )
+    {
+      final String message = String.format( "Failed to find cross sections for element: %s", m_waterOrReach.getName() );
+      return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+    }
+
+    try
+    {
+      final LineString riverLine = (LineString) JTSAdapter.export( centerLine );
+      return buildBankLines( riverLine, profiles );
+    }
+    catch( final GM_Exception e )
+    {
+      final String message = String.format( "Unable to build bank lines for element '%s': bad no center line in water body", m_waterOrReach.getName() );
+      return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
+    }
+  }
+
+  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles )
+  {
     // TODO Auto-generated method stub
+    m_mainChannel = (Polygon) riverLine.buffer( 10 );
+
     return Status.OK_STATUS;
+  }
+
+  WspmWaterBody getWaterBody( )
+  {
+    if( m_waterOrReach instanceof WspmWaterBody )
+      return (WspmWaterBody) m_waterOrReach;
+
+    if( m_waterOrReach instanceof TuhhReach )
+      return ((TuhhReach) m_waterOrReach).getWaterBody();
+
+    return null;
+  }
+
+  public TuhhReach getReach( )
+  {
+    if( m_waterOrReach instanceof TuhhReach )
+      return (TuhhReach) m_waterOrReach;
+
+    return null;
+  }
+
+  private IProfileFeature[] getProfiles( )
+  {
+    final TuhhReach reach = getReach();
+    if( reach != null )
+    {
+      final TuhhReachProfileSegment[] profileSegments = reach.getReachProfileSegments();
+      final IProfileFeature[] profiles = new IProfileFeature[profileSegments.length];
+      for( int i = 0; i < profiles.length; i++ )
+        profiles[i] = profileSegments[i].getProfileMember();
+    }
+
+    final WspmWaterBody waterBody = getWaterBody();
+    if( waterBody != null )
+    {
+      final IFeatureBindingCollection<IProfileFeature> profiles = waterBody.getProfiles();
+      return profiles.toArray( new IProfileFeature[profiles.size()] );
+    }
+
+    return null;
   }
 
   public Polygon getMainChannel( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_mainChannel;
   }
 }

@@ -44,6 +44,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -52,6 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
@@ -61,11 +63,12 @@ import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.deegree.IShapeDataFactory;
-import org.kalypso.shape.geometry.SHPNullShape;
+import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -74,9 +77,11 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 {
-  private static final short FIELD_LENGTH_ELEMENT = (short) 15;
+  private static final short FIELD_LENGTH_STATUS = (short) 128;
 
-  private static final short FIELD_LENGTH_NAME = (short) 30;
+  private static final short FIELD_LENGTH_TYPE = (short) 20;
+
+  private static final short FIELD_LENGTH_NAME = (short) 64;
 
   private final GM_Object2Shape m_channelShaper;
 
@@ -90,12 +95,11 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
   {
     final Charset charset = data.getExportCharset();
     final String srs = data.getExportCrs();
-    final ShapeType type = ShapeType.POLYLINE;
     final IDBFField[] fields = createFields();
 
     m_channelShaper = new GM_Object2Shape( ShapeType.POLYGON, data.getExportCrs() );
 
-    m_simpleShapeData = new SimpleShapeData( charset, srs, type, fields );
+    m_simpleShapeData = new SimpleShapeData( charset, srs, ShapeType.POLYGON, fields );
     m_exportableElements = data.getExportableElements();
   }
 
@@ -106,9 +110,15 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
       final Collection<IDBFField> fields = new ArrayList<>();
 
       // FIXME: get length from constant and use or create data
-      fields.add( new DBFField( "name", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
-      fields.add( new DBFField( "element", FieldType.C, FIELD_LENGTH_ELEMENT, (short) 0 ) );
-      // FIXME: other fields
+      fields.add( new DBFField( "WaterBody", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
+      fields.add( new DBFField( "RefId", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
+      fields.add( new DBFField( "Reach", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
+      fields.add( new DBFField( "Type", FieldType.C, FIELD_LENGTH_TYPE, (short) 0 ) );
+      fields.add( new DBFField( "Status", FieldType.C, FIELD_LENGTH_STATUS, (short) 0 ) );
+      // FIXME: other fields:
+      // water body name
+      // water body ref id
+      // reach name
 
       return fields.toArray( new IDBFField[fields.size()] );
     }
@@ -187,15 +197,23 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
       m_log.add( status );
 
     final Polygon mainChannelGeometry = exporter.getMainChannel();
-    final Object[] data = new Object[2];
-    data[0] = element.getName();
-    data[1] = element.getFeatureType().getQName().getLocalPart();
 
-// if( mainChannelGeometry != null )
-    {
-      // final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( mainChannelGeometry, kalypsoSrs ) );
-      exporter.getMainChannel();
-      m_simpleShapeData.addRow( new SHPNullShape(), data );
-    }
+    final Object[] data = new Object[5];
+
+    final WspmWaterBody water = exporter.getWaterBody();
+    final TuhhReach reach = exporter.getReach();
+    final String waterName = water == null ? StringUtils.EMPTY : water.getName();
+    final String refId = water == null ? StringUtils.EMPTY : water.getRefNr();
+    final String reachName = reach == null ? StringUtils.EMPTY : reach.getName();
+
+    data[0] = StringUtils.abbreviate( waterName, FIELD_LENGTH_NAME );
+    data[1] = StringUtils.abbreviate( refId, FIELD_LENGTH_NAME );
+    data[2] = StringUtils.abbreviate( reachName, FIELD_LENGTH_NAME );
+    data[3] = StringUtils.abbreviate( element.getFeatureType().getQName().getLocalPart(), FIELD_LENGTH_TYPE );
+    data[4] = StringUtils.abbreviate( status.getMessage(), FIELD_LENGTH_STATUS );
+
+    final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( mainChannelGeometry, kalypsoSrs ) );
+    exporter.getMainChannel();
+    m_simpleShapeData.addRow( geometry, data );
   }
 }
