@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Gernot Belger
@@ -196,7 +196,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     if( !status.isOK() )
       m_log.add( status );
 
-    final Polygon mainChannelGeometry = exporter.getMainChannel();
+    final Geometry mainChannelGeometry = exporter.getMainChannel();
 
     final Object[] data = new Object[5];
 
@@ -213,6 +213,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     data[4] = StringUtils.abbreviate( status.getMessage(), FIELD_LENGTH_STATUS );
 
     final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( mainChannelGeometry, kalypsoSrs ) );
+
     exporter.getMainChannel();
     m_simpleShapeData.addRow( geometry, data );
   }
