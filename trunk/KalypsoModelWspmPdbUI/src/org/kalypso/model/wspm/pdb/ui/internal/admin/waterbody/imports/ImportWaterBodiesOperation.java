@@ -62,10 +62,13 @@ public class ImportWaterBodiesOperation implements ICoreRunnableWithProgress
 
   private final WaterBody[] m_waterBodies;
 
-  public ImportWaterBodiesOperation( final WaterBody[] waterBodies, final ImportWaterBodiesData data )
+  private final IPdbConnection m_connection;
+
+  public ImportWaterBodiesOperation( final WaterBody[] waterBodies, final ImportWaterBodiesData data, final IPdbConnection connection )
   {
     m_waterBodies = waterBodies;
     m_data = data;
+    m_connection = connection;
   }
 
   @Override
@@ -73,11 +76,10 @@ public class ImportWaterBodiesOperation implements ICoreRunnableWithProgress
   {
     final INSERTION_MODE insertionMode = m_data.getInsertionMode();
 
-    final IPdbConnection connection = m_data.getConnection();
     Session session = null;
     try
     {
-      session = connection.openSession();
+      session = m_connection.openSession();
       final IPdbOperation operation = new WaterBodiesInsertOperation( m_waterBodies, insertionMode, monitor );
       new Executor( session, operation ).execute();
       session.close();

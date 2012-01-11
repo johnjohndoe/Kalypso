@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * Reads water bodies from a shape file.
- *
+ * 
  * @author Gernot Belger
  */
 public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress

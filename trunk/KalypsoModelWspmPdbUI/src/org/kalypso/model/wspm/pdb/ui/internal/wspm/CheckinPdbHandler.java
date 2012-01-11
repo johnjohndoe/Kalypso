@@ -93,7 +93,7 @@ public class CheckinPdbHandler extends AbstractHandler
     final IPdbConnection connection = PdbUiUtils.getConnectionChecked( window );
 
     final CommandableWorkspace workspace = gmlViewer.getWorkspace();
-    final IStructuredSelection selection = (IStructuredSelection) gmlViewer.getSelection();
+    final IStructuredSelection selection = gmlViewer.getSelection();
 
     /* Ask user to save project and do nothing on cancel */
     final IConnectionViewer viewer = PdbHandlerUtils.getConnectionViewerChecked( event );
