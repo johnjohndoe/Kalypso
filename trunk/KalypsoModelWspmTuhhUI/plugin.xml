@@ -615,6 +615,13 @@
            <description>%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.description</description>
         </wizard>
         <wizard
+              category="exportWizards/shapeExportWizards"
+              class="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
+              id="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
+              name="%org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard.name">
+           <description>%org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard.description</description>
+        </wizard>
+        <wizard
               category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
               icon="icons/elcl16/export_plotter.gif"
@@ -783,6 +790,26 @@
         </wizardEnablement>
         <wizardEnablement
               wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard">
+           <enablement>
+              <with variable="selection">
+                 <iterate ifEmpty="false" operator="or">
+                    <or>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach">
+                       </test>
+                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
+                       </test>
+                    </or>
+                 </iterate>
+              </with>
+           </enablement>
+        </wizardEnablement>
+        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard">
            <enablement>
               <with variable="selection">
                  <iterate ifEmpty="false" operator="or">
