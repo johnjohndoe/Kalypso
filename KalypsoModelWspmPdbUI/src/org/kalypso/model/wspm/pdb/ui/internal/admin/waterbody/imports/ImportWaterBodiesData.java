@@ -46,13 +46,7 @@ import java.util.HashSet;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.model.wspm.pdb.PdbUtils;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.FileMode;
@@ -93,48 +87,23 @@ public class ImportWaterBodiesData extends AbstractModelObject
 
   private WaterBody[] m_waterBodies;
 
-  private INSERTION_MODE m_insertionMode = INSERTION_MODE.skip;
+  private INSERTION_MODE m_insertionMode;
 
-  private final WritableSet m_selectedWaterBodies = new WritableSet( new HashSet<WaterBody>(), WaterBody.class );
+  private final WritableSet m_selectedWaterBodies;
 
   private WaterBody[] m_existingWaterbodies;
 
-  private final IPdbConnection m_connection;
-
   private ImportAttributeInfo< ? >[] m_infos;
 
-  public ImportWaterBodiesData( final IPdbConnection connection )
+  public ImportWaterBodiesData( )
   {
-    m_connection = connection;
-  }
-
-  public void init( final IDialogSettings dialogSettings ) throws PdbConnectException
-  {
-    Session session = null;
-    try
-    {
-      session = m_connection.openSession();
-
-      m_existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
-
-      session.close();
-    }
-    finally
-    {
-      PdbUtils.closeSessionQuietly( session );
-    }
-
-    if( dialogSettings == null )
-      return;
-
-    // TODO: init from dialog settings
-
-    // TODO: save dialog settings
-  }
-
-  public IPdbConnection getConnection( )
-  {
-    return m_connection;
+    m_srs = null;
+    m_shapeFile = null;
+    m_waterBodies = null;
+    m_insertionMode = INSERTION_MODE.skip;
+    m_selectedWaterBodies = new WritableSet( new HashSet<WaterBody>(), WaterBody.class );
+    m_existingWaterbodies = null;
+    m_infos = null;
   }
 
   public void setShapeInput( final String shapeFile, final String srs )
@@ -204,6 +173,11 @@ public class ImportWaterBodiesData extends AbstractModelObject
     m_insertionMode = insertionMode;
 
     firePropertyChange( PROPERTY_INSERTION_MODE, oldValue, m_insertionMode );
+  }
+
+  public void setExistingWaterBodies( final WaterBody[] existingWaterBodies )
+  {
+    m_existingWaterbodies = existingWaterBodies;
   }
 
   public WaterBody[] getExistingWaterBodies( )
