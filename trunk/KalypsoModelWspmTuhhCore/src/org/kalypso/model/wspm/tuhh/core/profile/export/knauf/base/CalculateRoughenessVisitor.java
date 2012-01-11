@@ -145,6 +145,10 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
       base += d * value;
     }
 
-    return base / distance;
+    final double roughness = base / distance;
+    if( Double.isNaN( roughness ) )
+      return 0.0;
+
+    return roughness;
   }
 }

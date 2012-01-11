@@ -84,6 +84,17 @@ public class KnaufReach
     }
   }
 
+  public void addProfiles( final KnaufProfileWrapper... profiles )
+  {
+    if( Arrays.isEmpty( profiles ) )
+      return;
+
+    for( final KnaufProfileWrapper profile : profiles )
+    {
+      m_profiles.add( profile );
+    }
+  }
+
   private FLOW_DIRECTION getDirection( final IProfileFeature[] profiles )
   {
     for( final IProfileFeature profile : profiles )
@@ -95,6 +106,7 @@ public class KnaufReach
         final WspmWaterBody waterBody = (WspmWaterBody) parent;
         {
           m_direction = FLOW_DIRECTION.toFlowDirection( waterBody.isDirectionUpstreams() );
+          return m_direction;
         }
       }
     }
@@ -150,17 +162,6 @@ public class KnaufReach
       return null;
 
     return profiles[index + 1];
-  }
-
-  public void addProfiles( final KnaufProfileWrapper... profiles )
-  {
-    if( Arrays.isEmpty( profiles ) )
-      return;
-
-    for( final KnaufProfileWrapper profile : profiles )
-    {
-      m_profiles.add( profile );
-    }
   }
 
 }
