@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
+import java.util.SortedMap;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -55,6 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -115,11 +121,49 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
   private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles )
   {
-    // TODO Auto-generated method stub
-    m_mainChannel = (Polygon) riverLine.buffer( 10 );
+    final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
-    return Status.OK_STATUS;
+    /* Calculate bankline distances along the rivder line */
+    // TODO: find intersecting profiles; calculate left/right distances
+    final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles );
+    log.add( distanceBuilder.execute() );
+    final SortedMap<Double, BanklineDistances> banklineDistances = distanceBuilder.getDistances();
+
+    /* build left and right river banks */
+    // m_mainChannel = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0" );
+    final Polygon leftBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0", 1.0 );
+    final Polygon rightBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_1", -1.0 );
+
+    m_mainChannel = (Polygon) leftBank.union( rightBank );
+// m_mainChannel = new Polygon[leftBank.length + rightBank.length];
+// System.arraycopy( leftBank, 0, m_mainChannel, 0, leftBank.length );
+// System.arraycopy( rightBank, 0, m_mainChannel, leftBank.length, rightBank.length );
+
+    final String logMessage = String.format( "Compute bank line for '%s'", m_waterOrReach.getName() );
+    return log.asMultiStatusOrOK( logMessage, logMessage );
   }
+
+  private Polygon buildBuffer( final LineString riverLine, final SortedMap<Double, BanklineDistances> distances, final String name, final double distanceSignum )
+  {
+    final BanklineBufferBuilder builder = new BanklineBufferBuilder( distances, name, riverLine, distanceSignum );
+    return builder.buffer();
+  }
+
+// private Polygon buildMainChannel( final LineString riverLine, final LineString leftBank, final LineString rightBank )
+// {
+// final GeometryFactory factory = riverLine.getFactory();
+//
+// final Collection<Coordinate> crds = new ArrayList<>( leftBank.getNumPoints() + rightBank.getNumPoints() );
+//
+// crds.addAll( Arrays.asList( leftBank.getCoordinates() ) );
+// final Coordinate[] rightCoordinates = rightBank.getCoordinates();
+// ArrayUtils.reverse( rightCoordinates );
+// crds.addAll( Arrays.asList( rightCoordinates ) );
+//
+// final LinearRing shell = factory.createLinearRing( crds.toArray( new Coordinate[crds.size()] ) );
+//
+// return factory.createPolygon( shell, null );
+// }
 
   WspmWaterBody getWaterBody( )
   {
@@ -161,7 +205,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return null;
   }
 
-  public Polygon getMainChannel( )
+  public Geometry getMainChannel( )
   {
     return m_mainChannel;
   }
