@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesData.INSERTION_MODE;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
+import org.kalypso.model.wspm.pdb.wspm.SaveWaterBodyHelper;
 
 /**
  * The operation imports water bodies from a shape into a wspm project.
@@ -136,6 +137,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
       monitor.subTask( Messages.getString( "WspmImportWaterBodiesOperation.1" ) );
 
       // TODO Should the workspace be written...
+      // TODO Fire events...
 
       /* Monitor. */
       monitor.worked( 10 );
@@ -153,7 +155,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void insertWaterBody( final INSERTION_MODE insertionMode, final WaterBody waterBody )
+  private void insertWaterBody( final INSERTION_MODE insertionMode, final WaterBody waterBody ) throws Exception
   {
     final WspmWaterBody existingWaterBody = m_existingWaterBodies.get( waterBody.getName() );
     if( existingWaterBody != null )
@@ -165,7 +167,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
     insert( waterBody );
   }
 
-  private void updateWaterBody( final INSERTION_MODE insertionMode, final WaterBody waterBody, final WspmWaterBody existingWaterBody )
+  private void updateWaterBody( final INSERTION_MODE insertionMode, final WaterBody waterBody, final WspmWaterBody existingWaterBody ) throws Exception
   {
     switch( insertionMode )
     {
@@ -178,14 +180,15 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void insert( final WaterBody waterBody )
+  private void insert( final WaterBody waterBody ) throws Exception
   {
-    // TODO Auto-generated method stub
-
+    final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject );
+    final WspmWaterBody feature = helper.updateOrCreateWspmWaterBody( waterBody, null );
   }
 
-  private void update( final WaterBody waterBody, final WspmWaterBody existingWaterBody )
+  private void update( final WaterBody waterBody, final WspmWaterBody existingWaterBody ) throws Exception
   {
-    // TODO Auto-generated method stub
+    final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject );
+    final WspmWaterBody feature = helper.updateOrCreateWspmWaterBody( waterBody, existingWaterBody );
   }
 }
