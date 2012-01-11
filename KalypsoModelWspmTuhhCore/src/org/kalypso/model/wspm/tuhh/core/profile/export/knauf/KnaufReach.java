@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.core.profil.base.FLOW_DIRECTION;
 import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
@@ -70,21 +71,21 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class KnaufReach
 {
-
   private final Set<KnaufProfileWrapper> m_profiles;
+
+  private FLOW_DIRECTION m_direction;
 
   public KnaufReach( final IProfileFeature[] profiles )
   {
-    m_profiles = new TreeSet<>( new ProfileFeatureStationComparator( getDirection( profiles ) ) );
+    m_profiles = new TreeSet<>( new ProfileFeatureStationComparator( getDirection( profiles ).isUpstream() ) );
     for( final IProfileFeature profile : profiles )
     {
       m_profiles.add( new KnaufProfileWrapper( this, profile.getProfil() ) );
     }
   }
 
-  private boolean getDirection( final IProfileFeature[] profiles )
+  private FLOW_DIRECTION getDirection( final IProfileFeature[] profiles )
   {
-
     for( final IProfileFeature profile : profiles )
     {
       final Feature parent = profile.getOwner();
@@ -92,12 +93,18 @@ public class KnaufReach
       if( parent instanceof WspmWaterBody )
       {
         final WspmWaterBody waterBody = (WspmWaterBody) parent;
-        return waterBody.isDirectionUpstreams();
+        {
+          m_direction = FLOW_DIRECTION.toFlowDirection( waterBody.isDirectionUpstreams() );
+        }
       }
     }
 
-    // TODO
     throw new UnsupportedOperationException();
+  }
+
+  public FLOW_DIRECTION getDirection( )
+  {
+    return m_direction;
   }
 
   public AbstractKnaufProjectBean[] toBeans( )
