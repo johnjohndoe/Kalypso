@@ -58,6 +58,7 @@ import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.base.FillMissingProfileGeocoordinatesRunnable;
 import org.kalypso.model.wspm.core.profil.base.MoveProfileRunnable;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -98,6 +99,9 @@ public final class KnaufProfileBeanBuilder implements ICoreRunnableWithProgress
     final IProfil profile = m_profile.getProfile();
     final IProfileObject[] objects = profile.getProfileObjects();
 
+    final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( m_profile );
+    stati.add( runnable.execute( monitor ) );
+
     // TODO handle sinousität
 
     final IProfileBuilding building = findBuilding( objects );
@@ -132,8 +136,6 @@ public final class KnaufProfileBeanBuilder implements ICoreRunnableWithProgress
   {
     final Set<IStatus> stati = new LinkedHashSet<>();
 
-    m_profile.accept( new FillMissingCoordinatesVisitor() );
-
     final Coordinate vector = getBaseVector();
     final double distance = bridge.getWidth();
 
@@ -144,7 +146,7 @@ public final class KnaufProfileBeanBuilder implements ICoreRunnableWithProgress
     m_reach.addProfiles( oberwasser, unterwasser );
 
     final double deltaH = getDeltaH( bridge, unterwasser );
-    unterwasser.accept( new ChangeProfilePointHeight( deltaH ) );
+    unterwasser.accept( new ChangeProfilePointHeight( deltaH ), 1 );
 
     Collections.addAll( stati, buildDefaultBeans( m_reach, oberwasser ) );
     Collections.addAll( stati, buildDefaultBeans( m_reach, m_profile ) ); // FIXME bridge profile!!!!
