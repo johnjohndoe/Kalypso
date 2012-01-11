@@ -148,7 +148,7 @@ public class CheckoutWspmWizard extends Wizard implements IWorkbenchWizard
     addPage( new ConnectionChooserPage( "connectionChooser", m_settingsData ) ); //$NON-NLS-1$
 
     m_contentPage = new PdbContentPage( "elementChooser" ); //$NON-NLS-1$
-    addPage( m_contentPage ); //$NON-NLS-1$
+    addPage( m_contentPage );
 
     addPage( new CheckoutPdbPreviewPage( "previewPage", m_checkoutData ) ); //$NON-NLS-1$
   }
