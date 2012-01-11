@@ -45,16 +45,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypso.model.wspm.pdb.wspm.SaveWaterBodyHelper;
 
 /**
  * @author Gernot Belger
@@ -78,8 +75,12 @@ public class CheckoutWaterBodyWorker
 
       for( final WaterBody waterBody : waterBodies )
       {
+        final WspmProject project = m_mapping.getProject();
         final WspmWaterBody wspmWater = m_mapping.getWspmWaterBody( waterBody );
-        final WspmWaterBody newWspmWater = updateOrCreateWspmWaterBody( waterBody, wspmWater );
+
+        final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( project );
+        final WspmWaterBody newWspmWater = helper.updateOrCreateWspmWaterBody( waterBody, wspmWater );
+
         m_mapping.set( waterBody, newWspmWater );
         m_mapping.addAddedFeatures( newWspmWater );
 
@@ -95,47 +96,6 @@ public class CheckoutWaterBodyWorker
     finally
     {
       ProgressUtilities.done( monitor );
-    }
-  }
-
-  private WspmWaterBody updateOrCreateWspmWaterBody( final WaterBody waterBody, final WspmWaterBody wspmWater ) throws Exception
-  {
-    if( wspmWater == null )
-      return createWspmWaterBody( waterBody );
-
-    updateWaterBody( waterBody, wspmWater );
-    return wspmWater;
-  }
-
-  private WspmWaterBody createWspmWaterBody( final WaterBody waterBody ) throws Exception
-  {
-    final String name = waterBody.getLabel();
-
-    final TuhhWspmProject project = m_mapping.getProject();
-
-    final WspmWaterBody newWspmWaterBody = project.createWaterBody( name, true );
-
-    updateWaterBody( waterBody, newWspmWaterBody );
-
-    return newWspmWaterBody;
-  }
-
-  private void updateWaterBody( final WaterBody waterBody, final WspmWaterBody wspmWater ) throws Exception
-  {
-    wspmWater.setName( waterBody.getLabel() );
-    wspmWater.setRefNr( waterBody.getName() );
-    wspmWater.setDescription( waterBody.getDescription() );
-
-    final STATIONING_DIRECTION directionOfStationing = waterBody.getDirectionOfStationing();
-    final boolean isDirectionUpstreams = directionOfStationing == WaterBody.STATIONING_DIRECTION.upstream;
-    wspmWater.setDirectionUpstreams( isDirectionUpstreams );
-
-    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    final GM_Curve centerLine = (GM_Curve) JTSAdapter.wrapWithSrid( waterBody.getRiverlineAsLine() );
-    if( centerLine != null )
-    {
-      final GM_Curve transformedCenterline = (GM_Curve) centerLine.transform( kalypsoSRS );
-      wspmWater.setCenterLine( transformedCenterline );
     }
   }
 }
