@@ -86,6 +86,16 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
     return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
   }
 
+  public double getFormBeiwert( )
+  {
+    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+  }
+
+  public double getRauheit( )
+  {
+    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+  }
+
   public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
   {
     super( observation );
@@ -107,9 +117,6 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {

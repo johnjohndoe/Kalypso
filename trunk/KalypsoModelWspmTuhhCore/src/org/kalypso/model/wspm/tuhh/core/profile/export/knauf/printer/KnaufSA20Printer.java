@@ -139,7 +139,7 @@ public class KnaufSA20Printer extends AbstractKnaufPrinter
      * Brücke Hinweis: falls DELTA(i) = 0 wird DELTA(i) aus DELTA(i-1) übernommen<br>
      * Alternativ bei Schützen : Neigungswinkel ß (a°)
      */
-    builder.append( String.format( Locale.US, "%7.2f", 0.0 ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%7.2f", getBean().getPfeilerFormBeiwert() ) ); //$NON-NLS-1$
 
     builder.append( " " ); //$NON-NLS-1$
 

@@ -47,10 +47,12 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init.KnaufBeanInitializer;
 
 /**
  * @author Dirk Kuch
@@ -59,10 +61,24 @@ public abstract class AbstractKnaufProfileBeanBuilder implements ICoreRunnableWi
 {
   private final Set<AbstractKnaufProjectBean> m_beans = new LinkedHashSet<>();
 
-  protected IStatus[] buildDefaultBeans( final KnaufReach reach, final KnaufProfileWrapper profile )
+  protected IStatus[] buildDefaultBeans( final KnaufProfileWrapper profile )
   {
-    addBeans( new KnaufSA20Bean( reach, profile ) );
-    addBeans( new KnaufSA21Bean( reach, profile ) );
+    final KnaufSA20Bean sa20 = new KnaufSA20Bean( profile );
+    final KnaufSA21Bean sa21 = new KnaufSA21Bean( profile );
+
+    KnaufBeanInitializer.doInitialize( sa20 );
+    KnaufBeanInitializer.doInitialize( sa21 );
+
+    addBeans( sa20 );
+    addBeans( sa21 );
+
+    if( isBridgeProfile( profile ) )
+    {
+      final KnaufSA29Bean sa29 = new KnaufSA29Bean( profile );
+      KnaufBeanInitializer.doInitialize( sa29 );
+
+      addBeans( sa29 );
+    }
 
     final ProfilePointWrapper[] points = profile.getPoints();
     for( final ProfilePointWrapper point : points )
@@ -72,6 +88,20 @@ public abstract class AbstractKnaufProfileBeanBuilder implements ICoreRunnableWi
 
     final Status status = new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "Default Knauf Profilexport Bean-Generierung erfolgreich" );
     return new IStatus[] { status };
+  }
+
+  private boolean isBridgeProfile( final KnaufProfileWrapper profile )
+  {
+    final IProfileObject[] objects = profile.getProfile().getProfileObjects();
+    for( final IProfileObject object : objects )
+    {
+      if( object instanceof BuildingBruecke )
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   protected void addBeans( final AbstractKnaufProjectBean... beans )

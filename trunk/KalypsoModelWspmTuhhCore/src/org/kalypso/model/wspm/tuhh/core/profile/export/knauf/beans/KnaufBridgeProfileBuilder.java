@@ -103,9 +103,9 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final double deltaH = getDeltaH( m_bridge, unterwasser );
     unterwasser.accept( new ChangeProfilePointHeight( deltaH ), 1 );
 
-    Collections.addAll( stati, buildDefaultBeans( m_reach, unterwasser ) );
-    Collections.addAll( stati, buildDefaultBeans( m_reach, m_profile ) ); // FIXME bridge profile!!!!
-    Collections.addAll( stati, buildDefaultBeans( m_reach, oberwasser ) );
+    Collections.addAll( stati, buildDefaultBeans( unterwasser ) );
+    Collections.addAll( stati, buildDefaultBeans( m_profile ) ); // FIXME bridge profile!!!!
+    Collections.addAll( stati, buildDefaultBeans( oberwasser ) );
 
     return StatusUtilities.createStatus( stati, KalypsoModelWspmTuhhCorePlugin.getID(), "Export of KalypsoWspm Bridge Profile" );
   }

@@ -38,77 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA21Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA29Bean;
 
 /**
  * @author Dirk Kuch
  */
-public class KnaufSA20Bean extends AbstractKnaufProjectBean
+public class KnaufBeanInitializer
 {
 
-  private final KnaufProfileWrapper m_profile;
-
-  private Double m_pfeilerFormBeiwert;
-
-  public KnaufSA20Bean( final KnaufProfileWrapper profile )
+  public static final void doInitialize( final AbstractKnaufProjectBean bean )
   {
-    m_profile = profile;
+    if( bean instanceof KnaufSA20Bean )
+    {
+      KnaufSA20BeanInitializer.init( (KnaufSA20Bean) bean );
+    }
+    else if( bean instanceof KnaufSA21Bean )
+    {
+      KnaufSA21BeanInitializer.init( (KnaufSA21Bean) bean );
+    }
+    else if( bean instanceof KnaufSA29Bean )
+    {
+      KnaufSA29BeanInitializer.init( (KnaufSA29Bean) bean );
+    }
+    else
+      throw new UnsupportedOperationException();
   }
 
-  public KnaufProfileWrapper getProfile( )
+  protected static final IProfileBuilding getBuilding( final KnaufProfileWrapper profile )
   {
-    return m_profile;
-  }
+    final IProfileObject[] objects = profile.getProfile().getProfileObjects();
+    for( final IProfileObject object : objects )
+    {
+      if( object instanceof IProfileBuilding )
+        return (IProfileBuilding) object;
+    }
 
-  @Override
-  public Integer getSatzart( )
-  {
-    return 20;
-  }
-
-  /**
-   * @return profile station in m
-   */
-  public Double getStation( )
-  {
-    return m_profile.getStation() * 1000.0;
-  }
-
-  public Integer getNumberOfProfilePoints( )
-  {
-    return ArrayUtils.getLength( m_profile.getPoints() );
-  }
-
-  public Double getDistanceNextProfile( )
-  {
-    final KnaufProfileWrapper next = m_profile.findNextProfile();
-    if( Objects.isNull( next ) )
-      return 0.0;
-
-    final double distance = Math.abs( m_profile.getStation() - next.getStation() );
-
-    return distance * 1000.0; // distance in m
-  }
-
-  public ProfilePointWrapper findLowestPoint( )
-  {
-    final ProfilePointWrapper point = m_profile.findLowestPoint();
-
-    return point;
-  }
-
-  public Double getPfeilerFormBeiwert( )
-  {
-    return m_pfeilerFormBeiwert;
-  }
-
-  public void setPfeilerFormBeiwert( final Double pfeilerFormBeiwert )
-  {
-    m_pfeilerFormBeiwert = pfeilerFormBeiwert;
+    return null;
   }
 }

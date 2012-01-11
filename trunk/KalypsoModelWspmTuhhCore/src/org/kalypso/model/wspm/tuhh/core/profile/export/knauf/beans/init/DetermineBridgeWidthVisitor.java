@@ -38,77 +38,74 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
 /**
  * @author Dirk Kuch
  */
-public class KnaufSA20Bean extends AbstractKnaufProjectBean
+public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
 {
+  private final String m_property;
 
-  private final KnaufProfileWrapper m_profile;
+  double m_min = Double.MAX_VALUE;
 
-  private Double m_pfeilerFormBeiwert;
+  double m_max = -Double.MAX_VALUE;
 
-  public KnaufSA20Bean( final KnaufProfileWrapper profile )
+  public DetermineBridgeWidthVisitor( final String property )
   {
-    m_profile = profile;
-  }
-
-  public KnaufProfileWrapper getProfile( )
-  {
-    return m_profile;
+    m_property = property;
   }
 
   @Override
-  public Integer getSatzart( )
+  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point ) throws CancelVisitorException
   {
-    return 20;
+    final int index = profile.getProfile().indexOfProperty( m_property );
+    if( index < 0 )
+      throw new CancelVisitorException();
+
+    final Double hoehe = point.getHoehe();
+    final Double border = getValue( point, index );
+
+    if( isEquals( hoehe, border ) )
+      return;
+
+    final double breite = point.getBreite();
+
+    if( breite < m_min )
+      m_min = breite;
+
+    if( breite > m_max )
+      m_max = breite;
   }
 
-  /**
-   * @return profile station in m
-   */
-  public Double getStation( )
+  private Double getValue( final ProfilePointWrapper point, final int index )
   {
-    return m_profile.getStation() * 1000.0;
+    final Object value = point.getValue( index );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return null;
   }
 
-  public Integer getNumberOfProfilePoints( )
+  private boolean isEquals( final Double a, final Double b )
   {
-    return ArrayUtils.getLength( m_profile.getPoints() );
+    if( Objects.isNull( a, b ) )
+      return true;
+    if( Doubles.isNaN( a, b ) )
+      return true;
+
+    return Math.abs( a - b ) < 0.005;
   }
 
-  public Double getDistanceNextProfile( )
+  public double getWidth( )
   {
-    final KnaufProfileWrapper next = m_profile.findNextProfile();
-    if( Objects.isNull( next ) )
-      return 0.0;
-
-    final double distance = Math.abs( m_profile.getStation() - next.getStation() );
-
-    return distance * 1000.0; // distance in m
-  }
-
-  public ProfilePointWrapper findLowestPoint( )
-  {
-    final ProfilePointWrapper point = m_profile.findLowestPoint();
-
-    return point;
-  }
-
-  public Double getPfeilerFormBeiwert( )
-  {
-    return m_pfeilerFormBeiwert;
-  }
-
-  public void setPfeilerFormBeiwert( final Double pfeilerFormBeiwert )
-  {
-    m_pfeilerFormBeiwert = pfeilerFormBeiwert;
+    return Math.abs( m_max - m_min );
   }
 }

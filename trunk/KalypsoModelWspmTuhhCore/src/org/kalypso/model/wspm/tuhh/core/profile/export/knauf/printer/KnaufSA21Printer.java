@@ -111,7 +111,7 @@ public class KnaufSA21Printer extends AbstractKnaufPrinter
      * char [53-60], F8.0 changed %8.2 - Kote DKUK (höchster Punkt des möglichen Fließquerschnittes bei geschlossenen
      * Profilen)
      */
-    builder.append( String.format( Locale.US, "%8.2f", 0.0 ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%8.2f", getBean().getDKUK() ) ); //$NON-NLS-1$
 
     /**
      * char [61-68], F8.0 changed %8.2 - Bezugsradius des Durchlasses RHK
@@ -126,12 +126,12 @@ public class KnaufSA21Printer extends AbstractKnaufPrinter
     /**
      * char [77-78], I2 - Steuerparameter IDP für Sonderprofile
      */
-    builder.append( String.format( Locale.US, "%2d", 0 ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%2d", getBean().getIDP() ) ); //$NON-NLS-1$
 
     /**
      * char [77-78], I2 - Steuerparameter KZD für Durchströmungsart
      */
-    builder.append( String.format( Locale.US, "%2d", 0 ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%2d", getBean().getKZD() ) ); //$NON-NLS-1$
 
     return builder.toString();
   }

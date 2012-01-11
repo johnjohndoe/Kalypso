@@ -89,7 +89,7 @@ public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuild
 
     final IProfileBuilding building = findBuilding( objects );
     if( Objects.isNull( building ) )
-      Collections.addAll( stati, buildDefaultBeans( m_reach, m_profile ) );
+      Collections.addAll( stati, buildDefaultBeans( m_profile ) );
     else if( building instanceof BuildingBruecke )
     {
       final KnaufBridgeProfileBuilder builder = new KnaufBridgeProfileBuilder( m_reach, m_profile, (BuildingBruecke) building );
@@ -104,7 +104,7 @@ public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuild
       final Status status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.getID(), message );
       stati.add( status );
 
-      Collections.addAll( stati, buildDefaultBeans( m_reach, m_profile ) );
+      Collections.addAll( stati, buildDefaultBeans( m_profile ) );
     }
 
     return StatusUtilities.createStatus( stati, "Knauf-Profilexport Bean-Generierung" );

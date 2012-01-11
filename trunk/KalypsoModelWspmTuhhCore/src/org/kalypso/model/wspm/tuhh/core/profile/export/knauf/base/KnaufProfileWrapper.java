@@ -226,4 +226,15 @@ public class KnaufProfileWrapper extends ProfileWrapper
   {
     return m_reach.getFliessgesetz();
   }
+
+  public KnaufReach getReach( )
+  {
+    return m_reach;
+  }
+
+  public KnaufProfileWrapper findNextProfile( )
+  {
+    return getReach().findNextProfile( this );
+  }
+
 }
