@@ -48,6 +48,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
@@ -142,6 +143,17 @@ public class KnaufReach
       return null;
 
     return profiles[index + 1];
+  }
+
+  public void addProfiles( final KnaufProfileWrapper... profiles )
+  {
+    if( Arrays.isEmpty( profiles ) )
+      return;
+
+    for( final KnaufProfileWrapper profile : profiles )
+    {
+      m_profiles.add( profile );
+    }
   }
 
 }

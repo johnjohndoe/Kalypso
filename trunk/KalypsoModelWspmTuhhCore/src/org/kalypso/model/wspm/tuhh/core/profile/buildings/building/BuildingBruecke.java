@@ -81,6 +81,11 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
     return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
   }
 
+  public double getUnterwasser( )
+  {
+    return getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
+  }
+
   public BuildingBruecke( final IProfil profil, final IObservation<TupleResult> observation )
   {
     super( observation );

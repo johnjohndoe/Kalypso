@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.profile.utils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
+import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
  * @author Dirk Kuch
@@ -73,5 +75,19 @@ public final class TuhhProfiles
       return true;
 
     return false;
+  }
+
+  public static IProfil clone( final IProfil profile )
+  {
+    if( TuhhProfiles.class.equals( profile.getClass() ) )
+      throw new IllegalStateException( String.format( "Cloning of profile class %s not supported", profile.getClass().getName() ) );
+
+    final TuhhProfil clone = new TuhhProfil( TupleResultUtilities.clone( profile.getResult() ), null );
+    clone.setName( profile.getName() );
+    clone.setDescription( profile.getDescription() );
+    clone.setComment( profile.getComment() );
+    clone.setStation( profile.getStation() );
+
+    return clone;
   }
 }
