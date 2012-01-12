@@ -57,6 +57,8 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.data.SimpleShapeData;
+import org.kalypso.shape.data.SimpleShapeDataFactory;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;

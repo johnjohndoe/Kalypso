@@ -123,8 +123,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
-    /* Calculate bankline distances along the rivder line */
-    // TODO: find intersecting profiles; calculate left/right distances
+    /* Calculate bankline distances along the river line */
     final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles );
     log.add( distanceBuilder.execute() );
     final SortedMap<Double, BanklineDistances> banklineDistances = distanceBuilder.getDistances();
@@ -148,22 +147,6 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     final BanklineBufferBuilder builder = new BanklineBufferBuilder( distances, name, riverLine, distanceSignum );
     return builder.buffer();
   }
-
-// private Polygon buildMainChannel( final LineString riverLine, final LineString leftBank, final LineString rightBank )
-// {
-// final GeometryFactory factory = riverLine.getFactory();
-//
-// final Collection<Coordinate> crds = new ArrayList<>( leftBank.getNumPoints() + rightBank.getNumPoints() );
-//
-// crds.addAll( Arrays.asList( leftBank.getCoordinates() ) );
-// final Coordinate[] rightCoordinates = rightBank.getCoordinates();
-// ArrayUtils.reverse( rightCoordinates );
-// crds.addAll( Arrays.asList( rightCoordinates ) );
-//
-// final LinearRing shell = factory.createLinearRing( crds.toArray( new Coordinate[crds.size()] ) );
-//
-// return factory.createPolygon( shell, null );
-// }
 
   WspmWaterBody getWaterBody( )
   {
