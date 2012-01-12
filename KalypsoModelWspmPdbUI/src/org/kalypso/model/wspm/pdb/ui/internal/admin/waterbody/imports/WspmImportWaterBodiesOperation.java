@@ -41,12 +41,16 @@
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -54,6 +58,11 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesData.INSERTION_MODE;
 import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.SaveWaterBodyHelper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * The operation imports water bodies from a shape into a wspm project.
@@ -83,6 +92,16 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
   private final Map<String, WspmWaterBody> m_existingWaterBodies;
 
   /**
+   * The added features.
+   */
+  private final List<Feature> m_added;
+
+  /**
+   * The changed features.
+   */
+  private final List<Feature> m_changed;
+
+  /**
    * The constructor.
    * 
    * @param waterBodies
@@ -100,6 +119,8 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
     m_data = data;
     m_wspmProject = wspmProject;
     m_existingWaterBodies = existingWaterBodies;
+    m_added = new ArrayList<Feature>();
+    m_changed = new ArrayList<Feature>();
   }
 
   /**
@@ -136,8 +157,8 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.subTask( Messages.getString( "WspmImportWaterBodiesOperation.1" ) );
 
-      // TODO Should the workspace be written...
-      // TODO Fire events...
+      /* Fire events. */
+      fireEvents();
 
       /* Monitor. */
       monitor.worked( 10 );
@@ -184,11 +205,70 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
   {
     final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject );
     final WspmWaterBody feature = helper.updateOrCreateWspmWaterBody( waterBody, null );
+    m_added.add( feature );
   }
 
   private void update( final WaterBody waterBody, final WspmWaterBody existingWaterBody ) throws Exception
   {
     final SaveWaterBodyHelper helper = new SaveWaterBodyHelper( m_wspmProject );
     final WspmWaterBody feature = helper.updateOrCreateWspmWaterBody( waterBody, existingWaterBody );
+    m_changed.add( feature );
+  }
+
+  private void fireEvents( ) throws Exception
+  {
+    /* Get the commandable workspace. */
+    // TODO
+    final GMLWorkspace workspace = m_wspmProject.getWorkspace();
+    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( workspace );
+
+    /* Convert to arrays. */
+    final Feature[] added = m_added.toArray( new Feature[] {} );
+    final Feature[] changed = m_changed.toArray( new Feature[] {} );
+
+    /* Get the üarents. */
+    final Feature[] addedParents = findParents( added );
+    for( final Feature changedParent : addedParents )
+    {
+      /* Get the children. */
+      final Feature[] children = findChildren( changedParent, added );
+
+      /* Fire the event. */
+      cmdWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( cmdWorkspace, changedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    }
+
+    /* Fire the event. */
+    cmdWorkspace.fireModellEvent( new FeaturesChangedModellEvent( cmdWorkspace, changed ) );
+
+    /* Post the command. */
+    cmdWorkspace.postCommand( new EmptyCommand( null, false ) );
+  }
+
+  private Feature[] findParents( final Feature[] features )
+  {
+    final Collection<Feature> parents = new ArrayList<Feature>();
+
+    for( final Feature feature : features )
+    {
+      final Feature parent = feature.getOwner();
+      if( parent != null )
+        parents.add( parent );
+    }
+
+    return parents.toArray( new Feature[parents.size()] );
+  }
+
+  private Feature[] findChildren( final Feature parent, final Feature[] removedFeatures )
+  {
+    final Collection<Feature> children = new ArrayList<Feature>();
+
+    for( final Feature feature : removedFeatures )
+    {
+      final Feature owner = feature.getOwner();
+      if( owner == parent )
+        children.add( feature );
+    }
+
+    return children.toArray( new Feature[children.size()] );
   }
 }
