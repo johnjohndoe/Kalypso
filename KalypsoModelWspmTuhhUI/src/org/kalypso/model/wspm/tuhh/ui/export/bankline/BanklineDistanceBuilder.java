@@ -151,12 +151,7 @@ public class BanklineDistanceBuilder
     }
 
     /* Find station in river line */
-    final Point intersectionPoint = intersections[0];
-
-    final double station = computeStation( intersectionPoint );
-
-    final BanklineDistances banklineDistances = new BanklineDistances( station );
-    m_distances.put( station, banklineDistances );
+    final Point intersectionCSwithRiver = intersections[0];
 
     /* Fill missing geo coordinates */
     final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( new ProfileWrapper( profileCopy ) );
@@ -179,26 +174,66 @@ public class BanklineDistanceBuilder
       {
         final IProfilPointMarker pointMarker = pointMarkers[i];
         final IRecord point = pointMarker.getPoint();
-
         final ProfilePointWrapper pointWrapper = new ProfilePointWrapper( point );
         final Coordinate coordinate = jtsTransformer.transform( pointWrapper.getCoordinate() );
 
-        final Point markerLocation = m_riverLine.getFactory().createPoint( coordinate );
-
         final String markerName = String.format( "%s_%d", pointMarker.getComponent().getId(), i );
 
-        final double markerDistance = markerLocation.distance( intersectionPoint );
-        banklineDistances.setDistance( markerName, markerDistance );
+        calculateMarkerDistance( intersectionCSwithRiver, coordinate, markerName );
       }
     }
   }
 
-  // FIXME: major performance problem here -> linear search through all segments of the riverLine,
-  // for every cross section
-  // TODO: use some kind of index to find quickly the right segment
-  private double computeStation( final Point point )
+  private void calculateMarkerDistance( final Point intersectionCSwithRiver, final Coordinate markerLocation, final String markerName )
   {
-    return m_riverIndex.indexOf( point.getCoordinate() );
+    // TODO: from outside:
+    final boolean calculateAlongCrossSection = false;
+    if( calculateAlongCrossSection )
+      calculateMarkerDistanceAlongCrossSection( intersectionCSwithRiver, markerLocation, markerName );
+    else
+      calculateMarkerDistancePerpendicular( markerLocation, markerName );
+  }
+
+  /**
+   * The distance of the merker is calculated along the cros section. The station is the point where the cross section
+   * intersect with the river.<br/>
+   * Bad for cross section that are not 90° to the river.
+   */
+  private void calculateMarkerDistanceAlongCrossSection( final Point intersectionCSwithRiver, final Coordinate markerLocation, final String markerName )
+  {
+    final double station = m_riverIndex.indexOf( intersectionCSwithRiver.getCoordinate() );
+
+    final Point markerPoint = m_riverLine.getFactory().createPoint( markerLocation );
+    final double markerDistance = intersectionCSwithRiver.distance( markerPoint );
+
+    final BanklineDistances banklineDistances = getOrCreateDistances( station );
+    banklineDistances.setDistance( markerName, markerDistance );
+  }
+
+  /**
+   * The distance marker to river is calculated as the distance between this point and the river.<br/>
+   * The station is the location of the 'lot' of the marker location to the river.
+   */
+  private void calculateMarkerDistancePerpendicular( final Coordinate markerLocation, final String markerName )
+  {
+    final double station = m_riverIndex.project( markerLocation );
+
+    final Point markerPoint = m_riverLine.getFactory().createPoint( markerLocation );
+    final double markerDistance = m_riverLine.distance( markerPoint );
+
+    final BanklineDistances banklineDistances = getOrCreateDistances( station );
+    banklineDistances.setDistance( markerName, markerDistance );
+  }
+
+  private BanklineDistances getOrCreateDistances( final Double station )
+  {
+    if( !m_distances.containsKey( station ) )
+    {
+      final BanklineDistances banklineDistances = new BanklineDistances( station );
+      m_distances.put( station, banklineDistances );
+    }
+
+    return m_distances.get( station );
   }
 
   private static Point[] findPoints( final Geometry intersection )
