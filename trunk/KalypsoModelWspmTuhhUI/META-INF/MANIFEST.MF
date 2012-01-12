@@ -32,6 +32,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.module,
  org.kalypso.model.wspm.tuhh.schema,
  org.junit;resolution:=optional,
- org.kalypso.featureview
+ org.kalypso.featureview,
+ org.kalypso.deegree
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

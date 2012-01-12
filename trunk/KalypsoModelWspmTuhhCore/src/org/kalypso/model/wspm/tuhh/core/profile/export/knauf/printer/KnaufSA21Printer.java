@@ -79,7 +79,7 @@ public class KnaufSA21Printer extends AbstractKnaufPrinter
     /**
      * char [13-20], type F8.0 changed-> %8.2f, Berechnungsabfluss Q
      */
-    builder.append( String.format( Locale.US, "%8.2f", 0.0 ) ); //$NON-NLS-1$ //FIXME
+    builder.append( String.format( Locale.US, "%8.2f", 0.0 ) ); //$NON-NLS-1$ 
 
     /**
      * char [21-28], type F8.0 changed-> %8.2f, Rauheitsbeiwerte linkes Vorland

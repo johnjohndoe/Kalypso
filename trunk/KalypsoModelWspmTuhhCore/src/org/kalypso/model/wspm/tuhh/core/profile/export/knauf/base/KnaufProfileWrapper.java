@@ -160,15 +160,15 @@ public class KnaufProfileWrapper extends ProfileWrapper
 
         return "PE";//$NON-NLS-1$
       }
-      else if( StringUtils.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, identifier ) )
-      {
-        if( isLeftMarker( marker, identifier ) )
-        {
-          return "LB";//$NON-NLS-1$
-        }
-
-        return "RB"; //$NON-NLS-1$
-      }
+// else if( StringUtils.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, identifier ) )
+// {
+// if( isLeftMarker( marker, identifier ) )
+// {
+//          return "LB";//$NON-NLS-1$
+// }
+//
+//        return "RB"; //$NON-NLS-1$
+// }
       else if( StringUtils.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, identifier ) )
       {
         if( isLeftMarker( marker, identifier ) )

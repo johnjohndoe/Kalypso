@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA10Bean;
@@ -80,12 +81,12 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
 
     final KnaufReach[] reaches = m_calculation.getReaches();
 
-    monitor.beginTask( "Exporting Knauf Reach", ArrayUtils.getLength( reaches ) );
+    monitor.beginTask( Messages.getString("KnaufCalculationBeanBuilder_0"), ArrayUtils.getLength( reaches ) ); //$NON-NLS-1$
 
     for( final KnaufReach reach : reaches )
     {
       final KnaufReachBeanBuilder builder = new KnaufReachBeanBuilder( reach );
-      builder.execute( new SubProgressMonitor( monitor, ArrayUtils.getLength( reach.getProfiles() ) ) );
+      stati.add( builder.execute( new SubProgressMonitor( monitor, ArrayUtils.getLength( reach.getProfiles() ) ) ) );
 
       addBeans( builder.getBeans() );
 
@@ -94,7 +95,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
 
     stati.add( buildFooter() );
 
-    return StatusUtilities.createStatus( stati, "KnaufCalculationBeanBuilder - Exporting of Knauf Calculation" );
+    return StatusUtilities.createStatus( stati, Messages.getString("KnaufCalculationBeanBuilder_1") ); //$NON-NLS-1$
   }
 
   private IStatus buildHeader( )
@@ -104,7 +105,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
     addBeans( new KnaufSA12Bean( m_calculation ) );
     addBeans( new KnaufSA13Bean() );
 
-    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "KnaufCalculationBeanBuilder - successful added .wspr header beans." );
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("KnaufCalculationBeanBuilder_2") ); //$NON-NLS-1$
 
   }
 
@@ -114,7 +115,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
     addBeans( new KnaufSA94Bean( m_calculation ) );
     addBeans( new KnaufSA99Bean() );
 
-    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "KnaufCalculationBeanBuilder - successful added .wspr footer beans." );
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("KnaufCalculationBeanBuilder_3") ); //$NON-NLS-1$
   }
 
 }
