@@ -46,7 +46,6 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -156,15 +155,14 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
         {
           monitor.beginTask( Messages.getString( "ExportProfilesWizard_5" ), profilFeatures.length ); //$NON-NLS-1$
 
-          exportProfiles( chosenProfiles, monitor );
-
-          return Status.OK_STATUS;
+          return exportProfiles( chosenProfiles, monitor );
         }
         catch( final CoreException e )
         {
           final IStatus status = e.getStatus();
           if( status.matches( IStatus.CANCEL ) )
             throw new InterruptedException();
+
           return status;
         }
       }
@@ -178,5 +176,5 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
     return !result.matches( IStatus.ERROR );
   }
 
-  protected abstract void exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
+  protected abstract IStatus exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
 }

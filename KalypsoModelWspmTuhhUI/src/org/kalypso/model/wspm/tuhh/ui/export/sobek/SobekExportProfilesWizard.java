@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
@@ -89,7 +90,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final ISobekProfileExportOperation[] operations = m_profileFileChooserPage.getOperations( profiles );
     final Collection<IStatus> problems = new ArrayList<IStatus>( operations.length );
@@ -114,5 +115,7 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
       final IStatus status = new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), 0, problemChildren, message, null );
       throw new CoreException( status );
     }
+
+    return Status.OK_STATUS;
   }
 }

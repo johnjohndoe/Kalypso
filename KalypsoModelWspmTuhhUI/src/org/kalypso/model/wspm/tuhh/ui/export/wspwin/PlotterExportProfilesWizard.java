@@ -109,7 +109,7 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
       {
         if( !Plotter.checkPlotterExe( getShell() ) )
         {
-          MessageDialog.openWarning( getShell(), getWindowTitle(), Messages.getString("PlotterExportProfilesWizard.0") ); //$NON-NLS-1$
+          MessageDialog.openWarning( getShell(), getWindowTitle(), Messages.getString( "PlotterExportProfilesWizard.0" ) ); //$NON-NLS-1$
           getShell().close();
         }
 
@@ -120,7 +120,7 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File tempDir = m_profileFileChooserPage.getFile();
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
@@ -132,5 +132,7 @@ public class PlotterExportProfilesWizard extends ExportProfilesWizard
     final IStatus export = prfExporter.export( profiles, monitor );
     if( !export.isOK() )
       throw new CoreException( export );
+
+    return Status.OK_STATUS;
   }
 }

@@ -45,6 +45,8 @@ import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -101,13 +103,15 @@ public class TrippleExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File file = m_profileFileChooserPage.getFile();
 
     /* Write profiles */
     final AbstractCsvWriter csvSink = createWriter();
     csvSink.export( profiles, file, monitor );
+
+    return Status.OK_STATUS;
   }
 
   private AbstractCsvWriter createWriter( )
