@@ -41,10 +41,13 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
 
 import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders.KnaufCalculationBeanBuilder;
 
@@ -66,11 +69,14 @@ public class KnaufProfileExporter implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+    final Set<IStatus> stati = new LinkedHashSet<>();
 
     final KnaufCalculationBeanBuilder builder = new KnaufCalculationBeanBuilder( m_calculation );
-    builder.execute( new SubProgressMonitor( monitor, 1 ) );
+    stati.add( builder.execute( new SubProgressMonitor( monitor, 1 ) ) );
 
     final KnaufBeanSerializer serializer = new KnaufBeanSerializer( builder.getBeans(), m_destination );
-    return serializer.execute( monitor );
+    stati.add( serializer.execute( monitor ) );
+
+    return StatusUtilities.createStatus( stati, "KnaufProfileExporter" );
   }
 }

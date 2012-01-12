@@ -130,12 +130,8 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard#exportProfiles(org.kalypso.model.wspm.core.gml.IProfileFeature[],
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final Charset shapeCharset = m_exportShapePage.getCharset();
     final String coordinateSystem = m_exportShapePage.getCoordinateSystem();
@@ -172,6 +168,8 @@ public class ExportProfileLineWizard extends ExportProfilesWizard
     {
       throw new CoreException( Status.CANCEL_STATUS );
     }
+
+    return Status.OK_STATUS;
   }
 
   private IDBFValue[] fillMapping( final PatternReplacementColumn[] exportColumns )

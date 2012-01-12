@@ -76,7 +76,7 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File file = m_profileFileChooserPage.getFile();
     final SinkExporter exporter = new SinkExporter( new LngSink() );
@@ -86,6 +86,8 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     {
       openInPlotter( file );
     }
+
+    return Status.OK_STATUS;
   }
 
   @Override

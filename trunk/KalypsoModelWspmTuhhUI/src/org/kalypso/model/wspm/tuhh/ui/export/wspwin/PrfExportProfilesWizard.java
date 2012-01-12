@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -91,7 +92,7 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File exportDir = m_profileFileChooserPage.getFile();
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
@@ -103,5 +104,7 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     final IStatus export = prfExporter.export( profiles, monitor );
     if( !export.isOK() )
       throw new CoreException( export );
+
+    return Status.OK_STATUS;
   }
 }

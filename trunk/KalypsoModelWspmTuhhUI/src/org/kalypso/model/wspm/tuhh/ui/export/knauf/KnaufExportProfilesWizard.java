@@ -44,6 +44,8 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -51,6 +53,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufProfileExporter;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportFileChooserPage;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -92,7 +95,7 @@ public class KnaufExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -102,12 +105,12 @@ public class KnaufExportProfilesWizard extends ExportProfilesWizard
       final KnaufCalculation calculation = new KnaufCalculation( profiles );
 
       final KnaufProfileExporter exporter = new KnaufProfileExporter( calculation, file );
-      exporter.execute( monitor );
+      return exporter.execute( monitor );
+
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Export of Knauf Profiles failed.", e ) );
     }
   }
-
 }

@@ -46,6 +46,8 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -113,7 +115,7 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     m_data.storeSettings( getDialogSettings() );
 
@@ -135,6 +137,8 @@ public class CsvExportProfilesWizard extends ExportProfilesWizard
 
     final AbstractCsvWriter csvSink = createWriter( interpolatedProfiles, userDefinedColumns, type );
     csvSink.export( interpolatedProfiles, file, monitor );
+
+    return Status.OK_STATUS;
   }
 
   private AbstractCsvWriter createWriter( final IProfileFeature[] profiles, final IProfileExportColumn[] userDefinedColumns, final OUTPUT_TYPE type )
