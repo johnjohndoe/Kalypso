@@ -49,6 +49,7 @@ import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.jts.JtsVectorUtilities;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
@@ -81,7 +82,7 @@ public class BanklineBufferBuilder
     m_distanceSignum = distanceSignum;
   }
 
-  public Polygon buffer( )
+  public Geometry buffer( )
   {
     initDistancer();
 
@@ -108,7 +109,7 @@ public class BanklineBufferBuilder
 
     final Polygon[] allPolygons = m_segmentAreas.toArray( new Polygon[m_segmentAreas.size()] );
     final GeometryCollection collection = m_line.getFactory().createGeometryCollection( allPolygons );
-    return (Polygon) collection.union();
+    return collection.union();
 
 // return m_segmentAreas.toArray( new Polygon[m_segmentAreas.size()] );
   }

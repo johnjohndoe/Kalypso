@@ -62,7 +62,6 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Builds banklines from a {@link org.kalypso.model.wspm.core.gml.WspmWaterBody} or a
@@ -75,7 +74,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 {
   private final Feature m_waterOrReach;
 
-  private Polygon m_mainChannel;
+  private Geometry m_mainChannel;
 
   public BanklineBuilder( final Feature waterOrReach )
   {
@@ -130,10 +129,10 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
     /* build left and right river banks */
     // m_mainChannel = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0" );
-    final Polygon leftBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0", 1.0 );
-    final Polygon rightBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_1", -1.0 );
+    final Geometry leftBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0", 1.0 );
+    final Geometry rightBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_1", -1.0 );
 
-    m_mainChannel = (Polygon) leftBank.union( rightBank );
+    m_mainChannel = leftBank.union( rightBank );
 // m_mainChannel = new Polygon[leftBank.length + rightBank.length];
 // System.arraycopy( leftBank, 0, m_mainChannel, 0, leftBank.length );
 // System.arraycopy( rightBank, 0, m_mainChannel, leftBank.length, rightBank.length );
@@ -142,7 +141,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return log.asMultiStatusOrOK( logMessage, logMessage );
   }
 
-  private Polygon buildBuffer( final LineString riverLine, final SortedMap<Double, BanklineDistances> distances, final String name, final double distanceSignum )
+  private Geometry buildBuffer( final LineString riverLine, final SortedMap<Double, BanklineDistances> distances, final String name, final double distanceSignum )
   {
     final BanklineBufferBuilder builder = new BanklineBufferBuilder( distances, name, riverLine, distanceSignum );
     return builder.buffer();
