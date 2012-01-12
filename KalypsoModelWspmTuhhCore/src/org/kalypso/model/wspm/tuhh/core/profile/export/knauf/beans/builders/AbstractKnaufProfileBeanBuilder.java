@@ -38,11 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
-
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -52,14 +48,17 @@ import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA21Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA29Bean;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA30Bean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init.KnaufBeanInitializer;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractKnaufProfileBeanBuilder implements ICoreRunnableWithProgress
+public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanBuilder implements ICoreRunnableWithProgress
 {
-  private final Set<AbstractKnaufProjectBean> m_beans = new LinkedHashSet<>();
 
   protected IStatus[] buildDefaultBeans( final KnaufProfileWrapper profile )
   {
@@ -102,16 +101,6 @@ public abstract class AbstractKnaufProfileBeanBuilder implements ICoreRunnableWi
     }
 
     return false;
-  }
-
-  protected void addBeans( final AbstractKnaufProjectBean... beans )
-  {
-    Collections.addAll( m_beans, beans );
-  }
-
-  public AbstractKnaufProjectBean[] getBeans( )
-  {
-    return m_beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
 
 }

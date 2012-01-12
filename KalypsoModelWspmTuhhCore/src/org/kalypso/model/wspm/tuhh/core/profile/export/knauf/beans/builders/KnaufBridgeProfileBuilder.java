@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -54,13 +54,13 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.JtsVectorUtilities;
+import org.kalypso.model.wspm.core.profil.base.ChangeProfilePointHeight;
 import org.kalypso.model.wspm.core.profil.base.FLOW_DIRECTION;
 import org.kalypso.model.wspm.core.profil.base.MoveProfileRunnable;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 
@@ -74,15 +74,13 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 {
-  private final KnaufReach m_reach;
 
   private final KnaufProfileWrapper m_profile;
 
   private final BuildingBruecke m_bridge;
 
-  public KnaufBridgeProfileBuilder( final KnaufReach reach, final KnaufProfileWrapper profile, final BuildingBruecke bridge )
+  public KnaufBridgeProfileBuilder( final KnaufProfileWrapper profile, final BuildingBruecke bridge )
   {
-    m_reach = reach;
     m_profile = profile;
     m_bridge = bridge;
   }
@@ -98,7 +96,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final KnaufProfileWrapper oberwasser = getOberwasserProfile( vector, distance );
     final KnaufProfileWrapper unterwasser = getUnterwasserProile( vector, distance );
 
-    m_reach.addProfiles( oberwasser, unterwasser );
+    m_profile.getReach().addProfiles( oberwasser, unterwasser );
 
     final double deltaH = getDeltaH( m_bridge, unterwasser );
     unterwasser.accept( new ChangeProfilePointHeight( deltaH ), 1 );
@@ -112,7 +110,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
   private KnaufProfileWrapper getUnterwasserProile( final Coordinate vector, final double distance )
   {
-    final FLOW_DIRECTION direction = m_reach.getDirection();
+    final FLOW_DIRECTION direction = m_profile.getReach().getDirection();
 
     if( FLOW_DIRECTION.eSrc2Estuary == direction )
       return buildBridgeProfile( vector, distance, 1 );
@@ -122,7 +120,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
   private KnaufProfileWrapper getOberwasserProfile( final Coordinate vector, final double distance )
   {
-    final FLOW_DIRECTION direction = m_reach.getDirection();
+    final FLOW_DIRECTION direction = m_profile.getReach().getDirection();
 
     if( FLOW_DIRECTION.eSrc2Estuary == direction )
       return buildBridgeProfile( vector, distance, -1 );
@@ -147,7 +145,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
   private KnaufProfileWrapper buildBridgeProfile( final Coordinate vector, final double distance, final int direction )
   {
-    final KnaufProfileWrapper profile = new KnaufProfileWrapper( m_reach, TuhhProfiles.clone( m_profile.getProfile() ) );
+    final KnaufProfileWrapper profile = new KnaufProfileWrapper( m_profile.getReach(), TuhhProfiles.clone( m_profile.getProfile() ) );
     new MoveProfileRunnable( profile.getProfile(), vector, distance, direction ).execute( new NullProgressMonitor() );
 
     profile.getProfile().setStation( m_profile.getStation() + distance / 1000.0 * direction );

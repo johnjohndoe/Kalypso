@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -55,12 +51,6 @@ import org.kalypso.model.wspm.core.profil.base.FLOW_DIRECTION;
 import org.kalypso.model.wspm.tuhh.core.gml.ProfileFeatureStationComparator;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufProfileBeanBuilder;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA15Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA16Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA40Bean;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -117,27 +107,6 @@ public class KnaufReach
   public FLOW_DIRECTION getDirection( )
   {
     return m_direction;
-  }
-
-  public AbstractKnaufProjectBean[] toBeans( )
-  {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA14Bean( this ) );
-    beans.add( new KnaufSA15Bean( this ) );
-    beans.add( new KnaufSA16Bean( this ) );
-
-    final KnaufProfileWrapper[] profiles = getProfiles();
-    for( final KnaufProfileWrapper profile : profiles )
-    {
-      final KnaufProfileBeanBuilder builder = new KnaufProfileBeanBuilder( this, profile );
-      final IStatus status = builder.execute( new NullProgressMonitor() ); // TODO
-
-      Collections.addAll( beans, builder.getBeans() );
-    }
-
-    beans.add( new KnaufSA40Bean( this ) );
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
 
   public KNAUF_FLIESSGESETZ getFliessgesetz( )

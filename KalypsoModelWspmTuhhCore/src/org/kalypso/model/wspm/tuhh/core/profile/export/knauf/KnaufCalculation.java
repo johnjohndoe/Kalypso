@@ -40,22 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA10Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA11Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA12Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA13Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA91Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA94Bean;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA99Bean;
 
 /**
  * First basic implementation of a Knauf based KalypsoWpm calculation - an later implementation will be analog to
@@ -94,40 +82,4 @@ public class KnaufCalculation
     return null;
   }
 
-  public AbstractKnaufProjectBean[] toBeans( )
-  {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    Collections.addAll( beans, getHeader() );
-
-    final KnaufReach[] reaches = getReaches();
-    for( final KnaufReach reach : reaches )
-    {
-      Collections.addAll( beans, reach.toBeans() );
-    }
-
-    Collections.addAll( beans, getFooter() );
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
-  }
-
-  private AbstractKnaufProjectBean[] getHeader( )
-  {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA10Bean() );
-    beans.add( new KnaufSA11Bean( this ) );
-    beans.add( new KnaufSA12Bean( this ) );
-    beans.add( new KnaufSA13Bean() );
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
-  }
-
-  private AbstractKnaufProjectBean[] getFooter( )
-  {
-    final Set<AbstractKnaufProjectBean> beans = new LinkedHashSet<>();
-    beans.add( new KnaufSA91Bean( this ) );
-    beans.add( new KnaufSA94Bean( this ) );
-    beans.add( new KnaufSA99Bean() );
-
-    return beans.toArray( new AbstractKnaufProjectBean[] {} );
-  }
 }

@@ -38,39 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders;
 
-import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
 
 /**
  * @author Dirk Kuch
  */
-public class ChangeProfilePointHeight implements IProfilePointWrapperVisitor
+public abstract class AbstractKnaufBeanBuilder implements ICoreRunnableWithProgress
 {
+  private final Set<AbstractKnaufProjectBean> m_beans = new LinkedHashSet<>();
 
-  private final double m_diff;
-
-  public ChangeProfilePointHeight( final double diff )
+  protected final void addBeans( final AbstractKnaufProjectBean... beans )
   {
-    m_diff = diff;
+    Collections.addAll( m_beans, beans );
   }
 
-  @Override
-  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point ) throws CancelVisitorException
+  public final AbstractKnaufProjectBean[] getBeans( )
   {
-    if( m_diff == 0.0 )
-      throw new CancelVisitorException();
-
-    final double hoehe = point.getHoehe();
-    if( Doubles.isNaN( hoehe ) )
-      return;
-
-    point.setHoehe( hoehe + m_diff );
-
+    return m_beans.toArray( new AbstractKnaufProjectBean[] {} );
   }
-
 }

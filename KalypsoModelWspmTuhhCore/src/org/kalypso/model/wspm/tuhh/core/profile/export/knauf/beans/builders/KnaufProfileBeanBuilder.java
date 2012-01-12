@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -56,7 +56,6 @@ import org.kalypso.model.wspm.core.profil.base.FillMissingProfileGeocoordinatesR
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
@@ -64,13 +63,11 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWr
  */
 public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuilder
 {
-  private final KnaufReach m_reach;
 
   private final KnaufProfileWrapper m_profile;
 
-  public KnaufProfileBeanBuilder( final KnaufReach reach, final KnaufProfileWrapper profile )
+  public KnaufProfileBeanBuilder( final KnaufProfileWrapper profile )
   {
-    m_reach = reach;
     m_profile = profile;
   }
 
@@ -92,7 +89,7 @@ public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuild
       Collections.addAll( stati, buildDefaultBeans( m_profile ) );
     else if( building instanceof BuildingBruecke )
     {
-      final KnaufBridgeProfileBuilder builder = new KnaufBridgeProfileBuilder( m_reach, m_profile, (BuildingBruecke) building );
+      final KnaufBridgeProfileBuilder builder = new KnaufBridgeProfileBuilder( m_profile, (BuildingBruecke) building );
       final IStatus status = builder.execute( new SubProgressMonitor( monitor, 1 ) );
 
       addBeans( builder.getBeans() );
