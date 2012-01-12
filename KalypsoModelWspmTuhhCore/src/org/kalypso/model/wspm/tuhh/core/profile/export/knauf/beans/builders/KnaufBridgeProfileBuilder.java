@@ -48,6 +48,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
@@ -60,7 +61,9 @@ import org.kalypso.model.wspm.core.profil.base.MoveProfileRunnable;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 
@@ -96,16 +99,71 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final KnaufProfileWrapper oberwasser = getOberwasserProfile( vector, distance );
     final KnaufProfileWrapper unterwasser = getUnterwasserProile( vector, distance );
 
-    m_profile.getReach().addProfiles( oberwasser, unterwasser );
-
     final double deltaH = getDeltaH( m_bridge, unterwasser );
     unterwasser.accept( new ChangeProfilePointHeight( deltaH ), 1 );
 
-    Collections.addAll( stati, buildDefaultBeans( unterwasser ) );
-    Collections.addAll( stati, buildDefaultBeans( m_profile ) ); // FIXME bridge profile!!!!
-    Collections.addAll( stati, buildDefaultBeans( oberwasser ) );
+    Collections.addAll( stati, addProfile( unterwasser, distance ) );
+    Collections.addAll( stati, buildDefaultBeans( m_profile ) );
+    Collections.addAll( stati, addProfile( oberwasser, distance ) );
 
-    return StatusUtilities.createStatus( stati, KalypsoModelWspmTuhhCorePlugin.getID(), "Export of KalypsoWspm Bridge Profile" );
+    return StatusUtilities.createStatus( stati, Messages.getString( "KnaufBridgeProfileBuilder_0" ) ); //$NON-NLS-1$
+  }
+
+  private IStatus[] addProfile( final KnaufProfileWrapper current, final double distance )
+  {
+    final KnaufReach reach = m_profile.getReach();
+    final KnaufProfileWrapper previous = reach.findPreviousProfile( m_profile );
+    final KnaufProfileWrapper next = reach.findNextProfile( m_profile );
+
+    if( !(isBetween( previous, current ) || isBetween( next, current )) )
+    {
+      final Status status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.getID(), String.format( Messages.getString( "KnaufBridgeProfileBuilder_1" ), current.getStation() ) ); //$NON-NLS-1$
+
+      return new IStatus[] { status };
+    }
+
+    final Set<IStatus> stati = new LinkedHashSet<>();
+
+    if( isTooClose( previous, current, distance ) || isTooClose( next, current, distance ) )
+    {
+      stati.add( new Status( IStatus.INFO, KalypsoModelWspmTuhhCorePlugin.getID(), String.format( Messages.getString( "KnaufBridgeProfileBuilder_2" ), current.getStation() ) ) ); //$NON-NLS-1$
+    }
+
+    m_profile.getReach().addProfiles( current );
+    Collections.addAll( stati, buildDefaultBeans( current ) );
+
+    return stati.toArray( new IStatus[] {} );
+  }
+
+  private boolean isTooClose( final KnaufProfileWrapper neighbour, final KnaufProfileWrapper current, final double distance )
+  {
+    if( Objects.isNull( current, neighbour ) )
+      return false;
+
+    final double d = Math.abs( neighbour.getStation() - current.getStation() ) * 1000;
+
+    return d < distance;
+  }
+
+  private boolean isBetween( final KnaufProfileWrapper neighbour, final KnaufProfileWrapper current )
+  {
+    if( Objects.isNull( m_profile, neighbour ) )
+      return false;
+
+    final double min = Math.min( m_profile.getStation(), neighbour.getStation() ) * 1000;
+    final double max = Math.max( m_profile.getStation(), neighbour.getStation() ) * 1000;
+
+    final double station = current.getStation() * 1000;
+
+    if( Math.abs( min - station ) < 1.0 )
+      return false;
+    if( Math.abs( max - station ) < 1.0 )
+      return false;
+
+    if( station > min && station < max )
+      return true;
+
+    return false;
   }
 
   private KnaufProfileWrapper getUnterwasserProile( final Coordinate vector, final double distance )

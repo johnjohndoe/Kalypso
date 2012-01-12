@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.builders.KnaufCalculationBeanBuilder;
 
 /**
@@ -77,6 +78,6 @@ public class KnaufProfileExporter implements ICoreRunnableWithProgress
     final KnaufBeanSerializer serializer = new KnaufBeanSerializer( builder.getBeans(), m_destination );
     stati.add( serializer.execute( monitor ) );
 
-    return StatusUtilities.createStatus( stati, "KnaufProfileExporter" );
+    return StatusUtilities.createStatus( stati, Messages.getString("KnaufProfileExporter_0") ); //$NON-NLS-1$
   }
 }

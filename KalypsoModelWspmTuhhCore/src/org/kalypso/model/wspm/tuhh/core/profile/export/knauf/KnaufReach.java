@@ -133,4 +133,15 @@ public class KnaufReach
     return profiles[index + 1];
   }
 
+  public KnaufProfileWrapper findPreviousProfile( final KnaufProfileWrapper profile )
+  {
+    final KnaufProfileWrapper[] profiles = getProfiles();
+
+    final int index = ArrayUtils.indexOf( profiles, profile );
+    if( index == 0 )
+      return null;
+
+    return profiles[index - 1];
+  }
+
 }

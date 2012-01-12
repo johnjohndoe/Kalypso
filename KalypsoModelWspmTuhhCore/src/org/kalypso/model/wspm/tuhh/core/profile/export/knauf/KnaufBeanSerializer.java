@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.AbstractKnaufProjectBean;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.IKnaufPrinter;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer.KnaufPrinterFactory;
@@ -75,7 +76,7 @@ public class KnaufBeanSerializer implements ICoreRunnableWithProgress
 
     try
     {
-      final FileWriterWithEncoding writer = new FileWriterWithEncoding( m_destination, "Cp1252" );
+      final FileWriterWithEncoding writer = new FileWriterWithEncoding( m_destination, "Cp1252" ); //$NON-NLS-1$
 
       try
       {
@@ -95,12 +96,12 @@ public class KnaufBeanSerializer implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final String msg = "Error - Serializing Knauf Beans";
+      final String msg = Messages.getString("KnaufBeanSerializer_1"); //$NON-NLS-1$
 
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), msg, e );
     }
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Successful - Serializing Knauf Beans" );
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), Messages.getString("KnaufBeanSerializer_2") ); //$NON-NLS-1$
   }
 
 }

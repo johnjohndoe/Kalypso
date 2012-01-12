@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.base.FillMissingProfileGeocoordinatesRunnable;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
@@ -97,14 +98,14 @@ public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuild
     }
     else if( Objects.isNotNull( building ) )
     {
-      final String message = String.format( "Achtung! Bauwerk am Profile %.3f wurde übersprungen. %s", m_profile.getStation(), building.getClass().getName() );
+      final String message = String.format( Messages.getString( "KnaufProfileBeanBuilder_0" ), m_profile.getStation(), building.getClass().getName() ); //$NON-NLS-1$
       final Status status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhCorePlugin.getID(), message );
       stati.add( status );
 
       Collections.addAll( stati, buildDefaultBeans( m_profile ) );
     }
 
-    return StatusUtilities.createStatus( stati, "Knauf-Profilexport Bean-Generierung" );
+    return StatusUtilities.createStatus( stati, String.format( Messages.getString( "KnaufProfileBeanBuilder_1" ), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   private IProfileBuilding findBuilding( final IProfileObject[] objects )

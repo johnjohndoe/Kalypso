@@ -46,6 +46,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
@@ -85,7 +86,7 @@ public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanB
       addBeans( new KnaufSA30Bean( profile, point ) );
     }
 
-    final Status status = new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "Default Knauf Profilexport Bean-Generierung erfolgreich" );
+    final Status status = new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("AbstractKnaufProfileBeanBuilder_0") ); //$NON-NLS-1$
     return new IStatus[] { status };
   }
 

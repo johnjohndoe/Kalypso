@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA14Bean;
@@ -79,7 +80,7 @@ public class KnaufReachBeanBuilder extends AbstractKnaufBeanBuilder
     final KnaufProfileWrapper[] profiles = m_reach.getProfiles();
     for( final KnaufProfileWrapper profile : profiles )
     {
-      monitor.setTaskName( String.format( "Exporting profile %.3f km", profile.getStation() ) );
+      monitor.setTaskName( String.format( Messages.getString("KnaufReachBeanBuilder_0"), profile.getStation() ) ); //$NON-NLS-1$
 
       final KnaufProfileBeanBuilder builder = new KnaufProfileBeanBuilder( profile );
       stati.add( builder.execute( new NullProgressMonitor() ) );
@@ -91,6 +92,6 @@ public class KnaufReachBeanBuilder extends AbstractKnaufBeanBuilder
 
     addBeans( new KnaufSA40Bean( m_reach ) );
 
-    return StatusUtilities.createStatus( stati, "KnaufCalculationBeanBuilder - Exporting of Knauf Calculation Reach" );
+    return StatusUtilities.createStatus( stati, Messages.getString("KnaufReachBeanBuilder_1") ); //$NON-NLS-1$
   }
 }

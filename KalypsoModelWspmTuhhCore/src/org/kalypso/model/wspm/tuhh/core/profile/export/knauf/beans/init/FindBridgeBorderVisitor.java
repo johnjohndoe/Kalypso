@@ -42,10 +42,10 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * @author Dirk Kuch
@@ -73,7 +73,10 @@ public class FindBridgeBorderVisitor implements IProfilePointWrapperVisitor
     final Double hoehe = point.getHoehe();
     final Double border = getValue( point, index );
 
-    if( isEquals( hoehe, border ) )
+    if( Doubles.isNaN( hoehe, border ) )
+      return;
+
+    if( !isRelevant( hoehe, border ) )
       return;
 
     if( border < m_min )
@@ -92,14 +95,15 @@ public class FindBridgeBorderVisitor implements IProfilePointWrapperVisitor
     return null;
   }
 
-  private boolean isEquals( final Double a, final Double b )
+  private boolean isRelevant( final Double a, final Double b )
   {
-    if( Objects.isNull( a, b ) )
-      return true;
     if( Doubles.isNaN( a, b ) )
+      return false;
+
+    if( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE.equals( m_property ) )
       return true;
 
-    return Math.abs( a - b ) < 0.005;
+    return Math.abs( a - b ) > 0.005;
   }
 
   public double getBorder( )

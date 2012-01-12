@@ -150,11 +150,11 @@ public class KnaufSA30Bean extends AbstractKnaufProjectBean
   {
     final int index = m_point.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_COMMENT );
     if( index < 0 )
-      return StringUtils.repeat( " ", 9 );
+      return StringUtils.repeat( " ", 9 ); //$NON-NLS-1$
 
     final Object value = m_point.getValue( index );
     if( Objects.isNull( value ) )
-      return StringUtils.repeat( " ", 9 );
+      return StringUtils.repeat( " ", 9 ); //$NON-NLS-1$
 
     String description = value.toString();
     if( description.length() == 9 )
@@ -163,7 +163,7 @@ public class KnaufSA30Bean extends AbstractKnaufProjectBean
       return description.substring( 0, 8 );
 
     while( description.length() < 9 )
-      description += " "; //$NON-NLS-N$
+      description += " "; //$NON-NLS-N$ //$NON-NLS-1$
 
     return description;
   }
