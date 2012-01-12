@@ -87,7 +87,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
+    final WspmWaterBody newWater = createOrGetWaterBody( waterName, isDirectionUpstreams );
     return createNewReachForWaterBody( newWater );
   }
 
@@ -109,7 +109,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public IProfileFeature createNewProfile( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
+    final WspmWaterBody newWater = createOrGetWaterBody( waterName, isDirectionUpstreams );
     final IProfileFeature newProfile = newWater.createNewProfile();
     newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     return newProfile;
