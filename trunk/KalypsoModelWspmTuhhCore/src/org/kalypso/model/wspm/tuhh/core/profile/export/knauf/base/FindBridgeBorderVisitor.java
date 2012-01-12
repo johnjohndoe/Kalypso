@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
+package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Doubles;
@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 /**
  * @author Dirk Kuch
  */
-public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
+public class FindBridgeBorderVisitor implements IProfilePointWrapperVisitor
 {
   private final String m_property;
 
@@ -58,7 +58,7 @@ public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
 
   double m_max = -Double.MAX_VALUE;
 
-  public DetermineBridgeWidthVisitor( final String property )
+  public FindBridgeBorderVisitor( final String property )
   {
     m_property = property;
   }
@@ -79,13 +79,11 @@ public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
     if( !isRelevant( hoehe, border ) )
       return;
 
-    final double breite = point.getBreite();
+    if( border < m_min )
+      m_min = border;
 
-    if( breite < m_min )
-      m_min = breite;
-
-    if( breite > m_max )
-      m_max = breite;
+    if( border > m_max )
+      m_max = border;
   }
 
   private Double getValue( final ProfilePointWrapper point, final int index )
@@ -108,8 +106,13 @@ public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
     return Math.abs( a - b ) > 0.005;
   }
 
-  public double getWidth( )
+  public double getBorder( )
   {
-    return Math.abs( m_max - m_min );
+    if( Double.MAX_VALUE == m_min )
+      return 0.0;
+    if( -Double.MAX_VALUE == m_max )
+      return 0.0;
+
+    return (m_min + m_max) / 2.0;
   }
 }
