@@ -56,6 +56,8 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -74,6 +76,11 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
   private final Map<String, WspmWaterBody> m_features;
 
   /**
+   * The workspace.
+   */
+  private CommandableWorkspace m_workspace;
+
+  /**
    * The wspm project.
    */
   private WspmProject m_wspmProject;
@@ -84,6 +91,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
   public WspmImportWaterBodiesWizard( )
   {
     m_features = new HashMap<String, WspmWaterBody>();
+    m_workspace = null;
     m_wspmProject = null;
   }
 
@@ -94,6 +102,10 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
   @Override
   protected WaterBody[] initData( final IWorkbenchPart part, final IStructuredSelection selection )
   {
+    m_workspace = findWorkspace( selection );
+    if( m_workspace == null )
+      throw new IllegalStateException( "No commandable workspace was found..." );
+
     m_wspmProject = findWspmProject( selection );
     if( m_wspmProject == null )
       throw new IllegalStateException( "No WSPM project was found..." );
@@ -129,7 +141,7 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     final WaterBody[] waterBodies = (WaterBody[]) selectedWaterBodies.toArray( new WaterBody[selectedWaterBodies.size()] );
 
     /* Create the operation. */
-    final ICoreRunnableWithProgress operation = new WspmImportWaterBodiesOperation( waterBodies, data, m_wspmProject, m_features );
+    final ICoreRunnableWithProgress operation = new WspmImportWaterBodiesOperation( m_workspace, waterBodies, data, m_wspmProject, m_features );
 
     /* Execute the operation. */
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
@@ -140,6 +152,38 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     }
 
     return status.isOK();
+  }
+
+  private CommandableWorkspace findWorkspace( final IStructuredSelection selection )
+  {
+    if( !(selection instanceof IFeatureSelection) )
+      return null;
+
+    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+
+    final Object[] elements = selection.toArray();
+    for( final Object element : elements )
+    {
+      if( element instanceof FeatureAssociationTypeElement )
+      {
+        final FeatureAssociationTypeElement featureAssociationTypeElement = (FeatureAssociationTypeElement) element;
+        final Feature feature = featureAssociationTypeElement.getOwner();
+        final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+        if( workspace != null )
+          return workspace;
+
+      }
+
+      if( element instanceof Feature )
+      {
+        final Feature feature = (Feature) element;
+        final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
+        if( workspace != null )
+          return workspace;
+      }
+    }
+
+    return null;
   }
 
   /**
