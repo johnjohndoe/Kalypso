@@ -386,7 +386,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
     final TuhhCalculation calculation = project.createReibConstCalculation();
     final boolean direction = true; // TODO: depends on building stuff
-    final WspmWaterBody waterBody = project.createWaterBody( "someWater", direction ); //$NON-NLS-1$
+    final WspmWaterBody waterBody = project.createOrGetWaterBody( "someWater", direction ); //$NON-NLS-1$
     project.createNewReach( waterBody.getName(), direction );
     final TuhhReach reach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
     reach.setName( "someReach" ); //$NON-NLS-1$
