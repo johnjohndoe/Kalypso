@@ -63,6 +63,7 @@ public class BanklineExportWizard extends Wizard implements IWorkbenchWizard
   public BanklineExportWizard( )
   {
     setWindowTitle( "Bankline Export" );
+    setNeedsProgressMonitor( true );
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() ) );
   }

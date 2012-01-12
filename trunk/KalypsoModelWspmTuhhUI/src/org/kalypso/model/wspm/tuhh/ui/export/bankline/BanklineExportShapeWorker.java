@@ -143,8 +143,11 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
     monitor.beginTask( "Computing banklines", flatElements.length );
 
-    for( final Feature feature : m_exportableElements )
+    for( int i = 0; i < flatElements.length; i++ )
     {
+      final Feature feature = flatElements[i];
+      monitor.subTask( String.format( "%s (%d/%d)", feature.getName(), i + 1, flatElements.length ) );
+
       try
       {
         addData( feature, new SubProgressMonitor( monitor, 1 ) );

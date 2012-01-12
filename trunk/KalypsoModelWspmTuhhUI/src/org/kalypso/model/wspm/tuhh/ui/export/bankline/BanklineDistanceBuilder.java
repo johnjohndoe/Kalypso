@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -68,9 +67,10 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.util.PointExtracter;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * @author Gernot Belger
@@ -85,10 +85,14 @@ public class BanklineDistanceBuilder
 
   private final IProfileFeature[] m_profiles;
 
+  private final LengthIndexedLine m_riverIndex;
+
   public BanklineDistanceBuilder( final LineString riverLine, final IProfileFeature[] profiles )
   {
     m_riverLine = riverLine;
     m_profiles = profiles;
+
+    m_riverIndex = new LengthIndexedLine( m_riverLine );
   }
 
   public SortedMap<Double, BanklineDistances> getDistances( )
@@ -148,7 +152,8 @@ public class BanklineDistanceBuilder
 
     /* Find station in river line */
     final Point intersectionPoint = intersections[0];
-    final double station = JTSUtilities.pointDistanceOnLine( m_riverLine, intersectionPoint );
+
+    final double station = computeStation( intersectionPoint );
 
     final BanklineDistances banklineDistances = new BanklineDistances( station );
     m_distances.put( station, banklineDistances );
@@ -188,26 +193,18 @@ public class BanklineDistanceBuilder
     }
   }
 
+  // FIXME: major performance problem here -> linear search through all segments of the riverLine,
+  // for every cross section
+  // TODO: use some kind of index to find quickly the right segment
+  private double computeStation( final Point point )
+  {
+    return m_riverIndex.indexOf( point.getCoordinate() );
+  }
+
   private static Point[] findPoints( final Geometry intersection )
   {
-    if( intersection instanceof Point )
-      return new Point[] { (Point) intersection };
-
-    if( intersection instanceof GeometryCollection )
-    {
-      final Collection<Point> points = new ArrayList<>();
-      final GeometryCollection collection = (GeometryCollection) intersection;
-      final int numGeometries = collection.getNumGeometries();
-      for( int i = 0; i < numGeometries; i++ )
-      {
-        final Geometry geom = collection.getGeometryN( i );
-        if( geom instanceof Point )
-          points.add( (Point) geom );
-      }
-
-      return points.toArray( new Point[points.size()] );
-    }
-
-    return new Point[] {};
+    final List<Point> points = new ArrayList<>();
+    intersection.apply( new PointExtracter( points ) );
+    return points.toArray( new Point[points.size()] );
   }
 }
