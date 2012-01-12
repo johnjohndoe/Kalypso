@@ -62,7 +62,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 /**
  * @author Dirk Kuch
  */
-public class KnaufExportProfilesWizard extends ExportProfilesWizard
+public class KnaufProfileExportWizard extends ExportProfilesWizard
 {
   private static final String FILTER_LABEL = Messages.getString( "KnaufExportProfilesWizard_0" ); //$NON-NLS-1$
 
@@ -70,7 +70,7 @@ public class KnaufExportProfilesWizard extends ExportProfilesWizard
 
   private ExportFileChooserPage m_profileFileChooserPage;
 
-  public KnaufExportProfilesWizard( )
+  public KnaufProfileExportWizard( )
   {
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }

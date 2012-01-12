@@ -608,7 +608,7 @@
         </wizard>
         <wizard
               category="exportWizards/profileExportWizards"
-              class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard"
+              class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufProfileExportWizard"
               icon="icons/elcl16/export_csv.gif"
               id="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard"
               name="%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.name">
