@@ -221,5 +221,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
     exporter.getMainChannel();
     m_simpleShapeData.addRow( geometry, data );
+
+    monitor.done();
   }
 }

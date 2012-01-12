@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -128,17 +129,21 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     final SortedMap<Double, BanklineDistances> banklineDistances = distanceBuilder.getDistances();
 
     /* build left and right river banks */
-    // m_mainChannel = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0" );
-    final Geometry leftBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0", 1.0 );
-    final Geometry rightBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_1", -1.0 );
+    final Geometry leftBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0", -1.0 );
+    final Geometry rightBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_1", +1.0 );
 
-    m_mainChannel = leftBank.union( rightBank );
-// m_mainChannel = new Polygon[leftBank.length + rightBank.length];
-// System.arraycopy( leftBank, 0, m_mainChannel, 0, leftBank.length );
-// System.arraycopy( rightBank, 0, m_mainChannel, leftBank.length, rightBank.length );
+    m_mainChannel = buildMainChannel( leftBank, rightBank );
 
     final String logMessage = String.format( "Compute bank line for '%s'", m_waterOrReach.getName() );
     return log.asMultiStatusOrOK( logMessage, logMessage );
+  }
+
+  private Geometry buildMainChannel( final Geometry leftBank, final Geometry rightBank )
+  {
+    if( leftBank instanceof GeometryCollection || rightBank instanceof GeometryCollection )
+      return GeometryGatherer.collect( leftBank, rightBank );
+
+    return leftBank.union( rightBank );
   }
 
   private Geometry buildBuffer( final LineString riverLine, final SortedMap<Double, BanklineDistances> distances, final String name, final double distanceSignum )

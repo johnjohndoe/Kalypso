@@ -74,6 +74,10 @@ public class BanklineBufferBuilder
 
   private final double m_distanceSignum;
 
+  private final GeometryFactory m_factory = new GeometryFactory();
+
+  // private final GeometryFactory m_factory = new GeometryFactory( new PrecisionModel( 2 ) );
+
   public BanklineBufferBuilder( final SortedMap<Double, BanklineDistances> distances, final String name, final LineString line, final double distanceSignum )
   {
     m_distances = distances;
@@ -85,6 +89,10 @@ public class BanklineBufferBuilder
   public Geometry buffer( )
   {
     initDistancer();
+
+    /* If distancer was not initialized, we have not enough distance values, we can only return the empty collection now */
+    if( m_distancer == null )
+      return m_factory.createGeometryCollection( null );
 
     final Coordinate[] coordinates = m_line.getCoordinates();
 
@@ -108,10 +116,48 @@ public class BanklineBufferBuilder
     }
 
     final Polygon[] allPolygons = m_segmentAreas.toArray( new Polygon[m_segmentAreas.size()] );
-    final GeometryCollection collection = m_line.getFactory().createGeometryCollection( allPolygons );
-    return collection.union();
 
-// return m_segmentAreas.toArray( new Polygon[m_segmentAreas.size()] );
+    final GeometryCollection collection = m_factory.createGeometryCollection( allPolygons );
+
+    try
+    {
+      final boolean buildUnion = false;
+      if( buildUnion )
+        return collection.union();
+      else
+        return collection;
+    }
+    catch( final Exception e )
+    {
+      // REMARK: sometimes the 'union' does not work (JTS bug), but sequentially unions does, so we try this here...
+      e.printStackTrace();
+      return buildContinuousUnion( collection );
+    }
+  }
+
+  private Geometry buildContinuousUnion( final GeometryCollection collection )
+  {
+    Geometry continousUnion = collection.getGeometryN( 0 );
+
+    final Collection<Geometry> problematic = new ArrayList<>();
+
+    for( int i = 1; i < collection.getNumGeometries(); i++ )
+    {
+      try
+      {
+        continousUnion = continousUnion.union( collection.getGeometryN( i ) );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+
+        problematic.add( collection );
+      }
+    }
+
+    final Geometry[] result = problematic.toArray( new Geometry[problematic.size() + 1] );
+    result[problematic.size()] = continousUnion;
+    return collection.getFactory().createGeometryCollection( result );
   }
 
   private void initDistancer( )
@@ -130,7 +176,8 @@ public class BanklineBufferBuilder
     }
 
     final Point2D[] allPoints = points.toArray( new Point2D[points.size()] );
-    m_distancer = new PolyLine( allPoints, 0.0001 );
+    if( allPoints.length > 1 )
+      m_distancer = new PolyLine( allPoints, 0.0001 );
   }
 
   private void addSegment( final LineSegment lastSegment, final LineSegment segment, final double distance0, final double distance1 )
@@ -153,11 +200,9 @@ public class BanklineBufferBuilder
 
   private void addPatch( final Coordinate[] coordinates )
   {
-    final GeometryFactory factory = m_line.getFactory();
+    final LinearRing shell = m_factory.createLinearRing( coordinates );
 
-    final LinearRing shell = factory.createLinearRing( coordinates );
-
-    final Polygon polygon = factory.createPolygon( shell, null );
+    final Polygon polygon = m_factory.createPolygon( shell, null );
     polygon.normalize();
 
     if( polygon.getArea() <= 0.0 )
