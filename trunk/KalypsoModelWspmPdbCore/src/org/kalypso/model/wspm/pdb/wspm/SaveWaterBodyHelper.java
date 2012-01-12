@@ -66,6 +66,7 @@ public class SaveWaterBodyHelper
       return createWspmWaterBody( waterBody );
 
     updateWaterBody( waterBody, wspmWater );
+
     return wspmWater;
   }
 
@@ -82,7 +83,9 @@ public class SaveWaterBodyHelper
 
   private void updateWaterBody( final WaterBody waterBody, final WspmWaterBody wspmWater ) throws Exception
   {
-    wspmWater.setName( waterBody.getLabel() );
+    final String label = waterBody.getLabel();
+    if( label != null && label.length() > 0 )
+      wspmWater.setName( label );
     wspmWater.setRefNr( waterBody.getName() );
     wspmWater.setDescription( waterBody.getDescription() );
 
