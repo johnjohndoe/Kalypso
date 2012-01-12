@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.DetermineBridgeWidthVisitor;
+import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.FindBridgeBorderVisitor;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA29Bean;
 
