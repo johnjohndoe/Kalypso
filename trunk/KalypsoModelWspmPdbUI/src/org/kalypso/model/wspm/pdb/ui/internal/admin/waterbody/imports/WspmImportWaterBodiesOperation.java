@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.SaveWaterBodyHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
@@ -71,6 +70,11 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  */
 public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
 {
+  /**
+   * The workspace.
+   */
+  private final CommandableWorkspace m_workspace;
+
   /**
    * The water bodies.
    */
@@ -104,6 +108,8 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
   /**
    * The constructor.
    * 
+   * @param workspace
+   *          The workspace.
    * @param waterBodies
    *          The water bodies.
    * @param data
@@ -113,8 +119,9 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
    * @param existingWaterBodies
    *          The existing water bodies hashed by their gkz.
    */
-  public WspmImportWaterBodiesOperation( final WaterBody[] waterBodies, final ImportWaterBodiesData data, final WspmProject wspmProject, final Map<String, WspmWaterBody> existingWaterBodies )
+  public WspmImportWaterBodiesOperation( final CommandableWorkspace workspace, final WaterBody[] waterBodies, final ImportWaterBodiesData data, final WspmProject wspmProject, final Map<String, WspmWaterBody> existingWaterBodies )
   {
+    m_workspace = workspace;
     m_waterBodies = waterBodies;
     m_data = data;
     m_wspmProject = wspmProject;
@@ -217,10 +224,9 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
 
   private void fireEvents( ) throws Exception
   {
-    /* Get the commandable workspace. */
-    // TODO
-    final GMLWorkspace workspace = m_wspmProject.getWorkspace();
-    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( workspace );
+    /* No workspace? */
+    if( m_workspace == null )
+      return;
 
     /* Convert to arrays. */
     final Feature[] added = m_added.toArray( new Feature[] {} );
@@ -234,14 +240,14 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
       final Feature[] children = findChildren( changedParent, added );
 
       /* Fire the event. */
-      cmdWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( cmdWorkspace, changedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, changedParent, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
 
     /* Fire the event. */
-    cmdWorkspace.fireModellEvent( new FeaturesChangedModellEvent( cmdWorkspace, changed ) );
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changed ) );
 
     /* Post the command. */
-    cmdWorkspace.postCommand( new EmptyCommand( null, false ) );
+    m_workspace.postCommand( new EmptyCommand( null, false ) );
   }
 
   private Feature[] findParents( final Feature[] features )
