@@ -18,12 +18,11 @@
     <mapv:layer visible="false" name="OpenStreetMap" featurePath="" id="ID_2" linktype="WMS" xlink:actuate="onRequest"
       xlink:href="URL=http://osm.wheregroup.com/cgi-bin/osm_basic.xml#LAYERS=Grenzen,Landwirtschaft,Industriegebiet,Bauland,Gruenflaeche,unkultiviertes_Land,Park,Naherholungsgebiet,Wald,Wiese,Fussgaengerzone,Gebaeude,Wasser,Fluesse,Baeche,Kanal,Wasserbecken,Insel,Kueste,Inselpunkte,Strand,Fussgaengerweg,Radweg,Wege,Wohnstrasse,Zufahrtswege,einfache_Strasse,Landstrasse,Bundesstrasse,Kraftfahrstrasse,Autobahn,Ortschaft,Weiler,Stadtteil,Dorf,Stadt,Grossstadt,Bahn,Bahnhof,Airport,Kirchengelaende,Friedhof,Kirche,Graeber,copyright#STYLES=default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default,default#PROVIDER="
       xlink:type="simple">
-      <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
     <mapv:layer visible="true" name="%mapTemplate.layer.dtm" featurePath="coverageMember" id="ID_4" linktype="gml" xlink:actuate="onRequest" xlink:href="dtm/dtm.gml" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
       <templ:style linktype="sld" xlink:actuate="onRequest" xlink:href="dtm/dtm.sld" xlink:type="simple" />
-      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="deleteable">false</templ:property>
       <templ:property name="allowUserChangeGridFolder">false</templ:property>
     </mapv:layer>
   </mapv:layers>
