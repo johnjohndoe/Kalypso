@@ -172,9 +172,6 @@ public class PointMarkerLayer extends AbstractProfilLayer
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
