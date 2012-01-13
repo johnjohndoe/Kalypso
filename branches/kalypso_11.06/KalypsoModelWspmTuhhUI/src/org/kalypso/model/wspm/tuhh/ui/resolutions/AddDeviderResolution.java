@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -78,7 +79,6 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
-
   @Override
   public boolean resolve( final IProfil profil )
   {
@@ -104,27 +104,20 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
   {
     final ProfilOperation operation = new ProfilOperation( "Add Devider", profil, true ); //$NON-NLS-1$
 
-    // TODO: the atomic operations are adding a column and setting values to it
-    // we need api for that; the marker api is too strongly coupled into the profile
-
     final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, pointLeft );
     final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, pointRight );
-// m1.setInterpretedValue( true );
-// m2.setInterpretedValue( true );
-
-    m1.setPoint( pointLeft );
-    m2.setPoint( pointRight );
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
 
-    final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final Object defaultValue = provider.getDefaultValue( m_deviderType );
     m1.setValue( defaultValue );
     m2.setValue( defaultValue );
 
-// operation.addChange( new PointMarkerSetPoint( m1, pointLeft ) );
-// operation.addChange( new PointMarkerSetPoint( m2, pointRight ) );
+    operation.addChange( new PointMarkerSetPoint( m1, pointLeft ) );
+    operation.addChange( new PointMarkerSetPoint( m2, pointRight ) );
 
     operation.addChange( new ActiveObjectEdit( profil, pointLeft, null ) );
+
     new ProfilOperationJob( operation ).schedule();
   }
 
