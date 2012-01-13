@@ -53,7 +53,7 @@ import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
 /**
  * @author Gernot Belger
@@ -68,7 +68,7 @@ public class EditBuildingParameterHandler extends AbstractHandler implements IEl
     final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
 
     final EditBuildingParameterMouseHandler plotDragZoomInHandler = new EditBuildingParameterMouseHandler( chart );
-    final IPlotHandler plotHandler = chart.getPlotHandler();
+    final IChartHandlerManager plotHandler = chart.getPlotHandler();
     plotHandler.activatePlotHandler( plotDragZoomInHandler );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
