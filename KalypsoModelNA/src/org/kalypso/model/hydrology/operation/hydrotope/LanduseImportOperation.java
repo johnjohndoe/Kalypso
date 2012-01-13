@@ -57,9 +57,9 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
  * 
  * @author Gernot Belger
  */
-public class LanduseImportOperation extends AbstractImportOperation
+public class LanduseImportOperation extends AbstractImportOperation<GM_MultiSurface>
 {
-  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor
+  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
     String getDescription( int index );
 

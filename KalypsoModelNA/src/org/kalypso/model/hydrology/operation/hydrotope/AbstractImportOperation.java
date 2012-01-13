@@ -53,11 +53,13 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
  */
-abstract class AbstractImportOperation implements ICoreRunnableWithProgress
+public abstract class AbstractImportOperation<T extends GM_Object> implements ICoreRunnableWithProgress
 {
   static final String STR_IMPORT_SUCCESSFULLY_TERMINATED = Messages.getString( "AbstractImportOperation.0" ); //$NON-NLS-1$
 
@@ -65,19 +67,19 @@ abstract class AbstractImportOperation implements ICoreRunnableWithProgress
 
   private final IStatusCollector m_log = new StatusCollector( ModelNA.PLUGIN_ID );
 
-  private final InputDescriptor m_inputDescriptor;
+  private final InputDescriptor<T> m_inputDescriptor;
 
-  interface InputDescriptor
+  public interface InputDescriptor<T>
   {
     /** Number of elements contained in this descriptor. All other methods allow for indices in the range 0..size-1 */
     int size( ) throws CoreException;
 
     String getName( int index );
 
-    GM_MultiSurface getGeometry( int index ) throws CoreException;
+    T getGeometry( int index ) throws CoreException;
   }
 
-  public AbstractImportOperation( final InputDescriptor inputDescriptor )
+  public AbstractImportOperation( final InputDescriptor<T> inputDescriptor )
   {
     m_inputDescriptor = inputDescriptor;
   }
@@ -97,7 +99,7 @@ abstract class AbstractImportOperation implements ICoreRunnableWithProgress
       try
       {
         final String label = m_inputDescriptor.getName( i );
-        final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
+        final T geometry = m_inputDescriptor.getGeometry( i );
         checkGeometry( geometry, label );
 
         importRow( i, label, geometry, m_log );
@@ -125,7 +127,7 @@ abstract class AbstractImportOperation implements ICoreRunnableWithProgress
     return m_log.asMultiStatusOrOK( STR_PROBLEMS_DURING_IMPORT, STR_IMPORT_SUCCESSFULLY_TERMINATED );
   }
 
-  private void checkGeometry( final GM_MultiSurface geometry, final String label )
+  private void checkGeometry( final T geometry, final String label )
   {
     if( geometry == null )
     {
@@ -134,13 +136,29 @@ abstract class AbstractImportOperation implements ICoreRunnableWithProgress
     }
     else
     {
-      final IStatus isValidTop = TopologyChecker.checkTopology( geometry, label );
-      if( !isValidTop.isOK() )
-        m_log.add( isValidTop );
+      // supported geometries are GM_MultiSurface and GM_Point
+      if( geometry instanceof GM_MultiSurface )
+      {
+        final GM_MultiSurface surface = (GM_MultiSurface) geometry;
+        final IStatus isValidTop = TopologyChecker.checkTopology( surface, label );
+        if( !isValidTop.isOK() )
+        {
+          m_log.add( isValidTop );
+        }
+      }
+      else if( geometry instanceof GM_Point )
+      {
+        // nothing to check...
+      }
+      else
+      {
+        final String message = Messages.getString( "org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.1", label ); //$NON-NLS-1$
+        m_log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
+      }
     }
   }
 
   protected abstract void init( );
 
-  protected abstract void importRow( int i, String label, GM_MultiSurface geometry, IStatusCollector log ) throws CoreException;
+  protected abstract void importRow( int i, String label, T geometry, IStatusCollector log ) throws CoreException;
 }

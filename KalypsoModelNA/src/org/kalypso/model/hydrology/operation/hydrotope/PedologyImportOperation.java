@@ -65,9 +65,9 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  *
  * @author Gernot Belger, Dejan Antanaskovic
  */
-public class PedologyImportOperation extends AbstractImportOperation
+public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSurface>
 {
-  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor
+  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
     String getDescription( int index );
 

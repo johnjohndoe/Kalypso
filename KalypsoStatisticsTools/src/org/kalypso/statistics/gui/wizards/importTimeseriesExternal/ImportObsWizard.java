@@ -22,8 +22,8 @@ import org.kalypso.statistics.types.data.NodeProfile;
 import org.kalypso.statistics.types.data.TimeserieProfile;
 import org.kalypso.statistics.types.data.TimeserieProfileEntry;
 import org.kalypso.statistics.utils.AppUtils;
-import org.kalypso.ui.wizard.sensor.ImportObservationWizard;
-import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
+import org.kalypso.zml.ui.imports.ImportObservationWizard;
+import org.kalypso.zml.ui.imports.ObservationImportSelection;
 
 public class ImportObsWizard extends ImportObservationWizard {
 

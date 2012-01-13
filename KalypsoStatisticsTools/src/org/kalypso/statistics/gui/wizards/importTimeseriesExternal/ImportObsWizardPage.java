@@ -50,7 +50,7 @@ import org.kalypso.statistics.gui.NodeLabelProvider;
 import org.kalypso.statistics.gui.views.nodes.NodesContentProvider;
 import org.kalypso.statistics.project.SessionDataProvider;
 import org.kalypso.statistics.types.data.NodeProfile;
-import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
+import org.kalypso.zml.ui.imports.ObservationImportSelection;
 
 public class ImportObsWizardPage extends WizardPage implements /*
 																 * FocusListener,
