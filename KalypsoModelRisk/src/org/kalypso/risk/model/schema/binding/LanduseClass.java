@@ -9,6 +9,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -135,8 +136,8 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   public String getDamageFunctionGmlID( )
   {
     final Object property = getProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK );
-    if( property != null && property instanceof XLinkedFeature_Impl )
-      return ((XLinkedFeature_Impl) property).getFeatureId();
+    if( property != null && property instanceof IXLinkedFeature )
+      return ((IXLinkedFeature) property).getFeatureId();
     return ""; //$NON-NLS-1$
   }
 

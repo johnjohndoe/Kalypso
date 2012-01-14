@@ -62,9 +62,9 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -146,7 +146,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
       final Feature[] sudsArray = hydrotop.getSuds();
       for( final Feature s : sudsArray )
       {
-        final Feature f = s instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) s).getFeature() : s;
+        final Feature f = s instanceof IXLinkedFeature ? ((IXLinkedFeature) s).getFeature() : s;
         final String key;
         final List<String> value = new ArrayList<String>();
         if( f instanceof SwaleInfiltrationDitch )

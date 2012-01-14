@@ -78,6 +78,7 @@ import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -132,7 +133,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
 
       /* Get the needed properties. */
-      final XLinkedFeature_Impl ombrometerCollectionLink = getProperty( MEMBER_ombrometerCollection, XLinkedFeature_Impl.class );
+      final IXLinkedFeature ombrometerCollectionLink = getProperty( MEMBER_ombrometerCollection, XLinkedFeature_Impl.class );
       final IOmbrometerCollection ombrometerCollection = (IOmbrometerCollection) ombrometerCollectionLink.getFeature();
       final String collectionPath = getProperty( PROPERTY_ombrometerFeaturePath, String.class );
       final String areaPath = getProperty( PROPERTY_areaPath, String.class );

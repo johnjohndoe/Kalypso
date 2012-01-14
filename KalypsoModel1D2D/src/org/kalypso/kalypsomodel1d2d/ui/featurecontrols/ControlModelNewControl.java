@@ -53,7 +53,7 @@ import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * @author Dejan Antanaskovic
@@ -96,9 +96,9 @@ public class ControlModelNewControl extends AbstractFeatureControl
       {
         final Feature parentFeature = getFeature();
         final Object property = parentFeature.getProperty( getFeatureTypeProperty() );
-        if( property instanceof XLinkedFeature_Impl )
+        if( property instanceof IXLinkedFeature )
         {
-          final Feature f = (XLinkedFeature_Impl) property;
+          final Feature f = (IXLinkedFeature) property;
           final IRelationType relationType = f.getParentRelation();
           final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( parentFeature.getWorkspace() );
           final int pos = 0;

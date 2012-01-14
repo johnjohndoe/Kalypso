@@ -57,6 +57,7 @@ import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -132,7 +133,7 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
       soilType.setDescription( desc );
 
       final String href = "parameter.gml#" + soilTypeRef; //$NON-NLS-1$
-      final XLinkedFeature_Impl soilTypeXLink = new XLinkedFeature_Impl( soilType, m_pt, m_lcFT, href, null, null, null, null, null );
+      final IXLinkedFeature soilTypeXLink = new XLinkedFeature_Impl( soilType, m_pt, m_lcFT, href, null, null, null, null, null );
 
       soilType.setSoilType( soilTypeXLink );
     }

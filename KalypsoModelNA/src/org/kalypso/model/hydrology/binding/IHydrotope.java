@@ -46,6 +46,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -86,7 +87,7 @@ public interface IHydrotope extends Feature
 
   void setGWFactor( final double value );
 
-  XLinkedFeature_Impl getCatchmentMember( );
+  IXLinkedFeature getCatchmentMember( );
 
   void setCatchmentMember( final XLinkedFeature_Impl value );
 
