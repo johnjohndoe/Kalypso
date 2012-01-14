@@ -54,7 +54,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -62,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implements IBuildingFlowRelation
 {
 
-  public BuildingFlowRelation( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public BuildingFlowRelation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -109,7 +108,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
    * <p>
    * If it does not exist yet or is not yet initialized, both is done.
    * </p>
-   * 
+   *
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getBuildingObservation()
    */
   @Override
@@ -188,7 +187,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
    * The building parameters are NOT backed by the underlying featre, so changed to the feature are not refelcted in the
    * building parameters.
    * </p>
-   * 
+   *
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getBuildingParameters()
    */
   @Override
@@ -215,10 +214,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
   {
     final Feature feature = this;
 
-    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
-    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
-    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    feature.setProperty( profileRelation, profileLinkFeature );
+    createLink( QNAME_PROP_PROFILE, profileRef );
   }
 
   /**

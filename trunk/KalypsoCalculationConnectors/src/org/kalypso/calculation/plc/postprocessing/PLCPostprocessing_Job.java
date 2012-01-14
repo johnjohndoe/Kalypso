@@ -35,7 +35,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements ISimulation
 {
@@ -354,8 +353,8 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final String href = fileRef + "#LengthSectionResult"; //$NON-NLS-1$
     final IFeatureType lcFT = resultMember.getFeatureType();
     final IRelationType pt = (IRelationType) lcFT.getProperty( property );
-    final XLinkedFeature_Impl xLink = new XLinkedFeature_Impl( resultMember, pt, lcFT, href );
-    resultMember.setProperty( pt, xLink );
+
+    resultMember.createLink( pt, href, lcFT );
   }
 
   private void changeCoverageFilePathPrefix( final ICoverage coverage, final String prefix )
