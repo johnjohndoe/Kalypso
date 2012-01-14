@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -882,12 +883,36 @@ public class SimpleNodeResult implements INodeResult
   @Override
   public Feature getMember( final IRelationType relation )
   {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public Feature getMember( final QName relation )
   {
-    return null;
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relation, final String href, final IFeatureType featureType )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relation, final String href, final QName featureType )
+  {
+    throw new UnsupportedOperationException();
   }
 }
