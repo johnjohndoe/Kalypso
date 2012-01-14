@@ -95,9 +95,9 @@ public class Target extends Feature_Impl implements ITarget
   }
 
   @Override
-  public void setCatchmentFeature( final Object feature )
+  public void setCatchmentFeature( final String href )
   {
-    setProperty( PROPERTY_CATCHMENT_COLLECTION, feature );
+    setLink( PROPERTY_CATCHMENT_COLLECTION, href );
   }
 
   @Override

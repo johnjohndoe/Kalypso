@@ -46,12 +46,10 @@ import java.util.List;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -60,7 +58,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
 {
   private final IFeatureBindingCollection<IPolynomial1D> m_polynomes = new FeatureBindingCollection<IPolynomial1D>( this, IPolynomial1D.class, QNAME_PROP_POLYNOMES );
 
-  public TeschkeFlowRelation( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public TeschkeFlowRelation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -105,9 +103,6 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
     return slope.doubleValue();
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setSlope(double)
-   */
   @Override
   public void setSlope( final double slope )
   {
@@ -115,29 +110,15 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
     setProperty( QNAME_PROP_SLOPE, slopeDec );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
-   */
   @Override
   public IProfileFeature getProfile( )
   {
-    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
-
-    return profileFeature;
+    return (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
-   */
   @Override
   public void setProfileLink( final String profileRef )
   {
-    final Feature feature = this;
-
-    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
-    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
-    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    feature.setProperty( profileRelation, profileLinkFeature );
+    setLink( QNAME_PROP_PROFILE, profileRef );
   }
-
 }

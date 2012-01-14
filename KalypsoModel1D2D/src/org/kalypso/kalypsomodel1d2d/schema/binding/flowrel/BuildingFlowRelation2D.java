@@ -54,7 +54,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger, ig
@@ -62,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D implements IBuildingFlowRelation2D
 {
 
-  public BuildingFlowRelation2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public BuildingFlowRelation2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -109,7 +108,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
    * <p>
    * If it does not exist yet or is not yet initialized, both is done.
    * </p>
-   * 
+   *
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getBuildingObservation()
    */
   @Override
@@ -188,7 +187,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
    * The building parameters are NOT backed by the underlying featre, so changed to the feature are not refelcted in the
    * building parameters.
    * </p>
-   * 
+   *
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getBuildingParameters()
    */
   @Override
@@ -197,33 +196,18 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
     return new BuildingParameters( getBuildingObservation() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
-   */
   @Override
   public IProfileFeature getProfile( )
   {
-    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
-    return profileFeature;
+    return (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
-   */
   @Override
   public void setProfileLink( final String profileRef )
   {
-    final Feature feature = this;
-
-    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
-    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
-    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    feature.setProperty( profileRelation, profileLinkFeature );
+    setLink( QNAME_PROP_PROFILE, profileRef );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D#getStation()
-   */
   @Override
   public BigDecimal getStation( )
   {

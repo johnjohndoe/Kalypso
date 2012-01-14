@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -94,9 +93,7 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
   @Override
   public void setStation( final String href )
   {
-    final IRelationType parentRelation = (IRelationType) getFeatureType().getProperty( LINK_STATION );
-    final XLinkedFeature_Impl link = new XLinkedFeature_Impl( this, parentRelation, parentRelation.getTargetFeatureType(), href );
-    setProperty( LINK_STATION, link );
+    setLink( LINK_STATION, href );
   }
 
   @Override

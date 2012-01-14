@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
@@ -14,15 +14,15 @@ import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * {@link AbstractFeatureBinder} based, default implementation of {@link IRoughnessPolygon}
- * 
+ *
  * @author Dejan Antanaskovic, Patrice Congo
  */
 public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
@@ -42,7 +42,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getLinestring()
    */
   @Override
@@ -56,7 +56,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessID()
    */
   @Override
@@ -115,8 +115,7 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
       setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, null );
     else
     {
-      final XLinkedFeature_Impl xlink = RoughnessPolygon.createClassLink( this, reference );
-      setProperty( SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, xlink );
+      RoughnessPolygon.createClassLink( this, SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, reference );
     }
   }
 
@@ -269,10 +268,10 @@ public class RoughnessPolygon extends Feature_Impl implements IRoughnessPolygon
     return changes;
   }
 
-  public static XLinkedFeature_Impl createClassLink( final Feature polygonFeature, final Feature classFeature )
+  public static IXLinkedFeature createClassLink( final Feature polygonFeature, final QName relationName, final Feature classFeature )
   {
     final StringBuffer xlinkBuffer = new StringBuffer( 50 );
     xlinkBuffer.append( "project:" ).append( DATA_LOCATION ).append( "#" ).append( classFeature.getId() ).trimToSize(); //$NON-NLS-1$ //$NON-NLS-2$
-    return new XLinkedFeature_Impl( polygonFeature, classFeature.getParentRelation(), classFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    return polygonFeature.setLink( relationName, xlinkBuffer.toString(), classFeature.getFeatureType() );
   }
 }

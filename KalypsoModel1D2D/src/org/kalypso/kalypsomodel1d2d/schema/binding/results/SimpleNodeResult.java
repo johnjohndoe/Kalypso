@@ -893,37 +893,37 @@ public class SimpleNodeResult implements INodeResult
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relationName, final String href )
+  public IXLinkedFeature setLink( final QName relationName, final String href )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureType )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final QName relation, final String href, final IFeatureType featureType )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relation, final String href, final QName featureType )
+  public IXLinkedFeature setLink( final QName relation, final String href, final QName featureType )
   {
     throw new UnsupportedOperationException();
   }

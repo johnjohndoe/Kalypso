@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype
- * 
+ *
  * @author Gernot Belger
  */
 public class SoilType extends Feature_Impl
@@ -81,9 +81,9 @@ public class SoilType extends Feature_Impl
    *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
    *          to a feature.
    */
-  public void setSoilType( final Object soilType )
+  public void setSoilType( final String href )
   {
-    setProperty( QNAME_PROP_SOILTYPE, soilType );
+    setLink( QNAME_PROP_SOILTYPE, href );
   }
 
   public Object getSoilType( )

@@ -85,7 +85,7 @@ public interface ITarget extends Feature
 
   void setFilter( String filter );
 
-  void setCatchmentFeature( Object feature );
+  void setCatchmentFeature( String href );
 
   Feature getResolvedCatchmentFeature( );
 }

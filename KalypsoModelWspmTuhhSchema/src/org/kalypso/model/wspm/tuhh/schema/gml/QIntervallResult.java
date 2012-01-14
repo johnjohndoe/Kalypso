@@ -64,7 +64,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -146,14 +145,10 @@ public class QIntervallResult extends Feature_Impl
    */
   public void setProfileLink( final IProfileFeature profile )
   {
-    final IFeatureType ftQIntervallResult = GMLSchemaUtilities.getFeatureTypeQuiet( QIntervallResult.QNAME_F_QIntervallResult );
-
     final IFeatureType ftProfile = GMLSchemaUtilities.getFeatureTypeQuiet( IProfileFeature.QN_PROFILE );
-    final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_profileMember );
 
     final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
-    final Feature profileFeatureRef = new XLinkedFeature_Impl( this, profileRelation, ftProfile, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    setProperty( profileRelation, profileFeatureRef );
+    setLink( QNAME_P_QIntervallResult_profileMember, href, ftProfile );
 
     final IProfileObject[] buildings = profile.getProfil().getProfileObjects( IProfileBuilding.class );
     if( ArrayUtils.isEmpty( buildings ) )

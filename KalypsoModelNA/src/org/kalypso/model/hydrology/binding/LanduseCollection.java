@@ -169,9 +169,7 @@ public class LanduseCollection extends Feature_Impl
   {
     final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
     final IFeatureType lcFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
-    final IRelationType pt = (IRelationType) GMLSchemaUtilities.getFeatureTypeQuiet( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
-    final IXLinkedFeature landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
-    landuse.setLanduse( landuseXLink );
+    landuse.setLink( Landuse.QNAME_PROP_LANDUSE, href, lcFT );
   }
 
   private void clipExistingLanduse( final Landuse existingLanduse, final GM_MultiSurface geometry )
@@ -198,7 +196,7 @@ public class LanduseCollection extends Feature_Impl
       final IFeatureType ft = sud.getFeatureType();
       final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
 
-      final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
+      final IXLinkedFeature lnk = new XLinkedFeature_Impl( landuse, rt, ft, href );
       sudCollection.add( lnk );
     }
   }

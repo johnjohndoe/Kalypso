@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
@@ -81,13 +80,7 @@ public class Catchment extends Feature_Impl implements ICatchment
   @Override
   public void setAreaLink( final String href )
   {
-    final IFeatureType featureType = getFeatureType();
-
-    final IRelationType linkProperty = (IRelationType) featureType.getProperty( PROPERTY_AREA_LINK );
-    final IFeatureType areaLinkFeatureType = linkProperty.getTargetFeatureType();
-
-    final XLinkedFeature_Impl link = new XLinkedFeature_Impl( this, linkProperty, areaLinkFeatureType, href );
-    setProperty( PROPERTY_AREA_LINK, link );
+    setLink( PROPERTY_AREA_LINK, href );
   }
 
 

@@ -354,7 +354,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final IFeatureType lcFT = resultMember.getFeatureType();
     final IRelationType pt = (IRelationType) lcFT.getProperty( property );
 
-    resultMember.createLink( pt, href, lcFT );
+    resultMember.setLink( pt, href, lcFT );
   }
 
   private void changeCoverageFilePathPrefix( final ICoverage coverage, final String prefix )

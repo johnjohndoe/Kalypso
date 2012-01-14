@@ -53,7 +53,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
@@ -70,13 +69,12 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Patrice Congo
  * @author Madanagopal
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
 {
@@ -550,16 +548,13 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
   {
     try
     {
-      final Feature wrappedFeature = calUnit;
-      final Feature parentFeature = this;// control to link to
-      final IPropertyType property = parentFeature.getFeatureType().getProperty( ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
-
       final GMLWorkspace workspace = calUnit.getWorkspace();
       final URL context = workspace.getContext();
-      final File filee = new File( FileLocator.resolve( context ).getFile() );
-      final String name = filee.getName();// new java.io.File( uri ).getName();
-      final XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getId(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() ); //$NON-NLS-1$
-      parentFeature.setProperty( property, linkedFeature );
+      final File file = new File( FileLocator.resolve( context ).getFile() );
+      final String name = file.getName();
+      final String href = name + "#" + calUnit.getId();
+
+      setLink( ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT, href, calUnit.getFeatureType() );
     }
     catch( final Exception e )
     {

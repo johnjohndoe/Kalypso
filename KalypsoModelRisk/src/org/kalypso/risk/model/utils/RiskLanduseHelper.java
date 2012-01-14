@@ -71,7 +71,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -79,7 +78,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class RiskLanduseHelper
 {
@@ -374,16 +373,17 @@ public class RiskLanduseHelper
     // TODO: is this good?
     final String linkedFeaturePath = "RasterizationControlModel.gml#"; //$NON-NLS-1$
     for( final Object object : landuseClassesList )
+    {
       if( object instanceof ILanduseClass )
       {
         final ILanduseClass landuseClass = (ILanduseClass) object;
         if( landuseClass.getName().equals( className ) )
         {
           final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getId();
-          final IXLinkedFeature linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getParentRelation(), landuseClass.getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-          return linkedFeature_Impl;
+          return new XLinkedFeature_Impl( feature, landuseClass.getParentRelation(), landuseClass.getFeatureType(), xlinkedFeaturePath );
         }
       }
+    }
     return null;
   }
 
