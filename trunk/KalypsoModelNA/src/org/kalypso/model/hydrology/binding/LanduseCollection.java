@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -169,7 +170,7 @@ public class LanduseCollection extends Feature_Impl
     final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
     final IFeatureType lcFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
     final IRelationType pt = (IRelationType) GMLSchemaUtilities.getFeatureTypeQuiet( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
-    final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
+    final IXLinkedFeature landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
     landuse.setLanduse( landuseXLink );
   }
 

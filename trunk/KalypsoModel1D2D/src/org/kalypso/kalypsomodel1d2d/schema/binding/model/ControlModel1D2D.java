@@ -66,6 +66,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -585,11 +586,11 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
       // the one id the control workspace with the same id
       // this will only work in the same scenario context
       final Feature resolveLink = FeatureHelper.resolveLink( this, ICalculationUnit1D2D.WB1D2D_PROP_CALC_UNIT );
-      if( !(resolveLink instanceof XLinkedFeature_Impl) )
+      if( !(resolveLink instanceof IXLinkedFeature) )
       {
         throw e;
       }
-      final String featureId = ((XLinkedFeature_Impl) resolveLink).getFeatureId();
+      final String featureId = ((IXLinkedFeature) resolveLink).getFeatureId();
       final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class );
       if( model == null )
       {

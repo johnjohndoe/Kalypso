@@ -44,10 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * GML-binding for the th:ThiessenStation
@@ -74,7 +74,7 @@ public interface IThiessenStation extends Feature
 
   void setThiessenArea( GM_Surface< ? > area );
 
-  XLinkedFeature_Impl getStation( );
+  IXLinkedFeature getStation( );
 
   void setStation( String href );
 

@@ -49,9 +49,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dejan Antanaskovic
@@ -87,7 +87,7 @@ public class PF_LandusePolygon_IsUrbanType extends FeaturePropertyFunction
         return null;
       else
       {
-        final XLinkedFeature_Impl landuseXlink = (XLinkedFeature_Impl) landuseClass;
+        final IXLinkedFeature landuseXlink = (IXLinkedFeature) landuseClass;
         final GMLWorkspace controlWorkspace = landuseXlink.getFeature().getWorkspace();
 
         final Feature riskZone = FeatureHelper.resolveLinkedFeature( controlWorkspace, landuseClass.getProperty( XLINKED_RISKZONE ) );

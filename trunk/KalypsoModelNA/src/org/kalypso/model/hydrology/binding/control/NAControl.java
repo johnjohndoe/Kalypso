@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -274,7 +275,7 @@ public class NAControl extends Feature_Impl
 
   private IRainfallGenerator getGenerator( final QName prop )
   {
-    final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) getProperty( prop );
+    final IXLinkedFeature xlink = (IXLinkedFeature) getProperty( prop );
     if( xlink == null )
       return null;
 

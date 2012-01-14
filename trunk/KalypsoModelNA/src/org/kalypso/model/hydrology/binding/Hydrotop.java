@@ -48,6 +48,7 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -174,7 +175,7 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public XLinkedFeature_Impl getCatchmentMember( )
+  public IXLinkedFeature getCatchmentMember( )
   {
     return getProperty( QNAME_PROP_CATCHMENT_MEMBER, XLinkedFeature_Impl.class );
   }

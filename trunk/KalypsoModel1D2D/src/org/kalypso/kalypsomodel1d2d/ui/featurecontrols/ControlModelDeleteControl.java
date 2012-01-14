@@ -53,7 +53,7 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * @author Dejan Antanaskovic
@@ -97,10 +97,10 @@ public class ControlModelDeleteControl extends AbstractFeatureControl
         {
           final Feature parentFeature = getFeature();
           final Object property = parentFeature.getProperty( getFeatureTypeProperty() );
-          if( property instanceof XLinkedFeature_Impl )
+          if( property instanceof IXLinkedFeature )
           {
             final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( parentFeature.getWorkspace() );
-            final Feature fLinked = ((XLinkedFeature_Impl) property);
+            final Feature fLinked = ((IXLinkedFeature) property);
 
             /**
              * XLinkedFeature_Impl's method getFeature will not return the instance from the collection (GM_envelope is

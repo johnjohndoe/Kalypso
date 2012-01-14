@@ -43,6 +43,7 @@ package org.kalypso.model.rcm.internal.binding;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IThiessenStation;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -85,9 +86,9 @@ public class ThiessenStation extends Feature_Impl implements IThiessenStation
   }
 
   @Override
-  public XLinkedFeature_Impl getStation( )
+  public IXLinkedFeature getStation( )
   {
-    return (XLinkedFeature_Impl) getMember( LINK_STATION );
+    return (IXLinkedFeature) getMember( LINK_STATION );
   }
 
   @Override

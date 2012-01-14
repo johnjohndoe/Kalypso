@@ -115,6 +115,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -376,7 +377,7 @@ public class UpdateSimulationWorker
     for( final ICatchment generatorCatchment : generatorCatchments )
     {
       /* Get the area. */
-      final XLinkedFeature_Impl areaLink = (XLinkedFeature_Impl) generatorCatchment.getAreaLink();
+      final IXLinkedFeature areaLink = (IXLinkedFeature) generatorCatchment.getAreaLink();
       final Catchment catchment = (Catchment) areaLink.getFeature();
 
       /* Find the workspace to save. */
@@ -487,7 +488,7 @@ public class UpdateSimulationWorker
     final IRelationType catchmentLinkRelation = (IRelationType) target.getFeatureType().getProperty( ITarget.PROPERTY_CATCHMENT_COLLECTION );
     final IFeatureType catchmentLinkType = GMLSchemaUtilities.getFeatureTypeQuiet( Feature.QNAME_FEATURE );
     final String catchmentLinkRef = "modell.gml#" + model.getId(); //$NON-NLS-1$
-    final XLinkedFeature_Impl catchmentXLink = new XLinkedFeature_Impl( target, catchmentLinkRelation, catchmentLinkType, catchmentLinkRef );
+    final IXLinkedFeature catchmentXLink = new XLinkedFeature_Impl( target, catchmentLinkRelation, catchmentLinkType, catchmentLinkRef );
     target.setCatchmentFeature( catchmentXLink );
 
     /* Target range. */
