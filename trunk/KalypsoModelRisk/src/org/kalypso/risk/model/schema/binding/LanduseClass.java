@@ -12,11 +12,10 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class LanduseClass extends Feature_Impl implements ILanduseClass
 {
-  public LanduseClass( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public LanduseClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -29,7 +28,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
 
   private double m_cellSize = Double.NaN;
 
- 
+
 
   @Override
   public void setName( final String name )
@@ -68,7 +67,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   }
 
   @Override
-  public void setOrdinalNumber( int value )
+  public void setOrdinalNumber( final int value )
   {
     setProperty( ILanduseClass.PROP_ORDINAL_NUMBER, value );
   }
@@ -109,25 +108,25 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   }
 
   @Override
-  public void setMaxAnnualDamage( double value )
+  public void setMaxAnnualDamage( final double value )
   {
     setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
   }
 
   @Override
-  public void setMinAnnualDamage( double value )
+  public void setMinAnnualDamage( final double value )
   {
     setProperty( ILanduseClass.PROP_MIN_DAMAGE, value );
   }
 
   @Override
-  public void setTotalDamage( double value )
+  public void setTotalDamage( final double value )
   {
     setProperty( ILanduseClass.PROP_TOTAL_DAMAGE, value );
   }
 
   @Override
-  public void setAverageAnnualDamage( double value )
+  public void setAverageAnnualDamage( final double value )
   {
     setProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE, value );
   }
@@ -145,31 +144,26 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   public void setDamageFunction( final IDamageFunction damageFunction )
   {
     final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + damageFunction.getId(); //$NON-NLS-1$
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( this, damageFunction.getParentRelation(), damageFunction.getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
+    setLink( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeaturePath, damageFunction.getFeatureType() );
   }
 
   @Override
   public IAssetValueClass getAssetValue( )
   {
     final Object property = getProperty( ILanduseClass.PROP_ASSET_VALUE_LINK );
-    Feature assetFeature = FeatureHelper.resolveLinkedFeature( getWorkspace(), property );
+    final Feature assetFeature = FeatureHelper.resolveLinkedFeature( getWorkspace(), property );
     if( assetFeature == null )
       return null;
 
-    IAssetValueClass assetValueClass = (IAssetValueClass) assetFeature.getAdapter( IAssetValueClass.class );
+    final IAssetValueClass assetValueClass = (IAssetValueClass) assetFeature.getAdapter( IAssetValueClass.class );
     return assetValueClass;
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#setAssetValue(org.kalypso.risk.model.schema.binding.IAssetValueClass)
-   */
   @Override
-  public void setAssetValue( IAssetValueClass assetValueClass )
+  public void setAssetValue( final IAssetValueClass assetValueClass )
   {
     final String xFeaturePath = IRasterizationControlModel.MODEL_FILENAME_GML + "#" + assetValueClass.getId(); //$NON-NLS-1$
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( this, assetValueClass.getParentRelation(), assetValueClass.getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-    setProperty( ILanduseClass.PROP_ASSET_VALUE_LINK, xFeature );
+    setLink( ILanduseClass.PROP_ASSET_VALUE_LINK, xFeaturePath, assetValueClass.getFeatureType() );
   }
 
   /**
@@ -178,7 +172,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   @Override
   public void updateStatistic( final int returnPeriod )
   {
-    for( IRiskLanduseStatistic entry : m_statList )
+    for( final IRiskLanduseStatistic entry : m_statList )
     {
       if( entry.getReturnPeriod() == returnPeriod )
         entry.finish();
@@ -189,7 +183,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   {
     final List<IRiskLanduseStatistic> statisticList = getLanduseStatisticList();
 
-    for( IRiskLanduseStatistic entry : statisticList )
+    for( final IRiskLanduseStatistic entry : statisticList )
     {
       if( entry.getReturnPeriod() == returnPeriod )
         return entry;
@@ -203,7 +197,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
     final List<IRiskLanduseStatistic> statList = new ArrayList<IRiskLanduseStatistic>();
 
     final FeatureList list = (FeatureList) getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
-    for( Object object : list )
+    for( final Object object : list )
     {
       if( object instanceof Feature )
       {
@@ -251,7 +245,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#getStatistic(int, double)
    */
   @Override
-  public IRiskLanduseStatistic getStatistic( int returnPeriod )
+  public IRiskLanduseStatistic getStatistic( final int returnPeriod )
   {
     for( final IRiskLanduseStatistic entry : m_statList )
       if( entry.getReturnPeriod() == returnPeriod )
@@ -300,7 +294,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
    * @see org.kalypso.risk.model.schema.binding.ILanduseClass#setCellSize(int)
    */
   @Override
-  public void setCellSize( double cellSize )
+  public void setCellSize( final double cellSize )
   {
     m_cellSize = cellSize;
   }

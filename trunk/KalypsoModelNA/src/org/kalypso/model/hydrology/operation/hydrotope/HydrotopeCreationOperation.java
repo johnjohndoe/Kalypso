@@ -276,10 +276,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         {
           if( feature instanceof org.kalypso.model.hydrology.binding.model.Catchment )
           {
-            final IFeatureType featureType = feature.getFeatureType();
             final String href = String.format( ".models/modell.gml#%s", feature.getId() ); //$NON-NLS-1$
-            final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
-            hydrotop.setCatchmentMember( lnk );
+
+            hydrotop.setCatchmentMember( href );
+
             corrSealing = corrSealing * ((Catchment) feature).getCorrSealing();
           }
           else if( feature instanceof Landuse )
@@ -305,7 +305,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
                 final IFeatureType ft = sudsFeature.getFeatureType();
                 final String href = String.format( "suds.gml#%s", ((IXLinkedFeature) sudsFeature).getFeatureId() ); //$NON-NLS-1$
 
-                final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
+                final IXLinkedFeature lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href );
                 hydrotopeFeatureList.add( lnk );
               }
             }

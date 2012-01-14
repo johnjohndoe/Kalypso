@@ -117,7 +117,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
@@ -485,11 +484,8 @@ public class UpdateSimulationWorker
     rainfallModel.setTarget( target );
 
     /* Create the link to the catchment. */
-    final IRelationType catchmentLinkRelation = (IRelationType) target.getFeatureType().getProperty( ITarget.PROPERTY_CATCHMENT_COLLECTION );
-    final IFeatureType catchmentLinkType = GMLSchemaUtilities.getFeatureTypeQuiet( Feature.QNAME_FEATURE );
     final String catchmentLinkRef = "modell.gml#" + model.getId(); //$NON-NLS-1$
-    final IXLinkedFeature catchmentXLink = new XLinkedFeature_Impl( target, catchmentLinkRelation, catchmentLinkType, catchmentLinkRef );
-    target.setCatchmentFeature( catchmentXLink );
+    target.setCatchmentFeature( catchmentLinkRef );
 
     /* Target range. */
     target.setPeriod( targetRange );

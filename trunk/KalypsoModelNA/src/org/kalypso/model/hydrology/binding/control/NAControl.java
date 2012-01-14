@@ -45,7 +45,6 @@ import java.util.Date;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -53,7 +52,6 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
@@ -284,15 +282,7 @@ public class NAControl extends Feature_Impl
 
   private void setGeneratorReference( final QName property, final String href )
   {
-    if( StringUtils.isBlank( href ) )
-    {
-      setProperty( property, null );
-      return;
-    }
-
-    final IRelationType relation = (IRelationType) getFeatureType().getProperty( property );
-    final XLinkedFeature_Impl reference = new XLinkedFeature_Impl( this, relation, relation.getTargetFeatureType(), href );
-    setProperty( property, reference );
+    setLink( property, href );
   }
 
   public String getInitialValueSource( )

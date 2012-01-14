@@ -42,24 +42,16 @@ package org.kalypso.model.hydrology.operation.hydrotope;
 
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.SoilType;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Imports pedology into a 'pedology.gml' file from another gml-workspace (probably a shape-file).
@@ -83,10 +75,6 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
 
   private final Map<String, String> m_soilTypes;
 
-  private final IFeatureType m_lcFT;
-
-  private final IRelationType m_pt;
-
   /**
    * @param output
    *          An (empty) list containing rrmsoilType:soilType features
@@ -99,9 +87,6 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
     m_output = output;
     m_soilTypes = soilTypes;
     m_importType = importType;
-
-    m_lcFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) ); //$NON-NLS-1$
-    m_pt = (IRelationType) GMLSchemaUtilities.getFeatureTypeQuiet( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
   }
 
   @Override
@@ -133,9 +118,8 @@ public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSur
       soilType.setDescription( desc );
 
       final String href = "parameter.gml#" + soilTypeRef; //$NON-NLS-1$
-      final IXLinkedFeature soilTypeXLink = new XLinkedFeature_Impl( soilType, m_pt, m_lcFT, href, null, null, null, null, null );
 
-      soilType.setSoilType( soilTypeXLink );
+      soilType.setSoilType( href );
     }
   }
 }

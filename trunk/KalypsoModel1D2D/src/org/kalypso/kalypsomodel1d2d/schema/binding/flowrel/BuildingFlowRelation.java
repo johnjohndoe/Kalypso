@@ -214,7 +214,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
   {
     final Feature feature = this;
 
-    createLink( QNAME_PROP_PROFILE, profileRef );
+    setLink( QNAME_PROP_PROFILE, profileRef );
   }
 
   /**

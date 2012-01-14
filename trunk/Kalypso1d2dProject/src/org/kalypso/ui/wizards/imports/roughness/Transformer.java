@@ -26,7 +26,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
@@ -160,8 +159,7 @@ public class Transformer implements ICoreRunnableWithProgress
       final Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        final XLinkedFeature_Impl xlink = RoughnessPolygon.createClassLink( feature, linkedFeature );
-        feature.setProperty( RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, xlink );
+        RoughnessPolygon.createClassLink( feature, RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
       }
     }
     // use (dummy) command to make workspace dirty

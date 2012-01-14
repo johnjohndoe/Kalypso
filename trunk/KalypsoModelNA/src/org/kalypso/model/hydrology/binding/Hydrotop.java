@@ -52,11 +52,10 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/hydrotop}Hydrotop<br/>
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class Hydrotop extends Feature_Impl implements IHydrotope
@@ -177,13 +176,13 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   @Override
   public IXLinkedFeature getCatchmentMember( )
   {
-    return getProperty( QNAME_PROP_CATCHMENT_MEMBER, XLinkedFeature_Impl.class );
+    return getProperty( QNAME_PROP_CATCHMENT_MEMBER, IXLinkedFeature.class );
   }
 
   @Override
-  public void setCatchmentMember( final XLinkedFeature_Impl value )
+  public void setCatchmentMember( final String href )
   {
-    setProperty( QNAME_PROP_CATCHMENT_MEMBER, value );
+    setLink( QNAME_PROP_CATCHMENT_MEMBER, href );
   }
 
   @Override
