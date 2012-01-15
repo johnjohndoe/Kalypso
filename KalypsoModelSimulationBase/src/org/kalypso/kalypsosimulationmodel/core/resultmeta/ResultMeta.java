@@ -72,7 +72,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   @Override
   public IResultMeta getOwner( )
   {
-    final Feature parentFeature = getOwner();
+    final Feature parentFeature = super.getOwner();
     if( parentFeature == null )
       return null;
 
