@@ -73,7 +73,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -302,11 +301,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
               // TODO check why landuse have the collection of suds, when hydrotop may be connected to just one sud
               if( sudsFeature instanceof IXLinkedFeature )
               {
-                final IFeatureType ft = sudsFeature.getFeatureType();
                 final String href = String.format( "suds.gml#%s", ((IXLinkedFeature) sudsFeature).getFeatureId() ); //$NON-NLS-1$
-
-                final IXLinkedFeature lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href );
-                hydrotopeFeatureList.add( lnk );
+                hydrotopeFeatureList.addLink( href );
               }
             }
           }

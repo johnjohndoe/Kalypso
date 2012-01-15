@@ -52,11 +52,9 @@ import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
@@ -192,12 +190,8 @@ public class LanduseCollection extends Feature_Impl
 
     for( final Feature sud : suds )
     {
-      final IRelationType rt = (IRelationType) GMLSchemaUtilities.getFeatureTypeQuiet( Landuse.QNAME_PROP_SUD_MEMBERS );
-      final IFeatureType ft = sud.getFeatureType();
       final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
-
-      final IXLinkedFeature lnk = new XLinkedFeature_Impl( landuse, rt, ft, href );
-      sudCollection.add( lnk );
+      sudCollection.addLink( href );
     }
   }
 }

@@ -74,7 +74,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Thomas Jung
@@ -380,7 +380,7 @@ public class RiskLanduseHelper
         if( landuseClass.getName().equals( className ) )
         {
           final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getId();
-          return new XLinkedFeature_Impl( feature, landuseClass.getParentRelation(), landuseClass.getFeatureType(), xlinkedFeaturePath );
+          return FeatureFactory.createXLink( feature, landuseClass.getParentRelation(), landuseClass.getFeatureType(), xlinkedFeaturePath );
         }
       }
     }

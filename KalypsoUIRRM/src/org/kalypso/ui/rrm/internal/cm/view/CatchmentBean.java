@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
@@ -248,7 +248,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     /* Build the area link. */
     final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef;
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( ICatchment.PROPERTY_AREA_LINK );
-    final IXLinkedFeature areaLink = new XLinkedFeature_Impl( newFeature, relation, null, href );
+    final IXLinkedFeature areaLink = FeatureFactory.createXLink( newFeature, relation, null, href );
 
     /* Create the change feature command. */
     final ChangeFeatureCommand changeCommand = new ChangeFeatureCommand( newFeature, relation, areaLink );
