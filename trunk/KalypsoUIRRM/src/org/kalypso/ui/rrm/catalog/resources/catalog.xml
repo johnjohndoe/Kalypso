@@ -38,5 +38,4 @@
 
   <system uri="ThiessenStation.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:default" />
   <system uri="ThiessenStation_selected.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:selected" />
-
 </catalog>
