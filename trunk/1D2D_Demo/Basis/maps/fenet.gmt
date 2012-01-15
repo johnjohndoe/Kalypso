@@ -5,6 +5,24 @@
   </mapv:translator>
   <mapv:extent srs="EPSG:31467" bottom="773106.5310006625" top="779107.5183922119" right="3932001.310043943" left="3928459.159528979" />
   <mapv:layers>
+    <mapv:layer visible="true" name="Maßstab" id="ID_17" linktype="scale">
+      <templ:showChildren>true</templ:showChildren>
+    </mapv:layer>
+    <mapv:layer visible="true" name="Legende" featurePath="" id="ID_16" linktype="legend" xlink:href="">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">false</templ:property>
+      <templ:property name="horizontal_position">4</templ:property>
+      <templ:property name="theme_ids">ID_1;ID_2;ID_3;ID_4;ID_5;ID_6;ID_7;ID_8;ID_9;ID_10;ID_11</templ:property>
+      <templ:property name="insets">6</templ:property>
+      <templ:property name="background_color">255;255;255</templ:property>
+      <templ:property name="vertical_position">1</templ:property>
+    </mapv:layer>
+    <mapv:layer visible="false" name="FE-Net DTM" featurePath="" id="ID_18" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/model_tin.gz" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:style style="tinLineStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/model_tin.sld" xlink:type="simple" />
+      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="fenetDtm">true</templ:property>
+    </mapv:layer>
     <mapv:layer visible="false" name="%fenet.mapv.layer.Knoten" featurePath="#fid#root/node[Node]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
       <templ:legendicon>urn:kalypso:map:theme:swtimage:style:FE1D2DNode:rule:Node</templ:legendicon>
       <templ:showChildren>true</templ:showChildren>
@@ -45,6 +63,10 @@
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
+    <mapv:layer visible="true" name="Demo Strang" featurePath="#fid#RiverProfileNetwork12125819001485/riverProfile" id="ID_19" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/terrain.gml" xlink:type="simple">
+      <templ:showChildren>true</templ:showChildren>
+      <templ:property name="deleteable">true</templ:property>
+    </mapv:layer>
     <mapv:layer visible="false" name="%fenet.mapv.layer.Rauheiten" featurePath="#fid#root/element[PolyElement]" id="ID_10" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/discretisation.gml" xlink:type="simple">
       <templ:legendicon>urn:kalypso:map:theme:swtimage:style:Roughness style:rule:undefinierterStilID</templ:legendicon>
       <templ:showChildren>true</templ:showChildren>
@@ -70,28 +92,6 @@
     <mapv:layer visible="false" name="%base.mapv.gismapview.Grundlagen" id="ID_15" linktype="gmt" xlink:actuate="onRequest" xlink:href="base.gmt" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
       <templ:property name="deleteable">false</templ:property>
-    </mapv:layer>
-    <mapv:layer visible="true" name="Legende" featurePath="" id="ID_16" linktype="legend" xlink:href="">
-      <templ:showChildren>true</templ:showChildren>
-      <templ:property name="deleteable">false</templ:property>
-      <templ:property name="horizontal_position">4</templ:property>
-      <templ:property name="theme_ids">ID_1;ID_2;ID_3;ID_4;ID_5;ID_6;ID_7;ID_8;ID_9;ID_10;ID_11</templ:property>
-      <templ:property name="insets">6</templ:property>
-      <templ:property name="background_color">255;255;255</templ:property>
-      <templ:property name="vertical_position">1</templ:property>
-    </mapv:layer>
-    <mapv:layer visible="true" name="Maßstab" id="ID_17" linktype="scale">
-      <templ:showChildren>true</templ:showChildren>
-    </mapv:layer>
-    <mapv:layer visible="false" name="FE-Net DTM" featurePath="" id="ID_18" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/model_tin.gz" xlink:type="simple">
-      <templ:showChildren>true</templ:showChildren>
-      <templ:style style="tinLineStyle" linktype="sld" xlink:actuate="onRequest" xlink:href="../styles/model_tin.sld" xlink:type="simple" />
-      <templ:property name="deleteable">true</templ:property>
-      <templ:property name="fenetDtm">true</templ:property>
-    </mapv:layer>
-    <mapv:layer visible="true" name="Demo Strang" featurePath="#fid#RiverProfileNetwork12125819001485/riverProfile" id="ID_19" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/terrain.gml" xlink:type="simple">
-      <templ:showChildren>true</templ:showChildren>
-      <templ:property name="deleteable">true</templ:property>
     </mapv:layer>
   </mapv:layers>
 </mapv:gismapview>
