@@ -57,8 +57,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.observation.IObservation;
@@ -68,7 +66,6 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -97,7 +94,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
@@ -229,14 +226,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
     /* task: create an observation */
     final Feature controlModelFeature = controlModel;
-    final CommandableWorkspace workspace = new CommandableWorkspace( controlModelFeature.getWorkspace() );
 
-    final IPropertyType property = controlModelFeature.getFeatureType().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
-    final IRelationType relation = (IRelationType) property;
-
-    final Feature fObs = workspace.createFeature( controlModelFeature, relation, relation.getTargetFeatureType() );
-
-    workspace.setFeatureAsComposition( controlModelFeature, relation, fObs, true );
+    final Feature fObs = controlModelFeature.createSubFeature( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
 
     // new observation
     final TupleResult result = new TupleResult();

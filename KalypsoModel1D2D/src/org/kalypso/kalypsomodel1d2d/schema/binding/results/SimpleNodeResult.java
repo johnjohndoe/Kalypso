@@ -927,4 +927,28 @@ public class SimpleNodeResult implements INodeResult
   {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public Feature createSubFeature( final IRelationType relation, final QName featureTypeName )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Feature createSubFeature( final IRelationType relation )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Feature createSubFeature( final QName relationName, final QName featureTypeName )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Feature createSubFeature( final QName relationName )
+  {
+    throw new UnsupportedOperationException();
+  }
 }

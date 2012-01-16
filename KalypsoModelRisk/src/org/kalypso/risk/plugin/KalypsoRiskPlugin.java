@@ -27,6 +27,8 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class KalypsoRiskPlugin extends AbstractUIPlugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.risk"; //$NON-NLS-1$
+
   private static KalypsoRiskPlugin PLUGIN;
 
   private TaskExecutionAuthority m_taskExecutionAuthority;
@@ -138,7 +140,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     return m_szenarioController;
   }
 
-  protected void setSzenarioController( SzenarioController szenarioController )
+  protected void setSzenarioController( final SzenarioController szenarioController )
   {
     m_szenarioController = szenarioController;
   }
