@@ -17,6 +17,7 @@ h2. KalypsoWSPM Brückenprofile
 h3. Allgemeines
 
 * Brücken werden als Gerade Decke serialisiert.
+* die Stationierung des KalypsoWSPM Brückenprofil wird Richtung Unterwasser verschoben (Brückenbreite / 2.0) 
 * Für jede Brücke wird ein Unter- und Oberwasserprofil generiert
 ** dazu wird das Brückenprofil gedoppelt (ohne Bauwerke)
 ** Positionierung = Brückenprofil.getStation() +/- Brücke.getBreite();
