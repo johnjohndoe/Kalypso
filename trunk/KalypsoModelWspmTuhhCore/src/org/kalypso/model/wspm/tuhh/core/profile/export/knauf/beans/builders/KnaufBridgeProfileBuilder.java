@@ -96,27 +96,29 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final Coordinate vector = getBaseVector();
     final double distance = m_bridge.getWidth();
 
+    /** move bridge into upstream direction */
     final IStatus status = moveBridgeProfile( distance / 2.0 );
     Collections.addAll( stati, status );
     if( !status.isOK() )
       return StatusUtilities.createStatus( stati, Messages.getString( "KnaufBridgeProfileBuilder_0" ) ); //$NON-NLS-1$
 
-    final KnaufProfileWrapper oberwasser = getOberwasserProfile( vector, distance );
-    final KnaufProfileWrapper unterwasser = getUnterwasserProfile( vector, distance );
+    /** generate new upstream and downstream profiles */
+    final KnaufProfileWrapper downstream = getOberwasserProfile( vector, distance );
+    final KnaufProfileWrapper upstream = getUnterwasserProfile( vector, distance );
 
-    final double deltaH = getDeltaH( m_bridge, unterwasser );
-    unterwasser.accept( new ChangeProfilePointHeight( deltaH ), 1 );
+    /** lowering of upstream profile */
+    final double deltaH = getDeltaH( m_bridge, upstream );
+    upstream.accept( new ChangeProfilePointHeight( deltaH ), 1 );
 
-    Collections.addAll( stati, addProfile( unterwasser, distance ) );
+    Collections.addAll( stati, addProfile( upstream, distance ) );
     Collections.addAll( stati, buildDefaultBeans( m_profile ) );
-    Collections.addAll( stati, addProfile( oberwasser, distance ) );
+    Collections.addAll( stati, addProfile( downstream, distance ) );
 
     return StatusUtilities.createStatus( stati, Messages.getString( "KnaufBridgeProfileBuilder_0" ) ); //$NON-NLS-1$
   }
 
   private IStatus moveBridgeProfile( final double distance )
   {
-
     final KnaufReach reach = m_profile.getReach();
 
     final KnaufProfileWrapper previous = reach.findPreviousProfile( m_profile );
