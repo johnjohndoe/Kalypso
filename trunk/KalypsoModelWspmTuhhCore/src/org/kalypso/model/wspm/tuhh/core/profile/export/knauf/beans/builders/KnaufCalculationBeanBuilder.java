@@ -81,7 +81,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
 
     final KnaufReach[] reaches = m_calculation.getReaches();
 
-    monitor.beginTask( Messages.getString("KnaufCalculationBeanBuilder_0"), ArrayUtils.getLength( reaches ) ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "KnaufCalculationBeanBuilder_0" ), ArrayUtils.getLength( reaches ) ); //$NON-NLS-1$
 
     for( final KnaufReach reach : reaches )
     {
@@ -95,7 +95,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
 
     stati.add( buildFooter() );
 
-    return StatusUtilities.createStatus( stati, Messages.getString("KnaufCalculationBeanBuilder_1") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( stati, Messages.getString( "KnaufCalculationBeanBuilder_1" ) ); //$NON-NLS-1$
   }
 
   private IStatus buildHeader( )
@@ -105,7 +105,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
     addBeans( new KnaufSA12Bean( m_calculation ) );
     addBeans( new KnaufSA13Bean() );
 
-    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("KnaufCalculationBeanBuilder_2") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString( "KnaufCalculationBeanBuilder_2" ) ); //$NON-NLS-1$
 
   }
 
@@ -115,7 +115,7 @@ public class KnaufCalculationBeanBuilder extends AbstractKnaufBeanBuilder
     addBeans( new KnaufSA94Bean( m_calculation ) );
     addBeans( new KnaufSA99Bean() );
 
-    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("KnaufCalculationBeanBuilder_3") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString( "KnaufCalculationBeanBuilder_3" ) ); //$NON-NLS-1$
   }
 
 }

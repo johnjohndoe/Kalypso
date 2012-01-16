@@ -96,7 +96,10 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final Coordinate vector = getBaseVector();
     final double distance = m_bridge.getWidth();
 
-    moveBridgeProfile( distance / 2.0 );
+    final IStatus status = moveBridgeProfile( distance / 2.0 );
+    Collections.addAll( stati, status );
+    if( !status.isOK() )
+      return StatusUtilities.createStatus( stati, Messages.getString( "KnaufBridgeProfileBuilder_0" ) ); //$NON-NLS-1$
 
     final KnaufProfileWrapper oberwasser = getOberwasserProfile( vector, distance );
     final KnaufProfileWrapper unterwasser = getUnterwasserProfile( vector, distance );
@@ -111,15 +114,42 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     return StatusUtilities.createStatus( stati, Messages.getString( "KnaufBridgeProfileBuilder_0" ) ); //$NON-NLS-1$
   }
 
-  private void moveBridgeProfile( final double distance )
+  private IStatus moveBridgeProfile( final double distance )
   {
+
+    final KnaufReach reach = m_profile.getReach();
+
+    final KnaufProfileWrapper previous = reach.findPreviousProfile( m_profile );
+    final KnaufProfileWrapper next = reach.findNextProfile( m_profile );
+
+    double station;
+
     final FLOW_DIRECTION direction = m_profile.getReach().getDirection();
 
     if( FLOW_DIRECTION.eSrc2Estuary == direction )
-      m_profile.getProfile().setStation( m_profile.getStation() + distance / 1000.0 );
-
+      station = m_profile.getStation() + distance / 1000.0;
     else
-      m_profile.getProfile().setStation( m_profile.getStation() - distance / 1000.0 );
+      station = m_profile.getStation() - distance / 1000.0;
+
+    if( !isBetween( Math.min( previous.getStation(), next.getStation() ), station, Math.max( previous.getStation(), next.getStation() ) ) )
+    {
+      final String msg = String.format( "Konflikt! Kann KalypsoWSPM Brückenprofil nicht in Unterwasser-Richtung verschieben. Neue Stationierung %.3f km kollidiert mit bestehenden Nachbar-Profilen (%.3f km, %.3f km)", station, previous.getStation(), next.getStation() );
+      final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), msg );
+
+      return status;
+    }
+
+    m_profile.getProfile().setStation( station );
+
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "Verschiebung des Brückenprofils in Unterwasser-Richtung" );
+  }
+
+  private boolean isBetween( final double before, final double bridge, final double next )
+  {
+    if( bridge > before && bridge < next )
+      return true;
+
+    return false;
   }
 
   private IStatus[] addProfile( final KnaufProfileWrapper current, final double distance )

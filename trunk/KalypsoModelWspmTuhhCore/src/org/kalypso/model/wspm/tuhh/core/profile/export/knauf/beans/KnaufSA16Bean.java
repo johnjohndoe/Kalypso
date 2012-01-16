@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
  */
 public class KnaufSA16Bean extends AbstractKnaufProjectBean
 {
-
   private final KnaufReach m_reach;
 
   private Double m_dhwMax = 2.0;

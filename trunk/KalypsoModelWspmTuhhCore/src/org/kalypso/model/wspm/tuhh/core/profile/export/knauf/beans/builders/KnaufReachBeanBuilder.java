@@ -80,7 +80,7 @@ public class KnaufReachBeanBuilder extends AbstractKnaufBeanBuilder
     final KnaufProfileWrapper[] profiles = m_reach.getProfiles();
     for( final KnaufProfileWrapper profile : profiles )
     {
-      monitor.setTaskName( String.format( Messages.getString("KnaufReachBeanBuilder_0"), profile.getStation() ) ); //$NON-NLS-1$
+      monitor.setTaskName( String.format( Messages.getString( "KnaufReachBeanBuilder_0" ), profile.getStation() ) ); //$NON-NLS-1$
 
       final KnaufProfileBeanBuilder builder = new KnaufProfileBeanBuilder( profile );
       stati.add( builder.execute( new NullProgressMonitor() ) );
@@ -92,6 +92,6 @@ public class KnaufReachBeanBuilder extends AbstractKnaufBeanBuilder
 
     addBeans( new KnaufSA40Bean( m_reach ) );
 
-    return StatusUtilities.createStatus( stati, Messages.getString("KnaufReachBeanBuilder_1") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( stati, Messages.getString( "KnaufReachBeanBuilder_1" ) ); //$NON-NLS-1$
   }
 }
