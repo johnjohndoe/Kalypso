@@ -96,8 +96,10 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     final Coordinate vector = getBaseVector();
     final double distance = m_bridge.getWidth();
 
+    moveBridgeProfile( distance / 2.0 );
+
     final KnaufProfileWrapper oberwasser = getOberwasserProfile( vector, distance );
-    final KnaufProfileWrapper unterwasser = getUnterwasserProile( vector, distance );
+    final KnaufProfileWrapper unterwasser = getUnterwasserProfile( vector, distance );
 
     final double deltaH = getDeltaH( m_bridge, unterwasser );
     unterwasser.accept( new ChangeProfilePointHeight( deltaH ), 1 );
@@ -107,6 +109,17 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     Collections.addAll( stati, addProfile( oberwasser, distance ) );
 
     return StatusUtilities.createStatus( stati, Messages.getString( "KnaufBridgeProfileBuilder_0" ) ); //$NON-NLS-1$
+  }
+
+  private void moveBridgeProfile( final double distance )
+  {
+    final FLOW_DIRECTION direction = m_profile.getReach().getDirection();
+
+    if( FLOW_DIRECTION.eSrc2Estuary == direction )
+      m_profile.getProfile().setStation( m_profile.getStation() + distance / 1000.0 );
+
+    else
+      m_profile.getProfile().setStation( m_profile.getStation() - distance / 1000.0 );
   }
 
   private IStatus[] addProfile( final KnaufProfileWrapper current, final double distance )
@@ -166,7 +179,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     return false;
   }
 
-  private KnaufProfileWrapper getUnterwasserProile( final Coordinate vector, final double distance )
+  private KnaufProfileWrapper getUnterwasserProfile( final Coordinate vector, final double distance )
   {
     final FLOW_DIRECTION direction = m_profile.getReach().getDirection();
 
