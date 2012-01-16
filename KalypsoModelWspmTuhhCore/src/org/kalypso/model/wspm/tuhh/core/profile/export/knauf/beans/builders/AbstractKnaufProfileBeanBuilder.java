@@ -86,7 +86,7 @@ public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanB
       addBeans( new KnaufSA30Bean( profile, point ) );
     }
 
-    final Status status = new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("AbstractKnaufProfileBeanBuilder_0") ); //$NON-NLS-1$
+    final Status status = new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString( "AbstractKnaufProfileBeanBuilder_0" ) ); //$NON-NLS-1$
     return new IStatus[] { status };
   }
 
