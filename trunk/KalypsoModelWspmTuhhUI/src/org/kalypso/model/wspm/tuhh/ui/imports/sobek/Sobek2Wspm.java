@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDefYZTable;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -139,7 +140,7 @@ public class Sobek2Wspm
     if( profileDef == null )
     {
       final String id = profileDat.getId();
-      m_stati.add( IStatus.ERROR, Messages.getString("Sobek2Wspm.0"), null, id ); //$NON-NLS-1$
+      m_stati.add( IStatus.ERROR, Messages.getString( "Sobek2Wspm.0" ), null, id ); //$NON-NLS-1$
       return;
     }
 
@@ -203,7 +204,7 @@ public class Sobek2Wspm
 
     final BigDecimal station = GuessStationPatternReplacer.findStation( searchString, GuessStationContext.DEFAULT_SEARCH_CONTEXTS, m_stationPatterns );
     if( station == null )
-      m_stati.add( IStatus.WARNING, Messages.getString("Sobek2Wspm.1"), null, searchString ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "Sobek2Wspm.1" ), null, searchString ); //$NON-NLS-1$
     return station;
   }
 
@@ -217,7 +218,7 @@ public class Sobek2Wspm
         break;
 
       default:
-        final String message = String.format( Messages.getString("Sobek2Wspm.2"), profil.getName(), type ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "Sobek2Wspm.2" ), profil.getName(), type ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
         throw new CoreException( status );
     }
@@ -244,7 +245,7 @@ public class Sobek2Wspm
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( Messages.getString("Sobek2Wspm.3"), Messages.getString("Sobek2Wspm.4") ); //$NON-NLS-1$ //$NON-NLS-2$
+    return m_stati.asMultiStatusOrOK( Messages.getString( "Sobek2Wspm.3" ), Messages.getString( "Sobek2Wspm.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public Feature[] getNewFeatures( )
@@ -256,7 +257,7 @@ public class Sobek2Wspm
   {
     if( frictionDat == null )
     {
-      m_stati.add( IStatus.WARNING, Messages.getString("Sobek2Wspm.5"), null, profil.getName() ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, Messages.getString( "Sobek2Wspm.5" ), null, profil.getName() ); //$NON-NLS-1$
       return;
     }
 
@@ -277,8 +278,8 @@ public class Sobek2Wspm
       final BigDecimal start = section.getStart();
       final BigDecimal end = section.getEnd();
 
-      final IRecord startRecord = ProfilUtil.findOrInsertPointAt( profil, start );
-      final IRecord endRecord = ProfilUtil.findOrInsertPointAt( profil, end );
+      final IProfileRecord startRecord = ProfilUtil.findOrInsertPointAt( profil, start );
+      final IProfileRecord endRecord = ProfilUtil.findOrInsertPointAt( profil, end );
 
       final int startIndex = profil.indexOfPoint( startRecord );
       final int endIndex = profil.indexOfPoint( endRecord );
@@ -287,7 +288,7 @@ public class Sobek2Wspm
       // Probably, the next section will overwrite the end with the next start.
       for( int i = startIndex; i <= endIndex; i++ )
       {
-        final IRecord record = profil.getPoint( i );
+        final IProfileRecord record = profil.getPoint( i );
         final int index = ProfilUtil.getOrCreateComponent( profil, componentID );
         record.setValue( index, value.doubleValue() );
       }
@@ -300,7 +301,7 @@ public class Sobek2Wspm
     }
   }
 
-  private void setMarker( final IProfil profil, final IRecord record, final String markerType )
+  private void setMarker( final IProfil profil, final IProfileRecord record, final String markerType )
   {
     if( markerType == null )
       return;

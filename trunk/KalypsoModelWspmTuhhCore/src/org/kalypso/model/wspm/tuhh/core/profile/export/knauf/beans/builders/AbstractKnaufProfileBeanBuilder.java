@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -80,8 +80,8 @@ public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanB
       addBeans( sa29 );
     }
 
-    final ProfilePointWrapper[] points = profile.getPoints();
-    for( final ProfilePointWrapper point : points )
+    final IProfileRecord[] points = profile.getPoints();
+    for( final IProfileRecord point : points )
     {
       addBeans( new KnaufSA30Bean( profile, point ) );
     }

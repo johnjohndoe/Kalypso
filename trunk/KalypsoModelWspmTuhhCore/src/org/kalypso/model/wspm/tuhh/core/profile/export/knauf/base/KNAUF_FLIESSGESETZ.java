@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
  * @author Dirk Kuch
@@ -94,7 +94,7 @@ public enum KNAUF_FLIESSGESETZ
     }
   }
 
-  public Double getRoughnessValue( final ProfilePointWrapper point )
+  public Double getRoughnessValue( final IProfileRecord point )
   {
     switch( this )
     {

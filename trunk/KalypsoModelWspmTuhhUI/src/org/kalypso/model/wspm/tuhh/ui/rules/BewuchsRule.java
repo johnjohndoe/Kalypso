@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
@@ -91,16 +92,16 @@ public class BewuchsRule extends AbstractValidatorRule
     if( devider.length < 2 )
       return;
 
-    final IRecord leftP = devider[0].getPoint();
-    final IRecord rightP = devider[devider.length - 1].getPoint();
+    final IProfileRecord leftP = devider[0].getPoint();
+    final IProfileRecord rightP = devider[devider.length - 1].getPoint();
     if( leftP == null || rightP == null )
       return;
 
     final int leftIndex = profil.indexOfPoint( leftP );
     final int rightIndex = profil.indexOfPoint( rightP );
-    final IRecord[] leftForeland = profil.getPoints( 0, leftIndex - 1 );
-    final IRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
-    final IRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
+    final IProfileRecord[] leftForeland = profil.getPoints( 0, leftIndex - 1 );
+    final IProfileRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
+    final IProfileRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
 
     if( !Arrays.isEmpty( riverTube ) && WspmProfileHelper.getBuilding( profil, IProfileBuilding.class ) == null )
     {
@@ -149,13 +150,13 @@ public class BewuchsRule extends AbstractValidatorRule
     }
   }
 
-  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord[] subList ) throws CoreException
+  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IProfileRecord[] subList ) throws CoreException
   {
     boolean hasValues = false;
     boolean hasErrors = false;
     if( subList.length < 1 )
       return false;
-    for( final IRecord point : subList )
+    for( final IProfileRecord point : subList )
     {
       final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
       final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );

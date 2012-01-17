@@ -48,10 +48,10 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.chart.utils.ProfileChannel;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * Helper class for displacementof trennflaechen. If active, the mover will also change the roughness values of the
@@ -73,17 +73,17 @@ public class RoughnessAdjuster
     Assert.isTrue( m_devider.getComponent().getId().equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
   }
 
-  public void moveDevider( final IRecord newPoint )
+  public void moveDevider( final IProfileRecord newPoint )
   {
     final IProfilPointMarker[] trennflaechen = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker[] durchstroemte = m_profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( trennflaechen.length < 2 || durchstroemte.length < 2 )
       return;
 
-    final IRecord startDB = durchstroemte[0].getPoint();
-    final IRecord startTF = trennflaechen[0].getPoint();
-    final IRecord endTF = trennflaechen[1].getPoint();
-    final IRecord endDB = durchstroemte[1].getPoint();
+    final IProfileRecord startDB = durchstroemte[0].getPoint();
+    final IProfileRecord startTF = trennflaechen[0].getPoint();
+    final IProfileRecord endTF = trennflaechen[1].getPoint();
+    final IProfileRecord endDB = durchstroemte[1].getPoint();
 
     final int startDBindex = m_profil.indexOfPoint( startDB );
     final int startTFindex = m_profil.indexOfPoint( startTF );

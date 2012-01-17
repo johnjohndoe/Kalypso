@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
@@ -64,7 +64,7 @@ public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
   }
 
   @Override
-  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point ) throws CancelVisitorException
+  public void visit( final ProfileWrapper profile, final IProfileRecord point ) throws CancelVisitorException
   {
     final int index = profile.getProfile().indexOfProperty( m_property );
     if( index < 0 )
@@ -88,7 +88,7 @@ public class DetermineBridgeWidthVisitor implements IProfilePointWrapperVisitor
       m_max = breite;
   }
 
-  private Double getValue( final ProfilePointWrapper point, final int index )
+  private Double getValue( final IProfileRecord point, final int index )
   {
     final Object value = point.getValue( index );
     if( value instanceof Number )

@@ -3,8 +3,8 @@ package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * A special profile point filter only for the last profile point (i.e. point on right DB)<br/>
@@ -18,11 +18,11 @@ import org.kalypso.observation.result.IRecord;
 public class LastPointProfilePointFilter extends AbstractProfilePointFilter
 {
   @Override
-  public boolean accept( final IProfil profil, final IRecord point )
+  public boolean accept( final IProfil profil, final IProfileRecord point )
   {
     final IProfilPointMarker[] dbMarkers = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 
-    final IRecord rightDBMarker = getRelevantPoint( profil, dbMarkers );
+    final IProfileRecord rightDBMarker = getRelevantPoint( profil, dbMarkers );
     if( rightDBMarker == null )
       return false;
 
@@ -31,9 +31,9 @@ public class LastPointProfilePointFilter extends AbstractProfilePointFilter
     return index == markerIndex;
   }
 
-  private IRecord getRelevantPoint( final IProfil profil, final IProfilPointMarker[] dbMarkers )
+  private IProfileRecord getRelevantPoint( final IProfil profil, final IProfilPointMarker[] dbMarkers )
   {
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
 

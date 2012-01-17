@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
@@ -140,7 +141,7 @@ class DeviderLine
     if( ProfilUtil.compareValues( value, pos, 0.0001 ) )
       return;
 
-    final IRecord point = ProfilUtil.findNearestPoint( m_profile, value );
+    final IProfileRecord point = ProfilUtil.findNearestPoint( m_profile, value );
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2" ), m_profile, true ); //$NON-NLS-1$
     operation.addChange( new PointMarkerSetPoint( m_devider, point ) );
     operation.addChange( new ActiveObjectEdit( m_profile, point, null ) );

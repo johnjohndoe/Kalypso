@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA20Bean;
 
 /**
@@ -151,7 +151,7 @@ public class KnaufSA20Printer extends AbstractKnaufPrinter
      */
     builder.append( StringUtils.repeat( " ", 2 ) ); //$NON-NLS-1$
 
-    final ProfilePointWrapper point = getBean().findLowestPoint();
+    final IProfileRecord point = getBean().findLowestPoint();
 
     /**
      * char [81-95], type F15.0 changed -> %15.2 - Rechtswert Gauss-Krüger für tiefsten Punkt

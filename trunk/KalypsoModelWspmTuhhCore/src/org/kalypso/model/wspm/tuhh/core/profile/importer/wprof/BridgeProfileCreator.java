@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -181,16 +182,16 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     cleanupHeights( profile );
 
-    final IRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, ukComponent );
+    final IProfileRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, ukComponent );
     createMarkers( profile, trennflaechenPoints, MARKER_TYP_TRENNFLAECHE );
   }
 
-  private IRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
+  private IProfileRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
   {
-    final Collection<IRecord> firstLast = new ArrayList<IRecord>( 2 );
+    final Collection<IProfileRecord> firstLast = new ArrayList<IProfileRecord>( 2 );
 
-    final List<IRecord> points = Arrays.asList( profile.getPoints() );
-    final IRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
+    final List<IProfileRecord> points = Arrays.asList( profile.getPoints() );
+    final IProfileRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
     if( firstPoint != null )
     {
       firstLast.add( firstPoint );
@@ -198,22 +199,22 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     Collections.reverse( points );
 
-    final IRecord lastPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
+    final IProfileRecord lastPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
     if( lastPoint != null )
     {
       firstLast.add( lastPoint );
     }
 
-    return firstLast.toArray( new IRecord[firstLast.size()] );
+    return firstLast.toArray( new IProfileRecord[firstLast.size()] );
   }
 
-  private IRecord findFirstBridgePoint( final Collection<IRecord> points, final int heightComponent, final int bridgeComponent )
+  private IProfileRecord findFirstBridgePoint( final Collection<IProfileRecord> points, final int heightComponent, final int bridgeComponent )
   {
     if( points.size() == 0 )
       return null;
 
-    IRecord lastBridgePoint = points.iterator().next();
-    for( final IRecord point : points )
+    IProfileRecord lastBridgePoint = points.iterator().next();
+    for( final IProfileRecord point : points )
     {
       final Object bridgeValue = point.getValue( bridgeComponent );
       final Object heightValue = point.getValue( heightComponent );

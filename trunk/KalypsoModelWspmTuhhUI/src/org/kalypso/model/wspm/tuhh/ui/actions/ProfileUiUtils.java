@@ -46,9 +46,9 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -92,7 +92,7 @@ public final class ProfileUiUtils
   public static void addDefaultMarkers( final IProfil profile, final String markerTyp )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
-    final IRecord[] points = profile.getPoints();
+    final IProfileRecord[] points = profile.getPoints();
     if( points.length > 0 )
     {
       final Object defaultValue = provider.getDefaultValue( markerTyp );

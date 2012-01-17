@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -390,7 +391,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     profilePoint.setValue( profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
 
     /* sort profile points by width */
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
 
     // TODO: save the sorted points as new m_profile
     final IProfil tmpProfil = ProfilFactory.createProfil( profil.getType() );
@@ -411,9 +412,9 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final int iRW = tmpProfil.indexOfProperty( rwComponent );
     final int iHW = tmpProfil.indexOfProperty( hwComponent );
 
-    for( final IRecord element : points )
+    for( final IProfileRecord element : points )
     {
-      final IRecord profilPoint = tmpProfil.createProfilPoint();
+      final IProfileRecord profilPoint = tmpProfil.createProfilPoint();
 
       final double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, element );
       final double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, element );

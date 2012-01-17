@@ -41,16 +41,16 @@
 package org.kalypso.model.wspm.tuhh.core.profile;
 
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
  */
 public class ProfilDevider extends PointMarker
 {
-  public ProfilDevider( final IComponent typ, final IRecord point )
+  public ProfilDevider( final IComponent typ, final IProfileRecord point )
   {
     super( typ, point );
   }

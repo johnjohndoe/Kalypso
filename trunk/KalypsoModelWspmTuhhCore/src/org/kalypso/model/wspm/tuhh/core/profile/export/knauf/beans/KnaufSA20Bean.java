@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
 /**
@@ -95,9 +95,9 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
     return distance * 1000.0; // distance in m
   }
 
-  public ProfilePointWrapper findLowestPoint( )
+  public IProfileRecord findLowestPoint( )
   {
-    final ProfilePointWrapper point = m_profile.findLowestPoint();
+    final IProfileRecord point = m_profile.findLowestPoint();
 
     return point;
   }

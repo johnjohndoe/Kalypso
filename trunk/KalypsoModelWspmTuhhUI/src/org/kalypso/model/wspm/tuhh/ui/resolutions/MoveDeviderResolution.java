@@ -43,9 +43,9 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -99,10 +99,10 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
       final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
       final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
       final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
-      final IRecord[] points = profil.getPoints();
+      final IProfileRecord[] points = profil.getPoints();
       if( marker == null || cBreite == null || m_pointIndex < 0 || m_pointIndex >= points.length )
         return false;
-      final IRecord point = points[m_pointIndex];
+      final IProfileRecord point = points[m_pointIndex];
       marker.setPoint( point );
       profil.getSelection().setActivePoint( point );
 

@@ -47,13 +47,13 @@ import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -74,14 +74,11 @@ class AddWeirDeviderAction extends Action
     setEnabled( canAdd && devider != null );
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#run()
-   */
   @Override
   public void run( )
   {
     final IProfilPointMarker marker = m_devider;
-    final IRecord point = m_profile.getPoint( m_profile.indexOfPoint( marker.getPoint() ) + 1 );
+    final IProfileRecord point = m_profile.getPoint( m_profile.indexOfPoint( marker.getPoint() ) + 1 );
 
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), m_profile, true ); //$NON-NLS-1$
     final IProfilPointMarker trenner = m_profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );

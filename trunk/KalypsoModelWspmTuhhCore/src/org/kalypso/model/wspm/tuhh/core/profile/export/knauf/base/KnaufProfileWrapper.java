@@ -44,8 +44,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
@@ -140,7 +140,7 @@ public class KnaufProfileWrapper extends ProfileWrapper
     return visitor.getRoughness( m_reach );
   }
 
-  public String getKennziffer( final ProfilePointWrapper point )
+  public String getKennziffer( final IProfileRecord point )
   {
     final ProfilePointMarkerWrapper[] markers = getPointMarkers( point );
     if( ArrayUtils.isEmpty( markers ) )
@@ -197,7 +197,7 @@ public class KnaufProfileWrapper extends ProfileWrapper
     return marker.getBreite() == ptr;
   }
 
-  public String getAusuferungsgrenze( final ProfilePointWrapper point )
+  public String getAusuferungsgrenze( final IProfileRecord point )
   {
     final ProfilePointMarkerWrapper[] markers = getPointMarkers( point );
     if( ArrayUtils.isEmpty( markers ) )

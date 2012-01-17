@@ -43,20 +43,16 @@ package org.kalypso.model.wspm.tuhh.core.profile.pointfilter;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
  */
 public class FlussschlauchProfilePointFilter extends AbstractProfilePointFilter
 {
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.model.wspm.core.profil.IProfilPoint)
-   */
   @Override
-  public boolean accept( final IProfil profil, final IRecord point )
+  public boolean accept( final IProfil profil, final IProfileRecord point )
   {
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( devider.length == 2 )

@@ -44,7 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KNAUF_FLIESSGESETZ;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWr
  */
 public class KnaufSA30Bean extends AbstractKnaufProjectBean
 {
-  private final ProfilePointWrapper m_point;
+  private final IProfileRecord m_point;
 
   private final KnaufProfileWrapper m_profile;
 
@@ -77,7 +77,7 @@ public class KnaufSA30Bean extends AbstractKnaufProjectBean
 
   private Double m_hochwert;
 
-  public KnaufSA30Bean( final KnaufProfileWrapper profile, final ProfilePointWrapper point )
+  public KnaufSA30Bean( final KnaufProfileWrapper profile, final IProfileRecord point )
   {
     m_profile = profile;
     m_point = point;
