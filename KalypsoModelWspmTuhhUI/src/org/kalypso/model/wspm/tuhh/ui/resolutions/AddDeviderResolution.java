@@ -47,9 +47,9 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -100,7 +100,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     return false;
   }
 
-  private void createMarkers( final IProfil profil, final IRecord pointLeft, final IRecord pointRight )
+  private void createMarkers( final IProfil profil, final IProfileRecord pointLeft, final IProfileRecord pointRight )
   {
     final ProfilOperation operation = new ProfilOperation( "Add Devider", profil, true ); //$NON-NLS-1$
 

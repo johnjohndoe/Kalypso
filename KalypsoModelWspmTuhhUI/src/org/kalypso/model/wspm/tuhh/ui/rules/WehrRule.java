@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
@@ -214,12 +215,12 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     for( final IProfilPointMarker marker : devider )
     {
-      final IRecord point = marker.getPoint();
+      final IProfileRecord point = marker.getPoint();
       validateLimit( profil, collector, point );
     }
   }
 
-  private void validateLimit( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord point ) throws CoreException
+  private void validateLimit( final IProfil profil, final IValidatorMarkerCollector collector, final IProfileRecord point ) throws CoreException
   {
     final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );

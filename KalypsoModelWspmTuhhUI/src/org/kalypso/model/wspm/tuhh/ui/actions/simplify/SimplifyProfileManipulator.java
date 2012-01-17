@@ -9,8 +9,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -40,23 +40,23 @@ final class SimplifyProfileManipulator implements IProfileManipulator
   {
     monitor.beginTask( "", 1 );//$NON-NLS-1$
 
-    final IRecord[] points = m_simplifyPage.getSelectedPoints( profile );
+    final IProfileRecord[] points = m_simplifyPage.getSelectedPoints( profile );
 
-    final IRecord[] pointsToKeep = getPointsToKeep( profile );
+    final IProfileRecord[] pointsToKeep = getPointsToKeep( profile );
 
-    final IRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, m_allowedDistance );
+    final IProfileRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, m_allowedDistance );
 
     profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
 
     monitor.done();
   }
 
-  private IRecord[] getPointsToKeep( final IProfil profile )
+  private IProfileRecord[] getPointsToKeep( final IProfil profile )
   {
-    final Collection<IRecord> pointsToKeep = new ArrayList<IRecord>();
+    final Collection<IProfileRecord> pointsToKeep = new ArrayList<IProfileRecord>();
 
     /* Marked points (TF, DB, BV) should never get simplified */
-    final IRecord[] markedPoints = profile.getMarkedPoints();
+    final IProfileRecord[] markedPoints = profile.getMarkedPoints();
     pointsToKeep.addAll( Arrays.asList( markedPoints ) );
 
     /*
@@ -65,27 +65,27 @@ final class SimplifyProfileManipulator implements IProfileManipulator
      */
 
     /* for now, we just keep all bridge points, which does not work if all points are bridge points */
-    final IRecord[] buildingPoints = getBuildingPoints( profile );
+    final IProfileRecord[] buildingPoints = getBuildingPoints( profile );
     pointsToKeep.addAll( Arrays.asList( buildingPoints ) );
 
-    return pointsToKeep.toArray( new IRecord[pointsToKeep.size()] );
+    return pointsToKeep.toArray( new IProfileRecord[pointsToKeep.size()] );
   }
 
-  private IRecord[] getBuildingPoints( final IProfil profile )
+  private IProfileRecord[] getBuildingPoints( final IProfil profile )
   {
-    final Collection<IRecord> buildingPoints = new ArrayList<IRecord>();
+    final Collection<IProfileRecord> buildingPoints = new ArrayList<IProfileRecord>();
 
     final String[] buildingComponents = getBuildingComponents();
     for( final String buildingComponent : buildingComponents )
     {
-      final IRecord[] componentPoints = getBuildingPoints( profile, buildingComponent );
+      final IProfileRecord[] componentPoints = getBuildingPoints( profile, buildingComponent );
       buildingPoints.addAll( Arrays.asList( componentPoints ) );
     }
 
-    return buildingPoints.toArray( new IRecord[buildingPoints.size()] );
+    return buildingPoints.toArray( new IProfileRecord[buildingPoints.size()] );
   }
 
-  private IRecord[] getBuildingPoints( final IProfil profile, final String buildingComponent )
+  private IProfileRecord[] getBuildingPoints( final IProfil profile, final String buildingComponent )
   {
     if( m_keepBuildingPoints )
       return getAllValidPoints( profile, buildingComponent );
@@ -96,16 +96,16 @@ final class SimplifyProfileManipulator implements IProfileManipulator
   /**
    * Get all profile points of a component, which values are of type number (i.e non-<code>null</code>).
    */
-  private IRecord[] getAllValidPoints( final IProfil profile, final String buildingComponent )
+  private IProfileRecord[] getAllValidPoints( final IProfil profile, final String buildingComponent )
   {
-    final Collection<IRecord> allPoints = new ArrayList<IRecord>();
+    final Collection<IProfileRecord> allPoints = new ArrayList<IProfileRecord>();
 
     final int componentIndex = profile.indexOfProperty( buildingComponent );
     if( componentIndex == -1 )
-      return new IRecord[0];
+      return new IProfileRecord[0];
 
-    final IRecord[] points = profile.getPoints();
-    for( final IRecord point : points )
+    final IProfileRecord[] points = profile.getPoints();
+    for( final IProfileRecord point : points )
     {
       final Object value = point.getValue( componentIndex );
       if( value instanceof Number )
@@ -114,14 +114,14 @@ final class SimplifyProfileManipulator implements IProfileManipulator
       }
     }
 
-    return allPoints.toArray( new IRecord[allPoints.size()] );
+    return allPoints.toArray( new IProfileRecord[allPoints.size()] );
   }
 
   // FIXME: does not work properly we need to consider if the point lies on the soil or not, see BridgeRule
   @SuppressWarnings("unused")
-  private IRecord[] getStartingEndBuildingPoints( final IProfil profile, final String buildingComponent )
+  private IProfileRecord[] getStartingEndBuildingPoints( final IProfil profile, final String buildingComponent )
   {
-    final Collection<IRecord> startOrEndPoints = new HashSet<IRecord>();
+    final Collection<IProfileRecord> startOrEndPoints = new HashSet<IProfileRecord>();
 
 // final int componentIndex = profile.indexOfProperty( buildingComponent );
 // if( componentIndex == -1 )
@@ -147,7 +147,7 @@ final class SimplifyProfileManipulator implements IProfileManipulator
 // lastPoint = point;
 // }
 
-    return startOrEndPoints.toArray( new IRecord[startOrEndPoints.size()] );
+    return startOrEndPoints.toArray( new IProfileRecord[startOrEndPoints.size()] );
   }
 
   private String[] getBuildingComponents( )

@@ -42,9 +42,9 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -68,10 +68,6 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     this( -1, false );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.eclipse.core.resources.IMarker)
-   */
   @Override
   public boolean resolve( final IProfil profil )
   {
@@ -85,7 +81,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
 
     final int step = m_orientationLeft ? -1 : 1;
 
-    final IRecord point = profil.getPoint( m_pointIndex );
+    final IProfileRecord point = profil.getPoint( m_pointIndex );
     Double pAx = (Double) point.getValue( iAX );
     Double pAy = (Double) point.getValue( iAY );
     Double pDp = (Double) point.getValue( iDP );
@@ -93,7 +89,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     for( int i = m_pointIndex + step; i > -1 && i < profil.getPoints().length; i = i + step )
     {
 
-      final IRecord record = profil.getPoint( i );
+      final IProfileRecord record = profil.getPoint( i );
       final Double dAx = (Double) record.getValue( iAX );
       final Double dAy = (Double) record.getValue( iAY );
       final Double dDp = (Double) record.getValue( iDP );

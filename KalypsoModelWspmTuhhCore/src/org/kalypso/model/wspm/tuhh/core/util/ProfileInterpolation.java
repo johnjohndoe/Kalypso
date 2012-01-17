@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -115,7 +116,7 @@ public class ProfileInterpolation
 
     /* update profile: add durchstroemte bereiche, trennflaechen */
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
-    final IRecord[] points = profile.getPoints();
+    final IProfileRecord[] points = profile.getPoints();
     if( points.length > 1 )
     {
       final Object defaultDB = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
@@ -199,7 +200,7 @@ public class ProfileInterpolation
     final int widthComponentIndex = profil.indexOfProperty( widthComponent );
     for( final BigDecimal newXValue : newXValues )
     {
-      final IRecord newPoint = profil.createProfilPoint();
+      final IProfileRecord newPoint = profil.createProfilPoint();
       newPoint.setValue( widthComponentIndex, newXValue.doubleValue() );
       profil.addPoint( newPoint );
     }

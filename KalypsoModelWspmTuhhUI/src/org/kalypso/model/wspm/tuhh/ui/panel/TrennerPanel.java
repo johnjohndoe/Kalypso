@@ -79,6 +79,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -276,14 +277,14 @@ public class TrennerPanel extends AbstractProfilView
 
           operation.addChange( new PointPropertyAdd( profil, bordvoll ) );
 
-          final IRecord[] profilPoints = profil.getPoints();
+          final IProfileRecord[] profilPoints = profil.getPoints();
           if( profilPoints.length > 0 )
           {
-            final IRecord firstPoint = profilPoints[0];
-            final IRecord lastPoint = profilPoints[profilPoints.length - 1];
+            final IProfileRecord firstPoint = profilPoints[0];
+            final IProfileRecord lastPoint = profilPoints[profilPoints.length - 1];
 
-            final IRecord leftPoint = dbDevs.length > 0 ? dbDevs[0].getPoint() : firstPoint;
-            final IRecord rightPoint = dbDevs.length > 1 ? dbDevs[1].getPoint() : lastPoint;
+            final IProfileRecord leftPoint = dbDevs.length > 0 ? dbDevs[0].getPoint() : firstPoint;
+            final IProfileRecord rightPoint = dbDevs.length > 1 ? dbDevs[1].getPoint() : lastPoint;
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, leftPoint ), true ) );
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, rightPoint ), true ) );
             operation.addChange( new ActiveObjectEdit( profil, rightPoint, bordvoll ) );
@@ -481,7 +482,7 @@ public class TrennerPanel extends AbstractProfilView
           return;
         }
 
-        final IRecord pointCloseTo = ProfilUtil.findNearestPoint( profil, value );
+        final IProfileRecord pointCloseTo = ProfilUtil.findNearestPoint( profil, value );
         final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
 
         if( devs.length <= m_pos )

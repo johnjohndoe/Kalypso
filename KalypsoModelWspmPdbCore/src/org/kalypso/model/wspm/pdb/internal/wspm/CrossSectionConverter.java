@@ -53,6 +53,8 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -128,7 +130,7 @@ public class CrossSectionConverter
       final String hyk = point.getHyk();
       final String markerType = toMarkerType( hyk );
       if( markerType != null )
-        createMarker( record, markerType );
+        createMarker( new ProfileRecord( record ), markerType );
     }
   }
 
@@ -152,7 +154,7 @@ public class CrossSectionConverter
     return null;
   }
 
-  protected void createMarker( final IRecord point, final String markerType )
+  protected void createMarker( final IProfileRecord point, final String markerType )
   {
     final IProfilPointMarker marker = m_profile.createPointMarker( markerType, point );
     final Object defaultValue = m_provider.getDefaultValue( markerType );

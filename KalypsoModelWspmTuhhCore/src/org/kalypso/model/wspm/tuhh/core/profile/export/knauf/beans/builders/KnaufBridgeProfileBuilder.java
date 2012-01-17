@@ -58,7 +58,7 @@ import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.profil.base.ChangeProfilePointHeight;
 import org.kalypso.model.wspm.core.profil.base.FLOW_DIRECTION;
 import org.kalypso.model.wspm.core.profil.base.MoveProfileRunnable;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -233,7 +233,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
   private double getDeltaH( final BuildingBruecke bridge, final KnaufProfileWrapper profile )
   {
-    final ProfilePointWrapper point = org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper.getSohlpunktPoint( profile );
+    final IProfileRecord point = org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper.getSohlpunktPoint( profile );
     if( Objects.isNull( point ) )
       return 0.0;
 
@@ -268,20 +268,20 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     if( Objects.isNotNull( vector ) )
       return vector;
 
-    final ProfilePointWrapper[] points = m_profile.getPoints();
+    final IProfileRecord[] points = m_profile.getPoints();
     if( Arrays.isEmpty( points ) || ArrayUtils.getLength( points ) < 2 )
       return null;
 
     return toVector( points[0], points[ArrayUtils.getLength( points ) - 1] );
   }
 
-  private Coordinate toVector( final ProfilePointWrapper... markers )
+  private Coordinate toVector( final IProfileRecord... markers )
   {
     if( Arrays.isEmpty( markers ) || ArrayUtils.getLength( markers ) < 2 )
       return null;
 
-    final ProfilePointWrapper marker1 = markers[0];
-    final ProfilePointWrapper marker2 = markers[ArrayUtils.getLength( markers ) - 1];
+    final IProfileRecord marker1 = markers[0];
+    final IProfileRecord marker2 = markers[ArrayUtils.getLength( markers ) - 1];
 
     final double x1 = marker1.getRechtswert();
     final double y1 = marker1.getHochwert();

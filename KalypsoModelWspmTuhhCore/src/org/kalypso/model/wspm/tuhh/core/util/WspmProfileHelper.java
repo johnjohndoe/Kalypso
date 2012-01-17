@@ -45,8 +45,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
@@ -91,12 +91,12 @@ public final class WspmProfileHelper
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
 
-    final List<ProfilePointWrapper> sohle = new ArrayList<ProfilePointWrapper>();
+    final List<IProfileRecord> sohle = new ArrayList<>();
     boolean lastIterationAdd = false;
     double sohlpunkt = Double.MAX_VALUE;
-    for( final ProfilePointWrapper point : points )
+    for( final IProfileRecord point : points )
     {
       final Double h = point.getHoehe();
 
@@ -122,8 +122,8 @@ public final class WspmProfileHelper
     if( sohle.size() == 1 )
       return sohle.get( 0 ).getBreite();
 
-    final ProfilePointWrapper p1 = sohle.get( 0 );
-    final ProfilePointWrapper p2 = sohle.get( sohle.size() - 1 );
+    final IProfileRecord p1 = sohle.get( 0 );
+    final IProfileRecord p2 = sohle.get( sohle.size() - 1 );
 
     final double distance = Math.abs( p1.getBreite() - p2.getBreite() );
 
@@ -136,17 +136,17 @@ public final class WspmProfileHelper
     return ArrayUtils.isEmpty( profileObjects ) ? null : buildingType.cast( profileObjects[0] );
   }
 
-  public static ProfilePointWrapper getSohlpunktPoint( final ProfileWrapper wrapper )
+  public static IProfileRecord getSohlpunktPoint( final ProfileWrapper wrapper )
   {
     final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
 
-    ProfilePointWrapper ptr = null;
+    IProfileRecord ptr = null;
 
-    for( final ProfilePointWrapper point : points )
+    for( final IProfileRecord point : points )
     {
       if( ptr == null )
         ptr = point;

@@ -46,7 +46,8 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 
@@ -67,7 +68,7 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
 
   private final double m_segmentEnd;
 
-  Set<ProfilePointWrapper> m_points = new LinkedHashSet<>();
+  Set<IProfileRecord> m_points = new LinkedHashSet<>();
 
   public CalculateRoughenessVisitor( final double segmentStart, final double segmentEnd )
   {
@@ -76,7 +77,7 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
   }
 
   @Override
-  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point )
+  public void visit( final ProfileWrapper profile, final IProfileRecord point )
   {
     if( !isBetween( point ) )
       return;
@@ -98,7 +99,7 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
     }
   }
 
-  private boolean isBetween( final ProfilePointWrapper point )
+  private boolean isBetween( final IProfileRecord point )
   {
     final double breite = point.getBreite();
     if( breite < m_segmentStart || breite >= m_segmentEnd )
@@ -107,13 +108,13 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
     return true;
   }
 
-  private double getDistance( final ProfilePointWrapper... points )
+  private double getDistance( final IProfileRecord... points )
   {
     if( ArrayUtils.getLength( points ) == 1 )
       return 0.0;
 
-    final ProfilePointWrapper p1 = points[0];
-    final ProfilePointWrapper p2 = points[ArrayUtils.getLength( points ) - 1];
+    final IProfileRecord p1 = points[0];
+    final IProfileRecord p2 = points[ArrayUtils.getLength( points ) - 1];
 
     return Math.abs( p2.getBreite() - p1.getBreite() );
   }
@@ -125,7 +126,7 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
 
     final KNAUF_FLIESSGESETZ fliessgesetz = reach.getFliessgesetz();
 
-    final ProfilePointWrapper[] points = m_points.toArray( new ProfilePointWrapper[] {} );
+    final IProfileRecord[] points = m_points.toArray( new ProfileRecord[] {} );
 
     final double distance = getDistance( points );
     if( distance == 0.0 )
@@ -135,8 +136,8 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
 
     for( int index = 0; index < points.length - 1; index++ )
     {
-      final ProfilePointWrapper p1 = points[index];
-      final ProfilePointWrapper p2 = points[index + 1];
+      final IProfileRecord p1 = points[index];
+      final IProfileRecord p2 = points[index + 1];
 
       final double d = getDistance( p1, p2 );
 

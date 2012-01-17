@@ -51,11 +51,11 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -74,7 +74,7 @@ public class RauheitRule extends AbstractValidatorRule
     final IComponent propertyClazz = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
     if( Objects.allNull( pointPropKS, pointPropKST, propertyClazz ) )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, ""); //$NON-NLS-1$//$NON-NLS-2$
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, "" ); //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 
@@ -84,8 +84,7 @@ public class RauheitRule extends AbstractValidatorRule
 
     final int leftD = profil.indexOfPoint( durchS[0].getPoint() );
     final int rightD = profil.indexOfPoint( durchS[durchS.length - 1].getPoint() );
-    final IRecord[] points = profil.getPoints( leftD, rightD );
-
+    final IProfileRecord[] points = profil.getPoints( leftD, rightD );
     if( points.length == 0 )
       return;
 
@@ -95,12 +94,12 @@ public class RauheitRule extends AbstractValidatorRule
     checkRoughnessValues( collector, stationId, profil, points, pointPropKST, showLabel );
   }
 
-  private void checkRoughnessValues( final IValidatorMarkerCollector collector, final String stationId, final IProfil profil, final IRecord[] points, final IComponent pointProp, final boolean showLabel ) throws CoreException
+  private void checkRoughnessValues( final IValidatorMarkerCollector collector, final String stationId, final IProfil profil, final IProfileRecord[] points, final IComponent pointProp, final boolean showLabel ) throws CoreException
   {
     if( pointProp == null )
       return;
 
-    for( final IRecord point : points )
+    for( final IProfileRecord point : points )
     {
       final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
       if( value.isNaN() || value <= 0.0 )
