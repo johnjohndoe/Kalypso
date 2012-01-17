@@ -88,10 +88,10 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( wehrDevider == null || wehrDevider.length < 1 || deviders == null || deviders.length < 2 )
       return;
-    final int index1 = profil.indexOfPoint( wehrDevider[0].getPoint() );
-    final int index2 = profil.indexOfPoint( wehrDevider[wehrDevider.length - 1].getPoint() );
-    final int index3 = profil.indexOfPoint( deviders[0].getPoint() );
-    final int index4 = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
+    final int index1 = wehrDevider[0].getPoint().getIndex();
+    final int index2 = wehrDevider[wehrDevider.length - 1].getPoint().getIndex();
+    final int index3 = deviders[0].getPoint().getIndex();
+    final int index4 = deviders[deviders.length - 1].getPoint().getIndex();
     if( index1 < index3 )
     {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.1" ), String.format( "km %.4f", profil.getStation() ), index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -111,8 +111,8 @@ public class WehrRule extends AbstractValidatorRule
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( deviders.length < 2 )
       return;
-    final int index1 = profil.indexOfPoint( deviders[0].getPoint() );
-    final int index2 = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
+    final int index1 = deviders[0].getPoint().getIndex();
+    final int index2 = deviders[deviders.length - 1].getPoint().getIndex();
     final IRecord[] points = profil.getPoints();
     for( int i = index1; i < index2; i++ )
     {
@@ -147,7 +147,7 @@ public class WehrRule extends AbstractValidatorRule
         final Object objValue = devider.getValue();
         if( objValue == null || !(objValue instanceof Double) || ((Double) objValue).isNaN() || (Double) objValue == 0.0 )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.7" ), String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.7" ), String.format( "km %.4f", profil.getStation() ), devider.getPoint().getIndex(), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
           break;
         }
       }
@@ -185,8 +185,8 @@ public class WehrRule extends AbstractValidatorRule
 // final int iOKWehr = profil.indexOfProperty( IWspmTuhhConstants.BUILDING_TYP_WEHR );
 // if( iOKWehr < 0 || iHoehe < 0 )
 // return;
-    final int left = profil.indexOfPoint( deviders[0].getPoint() );
-    final int right = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
+    final int left = deviders[0].getPoint().getIndex();
+    final int right = deviders[deviders.length - 1].getPoint().getIndex();
     if( left != innerLeft )
     {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.14" ), String.format( "km %.4f", profil.getStation() ), innerLeft, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -236,7 +236,7 @@ public class WehrRule extends AbstractValidatorRule
     if( !weirValue.isNaN() && !groundValue.isNaN() && Math.abs( groundValue - weirValue ) > deltaOkW )
     {
       final String location = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
-      final int indexOfPoint = profil.indexOfPoint( point );
+      final int indexOfPoint = point.getIndex();
       final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.14" ); //$NON-NLS-1$
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, location, indexOfPoint, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     }

@@ -26,8 +26,8 @@ public class LastPointProfilePointFilter extends AbstractProfilePointFilter
     if( rightDBMarker == null )
       return false;
 
-    final int index = profil.indexOfPoint( point );
-    final int markerIndex = profil.indexOfPoint( rightDBMarker );
+    final int index = point.getIndex();
+    final int markerIndex = rightDBMarker.getIndex();
     return index == markerIndex;
   }
 
