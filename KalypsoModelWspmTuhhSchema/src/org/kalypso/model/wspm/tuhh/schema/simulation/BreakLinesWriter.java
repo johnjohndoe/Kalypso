@@ -48,8 +48,8 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.math.NumberRange;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Range;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -79,12 +79,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * Triangulates the given profile (segments) suing the indicated waterlevel as height. // * @return The min/max range of
  * the waterlevel. <code>null</code>, if no triangulation has been created.
- *
+ * 
  * @author Monika Thül
  */
 public class BreakLinesWriter implements IWspmConstants
 {
-  private NumberRange m_range;
+  private Range<Double> m_range;
 
   private final TuhhReachProfileSegment[] m_segments;
 
@@ -137,7 +137,7 @@ public class BreakLinesWriter implements IWspmConstants
 
     // debug
     GM_Curve lastProfile = null;
-    NumberRange range = null;
+    Range<Double> range = null;
     for( final TuhhReachProfileSegment reach : m_segments )
     {
       final GM_Curve geometry = reach.getGeometry();
@@ -151,9 +151,9 @@ public class BreakLinesWriter implements IWspmConstants
       if( wsp != null )
       {
         if( range == null )
-          range = new NumberRange( wsp );
+          range = Range.is( wsp );
         else
-          range = new NumberRange( Math.min( wsp, range.getMinimumDouble() ), Math.max( wsp, range.getMaximumDouble() ) );
+          range = Range.between( Math.min( wsp, range.getMinimum() ), Math.max( wsp, range.getMaximum() ) );
 
         // ignore profiles without result (no value in length section). This can occur if the
         // simulation does not cover the whole reach.
@@ -232,7 +232,7 @@ public class BreakLinesWriter implements IWspmConstants
     GmlSerializer.serializeWorkspace( outputFile, m_triangleWorkspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
   }
 
-  public NumberRange getRange( ) throws GMLSchemaException, GM_Exception
+  public Range<Double> getRange( ) throws GMLSchemaException, GM_Exception
   {
     init();
 

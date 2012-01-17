@@ -48,7 +48,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.math.NumberRange;
+import org.apache.commons.lang3.Range;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.tuhh.core.results.processing.AbstractResultLSFile;
@@ -112,7 +112,7 @@ public class ResultLSTinSldFile extends AbstractResultLSFile
   @Override
   protected void doWrite( final File outputFile ) throws IOException, XMLParsingException, SAXException, GMLSchemaException, GM_Exception
   {
-    final NumberRange range = m_breakLines.getRange();
+    final Range<Double> range = m_breakLines.getRange();
     if( range == null )
       return;
 
@@ -124,8 +124,8 @@ public class ResultLSTinSldFile extends AbstractResultLSFile
     final PolygonColorMap colorMap = polySymb.getColorMap();
 
     final BigDecimal stepWidth = new BigDecimal( "0.01" ); //$NON-NLS-1$
-    final BigDecimal minValue = new BigDecimal( range.getMinimumDouble() );
-    final BigDecimal maxValue = new BigDecimal( range.getMaximumDouble() );
+    final BigDecimal minValue = new BigDecimal( range.getMinimum() );
+    final BigDecimal maxValue = new BigDecimal( range.getMaximum() );
 
     final Color minFill = new Color( 0, 255, 0, 128 );
     final Color maxFill = new Color( 255, 0, 0, 128 );
