@@ -97,8 +97,8 @@ public class BewuchsRule extends AbstractValidatorRule
     if( leftP == null || rightP == null )
       return;
 
-    final int leftIndex = profil.indexOfPoint( leftP );
-    final int rightIndex = profil.indexOfPoint( rightP );
+    final int leftIndex = leftP.getIndex();
+    final int rightIndex = rightP.getIndex();
     final IProfileRecord[] leftForeland = profil.getPoints( 0, leftIndex - 1 );
     final IProfileRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
     final IProfileRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
@@ -171,7 +171,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
         hasErrors = true;
         final String stationFormatted = String.format( Messages.getString( "BewuchsRule.0" ), profil.getStation() ); //$NON-NLS-1$
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, point.getIndex(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else if( ax < 0 || ay < 0 || dp < 0 )
       {
@@ -183,7 +183,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
         hasErrors = true;
         final String stationFormatted = String.format( Messages.getString( "BewuchsRule.0" ), profil.getStation() ); //$NON-NLS-1$
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.8" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.8" ), stationFormatted, point.getIndex(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
 
       }
       else
@@ -211,7 +211,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
             final String text = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9", stringBuffer.toString() ); //$NON-NLS-1$
             hasErrors = true;
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, String.format( "km %.4f", profil.getStation() ), point.getIndex(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$
           }
           else
           {

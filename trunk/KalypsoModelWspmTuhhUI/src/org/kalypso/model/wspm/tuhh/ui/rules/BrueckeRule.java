@@ -112,8 +112,8 @@ public class BrueckeRule extends AbstractValidatorRule
     // Brückengeometrie ermitteln
 
     final IProfilPointMarker[] trenner = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    final int markerLeft = trenner.length > 1 ? profil.indexOfPoint( trenner[0].getPoint() ) : -1;
-    final int markerRight = trenner.length > 1 ? profil.indexOfPoint( trenner[trenner.length - 1].getPoint() ) : -1;
+    final int markerLeft = trenner.length > 1 ? trenner[0].getPoint().getIndex() : -1;
+    final int markerRight = trenner.length > 1 ? trenner[trenner.length - 1].getPoint().getIndex() : -1;
     // Trennflächen vorhanden
     if( markerLeft == -1 || markerRight == -1 )
     {

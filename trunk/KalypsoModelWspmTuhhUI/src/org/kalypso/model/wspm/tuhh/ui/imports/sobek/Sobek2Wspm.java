@@ -281,8 +281,8 @@ public class Sobek2Wspm
       final IProfileRecord startRecord = ProfilUtil.findOrInsertPointAt( profil, start );
       final IProfileRecord endRecord = ProfilUtil.findOrInsertPointAt( profil, end );
 
-      final int startIndex = profil.indexOfPoint( startRecord );
-      final int endIndex = profil.indexOfPoint( endRecord );
+      final int startIndex = startRecord.getIndex();
+      final int endIndex = endRecord.getIndex();
 
       // We also set value of endIndex (against definition of friction, which is exclusive), in order to avoid holes.
       // Probably, the next section will overwrite the end with the next start.

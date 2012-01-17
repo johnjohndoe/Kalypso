@@ -85,13 +85,13 @@ public class RoughnessAdjuster
     final IProfileRecord endTF = trennflaechen[1].getPoint();
     final IProfileRecord endDB = durchstroemte[1].getPoint();
 
-    final int startDBindex = m_profil.indexOfPoint( startDB );
-    final int startTFindex = m_profil.indexOfPoint( startTF );
-    final int endTFindex = m_profil.indexOfPoint( endTF );
-    final int endDBindex = m_profil.indexOfPoint( endDB );
+    final int startDBindex = startDB.getIndex();
+    final int startTFindex = startTF.getIndex();
+    final int endTFindex = endTF.getIndex();
+    final int endDBindex = endDB.getIndex();
 
-    final int newPointIndex = m_profil.indexOfPoint( newPoint );
-    final int oldPointIndex = m_profil.indexOfPoint( m_devider.getPoint() );
+    final int newPointIndex = newPoint.getIndex();
+    final int oldPointIndex = m_devider.getPoint().getIndex();
 
     final ProfileChannel leftChannel = new ProfileChannel( m_profil, startDBindex, startTFindex );
     final ProfileChannel mainChannel = new ProfileChannel( m_profil, startTFindex, endTFindex );

@@ -165,7 +165,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
         continue;
       }
       if( hoverRect.contains( pos ) )
-        return new EditInfo( this, null, null, getProfil().indexOfPoint( point ), getTooltipInfo( point ), pos );
+        return new EditInfo( this, null, null, point.getIndex(), getTooltipInfo( point ), pos );
     }
     return null;
   }

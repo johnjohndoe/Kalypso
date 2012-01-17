@@ -82,8 +82,8 @@ public class RauheitRule extends AbstractValidatorRule
     if( durchS.length < 2 )
       return;
 
-    final int leftD = profil.indexOfPoint( durchS[0].getPoint() );
-    final int rightD = profil.indexOfPoint( durchS[durchS.length - 1].getPoint() );
+    final int leftD = durchS[0].getPoint().getIndex();
+    final int rightD = durchS[durchS.length - 1].getPoint().getIndex();
     final IProfileRecord[] points = profil.getPoints( leftD, rightD );
     if( points.length == 0 )
       return;
@@ -115,7 +115,7 @@ public class RauheitRule extends AbstractValidatorRule
           message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1" ); //$NON-NLS-1$
         }
 
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, profil.indexOfPoint( point ), pointProp.getId() ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, point.getIndex(), pointProp.getId() ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
     }

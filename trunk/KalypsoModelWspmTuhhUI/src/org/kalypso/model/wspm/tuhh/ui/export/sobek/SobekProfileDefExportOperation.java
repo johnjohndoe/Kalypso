@@ -214,8 +214,8 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     final IProfileRecord startPoint = markers[0].getPoint();
     final IProfileRecord endPoint = markers[1].getPoint();
 
-    final int startIndex = profil.indexOfPoint( startPoint );
-    final int endIndex = profil.indexOfPoint( endPoint );
+    final int startIndex = startPoint.getIndex();
+    final int endIndex = endPoint.getIndex();
 
     return profil.getPoints( startIndex, endIndex );
   }

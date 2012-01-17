@@ -91,8 +91,8 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
       if( deviders.length < 2 )
         return false;
 
-      m_leftIndex = profil.indexOfPoint( deviders[0].getPoint() );
-      m_rightIndex = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
+      m_leftIndex = deviders[0].getPoint().getIndex();
+      m_rightIndex = deviders[deviders.length - 1].getPoint().getIndex();
 
     }
 

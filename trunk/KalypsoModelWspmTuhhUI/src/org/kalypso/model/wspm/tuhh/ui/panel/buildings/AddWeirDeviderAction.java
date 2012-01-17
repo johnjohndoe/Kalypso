@@ -78,7 +78,7 @@ class AddWeirDeviderAction extends Action
   public void run( )
   {
     final IProfilPointMarker marker = m_devider;
-    final IProfileRecord point = m_profile.getPoint( m_profile.indexOfPoint( marker.getPoint() ) + 1 );
+    final IProfileRecord point = m_profile.getPoint( marker.getPoint().getIndex() + 1 );
 
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), m_profile, true ); //$NON-NLS-1$
     final IProfilPointMarker trenner = m_profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
