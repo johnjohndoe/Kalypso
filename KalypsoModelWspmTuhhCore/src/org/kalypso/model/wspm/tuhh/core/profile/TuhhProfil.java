@@ -72,11 +72,6 @@ public class TuhhProfil extends AbstractProfil
     result.setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
-   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time
-   * @throws IllegalStateException
-   */
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
@@ -94,9 +89,6 @@ public class TuhhProfil extends AbstractProfil
    * FIXME: this creates a marker (virtually) but does not really change the profile, except maybe add the
    * marker-component to it.<br/>
    * This is very confusing! Instead, we should directly set the value and return the real marker.
-   * 
-   * @see org.kalypso.model.wspm.core.profil.IProfil#createPointMarker(java.lang.String,
-   *      org.kalypso.observation.result.IRecord)
    */
   @Override
   public IProfilPointMarker createPointMarker( final String markerID, final IRecord point )
