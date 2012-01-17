@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -110,15 +109,13 @@ public class CrossSectionConverter
 
     // TODO: put part's name, description etc. into profile objects
 
-    final TupleResult result = m_profile.getResult();
-
     /* Add points in their natural order into the profile */
     final Set<Point> points = part.getPoints();
     final List<Point> sortedPoints = sortPoints( points );
     for( final Point point : sortedPoints )
     {
-      final IRecord record = result.createRecord();
-      result.add( record );
+      final IProfileRecord record = m_profile.createProfilPoint();
+      m_profile.addPoint( record );
 
       setValue( record, IWspmPointProperties.POINT_PROPERTY_BREITE, asDouble( point.getWidth() ) );
       setValue( record, IWspmPointProperties.POINT_PROPERTY_HOEHE, asDouble( point.getHeight() ) );
@@ -130,7 +127,7 @@ public class CrossSectionConverter
       final String hyk = point.getHyk();
       final String markerType = toMarkerType( hyk );
       if( markerType != null )
-        createMarker( new ProfileRecord( record ), markerType );
+        createMarker( record, markerType );
     }
   }
 

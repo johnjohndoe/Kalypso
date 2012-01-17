@@ -81,7 +81,7 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
 
   public Integer getNumberOfProfilePoints( )
   {
-    return ArrayUtils.getLength( m_profile.getPoints() );
+    return ArrayUtils.getLength( m_profile.getProfile().getPoints() );
   }
 
   public Double getDistanceNextProfile( )

@@ -44,8 +44,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
@@ -68,16 +68,16 @@ public class KnaufProfileWrapper extends ProfileWrapper
 
   public Double getRightForelandRoughness( )
   {
-    final ProfilePointMarkerWrapper[] trennflaechen = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final ProfilePointMarkerWrapper[] durchstroemt = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] trennflaechen = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] durchstroemt = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 
     if( ArrayUtils.isEmpty( trennflaechen ) || ArrayUtils.isEmpty( durchstroemt ) )
       return 0.0;
 
-    final ProfilePointMarkerWrapper w1 = findMax( trennflaechen );
-    final ProfilePointMarkerWrapper w2 = findMax( durchstroemt );
+    final IProfilPointMarker w1 = findMax( trennflaechen );
+    final IProfilPointMarker w2 = findMax( durchstroemt );
 
-    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getBreite(), w2.getBreite() ), Math.max( w1.getBreite(), w2.getBreite() ) );
+    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
     accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
@@ -85,38 +85,38 @@ public class KnaufProfileWrapper extends ProfileWrapper
 
   public Double getRiverbedRoughness( )
   {
-    final ProfilePointMarkerWrapper[] trennflaechen = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final ProfilePointMarkerWrapper w1 = findMin( trennflaechen );
-    final ProfilePointMarkerWrapper w2 = findMax( trennflaechen );
+    final IProfilPointMarker[] trennflaechen = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker w1 = findMin( trennflaechen );
+    final IProfilPointMarker w2 = findMax( trennflaechen );
 
-    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getBreite(), w2.getBreite() ), Math.max( w1.getBreite(), w2.getBreite() ) );
+    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
     accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
   }
 
-  private ProfilePointMarkerWrapper findMin( final ProfilePointMarkerWrapper[] wrappers )
+  private IProfilPointMarker findMin( final IProfilPointMarker[] wrappers )
   {
-    ProfilePointMarkerWrapper ptr = null;
-    for( final ProfilePointMarkerWrapper wrapper : wrappers )
+    IProfilPointMarker ptr = null;
+    for( final IProfilPointMarker wrapper : wrappers )
     {
       if( Objects.isNull( ptr ) )
         ptr = wrapper;
-      else if( ptr.getBreite() > wrapper.getBreite() )
+      else if( ptr.getPoint().getBreite() > wrapper.getPoint().getBreite() )
         ptr = wrapper;
     }
 
     return ptr;
   }
 
-  private ProfilePointMarkerWrapper findMax( final ProfilePointMarkerWrapper[] wrappers )
+  private IProfilPointMarker findMax( final IProfilPointMarker[] wrappers )
   {
-    ProfilePointMarkerWrapper ptr = null;
-    for( final ProfilePointMarkerWrapper wrapper : wrappers )
+    IProfilPointMarker ptr = null;
+    for( final IProfilPointMarker wrapper : wrappers )
     {
       if( Objects.isNull( ptr ) )
         ptr = wrapper;
-      else if( ptr.getBreite() < wrapper.getBreite() )
+      else if( ptr.getPoint().getBreite() < wrapper.getPoint().getBreite() )
         ptr = wrapper;
     }
 
@@ -125,16 +125,16 @@ public class KnaufProfileWrapper extends ProfileWrapper
 
   public Double getLeftForelandRoughness( )
   {
-    final ProfilePointMarkerWrapper[] trennflaechen = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final ProfilePointMarkerWrapper[] durchstroemt = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] trennflaechen = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] durchstroemt = getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
 
     if( ArrayUtils.isEmpty( trennflaechen ) || ArrayUtils.isEmpty( durchstroemt ) )
       return 0.0;
 
-    final ProfilePointMarkerWrapper w1 = findMin( trennflaechen );
-    final ProfilePointMarkerWrapper w2 = findMin( durchstroemt );
+    final IProfilPointMarker w1 = findMin( trennflaechen );
+    final IProfilPointMarker w2 = findMin( durchstroemt );
 
-    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getBreite(), w2.getBreite() ), Math.max( w1.getBreite(), w2.getBreite() ) );
+    final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
     accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
@@ -142,11 +142,11 @@ public class KnaufProfileWrapper extends ProfileWrapper
 
   public String getKennziffer( final IProfileRecord point )
   {
-    final ProfilePointMarkerWrapper[] markers = getPointMarkers( point );
+    final IProfilPointMarker[] markers = getPointMarkers( point );
     if( ArrayUtils.isEmpty( markers ) )
       return StringUtils.repeat( " ", 2 ); //$NON-NLS-1$
 
-    for( final ProfilePointMarkerWrapper marker : markers )
+    for( final IProfilPointMarker marker : markers )
     {
       final IComponent component = marker.getComponent();
       final String identifier = component.getId();
@@ -183,27 +183,27 @@ public class KnaufProfileWrapper extends ProfileWrapper
     return StringUtils.repeat( " ", 2 ); //$NON-NLS-1$
   }
 
-  private boolean isLeftMarker( final ProfilePointMarkerWrapper marker, final String identifier )
+  private boolean isLeftMarker( final IProfilPointMarker marker, final String identifier )
   {
     double ptr = Double.MAX_VALUE;
 
-    final ProfilePointMarkerWrapper[] markers = getProfilePointMarkerWrapper( identifier );
-    for( final ProfilePointMarkerWrapper m : markers )
+    final IProfilPointMarker[] markers = getProfilePointMarkerWrapper( identifier );
+    for( final IProfilPointMarker m : markers )
     {
-      if( m.getBreite() < ptr )
-        ptr = m.getBreite();
+      if( m.getPoint().getBreite() < ptr )
+        ptr = m.getPoint().getBreite();
     }
 
-    return marker.getBreite() == ptr;
+    return marker.getPoint().getBreite() == ptr;
   }
 
   public String getAusuferungsgrenze( final IProfileRecord point )
   {
-    final ProfilePointMarkerWrapper[] markers = getPointMarkers( point );
+    final IProfilPointMarker[] markers = getPointMarkers( point );
     if( ArrayUtils.isEmpty( markers ) )
       return " "; //$NON-NLS-1$
 
-    for( final ProfilePointMarkerWrapper marker : markers )
+    for( final IProfilPointMarker marker : markers )
     {
       final IComponent component = marker.getComponent();
       final String identifier = component.getId();

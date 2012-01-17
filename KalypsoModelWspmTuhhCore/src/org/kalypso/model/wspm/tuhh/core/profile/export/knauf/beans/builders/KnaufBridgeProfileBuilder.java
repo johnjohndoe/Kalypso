@@ -55,6 +55,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.JtsVectorUtilities;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.base.ChangeProfilePointHeight;
 import org.kalypso.model.wspm.core.profil.base.FLOW_DIRECTION;
 import org.kalypso.model.wspm.core.profil.base.MoveProfileRunnable;
@@ -268,20 +269,28 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
     if( Objects.isNotNull( vector ) )
       return vector;
 
-    final IProfileRecord[] points = m_profile.getPoints();
+    final IProfileRecord[] points = m_profile.getProfile().getPoints();
     if( Arrays.isEmpty( points ) || ArrayUtils.getLength( points ) < 2 )
       return null;
 
     return toVector( points[0], points[ArrayUtils.getLength( points ) - 1] );
   }
 
-  private Coordinate toVector( final IProfileRecord... markers )
+  private Coordinate toVector( final IProfilPointMarker... markers )
   {
     if( Arrays.isEmpty( markers ) || ArrayUtils.getLength( markers ) < 2 )
       return null;
 
-    final IProfileRecord marker1 = markers[0];
-    final IProfileRecord marker2 = markers[ArrayUtils.getLength( markers ) - 1];
+    return toVector( markers[0].getPoint(), markers[ArrayUtils.getLength( markers ) - 1].getPoint() );
+  }
+
+  private Coordinate toVector( final IProfileRecord... records )
+  {
+    if( Arrays.isEmpty( records ) || ArrayUtils.getLength( records ) < 2 )
+      return null;
+
+    final IProfileRecord marker1 = records[0];
+    final IProfileRecord marker2 = records[ArrayUtils.getLength( records ) - 1];
 
     final double x1 = marker1.getRechtswert();
     final double y1 = marker1.getHochwert();
