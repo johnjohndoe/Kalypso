@@ -80,7 +80,7 @@ public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanB
       addBeans( sa29 );
     }
 
-    final IProfileRecord[] points = profile.getPoints();
+    final IProfileRecord[] points = profile.getProfile().getPoints();
     for( final IProfileRecord point : points )
     {
       addBeans( new KnaufSA30Bean( profile, point ) );

@@ -55,12 +55,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileGeocoordinatesRunnable;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -174,9 +172,8 @@ public class BanklineDistanceBuilder
       for( int i = 0; i < pointMarkers.length; i++ )
       {
         final IProfilPointMarker pointMarker = pointMarkers[i];
-        final IRecord point = pointMarker.getPoint();
-        final IProfileRecord pointWrapper = new ProfileRecord( point );
-        final Coordinate coordinate = jtsTransformer.transform( pointWrapper.getCoordinate() );
+        final IProfileRecord point = pointMarker.getPoint();
+        final Coordinate coordinate = jtsTransformer.transform( point.getCoordinate() );
 
         final String markerName = String.format( "%s_%d", pointMarker.getComponent().getId(), i );
 

@@ -45,8 +45,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
@@ -87,11 +87,11 @@ public final class WspmProfileHelper
    */
   public static double findSohlpunkt( final ProfileWrapper wrapper, final double fuziness )
   {
-    final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
 
     final List<IProfileRecord> sohle = new ArrayList<>();
     boolean lastIterationAdd = false;
@@ -138,11 +138,11 @@ public final class WspmProfileHelper
 
   public static IProfileRecord getSohlpunktPoint( final ProfileWrapper wrapper )
   {
-    final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
+    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
 
     IProfileRecord ptr = null;
 
