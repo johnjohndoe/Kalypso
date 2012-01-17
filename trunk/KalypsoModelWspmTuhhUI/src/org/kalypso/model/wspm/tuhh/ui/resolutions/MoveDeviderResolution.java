@@ -63,7 +63,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 
   /**
    * verschieben der Trennfläche auf den Profilpunkt IProfil.getPoints().get(index)
-   *
+   * 
    * @param deviderTyp
    * @param deviderIndex
    *          devider=IProfil.getDevider(deviderTyp)[deviderIndex]
@@ -104,7 +104,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
         return false;
       final IRecord point = points[m_pointIndex];
       marker.setPoint( point );
-      profil.setActivePoint( point );
+      profil.getSelection().setActivePoint( point );
 
       // FIXEM: fire events?!
 
