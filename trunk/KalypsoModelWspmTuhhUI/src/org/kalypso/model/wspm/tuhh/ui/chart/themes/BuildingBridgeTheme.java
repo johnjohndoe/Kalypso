@@ -67,7 +67,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isActivePointChanged() )
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isSelectionChanged() )
     {
       fireLayerContentChanged();
     }

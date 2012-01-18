@@ -75,6 +75,7 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 public class VegetationTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2" ); //$NON-NLS-1$
+
   private ILegendEntry[] m_legendEntries;
 
   public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
@@ -83,14 +84,10 @@ public class VegetationTheme extends AbstractProfilTheme
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-    if( hint.isActivePointChanged() || hint.isPointValuesChanged() )
+    if( hint.isSelectionChanged() || hint.isPointValuesChanged() )
     {
       fireLayerContentChanged();
     }
@@ -160,19 +157,21 @@ public class VegetationTheme extends AbstractProfilTheme
     }
     return null;
   }
+
   /**
    * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
    */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    
+
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();
     }
     return m_legendEntries;
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
    */

@@ -75,7 +75,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-    if( hint.isActivePointChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
+    if( hint.isSelectionChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
       fireLayerContentChanged();
     }
