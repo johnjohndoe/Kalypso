@@ -42,15 +42,15 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
  * @author Dirk Kuch
  */
-public class FindBridgeBorderVisitor implements IProfilePointWrapperVisitor
+public class FindBridgeBorderVisitor implements IProfileRecordVisitor
 {
   private final String m_property;
 
@@ -64,9 +64,9 @@ public class FindBridgeBorderVisitor implements IProfilePointWrapperVisitor
   }
 
   @Override
-  public void visit( final ProfileWrapper profile, final IProfileRecord point ) throws CancelVisitorException
+  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
   {
-    final int index = profile.getProfile().indexOfProperty( m_property );
+    final int index = profile.indexOfProperty( m_property );
     if( index < 0 )
       throw new CancelVisitorException();
 

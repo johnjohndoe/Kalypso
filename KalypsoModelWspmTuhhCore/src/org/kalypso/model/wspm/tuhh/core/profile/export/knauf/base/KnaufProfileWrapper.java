@@ -78,7 +78,7 @@ public class KnaufProfileWrapper extends ProfileWrapper
     final IProfilPointMarker w2 = findMax( durchstroemt );
 
     final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
-    accept( visitor, 1 );
+    getProfile().accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
   }
@@ -90,7 +90,7 @@ public class KnaufProfileWrapper extends ProfileWrapper
     final IProfilPointMarker w2 = findMax( trennflaechen );
 
     final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
-    accept( visitor, 1 );
+    getProfile().accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
   }
@@ -135,7 +135,7 @@ public class KnaufProfileWrapper extends ProfileWrapper
     final IProfilPointMarker w2 = findMin( durchstroemt );
 
     final CalculateRoughenessVisitor visitor = new CalculateRoughenessVisitor( Math.min( w1.getPoint().getBreite(), w2.getPoint().getBreite() ), Math.max( w1.getPoint().getBreite(), w2.getPoint().getBreite() ) );
-    accept( visitor, 1 );
+    getProfile().accept( visitor, 1 );
 
     return visitor.getRoughness( m_reach );
   }

@@ -109,7 +109,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
     /** lowering of upstream profile */
     final double deltaH = getDeltaH( m_bridge, upstream );
-    upstream.accept( new ChangeProfilePointHeight( deltaH ), 1 );
+    upstream.getProfile().accept( new ChangeProfilePointHeight( deltaH ), 1 );
 
     Collections.addAll( stati, addProfile( upstream, distance ) );
     Collections.addAll( stati, buildDefaultBeans( m_profile ) );

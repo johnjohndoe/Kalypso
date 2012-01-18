@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base.KnaufProfileWrapper;
 
@@ -97,9 +98,7 @@ public class KnaufSA20Bean extends AbstractKnaufProjectBean
 
   public IProfileRecord findLowestPoint( )
   {
-    final IProfileRecord point = m_profile.findLowestPoint();
-
-    return point;
+    return ProfileVisitors.findLowestPoint( m_profile.getProfile() );
   }
 
   public Double getPfeilerFormBeiwert( )

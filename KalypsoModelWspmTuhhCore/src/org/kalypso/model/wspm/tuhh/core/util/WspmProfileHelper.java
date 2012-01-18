@@ -46,6 +46,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -91,7 +92,7 @@ public final class WspmProfileHelper
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
+    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( wrapper.getProfile(), dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
 
     final List<IProfileRecord> sohle = new ArrayList<>();
     boolean lastIterationAdd = false;
@@ -142,8 +143,7 @@ public final class WspmProfileHelper
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final IProfileRecord[] points = wrapper.findPointsBetween( dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
-
+    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( wrapper.getProfile(), dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
     IProfileRecord ptr = null;
 
     for( final IProfileRecord point : points )
@@ -156,5 +156,4 @@ public final class WspmProfileHelper
 
     return ptr;
   }
-
 }

@@ -88,7 +88,7 @@ public class KnaufSA21BeanInitializer extends KnaufBeanInitializer
 
     final KnaufProfileWrapper profile = bean.getProfile();
     final FindBridgeBorderVisitor unterkante = new FindBridgeBorderVisitor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-    profile.accept( unterkante, 1 );
+    profile.getProfile().accept( unterkante, 1 );
 
     bean.setDKUK( unterkante.getBorder() );
 
