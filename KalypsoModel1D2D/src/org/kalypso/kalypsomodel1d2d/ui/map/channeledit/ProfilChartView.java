@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -291,7 +290,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     final ChartImageComposite chart = m_chartComposite;
     if( chart == null || chart.isDisposed() )
@@ -311,7 +310,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
           {
-            ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+            ((IProfilChartLayer) layer).onProfilChanged( hint );
           }
         }
         redrawChart();
