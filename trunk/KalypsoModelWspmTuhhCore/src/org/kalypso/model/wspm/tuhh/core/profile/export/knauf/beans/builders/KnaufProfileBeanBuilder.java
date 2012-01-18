@@ -80,7 +80,7 @@ public final class KnaufProfileBeanBuilder extends AbstractKnaufProfileBeanBuild
     final IProfil profile = m_profile.getProfile();
     final IProfileObject[] objects = profile.getProfileObjects();
 
-    final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( m_profile );
+    final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( profile );
     stati.add( runnable.execute( monitor ) );
 
     // TODO handle sinousität

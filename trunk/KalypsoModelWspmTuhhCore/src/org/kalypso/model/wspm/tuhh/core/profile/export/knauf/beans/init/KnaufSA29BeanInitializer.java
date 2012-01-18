@@ -72,11 +72,11 @@ public class KnaufSA29BeanInitializer extends KnaufBeanInitializer
     final KnaufProfileWrapper profile = bean.getProfile();
 
     final FindBridgeBorderVisitor oberkante = new FindBridgeBorderVisitor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    profile.accept( oberkante, 1 );
+    profile.getProfile().accept( oberkante, 1 );
     bean.setHKrone( oberkante.getBorder() );
 
     final DetermineBridgeWidthVisitor width = new DetermineBridgeWidthVisitor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    profile.accept( width, 1 );
+    profile.getProfile().accept( width, 1 );
     bean.setWebe( width.getWidth() );
 
     bean.setMueBeiwert( 0.6 );

@@ -45,16 +45,16 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufReach;
 
 /**
  * @author Dirk Kuch
  */
-public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
+public class CalculateRoughenessVisitor implements IProfileRecordVisitor
 {
   double m_ksValues = 0.0;
 
@@ -77,7 +77,7 @@ public class CalculateRoughenessVisitor implements IProfilePointWrapperVisitor
   }
 
   @Override
-  public void visit( final ProfileWrapper profile, final IProfileRecord point )
+  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection )
   {
     if( !isBetween( point ) )
       return;
