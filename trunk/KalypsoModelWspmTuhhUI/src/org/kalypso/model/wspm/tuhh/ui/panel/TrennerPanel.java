@@ -67,7 +67,6 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
@@ -417,7 +416,7 @@ public class TrennerPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     if( hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {

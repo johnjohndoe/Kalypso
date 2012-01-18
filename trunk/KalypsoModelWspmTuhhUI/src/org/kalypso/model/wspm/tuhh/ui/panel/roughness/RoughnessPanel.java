@@ -65,7 +65,6 @@ import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPageListener;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages.MissingRoughnessTypePage;
@@ -96,7 +95,7 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     // TODO Auto-generated method stub
 

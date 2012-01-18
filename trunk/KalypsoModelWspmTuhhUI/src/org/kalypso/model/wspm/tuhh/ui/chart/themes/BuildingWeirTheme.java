@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 import java.util.ArrayList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
@@ -74,7 +73,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     if( hint.isActivePointChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {

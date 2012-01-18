@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
@@ -75,7 +74,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     if( hint.isObjectDataChanged() || hint.isObjectChanged() )
     {

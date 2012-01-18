@@ -46,7 +46,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
@@ -89,7 +88,7 @@ public class VegetationTheme extends AbstractProfilTheme
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     if( hint.isActivePointChanged() || hint.isPointValuesChanged() )
     {
