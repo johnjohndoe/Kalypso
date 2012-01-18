@@ -144,7 +144,7 @@ class DeviderLine
     final IProfileRecord point = ProfilUtil.findNearestPoint( m_profile, value );
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2" ), m_profile, true ); //$NON-NLS-1$
     operation.addChange( new PointMarkerSetPoint( m_devider, point ) );
-    operation.addChange( new ActiveObjectEdit( m_profile, point, null ) );
+    operation.addChange( new ActiveObjectEdit( m_profile, point.getBreiteAsRange(), null ) );
     new ProfilOperationJob( operation ).schedule();
   }
 

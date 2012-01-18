@@ -226,7 +226,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
     final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
     operation.addChange( new PointMarkerSetPoint( devider, newPoint ) );
-    operation.addChange( new ActiveObjectEdit( profil, newPoint, null ) );
+    operation.addChange( new ActiveObjectEdit( profil, newPoint.getBreiteAsRange(), null ) );
     new ProfilOperationJob( operation ).schedule();
   }
 

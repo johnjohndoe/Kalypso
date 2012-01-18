@@ -93,7 +93,7 @@ class AddWeirDeviderAction extends Action
 
       final Object dblVal = objVal instanceof Double ? objVal : Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, building );
       operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
-      operation.addChange( new ActiveObjectEdit( m_profile, point, null ) );
+      operation.addChange( new ActiveObjectEdit( m_profile, point.getBreiteAsRange(), null ) );
       new ProfilOperationJob( operation ).schedule();
     }
   }

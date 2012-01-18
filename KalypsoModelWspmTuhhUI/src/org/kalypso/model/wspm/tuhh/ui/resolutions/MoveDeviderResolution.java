@@ -104,7 +104,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
         return false;
       final IProfileRecord point = points[m_pointIndex];
       marker.setPoint( point );
-      profil.getSelection().setActivePoint( point );
+      profil.getSelection().setRange( point );
 
       // FIXEM: fire events?!
 

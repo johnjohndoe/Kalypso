@@ -45,7 +45,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
@@ -77,7 +76,7 @@ public class CalculateRoughenessVisitor implements IProfileRecordVisitor
   }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection )
+  public void visit( final IProfileRecord point, int searchDirection )
   {
     if( !isBetween( point ) )
       return;

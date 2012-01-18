@@ -286,7 +286,7 @@ public class TrennerPanel extends AbstractProfilView
             final IProfileRecord rightPoint = dbDevs.length > 1 ? dbDevs[1].getPoint() : lastPoint;
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, leftPoint ), true ) );
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, rightPoint ), true ) );
-            operation.addChange( new ActiveObjectEdit( profil, rightPoint, bordvoll ) );
+            operation.addChange( new ActiveObjectEdit( profil, rightPoint.getBreiteAsRange(), bordvoll ) );
           }
 
           new ProfilOperationJob( operation ).schedule();
@@ -502,7 +502,7 @@ public class TrennerPanel extends AbstractProfilView
 
           operation.setLabel( key.toString() + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.28" ) ); //$NON-NLS-1$
           operation.addChange( new PointMarkerSetPoint( key, pointCloseTo ) );
-          operation.addChange( new ActiveObjectEdit( profil, pointCloseTo, null ) );
+          operation.addChange( new ActiveObjectEdit( profil, pointCloseTo.getBreiteAsRange(), null ) );
         }
 
         new ProfilOperationJob( operation ).schedule();
