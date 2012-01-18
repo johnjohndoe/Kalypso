@@ -306,7 +306,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
           updateLayer();
         }
         else if( hint.isPointsChanged() || hint.isMarkerDataChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
-            || hint.isActivePointChanged() || hint.isActivePropertyChanged() )
+            || hint.isSelectionChanged() || hint.isActivePropertyChanged() )
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
           {
@@ -372,7 +372,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString("ProfilChartView_0"), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
+        m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString( "ProfilChartView_0" ), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
         ((GridData) m_chartComposite.getLayoutData()).exclude = false;
         updateLayer();
       }
