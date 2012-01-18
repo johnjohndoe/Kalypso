@@ -110,7 +110,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
         point.setValue( iAX, pAx );
         point.setValue( iAY, pAy );
         point.setValue( iDP, pDp );
-        profil.getSelection().setActivePoint( point );
+        profil.getSelection().setRange( point );
         break;
       }
 

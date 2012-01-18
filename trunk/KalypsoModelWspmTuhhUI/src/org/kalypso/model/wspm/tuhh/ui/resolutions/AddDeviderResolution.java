@@ -124,7 +124,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
 // operation.addChange( new PointMarkerSetPoint( m1, pointLeft ) );
 // operation.addChange( new PointMarkerSetPoint( m2, pointRight ) );
 
-    operation.addChange( new ActiveObjectEdit( profil, pointLeft, null ) );
+    operation.addChange( new ActiveObjectEdit( profil, pointLeft.getBreiteAsRange(), null ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
