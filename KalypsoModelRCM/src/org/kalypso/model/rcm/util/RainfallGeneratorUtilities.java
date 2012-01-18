@@ -47,7 +47,9 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -67,6 +69,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHand
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.core.filter.ZmlFilterWorker;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -90,33 +93,59 @@ public final class RainfallGeneratorUtilities
   {
   }
 
-  public static GM_MultiSurface[] findCatchmentAreas( final Feature[] catchmentFeatures, final GMLXPath catchmentAreaXPath ) throws CoreException, GMLXPathException
+  /**
+   * Res9olves the areas from the catchments AND transforms them into the kalypso srs.
+   */
+  public static GM_MultiSurface[] findCatchmentAreas( final Feature[] catchmentFeatures, final GMLXPath catchmentAreaXPath ) throws CoreException
   {
-    /* Memory for the results. */
-    final GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
-
-    for( int i = 0; i < catchmentFeatures.length; i++ )
+    try
     {
-      final Feature catchmentFeature = catchmentFeatures[i];
-      if( catchmentFeature == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
+      final String kalypsoSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-      final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
-      if( object instanceof GM_Surface )
+      /* Memory for the results. */
+      final GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
+
+      for( int i = 0; i < catchmentFeatures.length; i++ )
       {
-        final GM_Surface< ? > surface = (GM_Surface< ? >) object;
-        final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
-        areas[i] = multiSurface;
+        final Feature catchmentFeature = catchmentFeatures[i];
+        if( catchmentFeature == null )
+          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
+
+        final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
+        final GM_MultiSurface multiSurface = toMultiSurface( catchmentAreaXPath, object );
+        final GM_MultiSurface transformedMultiSurface = (GM_MultiSurface) multiSurface.transform( kalypsoSrs );
+        areas[i] = transformedMultiSurface;
       }
-      else if( object instanceof GM_MultiSurface )
-        areas[i] = (GM_MultiSurface) object;
-      else if( object == null )
-        areas[i] = null; // does not make sense to process
-      else
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
+
+      return areas;
+    }
+    catch( final GMLXPathException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to resolve catchment geometry path", e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to transform catchment geometry", e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+  }
+
+  private static GM_MultiSurface toMultiSurface( final GMLXPath catchmentAreaXPath, final Object object ) throws CoreException
+  {
+    if( object instanceof GM_Surface )
+    {
+      final GM_Surface< ? > surface = (GM_Surface< ? >) object;
+      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
     }
 
-    return areas;
+    if( object instanceof GM_MultiSurface )
+      return (GM_MultiSurface) object;
+
+    if( object == null )
+      return null; // does not make sense to process
+
+    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
   }
 
   public static IObservation[] readObservations( final Feature[] ombrometerFeatures, final GMLXPath linkXPath, final IZmlFilter[] filters, final DateRange dateRange ) throws SensorException
@@ -127,7 +156,7 @@ public final class RainfallGeneratorUtilities
     for( int i = 0; i < ombrometerFeatures.length; i++ )
     {
       final ZmlLink link = new ZmlLink( ombrometerFeatures[i], linkXPath );
-      if(link.isLinkSet() )
+      if( link.isLinkSet() )
       {
         final IObservation source = link.loadObservation();
         final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
