@@ -270,6 +270,24 @@
 			</and>
 		</visibleWhen>
      </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget"
+           style="toggle">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
     </menuContribution>
     <menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
@@ -281,6 +299,24 @@
 				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 			</and>
 		</visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget"
+           style="toggle">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
      </command>
     </menuContribution>
     <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
@@ -303,6 +339,42 @@
           <visibleWhen checkEnabled="true"/>
        </command>
     </menuContribution>
+  </extension>
+  <extension
+        point="de.openali.odysseus.chart.factory.LayerProvider">
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+     </provider>
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+     </provider>
+  </extension>
+
+  <extension point="org.eclipse.ui.commands">
+    <command
+          categoryId="org.kalypso.ogc.gml.map.category"
+          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
+          name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.name"
+          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
+    </command>
+    <category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
+	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+	       name="%command.name.7">
+	</command>
+    <command
+          description="%org.kalypso.model.wspm.calcTuhhAction.description"
+          id="org.kalypso.model.wspm.command.calcTuhh"
+          name="%org.kalypso.model.wspm.calcTuhhAction.name">
+    </command>
+  </extension>
+  
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
+     <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
+     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
   </extension>
 
   <extension point="org.eclipse.ui.handlers">
@@ -371,42 +443,6 @@
          </with>
       </enabledWhen>
    </handler>
-  </extension>
-
-  <extension point="org.eclipse.ui.commands">
-    <command
-          categoryId="org.kalypso.ogc.gml.map.category"
-          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-          name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.name"
-          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
-    </command>
-    <category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-	       name="%command.name.7">
-	</command>
-    <command
-          description="%org.kalypso.model.wspm.calcTuhhAction.description"
-          id="org.kalypso.model.wspm.command.calcTuhh"
-          name="%org.kalypso.model.wspm.calcTuhhAction.name">
-    </command>
-  </extension>
-  <extension
-        point="de.openali.odysseus.chart.factory.LayerProvider">
-     <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
-           id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
-     </provider>
-     <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
-           id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
-     </provider>
-  </extension>
-  
-  <extension point="org.eclipse.ui.commandImages">
-     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
-     <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
-     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
   </extension>
   
   <extension
