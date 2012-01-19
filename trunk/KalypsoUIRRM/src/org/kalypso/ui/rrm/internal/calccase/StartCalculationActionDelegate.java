@@ -50,10 +50,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
-import org.kalypso.simulation.ui.calccase.CalcCaseJob;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
@@ -76,15 +74,8 @@ public class StartCalculationActionDelegate extends AbstractHandler
     if( calcCasesToCalc == null )
       return null;
 
-    for( final IFolder folder : calcCasesToCalc )
-    {
-      final Job calcJob = new CalcCaseJob( folder );
-
-      // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.2" ) //$NON-NLS-1$
-          + folder.getName(), Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.3" ), false, true ) ); //$NON-NLS-1$
-      calcJob.schedule();
-    }
+    final Job calcJob = new CalcCaseJob( calcCasesToCalc );
+    calcJob.schedule();
 
     return null;
   }
