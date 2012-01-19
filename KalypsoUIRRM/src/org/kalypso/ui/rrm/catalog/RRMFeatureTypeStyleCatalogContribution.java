@@ -3,7 +3,6 @@ package org.kalypso.ui.rrm.catalog;
 import java.net.URL;
 
 import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.catalog.ICatalogContribution;
 
 public class RRMFeatureTypeStyleCatalogContribution implements ICatalogContribution
