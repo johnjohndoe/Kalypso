@@ -185,6 +185,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
     try
     {
       final IFolder modelsFolder = m_calcCase.getFolder( INaProjectConstants.FOLDER_MODELS );
+      final IFolder lzsimFolder = m_calcCase.getFolder( INaCalcCaseConstants.ANFANGSWERTE_DIR );
 
       // FIXME: use ScenarioAccessor instead
       final URL modelURL = ResourceUtilities.createURL( modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE ) );
@@ -195,7 +196,7 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
       // FIXME: check...
       final URL sudsURL = ResourceUtilities.createURL( modelsFolder.getFile( "suds.gml" ) );
       final URL syntNURL = ResourceUtilities.createURL( modelsFolder.getFile( INaProjectConstants.GML_SYNTH_N_FILE ) );
-      final URL lzsimURL = ResourceUtilities.createURL( modelsFolder.getFile( INaCalcCaseConstants.ANFANGSWERTE_FILE ) );
+      final URL lzsimURL = ResourceUtilities.createURL( lzsimFolder.getFile( INaCalcCaseConstants.ANFANGSWERTE_FILE ) );
 
       return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null );
     }
