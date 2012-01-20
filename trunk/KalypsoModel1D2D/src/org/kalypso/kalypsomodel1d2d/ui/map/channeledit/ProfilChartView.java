@@ -52,11 +52,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
+import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -86,7 +86,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   private IProfilLayerProvider m_layerProvider;
 
-  private final List<IProfilProviderListener> m_listener = new ArrayList<IProfilProviderListener>();
+  private final List<IProfileProviderListener> m_listener = new ArrayList<IProfileProviderListener>();
 
   private IProfil m_profile;
 
@@ -103,7 +103,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     }
   }
 
-  public void addProfilProviderListener( final IProfilProviderListener l )
+  public void addProfilProviderListener( final IProfileProviderListener l )
   {
     m_listener.add( l );
   }
@@ -141,7 +141,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   private void fireProfilChanged( final IProfil old )
   {
-    for( final IProfilProviderListener l : m_listener )
+    for( final IProfileProviderListener l : m_listener )
       l.onProfilProviderChanged( null, old, m_profile );
   }
 
@@ -337,7 +337,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
    * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.
    *      kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
    */
-  public void removeProfilProviderListener( final IProfilProviderListener l )
+  public void removeProfilProviderListener( final IProfileProviderListener l )
   {
     m_listener.remove( l );
   }
