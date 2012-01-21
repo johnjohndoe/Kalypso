@@ -63,7 +63,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.views.ScenarioContentProvider;
 import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -81,6 +80,8 @@ import org.kalypso.ui.wizards.results.ResultMetaInfoViewer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Gernot Belger
