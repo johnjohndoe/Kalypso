@@ -23,7 +23,6 @@ import org.kalypso.statistics.types.EStatisticsImage;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.connector.worklist.TaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -37,14 +36,12 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
 
   private static KalypsoStatisticsPlugin PLUGIN;
 
-  private TaskExecutionAuthority m_taskExecutionAuthority;
-
   private TaskExecutionListener m_taskExecutionListener;
 
   private PluginImageProvider m_imageProvider;
 
   private SzenarioController m_szenarioController;
-  
+
   public KalypsoStatisticsPlugin( )
   {
     super();
@@ -69,13 +66,12 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
       final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
       m_taskExecutionListener = new TaskExecutionListener();
       commandService.addExecutionListener( m_taskExecutionListener );
-      m_taskExecutionAuthority = new TaskExecutionAuthority();
     }
 
     // delete tmp images both on startup and shutdown
     m_imageProvider = new PluginImageProvider( this );
     m_imageProvider.resetTmpFiles();
-    
+
     final Job job = new Job( "" )
     {
       @Override
@@ -103,7 +99,7 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
     // delete tmp images both on startup and shutdown
     m_imageProvider.resetTmpFiles();
     m_imageProvider = null;
-    
+
     if( PlatformUI.isWorkbenchRunning() )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -112,14 +108,9 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
       final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       caseDataProvider.removeScenarioDataListener( getSzenarioController() );
     }
-    
+
     PLUGIN = null;
     super.stop( context );
-  }
-
-  public TaskExecutionAuthority getTaskExecutionAuthority( )
-  {
-    return m_taskExecutionAuthority;
   }
 
   /**
@@ -135,11 +126,11 @@ public class KalypsoStatisticsPlugin extends AbstractUIPlugin
     return m_szenarioController;
   }
 
-  protected void setSzenarioController( SzenarioController szenarioController )
+  protected void setSzenarioController( final SzenarioController szenarioController )
   {
     m_szenarioController = szenarioController;
   }
-  
+
 	@Override
 	protected void initializeImageRegistry(final ImageRegistry registry) {
 		super.initializeImageRegistry(registry);
