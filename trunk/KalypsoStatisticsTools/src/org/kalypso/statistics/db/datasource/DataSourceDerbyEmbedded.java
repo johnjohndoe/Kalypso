@@ -7,8 +7,9 @@ import java.sql.SQLNonTransientConnectionException;
 
 import org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.statistics.utils.AppUtils;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Derby DataSource. Singleton!

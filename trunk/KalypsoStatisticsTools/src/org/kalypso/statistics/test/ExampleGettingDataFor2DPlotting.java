@@ -1,7 +1,5 @@
 package org.kalypso.statistics.test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class ExampleGettingDataFor2DPlotting {
 	public static void main(String[] args) {
