@@ -54,7 +54,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
@@ -74,7 +74,9 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
     // Rechenfälle raussuchen
     final String title = Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_0" ); //$NON-NLS-1$
     final String message = Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_1" );//$NON-NLS-1$
-    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( shell, selection, title, message, INaCalcCaseConstants.CALCULATION_GML_PATH );
+
+    final String controlPath = RrmSimulation.getCalculationGmlPath().toString();
+    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( shell, selection, title, message, controlPath );
 
     if( calcCases == null )
       return null;

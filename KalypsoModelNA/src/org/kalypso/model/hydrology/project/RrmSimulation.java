@@ -42,17 +42,23 @@ package org.kalypso.model.hydrology.project;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
- * Helper that allows to access the file's and dir's of a calculation case.
+ * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data-
  *
  * @author Gernot Belger
  */
-public class CalcCaseAccessor
+public class RrmSimulation
 {
   private static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
 
   private static final String FOLDER_ANFANGSWERTE = "Anfangswerte"; //$NON-NLS-1$
+
+  private static final String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
+
+  private static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
 
   private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
@@ -71,21 +77,36 @@ public class CalcCaseAccessor
   // FIXME: check file name
   private static final String FILE_SUDS_GML = "suds.gml"; //$NON-NLS-1$
 
-  private final IFolder m_calcCase;
+  private final IFolder m_simulation;
 
-  public CalcCaseAccessor( final IFolder calcCase )
+  public RrmSimulation( final IFolder simulationFolder )
   {
-    m_calcCase = calcCase;
+    m_simulation = simulationFolder;
+  }
+
+  public IFolder getSimulationFolder( )
+  {
+    return m_simulation;
   }
 
   public IFolder getModelsFolder( )
   {
-    return m_calcCase.getFolder( FOLDER_MODELS );
+    return m_simulation.getFolder( FOLDER_MODELS );
+  }
+
+  public IFolder getResultsFolder( )
+  {
+    return m_simulation.getFolder( FOLDER_RESULTS );
+  }
+
+  public IFolder getCurrentResultsFolder( )
+  {
+    return getResultsFolder().getFolder( FOLDER_AKTUELL );
   }
 
   public IFolder getLzsimFolder( )
   {
-    return m_calcCase.getFolder( FOLDER_ANFANGSWERTE );
+    return m_simulation.getFolder( FOLDER_ANFANGSWERTE );
   }
 
   public IFile getModelGml( )
@@ -126,5 +147,26 @@ public class CalcCaseAccessor
   public IFile getLzsimGml( )
   {
     return getLzsimFolder().getFile( FILE_LZSIM_GML );
+  }
+
+  public static IPath getCalculationGmlPath( )
+  {
+    return new Path( FOLDER_MODELS ).append( FILE_CALCULATION_GML );
+  }
+
+  public String getName( )
+  {
+    return m_simulation.getName();
+  }
+
+  public boolean exists( )
+  {
+    return m_simulation.exists();
+  }
+
+  public IFolder getCurrentLzimResultFolder( )
+  {
+    final IFolder currentResultsFolder = getCurrentResultsFolder();
+    return currentResultsFolder.getFolder( FOLDER_ANFANGSWERTE );
   }
 }

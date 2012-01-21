@@ -59,7 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -160,7 +160,8 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
 
   private IStatus createSimulation( final NAControl simulation, final IFolder simulationFolder, final IProgressMonitor monitor ) throws CoreException
   {
-    final IFile simulationFile = simulationFolder.getFile( INaCalcCaseConstants.CALCULATION_GML_PATH );
+    final RrmSimulation calcCase = new RrmSimulation( simulationFolder );
+    final IFile simulationFile = calcCase.getCalculationGml();
 
     /* create the folder (including .model folder) */
     final ContainerGenerator generator = new ContainerGenerator( simulationFile.getParent().getFullPath() );

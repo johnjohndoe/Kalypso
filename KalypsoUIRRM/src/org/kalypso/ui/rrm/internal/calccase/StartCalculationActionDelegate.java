@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
@@ -69,7 +69,9 @@ public class StartCalculationActionDelegate extends AbstractHandler
 
     final String title = Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.0" ); //$NON-NLS-1$
     final String message = Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.1" ); //$NON-NLS-1$
-    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( shell, selection, title, message, INaCalcCaseConstants.CALCULATION_GML_PATH );
+
+    final String controlPath = RrmSimulation.getCalculationGmlPath().toString();
+    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( shell, selection, title, message, controlPath );
 
     if( calcCasesToCalc == null )
       return null;

@@ -54,7 +54,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.CopyFilesAndFoldersOperation;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
@@ -84,8 +84,8 @@ public class CopyCalcCaseDelegate extends AbstractHandler
       return null;
     }
 
-    final IFolder folder = (IFolder) resource;
-    final IFile file = folder.getFile( INaCalcCaseConstants.CALCULATION_GML_PATH );
+    final RrmSimulation calcCase = new RrmSimulation( (IFolder) resource );
+    final IFile file = calcCase.getCalculationGml();
     if( !file.exists() )
     {
       MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.0" ), Messages.getString( "org.kalypso.simulation.ui.actions.CopyCalcCaseDelegate.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
