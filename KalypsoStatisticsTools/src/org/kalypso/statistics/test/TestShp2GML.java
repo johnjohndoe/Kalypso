@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.IDBFField;
-import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.deegree.SHP2GM_Object;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.geometry.GM_Exception;

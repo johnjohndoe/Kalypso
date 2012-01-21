@@ -8,7 +8,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.statistics.db.DataProvider;
 import org.kalypso.statistics.db.handler.DBHandlerSysVars;
 import org.kalypso.statistics.gui.GlobalListenersManager;
-import org.kalypso.statistics.gui.PartManager;
 
 public class SessionDataProvider {
 

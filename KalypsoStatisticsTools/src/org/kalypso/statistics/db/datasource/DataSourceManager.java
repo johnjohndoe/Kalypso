@@ -3,9 +3,6 @@ package org.kalypso.statistics.db.datasource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.kalypso.statistics.utils.AppUtils;
-import org.kalypso.statistics.utils.WorkspaceUtils;
-
 /**
  * DataSource manager.
  * 

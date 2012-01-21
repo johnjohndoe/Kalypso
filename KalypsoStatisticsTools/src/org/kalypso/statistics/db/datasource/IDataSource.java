@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.afgui.scenarios.IScenario;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 public interface IDataSource {
 

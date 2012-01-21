@@ -15,12 +15,13 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.statistics.db.handler.DBHandlerSysVars;
 import org.kalypso.statistics.utils.AppUtils;
 import org.kalypso.statistics.utils.SQLUtils;
 import org.kalypso.statistics.utils.WorkspaceUtils;
 import org.kalypso.statistics.utils.WorkspaceUtils.SYSVARS;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 public abstract class AbstractDataSourceDerby implements IDataSource {
 
@@ -112,8 +113,8 @@ public abstract class AbstractDataSourceDerby implements IDataSource {
 		if (GENERAL_ERROR || IS_DATASOURCE_INITIALIZED)
 			return;
 		final List<String[]> sqlFilesList = new ArrayList<String[]>();
-		sqlFilesList.add(new String[] { "Creating data structure...", getFolderPathCreateDB() + "/createDatabase.sql" }); //$NON-NLS-1$ 
-		sqlFilesList.add(new String[] { "Initializing database...", getFolderPathInitDB() + "/initDatabase.sql" }); //$NON-NLS-1$ 
+		sqlFilesList.add(new String[] { "Creating data structure...", getFolderPathCreateDB() + "/createDatabase.sql" }); //$NON-NLS-1$
+		sqlFilesList.add(new String[] { "Initializing database...", getFolderPathInitDB() + "/initDatabase.sql" }); //$NON-NLS-1$
 
 		Connection conn = null;
 
@@ -235,7 +236,7 @@ public abstract class AbstractDataSourceDerby implements IDataSource {
 			for (final String sql : m_sqlUpdates) {
 				try {
 					stmt.execute(sql);
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					AppUtils.getLogger().logError(sql);
 					AppUtils.getLogger().logError(e.getMessage());
 					AppUtils.getLogger().logException(e);
