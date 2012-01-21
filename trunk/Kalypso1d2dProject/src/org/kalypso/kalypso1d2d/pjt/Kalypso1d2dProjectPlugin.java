@@ -11,13 +11,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioController;
 import org.osgi.framework.BundleContext;
 
+import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
