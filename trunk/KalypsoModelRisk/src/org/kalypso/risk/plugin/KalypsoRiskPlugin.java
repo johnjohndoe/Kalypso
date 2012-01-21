@@ -18,7 +18,6 @@ import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.risk.project.SzenarioController;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.connector.worklist.TaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -30,8 +29,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   public static final String PLUGIN_ID = "org.kalypso.risk"; //$NON-NLS-1$
 
   private static KalypsoRiskPlugin PLUGIN;
-
-  private TaskExecutionAuthority m_taskExecutionAuthority;
 
   private TaskExecutionListener m_taskExecutionListener;
 
@@ -63,7 +60,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
       m_taskExecutionListener = new TaskExecutionListener();
       commandService.addExecutionListener( m_taskExecutionListener );
-      m_taskExecutionAuthority = new TaskExecutionAuthority();
     }
 
     // delete tmp images both on startup and shutdown
@@ -111,11 +107,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
 
     PLUGIN = null;
     super.stop( context );
-  }
-
-  public TaskExecutionAuthority getTaskExecutionAuthority( )
-  {
-    return m_taskExecutionAuthority;
   }
 
   /**

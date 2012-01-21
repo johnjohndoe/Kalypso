@@ -38,7 +38,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -108,8 +107,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       action.run();
 
       /* Check if project creation succeeded */
-      final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
-      final CaseHandlingProjectNature<IScenario> nature = activeWorkContext.getCurrentProject();
+      final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+      final CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
       if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) ) //$NON-NLS-1$
       {
         // we simply return, because that means no new project was created (maybe user cancelled the dialog)
@@ -178,7 +177,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     for( final IRunoffEvent runoffEvent : selectedEvents )
     {
       final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
-      IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+      final IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
       if( resultCoveragesList.size() == 0 )
       {
         MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.12" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.13" ) + runoffEvent.getName() + Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
