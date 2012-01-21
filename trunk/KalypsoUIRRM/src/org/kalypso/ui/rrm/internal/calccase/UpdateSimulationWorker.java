@@ -86,7 +86,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.IRainfallModelProvider;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
@@ -133,11 +133,11 @@ public class UpdateSimulationWorker
 
   private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-  private final IFolder m_simulationFolder;
+  private final RrmSimulation m_simulation;
 
   public UpdateSimulationWorker( final IFolder simulationFolder )
   {
-    m_simulationFolder = simulationFolder;
+    m_simulation = new RrmSimulation( simulationFolder );
   }
 
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
@@ -146,31 +146,31 @@ public class UpdateSimulationWorker
 
     /* Read models */
     monitor.subTask( "Reading control file..." );
-    final NAControl control = readControlFile( m_simulationFolder );
-    final NaModell model = readModelFile( m_simulationFolder );
+    final NAControl control = readControlFile();
+    final NaModell model = readModelFile();
     ProgressUtilities.worked( monitor, 20 );
 
     /* Copy observations for pegel and zufluss */
-    copyMappingTimeseries( m_simulationFolder, control, "ObsQMapping.gml", "Pegel", new SubProgressMonitor( monitor, 20 ) );
-    copyMappingTimeseries( m_simulationFolder, control, "ObsQZuMapping.gml", "Zufluss", new SubProgressMonitor( monitor, 20 ) );
-    copyMappingTimeseries( m_simulationFolder, control, "ObsEMapping.gml", "Klima", new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( control, "ObsQMapping.gml", "Pegel", new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( control, "ObsQZuMapping.gml", "Zufluss", new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( control, "ObsEMapping.gml", "Klima", new SubProgressMonitor( monitor, 20 ) );
 
     /* Execute catchment models */
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
-    executeCatchmentModel( m_simulationFolder, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
 
     /* Copy initial condition from long term simulation */
     copyInitialCondition( control );
 
-    return m_log.asMultiStatusOrOK( m_simulationFolder.getName() );
+    return m_log.asMultiStatusOrOK( m_simulation.getName() );
   }
 
-  private NAControl readControlFile( final IFolder calcCaseFolder ) throws CoreException
+  private NAControl readControlFile( ) throws CoreException
   {
     try
     {
-      final IFile controlFile = calcCaseFolder.getFile( INaCalcCaseConstants.CALCULATION_GML_PATH );
+      final IFile controlFile = m_simulation.getCalculationGml();
       final GMLWorkspace controlWorkspace = GmlSerializer.createGMLWorkspace( controlFile );
       return (NAControl) controlWorkspace.getRootFeature();
     }
@@ -182,11 +182,11 @@ public class UpdateSimulationWorker
     }
   }
 
-  private NaModell readModelFile( final IFolder calcCaseFolder ) throws CoreException
+  private NaModell readModelFile( ) throws CoreException
   {
     try
     {
-      final IFile modelFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
+      final IFile modelFile = m_simulation.getModelGml();
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelFile );
       return (NaModell) modelWorkspace.getRootFeature();
     }
@@ -198,15 +198,15 @@ public class UpdateSimulationWorker
     }
   }
 
-  private void copyMappingTimeseries( final IFolder calcCaseFolder, final NAControl control, final String mappingFilename, final String outputFoldername, final IProgressMonitor monitor ) throws CoreException
+  private void copyMappingTimeseries( final NAControl control, final String mappingFilename, final String outputFoldername, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
       /* Read mapping */
-      final FeatureList mappingFeatures = readMapping( calcCaseFolder, mappingFilename, MAPPING_MEMBER );
+      final FeatureList mappingFeatures = readMapping( mappingFilename, MAPPING_MEMBER );
 
       /* Prepare visitor */
-      final CopyObservationFeatureVisitor visitor = prepareVisitor( calcCaseFolder, outputFoldername, "inObservationLink", control ); //$NON-NLS-1$
+      final CopyObservationFeatureVisitor visitor = prepareVisitor( outputFoldername, "inObservationLink", control ); //$NON-NLS-1$
 
       /* Execute visitor */
       final int count = mappingFeatures.size();
@@ -222,9 +222,9 @@ public class UpdateSimulationWorker
     }
   }
 
-  private FeatureList readMapping( final IFolder calcCaseFolder, final String filename, final QName memberProperty ) throws Exception
+  private FeatureList readMapping( final String filename, final QName memberProperty ) throws Exception
   {
-    final IProject project = calcCaseFolder.getProject();
+    final IProject project = m_simulation.getSimulationFolder().getProject();
     final IFolder observationConfFolder = project.getFolder( INaProjectConstants.FOLDER_OBSERVATION_CONF );
     final IFile mappingFile = observationConfFolder.getFile( filename );
     final GMLWorkspace mappingWorkspace = GmlSerializer.createGMLWorkspace( mappingFile );
@@ -232,7 +232,7 @@ public class UpdateSimulationWorker
     return (FeatureList) rootFeature.getProperty( memberProperty );
   }
 
-  private CopyObservationFeatureVisitor prepareVisitor( final IFolder calcCaseFolder, final String outputDir, final String sourceLinkName, final NAControl control )
+  private CopyObservationFeatureVisitor prepareVisitor( final String outputDir, final String sourceLinkName, final NAControl control )
   {
     final DateRange forecastRange = null;
 
@@ -249,6 +249,7 @@ public class UpdateSimulationWorker
     // REMARK: must be null, so the special NA-ObservationTarget is created
     final GMLXPath targetPath = null;
 
+    final IFolder calcCaseFolder = m_simulation.getSimulationFolder();
     final File calcDir = calcCaseFolder.getLocation().toFile();
     final File targetObservationDir = new File( calcDir, outputDir );
 
@@ -265,7 +266,7 @@ public class UpdateSimulationWorker
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
   }
 
-  private void executeCatchmentModel( final IFolder calcCaseFolder, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
+  private void executeCatchmentModel( final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
   {
     /* The timestep is only defined in linear sum generators for now. */
     if( !(generator instanceof ILinearSumGenerator) )
@@ -292,10 +293,10 @@ public class UpdateSimulationWorker
       initGenerator( linearGenerator, range, timestep, parameterType );
 
       /* Initialize the catchment target links. */
-      initTargetLinks( calcCaseFolder, generator, targetLink, parameterType );
+      initTargetLinks( generator, targetLink, parameterType );
 
       /* Create the rainfall generation operation. */
-      final IRainfallCatchmentModel rainfallModel = createRainfallModel( calcCaseFolder, model, generator, targetLink, range );
+      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
@@ -315,7 +316,7 @@ public class UpdateSimulationWorker
 
       try
       {
-        calcCaseFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        m_simulation.getSimulationFolder().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
       }
       catch( final CoreException e )
       {
@@ -351,16 +352,16 @@ public class UpdateSimulationWorker
       generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
   }
 
-  private void initTargetLinks( final IFolder calcCaseFolder, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
+  private void initTargetLinks( final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
   {
     /* The optimization only works for linear sum generators for now. */
     if( !(generator instanceof ILinearSumGenerator) )
       throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." );
 
-    initOptimizedTargetLinks( calcCaseFolder, generator, targetLink, parameterType );
+    initOptimizedTargetLinks( generator, targetLink, parameterType );
   }
 
-  private void initOptimizedTargetLinks( final IFolder calcCaseFolder, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
+  private void initOptimizedTargetLinks( final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
   {
     /* Cast. */
     final ILinearSumGenerator linearSumGenerator = (ILinearSumGenerator) generator;
@@ -419,7 +420,7 @@ public class UpdateSimulationWorker
 
     /* Save the workspace, because it is reloaded in the rainfall operation. */
     /* HINT: This is the linked workspace of the modell.gml, not the loaded one here. */
-    final IFile modelFile = calcCaseFolder.getFile( INaProjectConstants.GML_MODELL_PATH );
+    final IFile modelFile = m_simulation.getModelGml();
     GmlSerializer.saveWorkspace( workspaceToSave, modelFile );
   }
 
@@ -450,6 +451,7 @@ public class UpdateSimulationWorker
     return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
   }
 
+  // FIXME: use CalcCaseAccessor for that
   private String getTargetLinkFolderName( final String parameterType )
   {
     switch( parameterType )
@@ -465,11 +467,11 @@ public class UpdateSimulationWorker
     throw new IllegalArgumentException();
   }
 
-  private IRainfallCatchmentModel createRainfallModel( final IFolder calcCaseFolder, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
+  private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
   {
     /* Rainfall model. */
-    final IFolder folder = calcCaseFolder.getFolder( INaProjectConstants.FOLDER_MODELS );
-    final URL context = ResourceUtilities.createQuietURL( folder );
+    final IFolder modelsFolder = m_simulation.getModelsFolder();
+    final URL context = ResourceUtilities.createQuietURL( modelsFolder );
     final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL, context, GmlSerializer.DEFAULT_FACTORY );
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
     rainfallModel.getGenerators().add( generator );
@@ -549,24 +551,27 @@ public class UpdateSimulationWorker
       return;
 
     /* Does the source simulation exist? */
-    final IProject project = m_simulationFolder.getProject();
+    // FIXME: use scenarioAccessor instead
+    final IProject project = m_simulation.getSimulationFolder().getProject();
     final IFolder basisFolder = project.getFolder( INaProjectConstants.FOLDER_BASIS );
     final IFolder folderCalcCases = basisFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
-    final IFolder sourceCalcCase = folderCalcCases.getFolder( new Path( calcCaseNameSource ) );
+
+    final RrmSimulation sourceCalcCase = new RrmSimulation( folderCalcCases.getFolder( new Path( calcCaseNameSource ) ) );
+
     if( !sourceCalcCase.exists() )
     {
       m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': simulation does not exist", null, sourceCalcCase.getName() );
       return;
     }
 
-    final IFolder currentSourceFolder = sourceCalcCase.getFolder( INaCalcCaseConstants.AKTUELL_DIR );
+    final IFolder currentSourceFolder = sourceCalcCase.getCurrentResultsFolder();
     if( !currentSourceFolder.exists() )
     {
       m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': no results available", null, sourceCalcCase.getName() );
       return;
     }
 
-    final IFolder initialValuesSourceFolder = currentSourceFolder.getFolder( INaCalcCaseConstants.ANFANGSWERTE_DIR );
+    final IFolder initialValuesSourceFolder = sourceCalcCase.getCurrentLzimResultFolder();
     final Date startDate = control.getSimulationStart();
     final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate );
     final IFile initialValuesSourceFile = initialValuesSourceFolder.getFile( initialValuesSourceFilename );
@@ -577,14 +582,13 @@ public class UpdateSimulationWorker
     }
 
     /* target file */
-    final IFolder initialValuesTargetFolder = m_simulationFolder.getFolder( INaCalcCaseConstants.ANFANGSWERTE_DIR );
-    final IFile initialValuesTargetFile = initialValuesTargetFolder.getFile( INaCalcCaseConstants.ANFANGSWERTE_FILE );
+    final IFile initialValuesTargetFile = m_simulation.getLzsimGml();
 
     /* Copy it ! */
     try
     {
       FileUtils.copyFile( initialValuesSourceFile.getLocation().toFile(), initialValuesTargetFile.getLocation().toFile() );
-      initialValuesTargetFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+      initialValuesSourceFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( final Exception e )
     {

@@ -44,6 +44,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
@@ -62,7 +63,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard;
 
 /**
@@ -85,7 +86,9 @@ public class NewCalcCaseAction extends AbstractHandler
     final ISelection selection = part == null ? StructuredSelection.EMPTY : part.getViewSite().getSelectionProvider().getSelection();
 
     // NewCalcCaseWizard starten
-    final NewCalculationCaseWizard wizard = new NewCalculationCaseWizard( INaCalcCaseConstants.CALCULATION_GML_PATH );
+    final IPath calculationGmlPath = RrmSimulation.getCalculationGmlPath();
+
+    final NewCalculationCaseWizard wizard = new NewCalculationCaseWizard( calculationGmlPath.toString() );
     wizard.init( window.getWorkbench(), (IStructuredSelection) selection );
 
     final WizardDialog dlg = new WizardDialog( shell, wizard )

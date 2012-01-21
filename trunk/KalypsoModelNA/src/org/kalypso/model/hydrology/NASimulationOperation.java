@@ -55,15 +55,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.model.hydrology.internal.simulation.NaModelInnerCalcJob;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.SimulationException;
@@ -76,11 +74,11 @@ import org.kalypso.simulation.core.refactoring.local.LocalSimulationMonitor;
  */
 public class NASimulationOperation implements ICoreRunnableWithProgress
 {
-  private final IFolder m_calcCase;
+  private final RrmSimulation m_calcCase;
 
   public NASimulationOperation( final IFolder calcCase )
   {
-    m_calcCase = calcCase;
+    m_calcCase = new RrmSimulation( calcCase );
   }
 
   @Override
@@ -145,8 +143,8 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
 
   private void handleResults( final File resultDir ) throws CoreException
   {
-    final IFolder calcResultFolder = m_calcCase.getFolder( INaCalcCaseConstants.ERGEBNISSE_DIR );
-    final IFolder currentResultFolder = m_calcCase.getFolder( new Path( INaCalcCaseConstants.AKTUELL_DIR ) );
+    final IFolder calcResultFolder = m_calcCase.getResultsFolder();
+    final IFolder currentResultFolder = m_calcCase.getCurrentResultsFolder();
 
     final SimpleDateFormat timestampFormat = new SimpleDateFormat( "yyyy.MM.dd_(HH_mm_ss)" );
     final String timestampFilename = timestampFormat.format( new Date() );
@@ -154,7 +152,6 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
 
     final File currentResultDir = currentResultFolder.getLocation().toFile();
     final File timestampDir = timestampFolder.getLocation().toFile();
-
 
     try
     {
@@ -184,19 +181,14 @@ public class NASimulationOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      final IFolder modelsFolder = m_calcCase.getFolder( INaProjectConstants.FOLDER_MODELS );
-      final IFolder lzsimFolder = m_calcCase.getFolder( INaCalcCaseConstants.ANFANGSWERTE_DIR );
-
-      // FIXME: use ScenarioAccessor instead
-      final URL modelURL = ResourceUtilities.createURL( modelsFolder.getFile( INaProjectConstants.GML_MODELL_FILE ) );
-      final URL controlURL = ResourceUtilities.createURL( modelsFolder.getFile( INaCalcCaseConstants.EXPERT_CONTROL_FILE ) );
-      final URL metaURL = ResourceUtilities.createURL( modelsFolder.getFile( INaCalcCaseConstants.CALCULATION_GML_FILE ) );
-      final URL parameterURL = ResourceUtilities.createURL( modelsFolder.getFile( INaProjectConstants.GML_PARAMETER_FILE ) );
-      final URL hydrotopURL = ResourceUtilities.createURL( modelsFolder.getFile( INaProjectConstants.GML_HYDROTOP_FILE ) );
-      // FIXME: check...
-      final URL sudsURL = ResourceUtilities.createURL( modelsFolder.getFile( "suds.gml" ) );
-      final URL syntNURL = ResourceUtilities.createURL( modelsFolder.getFile( INaProjectConstants.GML_SYNTH_N_FILE ) );
-      final URL lzsimURL = ResourceUtilities.createURL( lzsimFolder.getFile( INaCalcCaseConstants.ANFANGSWERTE_FILE ) );
+      final URL modelURL = ResourceUtilities.createURL( m_calcCase.getModelGml() );
+      final URL controlURL = ResourceUtilities.createURL( m_calcCase.getExpertControlGml() );
+      final URL metaURL = ResourceUtilities.createURL( m_calcCase.getCalculationGml() );
+      final URL parameterURL = ResourceUtilities.createURL( m_calcCase.getParameterGml() );
+      final URL hydrotopURL = ResourceUtilities.createURL( m_calcCase.getHydrotopGml() );
+      final URL sudsURL = ResourceUtilities.createURL( m_calcCase.getSudsGml() );
+      final URL syntNURL = ResourceUtilities.createURL( m_calcCase.getSyntnGml() );
+      final URL lzsimURL = ResourceUtilities.createURL( m_calcCase.getLzsimGml() );
 
       return NaSimulationDataFactory.load( modelURL, controlURL, metaURL, parameterURL, hydrotopURL, sudsURL, syntNURL, lzsimURL, null, null );
     }

@@ -43,9 +43,11 @@ package org.kalypso.model.hydrology.project;
 /**
  * Constants relevant for the structure of a na model calc case.<br/>
  * Most pathes are relative to the calc case.
- *
+ * 
  * @author Gernot Belger
+ * @deprecated Use {@link CalcCaseAccessor} instead.
  */
+@Deprecated
 public interface INaCalcCaseConstants
 {
   String EXPERT_CONTROL_FILE = "expertControl.gml"; //$NON-NLS-1$

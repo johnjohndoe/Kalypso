@@ -58,7 +58,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.HandleDoneJobChangeAdapter;
-import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 
@@ -93,8 +93,8 @@ public class SetBasicModelDelegate extends AbstractHandler
       return null;
     }
 
-    final IFolder calcCase = (IFolder)resource;
-    final IFile file = calcCase.getFile( INaCalcCaseConstants.CALCULATION_GML_PATH );
+    final RrmSimulation calcCase = new RrmSimulation( (IFolder) resource );
+    final IFile file = calcCase.getCalculationGml();
     if( !file.exists() )
     {
       MessageDialog.openInformation( shell, Messages.getString("SetBasicModelDelegate.2"), //$NON-NLS-1$
@@ -104,16 +104,15 @@ public class SetBasicModelDelegate extends AbstractHandler
 
     final Job job = new Job( Messages.getString("SetBasicModelDelegate.4") + calcCase.getName() ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-       */
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
         try
         {
-          final ModelNature nature = (ModelNature) calcCase.getProject().getNature( ModelNature.ID );
-          return nature.setBasicModel( calcCase, monitor );
+          // FIXME: replace call to ant with legacy code
+          final IFolder calcCaseFolder = calcCase.getSimulationFolder();
+          final ModelNature nature = (ModelNature) calcCaseFolder.getProject().getNature( ModelNature.ID );
+          return nature.setBasicModel( calcCaseFolder, monitor );
         }
         catch( final CoreException e )
         {
