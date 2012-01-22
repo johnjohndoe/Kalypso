@@ -79,14 +79,12 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.grid.WorldFileReader;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.i18n.Messages;
 
@@ -104,7 +102,7 @@ enum SelectedPage
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Madanagopal
  */
-public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoImportWMSWizard
+public class ImportBaseMapWizard extends Wizard implements INewWizard
 {
   private IStructuredSelection initialSelection;
 
@@ -226,12 +224,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       return getContainer().getCurrentPage().isPageComplete();
   }
 
-  @Override
-  public ArrayList<String> getCatalog( )
-  {
-    return m_catalog;
-  }
-
   public void readCatalog( final InputStream is ) throws IOException, NullPointerException
   {
     m_catalog.clear();
@@ -263,7 +255,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     }
     try
     {
-      final IKalypsoLayerModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
+      final IKalypsoLayerModell mapModell = mapView.getMapPanel().getMapModell();
       switch( getSelectedPage() )
       {
         case PageImportIMG:
@@ -290,7 +282,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
   private boolean performFinishIMG( final MapView mapView, final IKalypsoLayerModell mapModell ) throws CoreException
   {
     final IFolder importsFolder = m_scenarioFolder.getProject().getFolder( "imports" ); //$NON-NLS-1$
-    final IFolder dstFileFolder = importsFolder.getFolder( "basemap" ); //$NON-NLS-1$ 
+    final IFolder dstFileFolder = importsFolder.getFolder( "basemap" ); //$NON-NLS-1$
 
     final IPath sourceLocation = m_pageImportImg.getSourceLocation();
     final File srcFileImage = new File( sourceLocation.toString() );

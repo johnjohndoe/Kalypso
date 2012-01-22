@@ -52,7 +52,6 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
@@ -64,9 +63,6 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
  */
 public class ConfigureResultMapHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -90,7 +86,7 @@ public class ConfigureResultMapHandler extends AbstractHandler
     final AddResultThemeWizard addLayerWizard = new AddResultThemeWizard();
     addLayerWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
     addLayerWizard.setCommandTarget( commandTarget );
-    addLayerWizard.setMapModel( (IKalypsoLayerModell) mapPanel.getMapModell() );
+    addLayerWizard.setMapModel( mapPanel.getMapModell() );
 
     // final KalypsoAddLayerWizard addLayerWizard = new KalypsoAddLayerWizard( outlineView );
     // addLayerWizard.init( PlatformUI.getWorkbench() );
