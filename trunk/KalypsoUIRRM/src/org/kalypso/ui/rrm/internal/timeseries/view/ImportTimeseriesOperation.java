@@ -138,14 +138,23 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
   private Period findTimestep( final IObservation observation ) throws CoreException
   {
+    final String message = "Failed to determine timestep";
+
     try
     {
-      return TimeseriesUtils.guessTimestep( observation.getValues( null ) );
+      final Period timestep = TimeseriesUtils.guessTimestep( observation.getValues( null ) );
+      if( timestep == null )
+      {
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
+        throw new CoreException( status );
+      }
+
+      return timestep;
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to determine timestep", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message, e );
       throw new CoreException( status );
     }
   }
