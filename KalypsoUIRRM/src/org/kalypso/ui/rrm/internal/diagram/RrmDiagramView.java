@@ -123,6 +123,7 @@ public class RrmDiagramView extends ViewPart
   public void setFocus( )
   {
     final Composite composite = (Composite) m_chartPart.getChartComposite();
-    composite.setFocus();
+    if( composite != null && !composite.isDisposed() )
+      composite.setFocus();
   }
 }
