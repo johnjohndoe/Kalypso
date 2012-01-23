@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -86,8 +85,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   private IProfilLayerProvider m_layerProvider;
 
-  private final List<IProfileProviderListener> m_listener = new ArrayList<IProfileProviderListener>();
-
   private IProfil m_profile;
 
   protected final void activeLayerChanged( final IChartLayer layer )
@@ -101,11 +98,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       if( l != layer )
         l.setActive( false );
     }
-  }
-
-  public void addProfilProviderListener( final IProfileProviderListener l )
-  {
-    m_listener.add( l );
   }
 
   public Control createControl( final Composite parent )
@@ -137,12 +129,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   {
     if( m_chartComposite != null && !m_chartComposite.isDisposed() )
       m_chartComposite.dispose();
-  }
-
-  private void fireProfilChanged( final IProfil old )
-  {
-    for( final IProfileProviderListener l : m_listener )
-      l.onProfilProviderChanged( null, old, m_profile );
   }
 
   private final void saveStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
@@ -333,15 +319,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       } );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.
-   *      kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
-   */
-  public void removeProfilProviderListener( final IProfileProviderListener l )
-  {
-    m_listener.remove( l );
-  }
-
   public void setLayerProvider( final IProfilLayerProvider layerProvider )
   {
     m_layerProvider = layerProvider;
@@ -358,7 +335,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       m_profile.removeProfilListener( this );
     }
 
-    final IProfil old = m_profile;
     m_profile = profil;
     if( m_profile == null )
     {
@@ -377,8 +353,6 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
         updateLayer();
       }
     }
-
-    fireProfilChanged( old );
   }
 
   public void updateLayer( )

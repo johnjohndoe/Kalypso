@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -66,7 +67,7 @@ public class TuhhProfil extends AbstractProfil
 {
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
-  public TuhhProfil( final TupleResult result, final Object source )
+  public TuhhProfil( final TupleResult result, final IProfileFeature source )
   {
     super( PROFIL_TYPE, result, source );
     result.setInterpolationHandler( new TUHHInterpolationHandler() );
