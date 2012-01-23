@@ -21,9 +21,6 @@ public class DataContainer
 
   private static final String m_defaultCoordinateSystem = IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE;
 
-  // private static final CS_CoordinateSystem m_defaultCoordinateSystem =
-  // KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-
   private SzenarioDataProvider m_szenarioDataProvider;
 
   public final void setInputFile( final String inputFile )
@@ -54,6 +51,11 @@ public class DataContainer
     return null;
   }
 
+  /**
+   * @deprecated Very suspicious. Fetch the kalypso coordinate system instead. Why is there a coordinate system variable
+   *             here at all?
+   */
+  @Deprecated
   public String getCoordinateSystem( final boolean getDefaultIfNull )
   {
     if( m_coordinateSystem == null && getDefaultIfNull )
