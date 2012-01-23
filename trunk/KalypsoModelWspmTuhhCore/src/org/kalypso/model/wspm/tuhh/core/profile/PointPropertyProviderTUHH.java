@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.core.profile;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.AbstractPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -92,7 +93,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil(org.kalypso.observation.result.TupleResult)
    */
   @Override
-  public IProfil createProfil( final TupleResult result, final Object source )
+  public IProfil createProfil( final TupleResult result, final IProfileFeature source )
   {
     if( result.getComponents().length == 0 )
     {
