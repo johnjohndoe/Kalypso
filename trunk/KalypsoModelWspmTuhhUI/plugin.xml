@@ -271,8 +271,26 @@
 		</visibleWhen>
      </command>
      <command
-           commandId="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget"
-           style="toggle">
+           commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
+           style="radio">
+           <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
+           style="radio">
         <visibleWhen
               checkEnabled="false">
            <and>
@@ -301,8 +319,26 @@
 		</visibleWhen>
      </command>
      <command
-           commandId="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget"
-           style="toggle">
+           commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
+           style="push">
+           <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
+           style="radio">
         <visibleWhen
               checkEnabled="false">
            <and>
