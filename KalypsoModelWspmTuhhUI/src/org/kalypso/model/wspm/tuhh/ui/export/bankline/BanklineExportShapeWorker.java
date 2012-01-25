@@ -47,6 +47,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -151,16 +152,20 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
       try
       {
         addData( feature, new SubProgressMonitor( monitor, 1 ) );
+        m_log.add( IStatus.OK, "%s", null, feature.getName() );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
-        m_log.add( IStatus.ERROR, "Failed to export element: %s", e, feature.getName() );
+        m_log.add( IStatus.ERROR, "%s", e, feature.getName() );
       }
+
+      if( monitor.isCanceled() )
+        throw new OperationCanceledException();
     }
 
     final String message = "Creating shape data";
-    return m_log.asMultiStatusOrOK( message, message );
+    return m_log.asMultiStatus( message );
   }
 
   private Feature[] flattenExportableElements( )
@@ -192,6 +197,8 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
   private void addData( final Feature element, final IProgressMonitor monitor ) throws ShapeDataException, GM_Exception
   {
+    monitor.beginTask( "Building buffer", 1 );
+
     // The built geometries are in Kalypso-SRS, because the geometries are derived from the wspm-workspace
     final String kalypsoSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 

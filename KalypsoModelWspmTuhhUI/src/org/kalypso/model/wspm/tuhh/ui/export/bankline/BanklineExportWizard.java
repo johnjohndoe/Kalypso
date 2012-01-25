@@ -109,7 +109,7 @@ public class BanklineExportWizard extends Wizard implements IWorkbenchWizard
     m_data.storeSettings( getDialogSettings() );
 
     final BanklineExportOperation operation = new BanklineExportOperation( m_data );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
     StatusDialog.open( getShell(), status, getWindowTitle() );
 
     return !status.matches( IStatus.ERROR );

@@ -69,9 +69,9 @@ public class BanklineExportOperation implements ICoreRunnableWithProgress
   {
     monitor.beginTask( "Export Banklines", 100 );
 
-    final IShapeDataFactory shapeDataFactory = createShapeData( new SubProgressMonitor( monitor, 50 ) );
+    final IShapeDataFactory shapeDataFactory = createShapeData( new SubProgressMonitor( monitor, 90 ) );
 
-    exportShape( new SubProgressMonitor( monitor, 50 ), shapeDataFactory );
+    exportShape( new SubProgressMonitor( monitor, 10 ), shapeDataFactory );
 
     return m_log.asMultiStatusOrOK( null, "Bankline export successfully terminated" );
   }
@@ -90,7 +90,9 @@ public class BanklineExportOperation implements ICoreRunnableWithProgress
     {
       final ExportShapeOperation operation = new ExportShapeOperation( m_data.getExportShapeBase(), shapeDataFactory, m_data.getWritePrj() );
       final IStatus status = operation.execute( monitor );
-      if( !status.isOK() )
+      if( status.isOK() )
+        m_log.add( IStatus.OK, "Write shape file" );
+      else
         m_log.add( status );
     }
     catch( final Exception e )
