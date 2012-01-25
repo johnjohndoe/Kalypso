@@ -60,9 +60,12 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * Builds banklines from a {@link org.kalypso.model.wspm.core.gml.WspmWaterBody} or a
@@ -140,10 +143,27 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
   private Geometry buildMainChannel( final Geometry leftBank, final Geometry rightBank )
   {
+    if( leftBank instanceof LineString && rightBank instanceof LineString )
+      return buildPolygonFromBanks( (LineString) leftBank, (LineString) rightBank );
+
     if( leftBank instanceof GeometryCollection || rightBank instanceof GeometryCollection )
       return GeometryGatherer.collect( leftBank, rightBank );
 
     return leftBank.union( rightBank );
+  }
+
+  private Geometry buildPolygonFromBanks( final LineString leftBank, final LineString rightBank )
+  {
+    final CoordinateList coordinateList = new CoordinateList();
+
+    coordinateList.add( leftBank.getCoordinates(), false, true );
+    coordinateList.add( rightBank.getCoordinates(), false, false );
+
+    coordinateList.closeRing();
+
+    final GeometryFactory factory = leftBank.getFactory();
+    final LinearRing shell = factory.createLinearRing( coordinateList.toCoordinateArray() );
+    return factory.createPolygon( shell, null );
   }
 
   private Geometry buildBuffer( final LineString riverLine, final SortedMap<Double, BanklineDistances> distances, final String name, final double distanceSignum )
