@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.util.MapUtils;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Thomas Jung
  * 
  */
-public abstract class AbstractEditHydrographWidget extends AbstractWidget
+public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
 {
   private final int m_grabRadius = 20;
 

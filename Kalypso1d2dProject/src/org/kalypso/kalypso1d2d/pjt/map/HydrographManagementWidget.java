@@ -121,7 +121,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -135,8 +134,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -161,7 +160,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class HydrographManagementWidget extends AbstractWidget implements IWidgetWithOptions
+public class HydrographManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   private IHydrographCollection m_hydrographs;
 
@@ -253,7 +252,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   private Button m_processHydrographCollectionButton;
 
-  private IWidget m_delegateWidget;
+  private IDeprecatedMouseWidget m_delegateWidget;
 
   public HydrographManagementWidget( )
   {
@@ -447,7 +446,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       {
         final SelectCalcUnitForHydrographWizard addCalcUnitWizard = new SelectCalcUnitForHydrographWizard();
         addCalcUnitWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
-        addCalcUnitWizard.setMapModel( (IKalypsoLayerModell) getMapPanel().getMapModell() );
+        addCalcUnitWizard.setMapModel( getMapPanel().getMapModell() );
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
         final IEvaluationContext context = handlerService.getCurrentState();
         final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -730,7 +729,6 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     };
     addAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.23" ) ); //$NON-NLS-1$
 
-
     final Action removeAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.26" ), removeID ) //$NON-NLS-1$
     {
       /**
@@ -797,7 +795,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     // set wizard
     final IWizard exportProfileWizard = new ExportHydrographWizard( m_hydrographs, m_selectedHydrograph );
 
-    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
     ;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
@@ -810,17 +808,19 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   {
     final IMapPanel mapPanel = getMapPanel();
 
-    IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-    
+    final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
+
     final ImportHydrographWizard importHydrographWizard = new ImportHydrographWizard( m_hydrographs, m_theme, discModel );
 
-    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();;
+    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    ;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importHydrographWizard );
     dialog.setRememberSize( true );
     dialog.open();
     final String errMsg = importHydrographWizard.getErrMsg();
-    if( errMsg != null && errMsg != "" ){
+    if( errMsg != null && errMsg != "" )
+    {
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
@@ -828,7 +828,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          IStatus lStatus = Status.CANCEL_STATUS;
+          final IStatus lStatus = Status.CANCEL_STATUS;
           ErrorDialog.openError( shell, "Import Hydrographs Warnings", errMsg, lStatus ); //$NON-NLS-1$
         }
       } );
@@ -836,7 +836,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     saveModell();
     refreshControl();
   }
-  
+
   protected void handleHydrographSelected( @SuppressWarnings("unused") final Event event )
   {
     // set widget
@@ -939,7 +939,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         return hydrograph.getName();
       }
     } );
-    if( m_hydrographs != null)
+    if( m_hydrographs != null )
       viewer.setInput( m_hydrographs.getHydrographs() );
 
   }
@@ -1048,7 +1048,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       m_delegateWidget.leftClicked( p );
   }
 
-  private void setDelegate( final IWidget delegateWidget )
+  private void setDelegate( final IDeprecatedMouseWidget delegateWidget )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.finish();

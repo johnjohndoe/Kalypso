@@ -29,7 +29,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -44,7 +44,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Patrice Congo
  */
-public class CreateFEElement1DWidget extends AbstractWidget
+public class CreateFEElement1DWidget extends DeprecatedMouseWidget
 {
   private final int m_grabRadius = 20;
 

@@ -63,7 +63,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -87,7 +87,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Gernot Belger
  */
-public class MergeTrianglesWidget extends AbstractWidget
+public class MergeTrianglesWidget extends DeprecatedMouseWidget
 {
   private final int GRAB_RADIUS = 10;
 
