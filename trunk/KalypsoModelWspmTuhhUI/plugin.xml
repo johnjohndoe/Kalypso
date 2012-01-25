@@ -306,6 +306,24 @@
            </and>
         </visibleWhen>
      </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
+           style="toggle">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
     </menuContribution>
     <menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
@@ -339,6 +357,24 @@
      <command
            commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
            style="radio">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <with
+                    variable="activeEditorId">
+                 <equals
+                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                 </equals>
+              </with>
+              <reference
+                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+              </reference>
+           </and>
+        </visibleWhen>
+     </command>
+     <command
+           commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
+           style="toggle">
         <visibleWhen
               checkEnabled="false">
            <and>
