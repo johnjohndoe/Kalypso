@@ -705,6 +705,7 @@
               name="%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.name">
            <description>%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.description</description>
         </wizard>
+        <!--
         <wizard
               category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufProfileExportWizard"
@@ -713,6 +714,7 @@
               name="%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.name">
            <description>%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.description</description>
         </wizard>
+        -->
         <wizard
               category="exportWizards/shapeExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
