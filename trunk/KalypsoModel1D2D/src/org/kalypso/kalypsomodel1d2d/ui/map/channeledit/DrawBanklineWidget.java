@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -71,7 +71,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Thomas Jung
  */
-public class DrawBanklineWidget extends AbstractWidget
+public class DrawBanklineWidget extends DeprecatedMouseWidget
 {
   private LineGeometryBuilder m_lineBuilder = null;
 
@@ -95,8 +95,8 @@ public class DrawBanklineWidget extends AbstractWidget
   private boolean m_edit;
 
   private LineGeometryEditor m_lineEditor = null;
-  
-  private boolean m_snappingActive = true;
+
+  private final boolean m_snappingActive = true;
 
   private PointSnapper m_pointSnapper;
 
@@ -122,10 +122,10 @@ public class DrawBanklineWidget extends AbstractWidget
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     super.activate( commandPoster, mapPanel );
-    
+
     m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
-    
+
     m_edit = false;
 
     reinit();
@@ -151,7 +151,8 @@ public class DrawBanklineWidget extends AbstractWidget
     final Object newNode = checkNewNode( p );
 
     if( newNode instanceof IFE1D2DNode )
-      m_currentPos = ((IFE1D2DNode) newNode).getPoint();// MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
+      m_currentPos = ((IFE1D2DNode) newNode).getPoint();// MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode)
+                                                        // newNode).getPoint() );
     else
       m_currentPos = MapUtilities.transform( getMapPanel(), p );
 
@@ -164,7 +165,7 @@ public class DrawBanklineWidget extends AbstractWidget
     if( panel != null )
       panel.repaintMap();
   }
-  
+
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -199,16 +200,17 @@ public class DrawBanklineWidget extends AbstractWidget
   public void leftPressed( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-  
+
     final Object newNode = checkNewNode( p );
 
     if( newNode instanceof IFE1D2DNode )
-      m_currentPos = ((IFE1D2DNode) newNode).getPoint();//MapUtilities.retransform( mapPanel, ((IFE1D2DNode) newNode).getPoint() );
+      m_currentPos = ((IFE1D2DNode) newNode).getPoint();// MapUtilities.retransform( mapPanel, ((IFE1D2DNode)
+                                                        // newNode).getPoint() );
     else
       m_currentPos = MapUtilities.transform( mapPanel, p );
 
     /* If we have a node, take this position, else take the current one */
-//    final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
+    // final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
     if( !m_edit )
     {
@@ -253,7 +255,7 @@ public class DrawBanklineWidget extends AbstractWidget
         /* paint the snap */
         if( m_pointSnapper != null )
           m_pointSnapper.paint( g );
-        
+
         final float width = 1;
         final BasicStroke basicStroke = new BasicStroke( width );
         g2.setStroke( basicStroke );
@@ -270,9 +272,9 @@ public class DrawBanklineWidget extends AbstractWidget
 
     String tooltipMsg = ""; //$NON-NLS-1$
     if( m_edit )
-      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DrawBanklineWidget.0"); //$NON-NLS-1$
+      tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DrawBanklineWidget.0" ); //$NON-NLS-1$
     else
-      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DrawBanklineWidget.1"); //$NON-NLS-1$
+      tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DrawBanklineWidget.1" ); //$NON-NLS-1$
 
     m_toolTipRenderer.setTooltip( tooltipMsg );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
@@ -343,7 +345,7 @@ public class DrawBanklineWidget extends AbstractWidget
 
     switch( keyCode )
     {
-      // reset
+    // reset
       case KeyEvent.VK_ESCAPE:
         reinit();
         break;

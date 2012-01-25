@@ -73,7 +73,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -96,7 +96,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  */
-public class EditFEConceptGeometryWidget extends AbstractWidget
+public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
 {
   /** Snapping radius in screen-pixels. */
   public static final int SNAPPING_RADIUS = 20;

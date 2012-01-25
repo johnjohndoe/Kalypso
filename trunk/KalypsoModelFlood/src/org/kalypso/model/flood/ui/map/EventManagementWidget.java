@@ -141,7 +141,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
@@ -170,7 +170,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
+public class EventManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   private final static URL SLD_TEMPLATE_LOCATION = EventManagementWidget.class.getResource( "resources/wsp.sld" );//$NON-NLS-1$
 

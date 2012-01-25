@@ -70,7 +70,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -91,7 +91,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  *         Wraps a {@link CreateGeometeryWidget2} for 0-argument constructor instantiation
  */
-public class CreatePolygonWidgetWrapper extends AbstractWidget
+public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
 {
   private final ToolTipRenderer m_warningRenderer = ToolTipRenderer.createWarningTooltip();
 

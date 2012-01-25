@@ -23,7 +23,7 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -31,7 +31,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Gernot Belger
  * @author Thomas Jung
  */
-public class CreateFE2DElementWidget extends AbstractWidget
+public class CreateFE2DElementWidget extends DeprecatedMouseWidget
 {
   private ElementGeometryBuilder m_builder = null;
 

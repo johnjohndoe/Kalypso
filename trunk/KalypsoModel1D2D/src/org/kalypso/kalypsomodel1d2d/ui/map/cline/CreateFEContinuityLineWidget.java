@@ -33,7 +33,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -41,7 +41,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
-public class CreateFEContinuityLineWidget extends AbstractWidget
+public class CreateFEContinuityLineWidget extends DeprecatedMouseWidget
 {
 
   private IFEDiscretisationModel1d2d m_discModel = null;

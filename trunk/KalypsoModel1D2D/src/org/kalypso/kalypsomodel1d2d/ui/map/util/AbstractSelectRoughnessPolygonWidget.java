@@ -67,7 +67,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -83,7 +83,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidget
+public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMouseWidget
 {
   private final int m_grabRadius = 5;
 
@@ -260,7 +260,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.0"), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.0" ), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -277,7 +277,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     // super.rightClicked( p );
     try
@@ -297,7 +297,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.1"), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.1" ), status ); //$NON-NLS-1$
         }
       } );
     }
@@ -359,7 +359,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.2"), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.2" ), status ); //$NON-NLS-1$
         }
       } );
     }

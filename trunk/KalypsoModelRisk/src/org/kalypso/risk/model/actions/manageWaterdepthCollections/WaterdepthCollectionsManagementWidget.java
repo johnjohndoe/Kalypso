@@ -102,7 +102,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -129,7 +129,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class WaterdepthCollectionsManagementWidget extends AbstractWidget implements IWidgetWithOptions
+public class WaterdepthCollectionsManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   private TreeViewer m_eventViewer;
 
@@ -604,7 +604,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
           }
           catch( final GeometryException e )
           {
-            Logger.getLogger( this.getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+            Logger.getLogger( getName() ).log( Level.WARNING, e.getLocalizedMessage() );
           }
         }
         else if( adaptedObject instanceof IAnnualCoverageCollection )
@@ -619,7 +619,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         }
         catch( final GeometryException e )
         {
-          Logger.getLogger( this.getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+          Logger.getLogger( getName() ).log( Level.WARNING, e.getLocalizedMessage() );
         }
       }
     }

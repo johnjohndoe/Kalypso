@@ -31,7 +31,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  */
-public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
+public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this );
 
@@ -303,7 +303,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     {
       final int x = (int) transform.getDestX( toCompare.getX() );
       final int y = (int) transform.getDestY( toCompare.getY() );
-      return (x > (ref.getX() - m_radius)) && (x > (ref.getY() - m_radius)) && (y < (ref.getX() + m_radius)) && (y < (ref.getY() + m_radius));
+      return x > ref.getX() - m_radius && x > ref.getY() - m_radius && y < ref.getX() + m_radius && y < ref.getY() + m_radius;
     }
 
   }
@@ -314,8 +314,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       return false;
     else
     {
-      return (toCompare.getX() > (ref.getX() - m_radius)) && (toCompare.getY() > (ref.getY() - m_radius)) && (toCompare.getX() < (ref.getX() + m_radius))
-          && (toCompare.getY() < (ref.getY() + m_radius));
+      return toCompare.getX() > ref.getX() - m_radius && toCompare.getY() > ref.getY() - m_radius && toCompare.getX() < ref.getX() + m_radius && toCompare.getY() < ref.getY() + m_radius;
     }
   }
 
@@ -477,7 +476,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       {
         workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
