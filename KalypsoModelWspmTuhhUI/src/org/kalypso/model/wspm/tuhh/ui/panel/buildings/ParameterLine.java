@@ -73,6 +73,8 @@ public class ParameterLine
 
   private final IProfil m_profile;
 
+  private final WeirLabelProvider m_labelProvider = new WeirLabelProvider();
+
   Text m_valueText;
 
   ParameterLine( final FormToolkit toolkit, final Composite parent, final IProfilPointMarker devider, final boolean canDelete, final IProfil profile )
@@ -85,14 +87,15 @@ public class ParameterLine
     m_composite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
     m_devider = devider;
-
-    toolkit.createLabel( m_composite, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.9" ) ); //$NON-NLS-1$
+    final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
+    final String weirType = weir.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ).toString();
+    toolkit.createLabel( m_composite, m_labelProvider.getDescription( weirType ) );
 
     m_valueText = toolkit.createText( m_composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_valueText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_valueText.setEnabled( m_devider != null );
+    m_valueText.setToolTipText( m_labelProvider.getDescription( weirType ) );
 
-    final BuildingWehr weir = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
     final Double coefficientValue;
     if( devider.getComponent().getId().equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
     {
