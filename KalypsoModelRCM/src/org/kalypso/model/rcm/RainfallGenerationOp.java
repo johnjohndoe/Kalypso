@@ -133,33 +133,38 @@ public class RainfallGenerationOp
 
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    /* Monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, "", m_generators.length * 10 + 2 * 3 + 10 );
 
+    /* Generate the rainfall. */
     for( final IRainfallGenerator generator : m_generators )
     {
-      final String generatorLabel = generator.getName();
-
       try
       {
-        doGeneration( generator, generatorLabel, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
+        /* Generate the rainfall for this generator. */
+        doGeneration( generator, generator.getName(), progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' fehlgeschlagen", generatorLabel );
+        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' fehlgeschlagen", generator.getName() );
         final IStatus status = m_generatorStati.add( IStatus.WARNING, msg, e );
         m_log.log( status );
       }
     }
 
-    // Combine observations and write into target file while applying the targetFilter
+    /* Monitor. */
     progress.subTask( "Schreibe Zeitreihen" );
+
+    /* Combine observations and write into target file while applying the targetFilter. */
     final IObservation[] combinedObservations = combineObservations();
 
     /* Add additional metadata, if wanted. */
     addAdditionalMetadata( combinedObservations );
 
+    /* Monitor. */
     ProgressUtilities.worked( progress, 10 );
 
+    /* Store the combined observations as result. */
     m_result = combinedObservations;
 
     return Status.OK_STATUS;
@@ -222,6 +227,9 @@ public class RainfallGenerationOp
 
   private void addAdditionalMetadata( final IObservation[] combinedObservations )
   {
+    if( combinedObservations == null )
+      return;
+
     for( int i = 0; i < combinedObservations.length; i++ )
     {
       final IObservation observation = combinedObservations[i];
@@ -275,15 +283,14 @@ public class RainfallGenerationOp
     {
       if( observations.isEmpty() )
         return null;
-      else if( observations.size() == 1 )
+
+      if( observations.size() == 1 )
         return observations.get( 0 );
 
-      final ForecastFilter fc = new ForecastFilter();
-
       final IObservation[] combine = observations.toArray( new IObservation[] {} );
-
       checkCombinedTimestep( combine );
 
+      final ForecastFilter fc = new ForecastFilter();
       fc.initFilter( combine, combine[0], null );
 
       /* Clone and set the timestep. */
@@ -293,7 +300,8 @@ public class RainfallGenerationOp
       if( timestep == null )
       {
         final String bestGuess = RainfallGeneratorUtilities.findTimeStep( combine );
-        metadataList.setProperty( MetadataHelper.MD_TIMESTEP, bestGuess );
+        if( bestGuess != null )
+          metadataList.setProperty( MetadataHelper.MD_TIMESTEP, bestGuess );
       }
 
       return clonedObservation;
@@ -312,14 +320,13 @@ public class RainfallGenerationOp
    */
   private static void checkCombinedTimestep( final IObservation[] observations ) throws CoreException
   {
-
     Period combinedTimestep = null;
-
     for( final IObservation observation : observations )
     {
       final Period currentTimestep = MetadataHelper.getTimestep( observation.getMetadataList() );
 
-      if( currentTimestep == null )
+      boolean hasValues = hasValues( observation );
+      if( currentTimestep == null && hasValues )
       {
         final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "All timeseries involved in rainfall generation must have a timestep." );
         throw new CoreException( status );
@@ -338,6 +345,19 @@ public class RainfallGenerationOp
       }
 
       combinedTimestep = currentTimestep;
+    }
+  }
+
+  private static boolean hasValues( IObservation observation )
+  {
+    try
+    {
+      return observation.getValues( null ).size() > 0;
+    }
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+      return false;
     }
   }
 
