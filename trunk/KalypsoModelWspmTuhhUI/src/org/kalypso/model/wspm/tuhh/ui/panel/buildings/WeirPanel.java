@@ -79,7 +79,7 @@ public class WeirPanel extends AbstractProfilView
 
   private final GridData m_deviderGroupData;
 
-  protected Label m_parameterLabel;
+ // protected Label m_parameterLabel;
 
   private DeviderLine m_wehrStart;
 

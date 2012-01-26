@@ -64,7 +64,6 @@ public class WeirLabelProvider extends LabelProvider
       return super.getText( type );
   }
 
-  // FIXME: not used
   public final String getDescription( final String type )
   {
     if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( type ) )
