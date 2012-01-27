@@ -74,6 +74,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.utils.log.GeoStatusLog;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -248,16 +249,26 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
       for( int i = 0; i < links.length; i++ )
       {
-        final IObservation obs = observations[i];
         final TimeseriesLinkType link = links[i];
-        if( obs == null || link == null )
+        if( link == null )
           continue;
 
-        final URL context = catchmentFeatures[i].getWorkspace().getContext();
+        /* Get the observation. */
+        /* If it is null, use the request defined in the filter to create a default one. */
+        IObservation obs = observations[i];
+        if( obs == null )
+          obs = RequestFactory.createDefaultObservation( targetFilter );
+
+        /* If it is still null, continue. */
+        if( obs == null )
+          continue;
 
         final IObservation filteredObs = ZmlFactory.decorateObservation( obs, targetFilter, null );
         final IRequest request = new ObservationRequest( period );
+
+        final URL context = catchmentFeatures[i].getWorkspace().getContext();
         final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+
         File file = ResourceUtilities.findJavaFileFromURL( location );
         if( file == null )
           file = FileUtils.toFile( location );
