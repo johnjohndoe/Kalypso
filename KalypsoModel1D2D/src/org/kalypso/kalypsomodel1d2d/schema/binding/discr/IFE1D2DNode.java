@@ -47,7 +47,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -66,8 +65,6 @@ public interface IFE1D2DNode<CT extends IFENetItem> extends IFENetItem
   public final static QName WB1D2D_PROP_POINT = new QName( NS.GML3, "pointProperty" ); //$NON-NLS-1$
 
   public static final QName PROP_HAS_ELEVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "hasElevation" ); //$NON-NLS-1$
-
-  public static final String DEFAULT_COORDINATE_SYSTEM = IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE;
 
   public static final QName PROP_GEOMETRY = new QName( NS.GML3, "pointProperty" ); //$NON-NLS-1$
 
