@@ -48,6 +48,7 @@ import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -97,4 +98,6 @@ public interface IOmbrometer extends Feature
   void setAffectedArea( GM_Surface< ? > area );
 
   IObservation getTimeserie( ) throws MalformedURLException, SensorException;
+
+  ZmlLink getTimeserieLink( );
 }

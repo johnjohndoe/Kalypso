@@ -210,6 +210,7 @@ public class ResultTimeseriesLoader
    */
   private MetadataList getMetadata( final Feature resultFeature ) throws SensorException
   {
+    // TODO: read every input timeseries (again) to get the metadata. Better: keep metadata from pre-processing instead.
     if( resultFeature instanceof Node )
     {
       final ZmlLink pegelLink = ((Node) resultFeature).getPegelLink();
