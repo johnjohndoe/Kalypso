@@ -104,7 +104,7 @@ public class WspmTuhhProjectSelection
     if( parentFeature instanceof TuhhWspmProject )
       return (TuhhWspmProject) parentFeature;
 
-    if( GMLSchemaUtilities.substitutes( parentFeature.getFeatureType(), WspmWaterBody.QNAME ) )
+    if( GMLSchemaUtilities.substitutes( parentFeature.getFeatureType(), WspmWaterBody.FEATURE_WSPM_WATER_BODY ) )
     {
       final Feature grandDad = parentFeature.getOwner();
       if( grandDad instanceof TuhhWspmProject )

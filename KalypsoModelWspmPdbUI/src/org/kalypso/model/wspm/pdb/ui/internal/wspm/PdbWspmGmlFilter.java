@@ -70,9 +70,9 @@ public class PdbWspmGmlFilter extends ViewerFilter
   {
     m_filteredElements.add( IProfileFeature.QN_PROFILE );
 
-    m_filteredElements.add( WspmWaterBody.QNAME_MEMBER_PROFILE );
-    m_filteredElements.add( WspmWaterBody.QNAME_MEMBER_RUNOFF );
-    m_filteredElements.add( WspmWaterBody.QNAME_PROP_CENTER_LINE );
+    m_filteredElements.add( WspmWaterBody.MEMBER_PROFILE );
+    m_filteredElements.add( WspmWaterBody.MEMBER_RUNOFF );
+    m_filteredElements.add( WspmWaterBody.PROPERTY_CENTER_LINE );
 
     m_filteredElements.add( TuhhReach.QNAME_MEMBER_MARKER );
     m_filteredElements.add( TuhhReach.QNAME_MEMBER_WATER_BODY_LINK );
