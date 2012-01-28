@@ -94,6 +94,8 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
   private final Feature[] m_exportableElements;
 
+  private final IBanklineMarkerProvider m_markerProvider;
+
   public BanklineExportShapeWorker( final BanklineExportData data )
   {
     final Charset charset = data.getExportCharset();
@@ -104,6 +106,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
     m_simpleShapeData = new SimpleShapeData( charset, srs, ShapeType.POLYGON, fields );
     m_exportableElements = data.getExportableElements();
+    m_markerProvider = data.getMarkerChooser();
   }
 
   private static IDBFField[] createFields( )
@@ -112,16 +115,12 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     {
       final Collection<IDBFField> fields = new ArrayList<>();
 
-      // FIXME: get length from constant and use or create data
+      // TODO: get length from available data
       fields.add( new DBFField( "WaterBody", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
       fields.add( new DBFField( "RefId", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
       fields.add( new DBFField( "Reach", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
       fields.add( new DBFField( "Type", FieldType.C, FIELD_LENGTH_TYPE, (short) 0 ) );
       fields.add( new DBFField( "Status", FieldType.C, FIELD_LENGTH_STATUS, (short) 0 ) );
-      // FIXME: other fields:
-      // water body name
-      // water body ref id
-      // reach name
 
       return fields.toArray( new IDBFField[fields.size()] );
     }
@@ -202,13 +201,13 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     // The built geometries are in Kalypso-SRS, because the geometries are derived from the wspm-workspace
     final String kalypsoSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final BanklineBuilder exporter = new BanklineBuilder( element );
+    final BanklineBuilder exporter = new BanklineBuilder( element, m_markerProvider );
 
     final IStatus status = exporter.execute( monitor );
     if( !status.isOK() )
       m_log.add( status );
 
-    final Geometry mainChannelGeometry = exporter.getMainChannel();
+    final Geometry banklineGeometry = exporter.getBanklineGeometry();
 
     final Object[] data = new Object[5];
 
@@ -224,9 +223,9 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     data[3] = StringUtils.abbreviate( element.getFeatureType().getQName().getLocalPart(), FIELD_LENGTH_TYPE );
     data[4] = StringUtils.abbreviate( status.getMessage(), FIELD_LENGTH_STATUS );
 
-    final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( mainChannelGeometry, kalypsoSrs ) );
+    final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( banklineGeometry, kalypsoSrs ) );
 
-    exporter.getMainChannel();
+    exporter.getBanklineGeometry();
     m_simpleShapeData.addRow( geometry, data );
 
     monitor.done();

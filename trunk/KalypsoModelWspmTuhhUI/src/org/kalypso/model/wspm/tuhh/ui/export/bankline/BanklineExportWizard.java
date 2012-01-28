@@ -79,6 +79,8 @@ public class BanklineExportWizard extends Wizard implements IWorkbenchWizard
   {
     // TODO: page, that shows chosen features for export
 
+    addPage( new BanklineExportOptionsPage( "options", m_data ) ); //$NON-NLS-1$
+
     /* Shape file and encoding etc. */
     final String shapeFilename = m_data.getProjectName();
     m_exportShapePage = new ExportShapePage( "exportShapePage", shapeFilename ); //$NON-NLS-1$

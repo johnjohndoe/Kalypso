@@ -40,26 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
-import java.util.SortedMap;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineDistanceBuilder.SIDE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.densify.Densifier;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
@@ -80,9 +82,12 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
   private Geometry m_mainChannel;
 
-  public BanklineBuilder( final Feature waterOrReach )
+  private final IBanklineMarkerProvider m_markerProvider;
+
+  public BanklineBuilder( final Feature waterOrReach, final IBanklineMarkerProvider markerProvider )
   {
     m_waterOrReach = waterOrReach;
+    m_markerProvider = markerProvider;
   }
 
   @Override
@@ -113,7 +118,17 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     try
     {
       final LineString riverLine = (LineString) JTSAdapter.export( centerLine );
-      return buildBankLines( riverLine, profiles );
+
+// final LineString denseRiverLine = riverLine;
+
+      // REMARK: very slow and produces many unnecessary points
+      // TODO: maybe let user decide if the line should be densified
+      final LineString denseRiverLine = (LineString) Densifier.densify( riverLine, 0.1 );
+
+      // REMARK: our own method is buggy and produces later NaN-coordinates
+      // final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
+
+      return buildBankLines( denseRiverLine, profiles );
     }
     catch( final GM_Exception e )
     {
@@ -122,20 +137,16 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     }
   }
 
-  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles )
+  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles ) throws GM_Exception
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
-    /* Calculate bankline distances along the river line */
-    final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles );
-    log.add( distanceBuilder.execute() );
-    final SortedMap<Double, BanklineDistances> banklineDistances = distanceBuilder.getDistances();
+// /* build left and right river banks */
+// final Geometry leftBank = buildPatchesBuffer( riverLine, profiles, BanklineDistanceBuilder.SIDE.left, log );
+// final Geometry rightBank = buildPatchesBuffer( riverLine, profiles, BanklineDistanceBuilder.SIDE.right, log );
+// m_mainChannel = buildMainChannel( leftBank, rightBank );
 
-    /* build left and right river banks */
-    final Geometry leftBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_0", -1.0 );
-    final Geometry rightBank = buildBuffer( riverLine, banklineDistances, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_1", +1.0 );
-
-    m_mainChannel = buildMainChannel( leftBank, rightBank );
+    m_mainChannel = buildVariableBuffer( riverLine, profiles, log );
 
     final String logMessage = String.format( "Compute bank line for '%s'", m_waterOrReach.getName() );
     return log.asMultiStatusOrOK( logMessage, logMessage );
@@ -166,9 +177,16 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return factory.createPolygon( shell, null );
   }
 
-  private Geometry buildBuffer( final LineString riverLine, final SortedMap<Double, BanklineDistances> distances, final String name, final double distanceSignum )
+  private Geometry buildPatchesBuffer( final LineString riverLine, final IProfileFeature[] profiles, final SIDE side, final IStatusCollector log )
   {
-    final BanklineBufferBuilder builder = new BanklineBufferBuilder( distances, name, riverLine, distanceSignum );
+    /* Calculate bankline distances along the river line */
+    final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, side );
+    log.add( distanceBuilder.execute() );
+    final PolyLine banklineDistances = distanceBuilder.getDistances();
+
+    final double distanceSignum = side == SIDE.left ? -1.0 : +1.0;
+
+    final BanklinePatchesBuilder builder = new BanklinePatchesBuilder( banklineDistances, riverLine, distanceSignum );
     return builder.buffer();
   }
 
@@ -200,6 +218,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
       final IProfileFeature[] profiles = new IProfileFeature[profileSegments.length];
       for( int i = 0; i < profiles.length; i++ )
         profiles[i] = profileSegments[i].getProfileMember();
+      return profiles;
     }
 
     final WspmWaterBody waterBody = getWaterBody();
@@ -212,8 +231,52 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return null;
   }
 
-  public Geometry getMainChannel( )
+  public Geometry getBanklineGeometry( )
   {
     return m_mainChannel;
+  }
+
+  private LineString densifyRiverLine( final LineString riverLine, final IProfileFeature[] profiles ) throws GM_Exception
+  {
+    // FIXME looking for an effective way to insert the intersection points...
+
+    final CoordinateList intersectionPoints = new CoordinateList();
+    for( final IProfileFeature profileFeature : profiles )
+    {
+      final GM_Curve line = profileFeature.getLine();
+      final Geometry crossSection = JTSAdapter.export( line );
+      if( crossSection != null )
+      {
+        final Geometry intersection = riverLine.intersection( crossSection );
+        final Coordinate[] coordinates = intersection.getCoordinates();
+
+        for( final Coordinate coordinate : coordinates )
+        {
+          if( Double.isNaN( coordinate.x ) )
+          {
+            System.out.println( "soso" );
+          }
+        }
+
+        intersectionPoints.add( coordinates, false );
+      }
+    }
+
+    return JTSUtilities.addPointsToLine( riverLine, intersectionPoints.toCoordinateArray() );
+  }
+
+  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log ) throws GM_Exception
+  {
+    /* Calculate bankline distances along the river line */
+    final BanklineDistanceBuilder leftDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, SIDE.left );
+    log.add( leftDistanceBuilder.execute() );
+    final PolyLine leftDistances = leftDistanceBuilder.getDistances();
+
+    final BanklineDistanceBuilder rightDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, SIDE.right );
+    log.add( rightDistanceBuilder.execute() );
+    final PolyLine rightDistances = rightDistanceBuilder.getDistances();
+
+    final BanklineVariableBufferBuilder builder = new BanklineVariableBufferBuilder( riverLine, leftDistances, rightDistances );
+    return builder.buffer();
   }
 }
