@@ -24,9 +24,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
- lib/apache/math/commons-math-2.2-javadoc.jar,
- lib/apache/math/commons-math-2.2-sources.jar,
- lib/apache/math/commons-math-2.2.jar,
  lib/apache/derby/derby.jar,
  lib/apache/derby/derbyclient.jar,
  lib/apache/derby/derbynet.jar,
