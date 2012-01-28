@@ -46,9 +46,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmReach;
@@ -62,11 +64,17 @@ import org.kalypsodeegree.model.feature.IFeatureRelation;
 /**
  * @author Gernot Belger
  */
-public class BanklineExportData
+public class BanklineExportData extends AbstractModelObject
 {
+  private final BanklineMarkerProviderFactory m_banklineMarkerProviderFactory = new BanklineMarkerProviderFactory();
+
   private static final String UNKNOWN_PROJECT_NAME = "Unknown";
 
+  public static final String PROPERTY_MARKER_CHOOSER = "markerChooser"; //$NON-NLS-1$
+
   private final Collection<Feature> m_exportableElements = new ArrayList<>();
+
+  private final IBanklineMarkerProvider[] m_availableMarkerChoosers = m_banklineMarkerProviderFactory.getAvailableProviders();
 
   private WspmProject m_project;
 
@@ -78,6 +86,8 @@ public class BanklineExportData
 
   private String m_exportShapeBase;
 
+  private IBanklineMarkerProvider m_markerChooser = m_availableMarkerChoosers[0];
+
   public void init( final IDialogSettings settings, final IStructuredSelection selection )
   {
     if( settings == null )
@@ -86,7 +96,10 @@ public class BanklineExportData
     findExportableElements( selection );
     findProject();
 
-    // TODO Auto-generated method stub
+    /* marker chooser */
+    final String chooserId = settings.get( PROPERTY_MARKER_CHOOSER );
+    if( !StringUtils.isBlank( chooserId ) )
+      m_markerChooser = m_banklineMarkerProviderFactory.getProvider( chooserId );
   }
 
 
@@ -95,7 +108,7 @@ public class BanklineExportData
     if( settings == null )
       return;
 
-    // TODO Auto-generated method stub
+    settings.put( PROPERTY_MARKER_CHOOSER, m_markerChooser.getId() );
   }
 
   private void findExportableElements( final IStructuredSelection selection )
@@ -205,5 +218,24 @@ public class BanklineExportData
   public String getExportShapeBase( )
   {
     return m_exportShapeBase;
+  }
+
+  public IBanklineMarkerProvider[] getAvailableMarkerChooser( )
+  {
+    return m_availableMarkerChoosers;
+  }
+
+  public IBanklineMarkerProvider getMarkerChooser( )
+  {
+    return m_markerChooser;
+  }
+
+  public void setMarkerChooser( final IBanklineMarkerProvider markerChooser )
+  {
+    final IBanklineMarkerProvider oldValue = m_markerChooser;
+
+    m_markerChooser = markerChooser;
+
+    firePropertyChange( PROPERTY_MARKER_CHOOSER, oldValue, markerChooser );
   }
 }

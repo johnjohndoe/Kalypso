@@ -40,26 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileGeocoordinatesRunnable;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.transformation.transformer.JTSTransformer;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -75,9 +74,15 @@ import com.vividsolutions.jts.linearref.LengthIndexedLine;
  */
 public class BanklineDistanceBuilder
 {
+  public static enum SIDE
+  {
+    left,
+    right;
+  }
+
   private final IStatusCollector m_log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
-  private final SortedMap<Double, BanklineDistances> m_distances = new TreeMap<>();
+  private final SortedMap<Double, Double> m_distances = new TreeMap<>();
 
   private final LineString m_riverLine;
 
@@ -85,17 +90,18 @@ public class BanklineDistanceBuilder
 
   private final LengthIndexedLine m_riverIndex;
 
-  public BanklineDistanceBuilder( final LineString riverLine, final IProfileFeature[] profiles )
+  private final SIDE m_side;
+
+  private final IBanklineMarkerProvider m_markerProvider;
+
+  public BanklineDistanceBuilder( final LineString riverLine, final IProfileFeature[] profiles, final IBanklineMarkerProvider markerProvider, final SIDE side )
   {
     m_riverLine = riverLine;
     m_profiles = profiles;
+    m_markerProvider = markerProvider;
+    m_side = side;
 
     m_riverIndex = new LengthIndexedLine( m_riverLine );
-  }
-
-  public SortedMap<Double, BanklineDistances> getDistances( )
-  {
-    return Collections.unmodifiableSortedMap( m_distances );
   }
 
   public IStatus execute( )
@@ -148,89 +154,29 @@ public class BanklineDistanceBuilder
       return;
     }
 
-    /* Find station in river line */
-    final Point intersectionCSwithRiver = intersections[0];
-
     /* Fill missing geo coordinates */
     final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( profileCopy );
     m_log.add( runnable.execute( new NullProgressMonitor() ) );
 
     final String profileSRS = profileFeature.getSrsName();
-    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    final int profileSRID = JTSAdapter.toSrid( profileSRS );
-    final int kalypsoSRID = JTSAdapter.toSrid( kalypsoSRS );
-
-    final JTSTransformer jtsTransformer = new JTSTransformer( profileSRID, kalypsoSRID );
 
     /* calculate distances of markers */
-    final IComponent[] markerTypes = profileCopy.getPointMarkerTypes();
-    for( final IComponent markerType : markerTypes )
-    {
-      final IProfilPointMarker[] pointMarkers = profileCopy.getPointMarkerFor( markerType );
-      for( int i = 0; i < pointMarkers.length; i++ )
-      {
-        final IProfilPointMarker pointMarker = pointMarkers[i];
-        final IProfileRecord point = pointMarker.getPoint();
-        final Coordinate coordinate = jtsTransformer.transform( point.getCoordinate() );
-
-        final String markerName = String.format( "%s_%d", pointMarker.getComponent().getId(), i );
-
-        calculateMarkerDistance( intersectionCSwithRiver, coordinate, markerName );
-      }
-    }
-  }
-
-  private void calculateMarkerDistance( final Point intersectionCSwithRiver, final Coordinate markerLocation, final String markerName )
-  {
-    // TODO: from outside:
-    final boolean calculateAlongCrossSection = false;
-    if( calculateAlongCrossSection )
-      calculateMarkerDistanceAlongCrossSection( intersectionCSwithRiver, markerLocation, markerName );
-    else
-      calculateMarkerDistancePerpendicular( markerLocation, markerName );
-  }
-
-  /**
-   * The distance of the merker is calculated along the cros section. The station is the point where the cross section
-   * intersect with the river.<br/>
-   * Bad for cross section that are not 90° to the river.
-   */
-  private void calculateMarkerDistanceAlongCrossSection( final Point intersectionCSwithRiver, final Coordinate markerLocation, final String markerName )
-  {
-    final double station = m_riverIndex.indexOf( intersectionCSwithRiver.getCoordinate() );
-
-    final Point markerPoint = m_riverLine.getFactory().createPoint( markerLocation );
-    final double markerDistance = intersectionCSwithRiver.distance( markerPoint );
-
-    final BanklineDistances banklineDistances = getOrCreateDistances( station );
-    banklineDistances.setDistance( markerName, markerDistance );
+    final Coordinate coordinate = m_markerProvider.getMarkerLocation( profileSRS, profileCopy, m_side );
+    calculateMarkerDistancePerpendicular( coordinate );
   }
 
   /**
    * The distance marker to river is calculated as the distance between this point and the river.<br/>
    * The station is the location of the 'lot' of the marker location to the river.
    */
-  private void calculateMarkerDistancePerpendicular( final Coordinate markerLocation, final String markerName )
+  private void calculateMarkerDistancePerpendicular( final Coordinate markerLocation )
   {
     final double station = m_riverIndex.project( markerLocation );
 
     final Point markerPoint = m_riverLine.getFactory().createPoint( markerLocation );
     final double markerDistance = m_riverLine.distance( markerPoint );
 
-    final BanklineDistances banklineDistances = getOrCreateDistances( station );
-    banklineDistances.setDistance( markerName, markerDistance );
-  }
-
-  private BanklineDistances getOrCreateDistances( final Double station )
-  {
-    if( !m_distances.containsKey( station ) )
-    {
-      final BanklineDistances banklineDistances = new BanklineDistances( station );
-      m_distances.put( station, banklineDistances );
-    }
-
-    return m_distances.get( station );
+    m_distances.put( station, markerDistance );
   }
 
   private static Point[] findPoints( final Geometry intersection )
@@ -238,5 +184,24 @@ public class BanklineDistanceBuilder
     final List<Point> points = new ArrayList<>();
     intersection.apply( new PointExtracter( points ) );
     return points.toArray( new Point[points.size()] );
+  }
+
+  public PolyLine getDistances( )
+  {
+    final Set<Entry<Double, Double>> entrySet = m_distances.entrySet();
+    final Collection<Point2D> points = new ArrayList<>( m_distances.size() );
+    for( final Entry<Double, Double> entry : entrySet )
+    {
+      final double x = entry.getKey();
+      final double y = entry.getValue();
+      if( !Double.isNaN( y ) )
+        points.add( new Point2D.Double( x, y ) );
+    }
+
+    final Point2D[] allPoints = points.toArray( new Point2D[points.size()] );
+    if( allPoints.length > 1 )
+      return new PolyLine( allPoints, 0.0001 );
+
+    return null;
   }
 }

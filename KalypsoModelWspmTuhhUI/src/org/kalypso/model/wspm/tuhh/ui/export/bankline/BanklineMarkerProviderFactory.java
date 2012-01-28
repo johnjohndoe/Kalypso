@@ -40,46 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
+ * Factory for available {@link IBanklineMarkerProvider}s.
+ *
  * @author Gernot Belger
  */
-public class BanklineDistances
+public class BanklineMarkerProviderFactory
 {
-  /** The station along the center line (not the profile station) */
-  private final double m_station;
+  private IBanklineMarkerProvider[] m_providers;
 
-  /** Distance for each marker type */
-  private final Map<String, Double> m_namedDistance = new HashMap<>();
-
-  public BanklineDistances( final double station )
+  // FIXME
+  // TODO: get from extension point?
+  public IBanklineMarkerProvider[] getAvailableProviders( )
   {
-    m_station = station;
+    if( m_providers == null )
+      m_providers = createProviders();
+
+    return m_providers;
   }
 
-  public double getStation( )
+  private IBanklineMarkerProvider[] createProviders( )
   {
-    return m_station;
+    final Collection<IBanklineMarkerProvider> providers = new ArrayList<>();
+
+    providers.add( new BanklineMarkerProvider( "Trennflächen", IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, null ) );
+    providers.add( new BanklineMarkerProvider( "Bordvollpunkte", IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    providers.add( new BanklineMarkerProvider( "Durchströmte Bereiche", IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, null ) );
+    providers.add( new BanklineMarkerProvider( "Modellrand", null, null ) );
+
+    // TODO: add provider for all known codes
+    // TODO: add provider for all currently available results
+
+    return providers.toArray( new IBanklineMarkerProvider[providers.size()] );
   }
 
-  public void setDistance( final String name, final double distance )
+  public IBanklineMarkerProvider getProvider( final String providerId )
   {
-    m_namedDistance.put( name, distance );
-  }
+    for( final IBanklineMarkerProvider provider : m_providers )
+    {
+      if( provider.getId().equals( providerId ) )
+        return provider;
+    }
 
-  /**
-   * Returns the distance for the given name.
-   *
-   * @return {@link Double#NaN} if no distance with the given name exist.
-   */
-  public double getDistance( final String name )
-  {
-    final Double distance = m_namedDistance.get( name );
-    if( distance == null )
-      return Double.NaN;
-
-    return distance;
+    return null;
   }
 }
