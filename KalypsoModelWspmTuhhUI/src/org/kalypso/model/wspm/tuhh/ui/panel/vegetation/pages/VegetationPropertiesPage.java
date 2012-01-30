@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.panel.vegetation.pages;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -108,14 +107,13 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     {
     };
 
-    toolkit.createLabel( group, "" ); //$NON-NLS-1$
+    toolkit.createLabel( group, StringUtils.EMPTY );
     toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.4" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
     toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.5" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
     toolkit.createLabel( group, Messages.getString( "VegetationPropertiesPage.6" ) ).setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
-    // TODO validators
-    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.7" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.9" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.7" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationPropertiesPage.9" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 4, 0 ) );
@@ -176,7 +174,7 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
   {
   }
 
-  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
+  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property )
   {
     toolkit.createLabel( body, label );
 
@@ -188,22 +186,22 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
     ax.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     ax.setMessage( EMPTY_STRING );
 
-    bind( ax, modelAx, property, validator );
+    bind( ax, modelAx, property );
 
     final Text ay = toolkit.createText( body, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     ay.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     ay.setMessage( EMPTY_STRING );
 
-    bind( ay, modelAy, property, validator );
+    bind( ay, modelAy, property );
 
     final Text dp = toolkit.createText( body, StringUtils.EMPTY, SWT.BORDER | SWT.RIGHT );
     dp.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     dp.setMessage( EMPTY_STRING );
 
-    bind( dp, modelDp, property, validator );
+    bind( dp, modelDp, property );
   }
 
-  protected void bind( final Text text, final VegetationsDataModel model, final String property, final IValidator validator )
+  protected void bind( final Text text, final VegetationsDataModel model, final String property )
   {
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SLDBinding.TEXT_DEFAULT_EVENTS );
     final IObservableValue modelValue = model.getObservableValue( property );

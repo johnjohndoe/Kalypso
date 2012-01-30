@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.panel.roughness.pages;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -131,7 +130,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     return m_model;
   }
 
-  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
+  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property )
   {
     toolkit.createLabel( body, label );
 
@@ -139,10 +138,12 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     text.setMessage( Messages.getString( "AbstractRoughnessPage.0" ) ); //$NON-NLS-1$
 
-    bind( text, property, validator );
+    // TODO validate text fields
+
+    bind( text, property );
   }
 
-  protected void bind( final Text textField, final String property, final IValidator validator )
+  protected void bind( final Text textField, final String property )
   {
     final ISWTObservableValue targetValue = SWTObservables.observeText( textField, SLDBinding.TEXT_DEFAULT_EVENTS );
     final IObservableValue modelValue = m_model.getObservableValue( property );
@@ -164,10 +165,9 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
     {
     } );
 
-    // TODO validators
-    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.2" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.3" ), RoughnessDataModel.PROPERTY_RIVER_TUBE, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.4" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.2" ), RoughnessDataModel.PROPERTY_LEFT_FLOODPLAIN ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.3" ), RoughnessDataModel.PROPERTY_RIVER_TUBE ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "AbstractRoughnessPage.4" ), RoughnessDataModel.PROPERTY_RIGHT_FLOODPLAIN ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
