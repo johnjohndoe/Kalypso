@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.gml;
 
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -78,23 +79,26 @@ public class DictI18nGmlListener extends GmlWorkspaceListener
     // try to load properties
     final String filename = FileUtilities.nameFromPath( file );
     final String path = FileUtilities.nameWithoutExtension( filename );
-    final Properties properties = new Properties();
-    PropertiesUtilities.loadI18nProperties( properties, context, path );
-    if( properties.isEmpty() )
-      return;
 
-    // replace i18n string
-    final FeatureVisitor visitor = new I18nFeatureVisitor( properties );
-    workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+    try
+    {
+      final ResourceBundle bundle = ResourceBundleUtils.loadResourceBundle( new URL( context, path ) );
+      if( bundle.keySet().isEmpty() )
+        return;
+
+      // replace i18n string
+      final FeatureVisitor visitor = new I18nFeatureVisitor( bundle );
+      workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
-// nothing to do
+    // nothing to do
   }
-
 }

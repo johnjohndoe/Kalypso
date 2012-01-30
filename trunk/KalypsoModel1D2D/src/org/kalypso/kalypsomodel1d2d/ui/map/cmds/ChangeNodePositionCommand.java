@@ -60,7 +60,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings("deprecation")
 public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 {
   private final IFE1D2DNode m_node;

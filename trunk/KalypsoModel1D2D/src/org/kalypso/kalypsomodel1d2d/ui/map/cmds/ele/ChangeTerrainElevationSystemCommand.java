@@ -131,7 +131,6 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
     final List<Feature> changedFeatures = new ArrayList<Feature>();
