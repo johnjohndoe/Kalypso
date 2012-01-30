@@ -132,7 +132,6 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
       log = initializeLog( rcm );
 
       final ITarget targetDefinition = rcm.getTarget();
-
       if( targetDefinition == null )
       {
         final String message = String.format( "Zeitreihenziel nicht definiert, Modell wird nicht berechnet." );
