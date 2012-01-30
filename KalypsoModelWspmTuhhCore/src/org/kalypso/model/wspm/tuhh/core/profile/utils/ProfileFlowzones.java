@@ -71,7 +71,6 @@ public final class ProfileFlowzones
     final IRecord[] points = profile.getPoints( p1, p2 );
     for( final IRecord point : points )
     {
-      @SuppressWarnings("deprecation")
       final Object object = point.getValue( component );
       if( Objects.isNull( value ) )
         value = object;

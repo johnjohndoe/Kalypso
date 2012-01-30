@@ -129,7 +129,7 @@ public class Control1D2DConverterSWAN
 
   private String m_strStepLength = ""; //$NON-NLS-1$
 
-  private String m_strStepLengthUnit = "MIN"; //$NON-NLS-1$
+  private final String m_strStepLengthUnit = "MIN"; //$NON-NLS-1$
 
   private String m_strStationary = ""; //$NON-NLS-1$
 
@@ -137,27 +137,27 @@ public class Control1D2DConverterSWAN
 
   private final IGeoLog m_log;
 
-  private Map<IFELine, Integer> m_mapContiLinesWithConditions;
+  private final Map<IFELine, Integer> m_mapContiLinesWithConditions;
 
-  private Double m_version = 1.0;
+  private final Double m_version = 1.0;
 
-  private List<Date> m_listWritenDatesWind;
+  private final List<Date> m_listWritenDatesWind;
 
-  private RectifiedGridDomain m_gridDescriptor;
+  private final RectifiedGridDomain m_gridDescriptor;
 
-  private long m_intMilisecInMinute = 60000;
+  private final long m_intMilisecInMinute = 60000;
 
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private FileObject m_fileObjWorkingDir;
+  private final FileObject m_fileObjWorkingDir;
 
   private Date[] m_calculatedSteps;
 
-  private Double m_doubleShiftY;
+  private final Double m_doubleShiftY;
 
-  private Double m_doubleShiftX;
+  private final Double m_doubleShiftX;
 
-  public Control1D2DConverterSWAN( final FileObject pFileObjWorkingDir, final IFEDiscretisationModel1d2d pDiscModel, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IGeoLog log, final ResultManager resultManager, final Map<IFELine, Integer> mapContiLineWithSWANBoundaryToCondition, final List<Date> pListWrittenDates, final RectifiedGridDomain pWrittenGridDescriptor, double shiftX, double shiftY )
+  public Control1D2DConverterSWAN( final FileObject pFileObjWorkingDir, final IFEDiscretisationModel1d2d pDiscModel, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IGeoLog log, final ResultManager resultManager, final Map<IFELine, Integer> mapContiLineWithSWANBoundaryToCondition, final List<Date> pListWrittenDates, final RectifiedGridDomain pWrittenGridDescriptor, final double shiftX, final double shiftY )
   {
     m_controlModel = controlModel;
     m_resultManager = resultManager;
@@ -239,7 +239,7 @@ public class Control1D2DConverterSWAN
 
   private void formateCoordinatesShift( ) throws IOException
   {
-    Formatter lFormatter = getFormatter( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+    final Formatter lFormatter = getFormatter( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
     lFormatter.format( "Kalypso-SWAN Coordinates shift\n" ); //$NON-NLS-1$
     lFormatter.format( "%s=%f\n%s=%f\nEND\n", ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_X, m_doubleShiftX, ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_Y, m_doubleShiftY ); //$NON-NLS-1$
     lFormatter.close();
@@ -260,8 +260,8 @@ public class Control1D2DConverterSWAN
 
       if( calculatedSteps != null && calculatedSteps.length > 1 )
       {
-        long lLongStepLen = ((calculatedSteps[1].getTime() - calculatedSteps[0].getTime()) / m_intMilisecInMinute);
-        Date lDateZero = new Date( calculatedSteps[0].getTime() - lLongStepLen * m_intMilisecInMinute );
+        final long lLongStepLen = ((calculatedSteps[1].getTime() - calculatedSteps[0].getTime()) / m_intMilisecInMinute);
+        final Date lDateZero = new Date( calculatedSteps[0].getTime() - lLongStepLen * m_intMilisecInMinute );
         m_strTimeFromZero = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( lDateZero );
 
         m_strTimeFrom = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( calculatedSteps[0] );
@@ -272,7 +272,7 @@ public class Control1D2DConverterSWAN
       m_strSeries = (m_controlModel.isUnsteadySelected() ? "SERIES " : ""); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_log.formatLog( 1, 1, e.getLocalizedMessage() );
     }
@@ -293,7 +293,6 @@ public class Control1D2DConverterSWAN
   /**
    * writes the header block with some defaults into the SWAN-Kalypso controlFile (INPUT)
    */
-  @SuppressWarnings("deprecation")
   private void formateControlHeader( final Formatter formatter )
   {
     /* FILES DATA BLOCK */
@@ -377,9 +376,9 @@ public class Control1D2DConverterSWAN
       {
         if( m_gridDescriptor == null )
           return;
-        String lStrCRS = m_gridDescriptor.getCoordinateSystem();
-        String lStrStartTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( 0 ) );
-        String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
+        final String lStrCRS = m_gridDescriptor.getCoordinateSystem();
+        final String lStrStartTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( 0 ) );
+        final String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
         if( m_listWritenDatesWind.size() == 1 )
         {
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s\n", //$NON-NLS-1$ 
@@ -387,7 +386,7 @@ public class Control1D2DConverterSWAN
         }
         else
         {
-          String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$  
+          final String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$  
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s %s %s %s\n", //$NON-NLS-1$ 
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind, lStrTimeStepLen, m_strStepLengthUnit, lStrEndTimeWind );
         }
@@ -395,7 +394,7 @@ public class Control1D2DConverterSWAN
             ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -422,7 +421,7 @@ public class Control1D2DConverterSWAN
     // //format the currents
     final Integer lInitVal = m_controlModel.getINITialValuesSWAN();
     String lStrInitVal = INIT_DEF;
-    String lStrInitPAR = ""; //$NON-NLS-1$
+    final String lStrInitPAR = ""; //$NON-NLS-1$
     switch( lInitVal )
     {
       case 0:
@@ -479,7 +478,7 @@ public class Control1D2DConverterSWAN
 
     for( final IFELine line : continuityLines )
     {
-      int lIntContiLineId = m_mapContiLinesWithConditions.get( line );
+      final int lIntContiLineId = m_mapContiLinesWithConditions.get( line );
       // format the boundaries
       formatter.format( "BOUN SHAPE %s PEAK DSPR POWER\n" //$NON-NLS-1$
       , lStrBoundaryMethod );
@@ -492,7 +491,7 @@ public class Control1D2DConverterSWAN
    */
   private void formateSimulationOperationsSpec( final Formatter formatter )
   {
-    String lOperationSpec = m_controlModel.getAdditionalSimParSWAN();
+    final String lOperationSpec = m_controlModel.getAdditionalSimParSWAN();
     if( lOperationSpec != null )
     {
       formatter.format( "$\n" + //$NON-NLS-1$
@@ -556,7 +555,7 @@ public class Control1D2DConverterSWAN
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
         final IComponent abscissaComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-        IComponent ordinateComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
+        final IComponent ordinateComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
 
         if( abscissaComponent != null && ordinateComponent != null )
         {
@@ -565,7 +564,7 @@ public class Control1D2DConverterSWAN
           {
             lContiLineAct = m_discretisationModel.findContinuityLine( boundaryCondition.getPosition(), 0.01 );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             continue;
           }
@@ -579,8 +578,8 @@ public class Control1D2DConverterSWAN
             return;
           }
 
-          String lStrBoundFileNameAct = ISimulation1D2DConstants.SWAN_BOUNDARY_FILE_PREFIX + pIntContiLineId + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
-          Formatter lFormatter = getFormatter( lStrBoundFileNameAct );
+          final String lStrBoundFileNameAct = ISimulation1D2DConstants.SWAN_BOUNDARY_FILE_PREFIX + pIntContiLineId + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
+          final Formatter lFormatter = getFormatter( lStrBoundFileNameAct );
           lFormatter.format( "TPAR\n" ); //$NON-NLS-1$
 
           final IComponent lComponentTime = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
@@ -604,7 +603,7 @@ public class Control1D2DConverterSWAN
             final IRecord record = tupleIterator.next();
             final XMLGregorianCalendar lGregCalendar = (XMLGregorianCalendar) record.getValue( lIndexTime );
 
-            Date lDateAct = DateUtilities.toDate( lGregCalendar );
+            final Date lDateAct = DateUtilities.toDate( lGregCalendar );
             if( m_calculatedSteps[0].getTime() <= lDateAct.getTime() && m_calculatedSteps[m_calculatedSteps.length - 1].getTime() >= lDateAct.getTime() )
             {
               final String lStrTime = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( lDateAct );
@@ -642,7 +641,7 @@ public class Control1D2DConverterSWAN
   {
     Formatter lFormatter = null;
     {
-      FileObject lFileDataAdditional = m_fileObjWorkingDir.resolveFile( pStrFileName );
+      final FileObject lFileDataAdditional = m_fileObjWorkingDir.resolveFile( pStrFileName );
       lFormatter = new Formatter( lFileDataAdditional.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
     }
 

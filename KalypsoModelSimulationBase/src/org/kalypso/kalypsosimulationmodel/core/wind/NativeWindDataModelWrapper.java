@@ -82,7 +82,6 @@ public class NativeWindDataModelWrapper extends WindDataModel implements INative
    * Creates a new {@link NativeWindDataModelWrapper} as child of the given parent and link to it by the prop of the
    * given name. The native source path is also set
    */
-  @SuppressWarnings("deprecation")
   private static final INativeWindDataModelWrapper createFeature( final Feature parentFeature, final QName propQName, final String sourceName, final Date date ) throws Exception
   {
     final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );

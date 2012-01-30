@@ -99,7 +99,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractCreateFlowrelationWidget extends DeprecatedMouseWidget
 {
   private final int m_grabRadius = 10;

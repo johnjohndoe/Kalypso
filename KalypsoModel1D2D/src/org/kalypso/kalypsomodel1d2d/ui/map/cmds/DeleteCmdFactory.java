@@ -121,7 +121,6 @@ public class DeleteCmdFactory
    * <ul>
    * <li>PolyElementFeature
    */
-  @SuppressWarnings("deprecation")
   public static final IDiscrModel1d2dChangeCommand createDeleteCmdPoly(  final IFEDiscretisationModel1d2d model1d2d )
   {
     return new DeletePolyElementCmd( model1d2d, null );
@@ -131,7 +130,6 @@ public class DeleteCmdFactory
    * <ul>
    * <li>Element1DFeature
    */
-  @SuppressWarnings("deprecation")
   public static final IDiscrModel1d2dChangeCommand createDeleteCmd1dElement( final IFEDiscretisationModel1d2d model1d2d )
   {
     return new DeleteElement1DCmd( model1d2d, null );

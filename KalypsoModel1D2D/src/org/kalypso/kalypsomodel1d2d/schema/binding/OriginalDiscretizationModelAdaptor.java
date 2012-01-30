@@ -71,7 +71,6 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
   }
 
   // Ignore deprecation, we are using this stuff for backwards compatibility
-  @SuppressWarnings("deprecation")
   protected IStatus execute( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
     final List<IStatus> statusList = new ArrayList<IStatus>();
@@ -291,7 +290,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       {
         changeFeaturesCommand.process();
       }
-      catch( Exception e1 )
+      catch( final Exception e1 )
       {
         // ... well, FIXME?
       }
@@ -388,7 +387,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edge );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return false;
     } 

@@ -499,7 +499,6 @@ public class WindDataModelSystemEditorComponent
     }
   }
 
-  @SuppressWarnings("deprecation")
   public void refreshActualWindView( final IWindDataModelSystem pWindDataModelSystem, final IWindDataModel pWindDataModel )
   {
     WindDataWidgetDataModel.setSelectedWindSystem( pWindDataModelSystem );

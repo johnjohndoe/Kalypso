@@ -163,7 +163,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     return outType.cast( in );
   }
 
-  @SuppressWarnings("deprecation")
   private IPropertyType getPropertyType( final String propertySpecificationName )
   {
     final String property = m_specifiction.getProperty( propertySpecificationName );
