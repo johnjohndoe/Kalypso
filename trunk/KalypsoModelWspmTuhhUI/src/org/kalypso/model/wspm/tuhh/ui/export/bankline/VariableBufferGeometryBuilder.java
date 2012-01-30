@@ -158,7 +158,7 @@ public class VariableBufferGeometryBuilder
 // Noder noder = new ScaledNoder(new MCIndexSnapRounder(new PrecisionModel(1.0)),
 // precisionModel.getScale());
 
-      return createBufferGeometry( noder, pm );
+      return createBufferGeometry( noder );
     }
     catch( final RuntimeException ex )
     {
@@ -184,7 +184,7 @@ public class VariableBufferGeometryBuilder
   {
     final Noder noder = new ScaledNoder( new MCIndexSnapRounder( new PrecisionModel( 1.0 ) ), fixedPM.getScale() );
 
-    return createBufferGeometry( noder, fixedPM );
+    return createBufferGeometry( noder );
   }
 
   /**
@@ -204,21 +204,23 @@ public class VariableBufferGeometryBuilder
     m_curveList.add( e );
   }
 
-  private Geometry createBufferGeometry( final Noder noder, final PrecisionModel pm )
+  private Geometry createBufferGeometry( final Noder noder )
   {
     // short-circuit test
     if( m_curveList.size() <= 0 )
       return createEmptyResultGeometry();
 
-    computeNodedEdges( noder, m_curveList, pm );
+    computeNodedEdges( noder, m_curveList );
 
     final PlanarGraph graph = new PlanarGraph( new OverlayNodeFactory() );
     graph.addEdges( m_edgeList.getEdges() );
 
-    final List subgraphList = createSubgraphs( graph );
+    final List<BufferSubgraph> subgraphList = createSubgraphs( graph );
     final PolygonBuilder polyBuilder = new PolygonBuilder( m_factory );
     buildSubgraphs( subgraphList, polyBuilder );
-    final List resultPolyList = polyBuilder.getPolygons();
+
+    @SuppressWarnings("unchecked")
+    final List<Geometry> resultPolyList = polyBuilder.getPolygons();
 
     // just in case...
     if( resultPolyList.size() <= 0 )
@@ -240,14 +242,16 @@ public class VariableBufferGeometryBuilder
     return emptyGeom;
   }
 
-  private void computeNodedEdges( final Noder noder, final List bufferSegStrList, final PrecisionModel precisionModel )
+  private void computeNodedEdges( final Noder noder, final List<SegmentString> bufferSegStrList )
   {
     noder.computeNodes( bufferSegStrList );
-    final Collection nodedSegStrings = noder.getNodedSubstrings();
 
-    for( final Iterator i = nodedSegStrings.iterator(); i.hasNext(); )
+    @SuppressWarnings("unchecked")
+    final Collection<SegmentString> nodedSegStrings = noder.getNodedSubstrings();
+
+    for( final SegmentString segmentString : nodedSegStrings )
     {
-      final SegmentString segStr = (SegmentString) i.next();
+      final SegmentString segStr = segmentString;
       final Label oldLabel = (Label) segStr.getData();
 
       final Coordinate[] coordinates = segStr.getCoordinates();
@@ -317,12 +321,14 @@ public class VariableBufferGeometryBuilder
     return 0;
   }
 
-  private List createSubgraphs( final PlanarGraph graph )
+  private List<BufferSubgraph> createSubgraphs( final PlanarGraph graph )
   {
-    final List subgraphList = new ArrayList();
-    for( final Iterator i = graph.getNodes().iterator(); i.hasNext(); )
+    final List<BufferSubgraph> subgraphList = new ArrayList<>();
+
+    for( @SuppressWarnings("unchecked")
+    final Iterator<Node> i = graph.getNodes().iterator(); i.hasNext(); )
     {
-      final Node node = (Node) i.next();
+      final Node node = i.next();
       if( !node.isVisited() )
       {
         final BufferSubgraph subgraph = new BufferSubgraph();
@@ -347,12 +353,12 @@ public class VariableBufferGeometryBuilder
    * @param polyBuilder
    *          the PolygonBuilder which will build the final polygons
    */
-  private void buildSubgraphs( final List subgraphList, final PolygonBuilder polyBuilder )
+  private void buildSubgraphs( final List<BufferSubgraph> subgraphList, final PolygonBuilder polyBuilder )
   {
-    final List processedGraphs = new ArrayList();
-    for( final Iterator i = subgraphList.iterator(); i.hasNext(); )
+    final List<BufferSubgraph> processedGraphs = new ArrayList<>();
+    for( final BufferSubgraph bufferSubgraph : subgraphList )
     {
-      final BufferSubgraph subgraph = (BufferSubgraph) i.next();
+      final BufferSubgraph subgraph = bufferSubgraph;
       final Coordinate p = subgraph.getRightmostCoordinate();
 // int outsideDepth = 0;
 // if (polyBuilder.containsPoint(p))

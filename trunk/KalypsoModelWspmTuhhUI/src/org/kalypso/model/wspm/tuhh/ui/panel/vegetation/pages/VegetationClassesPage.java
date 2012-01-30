@@ -45,7 +45,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -128,9 +127,8 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     {
     };
 
-    // TODO validators
-    build( group, toolkit, Messages.getString( "VegetationClassesPage.2" ), VegetationsDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
-    build( group, toolkit, Messages.getString( "VegetationClassesPage.4" ), VegetationsDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS, null ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationClassesPage.2" ), VegetationsDataModel.PROPERTY_LEFT_FLOODPLAIN_CLASS ); //$NON-NLS-1$
+    build( group, toolkit, Messages.getString( "VegetationClassesPage.4" ), VegetationsDataModel.PROPERTY_RIGHT_FLOODPLAIN_CLASS ); //$NON-NLS-1$
 
     final ImageHyperlink lnkRemove = toolkit.createImageHyperlink( group, SWT.NULL );
     lnkRemove.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false, 2, 0 ) );
@@ -184,7 +182,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
     return WspmClassifications.hasVegetationProperties( m_profile );
   }
 
-  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property, final IValidator validator )
+  protected void build( final Composite body, final FormToolkit toolkit, final String label, final String property )
   {
     toolkit.createLabel( body, label );
 

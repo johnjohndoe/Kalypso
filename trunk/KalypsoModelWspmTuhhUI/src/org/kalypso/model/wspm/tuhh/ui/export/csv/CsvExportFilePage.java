@@ -88,7 +88,7 @@ public class CsvExportFilePage extends WizardPage
     m_binding = new DatabindingWizardPage( this, null );
 
     createFileControls( panel );
-    createOptionsControls( panel );
+// createOptionsControls( panel );
   }
 
   private void createFileControls( final Composite panel )
@@ -106,9 +106,7 @@ public class CsvExportFilePage extends WizardPage
 
   }
 
-  private void createOptionsControls( final Composite panel )
-  {
-    // TODO Auto-generated method stub
-
-  }
+// private void createOptionsControls( )
+// {
+// }
 }

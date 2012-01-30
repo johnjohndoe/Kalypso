@@ -64,10 +64,7 @@ import com.vividsolutions.jts.densify.Densifier;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * Builds banklines from a {@link org.kalypso.model.wspm.core.gml.WspmWaterBody} or a
@@ -137,7 +134,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     }
   }
 
-  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles ) throws GM_Exception
+  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles )
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
@@ -152,43 +149,34 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return log.asMultiStatusOrOK( logMessage, logMessage );
   }
 
-  private Geometry buildMainChannel( final Geometry leftBank, final Geometry rightBank )
-  {
-    if( leftBank instanceof LineString && rightBank instanceof LineString )
-      return buildPolygonFromBanks( (LineString) leftBank, (LineString) rightBank );
-
-    if( leftBank instanceof GeometryCollection || rightBank instanceof GeometryCollection )
-      return GeometryGatherer.collect( leftBank, rightBank );
-
-    return leftBank.union( rightBank );
-  }
-
-  private Geometry buildPolygonFromBanks( final LineString leftBank, final LineString rightBank )
-  {
-    final CoordinateList coordinateList = new CoordinateList();
-
-    coordinateList.add( leftBank.getCoordinates(), false, true );
-    coordinateList.add( rightBank.getCoordinates(), false, false );
-
-    coordinateList.closeRing();
-
-    final GeometryFactory factory = leftBank.getFactory();
-    final LinearRing shell = factory.createLinearRing( coordinateList.toCoordinateArray() );
-    return factory.createPolygon( shell, null );
-  }
-
-  private Geometry buildPatchesBuffer( final LineString riverLine, final IProfileFeature[] profiles, final SIDE side, final IStatusCollector log )
-  {
-    /* Calculate bankline distances along the river line */
-    final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, side );
-    log.add( distanceBuilder.execute() );
-    final PolyLine banklineDistances = distanceBuilder.getDistances();
-
-    final double distanceSignum = side == SIDE.left ? -1.0 : +1.0;
-
-    final BanklinePatchesBuilder builder = new BanklinePatchesBuilder( banklineDistances, riverLine, distanceSignum );
-    return builder.buffer();
-  }
+// private Geometry buildPolygonFromBanks( final LineString leftBank, final LineString rightBank )
+// {
+// final CoordinateList coordinateList = new CoordinateList();
+//
+// coordinateList.add( leftBank.getCoordinates(), false, true );
+// coordinateList.add( rightBank.getCoordinates(), false, false );
+//
+// coordinateList.closeRing();
+//
+// final GeometryFactory factory = leftBank.getFactory();
+// final LinearRing shell = factory.createLinearRing( coordinateList.toCoordinateArray() );
+// return factory.createPolygon( shell, null );
+// }
+//
+// private Geometry buildPatchesBuffer( final LineString riverLine, final IProfileFeature[] profiles, final SIDE side,
+// final IStatusCollector log )
+// {
+// /* Calculate bankline distances along the river line */
+// final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider,
+// side );
+// log.add( distanceBuilder.execute() );
+// final PolyLine banklineDistances = distanceBuilder.getDistances();
+//
+// final double distanceSignum = side == SIDE.left ? -1.0 : +1.0;
+//
+// final BanklinePatchesBuilder builder = new BanklinePatchesBuilder( banklineDistances, riverLine, distanceSignum );
+// return builder.buffer();
+// }
 
   WspmWaterBody getWaterBody( )
   {
@@ -265,7 +253,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return JTSUtilities.addPointsToLine( riverLine, intersectionPoints.toCoordinateArray() );
   }
 
-  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log ) throws GM_Exception
+  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log )
   {
     /* Calculate bankline distances along the river line */
     final BanklineDistanceBuilder leftDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, SIDE.left );
