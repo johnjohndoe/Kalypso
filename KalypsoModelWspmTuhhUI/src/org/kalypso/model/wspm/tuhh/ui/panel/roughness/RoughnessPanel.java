@@ -90,10 +90,6 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     super( profile );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
@@ -101,10 +97,6 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
