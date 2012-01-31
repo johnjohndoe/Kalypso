@@ -89,19 +89,12 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
     super( profile, component, RoughnessClassesPage.class.getName() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.panel.roughness.AbstractRoughnessComposite#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return LABEL;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {

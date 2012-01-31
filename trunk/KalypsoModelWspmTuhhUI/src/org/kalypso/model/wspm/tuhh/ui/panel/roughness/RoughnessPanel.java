@@ -180,9 +180,6 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
 
     lnkAdd.addHyperlinkListener( new HyperlinkAdapter()
     {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
