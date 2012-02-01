@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -125,8 +126,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final Point2D curserPoint = toNumeric( curserPos );
 
-    final IRecord profilePoint = ProfilUtil.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
-    final IRecord fePoint = ProfilUtil.findNearestPoint( getProfil(), curserPoint.getX() );
+    final IRecord profilePoint = ProfileVisitors.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
+    final IRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
 
     final Point profilePointScreen = toScreen( profilePoint );
     final Point fePointScreen = toScreen( fePoint );
@@ -198,8 +199,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     if( curserPoint == null )
       return;
 
-    final IRecord profilePoint = ProfilUtil.findNearestPoint( origProfil, curserPoint.getX() );
-    final IRecord fePoint = ProfilUtil.findNearestPoint( profil, curserPoint.getX() );
+    final IRecord profilePoint = ProfileVisitors.findNearestPoint( origProfil, curserPoint.getX() );
+    final IRecord fePoint = ProfileVisitors.findNearestPoint( profil, curserPoint.getX() );
     final Point profilePointScreen = toScreen( profilePoint );
     final Point fePointScreen = toScreen( fePoint );
 

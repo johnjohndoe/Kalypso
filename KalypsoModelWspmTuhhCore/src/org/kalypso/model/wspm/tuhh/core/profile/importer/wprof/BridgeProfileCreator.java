@@ -50,13 +50,14 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -133,7 +134,9 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final double widthPointZ = widthPoint == null ? Double.MAX_VALUE : widthPoint.getValue();
     final IComponent heightComponent = profile.getPointPropertyFor( POINT_PROPERTY_HOEHE );
     final int heightIndex = profile.indexOfProperty( heightComponent );
-    final IRecord lowestSoilPoint = ProfilUtil.getMinPoint( profile, heightComponent );
+
+    final IProfileRecord lowestSoilPoint = ProfileVisitors.findLowestPoint( profile );
+
     final double lowestSoilZ = lowestSoilPoint == null ? Double.MAX_VALUE : (Double) lowestSoilPoint.getValue( heightIndex );
     // FIXME: 2cm runter ist zu fix, besser noch mal gegen das uw-Profil prüfen
     final double uwZ = Math.min( lowestSoilZ - 0.02, widthPointZ );
@@ -510,8 +513,6 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   private IRecord findOrInsertPointAt( final IProfil profile, final double distance, final int buildPropertyIndex )
   {
-    final int indexOfDistance = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-
     final IRecord existingPoint = ProfilUtil.findPoint( profile, distance, 0.00001 );
     if( existingPoint != null )
     {
@@ -521,11 +522,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
 
     // If no point with this width exist or if it already has the buildingProperty, create a new one:
-    final IRecord newPoint = profile.createProfilPoint();
-    newPoint.setValue( indexOfDistance, new Double( distance ) );
-
-    final IRecord pointBefore = ProfilUtil.getPointBefore( profile, distance );
-    ProfilUtil.insertPoint( profile, newPoint, pointBefore );
+    final IProfileRecord newPoint = Profiles.addPoint( profile, distance );
     return newPoint;
   }
 

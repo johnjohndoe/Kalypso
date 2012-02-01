@@ -40,16 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.sobek.struct.SobekStructDef;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.
- *
+ * 
  * @author Gernot Belger
  */
 public class SobekStructDefExportOperation extends AbstractSobekStructExportOperation
@@ -61,9 +61,6 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
     super( info, STRUCT_DEF );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -95,12 +92,10 @@ public class SobekStructDefExportOperation extends AbstractSobekStructExportOper
   {
     final double width = profileObject.getWidth();
 
-    final int heightIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final Double bottomLevel = ProfilUtil.getMinValueFor( profil, heightIndex );
-
-    if( bottomLevel == null )
+    final IProfileRecord sohl = ProfileVisitors.findLowestPoint( profil );
+    if( sohl == null )
       return null;
 
-    return SobekStructDef.createAbutmentBridge( buildingId, profileName, width, bottomLevel, buildingId );
+    return SobekStructDef.createAbutmentBridge( buildingId, profileName, width, sohl.getBreite(), buildingId );
   }
 }

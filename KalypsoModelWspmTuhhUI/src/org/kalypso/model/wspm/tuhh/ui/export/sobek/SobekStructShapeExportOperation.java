@@ -44,15 +44,13 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.shp.SHPException;
@@ -60,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.
- *
+ * 
  * @author Gernot Belger
  */
 public class SobekStructShapeExportOperation extends AbstractSobekExportOperation
@@ -124,9 +122,7 @@ public class SobekStructShapeExportOperation extends AbstractSobekExportOperatio
 
     final SobekExportInfo info = getInfo();
 
-    final IComponent heightComponent = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IRecord minPoint = ProfilUtil.getMinPoint( profil, heightComponent );
-
+    final IProfileRecord minPoint = ProfileVisitors.findLowestPoint( profil );
     if( minPoint == null )
       return;
 

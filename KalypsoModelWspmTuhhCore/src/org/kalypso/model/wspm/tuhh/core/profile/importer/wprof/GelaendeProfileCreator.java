@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -270,7 +271,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
   private IProfileRecord findPoint( final IProfil profile, final IWProfPoint wProfPoint )
   {
     final BigDecimal distance = wProfPoint.getDistance();
-    return ProfilUtil.findNearestPoint( profile, distance.doubleValue() );
+    return ProfileVisitors.findNearestPoint( profile, distance.doubleValue() );
   }
 
   public void setSoilOffset( final double offset )

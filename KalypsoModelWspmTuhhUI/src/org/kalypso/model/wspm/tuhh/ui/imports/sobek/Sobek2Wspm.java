@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDefYZTable;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -276,8 +277,8 @@ public class Sobek2Wspm
       final BigDecimal start = section.getStart();
       final BigDecimal end = section.getEnd();
 
-      final IProfileRecord startRecord = ProfilUtil.findOrInsertPointAt( profil, start );
-      final IProfileRecord endRecord = ProfilUtil.findOrInsertPointAt( profil, end );
+      final IProfileRecord startRecord = Profiles.addPoint( profil, start.doubleValue() );
+      final IProfileRecord endRecord = Profiles.addPoint( profil, end.doubleValue() );
 
       final int startIndex = startRecord.getIndex();
       final int endIndex = endRecord.getIndex();

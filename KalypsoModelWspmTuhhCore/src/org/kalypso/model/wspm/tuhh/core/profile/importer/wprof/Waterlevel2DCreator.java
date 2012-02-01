@@ -61,7 +61,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -75,7 +75,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Spezialcode für Steiermark: Wasserspiegel ins Querprofile einfügen.
- *
+ * 
  * @author Gernot Belger
  */
 public class Waterlevel2DCreator
@@ -236,7 +236,7 @@ public class Waterlevel2DCreator
 
     for( final double width : widths )
     {
-      final IProfileRecord point = ProfilUtil.findNearestPoint( profile, width );
+      final IProfileRecord point = ProfileVisitors.findNearestPoint( profile, width );
 
       final IProfilPointMarker marker = profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, point );
       final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );

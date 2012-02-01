@@ -103,8 +103,9 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -119,7 +120,6 @@ import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor;
 import org.kalypso.model.wspm.tuhh.schema.simulation.QIntervalIndex;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.IPhenomenon;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -138,7 +138,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
- *
+ * 
  * @author Gernot Belger
  */
 public class ImportWspmWizard extends Wizard implements IWizard
@@ -250,10 +250,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.11", foundNetwork.getName() ); //$NON-NLS-1$
       final MessageDialog messageDialog = new MessageDialog( getShell(), getWindowTitle(), null, msg, MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
-        IDialogConstants.CANCEL_LABEL }, 1 );
+          IDialogConstants.CANCEL_LABEL }, 1 );
       final int open = messageDialog.open();
       System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.12" ) + open ); //$NON-NLS-1$
-      if( (open == 2) || (open == -1) )
+      if( open == 2 || open == -1 )
         return false;
 
       if( open == 0 )
@@ -327,7 +327,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
   /**
    * Searches an already imported profile-network for the given reach.<br>
    * REMARK: at the moment, we just search for a network with the same name as the reach... is there another criterion?
-   *
+   * 
    * @return <code>null</code>, if none was found.
    */
   private IRiverProfileNetwork findExistingNetwork( final IRiverProfileNetworkCollection profNetworkColl, final TuhhReach reach )
@@ -345,7 +345,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   /**
    * Reads a REIB_CONST result and creates polynomial and building parameters (aka 'flow-relations') from it.
-   *
+   * 
    * @param elements
    *          by station Must be sorted in the order of the flow direction
    */
@@ -395,7 +395,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           // REMARK: it is important that elementsByStation is sorted in upstream direction
           final IFE1D2DNode< ? > downStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, false );
           final IFE1D2DNode< ? > upStreamNode = PolynomeProcessor.forStationAdjacent( elementsByStation, station, true );
-          if( (downStreamNode == null) || (upStreamNode == null) )
+          if( downStreamNode == null || upStreamNode == null )
           {
             throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17" ), null ) ); //$NON-NLS-1$
           }
@@ -433,7 +433,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return Status.OK_STATUS;
   }
 
-
   private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
   {
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );
@@ -459,7 +458,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       if( existingFlowrel instanceof IBuildingFlowRelation )
       {
-        existingRelation = ((IBuildingFlowRelation) existingFlowrel);
+        existingRelation = (IBuildingFlowRelation) existingFlowrel;
         break;
       }
     }
@@ -588,7 +587,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       /* find sohlpunkt */
       final IProfil profil = profileMember.getProfil();
-      final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+
+      final IProfileRecord sohlPoint = ProfileVisitors.findMinimum( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );
 
       // if there is already a node, do not create it again
@@ -644,7 +644,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           }
         }
 
-        if( !found && ( nodesList.size() == 0 || !( node.getPoint().getX() == nodesList.get( 0 ).getPoint().getX() && node.getPoint().getY() == nodesList.get( 0 ).getPoint().getY() ) ) )
+        if( !found && (nodesList.size() == 0 || !(node.getPoint().getX() == nodesList.get( 0 ).getPoint().getX() && node.getPoint().getY() == nodesList.get( 0 ).getPoint().getY())) )
         {
           /* Create an edge between lastNode and node */
           final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
@@ -726,7 +726,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
       final Feature clonedProfileFeature = FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember );
 
-      result.put( station, (IProfileFeature) (clonedProfileFeature) );
+      result.put( station, (IProfileFeature) clonedProfileFeature );
     }
 
     // We fire the add event, even if the network was not added, this should be enough to refresh anything with is

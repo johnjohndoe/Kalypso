@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
@@ -102,7 +102,7 @@ public class WeirProfileCreator extends GelaendeProfileCreator
         final double value = wprofPoint.getValue();
         final String comment = wprofPoint.getComment();
 
-        final IRecord point = ProfilUtil.findOrInsertPointAt( profile, distance );
+        final IRecord point = Profiles.addPoint( profile, distance.doubleValue() );
 
         point.setValue( bridgeIndex, value );
 

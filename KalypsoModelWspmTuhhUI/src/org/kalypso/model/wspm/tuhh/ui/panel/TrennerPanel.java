@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
@@ -481,7 +482,7 @@ public class TrennerPanel extends AbstractProfilView
           return;
         }
 
-        final IProfileRecord pointCloseTo = ProfilUtil.findNearestPoint( profil, value );
+        final IProfileRecord pointCloseTo = ProfileVisitors.findNearestPoint( profil, value );
         final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
 
         if( devs.length <= m_pos )
