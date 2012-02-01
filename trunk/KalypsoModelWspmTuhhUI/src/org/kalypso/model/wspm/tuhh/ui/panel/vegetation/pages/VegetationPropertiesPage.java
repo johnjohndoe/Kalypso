@@ -64,6 +64,8 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnable;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
@@ -150,6 +152,10 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
           final GuessVegetationClassesRunnable worker = new GuessVegetationClassesRunnable( m_profile, overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
+          final ProfilOperation operation = new ProfilOperation( "Guessing vegetation classes", m_profile, overwriteValues );
+          operation.addChange( worker.getChanges() );
+
+          new ProfilOperationJob( operation ).schedule();
         }
       } );
 

@@ -7,7 +7,9 @@ import java.util.HashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
+import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -36,19 +38,16 @@ final class SimplifyProfileManipulator implements IProfileManipulator
   }
 
   @Override
-  public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+  public IProfilChange[] performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
   {
     monitor.beginTask( "", 1 );//$NON-NLS-1$
 
     final IProfileRecord[] points = m_simplifyPage.getSelectedPoints( profile );
-
     final IProfileRecord[] pointsToKeep = getPointsToKeep( profile );
-
     final IProfileRecord[] pointsToRemove = DouglasPeuckerHelper.reducePoints( points, pointsToKeep, m_allowedDistance );
-
-    profile.getResult().removeAll( Arrays.asList( pointsToRemove ) );
-
     monitor.done();
+
+    return new IProfilChange[] { new PointRemove( profile, pointsToRemove ) };
   }
 
   private IProfileRecord[] getPointsToKeep( final IProfil profile )
