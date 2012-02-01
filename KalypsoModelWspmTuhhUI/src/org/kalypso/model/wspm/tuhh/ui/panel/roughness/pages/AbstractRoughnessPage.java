@@ -63,6 +63,8 @@ import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.roughness.utils.RoughnessDataModel;
@@ -208,6 +210,10 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
           final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
+          final ProfilOperation operation = new ProfilOperation( "Guessing rouhness classes", getProfile(), overwriteValues );
+          operation.addChange( worker.getChanges() );
+
+          new ProfilOperationJob( operation ).schedule();
         }
       } );
 

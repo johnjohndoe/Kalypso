@@ -70,6 +70,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
@@ -172,6 +174,11 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
 
         final UpdateVegetationProperties worker = new UpdateVegetationProperties( m_profile, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
+
+        final ProfilOperation operation = new ProfilOperation( "updating vegatation  values", m_profile, true );
+        operation.addChange( worker.getChanges() );
+
+        new ProfilOperationJob( operation ).schedule();
       }
     } );
 

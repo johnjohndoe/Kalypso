@@ -67,6 +67,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.classifications.utils.AbstractClassificationLabelProvider;
@@ -157,9 +159,14 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       {
         final boolean overwriteValues = MessageDialog.openQuestion( lnk.getShell(), Messages.getString( "RoughnessClassesPage.9" ), Messages.getString( "RoughnessClassesPage.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-        final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( getProfile(), property, overwriteValues );
+        final IProfil profile = getProfile();
+        final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( profile, property, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
 
+        final ProfilOperation operation = new ProfilOperation( "updating roughness values", profile, true );
+        operation.addChange( worker.getChanges() );
+
+        new ProfilOperationJob( operation ).schedule();
       }
     } );
 
