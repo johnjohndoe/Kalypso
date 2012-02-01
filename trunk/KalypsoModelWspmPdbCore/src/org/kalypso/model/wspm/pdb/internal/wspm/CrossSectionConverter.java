@@ -46,14 +46,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
 import org.kalypso.model.wspm.pdb.db.mapping.Point;
@@ -238,19 +240,14 @@ public class CrossSectionConverter
       final BigDecimal width = point.getWidth();
 
       /* Find or insert point at 'width' */
-      final IRecord record;
-      final IRecord nearestPoint = ProfilUtil.findPointAt( m_profile, width );
-      if( nearestPoint == null )
-        record = ProfilUtil.insertPointAt( m_profile, width );
-      else
-        record = nearestPoint;
-      final boolean isInserted = nearestPoint == null;
+      final boolean insert = Objects.isNull( ProfileVisitors.findPoint( m_profile, width.doubleValue() ) );
+      final IProfileRecord record = Profiles.addPoint( m_profile, width.doubleValue() );
 
       setValue( record, asComponent, asDouble( point.getHeight() ) );
 
       // TODO: check: if we have the same width, but different rw/hw we just forget the old rw/hw here, which is bad...
       // TODO: same holds for ID, Code, etc.
-      if( isInserted )
+      if( insert )
         convertStandardProperties( point, record );
     }
   }

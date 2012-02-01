@@ -72,11 +72,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -177,7 +176,9 @@ public class Restart1DImporter
       final String crs = profileMember.getSrsName();
       final BigDecimal station = profileMember.getBigStation();
       final IProfil profil = profileMember.getProfil();
-      final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+
+      final IProfileRecord sohlPoint = ProfileVisitors.findLowestPoint( profil );
+
       final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );
       map.put( station, point );
     }

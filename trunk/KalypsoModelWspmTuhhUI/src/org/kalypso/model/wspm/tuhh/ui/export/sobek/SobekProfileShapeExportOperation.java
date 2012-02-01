@@ -43,13 +43,11 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 import java.io.File;
 import java.io.IOException;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.shp.SHPException;
@@ -57,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Exports WSPM profiles as struct.def SOBEK file.
- *
+ * 
  * @author Gernot Belger
  */
 public class SobekProfileShapeExportOperation extends AbstractSobekExportOperation
@@ -111,9 +109,6 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
     m_shapePoint.closeQuiet();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.AbstractSobekExportOperation#writeProfile(org.kalypso.model.wspm.core.gml.IProfileFeature)
-   */
   @Override
   protected void writeProfile( final IProfileFeature profileFeature ) throws IOException, DBaseException, SHPException, ShapeDataException
   {
@@ -123,9 +118,7 @@ public class SobekProfileShapeExportOperation extends AbstractSobekExportOperati
 
     final IProfil profil = profileFeature.getProfil();
 
-    final IComponent heightComponent = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IRecord minPoint = ProfilUtil.getMinPoint( profil, heightComponent );
-
+    final IProfileRecord minPoint = ProfileVisitors.findLowestPoint( profil );
     if( minPoint == null )
       return;
 

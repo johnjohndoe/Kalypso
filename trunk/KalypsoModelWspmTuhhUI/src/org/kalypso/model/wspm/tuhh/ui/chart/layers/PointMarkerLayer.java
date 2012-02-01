@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -100,7 +101,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     final IProfil profil = getProfil();
-    final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
+    final IRecord point = ProfileVisitors.findNearestPoint( profil, toNumeric( newPos ).getX() );
     final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
@@ -128,7 +129,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
       return;
 
     final IProfileRecord profilPoint = profil.getPoint( pos );
-    final IProfileRecord newPoint = ProfilUtil.findNearestPoint( profil, numPoint.getX() );
+    final IProfileRecord newPoint = ProfileVisitors.findNearestPoint( profil, numPoint.getX() );
     if( newPoint == profilPoint )
       return;
 
