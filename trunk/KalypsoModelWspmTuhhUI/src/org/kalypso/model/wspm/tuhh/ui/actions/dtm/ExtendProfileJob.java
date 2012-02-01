@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.coverages.CoverageProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.ui.actions.ProfileUiUtils;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -113,8 +112,6 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     final IProfil profil = profile.getProfil();
     CoverageProfile.extendPoints( profil, m_insertSign, newPoints, getSimplifyDistance() );
 
-    ProfileUiUtils.changeProfileAndFireEvent( profil, profile );
-
     final TuhhReach reach = m_info.getReach();
     if( reach != null )
     {
@@ -131,9 +128,6 @@ public class ExtendProfileJob extends AbstractDemProfileJob
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.actions.dtm.ICreateProfileStrategy#getLabel()
-   */
   @Override
   public String getLabel( )
   {
