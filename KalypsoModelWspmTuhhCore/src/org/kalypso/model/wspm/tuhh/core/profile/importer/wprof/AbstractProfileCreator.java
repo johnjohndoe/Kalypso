@@ -54,7 +54,6 @@ import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -110,9 +109,6 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     return m_data.getMarkers();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreator#addProfiles(org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject)
-   */
   @Override
   public final IProfil addProfile( final TuhhWspmProject project ) throws CoreException
   {
@@ -132,10 +128,6 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
 
       final IStatus status = e.getStatus();
       profile.setComment( status.toString() );
-    }
-    finally
-    {
-      ProfileFeatureFactory.toFeature( profile, profileFeature );
     }
 
     return profile;

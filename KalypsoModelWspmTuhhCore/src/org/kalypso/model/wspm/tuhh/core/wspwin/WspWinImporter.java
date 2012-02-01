@@ -70,7 +70,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IRunOffEvent;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -314,7 +314,7 @@ public final class WspWinImporter
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
     final IProfil[] profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
 
-    ProfileFeatureFactory.toFeature( profile[0], prof );
+    ((ProfileFeatureBinding) prof).setProfile( profile[0] );
 
     /* Set filename as profile name in order to make it unique */
     prof.setName( FilenameUtils.removeExtension( fileName ) );

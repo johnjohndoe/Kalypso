@@ -55,7 +55,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -147,30 +146,29 @@ public class Sobek2Wspm
     final WspmWaterBody water = m_data.getWater();
     final String srs = m_data.getSrs();
 
-    final IProfileFeature newProfile = water.createNewProfile();
-    newProfile.setName( profileDef.getId() );
-    newProfile.setDescription( profileDef.getNm() );
-    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    newProfile.setSrsName( srs );
+    final IProfileFeature profileFeature = water.createNewProfile();
+    profileFeature.setName( profileDef.getId() );
+    profileFeature.setDescription( profileDef.getNm() );
+    profileFeature.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    profileFeature.setSrsName( srs );
 
     final ISobekProfileDefData profileData = profileDef.getData();
 
     try
     {
       final BigDecimal station = guessStation( profileDef );
-      newProfile.setBigStation( station );
+      profileFeature.setBigStation( station );
 
-      final IProfil profil = newProfile.getProfil();
+      final IProfil profil = profileFeature.getProfil();
       convertData( profil, profileData );
       convertFriction( profil, frictionDat );
       convertNetworkPoint( profil, networkPoint );
 
-      ProfileFeatureFactory.toFeature( profil, newProfile );
-      m_newFeatures.add( newProfile );
+      m_newFeatures.add( profileFeature );
     }
     catch( final CoreException e )
     {
-      water.getProfiles().remove( newProfile );
+      water.getProfiles().remove( profileFeature );
       m_stati.add( e.getStatus() );
       return;
     }

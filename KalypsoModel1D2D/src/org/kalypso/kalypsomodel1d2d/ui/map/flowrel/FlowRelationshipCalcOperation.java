@@ -77,7 +77,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
@@ -316,7 +316,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         final BigDecimal flowStation = flowRel.getStation();
         if( flowStation == null )
         {
-          final String message = String.format( Messages.getString("FlowRelationshipCalcOperation.0"), flowRel.getName() ); //$NON-NLS-1$
+          final String message = String.format( Messages.getString( "FlowRelationshipCalcOperation.0" ), flowRel.getName() ); //$NON-NLS-1$
           throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, null ) ); //$NON-NLS-1$
         }
 
@@ -399,7 +399,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       final double station = profil.getStation();
 
       final IProfileFeature profile = waterBody.createNewProfile();
-      ProfileFeatureFactory.toFeature( profil, profile );
+      ((ProfileFeatureBinding) profile).setProfile( profil );
       reach.createProfileSegment( profile, station );
 
       minStation = Math.min( minStation, station );
@@ -518,7 +518,8 @@ public class FlowRelationshipCalcOperation implements IAdaptable
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes")
+  final Class adapter )
   {
     if( adapter == IStatus.class )
       return m_status;

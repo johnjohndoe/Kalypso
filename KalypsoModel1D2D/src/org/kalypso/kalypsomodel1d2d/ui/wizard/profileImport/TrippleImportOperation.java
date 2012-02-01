@@ -15,7 +15,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -120,7 +120,7 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
     {
       final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( networkFeature, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.QN_PROFILE );
       profileFeature.setEnvelopesUpdated();
-      ProfileFeatureFactory.toFeature( profile, profileFeature );
+      ((ProfileFeatureBinding) profileFeature).setProfile( profile );
       profileFeature.setSrsName( m_crs );
       addedFeatures.add( profileFeature );
     }

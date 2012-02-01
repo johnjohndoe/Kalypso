@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -143,7 +142,6 @@ public class CheckoutCrossSectionsWorker
 
     final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
     converter.execute();
-    ProfileFeatureFactory.toFeature( profile, newProfile );
 
     convertDocuments( section, newProfile );
 
