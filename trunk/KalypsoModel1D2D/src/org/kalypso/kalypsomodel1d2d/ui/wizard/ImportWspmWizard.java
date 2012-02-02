@@ -68,7 +68,6 @@ import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
@@ -123,6 +122,7 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizard.gml.GmlFileImportData;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -147,9 +147,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private final List<Feature> m_discModelAdds = new ArrayList<Feature>();
 
-  private final GmlFileImportPage m_wspmGmlPage;
-
-  private final ImportWspmWizardPage m_importPage;
+  private ImportWspmWizardPage m_importPage;
 
   private final IRiverProfileNetworkCollection m_networkModel;
 
@@ -166,6 +164,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
     }
   };
 
+  private final GmlFileImportData m_gmlImportData = new GmlFileImportData();
+
   public ImportWspmWizard( final IFEDiscretisationModel1d2d discretisationModel, final IRiverProfileNetworkCollection networkModel, final IFlowRelationshipModel flowRelationCollection )
   {
     m_discretisationModel = discretisationModel;
@@ -175,37 +175,33 @@ public class ImportWspmWizard extends Wizard implements IWizard
     setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.0" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
-
-    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    /* Only show calculation node */
-    final GMLXPath projectPath = new GMLXPath( TuhhWspmProject.QN_TYPE );
-    final GMLXPath calculationsPath = new GMLXPath( projectPath, TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
-    m_wspmGmlPage.setRootPath( calculationsPath );
-
-    /* Choose wspm-reach */
-    m_wspmGmlPage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.3" ) ); //$NON-NLS-1$
-    m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QN_TUHH_CALC_REIB_CONST } );
-    m_wspmGmlPage.setValidKind( true, false );
-
-    /* Choose network collection */
-    m_wspmGmlPage.setValidKind( true, false );
-
-    m_importPage = new ImportWspmWizardPage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
-    addPage( m_wspmGmlPage );
+    // FIXME: ugly; directly present user with all available WPSMProject instead of let him select a model.gml
+    // KMUpdate stuff how to do this
+
+    /* Only show calculation node */
+    final GMLXPath projectPath = new GMLXPath( TuhhWspmProject.QN_TYPE );
+    final GMLXPath calculationsPath = new GMLXPath( projectPath, TuhhWspmProject.QNAME_PROP_CALC_MEMBER );
+    m_gmlImportData.setRootPath( calculationsPath );
+
+    /* Choose wspm-reach */
+    m_gmlImportData.setValidQNames( new QName[] { TuhhCalculation.QN_TUHH_CALC_REIB_CONST } );
+    m_gmlImportData.setValidKind( true, false );
+
+    final GmlFileImportPage wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.2" ), m_gmlImportData ); //$NON-NLS-1$ //$NON-NLS-2$
+    wspmGmlPage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.3" ) ); //$NON-NLS-1$
+
+    addPage( wspmGmlPage );
+
+    m_importPage = new ImportWspmWizardPage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.1" ) ); //$NON-NLS-1$
+
     addPage( m_importPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
-   */
   @Override
   public void setContainer( final IWizardContainer wizardContainer )
   {
@@ -219,9 +215,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
       ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangeListener );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -718,9 +711,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
       if( profileMember == null )
         continue;
 
-      if( profileMember == null )
-        continue;
-
       final BigDecimal station = segment.getStation();
 
       final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
@@ -746,10 +736,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   {
     if( event.getSelectedPage() == m_importPage )
     {
-      final IStructuredSelection wspmSelection = m_wspmGmlPage.getSelection();
-      final TuhhCalculation calculation = (TuhhCalculation) wspmSelection.getFirstElement();
+      final TuhhCalculation calculation = (TuhhCalculation) m_gmlImportData.getSelectedElement();
       m_importPage.setCalculation( calculation );
     }
   }
-
 }
