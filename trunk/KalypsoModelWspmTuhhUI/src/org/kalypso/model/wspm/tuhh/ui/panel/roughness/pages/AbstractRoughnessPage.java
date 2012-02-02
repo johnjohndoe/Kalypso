@@ -210,7 +210,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
           final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
-          final ProfilOperation operation = new ProfilOperation( "Guessing rouhness classes", getProfile(), overwriteValues );
+          final ProfilOperation operation = new ProfilOperation( "Guessing roughness classes", getProfile(), overwriteValues );
           operation.addChange( worker.getChanges() );
 
           new ProfilOperationJob( operation ).schedule();

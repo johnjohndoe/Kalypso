@@ -111,29 +111,29 @@ public class RiskModelHelper
   {
     {
       put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
-          {
+      {
         {
           put( FIELD.STYLE_URN, "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
         }
-          } );
+      } );
       put( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, new HashMap<FIELD, String>()
-          {
+      {
         {
           put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
           put( FIELD.STYLE_NAME, "default" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
         }
-          } );
+      } );
     }
   };
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -174,7 +174,7 @@ public class RiskModelHelper
   /**
    * Creates the specific damage coverage collection. <br>
    * The damage value for each grid cell is taken from the underlying polygon.
-   *
+   * 
    * @param scenarioFolder
    *          scenario folder
    * @param polygonCollection
@@ -355,7 +355,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   *
+   * 
    * @param parentKalypsoTheme
    *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -379,7 +379,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   *
+   * 
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -404,9 +404,9 @@ public class RiskModelHelper
   }
 
   /**
-   *
+   * 
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   *
+   * 
    * @param scenarioFolder
    *          relative path needed for the output file path to append on
    * @param inputCoverages
@@ -503,7 +503,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   *
+   * 
    * @param waterDepthCoverageCollection
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -525,7 +525,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -554,7 +554,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layers and adds the new ones
-   *
+   * 
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -635,7 +635,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for each landuse class<br>
    * The value is calculated by integrating the specific damage values.<br>
-   *
+   * 
    */
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
@@ -754,9 +754,9 @@ public class RiskModelHelper
 
   /**
    * Import new events into the risk model.<br>
-   *
+   * 
    * The parameters 'names', 'returnPeriods', 'grids' must eb of the same size.
-   *
+   * 
    * @param names
    *          The names of the events to import
    * @param descriptions
@@ -863,7 +863,7 @@ public class RiskModelHelper
 
   /**
    * Finds and activates the event theme if present.
-   *
+   * 
    * @return <code>true</code>, if the theme was successfully activated.
    * */
   public static boolean activateEventTheme( final IMapPanel mapPanel )
