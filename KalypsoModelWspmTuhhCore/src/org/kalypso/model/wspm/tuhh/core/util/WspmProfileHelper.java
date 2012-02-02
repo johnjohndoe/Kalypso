@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 
@@ -61,16 +62,6 @@ public final class WspmProfileHelper
   {
   }
 
-  /**
-   * @return breite of sohlpunkt
-   */
-  public static double findSohlpunkt( final IProfil profile )
-  {
-    final ProfileWrapper wrapper = new ProfileWrapper( profile );
-
-    return findSohlpunkt( wrapper );
-  }
-
   public static double findSohlpunkt( final IProfil profile, final double fuzziness )
   {
     return findSohlpunkt( new ProfileWrapper( profile ), fuzziness );
@@ -78,7 +69,7 @@ public final class WspmProfileHelper
 
   public static double findSohlpunkt( final ProfileWrapper wrapper )
   {
-    return findSohlpunkt( wrapper, org.kalypso.model.wspm.core.util.WspmProfileHelper.FUZZINESS );
+    return findSohlpunkt( wrapper, Profiles.FUZZINESS );
   }
 
   /**
