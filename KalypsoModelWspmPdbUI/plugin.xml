@@ -35,6 +35,10 @@
                 <visibleWhen checkEnabled="true"/>
              </command>
              <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
+		     <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
+		     <separator name="seperator.toggle.commands" visible="true"/>
+     		 <command commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection" style="toggle" />
           </menuContribution>
     </extension>
 

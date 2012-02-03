@@ -54,8 +54,10 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 /**
  * Abstract handler that should be used for exporting profiles.
  * 
+ * @deprecated no references or sub classes
  * @author Gernot Belger
  */
+@Deprecated
 public abstract class AbstractExportProfilesHandler extends AbstractHandler
 {
   @Override
