@@ -222,9 +222,6 @@ public class RoughnessPanel extends AbstractProfilView implements IElementPageLi
     return pages.toArray( new IElementPage[] {} );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPageListener#pageChanged(java.lang.String)
-   */
   @Override
   public void pageChanged( final String identifier )
   {

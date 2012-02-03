@@ -93,14 +93,20 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
       final Double dAx = (Double) record.getValue( iAX );
       final Double dAy = (Double) record.getValue( iAY );
       final Double dDp = (Double) record.getValue( iDP );
+
+      // FIXME & ?!?
       if( pAx == 0.0 & dAx != 0.0 )
       {
         pAx = dAx;
       }
+
+      // FIXME & ?!?
       if( pAy == 0.0 & dAy != 0.0 )
       {
         pAy = dAy;
       }
+
+      // FIXME & ?!?
       if( pDp == 0.0 & dDp != 0.0 )
       {
         pDp = dDp;

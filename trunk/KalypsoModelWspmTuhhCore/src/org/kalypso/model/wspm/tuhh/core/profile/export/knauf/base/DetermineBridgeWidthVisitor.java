@@ -111,4 +111,10 @@ public class DetermineBridgeWidthVisitor implements IProfileRecordVisitor
   {
     return Math.abs( m_max - m_min );
   }
+
+  @Override
+  public boolean isWriter( )
+  {
+    return false;
+  }
 }

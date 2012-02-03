@@ -114,4 +114,10 @@ public class FindBridgeBorderVisitor implements IProfileRecordVisitor
 
     return (m_min + m_max) / 2.0;
   }
+
+  @Override
+  public boolean isWriter( )
+  {
+    return false;
+  }
 }
