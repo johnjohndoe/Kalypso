@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
 
 import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -54,12 +55,11 @@ import org.kalypsodeegree_impl.model.feature.visitors.I18nFeatureVisitor;
 
 /**
  * This listeners is used to i18n gml-dictionaries (like component definitions).
- *
+ * 
  * @author thuel2
  */
 public class DictI18nGmlListener extends GmlWorkspaceListener
 {
-
 
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)
@@ -83,6 +83,9 @@ public class DictI18nGmlListener extends GmlWorkspaceListener
     try
     {
       final ResourceBundle bundle = ResourceBundleUtils.loadResourceBundle( new URL( context, path ) );
+      if( Objects.isNull( bundle ) || Objects.isNull( bundle.keySet() ) )
+        return;
+
       if( bundle.keySet().isEmpty() )
         return;
 

@@ -142,7 +142,7 @@ public class PolynomeProcessor
       /* Start the polynome1d process */
       final File exeFile = WspmTuhhCalcJob.getExecuteable( m_calculation, m_tmpDir, POLYNOME_1D_EXE_FORMAT, POLYNOME_1D_EXE_PATTERN, monitor );
       if( exeFile == null )
-        return null;
+        throw new SimulationException( "Couldn't resolve Polynome1d.exe" ); //$NON-NLS-1$
 
       final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
       ProcessHelper.startProcess( cmdLine, null, m_tmpDir, monitor, TIMEOUT, logStream, errStream, null );
@@ -222,7 +222,6 @@ public class PolynomeProcessor
       return null;
     }
   }
-
 
   private void prepareSteuerpoly( ) throws SimulationException
   {
