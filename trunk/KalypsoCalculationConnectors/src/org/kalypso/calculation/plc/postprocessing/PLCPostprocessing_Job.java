@@ -10,8 +10,6 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.plc.postprocessing.binding.IScenarioResults;
@@ -28,6 +26,7 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -363,12 +362,13 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     {
       final RectifiedGridCoverage gridCoverage = (RectifiedGridCoverage) coverage;
       final Object rangeSet = gridCoverage.getRangeSet();
-      if( rangeSet instanceof FileType )
+      if( rangeSet instanceof RangeSetFile )
       {
-        final Path filePath = new Path( ((FileType) rangeSet).getFileName() );
+        final RangeSetFile file = (RangeSetFile) rangeSet;
+        final Path filePath = new Path( file.getFileName() );
         // this works for both flood and risk
         final String fileName = new Path( prefix ).append( filePath.removeFirstSegments( 2 ) ).toString();
-        ((FileType) rangeSet).setFileName( fileName );
+        file.setFileName( fileName );
       }
     }
   }

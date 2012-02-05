@@ -3,8 +3,6 @@ package org.kalypso.risk.model.operation;
 import java.util.ArrayList;
 import java.util.List;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -16,7 +14,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -24,6 +21,7 @@ import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -69,10 +67,9 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         // @hack: append .bin to path to get the binary ascii grid file
         final IFile iFile = raster.getiSourceFile();
 
-        final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-
         final String binFileName = "platform:/resource//" + iFile.getProject().getName() + "/" + iFile.getProjectRelativePath().toString() + "." + BIN_EXTENSION; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        rangeSetFile.setFileName( binFileName );
+
+        final RangeSetFile rangeSetFile = new RangeSetFile( binFileName );
         rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
         // remove existing (invalid) coverage collections from the model
