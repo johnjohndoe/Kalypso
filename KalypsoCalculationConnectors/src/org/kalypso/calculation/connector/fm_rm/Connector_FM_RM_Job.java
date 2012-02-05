@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.apache.commons.io.FileUtils;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_FM_RM;
 import org.kalypso.calculation.connector.utils.Connectors;
@@ -25,11 +23,11 @@ import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -49,7 +47,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
   }
 
   @Override
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor )
   {
     final GMLWorkspace fmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_FM_RM.FM_Model.name() );
     final GMLWorkspace rmModel = Connectors.getWorkspace( inputProvider, MODELSPEC_CONNECTOR_FM_RM.RM_Model.name() );
@@ -85,9 +83,9 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
             final Object rangeSet = rCoverage.getRangeSet();
             // TODO: support other rangeSet types; possibly put this
             // code into a helper class
-            if( rangeSet instanceof FileType )
+            if( rangeSet instanceof RangeSetFile )
             {
-              final FileType fileType = (FileType) rangeSet;
+              final RangeSetFile fileType = (RangeSetFile) rangeSet;
               final File eventFile = new File( fmScenarioFolderAbsolutePath.concat( fileType.getFileName() ) );
               if( eventFile.exists() && eventFile.isFile() )
               {
