@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.test;
 
@@ -93,7 +93,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
       tinFile = File.createTempFile( "tinTest", ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       tinFile.deleteOnExit();
 
-      URL gmlLocation = getClass().getResource( "tinyTin.gml" ); //$NON-NLS-1$
+      final URL gmlLocation = getClass().getResource( "tinyTin.gml" ); //$NON-NLS-1$
       assertNotNull( gmlLocation );
 
       loadAndMarshall( tinFile, gmlLocation );
@@ -109,10 +109,10 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
   @Test
   public void testWriteTinyTin2( ) throws Exception
   {
-    File tinFile = new File( System.getProperty( "user.dir" ) + "/src/org/kalypso/kalypsomodel1d2d/conv/test/tinTest.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final File tinFile = new File( System.getProperty( "user.dir" ) + "/src/org/kalypso/kalypsomodel1d2d/conv/test/tinTest.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     tinFile.deleteOnExit();
 
-    URL gmlLocation = getClass().getResource( "tinyTin2.gml" ); //$NON-NLS-1$
+    final URL gmlLocation = getClass().getResource( "tinyTin2.gml" ); //$NON-NLS-1$
     assertNotNull( gmlLocation );
 
     loadAndMarshall( tinFile, gmlLocation );
@@ -121,7 +121,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
 
   }
 
-  private void loadAndMarshall( File tinFile, URL gmlLocation ) throws Exception
+  private void loadAndMarshall( final File tinFile, final URL gmlLocation ) throws Exception
   {
     /* Output: to stream */
     OutputStream os = null;
@@ -137,8 +137,8 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
 
       final XMLReader reader = initTinyTinMarshalling( os );
 
-      final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( reader, tin );
-      marshaller.marshall();
+      final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( reader, tin.getCoordinateSystem() );
+      marshaller.marshall( tin );
 
       endTinyTinMarshalling();
 
@@ -159,7 +159,7 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     return rootFeature;
   }
 
-  private void assertTinFirstTriangle( File file ) throws Exception
+  private void assertTinFirstTriangle( final File file ) throws Exception
   {
     try
     {
@@ -185,16 +185,16 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
     }
   }
 
-  private XMLReader initTinyTinMarshalling( OutputStream os ) throws SAXException
+  private XMLReader initTinyTinMarshalling( final OutputStream os ) throws SAXException
   {
-    XMLReader reader = initMarshalling( os );
+    final XMLReader reader = initMarshalling( os );
 
     m_xmlStream.startPrefixMapping( "xlink", NS.XLINK ); // the attribute does not trigger the prefix mapping //$NON-NLS-1$
     m_xmlStream.startPrefixMapping( "gml", NS.GML3 ); //$NON-NLS-1$
     m_xmlStream.startPrefixMapping( "xs", NS.XSD ); //$NON-NLS-1$
     m_xmlStream.startPrefixMapping( "ns1", "org.kalypso.deegree.gmlparsertest" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_xmlStream.startElement( "", "TinFeature", "ns1:TinFeature" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$    
+    m_xmlStream.startElement( "", "TinFeature", "ns1:TinFeature" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     m_xmlStream.addAttribute( NS.XSD, "schemaLocation", "xs:schemaLocation", "string", "org.kalypso.deegree.gmlparsertest test.xsd" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "idvalue0" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     m_xmlStream.startElement( "", "triangularSurfaceMember", "ns1:triangularSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -234,8 +234,8 @@ public class MarshallTriangulatedSurfaceTest extends TestCase
 
   private void assertContentEquals( final URL location, final File file ) throws IOException
   {
-    String fileContent = FileUtils.readFileToString( new File( file.getAbsolutePath() ), System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
-    String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
+    final String fileContent = FileUtils.readFileToString( new File( file.getAbsolutePath() ), System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
+    final String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) ); //$NON-NLS-1$
     assertEquals( fileContent, urlContent );
   }
 }
