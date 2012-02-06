@@ -48,10 +48,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -71,7 +73,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * refactored by Stefan Kurzbach
  * <p>
  * commented out some code for fixing bad geometries
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class FeatureListGeometryIntersector
@@ -119,7 +121,7 @@ public class FeatureListGeometryIntersector
    * Intersects features given as a list of feature lists, produces the result into the resultList<br>
    */
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public List<Polygon> intersect( final IProgressMonitor monitor )
+  public List<Polygon> intersect( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_sourceLayers.isEmpty() )
       return Collections.EMPTY_LIST;
@@ -195,7 +197,7 @@ public class FeatureListGeometryIntersector
         {
           final String msg = Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.2", count, countSourceFeatures, countTargetFeatures, layer + 1 ); //$NON-NLS-1$
           progress.subTask( msg ); //$NON-NLS-1$
-          childProgress.worked( 10 );
+          ProgressUtilities.worked( childProgress, 10 );
         }
         count++;
 
