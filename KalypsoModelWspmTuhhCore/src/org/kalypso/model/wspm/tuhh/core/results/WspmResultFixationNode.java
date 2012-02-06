@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 
@@ -106,6 +107,6 @@ public class WspmResultFixationNode extends AbstractWspmResultNode implements IW
   @Override
   public TuhhCalculation getCalculation( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

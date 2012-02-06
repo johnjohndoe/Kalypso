@@ -9,12 +9,12 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;

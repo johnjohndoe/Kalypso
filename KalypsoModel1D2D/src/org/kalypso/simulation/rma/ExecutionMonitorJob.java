@@ -53,16 +53,16 @@ import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs.FileContent;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.service.wps.utils.MarshallUtilities;
@@ -99,52 +99,51 @@ public class ExecutionMonitorJob extends Job
     setProperty( IProgressConstants.KEEP_PROPERTY, Boolean.TRUE );
     setUser( true );
 
-    // FIXME: Compile error in Eclipse 3.5.1
-    // if( commandId != null )
-    // {
-    // final ICommandService commandSvc = (ICommandService) PlatformUI.getWorkbench().getAdapter( ICommandService.class
-    // );
-    // final Command command = commandSvc.getCommand( commandId );
-    // if( command.isDefined() )
-    // {
-    // try
-    // {
-    //          final IParameter parmDef = command.getParameter( "statusLocation" ); //$NON-NLS-1$
-    // final Parameterization[] parms = new Parameterization[] { new Parameterization( parmDef, statusLocation ) };
-    // final ParameterizedCommand pCommand = new ParameterizedCommand( command, parms );
-    // setProperty( IProgressConstants.COMMAND_PROPERTY, pCommand );
-    // }
-    // catch( final NotDefinedException e )
-    // {
-    // // should never happen
-    // }
-    // }
-    // }
+// FIXME: Compile error in Eclipse 3.5.1
+// if( commandId != null )
+// {
+// final ICommandService commandSvc = (ICommandService) PlatformUI.getWorkbench().getAdapter( ICommandService.class );
+// final Command command = commandSvc.getCommand( commandId );
+// if( command.isDefined() )
+// {
+// try
+// {
+//          final IParameter parmDef = command.getParameter( "statusLocation" ); //$NON-NLS-1$
+// final Parameterization[] parms = new Parameterization[] { new Parameterization( parmDef, statusLocation ) };
+// final ParameterizedCommand pCommand = new ParameterizedCommand( command, parms );
+// setProperty( IProgressConstants.COMMAND_PROPERTY, pCommand );
+// }
+// catch( final NotDefinedException e )
+// {
+// // should never happen
+// }
+// }
+// }
 
     // display the status if clicked
-    // setProperty( IProgressConstants.ACTION_PROPERTY, new Action( "Show current status" )
-    // {
-    // @Override
-    // public void run( )
-    // {
-    // final IStatus status = getStatus();
-    // if( status == null )
-    // return;
-    //
-    // final IWorkbench workbench = PlatformUI.getWorkbench();
-    // if( workbench == null )
-    // return;
-    //
-    // final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-    // if( activeWorkbenchWindow == null )
-    // return;
-    //
-    // // open new status dialog
-    // final Shell shell = activeWorkbenchWindow.getShell();
-    // final StatusDialog dialog = new StatusDialog( shell, status, "Current status" );
-    // dialog.open();
-    // }
-    // } );
+// setProperty( IProgressConstants.ACTION_PROPERTY, new Action( "Show current status" )
+// {
+// @Override
+// public void run( )
+// {
+// final IStatus status = getStatus();
+// if( status == null )
+// return;
+//
+// final IWorkbench workbench = PlatformUI.getWorkbench();
+// if( workbench == null )
+// return;
+//
+// final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+// if( activeWorkbenchWindow == null )
+// return;
+//
+// // open new status dialog
+// final Shell shell = activeWorkbenchWindow.getShell();
+// final StatusDialog dialog = new StatusDialog( shell, status, "Current status" );
+// dialog.open();
+// }
+// } );
   }
 
   /**
@@ -158,7 +157,7 @@ public class ExecutionMonitorJob extends Job
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
-    monitor.beginTask( Messages.getString( "ExecutionMonitorJob_0" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("ExecutionMonitorJob_0"), 100 ); //$NON-NLS-1$
 
     try
     {
@@ -239,7 +238,7 @@ public class ExecutionMonitorJob extends Job
             final int percentCompleted = percent != null ? percent.intValue() : 0;
             monitor.worked( percentCompleted - m_previousWork );
             m_previousWork = percentCompleted;
-            status = StatusUtilities.createInfoStatus( Messages.getString( "ExecutionMonitorJob_1" ), description, percentCompleted ); //$NON-NLS-1$
+            status = StatusUtilities.createInfoStatus( Messages.getString("ExecutionMonitorJob_1"), description, percentCompleted ); //$NON-NLS-1$
             monitor.subTask( description );
           }
           else if( processSucceeded != null )
@@ -250,7 +249,7 @@ public class ExecutionMonitorJob extends Job
           }
           else
           {
-            status = StatusUtilities.createWarningStatus( Messages.getString( "ExecutionMonitorJob_2" ) ); //$NON-NLS-1$
+            status = StatusUtilities.createWarningStatus( Messages.getString("ExecutionMonitorJob_2") ); //$NON-NLS-1$
           }
 
           // update status
@@ -288,7 +287,7 @@ public class ExecutionMonitorJob extends Job
   private void updateStatusLocation( final String statusLocation )
   {
     m_statusLocation = statusLocation;
-    setName( Messages.getString( "ExecutionMonitorJob_3" ) + statusLocation ); //$NON-NLS-1$
+    setName( Messages.getString("ExecutionMonitorJob_3") + statusLocation ); //$NON-NLS-1$
   }
 
   public ExecuteResponseType getExecuteResponse( )

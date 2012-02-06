@@ -47,7 +47,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IViewPart;
@@ -145,7 +145,7 @@ public class UtilMap
     for( final IKalypsoFeatureTheme theme : loadedKalypsoFeatureThemes )
     {
       final FeatureList featureList = theme.getFeatureList();
-      final Feature modelFeature = featureList == null ? null : featureList.getOwner();
+      final Feature modelFeature = featureList == null ? null : featureList.getParentFeature();
       if( modelFeature != null )
       {
         final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );

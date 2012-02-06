@@ -85,7 +85,7 @@ public class GuessStationContext
 
   private DecimalFormat buildFormat( )
   {
-    final DecimalFormat df = new DecimalFormat( "###,###.#" ); //$NON-NLS-1$
+    final DecimalFormat df = new DecimalFormat( "###,###.#" );
     final DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 
     if( m_thousandSeparator != null )
@@ -117,7 +117,7 @@ public class GuessStationContext
     if( m_thousandSeparator != null )
     {
       builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
-      builder.append( "\\" ).append( m_thousandSeparator ); //$NON-NLS-1$
+      builder.append( "\\" ).append( m_thousandSeparator );
     }
 
     builder.append( DIGITS ).append( "+" ); //$NON-NLS-1$
@@ -126,7 +126,7 @@ public class GuessStationContext
       builder.append( "+" ); //$NON-NLS-1$
     else
     {
-      builder.append( "\\" ).append( m_decimalSeparator ); //$NON-NLS-1$
+      builder.append( "\\" ).append( m_decimalSeparator );
       builder.append( DIGITS ).append( '+' );
     }
 

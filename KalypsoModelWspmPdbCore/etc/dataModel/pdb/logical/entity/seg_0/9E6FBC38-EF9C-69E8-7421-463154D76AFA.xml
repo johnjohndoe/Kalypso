@@ -3,7 +3,7 @@
    <createdBy>thuel2</createdBy>
    <createdTime>2011-05-18 07:19:53 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-08-31 12:12:21 UTC</changedTime>
+   <changedTime>2011-07-13 13:35:48 UTC</changedTime>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Gaf_Vegetation PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -138,17 +138,6 @@
          <distinctType>B3BBFFC0-261E-2785-8C3A-A260662720FD</distinctType>
          <logicalDatatype>LOGDT024</logicalDatatype>
          <dataTypeSize>255</dataTypeSize>
-      </Attribute>
-      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Color" id="D4EE8AC2-B997-8AAF-4029-13E2A5283FFA">
-         <createdBy>thuel</createdBy>
-         <createdTime>2011-08-31 12:12:08 UTC</createdTime>
-         <changedBy>thuel</changedBy>
-         <changedTime>2011-08-31 12:12:21 UTC</changedTime>
-         <commentInRDBMS>color (hex)</commentInRDBMS>
-         <ownerDesignName>pdb</ownerDesignName>
-         <nullsAllowed>true</nullsAllowed>
-         <use>2</use>
-         <distinctType>836798AC-5A06-51A2-94D7-E5EDF6CFF68B</distinctType>
       </Attribute>
       <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="Point_Kind" id="774EA85F-B9F0-B2EB-7AF6-1B60FC4E9309">
          <createdBy>thuel2</createdBy>

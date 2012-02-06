@@ -6,7 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -22,7 +22,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -34,7 +34,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  * 
  * @author Holger Albert
  */
-public class CreateProfileFromDEMWidget extends DeprecatedMouseWidget
+public class CreateProfileFromDEMWidget extends AbstractWidget
 {
   private static final String STR_DEFAULT_TOOLTIP = Messages.getString( "CreateProfileFromDEMWidget_0" ) + Messages.getString( "CreateProfileFromDEMWidget_1" ) + Messages.getString( "CreateProfileFromDEMWidget_2" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
@@ -179,7 +179,7 @@ public class CreateProfileFromDEMWidget extends DeprecatedMouseWidget
     if( featureList == null )
       return null;
 
-    final Feature coveragesFeature = featureList.getOwner();
+    final Feature coveragesFeature = featureList.getParentFeature();
 
     return (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class );
   }

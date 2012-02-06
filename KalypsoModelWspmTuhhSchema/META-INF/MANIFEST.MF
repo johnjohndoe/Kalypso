@@ -20,4 +20,4 @@ Export-Package: org.kalypso.model.wspm.tuhh.schema,
  org.kalypso.model.wspm.tuhh.schema.gml,
  org.kalypso.model.wspm.tuhh.schema.schemata,
  org.kalypso.model.wspm.tuhh.schema.simulation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

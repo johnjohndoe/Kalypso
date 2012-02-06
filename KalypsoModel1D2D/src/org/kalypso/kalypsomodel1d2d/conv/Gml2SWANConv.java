@@ -74,8 +74,8 @@ import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -153,9 +153,9 @@ public class Gml2SWANConv implements INativeIDProvider
 
     m_listAllElements = m_calculationUnit.getElements2D();
 
-    final String lStrCalculationUnitId = m_calculationUnit.getId();
+    final String lStrCalculationUnitId = m_calculationUnit.getGmlID();
     m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
-    for( final IFlowRelationship relationship : flowrelationModel.getFlowRelationsShips() )
+    for( final IFlowRelationship relationship : flowrelationModel )
     {
       if( relationship instanceof IBoundaryCondition )
       {
@@ -171,7 +171,7 @@ public class Gml2SWANConv implements INativeIDProvider
     }
   }
 
-  public int getConversionID( final Feature feature )
+  public int getConversionID( final IFeatureWrapper2 feature )
   {
     return getConversionID( feature, null );
   }
@@ -181,7 +181,7 @@ public class Gml2SWANConv implements INativeIDProvider
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
   @SuppressWarnings("unused")
-  public int getConversionID( final Feature feature, final String pGMLId )
+  public int getConversionID( final IFeatureWrapper2 feature, final String pGMLId )
   {
     return 0;
   }
@@ -359,7 +359,7 @@ public class Gml2SWANConv implements INativeIDProvider
     {
       if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D ) || boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
-        if( boundaryCondition.getParentElementID() != null && boundaryCondition.getParentElementID().equals( contiLineAct.getId() ) )
+        if( boundaryCondition.getParentElementID() != null && boundaryCondition.getParentElementID().equals( contiLineAct.getGmlID() ) )
         {
           return true;
         }
@@ -384,7 +384,7 @@ public class Gml2SWANConv implements INativeIDProvider
 
         try
         {
-          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" );
+          final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" ); //$NON-NLS-1$
           lListResults.addAll( Arrays.asList( triangles ) );
         }
         catch( Throwable e )
@@ -554,14 +554,14 @@ public class Gml2SWANConv implements INativeIDProvider
     {
       return lBoolResult;
     }
-    IFeatureBindingCollection lContainers = pNode.getContainers();
+    IFeatureWrapperCollection lContainers = pNode.getContainers();
     for( final Object lContainerObject : lContainers )
     {
       if( lContainerObject instanceof IFE1D2DEdge )
       {
         IFE1D2DEdge lEdge = (IFE1D2DEdge) lContainerObject;
 
-        IFeatureBindingCollection<IFE1D2DElement> adjacentElements = lEdge.getAdjacentElements();
+        IFeatureWrapperCollection<IFE1D2DElement> adjacentElements = lEdge.getAdjacentElements();
         if( adjacentElements.size() < 2 || (!m_calculationUnit.contains( adjacentElements.get( 0 ) ) && m_calculationUnit.contains( adjacentElements.get( 1 ) ))
             || (!m_calculationUnit.contains( adjacentElements.get( 1 ) ) && m_calculationUnit.contains( adjacentElements.get( 0 ) )) )
         {

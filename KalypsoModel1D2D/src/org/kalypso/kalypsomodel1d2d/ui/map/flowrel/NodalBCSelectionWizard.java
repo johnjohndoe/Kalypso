@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
@@ -57,7 +57,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -71,6 +70,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -98,12 +98,12 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private IFeatureSelectionManager m_selectionManager;
 
-  private final Feature m_parentModelElement;
+  private final IFeatureWrapper2 m_parentModelElement;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature parentModelElement )
+  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 parentModelElement )
   {
     m_descriptors = descriptors;
     m_workspace = workspace;
@@ -133,7 +133,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     final IBoundaryConditionDescriptor descriptor = m_descriptorPage.getDescriptor();
 
     /* Create new feature */
-    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IBoundaryCondition.QNAME );
+    final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
     final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
     final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
     // System.out.println("PROP="+m_parentFeature.getProperty( m_parentRelation ));
@@ -211,6 +211,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           try
           {
             m_workspace.postCommand( command );
+
           }
           catch( final Throwable e )
           {
@@ -240,10 +241,10 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   /**
    * Sets the target position of the boundary condition to be created.
-   *
+   * 
    * @param boundaryPosition
    *          the target position
-   *
+   * 
    */
   public void setBoundaryPosition( final GM_Point boundaryPosition )
   {

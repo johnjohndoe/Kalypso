@@ -47,7 +47,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Command For deleting a boundary line. It does not support undo
@@ -142,7 +143,7 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
 
   private void unlinkComplexElement( IFELine line )
   {
-    IFeatureBindingCollection<IFE1D2DComplexElement> containers2 = line.getContainers();
+    IFeatureWrapperCollection<IFE1D2DComplexElement> containers2 = line.getContainers();
     IFE1D2DComplexElement[] containers = containers2.toArray( new IFE1D2DComplexElement[] {} );
     for( IFE1D2DComplexElement ce : containers )
     {
@@ -181,14 +182,14 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
 
   // private static final void unlinkEdges( ILineElement line, IFEDiscretisationModel1d2d model1d2d )
   // {
-  // final IFeatureBindingCollection<IFE1D2DEdge> edges = line.getEdges();
-  // final IFeatureBindingCollection<IFE1D2DEdge> model1d2dEdges = model1d2d.getEdges();
-  // final IFeatureBindingCollection<IFE1D2DNode> model1d2dNodes = model1d2d.getNodes();
+  // final IFeatureWrapperCollection<IFE1D2DEdge> edges = line.getEdges();
+  // final IFeatureWrapperCollection<IFE1D2DEdge> model1d2dEdges = model1d2d.getEdges();
+  // final IFeatureWrapperCollection<IFE1D2DNode> model1d2dNodes = model1d2d.getNodes();
   //
   // for( int i = edges.size() - 1; i >= 0; i-- )
   // {
   // final IFE1D2DEdge edge = edges.remove( i );
-  // final IFeatureBindingCollection edgeContainers = edge.getContainers();
+  // final IFeatureWrapperCollection edgeContainers = edge.getContainers();
   // edgeContainers.removeAllRefs( line );
   //
   // // if the element have been deleted before the line element
@@ -241,9 +242,9 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new Feature[] { bLine };
+    return new IFeatureWrapper2[] { bLine };
   }
 
   /**

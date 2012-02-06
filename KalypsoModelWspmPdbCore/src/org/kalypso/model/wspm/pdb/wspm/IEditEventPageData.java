@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Event;
 
 /**
  * @author Gernot Belger
+ *
  */
 public interface IEditEventPageData
 {

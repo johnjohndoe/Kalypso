@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.Geology;
@@ -66,13 +66,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -85,7 +85,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * Creates and writes hydrotops into a 'hydrotop.gml' file from 'modell.gml' (catchments), 'pedologie.gml',
  * 'geologie.gml' and 'landuse.gml'<br/>
  * FIXME: break this code into smaller chunks. Else, no one will every understand how it works....
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class HydrotopeCreationOperation implements IRunnableWithProgress
@@ -156,7 +156,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
   /**
    * TODO implements/extends ICoreRunnalbeWithProgress or WorkspaceJob -> run method return status!!!!
-   *
+   * 
    * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
@@ -213,7 +213,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
       int count = 0;
 
-      final IFeatureType hydrotopeFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.QNAME );
+      final IGMLSchema gmlSchema = m_workspace.getGMLSchema();
+      final IFeatureType hydrotopeFT = gmlSchema.getFeatureType( IHydrotope.QNAME );
       final IRelationType sudsMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_SUD_MEMBERS );
       final IRelationType catchmentMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_CATCHMENT_MEMBER );
 
@@ -275,10 +276,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         {
           if( feature instanceof org.kalypso.model.hydrology.binding.model.Catchment )
           {
-            final String href = String.format( ".models/modell.gml#%s", feature.getId() ); //$NON-NLS-1$
-
-            hydrotop.setCatchmentMember( href );
-
+            final IFeatureType featureType = feature.getFeatureType();
+            final String href = String.format( "modell.gml#%s", feature.getId() ); //$NON-NLS-1$
+            final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, catchmentMemberRT, featureType, href, null, null, null, null, null );
+            hydrotop.setCatchmentMember( lnk );
             corrSealing = corrSealing * ((Catchment) feature).getCorrSealing();
           }
           else if( feature instanceof Landuse )
@@ -287,7 +288,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             final Object landuseClassLink = landuse.getLanduse();
             final Feature featureLanduse = FeatureHelper.resolveLinkedFeature( m_workspace, landuseClassLink );
             if( featureLanduse == null )
-              hydrotop.setLanduse( ((IXLinkedFeature) landuseClassLink).getFeatureId() );
+              hydrotop.setLanduse( ((XLinkedFeature_Impl) landuseClassLink).getFeatureId() );
             else
               hydrotop.setLanduse( featureLanduse.getName() );
 
@@ -299,10 +300,13 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             for( final Feature sudsFeature : landuseSudsCollection )
             {
               // TODO check why landuse have the collection of suds, when hydrotop may be connected to just one sud
-              if( sudsFeature instanceof IXLinkedFeature )
+              if( sudsFeature instanceof XLinkedFeature_Impl )
               {
-                final String href = String.format( "suds.gml#%s", ((IXLinkedFeature) sudsFeature).getFeatureId() ); //$NON-NLS-1$
-                hydrotopeFeatureList.addLink( href );
+                final IFeatureType ft = sudsFeature.getFeatureType();
+                final String href = String.format( "suds.gml#%s", ((XLinkedFeature_Impl) sudsFeature).getFeatureId() ); //$NON-NLS-1$
+
+                final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( hydrotop, sudsMemberRT, ft, href, null, null, null, null, null );
+                hydrotopeFeatureList.add( lnk );
               }
             }
           }
@@ -310,8 +314,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           {
             final Object soiltypeClassLink = ((SoilType) feature).getSoilType();
             final String value;
-            if( soiltypeClassLink instanceof IXLinkedFeature )
-              value = ((IXLinkedFeature) soiltypeClassLink).getFeatureId();
+            if( soiltypeClassLink instanceof XLinkedFeature_Impl )
+              value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
             else
               value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
             hydrotop.setSoilType( value );

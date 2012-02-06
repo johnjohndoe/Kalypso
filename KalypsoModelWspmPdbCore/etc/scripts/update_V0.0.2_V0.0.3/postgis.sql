@@ -1,4 +1,4 @@
--- Version setzen auf "creating" oder "updating"
+-- Version setzen auf "creating" oder "updateing"
 UPDATE INFO set value='updating 0.0.2 to 0.0.3'  where key ='Version';
 
 GRANT SELECT ON TABLE pdb.cross_section TO GROUP pdb_user;
@@ -21,7 +21,7 @@ GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.event TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.info TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.point TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.point_kind TO GROUP pdb_admin;
-GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.roughness TO GROUP pdb_admin; 
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.roughness TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.state TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.vegetation TO GROUP pdb_admin;
 GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE pdb.water_body TO GROUP pdb_admin;
@@ -44,6 +44,6 @@ INSERT INTO INFO("key", "value") VALUES ('srsMinZ', '-1000.0');
 INSERT INTO INFO("key", "value") VALUES ('srsMaxZ', '10000.0');
 INSERT INTO INFO("key", "value") VALUES ('srsTolZ', '0.0005');
 
--- Version endgÃ¼ltig setzen
+-- Version endgültig setzen
 UPDATE INFO set value='0.0.3' where key ='Version';
 commit;

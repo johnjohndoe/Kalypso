@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class LengthSectionHandler2dTest extends TestCase
 {
@@ -74,8 +74,8 @@ public class LengthSectionHandler2dTest extends TestCase
     try
     {
       // Demo river line file (Stör)
-      final URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" ); //$NON-NLS-1$
-      final GMLWorkspace shapeWorkspace = null;
+      URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" ); //$NON-NLS-1$
+      GMLWorkspace shapeWorkspace = null;
       // final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       // final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
       // csFac.getCSByName( "EPSG:31467" ) );
@@ -84,8 +84,8 @@ public class LengthSectionHandler2dTest extends TestCase
       final Feature fRoot = shapeWorkspace.getRootFeature();
       final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-      final BigDecimal max = new BigDecimal( 62000 );
-      final BigDecimal min = new BigDecimal( 58000 );
+      BigDecimal max = new BigDecimal( 62000 );
+      BigDecimal min = new BigDecimal( 58000 );
       final BigDecimal stepWidth = new BigDecimal( 100 );
 
       final BigDecimal minDecimal = min.setScale( 1, BigDecimal.ROUND_FLOOR );
@@ -94,13 +94,13 @@ public class LengthSectionHandler2dTest extends TestCase
       final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
 
       // Demo Station List
-      final BigDecimal[] stationList = new BigDecimal[numOfClasses];
+      BigDecimal[] stationList = new BigDecimal[numOfClasses];
 
       for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
       {
         final double currentValue = minDecimal.doubleValue() + currentClass * stepWidth.doubleValue();
 
-        final BigDecimal station = new BigDecimal( currentValue );
+        BigDecimal station = new BigDecimal( currentValue );
         stationList[currentClass] = station;
       }
 
@@ -112,14 +112,14 @@ public class LengthSectionHandler2dTest extends TestCase
       // Triangulated surfaces
 
       GM_TriangulatedSurface surface = null;
-      final URL resource = getClass().getResource( "resources/tin_Terrain.gml" ); //$NON-NLS-1$
+      URL resource = getClass().getResource( "resources/tin_Terrain.gml" ); //$NON-NLS-1$
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
 
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-      GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
+      GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
 
       if( geometryProperty instanceof GM_TriangulatedSurface )
       {
@@ -127,12 +127,12 @@ public class LengthSectionHandler2dTest extends TestCase
       }
       LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false, new NullProgressMonitor() );
 
-      final URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
+      URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
       w = GmlSerializer.createGMLWorkspace( resource2, null );
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-      geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
+      geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
 
       if( geometryProperty instanceof GM_TriangulatedSurface )
       {
@@ -145,20 +145,20 @@ public class LengthSectionHandler2dTest extends TestCase
       if( lsObs.getResult().size() > 0 )
       {
         ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-        final File lsObsFile = new File( "d:/temp/lengthSection.gml" ); //$NON-NLS-1$
+        File lsObsFile = new File( "d:/temp/lengthSection.gml" ); //$NON-NLS-1$
         GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" ); //$NON-NLS-1$
       }
 
       // test obs geklappt hat...
-      final boolean result = true;
+      boolean result = true;
       assertEquals( "Result sollte true sein", true, result ); //$NON-NLS-1$
     }
-    catch( final GmlSerializeException e )
+    catch( GmlSerializeException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -189,5 +189,5 @@ public class LengthSectionHandler2dTest extends TestCase
     return ShapeSerializer.deserialize( shape, cSystem );
   }
 
-
+ 
 }

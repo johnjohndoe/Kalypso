@@ -52,6 +52,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -66,7 +67,18 @@ public class VerticalLineLayer extends AbstractLineLayer
    */
   private final BigDecimal[] m_points;
 
-  
+  /**
+   * The constructor.
+   * 
+   * @param points
+   *          A list of values at the domain axis, where the vertical lines should be drawn.
+   */
+  public VerticalLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle, final BigDecimal[] points )
+  {
+    super( provider, lineStyle, pointStyle );
+
+    m_points = points;
+  }
 
   /**
    * The constructor.
@@ -97,8 +109,7 @@ public class VerticalLineLayer extends AbstractLineLayer
       final Integer yMin = targetAxis.numericToScreen( numericRange.getMin() );
       final Integer yMax = targetAxis.numericToScreen( numericRange.getMax() );
 
-      final PolylineFigure polylineFigure = new PolylineFigure();
-      polylineFigure.setStyle( (ILineStyle) getStyleSet().getStyle( "line_style" ) );
+      final PolylineFigure polylineFigure = getPolylineFigure();
       polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
       polylineFigure.paint( gc );
     }
@@ -108,7 +119,7 @@ public class VerticalLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return new DataRange<Number>( m_points[0].doubleValue() - 0.1, m_points[0].doubleValue() + 0.1 );
   }

@@ -43,7 +43,7 @@ package org.kalypso.model.rcm.internal.binding;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -52,7 +52,6 @@ import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -185,7 +184,7 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
   @Override
   public IObservation getTimeserie( ) throws MalformedURLException, SensorException
   {
-    final TimeseriesLinkType link = getProperty( IOmbrometer.QNAME_PROP_PRECIPITATION1, TimeseriesLinkType.class );
+    final TimeseriesLinkType link = getTimeserieLink();
     final URL context = getWorkspace().getContext();
     final String href = link.getHref();
     final URL linkUrl = UrlResolverSingleton.resolveUrl( context, href );
@@ -193,9 +192,8 @@ public class Ombrometer extends Feature_Impl implements IOmbrometer
     return ZmlFactory.parseXML( linkUrl );
   }
 
-  @Override
-  public ZmlLink getTimeserieLink( )
+  private TimeseriesLinkType getTimeserieLink( )
   {
-    return new ZmlLink( this, IOmbrometer.QNAME_PROP_PRECIPITATION1 );
+    return getProperty( IOmbrometer.QNAME_PROP_PRECIPITATION1, TimeseriesLinkType.class );
   }
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.net.URL;
 import java.util.HashMap;
 
 import org.eclipse.swt.graphics.GC;
@@ -95,27 +94,12 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
+   */
   @Override
   public RGB getColorFor( final String marker )
   {
     return MARKER_TYPES.get( marker );
-  }
-
-  @Override
-  public URL getSld( final String marker )
-  {
-    switch( marker )
-    {
-      case IWspmTuhhConstants.MARKER_TYP_BORDVOLL:
-        return getClass().getResource( "marker/symbolization/bordvoll.point.sld" ); //$NON-NLS-1$
-      case IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE:
-        return getClass().getResource( "marker/symbolization/durstroemt.point.sld" ); //$NON-NLS-1$
-      case IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE:
-        return getClass().getResource( "marker/symbolization/trennflaeche.point.sld" ); //$NON-NLS-1$
-      case IWspmTuhhConstants.MARKER_TYP_WEHR:
-        return getClass().getResource( "marker/symbolization/wehr.sld" ); //$NON-NLS-1$
-    }
-
-    return null;
   }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
@@ -48,7 +48,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
@@ -92,7 +91,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
   public BuildingParameterLayer( final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId, final IStyleSet styleSet )
   {
-    super( null,new StyleSet() );
+    super( null );
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
     final TupleResult result = obs.getResult();
@@ -232,7 +231,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
   }
@@ -241,7 +240,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return rangeForComponent( m_valueComponent );
   }
@@ -402,7 +401,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // HACK: we post the command directly to the flow-model.... it would be of course much better to get the commandable
     // workspace from outside...
 
-    KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), command );
+    KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, command );
 
     ProgressUtilities.worked( monitor, 1 );
 

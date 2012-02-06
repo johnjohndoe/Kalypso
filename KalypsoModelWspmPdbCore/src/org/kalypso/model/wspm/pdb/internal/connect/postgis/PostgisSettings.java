@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.postgis;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
@@ -116,7 +116,7 @@ public class PostgisSettings extends HibernateSettings
     if( PROPERTY_NAME.equals( property ) )
       return "PostGIS"; //$NON-NLS-1$
 
-    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) ); //$NON-NLS-1$
+    throw new IllegalArgumentException( String.format( "Unknwon property: %s", property ) );
   }
 
   public void setHost( final String host )

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -108,7 +108,9 @@ public class CulvertLayer extends AbstractProfilLayer
     final Double x = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, tube );
     final Double y = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, tube );
     final Double b = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, tube );
-    final Double h;
+    final Double h = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, tube );
+    final Double m = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, tube );
+
     final IAxis targetAx = getTargetAxis();
     final IAxis domAx = getDomainAxis();
     final String tubeId = getTube().getId();
@@ -117,8 +119,6 @@ public class CulvertLayer extends AbstractProfilLayer
 
     if( getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
     {
-      h = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, tube );
-      final Double m = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, tube );
       if( x.isNaN() || y.isNaN() || b.isNaN() || m.isNaN() || h.isNaN() )
         return;
       tubeFigure = new AbstractFigure<IPointStyle>()
@@ -138,7 +138,6 @@ public class CulvertLayer extends AbstractProfilLayer
 
     else if( tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) || tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
     {
-      h = Double.NaN;
       if( x.isNaN() || y.isNaN() || b.isNaN() )
         return;
       tubeFigure = new AbstractFigure<IPointStyle>()

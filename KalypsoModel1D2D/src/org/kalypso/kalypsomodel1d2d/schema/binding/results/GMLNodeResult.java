@@ -46,25 +46,19 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
  */
-public class GMLNodeResult extends Feature_Impl implements INodeResult
+public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 {
-  public GMLNodeResult( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-
   public static final QName QNAME_PROP_CALCID = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "calcId" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" ); //$NON-NLS-1$
@@ -113,7 +107,10 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
 
   private boolean m_nodeAssigned;
 
-  
+  public GMLNodeResult( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME );
+  }
 
   @Override
   public List<ArcResult> getArcs( )
@@ -130,13 +127,13 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setCalcId( final int id )
   {
-    setProperty( QNAME_PROP_CALCID, new Integer( id ) );
+    getFeature().setProperty( QNAME_PROP_CALCID, new Integer( id ) );
   }
 
   @Override
   public void setDry( final int dry )
   {
-    setProperty( QNAME_PROP_DRY, new Integer( dry ) );
+    getFeature().setProperty( QNAME_PROP_DRY, new Integer( dry ) );
   }
 
   @Override
@@ -144,13 +141,13 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   {
     // depth is a function property, it will not be set anyway
     // TODO: remove this method
-    // setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
+    // getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
   }
 
   @Override
   public void setWaterlevel( final double waterlevel )
   {
-    setProperty( QNAME_PROP_WATERLEVEL, new Double( waterlevel ) );
+    getFeature().setProperty( QNAME_PROP_WATERLEVEL, new Double( waterlevel ) );
   }
 
   @Override
@@ -159,7 +156,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
     final GM_Point point = GeometryFactory.createGM_Point( position, crs );
 
-    setProperty( QNAME_PROP_LOCATION, point );
+    getFeature().setProperty( QNAME_PROP_LOCATION, point );
   }
 
   @Override
@@ -179,55 +176,55 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   public void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt )
   // WRT means with respect to
   {
-    setProperty( QNAME_PROP_VIRTDEPOVERTIME, virtDepWRTt );
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIME, virtDepWRTt );
 
     final List<Double> veloList = new ArrayList<Double>();
     veloList.clear();
     veloList.add( vxWRTt );
     veloList.add( vyWRTt );
-    setProperty( QNAME_PROP_VELOVERTIME, veloList );
+    getFeature().setProperty( QNAME_PROP_VELOVERTIME, veloList );
 
   }
 
   @Override
   public void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep )
   {
-    setProperty( QNAME_PROP_VIRTDEPPREVSTEP, virtDepPrevStep );
+    getFeature().setProperty( QNAME_PROP_VIRTDEPPREVSTEP, virtDepPrevStep );
 
     final List<Double> velPrevStepList = new ArrayList<Double>();
     velPrevStepList.clear();
     velPrevStepList.add( vxPrevStep );
     velPrevStepList.add( vyPrevStep );
-    setProperty( QNAME_PROP_VELPREVSTEP, velPrevStepList );
+    getFeature().setProperty( QNAME_PROP_VELPREVSTEP, velPrevStepList );
   }
 
   @Override
   public void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep )
   // WRT means with respect to
   {
-    setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, virtDepWRTtPrevStep );
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, virtDepWRTtPrevStep );
 
     final List<Double> veloList = new ArrayList<Double>();
     veloList.clear();
     veloList.add( vxWRTtPrevStep );
     veloList.add( vyWRTtPrevStep );
-    setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, veloList );
+    getFeature().setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, veloList );
 
     /* check the real depth by comparing water level with terrain elevation */
     // double depth = getDepth();
-    // setProperty( QNAME_PROP_DEPTH, depth );
+    // getFeature().setProperty( QNAME_PROP_DEPTH, depth );
   }
 
   @Override
   public void setMidSide( final boolean isMidSide )
   {
-    setProperty( QNAME_PROP_MIDSIDE, isMidSide );
+    getFeature().setProperty( QNAME_PROP_MIDSIDE, isMidSide );
   }
 
   @Override
   public GM_Point getPoint( )
   {
-    return (GM_Point) getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
+    return (GM_Point) getFeature().getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
   }
 
   @Override
@@ -249,13 +246,13 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @SuppressWarnings("unchecked")
   public List<Double> getVirtualVelocity( )
   {
-    return (List<Double>) getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
+    return (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
   }
 
   @Override
   public double getVirtualDepth( )
   {
-    final Double virtDepth = (Double) getProperty( GMLNodeResult.QNAME_PROP_VIRTUALDEPTH );
+    final Double virtDepth = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTUALDEPTH );
     if( virtDepth == null )
       return 0.0;
     return virtDepth;
@@ -265,13 +262,13 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   public double getDepth( )
   {
     // this is a function property that returns the water level minus the elevation
-    return (Double) getProperty( GMLNodeResult.QNAME_PROP_DEPTH );
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DEPTH );
   }
 
   @Override
   public double getWaterlevel( )
   {
-    final Double waterlevel = (Double) getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
+    final Double waterlevel = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
     if( waterlevel == null )
       return Double.NaN;
     return waterlevel;
@@ -280,13 +277,13 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public int getDry( )
   {
-    return (Integer) getProperty( GMLNodeResult.QNAME_PROP_DRY );
+    return (Integer) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DRY );
   }
 
   @Override
   public int getNodeID( )
   {
-    return (Integer) getProperty( GMLNodeResult.QNAME_PROP_CALCID );
+    return (Integer) getFeature().getProperty( GMLNodeResult.QNAME_PROP_CALCID );
   }
 
   /**
@@ -295,25 +292,25 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setVelocity( final List<Double> velocity )
   {
-    setProperty( QNAME_PROP_VELOCITY, velocity );
+    getFeature().setProperty( QNAME_PROP_VELOCITY, velocity );
   }
 
   @Override
   public void setVelPrevStep( final List<Double> velPrevStep )
   {
-    setProperty( QNAME_PROP_VELPREVSTEP, velPrevStep );
+    getFeature().setProperty( QNAME_PROP_VELPREVSTEP, velPrevStep );
   }
 
   @Override
   public void setVelOverTime( final List<Double> velOverTime )
   {
-    setProperty( QNAME_PROP_VELOVERTIME, velOverTime );
+    getFeature().setProperty( QNAME_PROP_VELOVERTIME, velOverTime );
   }
 
   @Override
   public void setVelOverTimePrevStep( final List<Double> velOverTimePrevStep )
   {
-    setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, velOverTimePrevStep );
+    getFeature().setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, velOverTimePrevStep );
   }
 
   /**
@@ -385,25 +382,25 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setVirtualDepth( final double virtualDepth )
   {
-    setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
+    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
   }
 
   @Override
   public void setVirtDepPrevStep( final double virtDepthPrevStep )
   {
-    setProperty( QNAME_PROP_VIRTDEPPREVSTEP, new Double( virtDepthPrevStep ) );
+    getFeature().setProperty( QNAME_PROP_VIRTDEPPREVSTEP, new Double( virtDepthPrevStep ) );
   }
 
   @Override
   public void setVirtDepOverTime( final double virtDepOverTime )
   {
-    setProperty( QNAME_PROP_VIRTDEPOVERTIME, new Double( virtDepOverTime ) );
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIME, new Double( virtDepOverTime ) );
   }
 
   @Override
   public void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep )
   {
-    setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, new Double( virtDepOverTimePrevStep ) );
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, new Double( virtDepOverTimePrevStep ) );
   }
 
   /**
@@ -412,7 +409,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public Double getDischarge( )
   {
-    return (Double) getProperty( GMLNodeResult.QNAME_PROP_DISCHARGE );
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DISCHARGE );
   }
 
   /**
@@ -421,7 +418,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setDischarge( final double discharge )
   {
-    setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
+    getFeature().setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
   }
 
   /**
@@ -434,7 +431,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     // Try to get the velocity over time derivative
     List<Double> veloList = null;
     try{
-      veloList = (List<Double>) getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
+      veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
     }
     catch (final Exception e) {
     }
@@ -463,7 +460,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     // Try to get the velocity over time derivative
     List<Double> veloList = null;
     try{
-      veloList = (List<Double>) getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
+      veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
     }
     catch (final Exception e) {
     }
@@ -492,7 +489,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
     // Try to get the velocity over time derivative
     List<Double> veloList = null;
     try{
-      veloList = (List<Double>) getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
+      veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
     }
     catch (final Exception e) {
     }
@@ -517,7 +514,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public double getVirtDepOverTime( )
   {
-    Double VirtualDepth = (Double) getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIME );
+    Double VirtualDepth = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIME );
     if( VirtualDepth == null )
       VirtualDepth = 0.0;
     return VirtualDepth;
@@ -530,7 +527,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public double getVirtDepOverTimePrevStep( )
   {
-    Double VirtDepOverTimePrevStep = (Double) getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP );
+    Double VirtDepOverTimePrevStep = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP );
     if( VirtDepOverTimePrevStep == null )
       VirtDepOverTimePrevStep = 0.0;
     return VirtDepOverTimePrevStep;
@@ -542,7 +539,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public double getVirtDepPrevStep( )
   {
-    Double VirtDepPrevStep = (Double) getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPPREVSTEP );
+    Double VirtDepPrevStep = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPPREVSTEP );
     if( VirtDepPrevStep == null )
       VirtDepPrevStep = 0.0;
     return VirtDepPrevStep;
@@ -554,7 +551,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public double getWaveDirection( )
   {
-    final Double waveDir = (Double) getProperty( GMLNodeResult.QNAME_PROP_WAVE_DIR );
+    final Double waveDir = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_DIR );
     if( waveDir == null )
       return Double.NaN;
     return waveDir;
@@ -566,7 +563,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public double getWaveHsig( )
   {
-    final Double waveHsig = (Double) getProperty( GMLNodeResult.QNAME_PROP_WAVE_HSIG );
+    final Double waveHsig = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_HSIG );
     if( waveHsig == null )
       return Double.NaN;
     return waveHsig;
@@ -578,7 +575,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public double getWavePeriod( )
   {
-    final Double wavePeriod = (Double) getProperty( GMLNodeResult.QNAME_PROP_WAVE_PER );
+    final Double wavePeriod = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WAVE_PER );
     if( wavePeriod == null )
       return Double.NaN;
     return wavePeriod;
@@ -590,7 +587,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setWaveDirection( final double direction )
   {
-    setProperty( QNAME_PROP_WAVE_DIR, direction ); 
+    getFeature().setProperty( QNAME_PROP_WAVE_DIR, direction ); 
   }
 
   /**
@@ -599,7 +596,7 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setWaveHsig( final double hsig )
   {
-    setProperty( QNAME_PROP_WAVE_HSIG, hsig );
+    getFeature().setProperty( QNAME_PROP_WAVE_HSIG, hsig );
   }
 
   /**
@@ -608,6 +605,6 @@ public class GMLNodeResult extends Feature_Impl implements INodeResult
   @Override
   public void setWavePeriod( final double period )
   {
-    setProperty( QNAME_PROP_WAVE_PER, period );
+    getFeature().setProperty( QNAME_PROP_WAVE_PER, period );
   }
 }

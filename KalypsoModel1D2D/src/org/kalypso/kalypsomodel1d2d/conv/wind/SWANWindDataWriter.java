@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -80,9 +80,8 @@ public class SWANWindDataWriter extends AbstractWindDataWriter
   @Override
   protected void writeWindFile( final IWindDataProvider windData )
   {
-    // the constant wind will be written for SWAN in to the according control file, so here just quit
-    if( m_constantWind )
-    {
+    //the constant wind will be written for SWAN in to the according control file, so here just quit
+    if( m_constantWind ){
       return;
     }
     SWANWindBinaryGeoGridWalker lSWANWalker = null;

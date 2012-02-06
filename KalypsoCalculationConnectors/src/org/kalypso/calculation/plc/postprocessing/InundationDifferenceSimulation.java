@@ -62,6 +62,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationMonitorAdaptor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
@@ -131,10 +132,10 @@ public class InundationDifferenceSimulation implements ISimulation
     {
       final GMLWorkspace tmpWorkspace = FeatureFactory.createGMLWorkspace( IFloodModel.QNAME, floodModelFile.toURI().toURL(), null );
       final IFloodModel floodModelOutput = (IFloodModel) tmpWorkspace.getRootFeature().getAdapter( IFloodModel.class );
-      final IFeatureBindingCollection<IRunoffEvent> resultCollection = floodModelOutput.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> resultCollection = floodModelOutput.getEvents();
 
-      final IFeatureBindingCollection<IRunoffEvent> inputCoverageCollection1 = rasterModelInput1.getEvents();
-      final IFeatureBindingCollection<IRunoffEvent> inputCoverageCollection2 = rasterModelInput2.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> inputCoverageCollection1 = rasterModelInput1.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> inputCoverageCollection2 = rasterModelInput2.getEvents();
 
       int highestReturnPeriod = 1;
       for( int i = 0; i < inputCoverageCollection1.size(); i++ )
@@ -188,7 +189,7 @@ public class InundationDifferenceSimulation implements ISimulation
         final SubstractionGrid outputGrid = new SubstractionGrid( inputGrid2, inputGrid1 );
         outputGrid.usePositiveValuesOnly( true );
 
-        final String outputCoverageFileName = String.format( "%s_%02d.bin", diffRunoffEvent.getId(), i ); //$NON-NLS-1$
+        final String outputCoverageFileName = String.format( "%s_%02d.bin", diffRunoffEvent.getGmlID(), i ); //$NON-NLS-1$
         final String outputCoverageFileRelativePath = "../" + rasterFolder.getName() + "/" + outputCoverageFileName;
         final File outputCoverageFile = new File( rasterFolder.getAbsolutePath(), outputCoverageFileName );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( diffRunoffEvent.getResultCoverages(), outputGrid, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$

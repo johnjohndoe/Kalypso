@@ -1,5 +1,5 @@
 @TypeDefs({ // 
-@TypeDef(defaultForType = Geometry.class, typeClass = GeometryUserType2.class), //
+  @TypeDef(defaultForType = Geometry.class, typeClass = GeometryUserType2.class), //
     @TypeDef(defaultForType = com.vividsolutions.jts.geom.LineString.class, typeClass = GeometryUserType2.class), //
     @TypeDef(defaultForType = com.vividsolutions.jts.geom.Point.class, typeClass = GeometryUserType2.class) // 
 })

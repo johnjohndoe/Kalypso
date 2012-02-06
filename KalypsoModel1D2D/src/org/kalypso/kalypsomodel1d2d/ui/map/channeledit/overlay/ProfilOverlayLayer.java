@@ -57,8 +57,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -126,8 +124,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final Point2D curserPoint = toNumeric( curserPos );
 
-    final IRecord profilePoint = ProfileVisitors.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
-    final IRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
+    final IRecord profilePoint = ProfilUtil.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
+    final IRecord fePoint = ProfilUtil.findNearestPoint( getProfil(), curserPoint.getX() );
 
     final Point profilePointScreen = toScreen( profilePoint );
     final Point fePointScreen = toScreen( fePoint );
@@ -199,8 +197,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     if( curserPoint == null )
       return;
 
-    final IRecord profilePoint = ProfileVisitors.findNearestPoint( origProfil, curserPoint.getX() );
-    final IRecord fePoint = ProfileVisitors.findNearestPoint( profil, curserPoint.getX() );
+    final IRecord profilePoint = ProfilUtil.findNearestPoint( origProfil, curserPoint.getX() );
+    final IRecord fePoint = ProfilUtil.findNearestPoint( profil, curserPoint.getX() );
     final Point profilePointScreen = toScreen( profilePoint );
     final Point fePointScreen = toScreen( fePoint );
 
@@ -392,7 +390,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     profilePoint.setValue( profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), geoPoint.getY() );
 
     /* sort profile points by width */
-    final IProfileRecord[] points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
 
     // TODO: save the sorted points as new m_profile
     final IProfil tmpProfil = ProfilFactory.createProfil( profil.getType() );
@@ -413,9 +411,9 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final int iRW = tmpProfil.indexOfProperty( rwComponent );
     final int iHW = tmpProfil.indexOfProperty( hwComponent );
 
-    for( final IProfileRecord element : points )
+    for( final IRecord element : points )
     {
-      final IProfileRecord profilPoint = tmpProfil.createProfilPoint();
+      final IRecord profilPoint = tmpProfil.createProfilPoint();
 
       final double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, element );
       final double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, element );

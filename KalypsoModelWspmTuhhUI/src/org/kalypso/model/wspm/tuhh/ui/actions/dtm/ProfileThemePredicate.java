@@ -49,7 +49,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * @author Gernot Belger
@@ -67,11 +67,11 @@ public class ProfileThemePredicate implements IKalypsoThemePredicate
       return false;
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-    final IFeatureRelation fp = featureTheme.getFeatureList();
+    final IFeatureProperty fp = featureTheme.getFeatureList();
     if( fp == null )
       return false;
 
-    final Feature parentFeature = fp.getOwner();
+    final Feature parentFeature = fp.getParentFeature();
     if( parentFeature == null )
       return false;
 

@@ -67,6 +67,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
@@ -75,14 +76,12 @@ import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -124,7 +123,7 @@ public class TrennerPanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
-    final IProfil profil = getProfile();
+    final IProfil profil = getProfil();
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
@@ -277,17 +276,17 @@ public class TrennerPanel extends AbstractProfilView
 
           operation.addChange( new PointPropertyAdd( profil, bordvoll ) );
 
-          final IProfileRecord[] profilPoints = profil.getPoints();
+          final IRecord[] profilPoints = profil.getPoints();
           if( profilPoints.length > 0 )
           {
-            final IProfileRecord firstPoint = profilPoints[0];
-            final IProfileRecord lastPoint = profilPoints[profilPoints.length - 1];
+            final IRecord firstPoint = profilPoints[0];
+            final IRecord lastPoint = profilPoints[profilPoints.length - 1];
 
-            final IProfileRecord leftPoint = dbDevs.length > 0 ? dbDevs[0].getPoint() : firstPoint;
-            final IProfileRecord rightPoint = dbDevs.length > 1 ? dbDevs[1].getPoint() : lastPoint;
+            final IRecord leftPoint = dbDevs.length > 0 ? dbDevs[0].getPoint() : firstPoint;
+            final IRecord rightPoint = dbDevs.length > 1 ? dbDevs[1].getPoint() : lastPoint;
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, leftPoint ), true ) );
             operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, rightPoint ), true ) );
-            operation.addChange( new ActiveObjectEdit( profil, rightPoint.getBreiteAsRange(), bordvoll ) );
+            operation.addChange( new ActiveObjectEdit( profil, rightPoint, bordvoll ) );
           }
 
           new ProfilOperationJob( operation ).schedule();
@@ -328,7 +327,7 @@ public class TrennerPanel extends AbstractProfilView
     if( m_panel == null || m_panel.isDisposed() )
       return;
 
-    final IProfil profil = getProfile();
+    final IProfil profil = getProfil();
     final IProfilPointMarker[] tfDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker[] dbDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IProfilPointMarker[] bvDevs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
@@ -417,7 +416,7 @@ public class TrennerPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
@@ -469,7 +468,7 @@ public class TrennerPanel extends AbstractProfilView
       if( e.widget instanceof Text )
       {
         final Text text = (Text) e.widget;
-        final IProfil profil = getProfile();
+        final IProfil profil = getProfil();
         final double value = NumberUtils.parseQuietDouble( text.getText() );
         final IProfilPointMarker[] devs = profil.getPointMarkerFor( m_component );
         final IComponent type = profil.hasPointProperty( m_component );
@@ -482,7 +481,7 @@ public class TrennerPanel extends AbstractProfilView
           return;
         }
 
-        final IProfileRecord pointCloseTo = ProfileVisitors.findNearestPoint( profil, value );
+        final IRecord pointCloseTo = ProfilUtil.findNearestPoint( profil, value );
         final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
 
         if( devs.length <= m_pos )
@@ -503,7 +502,7 @@ public class TrennerPanel extends AbstractProfilView
 
           operation.setLabel( key.toString() + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.28" ) ); //$NON-NLS-1$
           operation.addChange( new PointMarkerSetPoint( key, pointCloseTo ) );
-          operation.addChange( new ActiveObjectEdit( profil, pointCloseTo.getBreiteAsRange(), null ) );
+          operation.addChange( new ActiveObjectEdit( profil, pointCloseTo, null ) );
         }
 
         new ProfilOperationJob( operation ).schedule();

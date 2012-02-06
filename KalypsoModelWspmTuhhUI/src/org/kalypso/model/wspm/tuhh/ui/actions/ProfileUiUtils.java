@@ -42,13 +42,13 @@ package org.kalypso.model.wspm.tuhh.ui.actions;
 
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -92,7 +92,7 @@ public final class ProfileUiUtils
   public static void addDefaultMarkers( final IProfil profile, final String markerTyp )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
-    final IProfileRecord[] points = profile.getPoints();
+    final IRecord[] points = profile.getPoints();
     if( points.length > 0 )
     {
       final Object defaultValue = provider.getDefaultValue( markerTyp );
@@ -102,35 +102,36 @@ public final class ProfileUiUtils
   }
 
   /**
-   * @param previous
+   * @param previousProfile
    *          The new profile segment (if we have a reach) will be inserted after that profile.
    * @return Returns the element that should be selected after the new profile is created. The new reach segment if the
    *         reach is not null.
    */
-  public static Feature addNewProfileAndFireEvents( final IProfil iProfile, final WspmWaterBody waterBody, final TuhhReach reach, final IProfileFeature previous )
+  public static Feature addNewProfileAndFireEvents( final IProfil newProfile, final WspmWaterBody waterBody, final TuhhReach reach, final IProfileFeature previousProfile )
   {
-    final IProfileFeature feature = waterBody.createNewProfile();
-    ((ProfileFeatureBinding) feature).setProfile( iProfile );
+    final IProfileFeature newProfileFeature = waterBody.createNewProfile();
+    ProfileFeatureFactory.toFeature( newProfile, newProfileFeature );
 
     /* Move feature to right place */
     final IFeatureBindingCollection<IProfileFeature> profiles = waterBody.getProfiles();
-    final int previousProfileIndex = previous == null ? -1 : profiles.indexOf( previous );
+    final int previousProfileIndex = previousProfile == null ? -1 : profiles.indexOf( previousProfile );
     if( previousProfileIndex != -1 )
     {
       profiles.remove( profiles.size() - 1 );
-      profiles.add( previousProfileIndex + 1, feature );
+      profiles.add( previousProfileIndex + 1, newProfileFeature );
     }
 
     final GMLWorkspace workspace = waterBody.getWorkspace();
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterBody, new Feature[] { feature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterBody, new Feature[] { newProfileFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( reach != null )
     {
-      final TuhhReachProfileSegment segment = reach.createProfileSegment( feature, iProfile.getStation() );
+      final TuhhReachProfileSegment segment = reach.createProfileSegment( newProfileFeature, newProfile.getStation() );
 
-      /* insert at the right position */
+      /* insert at right position */
+
       final FeatureList reachSegmentList = reach.getReachSegmentList();
-      final int previousSegmentIndex = findSegmentIndex( reachSegmentList, previous );
+      final int previousSegmentIndex = findSegmentIndex( reachSegmentList, previousProfile );
       if( previousSegmentIndex != -1 )
       {
         reachSegmentList.remove( reachSegmentList.size() - 1 );
@@ -141,7 +142,7 @@ public final class ProfileUiUtils
       return segment;
     }
 
-    return feature;
+    return newProfileFeature;
   }
 
   private static int findSegmentIndex( final FeatureList reachSegmentList, final IProfileFeature previousProfile )
@@ -159,4 +160,12 @@ public final class ProfileUiUtils
     return -1;
   }
 
+  public static void changeProfileAndFireEvent( final IProfil profil, final IProfileFeature targetFeature )
+  {
+    ProfileFeatureFactory.toFeature( profil, targetFeature );
+
+    final Feature parent = targetFeature.getOwner();
+    final GMLWorkspace workspace = targetFeature.getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parent, new Feature[] { targetFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+  }
 }

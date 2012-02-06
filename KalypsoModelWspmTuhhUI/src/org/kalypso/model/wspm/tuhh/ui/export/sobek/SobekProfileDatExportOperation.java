@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.sobek;
 
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;

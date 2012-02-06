@@ -77,7 +77,6 @@ public class ImportWindDataHandler extends AbstractHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -94,6 +93,7 @@ public class ImportWindDataHandler extends AbstractHandler
 //      handler.execute( exc );
 
       /* Open import elevation model wizard */
+      @SuppressWarnings("deprecation")
       final IWindModel lWindModel = szenarioDataProvider.getModel( IWindModel.class );
       final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 

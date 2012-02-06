@@ -8,20 +8,6 @@
 	<mapv:extent top="5990460.47434493" srs="EPSG:31467" right="3554829.958971141"
 		left="3552092.959883878" bottom="5986643.672878034" />
 	<mapv:layers>
-        <mapv:layer visible="true" name="Maßstab" id="ID_17"
-            linktype="scale">
-            <templ:showChildren>true</templ:showChildren>
-        </mapv:layer>
-        <mapv:layer visible="true" name="Legende" featurePath=""
-            id="ID_16" linktype="legend" xlink:href="">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:property name="deleteable">false</templ:property>
-            <templ:property name="horizontal_position">4</templ:property>
-            <templ:property name="theme_ids">ID_1;ID_2;ID_3;ID_4;ID_5;ID_6;ID_7;ID_8;ID_9;ID_10;ID_11</templ:property>
-            <templ:property name="insets">6</templ:property>
-            <templ:property name="background_color">255;255;255</templ:property>
-            <templ:property name="vertical_position">1</templ:property>
-        </mapv:layer>
 		<mapv:layer visible="false" name="%fenet.mapv.layer.Knoten"
 			id="ID_1" featurePath="#fid#root/node[Node]" linktype="gml"
 			xlink:type="simple" xlink:href="../models/discretisation.gml"
@@ -120,6 +106,20 @@
 			id="ID_15" linktype="gmt" xlink:type="simple" xlink:href="base.gmt"
 			xlink:actuate="onRequest">
 			<templ:property name="deleteable">false</templ:property>
+		</mapv:layer>
+		<mapv:layer visible="true" name="Legende" featurePath=""
+			id="ID_16" linktype="legend" xlink:href="">
+			<templ:showChildren>true</templ:showChildren>
+			<templ:property name="deleteable">false</templ:property>
+			<templ:property name="horizontal_position">4</templ:property>
+			<templ:property name="theme_ids">ID_1;ID_2;ID_3;ID_4;ID_5;ID_6;ID_7;ID_8;ID_9;ID_10;ID_11</templ:property>
+			<templ:property name="insets">6</templ:property>
+			<templ:property name="background_color">255;255;255</templ:property>
+			<templ:property name="vertical_position">1</templ:property>
+		</mapv:layer>
+		<mapv:layer visible="true" name="Maßstab" id="ID_17"
+			linktype="scale">
+			<templ:showChildren>true</templ:showChildren>
 		</mapv:layer>
 	</mapv:layers>
 </mapv:gismapview>

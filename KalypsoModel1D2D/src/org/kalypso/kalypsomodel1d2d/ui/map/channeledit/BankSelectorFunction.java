@@ -113,7 +113,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
 
     // search bank within rectangle
     final FeatureList featureList = bankTheme.getFeatureList();
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
 
     final List< ? > list = featureList.query( envelope, null );
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );

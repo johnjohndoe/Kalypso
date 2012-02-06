@@ -176,6 +176,7 @@ public class WindDataWizardMainPage extends WizardPage
    * @param selection
    *          the selection or <code>null</code> if none
    */
+  @SuppressWarnings("unchecked")
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -248,12 +249,10 @@ public class WindDataWizardMainPage extends WizardPage
     }
     if( m_height.getText().trim().length() != 0 )
     {
-      try
-      {
+      try{
         Double.parseDouble( m_height.getText().trim() );
       }
-      catch( Exception e )
-      {
+      catch (Exception e) {
         setMessage( null );
         setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.5" ) ); //$NON-NLS-1$
       }

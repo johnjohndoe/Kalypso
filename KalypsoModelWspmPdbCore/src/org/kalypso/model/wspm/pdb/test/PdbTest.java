@@ -65,10 +65,10 @@ public class PdbTest extends Assert
   public void testPdb( ) throws PdbConnectException
   {
     final OracleSettings connectInfo = new OracleSettings();
-    connectInfo.setHost( "lfulg-kv-02" ); //$NON-NLS-1$
-    connectInfo.setDbName( "XE" ); //$NON-NLS-1$
-    connectInfo.setUsername( "pdb" ); //$NON-NLS-1$
-    connectInfo.setPassword( "pdb" ); //$NON-NLS-1$
+    connectInfo.setHost( "lfulg-kv-02" );
+    connectInfo.setDbName( "XE" );
+    connectInfo.setUsername( "pdb" );
+    connectInfo.setPassword( "pdb" );
 // final PostgisSettings connectInfo = new PostgisSettings();
 // connectInfo.setHost( "map.bjoernsen.de" );
 // connectInfo.setDbName( "moni" );
@@ -81,8 +81,8 @@ public class PdbTest extends Assert
     final Session session = connection.openSession();
 
     final PdbInfo info = new PdbInfo( session );
-    System.out.println( "Version=" + info.getVersion() ); //$NON-NLS-1$
-    System.out.println( "SRID=" + info.getSRID() ); //$NON-NLS-1$
+    System.out.println( "Version=" + info.getVersion() );
+    System.out.println( "SRID=" + info.getSRID() );
 
 // final Point onePoint = new Point();
 // // FIXME
@@ -92,9 +92,9 @@ public class PdbTest extends Assert
 // onePoint.setLabel( "PNAM1" );
 
     final WaterBody waterBody = new WaterBody();
-    waterBody.setDescription( "Comment" ); //$NON-NLS-1$
-    waterBody.setLabel( "GKN" ); //$NON-NLS-1$
-    waterBody.setName( "sososo" ); //$NON-NLS-1$
+    waterBody.setDescription( "Comment" );
+    waterBody.setLabel( "GKN" );
+    waterBody.setName( "sososo" );
 
     final LineString line = new GeometryFactory().createLineString( new Coordinate[] { new Coordinate( 3.14, 2.79 ), new Coordinate( 3.14, 2.79 ) } );
     waterBody.setRiverline( line );

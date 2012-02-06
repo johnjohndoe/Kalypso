@@ -45,14 +45,13 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.model.IModel;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessStyleUpdateListener;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-
-import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * A central place for controlling scenario specific stuff for Kalypso1d2d.
@@ -84,8 +83,8 @@ public class SzenarioController implements IScenarioDataListener
   {
     if( m_discModel != null && m_terrainModel != null )
     {
-      m_discModel.getWorkspace().removeModellListener( m_roughnessAssignListener );
-      m_terrainModel.getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_discModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_terrainModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
       if( m_roughnessAssignListener != null )
         m_roughnessAssignListener.dispose();
     }
@@ -105,8 +104,8 @@ public class SzenarioController implements IScenarioDataListener
       m_roughnessAssignListener = new RoughnessAssignListener( m_discModel, m_terrainModel );
 
       // register common listener to terrain/deisc modell
-      m_discModel.getWorkspace().addModellListener( m_roughnessAssignListener );
-      m_terrainModel.getWorkspace().addModellListener( m_roughnessAssignListener );
+      m_discModel.getFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
+      m_terrainModel.getFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
     }
 
     if( model instanceof IRoughnessClsCollection && m_scenario != null )
@@ -129,11 +128,11 @@ public class SzenarioController implements IScenarioDataListener
     // unregister any listeners
     if( m_discModel != null )
     {
-      m_discModel.getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_discModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
     }
     if( m_terrainModel != null )
     {
-      m_terrainModel.getWorkspace().removeModellListener( m_roughnessAssignListener );
+      m_terrainModel.getFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );
     }
     if( m_roughnessAssignListener != null )
     {

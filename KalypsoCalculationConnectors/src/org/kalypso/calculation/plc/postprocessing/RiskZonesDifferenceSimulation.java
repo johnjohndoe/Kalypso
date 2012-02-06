@@ -206,8 +206,8 @@ public class RiskZonesDifferenceSimulation implements ISimulationSpecKalypsoRisk
         }
 
         /* fireModellEvent to redraw a map */
-        final GMLWorkspace workspace = rasterModelOutput.getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModelOutput, new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        final GMLWorkspace workspace = rasterModelOutput.getFeature().getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModelOutput.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
     }

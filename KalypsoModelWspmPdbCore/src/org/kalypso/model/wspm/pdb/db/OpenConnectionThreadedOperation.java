@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Opens a connection in a separate thread.<br/>
@@ -81,7 +80,7 @@ public class OpenConnectionThreadedOperation implements ICoreRunnableWithProgres
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    final String taskName = Messages.getString( "OpenConnectionThreadedOperation.0", m_settings.getName() ); //$NON-NLS-1$
+    final String taskName = String.format( "Open Connection '%s'", m_settings.getName() );
     monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
 
     final OpenConnectionJob job = new OpenConnectionJob( m_settings, m_closeConnection );

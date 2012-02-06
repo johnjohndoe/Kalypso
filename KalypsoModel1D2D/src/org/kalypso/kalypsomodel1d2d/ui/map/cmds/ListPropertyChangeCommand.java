@@ -80,7 +80,7 @@ public class ListPropertyChangeCommand implements ICommand
         throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand.0") ); //$NON-NLS-1$
       }
       // final Object oldValue =
-      // change.getProperty( change.getProperty() );
+      // change.getFeature().getProperty( change.getProperty() );
 
     }
   }
@@ -171,7 +171,7 @@ public class ListPropertyChangeCommand implements ICommand
       }
       featureToChange.setProperty( propType, propList/* nextPropList */);
       // FeatureHelper.addProperty(
-      // change,
+      // change.getFeature(),
       // change.getProperty(),
       // change.getNewValue() );
       changedFeaturesList.add( change.getFeature() );

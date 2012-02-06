@@ -129,7 +129,7 @@ public class SceJob
   {
     try
     {
-      final URL sceExeLocation = getClass().getResource( "resource/sce.exe" );
+      final URL sceExeLocation = getClass().getResource( "resource/sce.exe_" );
       FileUtils.copyURLToFile( sceExeLocation, m_sceExe );
     }
     catch( final IOException e )

@@ -93,7 +93,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Wizard to show length sections to the chart view.
- *
+ * 
  * @author Thomas Jung
  */
 public class GenerateDifferenceResultTinWizard extends Wizard
@@ -217,7 +217,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
       IResultMeta destResult = null;
 
       // take the first selected step result
-      for( final IResultMeta resultMeta : destinationResults )
+      for( IResultMeta resultMeta : destinationResults )
       {
         if( resultMeta instanceof IStepResultMeta )
         {
@@ -264,7 +264,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
           IResultMeta destResult = null;
 
           // take the first selected step result
-          for( final IResultMeta resultMeta : destinationResults )
+          for( IResultMeta resultMeta : destinationResults )
           {
             if( resultMeta instanceof IStepResultMeta )
             {
@@ -277,25 +277,25 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
           monitor.subTask( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.23") ); //$NON-NLS-1$
 
-          final IPath docPath = destResult.getFullPath();
-          final IFolder folder = m_scenarioFolder.getFolder( docPath );
+          IPath docPath = destResult.getFullPath();
+          IFolder folder = m_scenarioFolder.getFolder( docPath );
 
           /* generate unique name for difference file */
-          final String name = "tin"; //$NON-NLS-1$
-          final String extension = ".gml"; //$NON-NLS-1$
-          final File parentDir = docPath.toFile();
+          String name = "tin"; //$NON-NLS-1$
+          String extension = ".gml"; //$NON-NLS-1$
+          File parentDir = docPath.toFile();
 
           // check, if file already exists and get the unique name */
           final File tinPath = new File( parentDir, "Tin" ); //$NON-NLS-1$
-          final String uniqueFileName = FileUtilities.createNewUniqueFileName( name, extension, tinPath );
+          String uniqueFileName = FileUtilities.createNewUniqueFileName( name, extension, tinPath );
 
-          final IFolder destPath = folder.getFolder( "Tin" ); //$NON-NLS-1$
-          final IFile destFile = destPath.getFile( uniqueFileName );
+          IFolder destPath = folder.getFolder( "Tin" ); //$NON-NLS-1$
+          IFile destFile = destPath.getFile( uniqueFileName );
 
-          final IStatus status = DifferenceResultTinHandler.generateDifferences( surfaces, operator, destFile, m_minMaxCatcher, monitor );
+          IStatus status = DifferenceResultTinHandler.generateDifferences( surfaces, operator, destFile, m_minMaxCatcher, monitor );
 
           /* update resource folder */
-          final IContainer parent = destFile.getParent();
+          IContainer parent = destFile.getParent();
           parent.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
 
           monitor.worked( 3 );
@@ -312,18 +312,18 @@ public class GenerateDifferenceResultTinWizard extends Wizard
             final String paramName = substring + "_" + param + extension; //$NON-NLS-1$
 
             /* we "know", that the results are stored in the "Tin" folder */
-            final Path path = new Path( "Tin/" + paramName ); //$NON-NLS-1$
+            Path path = new Path( "Tin/" + paramName ); //$NON-NLS-1$
 
             // get min max via a minmaxCatcher during processing.
-            final BigDecimal min = m_minMaxCatcher.getMinValue();
-            final BigDecimal max = m_minMaxCatcher.getMaxValue();
+            BigDecimal min = m_minMaxCatcher.getMinValue();
+            BigDecimal max = m_minMaxCatcher.getMaxValue();
 
             if( destResult instanceof IStepResultMeta )
             {
               // TODO: set a good description e.g.
               final String description = Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32"); //$NON-NLS-1$
 
-              final IStepResultMeta stepResult = (IStepResultMeta) destResult;
+              IStepResultMeta stepResult = (IStepResultMeta) destResult;
               ResultMeta1d2dHelper.addDocument( stepResult, "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max ); //$NON-NLS-1$
             }
             else
@@ -338,7 +338,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
           monitor.worked( 1 );
 
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           e.printStackTrace();
           // TODO: cleanFiles();
@@ -377,16 +377,16 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     /* get the result data */
     if( resultMeta instanceof IDocumentResultMeta )
     {
-      final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+      IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
 
-      final DOCUMENTTYPE documentType = docResult.getDocumentType();
+      DOCUMENTTYPE documentType = docResult.getDocumentType();
 
       if( documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinShearStress
           || documentType == DOCUMENTTYPE.tinTerrain )
       {
         try
         {
-          final IPath docPath = docResult.getFullPath();
+          IPath docPath = docResult.getFullPath();
           if( docPath == null )
             return null;
 
@@ -399,14 +399,14 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
           w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-          final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryPropertyValue();
+          GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
 
           if( geometryProperty instanceof GM_TriangulatedSurface )
           {
             return (GM_TriangulatedSurface) geometryProperty;
           }
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           e.printStackTrace();
         }

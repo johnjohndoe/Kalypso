@@ -47,7 +47,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
@@ -65,7 +65,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -243,7 +242,7 @@ public class ImportGafData extends AbstractModelObject
 
       final Calendar now = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       final Object thisYear = now.get( Calendar.YEAR );
-      m_state.setName( String.format( Messages.getString( "ImportGafData.0" ), FilenameUtils.removeExtension( filename ), thisYear ) ); //$NON-NLS-1$
+      m_state.setName( String.format( "Measurement %s %d", FilenameUtils.removeExtension( filename ), thisYear ) );
 
       m_waterlevelEvent.setSource( m_state.getSource() );
       // REMARK: No need to set event name here, it will be updated before event-page is displayed

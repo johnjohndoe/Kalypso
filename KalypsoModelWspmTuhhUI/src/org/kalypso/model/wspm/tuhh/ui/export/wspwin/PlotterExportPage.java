@@ -123,7 +123,7 @@ public class PlotterExportPage extends ExportPrfFileChooserPage
     binder.addTargetAfterConvertValidator( new NumberNotNegativeValidator( IStatus.ERROR ) );
     m_binding.bindValue( binder );
 
-    /* Enable/Disable sleep field */
+    /* Enable/Disable slepp field */
     final ISWTObservableValue targetEnabled = SWTObservables.observeEnabled( field );
     final IObservableValue modelEnabled = modelPrint;
     m_binding.bindValue( targetEnabled, modelEnabled );

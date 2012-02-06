@@ -63,9 +63,8 @@ import org.kalypso.ogc.sensor.view.observationDialog.RemoveObservationAction;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author kuepfer
@@ -101,9 +100,9 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   }
 
   @Override
-  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
-    return new ButtonModifier( propertyPath, ftp, fcl );
+    return new ButtonModifier( ftp, fcl );
   }
 
   @Override
@@ -177,7 +176,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     final CopyObservationVisitor visitor = new CopyObservationVisitor( newAxis );
     final Map<String, String> nameMapping = createCheckObservationNameMapping();
     visitor.setNameMapping( nameMapping );
-    model.accept( visitor, 1 );
+    model.accept( visitor );
 
     /* copy the rest */
     final String href = o.getHref();

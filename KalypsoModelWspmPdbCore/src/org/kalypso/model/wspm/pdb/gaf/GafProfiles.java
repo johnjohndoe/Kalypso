@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafPoint;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.transformation.transformer.JTSTransformer;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -109,7 +108,7 @@ public class GafProfiles
     m_currentProfile.addPoint( point, code );
     if( duplicateStation )
     {
-      final String message = String.format( Messages.getString( "GafProfiles.0" ), station ); //$NON-NLS-1$
+      final String message = String.format( "duplicate station: %s", station );
       m_currentProfile.addStatus( IStatus.WARNING, message );
     }
   }
@@ -168,7 +167,7 @@ public class GafProfiles
       for( final GafProfile profile : m_profiles )
         stati.add( profile.getStatus() );
 
-      m_status = stati.asMultiStatusOrOK( Messages.getString( "GafProfiles.1" ) ); //$NON-NLS-1$
+      m_status = stati.asMultiStatusOrOK( "Problems occured while reading GAF file" );
     }
 
     return m_status;

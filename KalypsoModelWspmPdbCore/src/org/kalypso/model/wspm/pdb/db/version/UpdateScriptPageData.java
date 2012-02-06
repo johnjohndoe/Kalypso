@@ -46,6 +46,7 @@ import org.kalypso.commons.java.util.AbstractModelObject;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class UpdateScriptPageData extends AbstractModelObject
 {

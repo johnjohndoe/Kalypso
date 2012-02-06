@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class LocalDataPropertyTest extends PropertyTester
 {
@@ -63,6 +65,6 @@ public class LocalDataPropertyTest extends PropertyTester
     }
 
     final String msg = String.format( "Unknown test property %s", property ); //$NON-NLS-1$
-    throw new UnsupportedOperationException( msg );
+    throw new NotImplementedException( msg );
   }
 }

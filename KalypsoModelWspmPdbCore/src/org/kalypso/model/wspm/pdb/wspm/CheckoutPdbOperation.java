@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -45,24 +45,15 @@ import java.net.URI;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
-import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutCrossSectionsWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutRemoveWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutStateWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutWaterBodyWorker;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckoutWaterlevelWorker;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -70,6 +61,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 {
   private final CheckoutPdbData m_data;
+
 
   public CheckoutPdbOperation( final CheckoutPdbData data )
   {
@@ -79,19 +71,14 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "CheckoutPdbOperation.0" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( "Loading data from cross section database", 100 );
 
     final URI documentBase = m_data.getDocumentBase();
     final CheckoutDataMapping mapping = m_data.getMapping();
-    final Coefficients coefficients = m_data.getCoefficients();
-    final GafCodes codes = m_data.getCodes();
 
     final CheckoutRemoveWorker removeWorker = new CheckoutRemoveWorker( m_data );
     removeWorker.execute();
     monitor.worked( 5 );
-
-    final CheckoutClassesWorker classesWorker = new CheckoutClassesWorker( codes, coefficients, mapping );
-    classesWorker.execute( new SubProgressMonitor( monitor, 5 ) );
 
     final CheckoutWaterBodyWorker waterBodyWorker = new CheckoutWaterBodyWorker( mapping );
     waterBodyWorker.execute( new SubProgressMonitor( monitor, 5 ) );
@@ -107,31 +94,8 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
 
     mapping.fireEvents( new SubProgressMonitor( monitor, 5 ) );
 
-    final IStatus status = checkClassesUpdate( mapping );
-
     ProgressUtilities.done( monitor );
 
-    return status;
-  }
-
-  private IStatus checkClassesUpdate( final CheckoutDataMapping mapping )
-  {
-    final IStatusCollector stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
-
-    final Feature[] changedFeatures = mapping.getChangedFeatures();
-    for( final Feature feature : changedFeatures )
-      checkForClassChange( stati, feature );
-
-    return stati.asMultiStatusOrOK( "Some class definitions of the WSPM project have been overwritten with values from the database. Please check your data." );
-  }
-
-  private void checkForClassChange( final IStatusCollector stati, final Feature feature )
-  {
-    if( feature instanceof IClassificationClass )
-    {
-      final IClassificationClass cc = (IClassificationClass) feature;
-      final String typeName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
-      stati.add( IStatus.WARNING, "%s class '%s' (id = '%s')", null, typeName, cc.getDescription(), cc.getName() );
-    }
+    return Status.OK_STATUS;
   }
 }

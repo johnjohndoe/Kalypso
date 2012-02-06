@@ -51,14 +51,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants, Feature
 {
-  QName QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
-
-  QName QN_PROPERTY_FLIESSGESETZ = new QName( NS_WSPM_TUHH, "fliessgesetz" ); //$NON-NLS-1$
-
-  QName QN_PROPERTY_PREFERE_ROUGHNESS_CLASSES = new QName( NS_WSPM_TUHH, "preferRoughnessClasses" ); //$NON-NLS-1$
-
-  QName QN_PROPERTY_PREFERE_VEGETATION_CLASSES = new QName( NS_WSPM_TUHH, "preferVegetationClasses" ); //$NON-NLS-1$
-
   QName QN_PROPERTY_STEADY_STATE_MEMBER = new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ); //$NON-NLS-1$
 
   QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" ); //$NON-NLS-1$
@@ -122,8 +114,4 @@ public interface ITuhhCalculation extends IWspmConstants, IWspmTuhhConstants, Fe
     TRAPEZ_FORMULA,
     GEOMETRIC_FORMULA
   }
-
-  boolean isPreferingRoughnessClasses( );
-
-  boolean isPreferingVegetationClasses( );
 }

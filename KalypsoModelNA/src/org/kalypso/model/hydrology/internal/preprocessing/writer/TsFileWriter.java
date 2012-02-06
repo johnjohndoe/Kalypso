@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
@@ -56,9 +56,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -79,7 +80,6 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -199,9 +199,7 @@ public class TsFileWriter
    */
   private RangeFactor createForecastFactor( final Catchment catchment )
   {
-    // FIXME: cannot work any more
-
-    final Date startForecast = m_metaControl.getSimulationEnd();
+    final Date startForecast = m_metaControl.getStartForecast();
     if( startForecast == null )
       return null;
 
@@ -280,9 +278,10 @@ public class TsFileWriter
     // Kostra-Kachel/ synth. N gebietsab‰ngig
     final String synthNKey = catchment.getSynthZR();
 
-    statNList.addAll( Arrays.asList( FeatureHelper.getFeaturesWithName( m_synthNWorkspace, NaModelConstants.SYNTHN_STATN_FT ) ) );
+    final IFeatureType syntNft = m_synthNWorkspace.getGMLSchema().getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
+    statNList.addAll( Arrays.asList( m_synthNWorkspace.getFeatures( syntNft ) ) );
 
-    // Performance & readability: linear search loop; first hash the synth-definitions; then write....
+    // Performance & readability: linear search loop; first hash the snyt-definitions; then write....
 
     for( final Feature statNFE : statNList )
     {

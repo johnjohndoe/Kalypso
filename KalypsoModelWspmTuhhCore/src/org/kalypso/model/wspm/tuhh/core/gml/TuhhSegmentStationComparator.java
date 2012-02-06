@@ -55,6 +55,9 @@ public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfile
     m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
   }
 
+  /**
+   * @see java.util.Comparator#compare(T, T)
+   */
   @Override
   public int compare( final TuhhReachProfileSegment o1, final TuhhReachProfileSegment o2 )
   {

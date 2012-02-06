@@ -51,8 +51,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -78,7 +78,7 @@ public class StorageChannelValidator
   public IStatus validate( )
   {
     if( m_wvqObservation == null )
-      m_log.add( IStatus.ERROR, Messages.getString( "StorageChannelValidator.0" ) ); //$NON-NLS-1$
+      m_log.add( IStatus.ERROR, Messages.getString("StorageChannelValidator.0") ); //$NON-NLS-1$
     else
     {
       validateWaterlevel();
@@ -143,7 +143,7 @@ public class StorageChannelValidator
     try
     {
       final HasValuesVisitor visitor = new HasValuesVisitor( axis );
-      wvqObservation.accept( visitor, null, 1 );
+      wvqObservation.accept( visitor, null );
       return visitor.hasValues();
     }
     catch( final SensorException e )

@@ -11,7 +11,7 @@ import java.util.List;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_NA_WSPM;
 import org.kalypso.calculation.connector.utils.Connectors;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
 import org.kalypso.model.hydrology.binding.model.visitors.FindNodeByNameVisitor;

@@ -18,14 +18,13 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
 {
@@ -46,7 +45,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
   {
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( WspmPdbUiPlugin.getDefault(), getClass().getName() ) );
-    setWindowTitle( Messages.getString( "ImportAttachmentsWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Import Attachments" );
   }
 
   @Override
@@ -122,7 +121,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
     if( !status.isOK() )
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+      new StatusDialog2( getShell(), status, getWindowTitle() ).open();
 
     final ElementSelector selector = new ElementSelector();
     selector.addStateName( m_data.getState().getName() );
@@ -137,7 +136,7 @@ public class ImportAttachmentsWizard extends Wizard implements IWorkbenchWizard
     if( zipFile == null || !zipFile.exists() )
       return true;
 
-    final String message = String.format( Messages.getString( "ImportAttachmentsWizard.1" ), zipFile.getName() ); //$NON-NLS-1$
+    final String message = String.format( "Overwrite existing file %s ?", zipFile.getName() );
     return MessageDialog.openConfirm( getShell(), getWindowTitle(), message );
   }
 

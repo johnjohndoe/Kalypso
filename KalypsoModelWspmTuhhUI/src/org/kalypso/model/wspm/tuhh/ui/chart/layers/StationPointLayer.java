@@ -56,6 +56,9 @@ public class StationPointLayer extends PointsLineLayer
     super( id, profil, targetRangeProperty, styleProvider );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
+   */
   @Override
   public String getTooltipInfo( final IRecord point )
   {

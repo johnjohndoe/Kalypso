@@ -42,6 +42,7 @@ package org.kalypso.model.rcm.internal.binding;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,7 +69,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.utils.log.LogUtilities;
-import org.kalypso.zml.core.filter.binding.IZmlFilter;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -92,20 +93,34 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 {
-  static final QName FEATURE_INVERSE_DISTANCE_RAINFALL_GENERATOR = new QName( UrlCatalogRcm.NS_RCM, "InverseDistanceRainfallGenerator" );
+  public static final QName QNAME = new QName( UrlCatalogRcm.NS_RCM, "InverseDistanceRainfallGenerator" );
 
-  static final QName MEMBER_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
+  public static final QName QNAME_PROP_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
 
-  static final QName PROPERTY_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" );
+  public static final QName QNAME_PROP_ombrometerFeaturePath = new QName( UrlCatalogRcm.NS_RCM, "ombrometerFeaturePath" );
 
-  static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
+  public static final QName QNAME_PROP_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
 
-  static final QName PROPERTY_stationLocationPath = new QName( UrlCatalogRcm.NS_RCM, "stationLocationPath" );
+  public static final QName QNAME_PROP_stationLocationPath = new QName( UrlCatalogRcm.NS_RCM, "stationLocationPath" );
 
-  static final QName PROPERTY_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );
+  public static final QName QNAME_PROP_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );
 
-  static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+  public static final QName QNAME_PROP_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
 
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent.
+   * @param parentRelation
+   *          The parent relation.
+   * @param featureType
+   *          The feature type.
+   * @param id
+   *          The feature id.
+   * @param propValues
+   *          The property values.
+   */
   public InverseDistanceRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, featureType, id, propValues );
@@ -126,12 +141,12 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
     LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Inverse Distanz) wurde gestartet.", null ) );
 
     /* Get the needed properties. */
-    final Feature ombrometerCollection = getProperty( MEMBER_ombrometerCollection, Feature.class );
-    final String collectionPath = getProperty( PROPERTY_ombrometerFeaturePath, String.class );
-    final String linkPath = getProperty( PROPERTY_timeseriesLinkPath, String.class );
-    final String stationLocationPath = getProperty( PROPERTY_stationLocationPath, String.class );
-    final BigInteger numberOmbrometers = getProperty( PROPERTY_numberOmbrometers, BigInteger.class );
-    final String catchmentAreaPath = getProperty( PROPERTY_catchmentAreaPath, String.class );
+    final Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
+    final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
+    final String linkPath = getProperty( QNAME_PROP_timeseriesLinkPath, String.class );
+    final String stationLocationPath = getProperty( QNAME_PROP_stationLocationPath, String.class );
+    final BigInteger numberOmbrometers = getProperty( QNAME_PROP_numberOmbrometers, BigInteger.class );
+    final String catchmentAreaPath = getProperty( QNAME_PROP_catchmentAreaPath, String.class );
 
     /* Create the paths. */
     final GMLXPath collectionXPath = new GMLXPath( collectionPath, getWorkspace().getNamespaceContext() );
@@ -150,7 +165,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
       /* Convert to an array. */
       final List<Feature> featureList = new ArrayList<Feature>( ombrometerList.size() );
-      final GMLWorkspace workspace = ombrometerList.getOwner().getWorkspace();
+      final GMLWorkspace workspace = ombrometerList.getParentFeature().getWorkspace();
       for( final Object object : ombrometerList )
       {
         final Feature feature = FeatureHelper.getFeature( workspace, object );
@@ -171,8 +186,9 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       monitor.subTask( "Konvertiere..." );
 
       /* Convert to zml observations . */
-      final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
-      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
+      final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkXPath, new TimeseriesLinkType[ombrometerFeatures.length] );
+      final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
+      final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerLinks, range, null, sourceContext );
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -367,7 +383,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       final Double distance = distances.get( i );
 
       /* Calculate the factor. */
-      final double factor = distance.doubleValue() / sumDistances;
+      final double factor = (distance.doubleValue() / sumDistances);
 
       /* Add it to the corresponding element. */
       element.setFactor( factor );

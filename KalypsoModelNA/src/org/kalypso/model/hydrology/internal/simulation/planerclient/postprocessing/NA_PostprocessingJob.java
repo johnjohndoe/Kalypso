@@ -53,10 +53,10 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * This class is the post processor for standard rainfall-runoff calculation. It produces the set of data representing
@@ -69,14 +69,14 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  * <li>Planing area is defined by setting the "planingAreaMember" property of "suds.gml", a part of rainfall-runoff
  * model. See {@link org.kalypso.planer.client.server.landuse.helper.AwMeasureHelper#setPlaningAreaMember}.</li>
  * </ul>
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class NA_PostprocessingJob extends AbstractInternalStatusJob implements ISimulation
 {
   /**
    * Helper class for preparing the discharge info for writing to report shape file.
-   *
+   * 
    * @author Dejan Antanaskovic
    */
   private class DischargeData
@@ -273,7 +273,7 @@ public class NA_PostprocessingJob extends AbstractInternalStatusJob implements I
        * Create feature type which describes what data the shape file contains
        */
       final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName( GM_Point.POINT_ELEMENT );
+      final IMarshallingTypeHandler typeHandlerGeometry = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POINT );
       final IMarshallingTypeHandler typeHandlerString = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
       final IMarshallingTypeHandler typeHandlerInt = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
       final IMarshallingTypeHandler typeHandlerDouble = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );

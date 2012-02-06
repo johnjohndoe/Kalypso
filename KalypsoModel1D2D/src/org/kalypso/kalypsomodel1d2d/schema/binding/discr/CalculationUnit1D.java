@@ -42,9 +42,10 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.math.BigInteger;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Default implementation of {@link ICalculationUnit1D}
@@ -54,10 +55,14 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
  */
 public class CalculationUnit1D extends CalculationUnit implements ICalculationUnit1D
 {
-
-  public CalculationUnit1D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public CalculationUnit1D( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    this( featureToBind, ICalculationUnit1D.QNAME, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS, IFENetItem.class );
+  }
+
+  public CalculationUnit1D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
+  {
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
 
   /**

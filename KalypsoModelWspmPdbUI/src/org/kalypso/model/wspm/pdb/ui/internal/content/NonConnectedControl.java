@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
@@ -64,7 +64,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 
 /**
@@ -112,8 +111,8 @@ public class NonConnectedControl extends Composite
   {
     final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.DESCRIPTION );
     section.setLayout( new FillLayout() );
-    section.setText( Messages.getString( "NonConnectedControl.0" ) ); //$NON-NLS-1$
-    section.setDescription( Messages.getString( "NonConnectedControl.1" ) ); //$NON-NLS-1$
+    section.setText( "Available Settings" );
+    section.setDescription( "Open a cross section database or configure a new connection." );
 
     toolkit.adapt( section );
     section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -130,7 +129,7 @@ public class NonConnectedControl extends Composite
 
   private void createAutoConnectCheck( final FormToolkit toolkit, final Composite parent )
   {
-    final Button button = toolkit.createButton( parent, Messages.getString( "NonConnectedControl.2" ), SWT.CHECK ); //$NON-NLS-1$
+    final Button button = toolkit.createButton( parent, "Auto connect on startup", SWT.CHECK );
     button.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( button );

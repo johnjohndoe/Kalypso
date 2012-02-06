@@ -43,17 +43,18 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 import java.util.ArrayList;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.buildings.WeirPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -73,9 +74,9 @@ public class BuildingWeirTheme extends AbstractProfilTheme
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isSelectionChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
+    if( hint.isActivePointChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
       fireLayerContentChanged();
     }

@@ -40,28 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.binding;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Thomas Jung
  * @author Gernot Belger
  * 
  */
-public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloodPolygon
+public abstract class AbstractFloodPolygon extends AbstractFeatureBinder implements IFloodPolygon
 {
-  private final FeatureBindingCollection<IRunoffEvent> m_runoffEvents;
+  private final FeatureWrapperCollection<IRunoffEvent> m_runoffEvents;
 
-  public AbstractFloodPolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public AbstractFloodPolygon( final Feature featureToBind, final QName qnameToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
-    m_runoffEvents = new FeatureBindingCollection<IRunoffEvent>( this, IRunoffEvent.class, QNAME_PROP_EVENT );
+    super( featureToBind, qnameToBind );
+
+    m_runoffEvents = new FeatureWrapperCollection<IRunoffEvent>( featureToBind, IRunoffEvent.class, QNAME_PROP_EVENT );
   }
 
   /**
@@ -72,7 +74,7 @@ public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloo
   {
     for( final IRunoffEvent event : m_runoffEvents )
     {
-      if( eventId.equals( event.getId() ) )
+      if( eventId.equals( event.getFeature().getId() ) )
         return true;
     }
 
@@ -99,7 +101,7 @@ public abstract class AbstractFloodPolygon extends Feature_Impl implements IFloo
    * @see org.kalypso.model.flood.binding.IFloodPolygon#getEvents()
    */
   @Override
-  public IFeatureBindingCollection<IRunoffEvent> getEvents( )
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( )
   {
     return m_runoffEvents;
   }

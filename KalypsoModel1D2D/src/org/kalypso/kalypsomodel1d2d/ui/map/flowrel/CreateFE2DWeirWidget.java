@@ -51,7 +51,6 @@ import java.awt.event.KeyEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -74,6 +73,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -97,7 +97,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   private IMapPanel m_mapPanel;
 
-  Feature m_newParentFeature = null;
+  IFeatureWrapper2 m_newParentFeature = null;
 
   private boolean m_warning;
 
@@ -146,7 +146,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     {
       m_builder = new ElementGeometryBuilder( 0, m_nodeTheme );
       initMembers();
-      // m_builder.setName( getName() );
+//      m_builder.setName( getName() );
     }
   }
 
@@ -181,7 +181,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       if( m_flowTheme != null && m_discModel != null )
       {
         final FeatureList featureList = m_flowTheme.getFeatureList();
-        final Feature parentFeature = featureList.getOwner();
+        final Feature parentFeature = featureList.getParentFeature();
         m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
       }
     }
@@ -211,7 +211,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     super.paint( g );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.8" ) ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.8") ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -226,7 +226,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       final double z = snapNode.getPoint().getZ();
       if( !Double.isNaN( z ) )
       {
-        final String format = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.9", z ); //$NON-NLS-1$
+        final String format = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.9" , z ); //$NON-NLS-1$
         getMapPanel().setMessage( format );
       }
     }
@@ -275,6 +275,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -295,12 +296,12 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
 
   /**
    * Return one 2D-Element.
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
   @Override
-  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     return null;
     // return discModel.find2DElement( currentPos, grabDistance );
@@ -309,6 +310,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -345,7 +347,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
     }
   }
 
-  public final Feature getNewParentFeature( )
+  public final IFeatureWrapper2 getNewParentFeature( )
   {
     return m_newParentFeature;
   }
@@ -353,7 +355,7 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the context menu is opened, so the framework must know whether
    * this widget is editing something at the moment or not
-   *
+   * 
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -392,12 +394,11 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
       repaintMap();
     }
   }
-
-  private Object checkNewNode( final Point p )
-  {
+  private Object checkNewNode( final Point p ){
     return checkNewNode( p, true );
   }
 
+  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p, final boolean pBoolFinalPoint )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -436,12 +437,12 @@ public class CreateFE2DWeirWidget extends AbstractCreateFlowrelationWidget
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#createNewFeature(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.relation.IRelationType,
-   *      org.kalypsodeegree.model.feature.binding.Feature)
+   *      org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @Override
-  protected IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
+  protected IFlowRelationship createNewFeature( CommandableWorkspace workspace, Feature parentFeature, IRelationType parentRelation, IFeatureWrapper2 modelElement )
   {
-    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IWeirFlowRelation2D.QNAME );
+    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation2D.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
     final IWeirFlowRelation2D weirRelation = (IWeirFlowRelation2D) newFeature.getAdapter( IWeirFlowRelation2D.class );
     /* Call getObservation once to initialize it */

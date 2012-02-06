@@ -45,7 +45,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Provides utility method to remove relationships between finite element concepts
@@ -72,13 +72,13 @@ public class LinksOps
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( complexElement, "complexElement" ); //$NON-NLS-1$
 
-    IFeatureBindingCollection containers = null;
+    IFeatureWrapperCollection containers = null;
     if( element instanceof IFE1D2DElement )
       containers = ((IFE1D2DElement) element).getContainers();
     else if( element instanceof IFELine )
       containers = ((IFELine) element).getContainers();
     if( containers != null )
-      containers.remove( complexElement );
+      containers.removeAllRefs( complexElement );
     complexElement.removeElementAsRef( element );
   }
 }

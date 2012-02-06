@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import ogc31.www.opengis.net.gml.FileType;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.plc.postprocessing.binding.IScenarioResults;
@@ -26,14 +28,15 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements ISimulation
 {
@@ -84,6 +87,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
 
   private static final FileFilter GML_FILE_FILTER = new FileFilter()
   {
+
     @Override
     public boolean accept( final File pathname )
     {
@@ -226,7 +230,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
 
     final GMLWorkspace floodStatusQuoWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( INPUT_FLOOD_STATUS_QUO_MODEL ), null ); //$NON-NLS-1$
     final IFloodModel floodStatusQuoModel = (IFloodModel) floodStatusQuoWS.getRootFeature().getAdapter( IFloodModel.class );
-    final IFeatureBindingCollection<IRunoffEvent> statusQuoEvents = floodStatusQuoModel.getEvents();
+    final IFeatureWrapperCollection<IRunoffEvent> statusQuoEvents = floodStatusQuoModel.getEvents();
 
     // adding representative (highest HQ) inundation coverages to the model
     int highestReturnPeriod = 1;
@@ -264,7 +268,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final IFloodModel floodCalculatedModel = (IFloodModel) floodCalculatedWS.getRootFeature().getAdapter( IFloodModel.class );
     final ICoverageCollection inundationCalculatedCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_CALCULATED_COVERAGES )).getAdapter( ICoverageCollection.class );
     final String calculatedPath = "flood/calculated/events"; //$NON-NLS-1$
-    final IFeatureBindingCollection<IRunoffEvent> calculatedEvents = floodCalculatedModel.getEvents();
+    final IFeatureWrapperCollection<IRunoffEvent> calculatedEvents = floodCalculatedModel.getEvents();
     for( final IRunoffEvent coverageCollection : calculatedEvents )
     {
       if( coverageCollection.getReturnPeriod() == highestReturnPeriod )
@@ -288,7 +292,7 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final IFloodModel floodDifferenceModel = (IFloodModel) floodDifferenceWS.getRootFeature().getAdapter( IFloodModel.class );
     final ICoverageCollection inundationDifferenceCoverageCollection = (ICoverageCollection) ((Feature) resultsWorkspace.getRootFeature().getProperty( IScenarioResults.QN_PROPERTY_INUNDATION_DIFFERENCES_COVERAGES )).getAdapter( ICoverageCollection.class );
     final String differencePath = "flood/difference/events"; //$NON-NLS-1$
-    final IFeatureBindingCollection<IRunoffEvent> differenceEvents = floodDifferenceModel.getEvents();
+    final IFeatureWrapperCollection<IRunoffEvent> differenceEvents = floodDifferenceModel.getEvents();
     for( final IRunoffEvent coverageCollection : differenceEvents )
     {
       if( coverageCollection.getReturnPeriod() == highestReturnPeriod )
@@ -352,8 +356,8 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     final String href = fileRef + "#LengthSectionResult"; //$NON-NLS-1$
     final IFeatureType lcFT = resultMember.getFeatureType();
     final IRelationType pt = (IRelationType) lcFT.getProperty( property );
-
-    resultMember.setLink( pt, href, lcFT );
+    final XLinkedFeature_Impl xLink = new XLinkedFeature_Impl( resultMember, pt, lcFT, href );
+    resultMember.setProperty( pt, xLink );
   }
 
   private void changeCoverageFilePathPrefix( final ICoverage coverage, final String prefix )
@@ -362,13 +366,12 @@ public class PLCPostprocessing_Job extends AbstractInternalStatusJob implements 
     {
       final RectifiedGridCoverage gridCoverage = (RectifiedGridCoverage) coverage;
       final Object rangeSet = gridCoverage.getRangeSet();
-      if( rangeSet instanceof RangeSetFile )
+      if( rangeSet instanceof FileType )
       {
-        final RangeSetFile file = (RangeSetFile) rangeSet;
-        final Path filePath = new Path( file.getFileName() );
+        final Path filePath = new Path( ((FileType) rangeSet).getFileName() );
         // this works for both flood and risk
         final String fileName = new Path( prefix ).append( filePath.removeFirstSegments( 2 ) ).toString();
-        file.setFileName( fileName );
+        ((FileType) rangeSet).setFileName( fileName );
       }
     }
   }

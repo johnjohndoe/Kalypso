@@ -104,7 +104,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * State object for creating main channel widget and composite.
- *
+ * 
  * @author Thomas Jung
  */
 public class CreateChannelData
@@ -724,7 +724,7 @@ public class CreateChannelData
 
     final Feature firstFeature = profileFeatures[0];
     final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.QN_PROPERTY_STATION );
-    Arrays.sort( profileFeatures, new FeatureComparator( firstFeature.getOwner(), stationProperty ) );
+    Arrays.sort( profileFeatures, new FeatureComparator( firstFeature.getParent(), stationProperty ) );
 
     // loop over all profiles
     // take two neighbouring profiles create a segment for them
@@ -771,10 +771,10 @@ public class CreateChannelData
 
     final Set<GM_Curve> curves = m_selectedBanks.keySet();
 
-    for( final GM_Curve curve : curves )
+    for( final GM_Curve curve : curves ) 
     {
-      final GM_LineString asLineString = null;
-      final GM_Curve lCurve = curve;
+      GM_LineString asLineString = null;
+      GM_Curve lCurve = curve;
 //      if( !lCurve.intersects( profile.getLine() ) && lCurve.intersection( profile.getLine() ) == null )
 //      {
 //        try
@@ -1135,7 +1135,7 @@ public class CreateChannelData
   /**
    * sets the bankline for a given side.<BR>
    * Before the new line is set the already existing bankline gets deleted as we allow only one line per side.
-   *
+   * 
    * @param curve
    *          the bankline
    * @param side

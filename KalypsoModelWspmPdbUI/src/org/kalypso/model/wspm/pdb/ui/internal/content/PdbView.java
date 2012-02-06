@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -72,6 +72,7 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
@@ -80,12 +81,10 @@ import org.kalypso.model.wspm.pdb.connect.PdbSettings;
 import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.PdbUpdater;
-import org.kalypso.model.wspm.pdb.ui.internal.IPdbHelp;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages.IMAGE;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.OpenConnectionData;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.FindViewRunnable;
 import org.kalypso.model.wspm.pdb.ui.internal.wspm.PdbWspmProject;
@@ -104,7 +103,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
   private final IAction m_infoAction = new InfoPdbAction( this );
 
-  private final UIJob m_updateControlJob = new UIJob( Messages.getString( "PdbView.0" ) ) //$NON-NLS-1$
+  private final UIJob m_updateControlJob = new UIJob( "Update pdb view" )
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -192,8 +191,6 @@ public class PdbView extends ViewPart implements IConnectionViewer
     body.setLayout( new FillLayout() );
 
     m_updateControlJob.schedule( 250 );
-
-    PlatformUI.getWorkbench().getHelpSystem().setHelp( m_form, IPdbHelp.CONTEXT_PDB_USER_MANUAL );
   }
 
   private Image getFormImage( )
@@ -207,13 +204,13 @@ public class PdbView extends ViewPart implements IConnectionViewer
   private String getFormTitel( )
   {
     if( m_wspmProject == null )
-      return Messages.getString( "PdbView.1" ); //$NON-NLS-1$
+      return "<Not Initialized>";
 
     if( m_pdbConnection == null )
-      return Messages.getString( "PdbView.2" ); //$NON-NLS-1$
+      return "<Not Connected>";
 
     final String label = m_pdbConnection.getLabel();
-    return String.format( "%s", label ); //$NON-NLS-1$
+    return String.format( "%s", label );
   }
 
   private void startAutoConnect( )
@@ -231,7 +228,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     final String settingsName = m_autoConnectData.getAutoConnectName();
     final IStatus result = doConnect( settingsName );
     if( !result.isOK() )
-      new StatusDialog( getSite().getShell(), result, Messages.getString( "PdbView.4" ) ); //$NON-NLS-1$
+      new StatusDialog2( getSite().getShell(), result, "Auto Connect" );
   }
 
   private IStatus doConnect( final String settingsName )
@@ -249,7 +246,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "PdbView.5" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to auto connect ot database", e );
     }
   }
 
@@ -358,7 +355,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     activateMapView();
 
     final IEvaluationService es = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
-    es.requestEvaluation( "pdbTester.hasRole" ); //$NON-NLS-1$
+    es.requestEvaluation( "pdbTester.hasRole" );
 
 // final ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
 // cs.refreshElements( "org.kalypso.model.wspm.pdb.ui.gmvtree.command.checkinState", null );
@@ -460,7 +457,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
     if( m_connectionStatus == null )
       return;
 
-    new StatusDialog( getSite().getShell(), m_connectionStatus, Messages.getString( "PdbView.7" ) ).open(); //$NON-NLS-1$
+    new StatusDialog2( getSite().getShell(), m_connectionStatus, "Connection Status" ).open();
   }
 
   public PdbInfo getInfo( )

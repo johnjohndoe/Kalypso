@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal;
 
@@ -46,10 +46,10 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.binding.IHydrotope;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.control.NAModellControl;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.util.optimize.NaOptimizeLoader;
@@ -57,7 +57,7 @@ import org.kalypso.ogc.gml.serialize.FeatureProviderWithCacheFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IWorkspaceProvider;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
@@ -109,7 +109,7 @@ public class NaSimulationData implements INaSimulationData
     else
       m_optimizeData = optimizeLoader.load( m_modelWorkspace, m_factory );
 
-    m_naModel = m_modelWorkspace == null ? null : (NaModell) m_modelWorkspace.getRootFeature();
+    m_naModel = (NaModell) m_modelWorkspace.getRootFeature();
 
     m_parameterWorkspace = readWorkspaceOrNull( parameterUrl );
 
@@ -140,7 +140,7 @@ public class NaSimulationData implements INaSimulationData
     if( location == null )
       return null;
 
-    final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
+    final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
     return provider.getWorkspace();
   }
 
@@ -215,7 +215,7 @@ public class NaSimulationData implements INaSimulationData
     if( file != null && !file.exists() )
       return null;
 
-    final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
+    final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, location.toURI().toString() );
     return provider.getWorkspace();
   }
 
@@ -224,7 +224,7 @@ public class NaSimulationData implements INaSimulationData
     if( file != null && file.exists() )
     {
       final String uri = file.toURI().toString();
-      final IWorkspaceProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
+      final IFeatureProvider provider = m_factory.createFeatureProvider( m_modelWorkspace, uri );
       return provider.getWorkspace();
     }
 

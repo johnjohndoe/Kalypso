@@ -69,8 +69,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -81,9 +81,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 {
   public static final boolean SUPPORT_MIDSIDE_NODES = false;
-
+  
   public static final boolean SUPPORT_FLOW_RESISTANCE_CLASSES = false;
-
+  
   private final IdMap m_roughnessIDProvider;
 
   private final IdMap m_nodesIDProvider = new IdMap();
@@ -110,9 +110,9 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
       m_roughnessIDProvider = null;
     else
     {
-      m_roughnessIDProvider = new IdMap( roughnessModel.getRoughnessClasses().size() );
-      for( final IRoughnessCls o : roughnessModel.getRoughnessClasses() )
-        m_roughnessIDProvider.getOrAdd( o.getId() );
+      m_roughnessIDProvider = new IdMap( roughnessModel.size() );
+      for( final IRoughnessCls o : roughnessModel )
+        m_roughnessIDProvider.getOrAdd( o.getGmlID() );
     }
   }
 
@@ -121,12 +121,12 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
   @Override
-  public int getConversionID( final Feature feature )
+  public int getConversionID( final IFeatureWrapper2 feature )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
 
-    final String id = feature.getId();
+    final String id = feature.getGmlID();
     if( feature instanceof IFE1D2DNode )
       return m_nodesIDProvider.getOrAdd( id );
 
@@ -189,11 +189,12 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
     writeHeaderLine( formatter );
 
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     writeElementsAndNodes( formatter, elements );
   }
 
@@ -210,18 +211,19 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     formatter.format( "MESH2D%n" ); //$NON-NLS-1$
   }
 
+  @SuppressWarnings("unchecked")
   private void writeNodes( final Formatter formatter, final IFE1D2DNode[] nodes ) throws CoreException, IOException
   {
     for( final IFE1D2DNode node : nodes )
     {
       // TODO: only write nodes, which are within the requested calculation unit!
 
-      if( m_writtenNodesIDs.contains( node.getId() ) )
+      if( m_writtenNodesIDs.contains( node.getGmlID() ) )
         continue;
 
       checkElevation( node );
 
-      m_writtenNodesIDs.add( node.getId() );
+      m_writtenNodesIDs.add( node.getGmlID() );
 
       /* The node itself */
       final int nodeID = getConversionID( node );
@@ -236,6 +238,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void checkElevation( final IFE1D2DNode node ) throws CoreException
   {
     // check if node elevation is assigned
@@ -266,7 +269,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     final double x = point.getX();
     final double y = point.getY();
     double z = point.getZ();
-
+    
     /*
      * Card Type ND Description: Defines the ID and location for each node of the mesh. Required: NO Format: ND id x y z
      * Sample: ND 1 7.75e+005 1.10e+005 5.00e-001 id (The ID of the node), x,y,z (the x, y, and z coordinates of the
@@ -280,13 +283,13 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    */
   @SuppressWarnings("unchecked")
-  private void writeElementsAndNodes( final Formatter formatter, final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException, IOException
+  private void writeElementsAndNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws CoreException, IOException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;
     final Set<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
     if( elementsInBBox.size() == 0 )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2" ), null ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2"), null ) ); //$NON-NLS-1$
 
     for( final IFE1D2DElement element : elementsInBBox )
     {
@@ -338,7 +341,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 
     for( final IFE1D2DEdge edge : edgeSet )
     {
-      final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
+      final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
       for( IFE1D2DNode node : nodes )
       {
         nodeSet.add( node );
@@ -361,6 +364,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n4: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
+  @SuppressWarnings("unchecked")
   private void writeQuadrangularElement( Formatter formatter, int id, int roughnessID, List<IFE1D2DNode> nodes )
   {
     // TODO: check orientation
@@ -369,7 +373,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     final int nodeID2 = getConversionID( nodes.get( 1 ) );
     final int nodeID3 = getConversionID( nodes.get( 2 ) );
     final int nodeID4 = getConversionID( nodes.get( 3 ) );
-
+    
     formatter.format( "E4Q%10d%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, nodeID4, roughnessID ); //$NON-NLS-1$
   }
 
@@ -386,6 +390,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * n1-n3: The ID's of nodes in the element.<br>
    * matid: The ID of the material assigned to the element.
    */
+  @SuppressWarnings("unchecked")
   private void writeTriangularElement( final Formatter formatter, final int id, final int roughnessID, final List<IFE1D2DNode> nodes )
   {
 
@@ -398,6 +403,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     formatter.format( "E3T%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, roughnessID ); //$NON-NLS-1$
   }
 
+  @SuppressWarnings("unchecked")
   private int getRoughnessID( final IFE1D2DElement element ) throws CoreException
   {
     final String roughnessClsID = element.getRoughnessClsID();
@@ -405,7 +411,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
       return m_roughnessIDProvider.getOrAdd( roughnessClsID );
 
     // TODO: georefed, core exception!
-    final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5", roughnessClsID, element ); //$NON-NLS-1$
+    final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5", roughnessClsID, element ); //$NON-NLS-1$
     // TODO: use default zone instead
     throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
   }

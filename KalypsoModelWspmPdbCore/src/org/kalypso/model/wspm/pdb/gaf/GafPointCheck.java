@@ -47,12 +47,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafLine;
+
 
 /**
  * Checks various attributes of a {@link org.kalypso.model.wspm.pdb.internal.gaf.GafPoint}.

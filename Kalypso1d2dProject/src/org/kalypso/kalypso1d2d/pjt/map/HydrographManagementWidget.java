@@ -47,7 +47,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -121,6 +120,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -134,14 +134,13 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
-import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -160,7 +159,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class HydrographManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class HydrographManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private IHydrographCollection m_hydrographs;
 
@@ -177,7 +176,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
       final FeatureList featureList = ft.getFeatureList();
-      final Feature hydrographsFeature = featureList == null ? null : featureList.getOwner();
+      final Feature hydrographsFeature = featureList == null ? null : featureList.getParentFeature();
 
       if( hydrographsFeature == null )
         return false;
@@ -252,7 +251,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
   private Button m_processHydrographCollectionButton;
 
-  private IDeprecatedMouseWidget m_delegateWidget;
+  private IWidget m_delegateWidget;
 
   public HydrographManagementWidget( )
   {
@@ -391,12 +390,10 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        try
-        {
+        try{
           handleListSelectionChanged( parent, hydrographInfoGroup, featureComposite, event );
         }
-        catch( final Exception e )
-        {
+        catch (final Exception e) {
           e.printStackTrace();
         }
       }
@@ -413,12 +410,8 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
     initializeThemeCombo();
 
-    if( m_hydrographs != null )
-    {
-      final IFeatureBindingCollection<IHydrograph> hydrographs = m_hydrographs.getHydrographs();
-      if( hydrographs != null && hydrographs.size() > 0 )
-        m_hydrographViewer.setSelection( new StructuredSelection( hydrographs.get( 0 ) ) );
-    }
+    if( m_hydrographs != null && m_hydrographs.size() > 0 )
+      m_hydrographViewer.setSelection( new StructuredSelection( m_hydrographs.get( 0 ) ) );
 
     final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     panel.setSize( size );
@@ -446,7 +439,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
       {
         final SelectCalcUnitForHydrographWizard addCalcUnitWizard = new SelectCalcUnitForHydrographWizard();
         addCalcUnitWizard.init( PlatformUI.getWorkbench(), new StructuredSelection() );
-        addCalcUnitWizard.setMapModel( getMapPanel().getMapModell() );
+        addCalcUnitWizard.setMapModel( (IKalypsoLayerModell) getMapPanel().getMapModell() );
         final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
         final IEvaluationContext context = handlerService.getCurrentState();
         final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -589,22 +582,22 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
   protected void handleThemeComboSelected( final SelectionChangedEvent event )
   {
+    setHydrographs( null, null );
+
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     final Object firstElement = selection.getFirstElement();
+
     if( firstElement instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
       final FeatureList featureList = ft.getFeatureList();
-      final Feature hydrographsFeature = featureList == null ? null : featureList.getOwner();
+      final Feature hydrographsFeature = featureList == null ? null : featureList.getParentFeature();
       if( hydrographsFeature != null )
         setHydrographs( (IHydrographCollection) hydrographsFeature.getAdapter( IHydrographCollection.class ), ft );
     }
-    else
-      setHydrographs( null, null );
   }
 
-  @SuppressWarnings("unchecked")
-  private void setHydrographs( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme theme )
+  private void setHydrographs( final IHydrographCollection hydrographs, final IKalypsoFeatureTheme theme )
   {
     // remove listener
     if( m_theme != null )
@@ -615,14 +608,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
       workspace.removeModellListener( m_modellistener );
       m_theme = null;
     }
-    m_hydrographs = hydrographCollection;
-
-    final List<IHydrograph> hydrographs;
-    if( m_hydrographs == null )
-      hydrographs = Collections.EMPTY_LIST;
-    else
-      hydrographs = m_hydrographs.getHydrographs();
-
+    m_hydrographs = hydrographs;
     m_theme = theme;
 
     // add listener
@@ -693,7 +679,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
 
     if( m_selectedHydrograph != null )
     {
-      featureComposite.setFeature( m_selectedHydrograph );
+      featureComposite.setFeature( m_selectedHydrograph.getFeature() );
       featureComposite.createControl( hydrographInfoGroup, SWT.NONE );
       parent.layout( true, true );
     }
@@ -728,6 +714,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
       }
     };
     addAction.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.23" ) ); //$NON-NLS-1$
+
 
     final Action removeAction = new Action( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.26" ), removeID ) //$NON-NLS-1$
     {
@@ -795,8 +782,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     // set wizard
     final IWizard exportProfileWizard = new ExportHydrographWizard( m_hydrographs, m_selectedHydrograph );
 
-    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    ;
+    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
     dialog.setRememberSize( true );
@@ -808,19 +794,17 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
   {
     final IMapPanel mapPanel = getMapPanel();
 
-    final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
-
+    IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
+    
     final ImportHydrographWizard importHydrographWizard = new ImportHydrographWizard( m_hydrographs, m_theme, discModel );
 
-    final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    ;
+    Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importHydrographWizard );
     dialog.setRememberSize( true );
     dialog.open();
     final String errMsg = importHydrographWizard.getErrMsg();
-    if( errMsg != null && errMsg != "" )
-    {
+    if( errMsg != null && errMsg != "" ){
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
@@ -828,7 +812,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          final IStatus lStatus = Status.CANCEL_STATUS;
+          IStatus lStatus = Status.CANCEL_STATUS;
           ErrorDialog.openError( shell, "Import Hydrographs Warnings", errMsg, lStatus ); //$NON-NLS-1$
         }
       } );
@@ -836,7 +820,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     saveModell();
     refreshControl();
   }
-
+  
   protected void handleHydrographSelected( @SuppressWarnings("unused") final Event event )
   {
     // set widget
@@ -939,8 +923,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
         return hydrograph.getName();
       }
     } );
-    if( m_hydrographs != null )
-      viewer.setInput( m_hydrographs.getHydrographs() );
+    viewer.setInput( m_hydrographs );
 
   }
 
@@ -1048,7 +1031,7 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
       m_delegateWidget.leftClicked( p );
   }
 
-  private void setDelegate( final IDeprecatedMouseWidget delegateWidget )
+  private void setDelegate( final IWidget delegateWidget )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.finish();

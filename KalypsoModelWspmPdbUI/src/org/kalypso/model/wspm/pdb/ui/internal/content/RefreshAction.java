@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.pdb.ui.internal.content;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiImages;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -56,7 +55,7 @@ public class RefreshAction extends Action
   {
     m_control = control;
 
-    setText( Messages.getString( "RefreshAction.0" ) ); //$NON-NLS-1$
+    setText( "Refresh" );
     setImageDescriptor( WspmPdbUiImages.getImageDescriptor( WspmPdbUiImages.IMAGE.REFRESH_CONTENT_VIEWER ) );
   }
 

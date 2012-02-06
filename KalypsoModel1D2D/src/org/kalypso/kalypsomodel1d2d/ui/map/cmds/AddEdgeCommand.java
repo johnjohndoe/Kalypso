@@ -45,7 +45,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Unduable add edge command.
@@ -60,6 +60,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
 
   private final IFEDiscretisationModel1d2d model;
 
+  @SuppressWarnings("unchecked")
   private IFE1D2DEdge addedEdge;
 
   public AddEdgeCommand( IFEDiscretisationModel1d2d model, AddNodeCommand node1Command, AddNodeCommand node2Command )
@@ -75,7 +76,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.0"); //$NON-NLS-1$
   }
 
   /**
@@ -121,7 +122,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   {
     if( addedEdge != null )
     {
-      model.getEdges().remove( addedEdge );
+      model.getEdges().remove( addedEdge.getFeature() );
       // TODO remove edges from node add method to node interface
     }
   }
@@ -130,9 +131,9 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new Feature[] { addedEdge };
+    return new IFeatureWrapper2[] { addedEdge };
   }
 
   /**
@@ -151,7 +152,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 128 );
-    buf.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.1" ) ); //$NON-NLS-1$
+    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.1") ); //$NON-NLS-1$
     buf.append( node1Command );
     buf.append( node2Command );
     buf.append( ']' );

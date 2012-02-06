@@ -44,7 +44,7 @@ import java.math.BigDecimal;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -83,7 +83,7 @@ public class WspmResultInterpolationProfile
     newProfile.setName( name );
 
     final IProfileFeature profileFeature = createProfileFeature();
-    ((ProfileFeatureBinding) profileFeature).setProfile( newProfile );
+    ProfileFeatureFactory.toFeature( newProfile, profileFeature );
 
     return profileFeature;
   }

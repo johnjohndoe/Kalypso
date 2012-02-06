@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +45,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 {
-  private final ImportHydrographWizardPage m_wizardPage;
+  private ImportHydrographWizardPage m_wizardPage;
 
   private final int m_grabRadius = 10;
 
@@ -57,11 +59,11 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   String m_errMsg = ""; //$NON-NLS-1$
 
-  private final char m_defaultSeparator = ';';
+  private char m_defaultSeparator = ';';
 
   private char m_separator = m_defaultSeparator;
-
-  private final Set<String> m_setNewCreatedNames = new HashSet<String>();
+  
+  private Set< String > m_setNewCreatedNames = new HashSet< String >();
 
   public ImportHydrographWizard( final IHydrographCollection hydrographCollection, final IKalypsoFeatureTheme hydroTheme, final IFEDiscretisationModel1d2d discModel )
   {
@@ -75,23 +77,23 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     m_wizardPage.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographIxportWizard.2" ) ); //$NON-NLS-1$
 
     m_discModel = discModel;
-
+    
     addPage( m_wizardPage );
   }
 
   private boolean doImportFromShape( )
   {
-    final ShapeFileReader reader = new ShapeFileReader( inFile.getAbsolutePath() );
+    ShapeFileReader reader = new ShapeFileReader( inFile.getAbsolutePath() );
     ShapeFile sf;
-    final List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
+    List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
     try
     {
       sf = reader.read();
-      final FeatureCollection fc = sf.getFeatureCollection();
+      FeatureCollection fc = sf.getFeatureCollection();
 
       for( int i = 0; i < fc.size(); ++i )
       {
-        final org.deegree.model.feature.Feature lf = fc.getFeature( i );
+        org.deegree.model.feature.Feature lf = fc.getFeature( i );
         double lDoubleX;
         double lDoubleY;
         try
@@ -99,22 +101,22 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
           lDoubleX = lf.getDefaultGeometryPropertyValue().getCentroid().getX();
           lDoubleY = lf.getDefaultGeometryPropertyValue().getCentroid().getY();
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           e.printStackTrace();
           continue;
         }
-        final GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
+        GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
         if( hydroPositionFromElement == null )
         {
           continue;
         }
-        final String lStrName = getNextName( lf.getId() );
-        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, lStrName, lf.getDescription() ) );
+        String lStrName = getNextName( lf.getId() ); 
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, lStrName, lf.getDescription() ).getFeature() );
       }
       postCommand( lListNewHydroFeatures.toArray( new Feature[lListNewHydroFeatures.size()] ) );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       m_errMsg += e.getMessage();
       return false;
@@ -158,7 +160,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   {
     if( separator != null )
     {
-      final String lStrSep = separator.trim();
+      String lStrSep = separator.trim();
       if( lStrSep.charAt( 0 ) == '\\' )
       {
         if( lStrSep.charAt( 1 ) == 't' )
@@ -188,7 +190,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   private boolean doImportFromCsv( )
   {
-    final List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
+    List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
     try
     {
       final CSVReader readerTimeSeries = new CSVReader( new FileReader( inFile ), m_separator );
@@ -204,7 +206,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
           lDoubleX = NumberUtils.parseDouble( lStrX );
           lDoubleY = NumberUtils.parseDouble( lStrY );
         }
-        catch( final NumberFormatException e )
+        catch( NumberFormatException e )
         {
           m_errMsg += e.getMessage();
           continue;
@@ -215,22 +217,22 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
         {
           description = nextLine[2];
         }
-        final GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
+        GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
         if( hydroPositionFromElement == null )
         {
           continue;
         }
-        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, name, description ) );
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, name, description ).getFeature() );
       }
       postCommand( lListNewHydroFeatures.toArray( new Feature[lListNewHydroFeatures.size()] ) );
     }
-    catch( final FileNotFoundException e )
+    catch( FileNotFoundException e )
     {
       m_errMsg += e.getMessage();
       e.printStackTrace();
       return false;
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       m_errMsg += e.getMessage();
       e.printStackTrace();
@@ -241,7 +243,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   private boolean doImportFromTxt( )
   {
-    final List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
+    List<Feature> lListNewHydroFeatures = new ArrayList<Feature>();
 
     try
     {
@@ -250,15 +252,15 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
       int lIntCounter = 0;
       int lIntPosColumnNr = -1;
       String name = inFile.getName().substring( 0, inFile.getName().length() - 4 );
-      final int lIntExportSuffixPos = inFile.getName().indexOf( ExportHydrographWizard.EXPORT_FILE_NAME_SUFFIX );
+      int lIntExportSuffixPos = inFile.getName().indexOf( ExportHydrographWizard.EXPORT_FILE_NAME_SUFFIX );
       if( lIntExportSuffixPos > -1 )
       {
         name = inFile.getName().substring( 0, lIntExportSuffixPos );
       }
       while( (nextLine = readerTimeSeries.readNext()) != null )
       {
-        // System.out.println( Arrays.asList( nextLine ) );
-        if( nextLine.length == 0 || nextLine.length == 1 && "".equals( nextLine[0].trim() ) ) { //$NON-NLS-1$
+//        System.out.println( Arrays.asList( nextLine ) );
+        if( nextLine.length == 0 || (nextLine.length == 1 && "".equals( nextLine[0].trim() )) ) { //$NON-NLS-1$
           continue;
         }
         if( lIntCounter == 0 )
@@ -273,11 +275,11 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
         double lDoubleY;
         try
         {
-          final int lPosSepLocal = lStrXY.indexOf( ' ' );
+          int lPosSepLocal = lStrXY.indexOf( ' ' );
           lDoubleX = NumberUtils.parseDouble( lStrXY.substring( 1, lPosSepLocal ) );
           lDoubleY = NumberUtils.parseDouble( lStrXY.substring( lPosSepLocal + 1, lStrXY.length() - 1 ) );
         }
-        catch( final NumberFormatException e )
+        catch( NumberFormatException e )
         {
           m_errMsg += e.getMessage();
           continue;
@@ -287,26 +289,26 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
         {
           description = nextLine[2];
         }
-        final GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
+        GM_Position hydroPositionFromElement = checkPositionOfNewHydrograph( lDoubleX, lDoubleY );
         if( hydroPositionFromElement == null )
         {
           continue;
         }
-        final String nameAct = getNextName( name );
+        String nameAct = getNextName( name );
 
-        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, nameAct, description ) );
+        lListNewHydroFeatures.add( createHydrograph( hydroPositionFromElement, nameAct, description ).getFeature() );
         lIntCounter++;
 
       }
       postCommand( lListNewHydroFeatures.toArray( new Feature[lListNewHydroFeatures.size()] ) );
     }
-    catch( final FileNotFoundException e )
+    catch( FileNotFoundException e )
     {
       m_errMsg += e.getMessage();
       e.printStackTrace();
       return false;
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       m_errMsg += e.getMessage();
       e.printStackTrace();
@@ -316,17 +318,16 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   }
 
   private String getNextName( final String name )
-  {
-    if( !nameExists( name ) )
-    {
+  { 
+    if( !nameExists( name ) ){
       m_setNewCreatedNames.add( name );
       return name;
     }
     String lStrNameRes = name;
-    int lIntAmountExistingHydro = m_hydrographCollection.getHydrographs().size();
+    int lIntAmountExistingHydro = m_hydrographCollection.size();
     do
     {
-      lStrNameRes = name + "_" + lIntAmountExistingHydro++; //$NON-NLS-1$
+      lStrNameRes = name + "_" + (lIntAmountExistingHydro++); //$NON-NLS-1$
     }
     while( nameExists( lStrNameRes ) );
     m_setNewCreatedNames.add( lStrNameRes );
@@ -334,16 +335,15 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
   }
 
   boolean nameExists( final String name )
-  {
+  { 
     if( name == null )
       return true;
-    if( m_setNewCreatedNames.contains( name ) )
-    {
+    if( m_setNewCreatedNames.contains( name ) ){
       return true;
     }
-    for( final Object element : m_hydrographCollection.getHydrographs() )
+    for( Iterator iterator = m_hydrographCollection.iterator(); iterator.hasNext(); )
     {
-      final IHydrograph type = (IHydrograph) element;
+      IHydrograph type = (IHydrograph) iterator.next();
       if( type.getName().trim().equalsIgnoreCase( name.trim() ) )
       {
         return true;
@@ -369,13 +369,13 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
 
   private GM_Position checkPositionOfNewHydrograph( final double lDoubleX, final double lDoubleY )
   {
-    final GM_Point gm_pos = GeometryFactory.createGM_Point( lDoubleX, lDoubleY, m_wizardPage.getSelectedCRS() );
-    final IFE1D2DNode node = m_discModel.findNode( gm_pos, m_grabRadius );
+    GM_Point gm_pos = GeometryFactory.createGM_Point( lDoubleX, lDoubleY, m_wizardPage.getSelectedCRS() );
+    IFE1D2DNode node = m_discModel.findNode( gm_pos, m_grabRadius );
     if( node == null )
     {
       return null;
     }
-    final IHydrograph existingHydrograph = m_hydrographCollection.findHydrograph( node.getPoint().getPosition(), 0.01 );
+    IHydrograph existingHydrograph = m_hydrographCollection.findHydrograph( node.getPoint().getPosition(), 0.01 );
     if( existingHydrograph != null )
     {
       return null;
@@ -414,8 +414,8 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     }
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
 
-    final Feature parentFeature = m_hydrographCollection;
-    final IRelationType parentRelation = m_hydrographCollection.getHydrographs().getFeatureList().getPropertyType();
+    final Feature parentFeature = m_hydrographCollection.getFeature();
+    final IRelationType parentRelation = m_hydrographCollection.getWrappedList().getParentFeatureTypeProperty();
     final IHydrograph hydro = HydrographUtils.createNewHydrographFeature( workspace, parentFeature, parentRelation, name, description );
 
     if( hydro == null )
@@ -438,8 +438,8 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     /* Post it as an commands */
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
     final IFeatureSelectionManager selectionManager = m_hydroTheme.getSelectionManager();
-    final Feature parentFeature = m_hydrographCollection;
-    final IRelationType parentRelation = m_hydrographCollection.getHydrographs().getFeatureList().getPropertyType();
+    final Feature parentFeature = m_hydrographCollection.getFeature();
+    final IRelationType parentRelation = m_hydrographCollection.getWrappedList().getParentFeatureTypeProperty();
 
     final Display display = PlatformUI.getWorkbench().getDisplay();
     for( final Feature lf : newHydroFeatures )
@@ -471,7 +471,7 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
   @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  public void init( IWorkbench workbench, IStructuredSelection selection )
   {
   }
 

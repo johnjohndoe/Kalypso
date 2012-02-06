@@ -40,17 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.util;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
-import org.kalypso.observation.util.ObservationHelper;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -66,10 +67,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.TuppleModelsLinearAdd;
 import org.kalypso.ogc.sensor.timeseries.datasource.AddDataSourceObservationHandler;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.zml.core.filter.ZmlFilterWorker;
-import org.kalypso.zml.core.filter.binding.IZmlFilter;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -93,75 +93,55 @@ public final class RainfallGeneratorUtilities
   {
   }
 
-  /**
-   * Res9olves the areas from the catchments AND transforms them into the kalypso srs.
-   */
-  public static GM_MultiSurface[] findCatchmentAreas( final Feature[] catchmentFeatures, final GMLXPath catchmentAreaXPath ) throws CoreException
+  public static GM_MultiSurface[] findCatchmentAreas( final Feature[] catchmentFeatures, final GMLXPath catchmentAreaXPath ) throws CoreException, GMLXPathException
   {
-    try
+    /* Memory for the results. */
+    final GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
+
+    for( int i = 0; i < catchmentFeatures.length; i++ )
     {
-      final String kalypsoSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      final Feature catchmentFeature = catchmentFeatures[i];
+      if( catchmentFeature == null )
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
 
-      /* Memory for the results. */
-      final GM_MultiSurface[] areas = new GM_MultiSurface[catchmentFeatures.length];
-
-      for( int i = 0; i < catchmentFeatures.length; i++ )
+      final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
+      if( object instanceof GM_Surface )
       {
-        final Feature catchmentFeature = catchmentFeatures[i];
-        if( catchmentFeature == null )
-          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Ein catchment feature war null ...", null ) );
-
-        final Object object = GMLXPathUtilities.query( catchmentAreaXPath, catchmentFeature );
-        final GM_MultiSurface multiSurface = toMultiSurface( catchmentAreaXPath, object );
-        final GM_MultiSurface transformedMultiSurface = (GM_MultiSurface) multiSurface.transform( kalypsoSrs );
-        areas[i] = transformedMultiSurface;
+        final GM_Surface< ? > surface = (GM_Surface< ? >) object;
+        final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
+        areas[i] = multiSurface;
       }
+      else if( object instanceof GM_MultiSurface )
+        areas[i] = (GM_MultiSurface) object;
+      else if( object == null )
+        areas[i] = null; // does not make sense to process
+      else
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
+    }
 
-      return areas;
-    }
-    catch( final GMLXPathException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to resolve catchment geometry path", e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "Failed to transform catchment geometry", e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
+    return areas;
   }
 
-  private static GM_MultiSurface toMultiSurface( final GMLXPath catchmentAreaXPath, final Object object ) throws CoreException
+  public static IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final DateRange range, final String sourceFilter, final URL context ) throws MalformedURLException, SensorException
   {
-    if( object instanceof GM_Surface )
+    final IRequest request = new ObservationRequest( range );
+
+    final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
+    for( int i = 0; i < ombrometerLinks.length; i++ )
     {
-      final GM_Surface< ? > surface = (GM_Surface< ? >) object;
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surface }, surface.getCoordinateSystem() );
-    }
-
-    if( object instanceof GM_MultiSurface )
-      return (GM_MultiSurface) object;
-
-    if( object == null )
-      return null; // does not make sense to process
-
-    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface oder ein GM_MultiSurface.", object, catchmentAreaXPath ), null ) );
-  }
-
-  public static IObservation[] readObservations( final Feature[] ombrometerFeatures, final GMLXPath linkXPath, final IZmlFilter[] filters, final DateRange dateRange ) throws SensorException
-  {
-    final IRequest request = new ObservationRequest( dateRange );
-
-    final IObservation[] readObservations = new IObservation[ombrometerFeatures.length];
-    for( int i = 0; i < ombrometerFeatures.length; i++ )
-    {
-      final ZmlLink link = new ZmlLink( ombrometerFeatures[i], linkXPath );
-      if( link.isLinkSet() )
+      final TimeseriesLinkType link = ombrometerLinks[i];
+      if( link != null )
       {
-        final IObservation source = link.loadObservation();
-        final IObservation filteredObservation = ZmlFilterWorker.applyFilters( source, filters );
-        final IObservation resolvedObservation = ObservationHelper.clone( filteredObservation, request );
-        readObservations[i] = resolvedObservation;
+        final String href = link.getHref();
+        if( href != null )
+        {
+          final String hrefFilter = ZmlURL.insertQueryPart( href, sourceFilter );
+
+          final String hrefRequest = ZmlURL.insertRequest( hrefFilter, request );
+          final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
+          if( zmlLocation != null )
+            readObservations[i] = ZmlFactory.parseXML( zmlLocation );
+        }
       }
     }
 
@@ -189,62 +169,53 @@ public final class RainfallGeneratorUtilities
     if( observations.length == 0 )
       return null;
 
-    /* Get some of the metadata from the first observation. */
+    /* Some things of the first observation. */
+
     final IObservation firstObservation = observations[0];
     final MetadataList firstMetadataList = firstObservation.getMetadataList();
-    final String timestep = findTimeStep( observations );
     final String firstStart = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_START );
     final String firstEnde = firstMetadataList.getProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE );
 
-    /* Get some of the axis from the first observation. */
-    final ITupleModel firstTuppleModel = firstObservation.getValues( null );
-    final IAxis[] firstAxisList = firstTuppleModel.getAxes();
-    final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
-    final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
-    IAxis firstStatusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( firstAxisList, firstValueAxis );
-    if( firstStatusAxis == null )
-      firstStatusAxis = KalypsoStatusUtils.createStatusAxisFor( firstValueAxis, true );
+    // FIXME: we still get values from observations with weight 0.0 -> we should first filter those out to improve
+    // performance
+    // FIXME 2: for still better performance, we could filter out everything with a weight smaller than some limit
+    // ( to still get 100%, we could share the difference with the remaining obses to their weight )
 
-    // FIXME 1: We still get values from observations with weight 0.0.
-    // FIXME 1: -> We should first filter those out to improve performance.
-    // FIXME 2: For still better performance, we could filter out everything with a weight smaller than some limit.
-    // FIXME 2: To still get 100%, we could share the difference with the remaining obses to their weight.
     final List<ITupleModel> observationValues = new ArrayList<ITupleModel>();
     for( final IObservation observation : observations )
       observationValues.add( observation.getValues( null ) );
 
-    /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tuple model. */
+    final ITupleModel[] tuppleModels = observationValues.toArray( new ITupleModel[observationValues.size()] );
+
+    final ITupleModel firstTuppleModel = firstObservation.getValues( null );
+    final IAxis[] firstAxisList = firstTuppleModel.getAxes();
+
+    final IAxis firstDateAxis = ObservationUtilities.findAxisByClass( firstAxisList, Date.class );
+    final IAxis firstValueAxis = ObservationUtilities.findAxisByClass( firstAxisList, Double.class );
+
+    IAxis firstStatusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( firstAxisList, firstValueAxis );
+    if( firstStatusAxis == null )
+      firstStatusAxis = KalypsoStatusUtils.createStatusAxisFor( firstValueAxis, true );
+
     final TuppleModelsLinearAdd linearAdd = new TuppleModelsLinearAdd( firstValueAxis.getType(), firstDateAxis, firstValueAxis, firstStatusAxis );
-    final ITupleModel combinedTuppleModel = linearAdd.addWeighted( observationValues.toArray( new ITupleModel[] {} ), weights );
+    final ITupleModel combinedTuppleModel = linearAdd.addWeighted( tuppleModels, weights );
 
-    /* Copy the metadata. */
+    /* ATTENTION: Make sure the axes of the observation are in the same order as the axes of the combined tuple model. */
     final MetadataList metadata = new MetadataList();
-    if( timestep != null )
-      metadata.setProperty( MetadataHelper.MD_TIMESTEP, timestep );
-    if( firstStart != null )
-      metadata.setProperty( TimeseriesUtils.MD_VORHERSAGE_START, firstStart );
-    if( firstEnde != null )
-      metadata.setProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE, firstEnde );
+    // TODO: copy other properties as well?
+    final String timestep = firstMetadataList.getProperty( MetadataHelper.MD_TIMESTEP );
+    metadata.setProperty( MetadataHelper.MD_TIMESTEP, timestep );
 
-    /* Create a new observation. */
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
     combinedObservation.setName( "Generierte Zeitreihe" );
+    if( firstStart != null )
+      combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_START, firstStart );
+    if( firstEnde != null )
+      combinedObservation.getMetadataList().setProperty( TimeseriesUtils.MD_VORHERSAGE_ENDE, firstEnde );
 
-    /* Ignore original data sources because rainfall generator combines different data sources. */
+    /**
+     * ignore original data sources because rainfall generator combines different data sources
+     */
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();
-  }
-
-  public static String findTimeStep( final IObservation[] observations )
-  {
-    /* A bit of a hack: Search all observations for a valid timestep. */
-    for( final IObservation observation : observations )
-    {
-      final MetadataList metadataList = observation.getMetadataList();
-      final String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
-      if( timestep != null )
-        return timestep;
-    }
-
-    return null;
   }
 }

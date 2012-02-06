@@ -44,7 +44,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.dialogs.WorkbenchPreferenceDialog;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.ui.internal.preferences.WspmPdbPreferencePage;
 
 /**
@@ -55,7 +54,7 @@ public abstract class ConfigureConnectionsAction extends Action
 {
   public ConfigureConnectionsAction( )
   {
-    setText( Messages.getString( "ConfigureConnectionsAction.0" ) ); //$NON-NLS-1$
+    setText( "Configure Connections..." );
   }
 
   @Override

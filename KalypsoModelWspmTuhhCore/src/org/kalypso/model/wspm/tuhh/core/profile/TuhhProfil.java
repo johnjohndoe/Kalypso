@@ -46,17 +46,15 @@ import java.util.List;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -67,12 +65,17 @@ public class TuhhProfil extends AbstractProfil
 {
   public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
-  public TuhhProfil( final TupleResult result, final IProfileFeature source )
+  public TuhhProfil( final TupleResult result )
   {
-    super( PROFIL_TYPE, result, source );
+    super( PROFIL_TYPE, result );
     result.setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
+   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time
+   * @throws IllegalStateException
+   */
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
@@ -90,9 +93,12 @@ public class TuhhProfil extends AbstractProfil
    * FIXME: this creates a marker (virtually) but does not really change the profile, except maybe add the
    * marker-component to it.<br/>
    * This is very confusing! Instead, we should directly set the value and return the real marker.
+   * 
+   * @see org.kalypso.model.wspm.core.profil.IProfil#createPointMarker(java.lang.String,
+   *      org.kalypso.observation.result.IRecord)
    */
   @Override
-  public IProfilPointMarker createPointMarker( final String markerID, final IProfileRecord point )
+  public IProfilPointMarker createPointMarker( final String markerID, final IRecord point )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     if( provider == null )
@@ -113,7 +119,7 @@ public class TuhhProfil extends AbstractProfil
   }
 
   @Override
-  public boolean removePoint( final IProfileRecord point )
+  public boolean removePoint( final IRecord point )
   {
     final IProfilPointMarker[] markers = getPointMarkerFor( point );
     if( Arrays.isEmpty( markers ) )
@@ -123,7 +129,7 @@ public class TuhhProfil extends AbstractProfil
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IProfileRecord record )
+  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
   {
     final List<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
     final IComponent[] markers = getPointMarkerTypes();
@@ -146,11 +152,10 @@ public class TuhhProfil extends AbstractProfil
 
     final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
 
-    final IProfileRecord[] points = getPoints();
-
-    for( final IProfileRecord point : points )
+    final TupleResult result = getResult();
+    for( final IRecord record : result )
     {
-      final IProfilPointMarker marker = getMarker( markerColumn, point );
+      final IProfilPointMarker marker = getMarker( markerColumn, record );
       if( marker != null )
       {
         markers.add( marker );
@@ -160,7 +165,7 @@ public class TuhhProfil extends AbstractProfil
     return markers.toArray( new IProfilPointMarker[] {} );
   }
 
-  private IProfilPointMarker getMarker( final IComponent component, final IProfileRecord record )
+  private IProfilPointMarker getMarker( final IComponent component, final IRecord record )
   {
     final int index = indexOfProperty( component );
     if( index < 0 )
@@ -181,11 +186,5 @@ public class TuhhProfil extends AbstractProfil
       return null;
 
     return new ProfilDevider( component, record );
-  }
-
-  @Override
-  public void accept( final IObservationVisitor visitor )
-  {
-    throw new UnsupportedOperationException();
   }
 }

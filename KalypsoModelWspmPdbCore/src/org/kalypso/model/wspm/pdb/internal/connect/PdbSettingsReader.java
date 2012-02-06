@@ -63,7 +63,7 @@ public class PdbSettingsReader
     catch( final StorageException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( "Failed to access secure storage for pdb connections", e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to access secure storage for pdb connections", e );
     }
   }
 

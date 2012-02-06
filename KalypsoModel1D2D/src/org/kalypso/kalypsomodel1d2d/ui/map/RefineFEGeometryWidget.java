@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -83,7 +84,7 @@ import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -119,7 +120,7 @@ import org.kalypsodeegree_impl.tools.refinement.Refinement;
  * 
  * @author Thomas Jung
  */
-public class RefineFEGeometryWidget extends DeprecatedMouseWidget
+public class RefineFEGeometryWidget extends AbstractWidget
 {
   private static final double SNAP_DISTANCE = 0.02;
 
@@ -177,8 +178,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     m_theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
-    final String mode = m_modePolygon ? Messages.getString( "RefineFEGeometryWidget.0" ) : Messages.getString( "RefineFEGeometryWidget.1" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String modeTooltip = String.format( Messages.getString( "RefineFEGeometryWidget.2" ), mode ); //$NON-NLS-1$
+    final String mode = m_modePolygon ? Messages.getString("RefineFEGeometryWidget.0") : Messages.getString("RefineFEGeometryWidget.1"); //$NON-NLS-1$ //$NON-NLS-2$
+    final String modeTooltip = String.format( Messages.getString("RefineFEGeometryWidget.2"), mode ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
 
@@ -385,7 +386,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       final CommandableWorkspace workspace = m_theme.getWorkspace();
 
       /* Initialize elements needed for edges and elements */
-      final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) workspace.getRootFeature();
+      final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( workspace.getRootFeature() );
 
       // add remove element command
       final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discModel );
@@ -409,8 +410,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         e.printStackTrace();
       }
 
-      discModel.getElements().removeAll( elementsToRemove );
-      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel,
+      discModel.getElements().removeAllAtOnce( elementsToRemove );
+      // workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(),
       // elementsToRemove.toArray( new Feature[ elementsToRemove.size() ] ),
       // FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
       m_nodesNameConversionMap.clear();
@@ -429,7 +430,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
 
       if( lListAdded.size() > 0 )
       {
-        final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel, lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+        final FeatureStructureChangeModellEvent changeEvent = new FeatureStructureChangeModellEvent( workspace, discModel.getFeature(), lListAdded.toArray( new Feature[lListAdded.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
         workspace.fireModellEvent( changeEvent );
         Logger.getLogger( RefineFEGeometryWidget.class.getName() ).log( Level.INFO, "Model event fired: " + changeEvent ); //$NON-NLS-1$
       }
@@ -457,12 +458,12 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
       lListRes.addAll( createNodesAndEdges( discModel, lListEdges, lListPoints ) );
 
       final IPolyElement element2d = discModel.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
-      lListRes.add( element2d );
+      lListRes.add( element2d.getFeature() );
       for( final IFE1D2DEdge lEdge : lListEdges )
       {
         // add edge to element and element to edge
-        final String elementId = element2d.getId();
-        element2d.addEdge( lEdge.getId() );
+        final String elementId = element2d.getGmlID();
+        element2d.addEdge( lEdge.getGmlID() );
         lEdge.addContainer( elementId );
       }
     }
@@ -497,7 +498,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
           return new ArrayList<Feature>();
         }
         m_nodesNameConversionMap.put( lPoint.getPosition(), actNode );
-        lListRes.add( actNode );
+        lListRes.add( actNode.getFeature() );
       }
 
       if( iCountNodes > 0 )
@@ -511,10 +512,10 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
         else
         {
           edge = FE1D2DEdge.createFromModel( discModel, lastNode, actNode );
-          lListRes.add( edge );
+          lListRes.add( edge.getFeature() );
         }
         lListEdges.add( edge );
-        // final String gmlID = edge.getId();
+        // final String gmlID = edge.getGmlID();
       }
       iCountNodes++;
       lastNode = actNode;
@@ -708,7 +709,7 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     {
     }
     final GM_Envelope envelope = selectGeometry.getEnvelope();
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
     final List result = featureList.query( envelope, null );
 
     for( final Object object : result )

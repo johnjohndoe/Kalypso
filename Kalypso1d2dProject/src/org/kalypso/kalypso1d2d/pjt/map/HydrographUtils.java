@@ -63,7 +63,6 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
@@ -91,17 +90,18 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class HydrographUtils
 {
-  public static GM_Position getHydroPositionFromElement( final Feature modelElement )
+  public static GM_Position getHydroPositionFromElement( final IFeatureWrapper2 modelElement )
   {
     try
     {
@@ -131,7 +131,7 @@ public class HydrographUtils
 
     // set a name
     final String hydrographName = calcUnitResult.getName();
-    hydrographFeature.setName( hydrographName );
+    newHydrograph.setName( hydrographName );
 
     setResultPaths( newHydrograph, calcUnitResult, DOCUMENTTYPE.nodes );
 
@@ -154,7 +154,7 @@ public class HydrographUtils
 
     for( final IDocumentResultMeta documentResultMeta : documents )
     {
-      final IResultMeta parent = documentResultMeta.getOwner();
+      final IResultMeta parent = documentResultMeta.getParent();
       if( parent instanceof IStepResultMeta )
       {
         final IStepResultMeta stepResult = (IStepResultMeta) parent;
@@ -200,10 +200,10 @@ public class HydrographUtils
     }
     return null;
   }
-
+  
   public static IHydrograph createNewHydrographFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final String name, final String description )
   {
-    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrograph.QNAME );
+    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IHydrograph.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT );
 
     /* set the observation components */
@@ -215,7 +215,7 @@ public class HydrographUtils
 
     return hydrograph;
   }
-
+  
   // FIXME: handle saving via pool
   public static Feature createNewHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, GmlSerializeException, IOException, GMLSchemaException
   {

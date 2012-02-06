@@ -248,32 +248,16 @@
      <extension
            point="org.kalypso.deegree.featureBinding">
         <feature
-              class="org.kalypso.model.hydrology.binding._11_6.NAModellControl"
+              class="org.kalypso.model.hydrology.binding.NAModellControl"
               qname="{org.kalypso.namodell.control}NAModellControl">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding._11_6.InitialValues"
+              class="org.kalypso.model.hydrology.binding.InitialValues"
               qname="{org.kalypso.namodell.control}initialValues">
         </feature>
         <feature
-              class="org.kalypso.model.hydrology.binding.control.NAModellControl"
-              qname="{org.kalypso.namodell.control_v2}NAModellControl">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding.InitialValue"
-              qname="{org.kalypso.namodell.control_v2}InitialValue">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding._11_6.NAControl"
+              class="org.kalypso.model.hydrology.binding.NAControl"
               qname="{org.kalypso.na.control}NAControl">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding.control.SimulationCollection"
-              qname="{org.kalypso.na.control_v2}SimulationCollection">
-        </feature>
-        <feature
-              class="org.kalypso.model.hydrology.binding.control.NAControl"
-              qname="{org.kalypso.na.control_v2}NAControl">
         </feature>
      </extension>
      <extension
@@ -373,46 +357,11 @@
               qname="{http://kalypso.sorgeforge.net/schemata/hydrology/optimize}NaOptimizeConfig">
         </feature>
      </extension>
-     <extension point="org.kalypso.deegree.featureBinding">
-          <feature
-                class="org.kalypso.model.hydrology.internal.cm.binding.CatchmentModel"
-                qname="{http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel}CatchmentModel">
-          </feature>
-     </extension>
-     
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.StationCollection"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationCollection">
-      </feature>
-      <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.HydrologicalStation"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}HydrologicalStation">
-      </feature>
-      <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}MeteorologicalStation">
-      </feature>
-      <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.Timeseries"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}Timeseries">
-      </feature>
-      <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.StationClasses"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClasses">
-      </feature>
-      <feature
-            class="org.kalypso.model.hydrology.internal.timeseries.binding.StationClass"
-            qname="{http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement}StationClass">
-      </feature>
-   </extension>     
-     
      <extension
            point="org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution>
            <nextCatalog
-                 catalog="etc/catalog.xml">
+                 catalog="src/org/kalypso/convert/namodel/schema/catalog.xml">
            </nextCatalog>
         </catalogContribution>
      </extension>
@@ -422,12 +371,5 @@
         <typeHandler
               factory="org.kalypso.model.hydrology.internal.gml.TypeHandlerFactory">
         </typeHandler>
-     </extension>
-     <extension
-           point="org.kalypso.core.catalogContribution">
-        <catalogContribution
-              class="org.kalypso.model.hydrology.internal.gml.DictionaryCatalog"
-              name="KalypsoModelRrrmCoreContributions">
-        </catalogContribution>
      </extension>
 </plugin>

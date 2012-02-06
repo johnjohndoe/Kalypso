@@ -46,7 +46,7 @@ import java.util.Collection;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.utils.hw.BridgeResult;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -211,11 +210,11 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
       return profil.getPoints();
     }
 
-    final IProfileRecord startPoint = markers[0].getPoint();
-    final IProfileRecord endPoint = markers[1].getPoint();
+    final IRecord startPoint = markers[0].getPoint();
+    final IRecord endPoint = markers[1].getPoint();
 
-    final int startIndex = startPoint.getIndex();
-    final int endIndex = endPoint.getIndex();
+    final int startIndex = profil.indexOfPoint( startPoint );
+    final int endIndex = profil.indexOfPoint( endPoint );
 
     return profil.getPoints( startIndex, endIndex );
   }

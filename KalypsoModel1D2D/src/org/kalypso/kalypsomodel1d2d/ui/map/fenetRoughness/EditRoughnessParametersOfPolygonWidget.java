@@ -58,11 +58,11 @@ import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
  */
 public class EditRoughnessParametersOfPolygonWidget extends SingleElementSelectWidget
 {
-  protected IViewPart m_featureView = null;
+  private IViewPart m_featureView = null;
 
   public EditRoughnessParametersOfPolygonWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

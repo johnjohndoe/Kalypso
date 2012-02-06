@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
@@ -64,10 +64,10 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IWeirFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final Feature modelElement )
+  protected IWeirFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     // TODO: use newAdd method in FeatureWrapperCollection instead?
-    final IFeatureType newFT = GMLSchemaUtilities.getFeatureTypeQuiet( IWeirFlowRelation.QNAME );
+    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
     final IWeirFlowRelation weirRelation = (IWeirFlowRelation) newFeature.getAdapter( IWeirFlowRelation.class );
     /* Call getObservation once to initialize it */
@@ -77,12 +77,12 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
 
 //  /**
 //   * Return one 1D-Element.
-//   *
+//   * 
 //   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
 //   *      org.kalypsodeegree.model.geometry.GM_Point, double)
 //   */
 //  @Override
-//  protected Feature findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
+//  protected IFeatureWrapper2 findModelElementFromCurrentPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
 //  {
 //    return discModel.find1DElement( currentPos, grabDistance );
 //  }

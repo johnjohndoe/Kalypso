@@ -23,9 +23,10 @@ Require-Bundle: org.eclipse.help.ui,
  org.kalypso.project.database.client,
  org.kalypso.risk,
  org.kalypso.simulation.ui,
- org.kalypso.model.rrm.ui,
+ org.kalypso.ui.observationimport,
+ org.kalypso.ui.rrm,
  org.kalypso.ui,
  org.eclipse.ui.navigator
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.ui.internal.ide.application
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

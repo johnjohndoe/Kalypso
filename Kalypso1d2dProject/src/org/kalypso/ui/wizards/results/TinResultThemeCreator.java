@@ -62,7 +62,7 @@ import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class TinResultThemeCreator extends AbstractThemeCreator
 {
@@ -178,8 +178,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     // TODO: this is dangerous, because the data need not to be stored in the document result level.
     // use a more general approach instead.
-    final IResultMeta calcUnitMeta = m_documentResult.getOwner().getOwner();
-    final IResultMeta timeStepMeta = m_documentResult.getOwner();
+    final IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
+    final IResultMeta timeStepMeta = m_documentResult.getParent();
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     final String resFolder = resultsFolder.getFullPath().toPortableString();

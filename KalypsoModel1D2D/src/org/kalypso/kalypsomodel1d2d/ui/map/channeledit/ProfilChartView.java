@@ -53,9 +53,11 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -81,9 +83,11 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 @Deprecated
 public class ProfilChartView implements IChartPart, IProfilListener, IProfilChart
 {
-  private ChartImageComposite m_chartComposite = null;
+  private IChartComposite m_chartComposite = null;
 
   private IProfilLayerProvider m_layerProvider;
+
+  private final List<IProfilProviderListener> m_listener = new ArrayList<IProfilProviderListener>();
 
   private IProfil m_profile;
 
@@ -100,12 +104,17 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     }
   }
 
+  public void addProfilProviderListener( final IProfilProviderListener l )
+  {
+    m_listener.add( l );
+  }
+
   public Control createControl( final Composite parent )
   {
     m_chartComposite = new ChartImageComposite( parent, SWT.BORDER, new ChartModel(), new RGB( 255, 255, 255 ) );
     final GridData gD = new GridData( SWT.FILL, SWT.FILL, true, true );
     // gD.exclude = true;
-    m_chartComposite.setLayoutData( gD );
+    m_chartComposite.getPlot().setLayoutData( gD );
     m_chartComposite.getChartModel().getBehaviour().setHideUnusedAxes( false );
 
     m_chartComposite.getChartModel().getLayerManager().addListener( new AbstractLayerManagerEventListener()
@@ -122,13 +131,19 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
     updateLayer();
 
-    return m_chartComposite;
+    return m_chartComposite.getPlot();
   }
 
   public void dispose( )
   {
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-      m_chartComposite.dispose();
+    if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
+      m_chartComposite.getPlot().dispose();
+  }
+
+  private void fireProfilChanged( final IProfil old )
+  {
+    for( final IProfilProviderListener l : m_listener )
+      l.onProfilProviderChanged( null, old, m_profile );
   }
 
   private final void saveStateVisible( final ILayerManager mngr, final HashMap<String, Boolean> map )
@@ -276,13 +291,13 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    final ChartImageComposite chart = m_chartComposite;
-    if( chart == null || chart.isDisposed() )
+    final IChartComposite chart = m_chartComposite;
+    if( chart == null || chart.getPlot().isDisposed() )
       return;
 
-    chart.getDisplay().syncExec( new Runnable()
+    chart.getPlot().getDisplay().syncExec( new Runnable()
     {
       @Override
       public void run( )
@@ -292,11 +307,11 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
           updateLayer();
         }
         else if( hint.isPointsChanged() || hint.isMarkerDataChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
-            || hint.isSelectionChanged() || hint.isActivePropertyChanged() )
+            || hint.isActivePointChanged() || hint.isActivePropertyChanged() )
         {
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
           {
-            ((IProfilChartLayer) layer).onProfilChanged( hint );
+            ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
           }
         }
         redrawChart();
@@ -306,17 +321,26 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
 
   protected void redrawChart( )
   {
-    final ChartImageComposite chart = m_chartComposite;
-    if( chart != null && !chart.isDisposed() )
-      chart.getDisplay().syncExec( new Runnable()
+    final IChartComposite chart = m_chartComposite;
+    if( chart != null && !chart.getPlot().isDisposed() )
+      chart.getPlot().getDisplay().syncExec( new Runnable()
       {
 
         @Override
         public void run( )
         {
-          chart.redraw();
+          chart.getPlot().redraw();
         }
       } );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.
+   *      kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
+   */
+  public void removeProfilProviderListener( final IProfilProviderListener l )
+  {
+    m_listener.remove( l );
   }
 
   public void setLayerProvider( final IProfilLayerProvider layerProvider )
@@ -335,24 +359,27 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       m_profile.removeProfilListener( this );
     }
 
+    final IProfil old = m_profile;
     m_profile = profil;
     if( m_profile == null )
     {
-      ((GridData) m_chartComposite.getLayoutData()).exclude = true;
+      ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = true;
       m_chartComposite.getChartModel().getSettings().setTitle( "<No Profile Selected>", ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
 
     }
     else
     {
-      if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
       {
         m_profile.addProfilListener( this );
 
-        m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString( "ProfilChartView_0" ), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
-        ((GridData) m_chartComposite.getLayoutData()).exclude = false;
+        m_chartComposite.getChartModel().getSettings().setTitle( String.format( Messages.getString("ProfilChartView_0"), m_profile.getStation() ), ALIGNMENT.CENTER, StyleUtils.getDefaultTextStyle(), new Insets( 0, 0, 0, 0 ) ); //$NON-NLS-1$
+        ((GridData) m_chartComposite.getPlot().getLayoutData()).exclude = false;
         updateLayer();
       }
     }
+
+    fireProfilChanged( old );
   }
 
   public void updateLayer( )
@@ -414,7 +441,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
       restoreStateVisible( lm, visibility );
       restoreStateActive( lm, activeLayerId );
       //
-      // m_chartComposite.invalidate( lm.getLayers() );
+      // m_chartComposite.getPlot().invalidate( lm.getLayers() );
     }
 
   }

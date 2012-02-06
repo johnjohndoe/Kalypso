@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.pdb.ui.internal.admin.state;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.EditStatePage.Mode;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -59,11 +58,11 @@ public class EditStateWizard extends Wizard implements IStatesProvider
     m_existingState = existingState;
     m_state = state;
 
-    setWindowTitle( Messages.getString( "EditStateWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( "Edit State" );
 
     final EditStatePage editStatePage = new EditStatePage( "editState", m_state, this, Mode.EDIT ); //$NON-NLS-1$
-    editStatePage.setTitle( Messages.getString( "EditStateWizard.1" ) ); //$NON-NLS-1$
-    editStatePage.setDescription( Messages.getString( "EditStateWizard.2" ) ); //$NON-NLS-1$
+    editStatePage.setTitle( "Edit State Properties" );
+    editStatePage.setDescription( "Change the properties of the edited state." );
     addPage( editStatePage );
   }
 

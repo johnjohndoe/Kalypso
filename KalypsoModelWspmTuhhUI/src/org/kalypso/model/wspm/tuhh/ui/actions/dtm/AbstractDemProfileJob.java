@@ -155,7 +155,7 @@ abstract class AbstractDemProfileJob extends UIJob implements ICreateProfileStra
 
   public IStatus openNoPointsWarning( )
   {
-    final String message = Messages.getString("AbstractDemProfileJob.0"); //$NON-NLS-1$
+    final String message = "No new profile points found.";
     MessageDialog.openWarning( getDisplay().getActiveShell(), getLabel(), message );
     return Status.OK_STATUS;
   }

@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -81,9 +81,9 @@ public class CsvSource implements IProfilSource
   private IComponent getComponent( final String key )
   {
     if( "BREITE".equalsIgnoreCase( key ) ) //$NON-NLS-1$
-      return m_provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+      return m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     if( "HOEHE".equalsIgnoreCase( key ) ) //$NON-NLS-1$
-      return m_provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+      return m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     else
       return null;
   }
@@ -110,13 +110,13 @@ public class CsvSource implements IProfilSource
 
     m_columns = tableReader.readNext();
 
-    final int station = getColumnIndex( "STATION" ); //$NON-NLS-1$ 
+    final int m_station = getColumnIndex( "STATION" ); //$NON-NLS-1$
     String[] values = tableReader.readNext();
     while( values != null )
     {
       if( values.length == m_columns.length )
       {
-        final String key = station < 0 ? "-" : values[station]; //$NON-NLS-1$
+        final String key = m_station < 0 ? "-" : values[m_station]; //$NON-NLS-1$
         final TupleResult result = getResult( key );
         final IRecord record = result.createRecord();
 

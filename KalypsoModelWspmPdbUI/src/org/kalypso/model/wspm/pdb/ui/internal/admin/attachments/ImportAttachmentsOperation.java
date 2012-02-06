@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.zip.ZipOutputStream;
 
@@ -54,7 +55,6 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -79,7 +79,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "ImportAttachmentsOperation.0" ); //$NON-NLS-1$
+    return "Importing documents into database";
   }
 
   @Override
@@ -94,7 +94,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
       for( final Document document : documents )
         addDcoument( session, document );
 
-          closeZip();
+      closeZip();
     }
     finally
     {
@@ -106,22 +106,14 @@ public class ImportAttachmentsOperation implements IPdbOperation
   {
     addToZip( document );
 
-    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
-    final DocumentInfo info = documentData.getInfo( document );
-
-    /* Delete any documents with the same file -> we overwrite them all with the new information */
-    final Document[] existingDocuments = info.getExistingDcouments();
-    for( final Document existingDcoument : existingDocuments )
-    {
-      session.delete( existingDcoument );
-    }
-
-    /* Save the new document */
+    document.setCreationDate( m_creationDate );
     document.setEditingDate( m_creationDate );
     document.setEditingUser( m_username );
-    document.setCreationDate( m_creationDate );
 
-    session.save( document );
+    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
+    final BigDecimal id = documentData.getExistingID( document );
+    document.setId( id );
+    session.merge( document );
   }
 
   private void createZip( ) throws PdbConnectException
@@ -137,7 +129,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString( "ImportAttachmentsOperation.1" ), e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to open output zip file", e );
     }
   }
 
@@ -146,9 +138,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     if( m_zipStream == null )
       return;
 
-    final ImportAttachmentsDocumentsData documentData = m_data.getDocumentData();
-    final DocumentInfo info = documentData.getInfo( document );
-    final File file = info.getFile();
+    final File file = m_data.getDocumentData().getFile( document );
     try
     {
       final String path = document.getFilename();
@@ -157,7 +147,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString( "ImportAttachmentsOperation.2" ), file.getName() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to add file to output zip: %s", file.getName() );
       throw new PdbConnectException( msg, e );
     }
   }
@@ -174,7 +164,7 @@ public class ImportAttachmentsOperation implements IPdbOperation
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new PdbConnectException( Messages.getString( "ImportAttachmentsOperation.3" ), e ); //$NON-NLS-1$
+      throw new PdbConnectException( "Failed to close output zip", e );
     }
   }
 }

@@ -75,7 +75,7 @@ public class ExecutePreRMAKalypso
 
   private final String m_calcUnitID;
 
-  private final Modeldata m_modelInput;
+  private Modeldata m_modelInput;
 
   private String m_modelFileUrl;
 
@@ -119,6 +119,7 @@ public class ExecutePreRMAKalypso
     m_wpsRequest = new WPSRequest( PreRMAKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
   }
 
+  @SuppressWarnings("deprecation")
   public IStatus run( final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1000 );

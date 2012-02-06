@@ -62,12 +62,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class ResultMetaInfoViewer extends Viewer
 {
@@ -75,7 +76,6 @@ public class ResultMetaInfoViewer extends Viewer
   /*
    * fonts
    */
-  // FIXME never disposed; use JFaceResources instead!
   private final Font fTextHeader;
 
   private final Font fTextNormal;
@@ -138,30 +138,30 @@ public class ResultMetaInfoViewer extends Viewer
     for( final Control control : children )
       control.dispose();
 
-        m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
-        m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
+    m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-        m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
-        m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
-        m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
+    m_panel.setText( Messages.getString( "org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0" ) ); //$NON-NLS-1$
+    m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
+    m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
 
-        if( m_input instanceof IResultMeta )
-        {
-          final IResultMeta result = (IResultMeta) m_input;
+    if( m_input instanceof IResultMeta )
+    {
+      final IResultMeta result = (IResultMeta) m_input;
 
-          // special result data
-          if( m_factory != null )
-          {
-            final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
-            final Composite buttonControl = createThemeCreator.createControl( m_panel );
-            if( buttonControl != null )
-              buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-          }
+      // special result data
+      if( m_factory != null )
+      {
+        final IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
+        final Composite buttonControl = createThemeCreator.createControl( m_panel );
+        if( buttonControl != null )
+          buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+      }
 
-          final String infoText = getInformationText( result );
-          m_textPanel.setText( infoText, true, false );
-        }
-        m_panel.layout( true );
+      final String infoText = getInformationText( result );
+      m_textPanel.setText( infoText, true, false );
+    }
+    m_panel.layout( true );
   }
 
   public static String getInformationText( final IResultMeta result )
@@ -257,7 +257,7 @@ public class ResultMetaInfoViewer extends Viewer
     /*
      * if( scenarioResult != null ) { buf.append( "<p>" ); buf.append( "<span color=\"header\" font=\"header\">" +
      * "Szenario: " + scenarioName + "</span>" ); buf.append( "</p>" );
-     *
+     * 
      * buf.append( "<p>" ); buf.append( scenarioDescription ); buf.append( "</p>" ); }
      */
     // CalcUnit
@@ -381,7 +381,7 @@ public class ResultMetaInfoViewer extends Viewer
       return (IScenarioResultMeta) result;
     else
     {
-      final IResultMeta parent = result.getOwner();
+      final IResultMeta parent = result.getParent();
       if( parent != null )
       {
         return getScenarioResultMeta( parent );
@@ -399,7 +399,7 @@ public class ResultMetaInfoViewer extends Viewer
       return (IStepResultMeta) result;
     else
     {
-      final IResultMeta parent = result.getOwner();
+      final IResultMeta parent = result.getParent();
       if( parent != null )
       {
         return getStepResultMeta( parent );

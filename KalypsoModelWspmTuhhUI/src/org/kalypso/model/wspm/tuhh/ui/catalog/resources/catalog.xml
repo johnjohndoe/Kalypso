@@ -57,10 +57,8 @@
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:swtimage:default"
 		uri="org.kalypso.model.wspm.tuhh.QIntervallResult.gif" />
 
-	<!-- Diagram Configuration for QIntervallResult -->
+	<!-- Diagramm Konfiguration for QIntervallResult -->
 	<catalog:system systemId="urn:kalypso:chart:configuration:QIntervallResult" uri="QIntervallResult.kod" />
-	<!-- Diagram Configuration for LengthSection -->
-	<catalog:system systemId="urn:kalypso:chart:configuration:LengthSectionTemplate" uri="LengthSectionTemplate.kod" />
 
 	<!-- SubReachDefinition -->
 	<catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:SubReachDefinition:featureview:default"

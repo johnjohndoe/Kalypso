@@ -44,21 +44,23 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.model.hydrology.binding.suds.AbstractSud;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
- *
+ * 
  * @author Gernot Belger
  */
 public class LanduseCollection extends Feature_Impl
@@ -81,7 +83,7 @@ public class LanduseCollection extends Feature_Impl
 
   /**
    * Create/Import a new landuse into this collection.
-   *
+   * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
   public void importLanduse( final ImportType importType, final String name, final GM_MultiSurface geometry, final String description, final Double corrSealing, final String drainageType, final String landuseRef, final AbstractSud[] suds )
@@ -166,8 +168,11 @@ public class LanduseCollection extends Feature_Impl
   private void addLanduseLink( final String landuseRef, final Landuse landuse )
   {
     final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
-    final IFeatureType lcFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
-    landuse.setLink( Landuse.QNAME_PROP_LANDUSE, href, lcFT );
+    final IGMLSchema schema = getWorkspace().getGMLSchema();
+    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
+    final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
+    final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
+    landuse.setLanduse( landuseXLink );
   }
 
   private void clipExistingLanduse( final Landuse existingLanduse, final GM_MultiSurface geometry )
@@ -187,11 +192,17 @@ public class LanduseCollection extends Feature_Impl
   private void addSudsToLanduse( final Feature[] suds, final Landuse landuse )
   {
     final IFeatureBindingCollection<Feature> sudCollection = landuse.getSudCollection();
+    final GMLWorkspace landuseWorkspace = landuse.getWorkspace();
+    final IGMLSchema landuseSchmea = landuseWorkspace.getGMLSchema();
 
     for( final Feature sud : suds )
     {
+      final IRelationType rt = (IRelationType) landuseSchmea.getFeatureType( Landuse.QNAME_PROP_SUD_MEMBERS );
+      final IFeatureType ft = sud.getFeatureType();
       final String href = String.format( "suds.gml#%s", sud.getId() ); //$NON-NLS-1$
-      sudCollection.addLink( href );
+
+      final XLinkedFeature_Impl lnk = new XLinkedFeature_Impl( landuse, rt, ft, href, null, null, null, null, null );
+      sudCollection.add( lnk );
     }
   }
 }

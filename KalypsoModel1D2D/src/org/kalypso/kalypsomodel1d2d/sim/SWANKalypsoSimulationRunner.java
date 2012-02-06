@@ -54,7 +54,7 @@ import net.opengeospatial.wps.ExecuteResponseType;
 import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -102,7 +102,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
   private WPSRequest m_wpsRequest = null;
 
   private IWPSProcess m_wpsProcess = null;
-
+  
   private boolean m_boolFirstDone = false;
 
   private URI m_uriRMACalcPath;
@@ -165,17 +165,17 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
         restartInfos = Collections.emptyList();
 
       // generate input files
-      final ExecutePreSWANKalypso executePreSWANKalypso = new ExecutePreSWANKalypso( m_serviceEndpoint, restartInfos, m_controlModel.getCalculationUnit().getId(), m_uriRMACalcPath );
+      final ExecutePreSWANKalypso executePreSWANKalypso = new ExecutePreSWANKalypso( m_serviceEndpoint, restartInfos, m_controlModel.getCalculationUnit().getGmlID(), m_uriRMACalcPath );
 
       m_wpsRequest = executePreSWANKalypso.getWpsRequest();
       final IStatus preStatus = executePreSWANKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
-
+ 
       // abort on error
       if( !preStatus.isOK() )
         return preStatus;
-
+      
       m_boolFirstDone = true;
-
+      
       // gather inputs for simulation
       final String lSWANVersion = m_controlModel.getVersionSWAN();
       final URI lSWANModelPath = new URI( executePreSWANKalypso.getSWANModelPath() );
@@ -206,7 +206,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
           // gobble
         }
       }
-    }
+    } 
   }
 
   private IStatus evaluateSimulationResult( final IStatus simulationStatus )

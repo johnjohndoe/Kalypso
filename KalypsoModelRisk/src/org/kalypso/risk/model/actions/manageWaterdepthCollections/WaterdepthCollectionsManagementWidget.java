@@ -102,7 +102,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -129,7 +129,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class WaterdepthCollectionsManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class WaterdepthCollectionsManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private TreeViewer m_eventViewer;
 
@@ -320,7 +320,7 @@ public class WaterdepthCollectionsManagementWidget extends DeprecatedMouseWidget
       viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget.9" ) ) ); //$NON-NLS-1$
     else
     {
-      viewer.setInput( m_model.getWorkspace() );
+      viewer.setInput( m_model.getFeature().getWorkspace() );
 
       final GMLXPathSegment segment = GMLXPathSegment.forQName( IRasterDataModel.QNAME );
       final GMLXPath pathToModel = new GMLXPath( segment );
@@ -604,7 +604,7 @@ public class WaterdepthCollectionsManagementWidget extends DeprecatedMouseWidget
           }
           catch( final GeometryException e )
           {
-            Logger.getLogger( getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+            Logger.getLogger( this.getName() ).log( Level.WARNING, e.getLocalizedMessage() );
           }
         }
         else if( adaptedObject instanceof IAnnualCoverageCollection )
@@ -619,7 +619,7 @@ public class WaterdepthCollectionsManagementWidget extends DeprecatedMouseWidget
         }
         catch( final GeometryException e )
         {
-          Logger.getLogger( getName() ).log( Level.WARNING, e.getLocalizedMessage() );
+          Logger.getLogger( this.getName() ).log( Level.WARNING, e.getLocalizedMessage() );
         }
       }
     }

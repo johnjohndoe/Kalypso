@@ -98,11 +98,11 @@ import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * TODO: remove the TriangulatedSurfaceTriangleEater from here: we do not want to have a dependency on 1d2d!<br>
- *
+ * 
  * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.
- *
+ * 
  * @author Gernot Belger
- *
+ * 
  */
 public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
@@ -275,7 +275,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           final Feature fRoot = sourceWorkspace.getRootFeature();
           final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
-          final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryPropertyValue();
+          final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
           gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
 
           if( geom instanceof GM_MultiSurface )
@@ -287,7 +287,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
               if( object instanceof Feature )
               {
                 final Feature feat = (Feature) object;
-                final GM_Object[] geometryProperties = feat.getGeometryPropertyValues();
+                final GM_Object[] geometryProperties = feat.getGeometryProperties();
                 if( geometryProperties[0] instanceof GM_MultiSurface )
                 {
                   final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometryProperties[0];
@@ -330,13 +330,13 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     }
 
     /* Fire modell event as feature was changed */
-    final Feature refFeature = ref;
+    final Feature refFeature = ref.getFeature();
     final GMLWorkspace workspace = refFeature.getWorkspace();
     final ModellEvent event = new FeaturesChangedModellEvent( workspace, new Feature[] { refFeature } );
     workspace.fireModellEvent( event );
 
     /* post command in order to make the pool dirty */
-    m_provider.postCommand( IFloodModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+    m_provider.postCommand( IFloodModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
     monitor.done();
     return Status.OK_STATUS;

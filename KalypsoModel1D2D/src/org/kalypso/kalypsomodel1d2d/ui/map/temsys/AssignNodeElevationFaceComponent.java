@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -106,7 +106,7 @@ public class AssignNodeElevationFaceComponent extends Composite
     @Override
     public void dataChanged( final String key, final Object newValue )
     {
-      handleDataChanged( key, newValue );
+      handleDataChanged(key, newValue);
     }
   };
 
@@ -141,7 +141,7 @@ public class AssignNodeElevationFaceComponent extends Composite
     toolkit.createLabel( panel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.14" ) ); //$NON-NLS-1$
 
     m_inputText = toolkit.createText( panel, StringUtils.EMPTY );
-    m_inputText.setMessage( Messages.getString( "AssignNodeElevationFaceComponent.1" ) ); //$NON-NLS-1$
+    m_inputText.setMessage( Messages.getString("AssignNodeElevationFaceComponent.1") ); //$NON-NLS-1$
     m_inputText.setEditable( false );
     m_inputText.setTextLimit( 100 );
     m_inputText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -347,7 +347,7 @@ public class AssignNodeElevationFaceComponent extends Composite
       {
         String name = ((INativeTerrainElevationModelWrapper) newValue).getName();
         if( name == null )
-          name = ((INativeTerrainElevationModelWrapper) newValue).getId();
+          name = ((INativeTerrainElevationModelWrapper) newValue).getGmlID();
         m_inputText.setText( name );
       }
     }
@@ -359,5 +359,5 @@ public class AssignNodeElevationFaceComponent extends Composite
       m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
       m_nodeElevationViewer.setInput( newValue );
     }
-  }
+  }  
 }

@@ -61,11 +61,7 @@ public class WspWinProfileWriter
 
   private final int m_profileNumber;
 
-  private boolean m_preferRoughnessClasses;
-
-  private boolean m_preferVegetationClasses;
-
-  public WspWinProfileWriter( final IProfil profil, final int profileNumber, final String roughnessType )
+  public WspWinProfileWriter( final IProfil profil, final String roughnessType, final int profileNumber )
   {
     m_profil = profil;
     m_roughnessType = roughnessType;
@@ -80,9 +76,6 @@ public class WspWinProfileWriter
       pw = new PrintWriter( outFile );
 
       final PrfWriter prfWriter = new PrfWriter( m_profil, new IWaterlevel[0], m_roughnessType );
-      prfWriter.setPreferRoughnessClasses( m_preferRoughnessClasses );
-      prfWriter.setPreferVegetationClasses( m_preferVegetationClasses );
-
       prfWriter.setPrfMetadata( IPrfConstants.PRF_LINE_8_BLATTBEZEICHNUNG_2, Integer.toString( m_profileNumber ) );
 
       prfWriter.write( pw );
@@ -94,15 +87,5 @@ public class WspWinProfileWriter
     {
       IOUtils.closeQuietly( pw );
     }
-  }
-
-  public void setPreferRoughnessClasses( final boolean preferRoughnessClasses )
-  {
-    m_preferRoughnessClasses = preferRoughnessClasses;
-  }
-
-  public void setPreferVegetationClasses( final boolean preferVegetationClasses )
-  {
-    m_preferVegetationClasses = preferVegetationClasses;
   }
 }

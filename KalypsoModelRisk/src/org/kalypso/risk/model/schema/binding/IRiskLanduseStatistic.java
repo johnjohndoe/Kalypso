@@ -45,7 +45,7 @@ import java.math.BigDecimal;
 import javax.xml.namespace.QName;
 
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Interface for statistical data of a landuse class
@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Thomas Jung
  * 
  */
-public interface IRiskLanduseStatistic extends Feature, Comparable<IRiskLanduseStatistic>
+public interface IRiskLanduseStatistic extends IFeatureWrapper2, Comparable<IRiskLanduseStatistic>
 {
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "StatisticClass" ); //$NON-NLS-1$
 

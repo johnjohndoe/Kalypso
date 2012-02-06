@@ -41,10 +41,11 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.roughness.RoughnessPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -60,6 +61,9 @@ public class RoughnessTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.RoughnessTheme.0" ); //$NON-NLS-1$
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetComponent()
+   */
   @Override
   public IComponent getTargetComponent( )
   {
@@ -76,6 +80,9 @@ public class RoughnessTheme extends AbstractProfilTheme
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
+   */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
@@ -87,8 +94,12 @@ public class RoughnessTheme extends AbstractProfilTheme
     super( profil, IWspmTuhhConstants.LAYER_RAUHEIT, TITLE, chartLayers, cm );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
@@ -96,10 +107,13 @@ public class RoughnessTheme extends AbstractProfilTheme
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
+   */
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new RoughnessPanel( getProfil() );
+    return new RauheitenPanel( getProfil() );
   }
 
 }

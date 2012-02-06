@@ -16,27 +16,26 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class LengthSectionCulvertLayer extends TupleResultLineLayer
 {
-  public LengthSectionCulvertLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
+  public LengthSectionCulvertLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( provider, data, styleSet );
+    super( provider, data, lineStyle, pointStyle );
   }
 
   /**
    * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final IObservation<TupleResult> obs = valueData.getObservation();
+    final IObservation<TupleResult> obs = m_data.getObservation();
     return getDataRange( obs == null ? null : obs.getResult(), IWspmConstants.LENGTH_SECTION_PROPERTY_GROUND );
   }
 
@@ -53,8 +52,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   @Override
   protected final String getTooltip( final int index )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult tr = valueData.getObservation().getResult();
+    final TupleResult tr = m_data.getObservation().getResult();
     final IRecord rec = tr.get( index );
     final int targetOKComponentIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN );
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
@@ -68,23 +66,21 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   @Override
   public void paint( final GC gc )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    if( valueData == null )
+    if( m_data == null )
       return;
-    valueData.open();
+    m_data.open();
 
     // FIXME: painting an ellipse here makes no sense!
-    // FIXME: wir brauchen mehr Informationen über die verdohlungslänge
-    for( int i = 0; i < valueData.getObservation().getResult().size(); i++ )
+
+    for( int i = 0; i < m_data.getObservation().getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
       if( rect != null )
       {
-        final PointFigure ps = new PointFigure();
-        ps.setPoints( new Point[] { RectangleUtils.getCenterPoint( rect ) } );
-        ps.getStyle().setWidth( rect.width );
-        ps.getStyle().setHeight( rect.height );
-        ps.paint( gc );
+        getPointFigure().setPoints( new Point[] { RectangleUtils.getCenterPoint( rect ) } );
+        getPointFigure().getStyle().setWidth( rect.width );
+        getPointFigure().getStyle().setHeight( rect.height );
+        getPointFigure().paint( gc );
       }
     }
   }
@@ -92,10 +88,9 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
   @Override
   public EditInfo getHover( final Point pos )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( !isVisible() )
       return null;
-    for( int i = 0; i < valueData.getDomainValues().length; i++ )
+    for( int i = 0; i < m_data.getDomainValues().length; i++ )
     {
       final Rectangle hover = getScreenRect( i );
       if( hover != null && hover.contains( pos ) )
@@ -106,8 +101,7 @@ public class LengthSectionCulvertLayer extends TupleResultLineLayer
 
   private Rectangle getScreenRect( final int i )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult result = valueData.getObservation().getResult();
+    final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
     final Double dN = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_ROHR_DN, record );
     final Double sT = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );

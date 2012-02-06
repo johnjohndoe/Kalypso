@@ -77,7 +77,7 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
   {
     setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getId() ); //$NON-NLS-1$
 
-    setEnvelopesUpdated();
+    invalidEnvelope();
   }
 
   // Commented out, because not used by the tuhh-model

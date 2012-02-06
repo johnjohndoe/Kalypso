@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -303,6 +303,7 @@ public class SWANResultsReader
    * 
    * @return List<Double>
    */
+  @SuppressWarnings("unchecked")
   private static List<Double> getValuesAsList( final MLArray pMLArray ) throws Exception
   {
     List<Double> lListRes = new ArrayList<Double>();

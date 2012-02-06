@@ -63,6 +63,6 @@ public class PdbGknComparator extends ViewerComparator
     if( element instanceof WaterBody )
       return ((WaterBody) element).getName();
 
-    return element.toString();
+     return element.toString();
   }
 }

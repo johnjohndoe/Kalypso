@@ -45,7 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -96,7 +96,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.mapmodel.KalypsoFeatureThemeHelper;
-import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -549,7 +549,7 @@ public class CreateMainChannelComposite extends Composite
           buttonGuard( chooseFirstBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.LEFT;
           final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
-          final IDeprecatedMouseWidget selectBankWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IWidget selectBankWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( selectBankWidget );
         }
         else
@@ -578,7 +578,7 @@ public class CreateMainChannelComposite extends Composite
         {
           buttonGuard( drawFirstBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.LEFT;
-          final IDeprecatedMouseWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( drawBankWidget );
         }
         else
@@ -645,7 +645,7 @@ public class CreateMainChannelComposite extends Composite
           buttonGuard( chooseSecondBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT;
           final IRectangleMapFunction function = new BankSelectorFunction( m_data, side );
-          final IDeprecatedMouseWidget selectBankWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IWidget selectBankWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( selectBankWidget );
         }
         else
@@ -671,7 +671,7 @@ public class CreateMainChannelComposite extends Composite
         {
           buttonGuard( drawSecondBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT;
-          final IDeprecatedMouseWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( drawBankWidget );
         }
         else
@@ -813,7 +813,7 @@ public class CreateMainChannelComposite extends Composite
         {
           buttonGuard( chooseProfilesButton );
           final IRectangleMapFunction function = new ProfileSelectorFunction( m_data );
-          final IDeprecatedMouseWidget selectProfileWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IWidget selectProfileWidget = new SelectionWidget( "", "", function ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( selectProfileWidget );
         }
         else

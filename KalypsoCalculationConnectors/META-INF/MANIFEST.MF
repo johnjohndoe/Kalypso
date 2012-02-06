@@ -14,12 +14,12 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.ui,
  org.kalypso.model.flood;visibility:=reexport,
  org.kalypso.risk;visibility:=reexport,
- org.kalypso.model.rrm.core;visibility:=reexport,
+ org.kalypso.NACalcJob;visibility:=reexport,
  org.kalypso.ModelSimulationBase;visibility:=reexport,
  org.kalypso.model1d2d;visibility:=reexport,
  org.kalypso.model.wspm.tuhh.schema;bundle-version="11.6.3";visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.connector,
  org.kalypso.calculation.connector.fm_rm,
  org.kalypso.calculation.connector.k1d2d_fm,

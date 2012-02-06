@@ -42,25 +42,24 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import java.awt.geom.Point2D;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
@@ -101,8 +100,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     final IProfil profil = getProfil();
-    final IRecord point = ProfileVisitors.findNearestPoint( profil, toNumeric( newPos ).getX() );
-    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) );
+    final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
+    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyleHover() );
@@ -128,8 +127,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
     if( numPoint == null )
       return;
 
-    final IProfileRecord profilPoint = profil.getPoint( pos );
-    final IProfileRecord newPoint = ProfileVisitors.findNearestPoint( profil, numPoint.getX() );
+    final IRecord profilPoint = profil.getPoint( pos );
+    final IRecord newPoint = ProfilUtil.findNearestPoint( profil, numPoint.getX() );
     if( newPoint == profilPoint )
       return;
 
@@ -145,31 +144,37 @@ public class PointMarkerLayer extends AbstractProfilLayer
         continue;
       }
 
-      if( devider.getComponent().getId().equals( getTargetComponent().getId() ) )
+      if( devider.getId().getId().equals( getTargetComponent().getId() ) )
       {
         moveDevider( devider, newPoint );
       }
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
   @Override
   public EditInfo getHover( final Point pos )
   {
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( getTargetComponent() );
     for( final IProfilPointMarker devider : deviders )
     {
-      final IProfileRecord point = devider.getPoint();
+      final IRecord point = devider.getPoint();
       final Rectangle hoverRect = getHoverRect( point );
       if( hoverRect == null )
       {
         continue;
       }
       if( hoverRect.contains( pos ) )
-        return new EditInfo( this, null, null, point.getIndex(), getTooltipInfo( point ), pos );
+        return new EditInfo( this, null, null, getProfil().indexOfPoint( point ), getTooltipInfo( point ), pos );
     }
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
+   */
   @Override
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
@@ -180,6 +185,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
     return new Rectangle( screenX - 5, top, 10, bottom - top );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
@@ -201,12 +209,18 @@ public class PointMarkerLayer extends AbstractProfilLayer
     return new ILegendEntry[] { le };
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;// new DataRange<Number>( 0, 1 );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getTooltipInfo(java.awt.geom.Point2D)
+   */
   @Override
   public String getTooltipInfo( final IRecord point )
   {
@@ -221,22 +235,22 @@ public class PointMarkerLayer extends AbstractProfilLayer
     }
   }
 
-  protected void moveDevider( final IProfilPointMarker devider, final IProfileRecord newPoint )
+  protected void moveDevider( final IProfilPointMarker devider, final IRecord newPoint )
   {
     final IProfil profil = getProfil();
 
     final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
     operation.addChange( new PointMarkerSetPoint( devider, newPoint ) );
-    operation.addChange( new ActiveObjectEdit( profil, newPoint.getBreiteAsRange(), null ) );
+    operation.addChange( new ActiveObjectEdit( profil, newPoint, null ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
   private boolean movesOnSameDeviderType( final IProfilPointMarker devider, final IProfilPointMarker[] targetDeviders )
   {
-    final String id = devider.getComponent().getId();
+    final String id = devider.getId().getId();
     for( final IProfilPointMarker marker : targetDeviders )
     {
-      final String targetId = marker.getComponent().getId();
+      final String targetId = marker.getId().getId();
       if( ObjectUtils.equals( id, targetId ) )
         return true;
     }
@@ -244,8 +258,12 @@ public class PointMarkerLayer extends AbstractProfilLayer
     return false;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() || hint.isProfilPropertyChanged() )
     {
@@ -253,6 +271,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -270,7 +291,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() );
       final int screenX = getCoordinateMapper().getDomainAxis().numericToScreen( breite );
       final Point p1 = new Point( screenX, bottom );
       final Point p2 = new Point( screenX, top );

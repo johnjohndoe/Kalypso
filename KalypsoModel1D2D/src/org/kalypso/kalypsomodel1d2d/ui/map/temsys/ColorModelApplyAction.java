@@ -81,7 +81,7 @@ public class ColorModelApplyAction extends Action
     else
     {
       final CommandableWorkspace workspace = elevationTheme.getWorkspace();
-      final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, elevationTheme.getFeatureList().getOwner(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+      final ModellEvent event = new FeatureStructureChangeModellEvent( workspace, elevationTheme.getFeatureList().getParentFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
       workspace.fireModellEvent( event );
     }
 

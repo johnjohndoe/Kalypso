@@ -44,8 +44,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -76,7 +79,6 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.profile.LengthSectionCreator;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.export.wspwin.ProfileFeatureSorter;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
@@ -117,6 +119,34 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     addPage( m_profileChooserPage );
   }
 
+  private IProfil[] extractProfiles( final Object[] profilFeatures )
+  {
+    final SortedMap<Double, IProfil> profiles = new TreeMap<Double, IProfil>();
+
+    for( final Object objProfileFeature : profilFeatures )
+    {
+      if( !(objProfileFeature instanceof IProfileFeature) )
+      {
+        continue;
+      }
+      final IProfileFeature profileFeature = (IProfileFeature) objProfileFeature;
+
+      final IProfil profil = profileFeature.getProfil();
+      final double station = profil.getStation();
+      profiles.put( station, profil );
+    }
+
+    final IProfil[] sortedProfiles = profiles.values().toArray( new IProfil[profiles.size()] );
+
+    // Sort according to flow direction (i.e. we always start upstreams)
+    final WspmWaterBody waterBody = ((IProfileFeature) profilFeatures[0]).getWater();
+    final boolean direction = waterBody == null ? true : waterBody.isDirectionUpstreams();
+    if( direction )
+      ArrayUtils.reverse( sortedProfiles );
+
+    return sortedProfiles;
+  }
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
@@ -143,31 +173,17 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     return true;
   }
 
-  private final String getAxisDirection( final Object[] profilFeatures )
-  {
-
-    if( profilFeatures.length > 0 && profilFeatures[0] instanceof IProfileFeature )
-    {
-      final WspmWaterBody waterBody = ((IProfileFeature) profilFeatures[0]).getWater();
-      if( waterBody != null && waterBody.isDirectionUpstreams() == false )
-      {
-        return "POSITIVE";
-      }
-    }
-    return "NEGATIVE";
-  }
-
   private IFile doExport( final Object[] profilFeatures, final URL context, final IFolder parentFolder ) throws CoreException, GMLSchemaException, IOException, GmlSerializeException
   {
     if( !parentFolder.exists() )
       parentFolder.create( false, true, new NullProgressMonitor() );
 
-    final IProfil[] profiles = ProfileFeatureSorter.extractProfiles( profilFeatures, null );
+    final IProfil[] profiles = extractProfiles( profilFeatures );
 
     final String containerName = getContainerName();
 
     final String fName = String.format( "%s_%.4f-%.4f", containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() ); //$NON-NLS-1$
-    final String title = String.format( Messages.getString( "CreateLengthSectionWizard.1" ), containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() ); //$NON-NLS-1$
+    final String title = String.format( "%s - km %.4f - km %.4f", containerName, profiles[0].getStation(), profiles[profiles.length - 1].getStation() );
     final IFolder targetFolder = parentFolder.getFolder( fName );
     if( !targetFolder.exists() )
       targetFolder.create( false, true, new NullProgressMonitor() );
@@ -186,8 +202,8 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
 
     final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
     final IFile tableFile = targetFolder.getFile( new Path( fName + ".gft" ) ); //$NON-NLS-1$
-    copyResourceFile( "resources/LS_no_result.kod", kodFile, fName, title, getAxisDirection( profilFeatures ) ); //$NON-NLS-1$
-    copyResourceFile( "resources/table.gft", tableFile, fName, title, "" ); //$NON-NLS-1$
+    copyResourceFile( "resources/LS_no_result.kod", kodFile, fName, title ); //$NON-NLS-1$
+    copyResourceFile( "resources/table.gft", tableFile, fName, title ); //$NON-NLS-1$
 
     return kodFile;
   }
@@ -201,15 +217,13 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     return parent.getName();
   }
 
-  private void copyResourceFile( final String resource, final IFile targetFile, final String fName, final String title, final String direction ) throws IOException, CoreException
+  private void copyResourceFile( final String resource, final IFile targetFile, final String fName, final String title ) throws IOException, CoreException
   {
     final URL resourceLocation = getClass().getResource( resource );
     String kod = FileUtilities.toString( resourceLocation, "UTF-8" ); //$NON-NLS-1$
     kod = kod.replaceAll( "%GMLFILENAME%", fName + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$
     kod = kod.replaceAll( "%TITLE%", title ); //$NON-NLS-1$
     kod = kod.replaceAll( "%DESCRIPTION%", fName ); //$NON-NLS-1$
-    kod = kod.replaceAll( "%DIRECTIONUPSTREAM%", direction ); //$NON-NLS-1$
-
     final InputStream inputStream = IOUtils.toInputStream( kod, "UTF-8" ); //$NON-NLS-1$
 
     if( targetFile.exists() )

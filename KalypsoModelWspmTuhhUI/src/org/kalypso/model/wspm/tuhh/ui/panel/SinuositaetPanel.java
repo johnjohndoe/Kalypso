@@ -60,15 +60,16 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_GERINNE_ART;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SINUOSITAET_KENNUNG;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -109,14 +110,13 @@ public class SinuositaetPanel extends AbstractProfilView
   {
     m_toolkit = toolkit;
     m_propPanel = m_toolkit.createComposite( parent );
-
+    m_propPanel.setLayout( new GridLayout( 2, false ) );
     if( m_propPanel == null )
     {
       m_toolkit.createText( m_propPanel, Messages.getString( "SinuositaetPanel_0" ) ); //$NON-NLS-1$
     }
     else
     {
-      m_propPanel.setLayout( new GridLayout( 2, false ) );
       createPropertyPanel();
     }
     updateControls();
@@ -130,7 +130,7 @@ public class SinuositaetPanel extends AbstractProfilView
     final IRecord rec = res.size() > 0 ? res.get( 0 ) : null;
     if( rec == null || val.equals( rec.getValue( i ) ) )
       return;
-    final ProfilOperation operation = new ProfilOperation( cmp.getDescription(), getProfile(), true ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( cmp.getDescription(), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectEdit( m_sinuositaet, cmp, val ) );
     new ProfilOperationJob( operation ).schedule();
 
@@ -253,7 +253,7 @@ public class SinuositaetPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isObjectDataChanged() )
     {

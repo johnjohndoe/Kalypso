@@ -118,8 +118,8 @@ public class RestartNodes
       final Feature rootFeature = resultWorkspace.getRootFeature();
       resultWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
       final INodeResultCollection nodeResults = (INodeResultCollection) rootFeature.getAdapter( INodeResultCollection.class );
-      for( final INodeResult node : nodeResults.getNodeResults() )
-        m_nodes.add( node );
+      for( final INodeResult node : nodeResults )
+        m_nodes.add( node.getFeature() );
     }
     catch( final Exception e )
     {

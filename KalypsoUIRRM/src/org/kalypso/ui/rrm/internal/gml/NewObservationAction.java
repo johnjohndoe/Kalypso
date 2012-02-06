@@ -42,7 +42,7 @@ package org.kalypso.ui.rrm.internal.gml;
 
 import java.util.Iterator;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -57,7 +57,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction;
 import org.kalypso.ogc.sensor.view.observationDialog.AxisRangeDialog;
 import org.kalypso.ogc.sensor.view.observationDialog.ObservationViewer;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.i18n.Messages;
 
 /**
  * @author Gernot Belger

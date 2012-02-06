@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,7 +62,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -77,7 +76,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
@@ -316,7 +315,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
         final BigDecimal flowStation = flowRel.getStation();
         if( flowStation == null )
         {
-          final String message = String.format( Messages.getString( "FlowRelationshipCalcOperation.0" ), flowRel.getName() ); //$NON-NLS-1$
+          final String message = String.format( Messages.getString("FlowRelationshipCalcOperation.0"), flowRel.getName() ); //$NON-NLS-1$
           throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, message, null ) ); //$NON-NLS-1$
         }
 
@@ -380,13 +379,13 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
   private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles ) throws GMLSchemaException, InvocationTargetException
   {
-    final IFeatureProviderFactory factory = flowRel.getWorkspace().getFeatureProviderFactory();
+    final IFeatureProviderFactory factory = flowRel.getFeature().getWorkspace().getFeatureProviderFactory();
 
     // Create empty project with one calculation and one reach
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
     final TuhhCalculation calculation = project.createReibConstCalculation();
     final boolean direction = true; // TODO: depends on building stuff
-    final WspmWaterBody waterBody = project.createOrGetWaterBody( "someWater", direction ); //$NON-NLS-1$
+    final WspmWaterBody waterBody = project.createWaterBody( "someWater", direction ); //$NON-NLS-1$
     project.createNewReach( waterBody.getName(), direction );
     final TuhhReach reach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
     reach.setName( "someReach" ); //$NON-NLS-1$
@@ -399,7 +398,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       final double station = profil.getStation();
 
       final IProfileFeature profile = waterBody.createNewProfile();
-      ((ProfileFeatureBinding) profile).setProfile( profil );
+      ProfileFeatureFactory.toFeature( profil, profile );
       reach.createProfileSegment( profile, station );
 
       minStation = Math.min( minStation, station );
@@ -448,10 +447,10 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
   public static void copyTeschkeData( final ITeschkeFlowRelation flowRel, final QIntervallResult qresult ) throws Exception
   {
-    final Feature feature = flowRel;
+    final Feature feature = flowRel.getFeature();
     final Feature flowRelParentFeature = feature;
     final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
-    final IFeatureType flowRelFT = GMLSchemaUtilities.getFeatureTypeQuiet( ITeschkeFlowRelation.QNAME );
+    final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
     final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
     final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
 
@@ -479,7 +478,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
   public static void copyBuildingData( final IBuildingFlowRelation buildingRelation, final QIntervallResult qresult )
   {
     /* copy building parameter from one observation to the other */
-    final Feature buildingFeature = buildingRelation;
+    final Feature buildingFeature = buildingRelation.getFeature();
     final GMLWorkspace buildingWorkspace = buildingFeature.getWorkspace();
     final IObservation<TupleResult> buildingObservation = buildingRelation.getBuildingObservation();
     final IObservation<TupleResult> qresultBuildingObs = qresult.getBuildingObservation( false );
@@ -518,8 +517,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes")
-  final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == IStatus.class )
       return m_status;

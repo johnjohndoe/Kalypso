@@ -154,18 +154,17 @@ public class ResultLengthSection
 
     final String title = getTitle();
 
-    /* Some handlers need access to the reach/profiles, fetch 'em! */
-    final TuhhReach reach = m_calculation.getReach();
-    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    
-    /* sort the segments */
-    final WspmWaterBody waterBody = reach.getWaterBody();
-    final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
-
-    final GMLWorkspace lengthSectionWorkspace = createLengthSection( title, isDirectionUpstreams );
+    final GMLWorkspace lengthSectionWorkspace = createLengthSection( title );
     final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( lengthSectionWorkspace.getRootFeature() );
     final TupleResult result = lengthSectionObs.getResult();
 
+    /* Some handlers need access to the reach/profiles, fetch 'em! */
+    final TuhhReach reach = m_calculation.getReach();
+    final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+
+    /* sort the segments */
+    final WspmWaterBody waterBody = reach.getWaterBody();
+    final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
     Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Breaklines */
@@ -212,7 +211,7 @@ public class ResultLengthSection
     return m_titlePattern.replaceAll( PATTERN_RUNOFF, m_runoff.toString() ).replaceAll( PATTERN_CALCNAME, calcname );
   }
 
-  private GMLWorkspace createLengthSection( final String title, boolean isDirectionUpstreams ) throws Exception
+  private GMLWorkspace createLengthSection( final String title ) throws Exception
   {
     final String description = String.format( Messages.getString( "ResultLengthSection.1" ), title ); //$NON-NLS-1$
 
@@ -232,7 +231,6 @@ public class ResultLengthSection
     final TupleResult result = lengthSectionObs.getResult();
 
     final ILengthSectionColumn[] columns = new ILengthSectionColumn[] { //
-        new LengthSectionInvertStation( isDirectionUpstreams ),
         new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_F, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_F_RE ), //
         new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_BR, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_RE ), //
         new LengthSectionColumnDivide( IWspmConstants.LENGTH_SECTION_PROPERTY_V_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_Q_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI ), //

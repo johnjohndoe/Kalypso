@@ -45,13 +45,12 @@ import java.math.BigDecimal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
@@ -166,10 +165,12 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   private IRecord createPoint( final IProfil profil, final BigDecimal distance )
   {
+    final int indexOfDistance = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
     // Höhe values always get added as new points; we assume that the points are in the right order
     // This is necessary the preserve 'Rücksprünge' in the soil-layer
-    final IProfileRecord newPoint = profil.createProfilPoint();
-    newPoint.setBreite( new Double( distance.doubleValue() ) );
+    final IRecord newPoint = profil.createProfilPoint();
+    newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
     profil.addPoint( newPoint );
     return newPoint;
   }
@@ -194,8 +195,8 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
   {
     // FIXME: make optional
     final boolean useLastObservedPoints = false;
-    final IProfileRecord firstPoint;
-    final IProfileRecord lastPoint;
+    final IRecord firstPoint;
+    final IRecord lastPoint;
     if( useLastObservedPoints )
     {
       // TRICKY: we use the soil points, to determine the default points here...
@@ -213,7 +214,7 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     }
     else
     {
-      final IProfileRecord[] points = profile.getPoints();
+      final IRecord[] points = profile.getPoints();
       if( points.length < 2 )
         return;
 
@@ -224,11 +225,11 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     switch( numberOfMarkersToAdd )
     {
       case 1:
-        createMarkers( profile, new IProfileRecord[] { lastPoint }, markerType );
+        createMarkers( profile, new IRecord[] { lastPoint }, markerType );
         break;
 
       case 2:
-        createMarkers( profile, new IProfileRecord[] { firstPoint, lastPoint }, markerType );
+        createMarkers( profile, new IRecord[] { firstPoint, lastPoint }, markerType );
         break;
 
       case 0:
@@ -241,15 +242,15 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
 
   protected void addMarkers( final IProfil profile, final IWProfPoint[] points, final String markerType )
   {
-    final IProfileRecord[] pointsToMark = findPoints( profile, points );
+    final IRecord[] pointsToMark = findPoints( profile, points );
     createMarkers( profile, pointsToMark, markerType );
   }
 
-  protected void createMarkers( final IProfil profile, final IProfileRecord[] points, final String markerType )
+  protected void createMarkers( final IProfil profile, final IRecord[] points, final String markerType )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
 
-    for( final IProfileRecord point : points )
+    for( final IRecord point : points )
     {
       final IProfilPointMarker marker = profile.createPointMarker( markerType, point );
       final Object defaultValue = provider.getDefaultValue( markerType );
@@ -257,9 +258,9 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     }
   }
 
-  private IProfileRecord[] findPoints( final IProfil profile, final IWProfPoint[] points )
+  private IRecord[] findPoints( final IProfil profile, final IWProfPoint[] points )
   {
-    final IProfileRecord[] result = new IProfileRecord[points.length];
+    final IRecord[] result = new IRecord[points.length];
     for( int i = 0; i < result.length; i++ )
     {
       result[i] = findPoint( profile, points[i] );
@@ -268,10 +269,10 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     return result;
   }
 
-  private IProfileRecord findPoint( final IProfil profile, final IWProfPoint wProfPoint )
+  private IRecord findPoint( final IProfil profile, final IWProfPoint wProfPoint )
   {
     final BigDecimal distance = wProfPoint.getDistance();
-    return ProfileVisitors.findNearestPoint( profile, distance.doubleValue() );
+    return ProfilUtil.findNearestPoint( profile, distance.doubleValue() );
   }
 
   public void setSoilOffset( final double offset )

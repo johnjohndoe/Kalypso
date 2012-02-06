@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IEditWorker;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -78,13 +77,13 @@ public class EditStateWorker implements IEditWorker
   @Override
   public String getWindowTitle( )
   {
-    return Messages.getString( "EditStateWorker.0" ); //$NON-NLS-1$
+    return "Edit State Properties";
   }
 
   @Override
   public Wizard createWizard( final IProgressMonitor monitor, final Session session ) throws PdbConnectException
   {
-    monitor.subTask( Messages.getString( "EditStateWorker.1" ) ); //$NON-NLS-1$
+    monitor.subTask( "Fetching existing states from database..." );
 
     final State[] existingStates = GetPdbList.getArray( session, State.class );
     m_stateToEdit = StateUtils.findStateByName( existingStates, m_selectedItem.getName() );

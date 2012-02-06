@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.imports.sobek;
 
@@ -66,7 +66,6 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportData.GUESS_STATION_STRATEGY;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternValidator;
@@ -87,8 +86,8 @@ public class SobekImportFilePage extends WizardPage
 
     m_data = data;
 
-    setTitle( Messages.getString("SobekImportFilePage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("SobekImportFilePage.1") ); //$NON-NLS-1$
+    setTitle( "Import SOBEK data" );
+    setDescription( "Please select the SOBEK project directory on this page." );
   }
 
   @Override
@@ -112,10 +111,10 @@ public class SobekImportFilePage extends WizardPage
   {
     final Group group = new Group( panel, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( group );
-    group.setText( Messages.getString("SobekImportFilePage.2") ); //$NON-NLS-1$
+    group.setText( "SOBEK Project" );
 
     final Label destinationLabel = new Label( group, SWT.NONE );
-    destinationLabel.setText( Messages.getString("SobekImportFilePage.3") ); //$NON-NLS-1$
+    destinationLabel.setText( "Input Directory" );
 
     // destination name entry field
     final FileAndHistoryData inputDir = m_data.getInputDir();
@@ -123,16 +122,14 @@ public class SobekImportFilePage extends WizardPage
     final IObservableValue modelDir = BeansObservables.observeValue( inputDir, FileAndHistoryData.PROPERTY_FILE );
     final IObservableValue modelHistory = BeansObservables.observeValue( inputDir, FileAndHistoryData.PROPERTY_HISTORY );
 
-    final DirectoryBinding directoryBinding = new DirectoryBinding( modelDir, SWT.OPEN );
+    final DirectoryBinding directoryBinding = new DirectoryBinding( m_binding, modelDir, SWT.OPEN );
 
     final Control historyControl = directoryBinding.createDirectoryFieldWithHistory( group, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final String message = Messages.getString("SobekImportFilePage.4"); //$NON-NLS-1$
+    final String message = "Please select the SOBEK project directory:";
     final Button searchButton = directoryBinding.createDirectorySearchButton( group, historyControl, getWizard().getWindowTitle(), message );
     setButtonLayoutData( searchButton );
-
-    directoryBinding.applyBinding( m_binding );
 
     return group;
   }
@@ -144,17 +141,17 @@ public class SobekImportFilePage extends WizardPage
     final IObservableValue model = BeansObservables.observeValue( m_data, SobekImportData.PROPERTY_SRS );
 
     final DataBinder binder = new DataBinder( target, model );
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("SobekImportFilePage.5") ) ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "You must select a coordinate system" ) );
     m_binding.bindValue( binder );
   }
 
   private void createStationControls( final Composite panel )
   {
     final Group group = new Group( panel, SWT.NONE );
-    group.setText( Messages.getString("SobekImportFilePage.6") ); //$NON-NLS-1$
+    group.setText( "Station" );
     GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( group );
 
-    new Label( group, SWT.NONE ).setText( Messages.getString("SobekImportFilePage.7") ); //$NON-NLS-1$
+    new Label( group, SWT.NONE ).setText( "Guess station..." );
 
     final ComboViewer combo = new ComboViewer( group );
     combo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -170,12 +167,12 @@ public class SobekImportFilePage extends WizardPage
 
     /* Pattern control */
     final Label patternLabel = new Label( group, SWT.NONE );
-    patternLabel.setText( Messages.getString("SobekImportFilePage.8") ); //$NON-NLS-1$
+    patternLabel.setText( "Pattern" );
 
     final Text patternField = new Text( group, SWT.BORDER );
     patternField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    patternField.setMessage( Messages.getString("SobekImportFilePage.9") ); //$NON-NLS-1$
-    patternField.setToolTipText( Messages.getString("SobekImportFilePage.10") ); //$NON-NLS-1$
+    patternField.setMessage( "Station Pattern" );
+    patternField.setToolTipText( "Pattern for parsing the station from the sobek cross section. Use '<station>' and '*' as search tokens." );
 
     final GuessStationPatternReplacer replacer = new GuessStationPatternReplacer();
     replacer.createPatternButton( group, patternField );

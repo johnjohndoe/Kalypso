@@ -12,6 +12,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -29,7 +30,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -41,10 +42,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Widget for creating 1d2d element
- * 
+ *
  * @author Patrice Congo
  */
-public class CreateFEElement1DWidget extends DeprecatedMouseWidget
+public class CreateFEElement1DWidget extends AbstractWidget
 {
   private final int m_grabRadius = 20;
 
@@ -58,11 +59,12 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
+  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_node;
 
   public CreateFEElement1DWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -80,7 +82,7 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
   {
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.2" ) ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.2") ); //$NON-NLS-1$
 
     final IMapModell mapModell = mapPanel.getMapModell();
     m_theme = UtilMap.findEditableTheme( mapPanel, IElement1D.QNAME );
@@ -118,7 +120,7 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
     /* If we have a node, take this position, else take the current one */
     final GM_Point currentPos = m_node == null ? MapUtilities.transform( mapPanel, p ) : m_node.getPoint();
 
-    mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.3" ) ); //$NON-NLS-1$
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.3") ); //$NON-NLS-1$
 
     try
     {
@@ -131,7 +133,7 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
       e.printStackTrace();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.4" ) + status.getMessage() ); //$NON-NLS-1$
+      mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.4") + status.getMessage() ); //$NON-NLS-1$
       reinit();
     }
   }
@@ -139,7 +141,7 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the xontext menu is opened, so the framework must know wether
    * this widget is editing something at the moment or not
-   * 
+   *
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -165,7 +167,7 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         final IMapPanel mapPanel = getMapPanel();
-        mapPanel.setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.5" ) + status.getMessage() ); //$NON-NLS-1$
+        mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.5") + status.getMessage() ); //$NON-NLS-1$
         reinit();
       }
     }
@@ -216,14 +218,14 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
 
   private ICommand finishLine2( final GM_Curve curve ) throws GM_Exception
   {
-    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.6" ) ); //$NON-NLS-1$
+    final CompositeCommand command = new CompositeCommand( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.6") ); //$NON-NLS-1$
 
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final FeatureList featureList = m_theme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
+    final Feature parentFeature = featureList.getParentFeature();
 
     /* Initialize elements needed for edges and elements */
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) parentFeature;
+    final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
 
     /* create 1d elements */
     final String crs = curve.getCoordinateSystem();
@@ -285,7 +287,7 @@ public class CreateFEElement1DWidget extends DeprecatedMouseWidget
 
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.7" ) ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.7") ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
   }

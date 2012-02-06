@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody;
 
@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.command.ExecutorRunnable;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
@@ -77,7 +77,7 @@ public class AddWaterBodyHandler extends AbstractHandler
     final IStatus result = ProgressUtilities.busyCursorWhile( runnable );
     if( !result.isOK() )
     {
-      new StatusDialog( shell, result, commandName );
+      new StatusDialog2( shell, result, commandName );
       return null;
     }
 

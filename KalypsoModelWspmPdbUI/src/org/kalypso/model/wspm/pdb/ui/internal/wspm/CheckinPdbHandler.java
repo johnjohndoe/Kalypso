@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
@@ -60,7 +60,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog;
 import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.core.gml.WspmFixation;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
@@ -70,7 +69,6 @@ import org.kalypso.model.wspm.pdb.ui.internal.admin.PdbHandlerUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbView;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.GmltreeHandlerUtils;
@@ -125,7 +123,7 @@ public class CheckinPdbHandler extends AbstractHandler
     final IStatus status = worker.checkPreconditions();
     if( !status.isOK() )
     {
-      new StatusDialog( shell, status, windowTitle ).open();
+      new StatusDialog2( shell, status, windowTitle ).open();
       return false;
     }
 
@@ -153,7 +151,7 @@ public class CheckinPdbHandler extends AbstractHandler
       {
         try
         {
-          monitor.beginTask( Messages.getString( "CheckinPdbHandler.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+          monitor.beginTask( "Reading database state", IProgressMonitor.UNKNOWN );
           worker.preInit( connection );
           return Status.OK_STATUS;
         }
@@ -167,7 +165,7 @@ public class CheckinPdbHandler extends AbstractHandler
     if( result.isOK() )
       return true;
 
-    final String msg = Messages.getString( "CheckinPdbHandler.1" ); //$NON-NLS-1$
+    final String msg = "Failed to access database.";
     ErrorDialog.openError( shell, windowTitle, msg, result );
     return false;
   }
@@ -194,6 +192,6 @@ public class CheckinPdbHandler extends AbstractHandler
 
     final IStatus result = ProgressUtilities.busyCursorWhile( saveOperation );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, windowTitle, Messages.getString( "CheckinPdbHandler.2" ) ).open(); //$NON-NLS-1$
+      new StatusDialog2( shell, result, windowTitle, "Failed to save local project data" ).open();
   }
 }

@@ -45,7 +45,7 @@ import java.util.List;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -80,7 +80,7 @@ public final class EditRelationUtils
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    final Feature parentFeature = features.getOwner();
+    final Feature parentFeature = features.getParentFeature();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : foundElements )
     {

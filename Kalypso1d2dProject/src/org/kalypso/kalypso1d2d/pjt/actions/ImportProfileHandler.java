@@ -114,7 +114,7 @@ public class ImportProfileHandler extends AbstractHandler
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
+      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -133,9 +133,9 @@ public class ImportProfileHandler extends AbstractHandler
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
 
         final IRiverProfileNetwork network = importWizard.getAddedRiverNetwork();
-        final FeaturePath networkPath = new FeaturePath( network);
+        final FeaturePath networkPath = new FeaturePath( network.getFeature() );
         final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-        final String source = terrainModel.getWorkspace().getContext().toString();
+        final String source = terrainModel.getFeature().getWorkspace().getContext().toString();
         // TODO: aktivates the theme, is this ok?
         final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source ); //$NON-NLS-1$
         mapView.postCommand( command, null );

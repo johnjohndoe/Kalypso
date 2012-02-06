@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.elevationmodel;
 
@@ -62,9 +62,11 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
@@ -110,7 +112,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * <li/>Second element an instance of {@link IFolder}
    * <li/>third element an instance of {@link CommandableWorkspace}
    * </ul>
-   *
+   * 
    * @param workbench
    *          the current workbench
    * @param selection
@@ -162,10 +164,10 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             ITerrainElevationModelSystem temSys = ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
             if( temSys == null )
             {
-              temSys =  ImportElevationWizard.this.m_terrainModel.getTerrainElevationModelSystem();
+              temSys = new TerrainElevationModelSystem( ImportElevationWizard.this.m_terrainModel );
             }
 
-            final GMLWorkspace workspace = temSys.getWorkspace();
+            final GMLWorkspace workspace = temSys.getFeature().getWorkspace();
 
             // Decoding the White Spaces present in the File Paths.
             final File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
@@ -195,8 +197,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
             }
             // final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-            final NativeTerrainElevationModelWrapper tem = (NativeTerrainElevationModelWrapper) temSys.getTerrainElevationModels().addNew( NativeTerrainElevationModelWrapper.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER );
-            tem.setFile( nativeTEMRelPath );
+            final ITerrainElevationModel tem = new NativeTerrainElevationModelWrapper( temSys, nativeTEMRelPath );
 
             // TODO introduce in the first page a name imput field and gets the
             // name from there
@@ -224,9 +225,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
 
-            final Feature temFeature = tem;
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys, temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getOwner(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            final Feature temFeature = tem.getFeature();
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
             caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddTerrainelevationModelCmd() );

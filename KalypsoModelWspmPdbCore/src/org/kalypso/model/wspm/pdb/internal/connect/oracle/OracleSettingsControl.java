@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.connect.oracle;
 
@@ -61,7 +61,6 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettingsControl;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCoreImages;
 import org.kalypso.model.wspm.pdb.internal.connect.SettingsPropertyValue;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PortValidator;
 
 /**
@@ -96,7 +95,7 @@ class OracleSettingsControl extends Composite implements IPdbSettingsControl
     final StringBlankValidator usernameValidator = new StringBlankValidator( IStatus.ERROR, StringBlankValidator.DEFAULT_ERROR_MESSAGE );
     createPropertyControl( "Username", SWT.NONE, OracleSettings.PROPERTY_USERNAME, usernameValidator ); //$NON-NLS-1$
 
-    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, Messages.getString( "OracleSettingsControl.0" ) ); //$NON-NLS-1$
+    final StringBlankValidator warningValidator = new StringBlankValidator( IStatus.WARNING, "Password field is empty" );
     createPropertyControl( "Password", SWT.PASSWORD, OracleSettings.PROPERTY_PASSWORD, warningValidator ); //$NON-NLS-1$
   }
 
@@ -106,13 +105,11 @@ class OracleSettingsControl extends Composite implements IPdbSettingsControl
 
     final Text field = new Text( this, SWT.BORDER | style );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setMessage( Messages.getString( "OracleSettingsControl.1" ) ); //$NON-NLS-1$
+    field.setMessage( "<Empty>" );
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
     for( final IValidator validator : validators )
-    {
       targetToModel.setAfterConvertValidator( validator );
-    }
 
     final IObservableValue target = SWTObservables.observeText( field, new int[] { SWT.Modify } );
     final IObservableValue model = new SettingsPropertyValue( m_settings, property );

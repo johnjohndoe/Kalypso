@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbMeasurementDateComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbMeasurementLabelProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -110,7 +109,7 @@ public class StatesViewer
   {
     final ViewerColumn nameColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( nameColumn );
-    column.setText( Messages.getString( "StatesViewer.0" ) ); //$NON-NLS-1$
+    column.setText( "Name" );
     column.setResizable( false );
     column.setMoveable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );
@@ -126,7 +125,7 @@ public class StatesViewer
   {
     final ViewerColumn measurementDateColumn = ColumnViewerUtil.createViewerColumn( viewer, SWT.LEFT );
     final ViewerColumnItem column = new ViewerColumnItem( measurementDateColumn );
-    column.setText( Messages.getString( "StatesViewer.1" ) ); //$NON-NLS-1$
+    column.setText( "Measurement" );
     column.setResizable( false );
     column.setMoveable( false );
     ColumnsResizeControlListener.setMinimumPackWidth( column.getColumn() );

@@ -49,19 +49,22 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
- * 
- * 
+ *
+ *
  * @author Patrice Congo
  */
+@SuppressWarnings("deprecation")
 public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 {
+  @SuppressWarnings("unchecked")
   private final IFE1D2DNode m_node;
 
   private final GM_Point m_newPosition;
@@ -105,7 +108,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0"); //$NON-NLS-1$
   }
 
   /**
@@ -134,28 +137,28 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     m_node.setPoint( position );
 
     final List<Feature> changedFeatures = new ArrayList<Feature>( 10 );
-    changedFeatures.add( m_node );
+    changedFeatures.add( m_node.getFeature() );
 
     if( m_fireEventsForDependendElements )
     {
       /* Edges etc. */
-      final IFeatureBindingCollection<Feature> containers = m_node.getContainers();
-      for( final Feature featureWrapper2 : containers )
+      final IFeatureWrapperCollection<IFeatureWrapper2> containers = m_node.getContainers();
+      for( final IFeatureWrapper2 featureWrapper2 : containers )
       {
-        changedFeatures.add( featureWrapper2 );
-        featureWrapper2.setEnvelopesUpdated();
+        changedFeatures.add( featureWrapper2.getFeature() );
+        featureWrapper2.getFeature().setEnvelopesUpdated();
       }
 
       /* Elements */
       final IFE1D2DElement[] elements = m_node.getElements();
       for( final IFE1D2DElement element : elements )
       {
-        changedFeatures.add( element );
-        element.setEnvelopesUpdated();
+        changedFeatures.add( element.getFeature() );
+        element.getFeature().setEnvelopesUpdated();
       }
     }
 
-    final GMLWorkspace workspace = m_discretisationModel.getWorkspace();
+    final GMLWorkspace workspace = m_discretisationModel.getFeature().getWorkspace();
     workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
   }
 
@@ -181,15 +184,16 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new Feature[] { m_node };
+    return new IFeatureWrapper2[] { m_node };
   }
 
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
   @Override
+  @SuppressWarnings("deprecation")
   @Deprecated
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
@@ -203,7 +207,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer();
-    buf.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.1" ) ); //$NON-NLS-1$
+    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.1") ); //$NON-NLS-1$
     buf.append( m_node );
     buf.append( ']' );
     return buf.toString();

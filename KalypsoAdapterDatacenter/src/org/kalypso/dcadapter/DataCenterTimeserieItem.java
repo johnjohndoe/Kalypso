@@ -285,15 +285,22 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     return false;
   }
 
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
   @Override
   public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
   {
     RepositoryVisitors.accept( this, visitor );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
-    Observations.accept( this, visitor, request, direction );
+    Observations.accept( this, visitor, request );
   }
 }

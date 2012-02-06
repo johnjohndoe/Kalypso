@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -62,8 +62,8 @@ public interface IWindDataWriter
 
   /**
    * 
-   * writes inside of the given {@link GM_Envelope} between the given {@link Date} dates to target directory given by
-   * {@link URL} parameter the data containing in {@link IWindDataProvider}
+   * writes inside of the given {@link GM_Envelope} between the given {@link Date} dates 
+   * to target directory given by {@link URL} parameter the data containing in {@link IWindDataProvider} 
    * 
    * 
    * 
@@ -73,18 +73,18 @@ public interface IWindDataWriter
   public boolean write( final boolean pBoolConstantWind ) throws IOException;
 
   /**
-   * @param pUrlOuputDirectory
-   *          {@link URL} pointing to output directory to write to
+   * @param  pUrlOuputDirectory{@link URL} 
+   *    pointing to output directory to write to
    */
   public void setOutputDirectory( final FileObject pOutputDirectory );
+  
+  /**
+   * @return the {@link List} of dates of written steps 
+   */
+  public List< Date > getListWritenDates();
 
   /**
-   * @return the {@link List} of dates of written steps
+   * @return the {@link RectifiedGridDomain} descriptor of written grid 
    */
-  public List<Date> getListWritenDates( );
-
-  /**
-   * @return the {@link RectifiedGridDomain} descriptor of written grid
-   */
-  public RectifiedGridDomain getWrittenGrid( );
+  public RectifiedGridDomain getWrittenGrid();
 }

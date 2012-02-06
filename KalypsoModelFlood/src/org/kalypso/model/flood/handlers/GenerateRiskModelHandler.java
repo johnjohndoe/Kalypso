@@ -24,6 +24,7 @@ import org.eclipse.ui.internal.actions.NewWizardShortcutAction;
 import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -34,6 +35,7 @@ import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -73,7 +75,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
 
       // get all events
-      final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
+      final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
 
       // ask user which events to process
       final IRunoffEvent[] selectedEvents = FloodModelHelper.askUserForEvents( shell, events );
@@ -107,8 +109,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       action.run();
 
       /* Check if project creation succeeded */
-      final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
-      final CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
+      final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+      final CaseHandlingProjectNature<IScenario> nature = activeWorkContext.getCurrentProject();
       if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) ) //$NON-NLS-1$
       {
         // we simply return, because that means no new project was created (maybe user cancelled the dialog)
@@ -177,7 +179,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     for( final IRunoffEvent runoffEvent : selectedEvents )
     {
       final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
-      final IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> resultCoveragesList = resultCoverages.getCoverages();
       if( resultCoveragesList.size() == 0 )
       {
         MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.12" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.13" ) + runoffEvent.getName() + Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

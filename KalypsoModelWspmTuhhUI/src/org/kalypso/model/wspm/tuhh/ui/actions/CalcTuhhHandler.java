@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.actions;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -51,6 +53,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -73,6 +76,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.util.command.WaitForFeatureChanges;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -86,13 +90,16 @@ public class CalcTuhhHandler extends AbstractHandler
   {
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
-    if( !(selection instanceof IFeatureSelection) )
+
+    final IFeatureSelection featureSelection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
+    if( featureSelection == null )
       throw new ExecutionException( "Selection must be a feature-selection" ); //$NON-NLS-1$
 
-    /* Save the workspace first: we assume that all features are from the same workspace. */
-    // FIXED: Wait for all feature changes to be commited, else the gml workspace might still being changed.
-    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
     final Feature[] features = FeatureSelectionHelper.getFeatures( featureSelection );
+
+    /* Save the workspace first: we assume that all features are from the same workspace */
+
+    // FIXED: wait for all feature changes to be commited, else the gml workspace might still being changed.
     final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
     ProgressUtilities.busyCursorWhile( commandWaiter );
 
@@ -103,22 +110,56 @@ public class CalcTuhhHandler extends AbstractHandler
     {
       // FIXME: use new result provider api
       final TuhhCalculation calculation = (TuhhCalculation) feature;
+
       final URL context = feature.getWorkspace().getContext();
       final IFile gmlFile = ResourceUtilities.findFileFromURL( context );
       if( gmlFile == null )
       {
-        // Context is not local, what shall we do?
-        // Ignore it for now.
+        // context is not local, what shall we do?
+
+        // ignore it for now
         continue;
       }
+
+      final Job calcJob = new Job( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.0", calculation.getName() ) ) //$NON-NLS-1$
+      {
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
+        {
+          try
+          {
+            final String calcxpath = String.format( "id('%s')", calculation.getId() ); //$NON-NLS-1$
+            final String resultPath = calculation.getResultFolder().toPortableString();
+
+            final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
+            if( nature == null )
+            {
+              final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.5" ) + ModelNature.ID; //$NON-NLS-1$
+              return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
+            }
+
+            final Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put( "calc.xpath", calcxpath ); //$NON-NLS-1$
+            properties.put( "result.path", resultPath ); //$NON-NLS-1$
+
+            return nature.launchAnt( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.8" ), "calc", properties, gmlFile.getParent(), monitor ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
+          catch( final OperationCanceledException e )
+          {
+            return Status.CANCEL_STATUS;
+          }
+          catch( final Throwable t )
+          {
+            return StatusUtilities.statusFromThrowable( t );
+          }
+        }
+      };
+      calcJob.setUser( true );
+      calcJob.schedule();
 
       // Only one calculation may run at the same time
       // Still a problem if the user start several task
       // Setting a mutext does not help, because we already have a rule
-      final Job calcJob = new CalcTuhhJob( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhHandler.0", calculation.getName() ), calculation, gmlFile ); //$NON-NLS-1$
-      calcJob.setUser( true );
-      calcJob.schedule();
-
       break;
     }
 
@@ -180,11 +221,10 @@ public class CalcTuhhHandler extends AbstractHandler
 
           return resultStatus;
         }
-      };
 
+      };
       job.setUser( true );
       job.schedule();
-
       try
       {
         job.join();

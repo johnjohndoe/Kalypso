@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.pdb.db.utils;
 
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;

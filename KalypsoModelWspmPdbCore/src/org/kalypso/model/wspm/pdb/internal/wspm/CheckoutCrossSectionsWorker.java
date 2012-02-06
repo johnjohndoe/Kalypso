@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
@@ -62,7 +63,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.wspm.CheckoutDataMapping;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -93,14 +93,14 @@ public class CheckoutCrossSectionsWorker
   {
     final CrossSection[] crossSections = m_mapping.getCrossSections();
 
-    monitor.beginTask( Messages.getString( "CheckoutCrossSectionsWorker.0" ), crossSections.length ); //$NON-NLS-1$
+    monitor.beginTask( "Reading cross sections from database", crossSections.length );
 
     try
     {
       /* Convert the cross sections */
       for( final CrossSection crossSection : crossSections )
       {
-        monitor.subTask( String.format( Messages.getString( "CheckoutCrossSectionsWorker.1" ), crossSection.getStation() ) ); //$NON-NLS-1$
+        monitor.subTask( String.format( "Converting %s", crossSection.getStation() ) );
         insert( crossSection );
         ProgressUtilities.worked( monitor, 1 );
       }
@@ -142,6 +142,7 @@ public class CheckoutCrossSectionsWorker
 
     final CrossSectionConverter converter = new CrossSectionConverter( section, profile );
     converter.execute();
+    ProfileFeatureFactory.toFeature( profile, newProfile );
 
     convertDocuments( section, newProfile );
 

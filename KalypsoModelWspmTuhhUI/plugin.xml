@@ -270,60 +270,6 @@
 			</and>
 		</visibleWhen>
      </command>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
-           style="radio">
-           <visibleWhen
-              checkEnabled="false">
-           <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
-              </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
-           </and>
-        </visibleWhen>
-     </command>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
-           style="radio">
-        <visibleWhen
-              checkEnabled="false">
-           <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
-              </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
-           </and>
-        </visibleWhen>
-     </command>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
-           style="toggle">
-        <visibleWhen
-              checkEnabled="false">
-           <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
-              </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
-           </and>
-        </visibleWhen>
-     </command>
     </menuContribution>
     <menuContribution locationURI="menu:org.kalypso.ui.menus.mapMenu?before=widgetAdditions">
      <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
@@ -335,60 +281,6 @@
 				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent"/>
 			</and>
 		</visibleWhen>
-     </command>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
-           style="push">
-           <visibleWhen
-              checkEnabled="false">
-           <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
-              </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
-           </and>
-        </visibleWhen>
-     </command>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
-           style="radio">
-        <visibleWhen
-              checkEnabled="false">
-           <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
-              </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
-           </and>
-        </visibleWhen>
-     </command>
-     <command
-           commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
-           style="toggle">
-        <visibleWhen
-              checkEnabled="false">
-           <and>
-              <with
-                    variable="activeEditorId">
-                 <equals
-                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
-                 </equals>
-              </with>
-              <reference
-                    definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-              </reference>
-           </and>
-        </visibleWhen>
      </command>
     </menuContribution>
     <menuContribution locationURI="toolbar:org.kalypso.chart.ui.editor.toolbar?after=additions">
@@ -411,42 +303,6 @@
           <visibleWhen checkEnabled="true"/>
        </command>
     </menuContribution>
-  </extension>
-  <extension
-        point="de.openali.odysseus.chart.factory.LayerProvider">
-     <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
-           id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
-     </provider>
-     <provider
-           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
-           id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
-     </provider>
-  </extension>
-
-  <extension point="org.eclipse.ui.commands">
-    <command
-          categoryId="org.kalypso.ogc.gml.map.category"
-          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
-          name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.name"
-          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
-    </command>
-    <category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
-    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
-	       name="%command.name.7">
-	</command>
-    <command
-          description="%org.kalypso.model.wspm.calcTuhhAction.description"
-          id="org.kalypso.model.wspm.command.calcTuhh"
-          name="%org.kalypso.model.wspm.calcTuhhAction.name">
-    </command>
-  </extension>
-  
-  <extension point="org.eclipse.ui.commandImages">
-     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
-     <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
-     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
   </extension>
 
   <extension point="org.eclipse.ui.handlers">
@@ -515,6 +371,42 @@
          </with>
       </enabledWhen>
    </handler>
+  </extension>
+
+  <extension point="org.eclipse.ui.commands">
+    <command
+          categoryId="org.kalypso.ogc.gml.map.category"
+          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM"
+          name="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.name"
+          description="%org.kalypso.model.wspm.ui.view.legend.CreateProfileFromDEM.description">
+    </command>
+    <category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
+    <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
+	       id="org.kalypso.model.wspm.ui.action.LengthSectionExport"
+	       name="%command.name.7">
+	</command>
+    <command
+          description="%org.kalypso.model.wspm.calcTuhhAction.description"
+          id="org.kalypso.model.wspm.command.calcTuhh"
+          name="%org.kalypso.model.wspm.calcTuhhAction.name">
+    </command>
+  </extension>
+  <extension
+        point="de.openali.odysseus.chart.factory.LayerProvider">
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.LengthSectionLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">
+     </provider>
+     <provider
+           class="org.kalypso.model.wspm.tuhh.ui.chart.layers.VerticalLineLayerProvider"
+           id="org.kalypso.model.wspm.tuhh.ui.chart.VerticalLineLayerProvider">
+     </provider>
+  </extension>
+  
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" icon="icons/profil_from_dem.gif"/>
+     <image commandId="org.kalypso.model.wspm.command.calcTuhh" icon="icons/obj16/startCalulation.gif"/>
+     <image commandId="org.kalypso.model.wspm.ui.action.LengthSectionExport" icon="icons/obj16/WspWinPlotter.gif"/>
   </extension>
   
   <extension
@@ -589,6 +481,15 @@
       </view>
   </extension>
   
+    <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.model.wspm.tuhh.ui.light.WspmMapViewPart"
+            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
+         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
+      </factory>
+   </extension>   
+
  <extension
          point="org.eclipse.ui.menus">
         <menuContribution
@@ -705,23 +606,6 @@
               name="%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.name">
            <description>%org.kalypso.model.wspm.tuhh.ui.export.tripple.TrippleExportProfilesWizard.description</description>
         </wizard>
-        <!--
-        <wizard
-              category="exportWizards/profileExportWizards"
-              class="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufProfileExportWizard"
-              icon="icons/elcl16/export_csv.gif"
-              id="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard"
-              name="%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.name">
-           <description>%org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard.description</description>
-        </wizard>
-        -->
-        <wizard
-              category="exportWizards/shapeExportWizards"
-              class="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
-              id="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard"
-              name="%org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard.name">
-           <description>%org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard.description</description>
-        </wizard>
         <wizard
               category="exportWizards/profileExportWizards"
               class="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard"
@@ -826,13 +710,6 @@
                 </reference>
            </enablement>
         </wizardEnablement>
-        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.knauf.KnaufExportProfilesWizard">
-           <enablement>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-           </enablement>
-        </wizardEnablement>
         <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.wspwin.LngExportProfilesWizard">
            <enablement>
                 <reference
@@ -891,26 +768,6 @@
         </wizardEnablement>
         <wizardEnablement
               wizardID="org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportGmlWizard">
-           <enablement>
-              <with variable="selection">
-                 <iterate ifEmpty="false" operator="or">
-                    <or>
-                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody">
-                       </test>
-                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody">
-                       </test>
-                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach">
-                       </test>
-                       <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
-                       </test>
-                       <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState">
-                       </test>
-                    </or>
-                 </iterate>
-              </with>
-           </enablement>
-        </wizardEnablement>
-        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineExportWizard">
            <enablement>
               <with variable="selection">
                  <iterate ifEmpty="false" operator="or">

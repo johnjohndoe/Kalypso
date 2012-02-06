@@ -43,13 +43,12 @@ package org.kalypso.model.wspm.tuhh.core.profile.export;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.patternreplace.IPatternInput;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat;
-import org.kalypso.model.wspm.tuhh.core.profile.pattern.PointComponentPattern;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfilePatternInputReplacer;
 import org.kalypso.model.wspm.tuhh.core.profile.pattern.ProfileResultPattern;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResult;
@@ -222,11 +221,6 @@ public class PatternReplacementColumn implements IProfileExportColumn
       final String params = pair.getValue();
       final IValueWithFormat< ? > valueWithFormat = (IValueWithFormat< ? >) token;
       return valueWithFormat.getType( params );
-    }
-
-    if( token instanceof PointComponentPattern )
-    {
-      return ((PointComponentPattern) token).getType( pair.getValue() );
     }
 
     return null;

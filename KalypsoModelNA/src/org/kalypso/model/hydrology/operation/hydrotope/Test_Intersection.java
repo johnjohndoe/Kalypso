@@ -64,10 +64,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -157,8 +157,8 @@ public class Test_Intersection extends TestCase
           continue;
         final Object landuseClassLink = landuse.getLanduse();
         String value = ""; //$NON-NLS-1$
-        if( landuseClassLink instanceof IXLinkedFeature )
-          value = ((IXLinkedFeature) landuseClassLink).getFeatureId();
+        if( landuseClassLink instanceof XLinkedFeature_Impl )
+          value = ((XLinkedFeature_Impl) landuseClassLink).getFeatureId();
         else
           value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
         hydrotop.setLanduse( value );
@@ -186,8 +186,8 @@ public class Test_Intersection extends TestCase
 
         final Object soiltypeClassLink = soilType.getSoilType();
         String value = ""; //$NON-NLS-1$
-        if( soiltypeClassLink instanceof IXLinkedFeature )
-          value = ((IXLinkedFeature) soiltypeClassLink).getFeatureId();
+        if( soiltypeClassLink instanceof XLinkedFeature_Impl )
+          value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
         else
           value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
 

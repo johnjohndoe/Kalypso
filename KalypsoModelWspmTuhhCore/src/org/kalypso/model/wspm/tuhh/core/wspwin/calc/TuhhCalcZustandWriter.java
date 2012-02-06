@@ -69,10 +69,6 @@ public class TuhhCalcZustandWriter
 
   private final String m_roughnessType;
 
-  private boolean m_preferRoughnessClasses = false;
-
-  private boolean m_preferVegetationClasses = false;
-
   public TuhhCalcZustandWriter( final TuhhReach reach, final TuhhStationRange stationRange, final String roughnessType )
   {
     m_stationRange = stationRange;
@@ -122,21 +118,6 @@ public class TuhhCalcZustandWriter
 
     final File outPrfFile = new File( profDir, prfName );
 
-    final WspWinProfileWriter writer = new WspWinProfileWriter( profil, fileCount, m_roughnessType );
-    writer.setPreferRoughnessClasses( m_preferRoughnessClasses );
-    writer.setPreferVegetationClasses( m_preferVegetationClasses );
-
-    writer.write( outPrfFile );
-  }
-
-  public void setPreferRoughnessClasses( final boolean preferingRoughnessClasses )
-  {
-    m_preferRoughnessClasses = preferingRoughnessClasses;
-
-  }
-
-  public void setPreferVegetationClasses( final boolean preferingVegetationClasses )
-  {
-    m_preferVegetationClasses = preferingVegetationClasses;
+    new WspWinProfileWriter( profil, m_roughnessType, fileCount ).write( outPrfFile );
   }
 }

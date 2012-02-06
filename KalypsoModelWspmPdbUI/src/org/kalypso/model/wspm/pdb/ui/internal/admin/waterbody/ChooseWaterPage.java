@@ -63,7 +63,6 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.content.filter.WaterBodyFilterControl;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -87,7 +86,7 @@ public class ChooseWaterPage extends WizardPage
     m_connection = connection;
     m_waterValue = waterValue;
 
-    setTitle( Messages.getString( "ChooseWaterPage.0" ) ); //$NON-NLS-1$
+    setTitle( "Choose Water Body" );
   }
 
   @Override
@@ -145,7 +144,7 @@ public class ChooseWaterPage extends WizardPage
 
     final DataBinder dataBinder = new DataBinder( target, m_waterValue );
 
-    dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBody>( WaterBody.class, IStatus.ERROR, Messages.getString( "ChooseWaterPage.1" ) ) ); //$NON-NLS-1$
+    dataBinder.addTargetAfterGetValidator( new NotNullValidator<WaterBody>( WaterBody.class, IStatus.ERROR, "no water body is selected" ) );
     binding.bindValue( dataBinder );
 
     return m_waterBodyViewer.getControl();
@@ -155,7 +154,7 @@ public class ChooseWaterPage extends WizardPage
   {
     final Group panel = new Group( parent, SWT.NONE );
     panel.setLayout( new FillLayout() );
-    panel.setText( Messages.getString( "ChooseWaterPage.2" ) ); //$NON-NLS-1$
+    panel.setText( "Search" );
 
     m_waterBodyFilterControl = new WaterBodyFilterControl( null, panel, null );
 
@@ -164,7 +163,7 @@ public class ChooseWaterPage extends WizardPage
 
   private Control createActions( final Composite panel )
   {
-    final Action addAction = new AddWaterBodyAction( m_session, m_waterBodyViewer, Messages.getString( "ChooseWaterPage.3" ) ); //$NON-NLS-1$
+    final Action addAction = new AddWaterBodyAction( m_session, m_waterBodyViewer, "Create New Water Body..." );
     return ActionHyperlink.createHyperlink( null, panel, SWT.NONE, addAction );
   }
 }

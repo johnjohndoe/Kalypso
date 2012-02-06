@@ -62,7 +62,6 @@
 		<xs:sequence>
 			<xs:element ref="simBase:FlowRelationshipModel" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
-        <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
 
 	<!-- =================================================================

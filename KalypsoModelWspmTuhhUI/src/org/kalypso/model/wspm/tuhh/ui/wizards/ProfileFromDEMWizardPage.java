@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
@@ -112,8 +112,8 @@ public class ProfileFromDEMWizardPage extends WizardPage
       return;
 
     final Label lName = new Label( parent, SWT.NONE );
-    lName.setText( Messages.getString("ProfileFromDEMWizardPage.2") ); //$NON-NLS-1$
-    lName.setToolTipText( Messages.getString("ProfileFromDEMWizardPage.3") ); //$NON-NLS-1$
+    lName.setText( "Theme" );
+    lName.setToolTipText( "The new profile will be added to this container." );
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -143,7 +143,7 @@ public class ProfileFromDEMWizardPage extends WizardPage
 
     final DataBinder binder = new DataBinder( target, model );
 
-    final String warning = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" ); //$NON-NLS-1$
+    final String warning = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.wizard.CreateProfileFromDem.6" );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.WARNING, warning ) );
 
     m_binding.bindValue( binder );

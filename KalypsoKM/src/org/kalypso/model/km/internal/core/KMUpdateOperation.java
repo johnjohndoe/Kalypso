@@ -2,46 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.km.internal.core;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -164,7 +162,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     // We should change that in Kalypso-NA and get number of parameters from the user
     final int paramCount = 5;
 
-    final IFeatureType kmFT = GMLSchemaUtilities.getFeatureTypeQuiet( KMChannel.FEATURE_KM_CHANNEL );
+    final IFeatureType kmFT = m_workspace.getFeatureType( KMChannel.FEATURE_KM_CHANNEL );
 
     final IPropertyType kmKMStartPT = kmFT.getProperty( KMChannel.PROP_KMSTART );
     final IPropertyType kmKMEndPT = kmFT.getProperty( KMChannel.PROP_KMEND );
@@ -230,14 +228,14 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     m_commands.addCommand( command );
   }
 
-  private IStatus writeValue( final KMChannel channel, final IKMValue value, final int index )
+  private IStatus writeValue( final KMChannel kmChannel, final IKMValue value, final int index )
   {
     final IStatusCollector valueLog = new StatusCollector( KMPlugin.getID() );
 
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( KMParameter.FEATURE_KM_PARAMETER );
-    final IRelationType parameterType = (IRelationType) channel.getFeatureType().getProperty( KMChannel.MEMBER_PARAMETER );
+    final IFeatureType kmParamFT = m_workspace.getGMLSchema().getFeatureType( KMParameter.FEATURE_KM_PARAMETER );
+    final IRelationType kmParamRT = (IRelationType) kmChannel.getFeatureType().getProperty( KMChannel.MEMBER_PARAMETER );
 
-    final AddFeatureCommand addCommand = new AddFeatureCommand( m_workspace, featureType, channel, parameterType, -1, new HashMap<IPropertyType, Object>(), null, -1 );
+    final AddFeatureCommand addCommand = new AddFeatureCommand( m_workspace, kmParamFT, kmChannel, kmParamRT, -1, -1 );
     m_commands.addCommand( addCommand );
 
     final double k = roundValue( value.getK(), 4 );
@@ -260,12 +258,12 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     final double alpha = roundValue( value.getAlpha(), 3 );
     validate( alpha, Messages.getString( "KMUpdateOperation_11" ), valueLog ); //$NON-NLS-1$
 
-    addCommand.addProperty( KMParameter.PROP_QRK, qSum );
-    addCommand.addProperty( KMParameter.PROP_RKF, k );
-    addCommand.addProperty( KMParameter.PROP_RNF, nValid );
-    addCommand.addProperty( KMParameter.PROP_RKV, kForeland );
-    addCommand.addProperty( KMParameter.PROP_RNV, nForelandValid );
-    addCommand.addProperty( KMParameter.PROP_C, alpha );
+    addCommand.setProperty( KMParameter.PROP_QRK, qSum );
+    addCommand.setProperty( KMParameter.PROP_RKF, k );
+    addCommand.setProperty( KMParameter.PROP_RNF, nValid );
+    addCommand.setProperty( KMParameter.PROP_RKV, kForeland );
+    addCommand.setProperty( KMParameter.PROP_RNV, nForelandValid );
+    addCommand.setProperty( KMParameter.PROP_C, alpha );
 
     final String msg = String.format( "%d. %s", index + 1, value );//$NON-NLS-1$
     return valueLog.asMultiStatus( msg );

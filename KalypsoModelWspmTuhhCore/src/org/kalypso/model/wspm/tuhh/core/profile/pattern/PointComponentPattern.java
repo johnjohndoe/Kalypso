@@ -42,15 +42,10 @@ package org.kalypso.model.wspm.tuhh.core.profile.pattern;
 
 import java.util.Locale;
 
-import javax.xml.namespace.QName;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.patternreplace.AbstractPatternInput;
-import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
-import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -99,13 +94,5 @@ public class PointComponentPattern extends AbstractPatternInput<IProfilePatternD
       return String.format( m_locale, "%.4f", value ); //$NON-NLS-1$
 
     return ObjectUtils.toString( value );
-  }
-
-  public Class< ? > getType( final String param )
-  {
-    final IComponent cmp = ComponentUtilities.getFeatureComponent( param );
-    final QName typeName = cmp.getValueTypeName();
-
-    return XmlTypes.toJavaClass( typeName );
   }
 }

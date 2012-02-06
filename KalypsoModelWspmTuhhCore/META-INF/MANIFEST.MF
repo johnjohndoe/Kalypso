@@ -23,15 +23,13 @@ Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.building,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass,
  org.kalypso.model.wspm.tuhh.core.profile.export,
- org.kalypso.model.wspm.tuhh.core.profile.export.knauf,
  org.kalypso.model.wspm.tuhh.core.profile.importer.wprof,
  org.kalypso.model.wspm.tuhh.core.profile.pattern,
  org.kalypso.model.wspm.tuhh.core.profile.sinuositaet,
- org.kalypso.model.wspm.tuhh.core.profile.utils,
  org.kalypso.model.wspm.tuhh.core.results,
  org.kalypso.model.wspm.tuhh.core.results.processing,
  org.kalypso.model.wspm.tuhh.core.util,
  org.kalypso.model.wspm.tuhh.core.wprof,
  org.kalypso.model.wspm.tuhh.core.wspwin,
  org.kalypso.model.wspm.tuhh.core.wspwin.prf
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

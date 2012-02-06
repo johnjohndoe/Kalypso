@@ -59,10 +59,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -109,7 +109,6 @@ public class NodeResultHelper
   public static final String NODE_TYPE = "Node"; //$NON-NLS-1$
 
   private static Map<String, Map<String, Map<String, Object>>> m_styleSettings = new HashMap<String, Map<String, Map<String, Object>>>();
-
   private static Map<String, Map<String, Object>> m_stepStyleSettings = new HashMap<String, Map<String, Object>>();
 
   public static final String[] NodeStyleTypes = new String[] { VELO_TYPE, WATERLEVEL_TYPE, DEPTH_TYPE, WAVE_HSIG_TYPE, WAVE_PERIOD_TYPE, WAVE_DIRECTION_TYPE };
@@ -191,11 +190,11 @@ public class NodeResultHelper
     midsideNode.setWaterlevel( waterlevel );
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
-    // double waveDirectionDown = nodeDown.getWaveDirection();
-    // double waveDirectionUp = nodeUp.getWaveDirection();
-    // if( waveDirectionDown > 180 || waveDirectionDown < -180 ){
-    //
-    // }
+    //    double waveDirectionDown = nodeDown.getWaveDirection();
+    //    double waveDirectionUp = nodeUp.getWaveDirection();
+    //    if( waveDirectionDown > 180 || waveDirectionDown < -180 ){
+    //      
+    //    }
     midsideNode.setWaveDirection( 0 );
     midsideNode.setWaveHsig( 0 );
     midsideNode.setWavePeriod( 0 );
@@ -209,7 +208,7 @@ public class NodeResultHelper
     {
       sum = sum + values.get( i );
     }
-    return sum / values.size();
+    return (sum / values.size());
   }
 
   private static void assignMidsideNodeData( final INodeResult node, final INodeResult midsideNode )
@@ -311,7 +310,7 @@ public class NodeResultHelper
   public static boolean checkTriangleArc( final INodeResult node1, final INodeResult node2 )
   {
     /* get the split point (inundation point) */
-    if( node1.isWet() && !node2.isWet() || !node1.isWet() && node2.isWet() )
+    if( (node1.isWet() && !node2.isWet()) || (!node1.isWet() && node2.isWet()) )
       return true;
     else
       return false;
@@ -334,7 +333,7 @@ public class NodeResultHelper
       if( i > 0 )
         width = width + geoPoint.distance( linePoints[i - 1] );
 
-      final IProfileRecord point = boundaryProfil.createProfilPoint();
+      final IRecord point = boundaryProfil.createProfilPoint();
 
       /* calculate the width of the intersected profile */
       // sort intersection points by width
@@ -355,6 +354,7 @@ public class NodeResultHelper
     return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
+  @SuppressWarnings("unchecked")
   public static GM_Point[] getLinePoints( final IContinuityLine2D continuityLine2D )
   {
     final List<IFE1D2DNode> nodes = continuityLine2D.getNodes();
@@ -373,8 +373,7 @@ public class NodeResultHelper
     if( mapStep != null )
     {
       Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
-      if( mapStyle == null )
-      {
+      if( mapStyle == null ){
         mapStyle = createMapStyle();
         mapStep.put( styleType.toLowerCase(), mapStyle );
       }

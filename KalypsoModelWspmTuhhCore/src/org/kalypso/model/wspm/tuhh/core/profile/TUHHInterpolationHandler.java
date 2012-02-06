@@ -60,14 +60,21 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
 
   /* Gets value of first point during interpolation */
   private static final String[] CONSTANT_IDS = new String[] { IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP,
-      IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST };
+      IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS };
 
+  /**
+   * @see org.kalypso.observation.result.IInterpolationHandler#getInterpolationCoponent()
+   */
   @Override
   public String getInterpolationComponent( )
   {
     return IWspmConstants.POINT_PROPERTY_BREITE;
   }
 
+  /**
+   * @see org.kalypso.observation.result.IInterpolationHandler#doInterpolation(java.lang.String, java.lang.Double,
+   *      java.lang.Double)
+   */
   @Override
   public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final double distance )
   {

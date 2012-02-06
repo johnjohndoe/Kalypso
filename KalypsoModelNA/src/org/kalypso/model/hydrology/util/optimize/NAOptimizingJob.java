@@ -62,8 +62,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.model.hydrology.INaSimulationData;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.NAOptimize;
-import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.internal.NACalculationLogger;
 import org.kalypso.model.hydrology.internal.NAModelSimulation;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
@@ -93,7 +93,7 @@ import org.w3c.dom.Node;
 
 /**
  * encapsulates an NAModellCalculation job to optimize it
- *
+ * 
  * @author doemming
  */
 public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
@@ -140,7 +140,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
   /**
    * Run myself in the {@link OptimizerRunner}.
-   *
+   * 
    * @see org.kalypso.simulation.core.ISimulationRunnable#run(org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
@@ -149,9 +149,8 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
     monitor.setMessage( Messages.getString( "NAOptimizingJob_3" ) ); //$NON-NLS-1$
 
     final NAControl metaControl = m_data.getMetaControl();
-    final Date optimizationStartDate = getOptimizationStart( metaControl );
-
-    final Date measuredEndDate = metaControl.getSimulationEnd();
+    final Date optimizationStartDate = metaControl.getOptimizationStart();
+    final Date measuredEndDate = metaControl.getStartForecast();
 
     final NaOptimizeData optimizeData = m_data.getOptimizeData();
 
@@ -169,21 +168,6 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
 
     final OptimizerRunner runner = new OptimizerRunner( m_tmpDir, m_logger, this );
     return runner.run( monitor );
-  }
-
-  private Date getOptimizationStart( final NAControl metaControl )
-  {
-    // Moved from NAControl.
-
-    // FIXME: does not belong in the core rrm stuff. Instead, we should specify this in the optimization code
-
-    // Or even better: specify on a per function base.
-
-// final XMLGregorianCalendar optimizationStartProperty = getProperty( PROP_OPTIMIZATION_START,
-// XMLGregorianCalendar.class );
-// if( optimizationStartProperty != null )
-// return DateUtilities.toDate( optimizationStartProperty );
-    return metaControl.getSimulationStart();
   }
 
   @Override
@@ -361,11 +345,7 @@ public class NAOptimizingJob implements IOptimizingJob, INaSimulationRunnable
       final IObservation observation = linkMeasuredTS.loadObservation();
 
       final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_DATE );
-      final IAxis qAxis = ObservationUtilities.findAxisByTypeNoEx( observation.getAxes(), ITimeseriesConstants.TYPE_RUNOFF );
-
-      if( qAxis == null )
-        return result;
-
+      final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxes(), ITimeseriesConstants.TYPE_RUNOFF );
       final ITupleModel values = observation.getValues( null );
       for( int i = 0; i < values.size(); i++ )
       {

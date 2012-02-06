@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
@@ -46,7 +46,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
@@ -62,6 +62,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -70,7 +71,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -81,6 +82,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -91,10 +93,9 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  *         Wraps a {@link CreateGeometeryWidget2} for 0-argument constructor instantiation
  */
-public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
+public class CreatePolygonWidgetWrapper extends AbstractWidget
 {
   private final ToolTipRenderer m_warningRenderer = ToolTipRenderer.createWarningTooltip();
-
   private final ToolTipRenderer m_toolTipRenderer = ToolTipRenderer.createWarningTooltip();
 
   private PolygonGeometryBuilder m_builder = null;
@@ -140,7 +141,7 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = featureTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
+    final Feature parentFeature = featureList.getParentFeature();
     if( parentFeature == null )
       return;
 
@@ -182,12 +183,12 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
     }
 
     final Rectangle screenBounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( Messages.getString( "CreatePolygonWidgetWrapper.3" ) ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "CreatePolygonWidgetWrapper.3" ) ); //$NON-NLS-1$ 
     m_toolTipRenderer.paintToolTip( new Point( 5, screenBounds.height - 5 ), g, screenBounds );
 
     final GM_Point pos = MapUtilities.transform( getMapPanel(), m_currentPoint );
     final String warning = validateGeometry( pos );
-
+    
     if( warning == null )
       g.setColor( Color.GREEN );
     else
@@ -212,13 +213,13 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
       try
       {
         final int pointCount = m_builder.getPointCount();
-        if( pointCount < 3 && pointCount > 1 )
-          return Messages.getString( "CreatePolygonWidgetWrapper.0" ); //$NON-NLS-1$
+        if( pointCount < 3 && pointCount > 1)
+          return Messages.getString("CreatePolygonWidgetWrapper.0"); //$NON-NLS-1$
 
         final GM_Object geom = m_builder.finish();
         final Polygon export = (Polygon) JTSAdapter.export( geom );
         if( !export.isValid() )
-          return Messages.getString( "CreatePolygonWidgetWrapper.1" ); //$NON-NLS-1$
+          return Messages.getString("CreatePolygonWidgetWrapper.1"); //$NON-NLS-1$
 
         return null;
       }
@@ -306,13 +307,13 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
       final ITerrainModel model = dataProvider.getModel( ITerrainModel.class.getName(), ITerrainModel.class );
 
       final IRoughnessClsCollection clsCollection = dataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
-      final Object[] classes = clsCollection.getRoughnessClasses().toArray();
+      final Object[] classes = clsCollection.toArray();
 
       /* let user choose roughness class */
       final Shell shell = SWT_AWT_Utilities.findActiveShell();
       final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, new GMLLabelProvider() );
       dialog.setElements( classes );
-      dialog.setMessage( Messages.getString( "CreatePolygonWidgetWrapper.2" ) ); //$NON-NLS-1$
+      dialog.setMessage( Messages.getString("CreatePolygonWidgetWrapper.2") ); //$NON-NLS-1$
       dialog.setMultipleSelection( false );
       if( SWT_AWT_Utilities.openSwtWindow( dialog ) != Window.OK )
         return;
@@ -322,13 +323,17 @@ public class CreatePolygonWidgetWrapper extends DeprecatedMouseWidget
       /* Add new polygon */
       final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection( m_roughnessLayer );
       final IRoughnessPolygon newZone = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
+      final Feature zoneFeature = newZone.getFeature();
 
       newZone.setSurface( (GM_Surface< ? >) poly );
-      newZone.setRoughnessClass( selectedClass );
+
+      final XLinkedFeature_Impl xlink = RoughnessPolygon.createClassLink( zoneFeature, selectedClass.getFeature() );
+      newZone.setRoughnessClassMember( xlink );
 
       /* Inform workspace */
-      final GMLWorkspace workspace = newZone.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_roughnessLayer, newZone, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = zoneFeature.getWorkspace();
+      final Feature parentFeature = m_roughnessLayer.getFeature();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, zoneFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
       /* Make model dirty */
       m_workspace.postCommand( new EmptyCommand( StringUtils.EMPTY, false ) );

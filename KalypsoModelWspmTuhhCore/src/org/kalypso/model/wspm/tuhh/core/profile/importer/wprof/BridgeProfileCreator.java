@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
@@ -50,14 +50,12 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -134,9 +132,7 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     final double widthPointZ = widthPoint == null ? Double.MAX_VALUE : widthPoint.getValue();
     final IComponent heightComponent = profile.getPointPropertyFor( POINT_PROPERTY_HOEHE );
     final int heightIndex = profile.indexOfProperty( heightComponent );
-
-    final IProfileRecord lowestSoilPoint = ProfileVisitors.findLowestPoint( profile );
-
+    final IRecord lowestSoilPoint = ProfilUtil.getMinPoint( profile, heightComponent );
     final double lowestSoilZ = lowestSoilPoint == null ? Double.MAX_VALUE : (Double) lowestSoilPoint.getValue( heightIndex );
     // FIXME: 2cm runter ist zu fix, besser noch mal gegen das uw-Profil prüfen
     final double uwZ = Math.min( lowestSoilZ - 0.02, widthPointZ );
@@ -185,16 +181,16 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     cleanupHeights( profile );
 
-    final IProfileRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, ukComponent );
+    final IRecord[] trennflaechenPoints = findFirstLast( profile, heightComponent, ukComponent );
     createMarkers( profile, trennflaechenPoints, MARKER_TYP_TRENNFLAECHE );
   }
 
-  private IProfileRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
+  private IRecord[] findFirstLast( final IProfil profile, final int heightComponent, final int bridgeComponent )
   {
-    final Collection<IProfileRecord> firstLast = new ArrayList<IProfileRecord>( 2 );
+    final Collection<IRecord> firstLast = new ArrayList<IRecord>( 2 );
 
-    final List<IProfileRecord> points = Arrays.asList( profile.getPoints() );
-    final IProfileRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
+    final List<IRecord> points = Arrays.asList( profile.getPoints() );
+    final IRecord firstPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
     if( firstPoint != null )
     {
       firstLast.add( firstPoint );
@@ -202,22 +198,22 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
     Collections.reverse( points );
 
-    final IProfileRecord lastPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
+    final IRecord lastPoint = findFirstBridgePoint( points, heightComponent, bridgeComponent );
     if( lastPoint != null )
     {
       firstLast.add( lastPoint );
     }
 
-    return firstLast.toArray( new IProfileRecord[firstLast.size()] );
+    return firstLast.toArray( new IRecord[firstLast.size()] );
   }
 
-  private IProfileRecord findFirstBridgePoint( final Collection<IProfileRecord> points, final int heightComponent, final int bridgeComponent )
+  private IRecord findFirstBridgePoint( final Collection<IRecord> points, final int heightComponent, final int bridgeComponent )
   {
     if( points.size() == 0 )
       return null;
 
-    IProfileRecord lastBridgePoint = points.iterator().next();
-    for( final IProfileRecord point : points )
+    IRecord lastBridgePoint = points.iterator().next();
+    for( final IRecord point : points )
     {
       final Object bridgeValue = point.getValue( bridgeComponent );
       final Object heightValue = point.getValue( heightComponent );
@@ -325,8 +321,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     if( m_ukPoints != null )
       return;
 
-    final IWProfPoint[] ukPoints = fetchUkPoints();
-    final IWProfPoint[] okPoints = fetchOkPoints();
+    final IWProfPoint[] ukPoints = getPoints( m_ukPointsID );
+    final IWProfPoint[] okPoints = getPoints( m_okPointsID );
 
     /* If only one of them is set, we assume it is uk */
     if( ukPoints == null )
@@ -355,16 +351,6 @@ class BridgeProfileCreator extends GelaendeProfileCreator
       m_ukPoints = ukPoints;
       m_okPoints = okPoints;
     }
-  }
-
-  protected IWProfPoint[] fetchOkPoints( )
-  {
-    return getPoints( m_okPointsID );
-  }
-
-  protected IWProfPoint[] fetchUkPoints( )
-  {
-    return getPoints( m_ukPointsID );
   }
 
   private double findMax( final IWProfPoint[] points )
@@ -513,6 +499,8 @@ class BridgeProfileCreator extends GelaendeProfileCreator
 
   private IRecord findOrInsertPointAt( final IProfil profile, final double distance, final int buildPropertyIndex )
   {
+    final int indexOfDistance = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
     final IRecord existingPoint = ProfilUtil.findPoint( profile, distance, 0.00001 );
     if( existingPoint != null )
     {
@@ -522,7 +510,11 @@ class BridgeProfileCreator extends GelaendeProfileCreator
     }
 
     // If no point with this width exist or if it already has the buildingProperty, create a new one:
-    final IProfileRecord newPoint = Profiles.addPoint( profile, distance );
+    final IRecord newPoint = profile.createProfilPoint();
+    newPoint.setValue( indexOfDistance, new Double( distance ) );
+
+    final IRecord pointBefore = ProfilUtil.getPointBefore( profile, distance );
+    ProfilUtil.insertPoint( profile, newPoint, pointBefore );
     return newPoint;
   }
 

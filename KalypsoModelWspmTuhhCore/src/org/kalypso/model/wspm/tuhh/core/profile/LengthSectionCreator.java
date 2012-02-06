@@ -43,13 +43,12 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
@@ -115,7 +114,7 @@ public class LengthSectionCreator
     station.setValue( 0, valueToBigDecimal( profil.getStation() ), true );// Station
     // Kennung
     // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
-    final Double minHeightValue = ProfileVisitors.findLowestPoint( profil ).getBreite();
+    final Double minHeightValue = ProfilUtil.getMinValueFor( profil, compHeight );
     final BigDecimal minHeightDecimal = minHeightValue == null ? null : ProfilUtil.stationToBigDecimal( minHeightValue );
     station.setValue( 2, minHeightDecimal, true ); // Ground
     final IProfilPointMarker[] mbv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );

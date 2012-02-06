@@ -6,7 +6,8 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -14,7 +15,6 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Convert from GML to RMAKalypso format
- *
+ * 
  * @author kurzbach
  */
 public class PreRMAKalypso implements ISimulation
@@ -111,8 +111,8 @@ public class PreRMAKalypso implements ISimulation
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
-    final OutputStream logOS = null;
-    final OutputStream errorOS = null;
+    OutputStream logOS = null;
+    OutputStream errorOS = null;
     FileSystemManagerWrapper manager = null;
     try
     {
@@ -129,7 +129,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
       }
       if( discretisationModel == null )
@@ -145,14 +145,21 @@ public class PreRMAKalypso implements ISimulation
       if( inputProvider.hasID( INPUT_CALCULATION_UNIT_ID ) )
       {
         final String calcUnitID = (String) inputProvider.getInputForID( INPUT_CALCULATION_UNIT_ID );
-        for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection.getControlModels() )
+        for( final IControlModel1D2D existingControlModel : controlModel1d2dCollection )
         {
-          final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
-          if( existingCalculationUnit.getId().equals( calcUnitID ) )
+          try
           {
-            controlModel = existingControlModel;
-            calculationUnit = existingControlModel.getCalculationUnit();
-            break;
+            final ICalculationUnit existingCalculationUnit = existingControlModel.getCalculationUnit();
+            if( existingCalculationUnit.getGmlID().equals( calcUnitID ) )
+            {
+              controlModel = existingControlModel;
+              calculationUnit = existingControlModel.getCalculationUnit();
+              break;
+            }
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
           }
         }
       }
@@ -163,7 +170,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
       }
       if( flowRelationshipModel == null )
@@ -179,7 +186,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         // TODO: handle exception
       }
@@ -196,7 +203,7 @@ public class PreRMAKalypso implements ISimulation
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
         windModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
       }
       if( windModel == null )
@@ -297,7 +304,7 @@ public class PreRMAKalypso implements ISimulation
       /* Wind File */
       m_log.formatLog( IStatus.INFO, ISimulation1D2DConstants.CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.16" ) ); //$NON-NLS-1$
       progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.17" ) ); //$NON-NLS-1$
-      final GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
+      GM_Envelope lGmEnvelope = CalcUnitOps.getBoundingBox( calculationUnit );
       final IWindDataWriter lRMA10WindWriter = new RMA10WindDataWriter( workingDir, lGmEnvelope, controlConverter.getListDateSteps(), windRelationshipModel.getWindDataModelSystems() );
       lRMA10WindWriter.setWindDataModel( windRelationshipModel );
       lRMA10WindWriter.write( controlModel.isConstantWindSWAN() );

@@ -63,7 +63,6 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.version.IUpdateScriptPage;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * Page asks for the global extent of the pdb data. Needed for oracle spatial columns definitions.<br/>
@@ -81,8 +80,8 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
   {
     super( "extentPage" ); //$NON-NLS-1$
 
-    setTitle( Messages.getString( "UpdatePageExtent.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "UpdatePageExtent.1" ) ); //$NON-NLS-1$
+    setTitle( "Database Geo Extent" );
+    setDescription( "Please enter the extent that will cover all geographic data in your database." );
   }
 
   @Override
@@ -109,20 +108,20 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
     final Group groupMin = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( groupMin );
     groupMin.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    groupMin.setText( Messages.getString( "UpdatePageExtent.2" ) ); //$NON-NLS-1$
+    groupMin.setText( "Lower Left (Minimum)" );
 
-    createPropertyControl( groupMin, "X", PdbInfo.PROPERTY_SRS_MIN_X ); //$NON-NLS-1$
-    createPropertyControl( groupMin, "Y", PdbInfo.PROPERTY_SRS_MIN_Y ); //$NON-NLS-1$
-    createPropertyControl( groupMin, "Z", PdbInfo.PROPERTY_SRS_MIN_Z ); //$NON-NLS-1$
+    createPropertyControl( groupMin, "X", PdbInfo.PROPERTY_SRS_MIN_X );
+    createPropertyControl( groupMin, "Y", PdbInfo.PROPERTY_SRS_MIN_Y );
+    createPropertyControl( groupMin, "Z", PdbInfo.PROPERTY_SRS_MIN_Z );
 
     final Group groupMax = new Group( parent, SWT.NONE );
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( groupMax );
     groupMax.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    groupMax.setText( Messages.getString( "UpdatePageExtent.6" ) ); //$NON-NLS-1$
+    groupMax.setText( "Upper Right (Maximum)" );
 
-    createPropertyControl( groupMax, "X", PdbInfo.PROPERTY_SRS_MAX_X ); //$NON-NLS-1$
-    createPropertyControl( groupMax, "Y", PdbInfo.PROPERTY_SRS_MAX_Y ); //$NON-NLS-1$
-    createPropertyControl( groupMax, "Z", PdbInfo.PROPERTY_SRS_MAX_Z ); //$NON-NLS-1$
+    createPropertyControl( groupMax, "X", PdbInfo.PROPERTY_SRS_MAX_X );
+    createPropertyControl( groupMax, "Y", PdbInfo.PROPERTY_SRS_MAX_Y );
+    createPropertyControl( groupMax, "Z", PdbInfo.PROPERTY_SRS_MAX_Z );
   }
 
   private void createPropertyControl( final Composite parent, final String label, final String property )
@@ -136,7 +135,7 @@ public class UpdatePageExtent extends WizardPage implements IUpdateScriptPage
     final IObservableValue model = new PropertiesObservaleValue( m_data.getVariables(), property );
 
     final DataBinder binder = new DataBinder( target, model );
-    final String message = String.format( Messages.getString( "UpdatePageExtent.10" ), label ); //$NON-NLS-1$
+    final String message = String.format( "Field '%s' must not be empty", label );
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, message ) );
     binder.addTargetAfterGetValidator( new StringAsDoubleValidator( IStatus.ERROR, label ) );
 

@@ -156,7 +156,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
     }
 
     final FeatureList featureList = m_mapActiveTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
+    final Feature parentFeature = featureList.getParentFeature();
     m_discretisationModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();

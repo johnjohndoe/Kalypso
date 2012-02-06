@@ -73,7 +73,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -96,7 +96,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  */
-public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
+public class EditFEConceptGeometryWidget extends AbstractWidget
 {
   /** Snapping radius in screen-pixels. */
   public static final int SNAPPING_RADIUS = 20;
@@ -115,6 +115,7 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
 
   private PointSnapper m_pointSnapper;
 
+  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
 
   private boolean m_snappingActive;
@@ -156,7 +157,7 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
       return;
 
     final FeatureList featureList = m_flowTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
+    final Feature parentFeature = featureList.getParentFeature();
     m_flowRelModel = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
     m_flowWorkspace = m_flowTheme.getWorkspace();
     reinit();
@@ -179,6 +180,7 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -233,6 +235,7 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
     super.leftPressed( p );
   }
 
+  @SuppressWarnings("unchecked")
   private void collectFlowrelationsInformation( )
   {
     final IFE1D2DNode startNode = m_editor.getStartNode();
@@ -246,13 +249,13 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
         final IFlowRelationship lBuilding = FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, m_flowRelModel );
         if( lBuilding != null )
         {
-          m_mapElementWithFlowRelationship.put( element.getId(), lBuilding );
+          m_mapElementWithFlowRelationship.put( element.getGmlID(), lBuilding );
         }
       }
     }
   }
 
-  @SuppressWarnings({})
+  @SuppressWarnings( { "unchecked" })
   private void setNewPositionsOfFlowrelations( )
   {
 
@@ -260,12 +263,12 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
     {
       if( element instanceof IPolyElement )
       {
-        final IFlowRelationship lBuilding = m_mapElementWithFlowRelationship.get( element.getId() );
+        final IFlowRelationship lBuilding = m_mapElementWithFlowRelationship.get( element.getGmlID() );
         if( lBuilding != null )
         {
           final GM_Position lFlowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( element );
           final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-          final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding, lBuilding.getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
+          final ChangeFeatureCommand lChangeFeatureCommand = new ChangeFeatureCommand( lBuilding.getFeature(), lBuilding.getFeature().getFeatureType().getProperty( IFlowRelationship.QNAME_PROP_POSITION ), GeometryFactory.createGM_Point( lFlowPositionFromElement, crs ) );
           try
           {
             m_flowWorkspace.postCommand( lChangeFeatureCommand );
@@ -359,6 +362,7 @@ public class EditFEConceptGeometryWidget extends DeprecatedMouseWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {

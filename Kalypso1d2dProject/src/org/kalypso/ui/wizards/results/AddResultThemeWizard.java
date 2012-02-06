@@ -51,7 +51,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommandTarget;
@@ -62,19 +61,20 @@ import org.kalypso.kalypso1d2d.pjt.map.MapUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * Wizard to add result themes to the map.
- *
+ * 
  * @author Thomas Jung
  */
-public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
+public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
@@ -101,7 +101,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.2"), null, resultFilter, resultComparator, themeConstructionFactory, null );//$NON-NLS-1$
+    SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.2"), null, resultFilter, resultComparator, themeConstructionFactory, null );//$NON-NLS-1$ 
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -110,11 +110,19 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     // Page: Neues Thema konfigurieren???
   }
 
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setCommandTarget(org.kalypso.commons.command.ICommandTarget)
+   */
+  @Override
   public void setCommandTarget( final ICommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
   }
 
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
+   */
+  @Override
   public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
@@ -131,7 +139,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       m_scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
@@ -146,6 +154,9 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
     }
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {

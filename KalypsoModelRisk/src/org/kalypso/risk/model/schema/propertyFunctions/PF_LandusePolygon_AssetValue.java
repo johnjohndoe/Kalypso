@@ -49,8 +49,8 @@ import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dejan Antanaskovic
@@ -75,7 +75,7 @@ public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    final IXLinkedFeature landuseClassLink = (IXLinkedFeature) feature.getProperty( XLINKED_LANDUSE_CLS );
+    final XLinkedFeature_Impl landuseClassLink = (XLinkedFeature_Impl) feature.getProperty( XLINKED_LANDUSE_CLS );
     if( landuseClassLink == null )
       return Double.NaN;
 

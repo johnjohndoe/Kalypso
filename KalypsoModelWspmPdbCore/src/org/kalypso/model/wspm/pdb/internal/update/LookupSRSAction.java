@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.update;
 
@@ -50,10 +50,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.version.UpdateScriptPageData;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -66,7 +65,7 @@ public class LookupSRSAction extends Action
   {
     m_data = data;
 
-    setText( Messages.getString( "LookupSRSAction.0" ) ); //$NON-NLS-1$
+    setText( "Lookup coordinate system extent at 'spatialreference.org'..." );
   }
 
   @Override
@@ -79,14 +78,14 @@ public class LookupSRSAction extends Action
       final IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
       final IWebBrowser externalBrowser = support.getExternalBrowser();
 
-      final String location = String.format( "http://spatialreference.org/ref/epsg/%s/", srid ); //$NON-NLS-1$
+      final String location = String.format( "http://spatialreference.org/ref/epsg/%s/", srid );
       final URL url = new URL( location );
       externalBrowser.openURL( url );
     }
     catch( final PartInitException e )
     {
       final Shell shell = event.widget.getDisplay().getActiveShell();
-      new StatusDialog( shell, e.getStatus(), getText() );
+      new StatusDialog2( shell, e.getStatus(), getText() );
       e.printStackTrace();
     }
     catch( final MalformedURLException e )

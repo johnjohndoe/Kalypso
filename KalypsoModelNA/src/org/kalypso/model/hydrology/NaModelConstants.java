@@ -52,24 +52,11 @@ public interface NaModelConstants
   String EXE_PATTERN = "Kalypso-NA_(.*).exe"; //$NON-NLS-1$
 
   /** namespaces */
-
-  /**
-   * @deprecated Do not use, only for conversion of existing projects.
-   */
-  @Deprecated
-  String NS_NAMETA_11_6 = "org.kalypso.na.control"; //$NON-NLS-1$
-
-  String NS_NAMETA = "org.kalypso.na.control_v2"; //$NON-NLS-1$
+  String NS_NAMETA = "org.kalypso.na.control"; //$NON-NLS-1$
 
   String NS_NAMODELL = "http://www.tuhh.de/kalypsoNA"; //$NON-NLS-1$
 
-  /**
-   * @deprecated Do not use, only for conversion of existing projects.
-   */
-  @Deprecated
-  String NS_NACONTROL_11_6 = "org.kalypso.namodell.control"; //$NON-NLS-1$
-
-  String NS_NACONTROL = "org.kalypso.namodell.control_v2"; //$NON-NLS-1$
+  String NS_NACONTROL = "org.kalypso.namodell.control"; //$NON-NLS-1$
 
   String NS_NAHYDROTOP = "http://www.tuhh.de/hydrotop"; //$NON-NLS-1$
 
@@ -94,10 +81,6 @@ public interface NaModelConstants
   String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds"; //$NON-NLS-1$
 
   String NS_NAOPTIMIZE = "http://kalypso.sorgeforge.net/schemata/hydrology/optimize"; //$NON-NLS-1$
-
-  String NS_TIMESERIES_MANAGEMENT = "http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement"; //$NON-NLS-1$
-
-  String NS_CATCHMENT_MODEL = "http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel"; //$NON-NLS-1$
 
   /** server client bean constants */
   // input
@@ -216,7 +199,7 @@ public interface NaModelConstants
 
   QName PARA_LANDUSE = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
-  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$
+  QName PARA_SEALING = new QName( NS_NAPARAMETER, "Sealing" ); //$NON-NLS-1$ 
 
   QName PARA_SOIL_LAYER_PARAMETER_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
 

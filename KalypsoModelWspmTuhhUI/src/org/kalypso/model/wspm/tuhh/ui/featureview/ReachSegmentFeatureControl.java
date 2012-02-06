@@ -216,7 +216,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
       }
       else
       {
-        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.MEMBER_PROFILE );
+        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.QNAME_MEMBER_PROFILE );
         m_viewer.setInput( profiles );
       }
     }

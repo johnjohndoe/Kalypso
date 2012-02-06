@@ -54,7 +54,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * @author Gernot Belger
@@ -98,11 +98,11 @@ public class WspWinExportGmlData extends WspWinExportData
       m_waterBodies.add( reach.getWaterBody() );
       reaches.add( reach );
     }
-    else if( element instanceof IFeatureRelation )
+    else if( element instanceof IFeatureProperty )
     {
-      final IFeatureRelation property = (IFeatureRelation) element;
+      final IFeatureProperty property = (IFeatureProperty) element;
       final IRelationType relation = property.getPropertyType();
-      final Feature parentFeature = property.getOwner();
+      final Feature parentFeature = property.getParentFeature();
       if( parentFeature != null && relation != null && relation.isList() )
       {
         final List< ? > list = (List< ? >) parentFeature.getProperty( relation );

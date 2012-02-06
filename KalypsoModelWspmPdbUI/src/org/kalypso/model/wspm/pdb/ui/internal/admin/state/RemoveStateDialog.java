@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ByStateContentProvider;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbComparator;
 import org.kalypso.model.wspm.pdb.ui.internal.content.PdbLabelProvider;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -70,7 +69,7 @@ public class RemoveStateDialog extends MessageDialog
 
   private static String formatMessage( final State state )
   {
-    return String.format( Messages.getString( "RemoveStateDialog.0" ), state.getName() ); //$NON-NLS-1$
+    return String.format( "Remove state '%s'?  All referenced cross sections (see below) will be removed as well.\nThis operation cannot be undone.", state.getName() );
   }
 
   @Override

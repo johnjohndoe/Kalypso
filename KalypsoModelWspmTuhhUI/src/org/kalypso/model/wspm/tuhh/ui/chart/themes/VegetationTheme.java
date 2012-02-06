@@ -40,22 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.vegetation.VegetationPanel;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IRecord;
@@ -76,24 +74,30 @@ public class VegetationTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2" ); //$NON-NLS-1$
 
-  private ILegendEntry[] m_legendEntries;
-
   public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
     super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, TITLE, chartLayers, cm );
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isSelectionChanged() || hint.isPointValuesChanged() )
+    if( hint.isActivePointChanged() || hint.isPointValuesChanged() )
     {
       fireLayerContentChanged();
     }
   }
 
-  private ILegendEntry[] createLegendEntries( )
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#createLegendEntries()
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
   {
 
     {
@@ -115,10 +119,10 @@ public class VegetationTheme extends AbstractProfilTheme
   {
     if( segmenthasVegetation( pp1 ) )
     {
-      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, pp1 );
-      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, pp2 );
-      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, pp1 );
-      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, pp2 );
+      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, pp1 );
+      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, pp2 );
+      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, pp1 );
+      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, pp2 );
 
       final Point p1 = new Point( getDomainAxis().numericToScreen( x1 ), getTargetAxis().numericToScreen( y1 ) - 3 );
       final Point p2 = new Point( getDomainAxis().numericToScreen( x2 ), getTargetAxis().numericToScreen( y2 ) - 3 );
@@ -159,20 +163,6 @@ public class VegetationTheme extends AbstractProfilTheme
   }
 
   /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-
-    if( ArrayUtils.isEmpty( m_legendEntries ) )
-    {
-      m_legendEntries = createLegendEntries();
-    }
-    return m_legendEntries;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
    */
   @Override
@@ -187,9 +177,9 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public String getTooltipInfo( final IRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, point );
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
     return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } ); //$NON-NLS-1$
   }
 
@@ -201,9 +191,9 @@ public class VegetationTheme extends AbstractProfilTheme
   {
     final IProfil profil = getProfil();
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1" ), getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ) ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
@@ -211,7 +201,7 @@ public class VegetationTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // don't calculate axis size and ticks
     return null;
@@ -269,17 +259,10 @@ public class VegetationTheme extends AbstractProfilTheme
 
   final boolean segmenthasVegetation( final IRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, point );
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
     return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
 
   }
-
-  @Override
-  public IProfilView createLayerPanel( )
-  {
-    return new VegetationPanel( getProfil() );
-  }
-
 }

@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -71,11 +72,8 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDefYZTable;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekYZPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportData.GUESS_STATION_STRATEGY;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationContext;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPatternReplacer;
@@ -140,36 +138,37 @@ public class Sobek2Wspm
     if( profileDef == null )
     {
       final String id = profileDat.getId();
-      m_stati.add( IStatus.ERROR, Messages.getString( "Sobek2Wspm.0" ), null, id ); //$NON-NLS-1$
+      m_stati.add( IStatus.ERROR, "Missing definition for cross section with id '%s'", null, id );
       return;
     }
 
     final WspmWaterBody water = m_data.getWater();
     final String srs = m_data.getSrs();
 
-    final IProfileFeature profileFeature = water.createNewProfile();
-    profileFeature.setName( profileDef.getId() );
-    profileFeature.setDescription( profileDef.getNm() );
-    profileFeature.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    profileFeature.setSrsName( srs );
+    final IProfileFeature newProfile = water.createNewProfile();
+    newProfile.setName( profileDef.getId() );
+    newProfile.setDescription( profileDef.getNm() );
+    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    newProfile.setSrsName( srs );
 
     final ISobekProfileDefData profileData = profileDef.getData();
 
     try
     {
       final BigDecimal station = guessStation( profileDef );
-      profileFeature.setBigStation( station );
+      newProfile.setBigStation( station );
 
-      final IProfil profil = profileFeature.getProfil();
+      final IProfil profil = newProfile.getProfil();
       convertData( profil, profileData );
       convertFriction( profil, frictionDat );
       convertNetworkPoint( profil, networkPoint );
 
-      m_newFeatures.add( profileFeature );
+      ProfileFeatureFactory.toFeature( profil, newProfile );
+      m_newFeatures.add( newProfile );
     }
     catch( final CoreException e )
     {
-      water.getProfiles().remove( profileFeature );
+      water.getProfiles().remove( newProfile );
       m_stati.add( e.getStatus() );
       return;
     }
@@ -203,7 +202,7 @@ public class Sobek2Wspm
 
     final BigDecimal station = GuessStationPatternReplacer.findStation( searchString, GuessStationContext.DEFAULT_SEARCH_CONTEXTS, m_stationPatterns );
     if( station == null )
-      m_stati.add( IStatus.WARNING, Messages.getString( "Sobek2Wspm.1" ), null, searchString ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, "Failed to find station in '%s'", null, searchString );
     return station;
   }
 
@@ -217,7 +216,7 @@ public class Sobek2Wspm
         break;
 
       default:
-        final String message = String.format( Messages.getString( "Sobek2Wspm.2" ), profil.getName(), type ); //$NON-NLS-1$
+        final String message = String.format( "Cross section '%s' has unknown type: %d", profil.getName(), type );
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
         throw new CoreException( status );
     }
@@ -244,7 +243,7 @@ public class Sobek2Wspm
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( Messages.getString( "Sobek2Wspm.3" ), Messages.getString( "Sobek2Wspm.4" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return m_stati.asMultiStatusOrOK( "Problems during SOBEK conversion", "Conversion sucessfully terminated" );
   }
 
   public Feature[] getNewFeatures( )
@@ -256,7 +255,7 @@ public class Sobek2Wspm
   {
     if( frictionDat == null )
     {
-      m_stati.add( IStatus.WARNING, Messages.getString( "Sobek2Wspm.5" ), null, profil.getName() ); //$NON-NLS-1$
+      m_stati.add( IStatus.WARNING, "Missing friction for cross section '%s'", null, profil.getName() );
       return;
     }
 
@@ -277,17 +276,17 @@ public class Sobek2Wspm
       final BigDecimal start = section.getStart();
       final BigDecimal end = section.getEnd();
 
-      final IProfileRecord startRecord = Profiles.addPoint( profil, start.doubleValue() );
-      final IProfileRecord endRecord = Profiles.addPoint( profil, end.doubleValue() );
+      final IRecord startRecord = ProfilUtil.findOrInsertPointAt( profil, start );
+      final IRecord endRecord = ProfilUtil.findOrInsertPointAt( profil, end );
 
-      final int startIndex = startRecord.getIndex();
-      final int endIndex = endRecord.getIndex();
+      final int startIndex = profil.indexOfPoint( startRecord );
+      final int endIndex = profil.indexOfPoint( endRecord );
 
       // We also set value of endIndex (against definition of friction, which is exclusive), in order to avoid holes.
       // Probably, the next section will overwrite the end with the next start.
       for( int i = startIndex; i <= endIndex; i++ )
       {
-        final IProfileRecord record = profil.getPoint( i );
+        final IRecord record = profil.getPoint( i );
         final int index = ProfilUtil.getOrCreateComponent( profil, componentID );
         record.setValue( index, value.doubleValue() );
       }
@@ -300,7 +299,7 @@ public class Sobek2Wspm
     }
   }
 
-  private void setMarker( final IProfil profil, final IProfileRecord record, final String markerType )
+  private void setMarker( final IProfil profil, final IRecord record, final String markerType )
   {
     if( markerType == null )
       return;

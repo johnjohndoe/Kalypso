@@ -1,0 +1,13 @@
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('-1', 'unknown', 'unknown','GAF',0,0,0);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('1', 'Röhricht, licht', 'Röhricht, licht', 'GAF',0.003, 0.03, 0.03);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('2', 'Röhricht, dicht', 'Röhricht, dicht', 'GAF',0.005, 0.02, 0.02);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('3', 'Sträucher, licht', 'Sträucher, licht', 'GAF',0.03, 0.35, 0.35);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('4', 'Sträucher, mittel', 'Sträucher, mittel', 'GAF',0.045, 0.25, 0.25);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('5', 'Sträucher, dicht', 'Sträucher, dicht', 'GAF',0.06, 0.15, 0.15);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('6', 'Bäume, licht', 'Bäume, licht', 'GAF',0.05, 5, 5);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('7', 'Bäume, mittel', 'Bäume, mittel', 'GAF',0.2, 10, 10);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('8', 'Bäume, dicht', 'Bäume, dicht', 'GAF',1, 5, 5);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('11', 'Büsche, einjährig', 'Büsche, einjährig', 'GAF',0.5, 10, 10);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('12', 'Büsche, mehrjährig', 'Büsche, mehrjährig', 'GAF',3.5, 10, 10);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('13', 'Bäume, einjährig', 'Bäume, einjährig', 'GAF',0.05, 20, 20);
+INSERT INTO vegetation(name, label, description, point_kind, dp, ax, ay) VALUES ('14', 'Bäume, mehrjährig', 'Bäume, mehrjährig', 'GAF',1, 20, 20);

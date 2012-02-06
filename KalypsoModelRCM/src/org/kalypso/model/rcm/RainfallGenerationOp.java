@@ -51,8 +51,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.joda.time.Duration;
-import org.joda.time.Period;
 import org.kalypso.commons.tokenreplace.IStringResolver;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -61,15 +59,12 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.rcm.binding.IMetadata;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
-import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
-import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -101,8 +96,8 @@ public class RainfallGenerationOp
   private final IRainfallGenerator[] m_generators;
 
   /**
-   * @param gmlContext
-   *          If set to non-<code>null</code>, this location will be set to the rcm-workspace as context.
+   *
+   * @param gmlContext If set to non-<code>null</code>, this location will be set to the rcm-workspace as context.
    * @param log
    *          If provided, the generators will write messages to this log.
    */
@@ -133,39 +128,33 @@ public class RainfallGenerationOp
 
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    /* Monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, "", m_generators.length * 10 + 2 * 3 + 10 );
 
-    /* Generate the rainfall. */
     for( final IRainfallGenerator generator : m_generators )
     {
+      final String generatorLabel = generator.getName();
+
       try
       {
-        /* Generate the rainfall for this generator. */
-        doGeneration( generator, generator.getName(), progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
+        doGeneration( generator, generatorLabel, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' fehlgeschlagen", generator.getName() );
+        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' fehlgeschlagen", generatorLabel );
         final IStatus status = m_generatorStati.add( IStatus.WARNING, msg, e );
-        if( m_log != null )
-          m_log.log( status );
+        m_log.log( status );
       }
     }
 
-    /* Monitor. */
+    // Combine observations and write into target file while applying the targetFilter
     progress.subTask( "Schreibe Zeitreihen" );
-
-    /* Combine observations and write into target file while applying the targetFilter. */
-    final IObservation[] combinedObservations = combineObservations();
+    final IObservation[] combinedObservations = combineObservations(  );
 
     /* Add additional metadata, if wanted. */
     addAdditionalMetadata( combinedObservations );
 
-    /* Monitor. */
     ProgressUtilities.worked( progress, 10 );
 
-    /* Store the combined observations as result. */
     m_result = combinedObservations;
 
     return Status.OK_STATUS;
@@ -217,7 +206,7 @@ public class RainfallGenerationOp
     return new SimpleObservation( href, name, metadataList, clonedValues );
   }
 
-  private IObservation[] combineObservations( ) throws CoreException
+  private IObservation[] combineObservations( )
   {
     final IObservation[] result = new IObservation[m_results.length];
     for( int i = 0; i < result.length; i++ )
@@ -228,9 +217,6 @@ public class RainfallGenerationOp
 
   private void addAdditionalMetadata( final IObservation[] combinedObservations )
   {
-    if( combinedObservations == null )
-      return;
-
     for( int i = 0; i < combinedObservations.length; i++ )
     {
       final IObservation observation = combinedObservations[i];
@@ -278,34 +264,21 @@ public class RainfallGenerationOp
   /**
    * Combines a list of observations into a single one.
    */
-  public static IObservation combineObservations( final List<IObservation> observations ) throws CoreException
+  public static IObservation combineObservations( final List<IObservation> observations )
   {
     try
     {
       if( observations.isEmpty() )
         return null;
-
-      if( observations.size() == 1 )
+      else if( observations.size() == 1 )
         return observations.get( 0 );
 
-      final IObservation[] combine = observations.toArray( new IObservation[] {} );
-      checkCombinedTimestep( combine );
-
       final ForecastFilter fc = new ForecastFilter();
+
+      final IObservation[] combine = observations.toArray( new IObservation[] {} );
       fc.initFilter( combine, combine[0], null );
 
-      /* Clone and set the timestep. */
-      final IObservation clonedObservation = ObservationHelper.clone( fc, null );
-      final MetadataList metadataList = clonedObservation.getMetadataList();
-      final String timestep = metadataList.getProperty( MetadataHelper.MD_TIMESTEP );
-      if( timestep == null )
-      {
-        final String bestGuess = RainfallGeneratorUtilities.findTimeStep( combine );
-        if( bestGuess != null )
-          metadataList.setProperty( MetadataHelper.MD_TIMESTEP, bestGuess );
-      }
-
-      return clonedObservation;
+      return fc;
     }
     catch( final SensorException e )
     {
@@ -313,53 +286,6 @@ public class RainfallGenerationOp
     }
 
     return null;
-  }
-
-  /**
-   * Check if all timeseries that get combined here have the same timestep<br/>
-   * Necessary, because the timestep of the combined timeseries is the timestep of the first timseries.
-   */
-  private static void checkCombinedTimestep( final IObservation[] observations ) throws CoreException
-  {
-    Period combinedTimestep = null;
-    for( final IObservation observation : observations )
-    {
-      final Period currentTimestep = MetadataHelper.getTimestep( observation.getMetadataList() );
-
-      boolean hasValues = hasValues( observation );
-      if( currentTimestep == null && hasValues )
-      {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, "All timeseries involved in rainfall generation must have a timestep." );
-        throw new CoreException( status );
-      }
-
-      if( combinedTimestep != null )
-      {
-        final Duration currentDuration = currentTimestep.toStandardDuration();
-        final Duration combinedDuration = combinedTimestep.toStandardDuration();
-        if( !currentDuration.equals( combinedDuration ) )
-        {
-          final String message = String.format( "All timeseries involed in rainfall generation must have the same timestep. Found: %s and %s", combinedTimestep, currentTimestep );
-          final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, message );
-          throw new CoreException( status );
-        }
-      }
-
-      combinedTimestep = currentTimestep;
-    }
-  }
-
-  private static boolean hasValues( IObservation observation )
-  {
-    try
-    {
-      return observation.getValues( null ).size() > 0;
-    }
-    catch( SensorException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
   }
 
   /**

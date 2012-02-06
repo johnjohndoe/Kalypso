@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
@@ -117,8 +117,8 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
 
     final double kreisOwStation = kreisStation + signum * owDistance;
 
-    final double kreisSoil = ProfileVisitors.findLowestPoint( kreisProfile ).getBreite();
-    final double owSoil = ProfileVisitors.findLowestPoint( owProfile ).getBreite();
+    final double kreisSoil = ProfilUtil.getMinValueFor( kreisProfile, kreisProfile.getPointPropertyFor( POINT_PROPERTY_HOEHE ) );
+    final double owSoil = ProfilUtil.getMinValueFor( owProfile, owProfile.getPointPropertyFor( POINT_PROPERTY_HOEHE ) );
 
     final double kreisOwSoil = interpolateSoil( kreisSoil, kreisStation, owSoil, owStation, kreisOwStation );
     if( Double.isNaN( kreisOwSoil ) )

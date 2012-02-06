@@ -41,16 +41,17 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.buildings.BridgePanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -64,10 +65,14 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.0" ); //$NON-NLS-1$
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isSelectionChanged() )
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isActivePointChanged() )
     {
       fireLayerContentChanged();
     }

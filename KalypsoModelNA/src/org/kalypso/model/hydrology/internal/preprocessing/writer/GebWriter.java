@@ -45,7 +45,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Bodenschichtkorrektur;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;

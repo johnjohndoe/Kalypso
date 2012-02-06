@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -76,9 +74,9 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnSortListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.model.wspm.pdb.db.mapping.Document;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.attachments.ImportAttachmentsDocumentsData.ImportMode;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -103,8 +101,8 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     m_data = data;
     m_documentData = m_data.getDocumentData();
 
-    setTitle( Messages.getString( "ImportAttachmentsPreviewPage.0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "ImportAttachmentsPreviewPage.1" ) ); //$NON-NLS-1$
+    setTitle( "Preview" );
+    setDescription( "Preview and select the found documents on this page." );
   }
 
   @Override
@@ -134,7 +132,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     // status
     final TableViewerColumn statusColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     statusColumn.setLabelProvider( new DocumentsStatusProvider( m_documentData ) );
-    statusColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.2" ) ); //$NON-NLS-1$
+    statusColumn.getColumn().setText( "Status" );
     statusColumn.getColumn().setResizable( false );
     ColumnViewerSorter.registerSorter( statusColumn, new DocumentsStatusComparator( m_documentData ) );
     ColumnsResizeControlListener.setMinimumPackWidth( statusColumn.getColumn() );
@@ -142,7 +140,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     // station
     final TableViewerColumn stationColumn = new TableViewerColumn( m_viewer, SWT.RIGHT );
     stationColumn.setLabelProvider( new DocumentsStationProvider( m_documentData ) );
-    stationColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.3" ) ); //$NON-NLS-1$
+    stationColumn.getColumn().setText( "Station [km]" );
     stationColumn.getColumn().setResizable( false );
     ColumnViewerSorter.registerSorter( stationColumn, new DocumentsStationComparator( m_documentData ) );
     ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
@@ -150,7 +148,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     /* name */
     final TableViewerColumn nameColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     nameColumn.setLabelProvider( new DocumentsNameProvider() );
-    nameColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.4" ) ); //$NON-NLS-1$
+    nameColumn.getColumn().setText( "Filename" );
     nameColumn.getColumn().setResizable( false );
     ColumnViewerSorter.registerSorter( nameColumn, new DocumentsNameComparator() );
     ColumnsResizeControlListener.setMinimumPackWidth( nameColumn.getColumn() );
@@ -158,7 +156,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     /* mime/type */
     final TableViewerColumn typeColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
     typeColumn.setLabelProvider( new DocumentsTypeProvider() );
-    typeColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.5" ) ); //$NON-NLS-1$
+    typeColumn.getColumn().setText( "Type" );
     typeColumn.getColumn().setResizable( false );
     ColumnViewerSorter.registerSorter( typeColumn, new DocumentsTypeComparator() );
     ColumnsResizeControlListener.setMinimumPackWidth( typeColumn.getColumn() );
@@ -183,7 +181,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_SELECTION_COUNT );
 
     final DataBinder countBinder = new DataBinder( target, model );
-    countBinder.addModelAfterGetValidator( new NumberNotExactValidator( Integer.valueOf( 0 ), IStatus.ERROR, Messages.getString( "ImportAttachmentsPreviewPage.6" ) ) ); //$NON-NLS-1$
+    countBinder.addModelAfterGetValidator( new NumberNotExactValidator( Integer.valueOf( 0 ), IStatus.ERROR, "No document is selected for import" ) );
     m_binding.bindValue( countBinder );
   }
 
@@ -195,8 +193,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof Document )
     {
-      final DocumentInfo info = m_documentData.getInfo( (Document) firstElement );
-      final IStatus status = info.getStatus();
+      final IStatus status = m_documentData.getStatus( (Document) firstElement );
       new StatusDialog( getShell(), status, getWizard().getWindowTitle() ).open();
     }
   }
@@ -215,7 +212,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
   private void createImportModelControl( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "ImportAttachmentsPreviewPage.7" ) ); //$NON-NLS-1$
+    label.setText( "Existing Documents: " );
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     viewer.setContentProvider( new ArrayContentProvider() );
@@ -225,22 +222,6 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportAttachmentsData.PROPERTY_IMPORT_MODE );
     m_binding.bindValue( target, model );
-
-    // TRICKY: we need to refresh the table when the import mode changes, in order
-    // to show the gray state correctly
-    model.addValueChangeListener( new IValueChangeListener()
-    {
-      @Override
-      public void handleValueChange( final ValueChangeEvent event )
-      {
-        handleImportModeChanged();
-      }
-    } );
-  }
-
-  protected void handleImportModeChanged( )
-  {
-    m_viewer.update( m_documentData.getDocuments(), null );
   }
 
   private void createSelectionButtons( final Composite parent )
@@ -290,7 +271,7 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     if( !status.isOK() )
     {
       final String windowTitle = getWizard().getWindowTitle();
-      new StatusDialog( getShell(), status, windowTitle ).open();
+      new StatusDialog2( getShell(), status, windowTitle ).open();
     }
   }
 }

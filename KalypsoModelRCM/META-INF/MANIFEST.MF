@@ -9,9 +9,8 @@ Require-Bundle: org.eclipse.ant.core,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.kalypso.core,
- org.kalypso.deegree,
- org.kalypso.zml.core;bundle-version="11.6.4"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+ org.kalypso.deegree
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.rcm,
  org.kalypso.model.rcm.binding,

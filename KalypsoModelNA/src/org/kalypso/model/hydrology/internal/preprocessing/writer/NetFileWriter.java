@@ -55,7 +55,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
-import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.KontEntnahme;
 import org.kalypso.model.hydrology.binding.model.KontZufluss;
 import org.kalypso.model.hydrology.binding.model.Ueberlauf;

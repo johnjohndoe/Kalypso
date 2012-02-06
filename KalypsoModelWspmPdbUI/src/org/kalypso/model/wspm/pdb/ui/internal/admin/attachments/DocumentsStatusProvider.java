@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -81,10 +81,7 @@ public class DocumentsStatusProvider extends ColumnLabelProvider
   private IStatus getStatus( final Object element )
   {
     if( element instanceof Document )
-    {
-      final DocumentInfo info = m_documentData.getInfo( (Document) element );
-      return info.getStatus();
-    }
+      return m_documentData.getStatus( (Document) element );
 
     return null;
   }

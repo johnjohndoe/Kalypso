@@ -57,8 +57,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -203,7 +203,7 @@ public class SimplifyProfilePage extends WizardPage
     return m_distance;
   }
 
-  public IProfileRecord[] getSelectedPoints( final IProfil profile )
+  public IRecord[] getSelectedPoints( final IProfil profile )
   {
     return m_filterChooser.getSelectedPoints( profile );
   }

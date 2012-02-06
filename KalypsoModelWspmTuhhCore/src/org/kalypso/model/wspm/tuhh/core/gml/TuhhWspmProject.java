@@ -87,14 +87,14 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody newWater = createOrGetWaterBody( waterName, isDirectionUpstreams );
+    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     return createNewReachForWaterBody( newWater );
   }
 
   /** Not in waterbody, as we create a TuhhReach */
   public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
   {
-    final TuhhReach tuhhReach = (TuhhReach) FeatureHelper.addFeature( waterBody, WspmWaterBody.MEMBER_REACH, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) ); //$NON-NLS-1$
+    final TuhhReach tuhhReach = (TuhhReach) FeatureHelper.addFeature( waterBody, WspmWaterBody.QNAME_MEMBER_REACH, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) ); //$NON-NLS-1$
 
     tuhhReach.setWaterBody( waterBody );
 
@@ -109,7 +109,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public IProfileFeature createNewProfile( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody newWater = createOrGetWaterBody( waterName, isDirectionUpstreams );
+    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     final IProfileFeature newProfile = newWater.createNewProfile();
     newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     return newProfile;
@@ -138,7 +138,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws GMLSchemaException
   {
-    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QN_TYPE, context, factory );
+    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QNAME, context, factory );
     final Feature rootFeature = projectWorkspace.getRootFeature();
     return (TuhhWspmProject) rootFeature;
   }

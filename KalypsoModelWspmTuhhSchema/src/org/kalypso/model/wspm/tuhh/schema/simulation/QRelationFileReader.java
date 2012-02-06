@@ -168,7 +168,7 @@ public class QRelationFileReader
 
   private String addToDescription( final String description, final String filename )
   {
-    if( org.apache.commons.lang3.StringUtils.isBlank( description ) )
+    if( org.apache.commons.lang.StringUtils.isBlank( description ) )
       return Messages.getString( "org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeProcessor.19" ) + filename; //$NON-NLS-1$
 
     return description + ", " + filename; //$NON-NLS-1$

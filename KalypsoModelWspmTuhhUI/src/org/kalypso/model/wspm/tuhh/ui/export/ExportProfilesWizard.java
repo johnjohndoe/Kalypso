@@ -46,6 +46,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -65,11 +66,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchWizard
 {
-  public static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString( "ExportProfilesWizard_0" ); //$NON-NLS-1$
+  protected static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString( "ExportProfilesWizard_0" ); //$NON-NLS-1$
 
-  public static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString( "ExportProfilesWizard_1" ); //$NON-NLS-1$
+  protected static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString( "ExportProfilesWizard_1" ); //$NON-NLS-1$
 
-  public static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString( "ExportProfilesWizard_2" ); //$NON-NLS-1$
+  protected static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString( "ExportProfilesWizard_2" ); //$NON-NLS-1$
 
   private ProfilesChooserPage m_profileChooserPage;
 
@@ -125,6 +126,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   private IProfileFeature[] getChosenProfiles( final Object[] profilFeatures )
   {
     final Collection<IProfileFeature> profiles = new ArrayList<IProfileFeature>( profilFeatures.length );
+
     for( final Object profilFeature : profilFeatures )
     {
       if( profilFeature instanceof IProfileFeature )
@@ -136,7 +138,6 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
         }
       }
     }
-
     return profiles.toArray( new IProfileFeature[] {} );
   }
 
@@ -155,14 +156,15 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
         {
           monitor.beginTask( Messages.getString( "ExportProfilesWizard_5" ), profilFeatures.length ); //$NON-NLS-1$
 
-          return exportProfiles( chosenProfiles, monitor );
+          exportProfiles( chosenProfiles, monitor );
+
+          return Status.OK_STATUS;
         }
         catch( final CoreException e )
         {
           final IStatus status = e.getStatus();
           if( status.matches( IStatus.CANCEL ) )
             throw new InterruptedException();
-
           return status;
         }
       }
@@ -176,5 +178,5 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
     return !result.matches( IStatus.ERROR );
   }
 
-  protected abstract IStatus exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
+  protected abstract void exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
 }

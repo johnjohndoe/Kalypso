@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
@@ -92,18 +91,18 @@ public class BewuchsRule extends AbstractValidatorRule
     if( devider.length < 2 )
       return;
 
-    final IProfileRecord leftP = devider[0].getPoint();
-    final IProfileRecord rightP = devider[devider.length - 1].getPoint();
+    final IRecord leftP = devider[0].getPoint();
+    final IRecord rightP = devider[devider.length - 1].getPoint();
     if( leftP == null || rightP == null )
       return;
 
-    final int leftIndex = leftP.getIndex();
-    final int rightIndex = rightP.getIndex();
-    final IProfileRecord[] leftForeland = profil.getPoints( 0, leftIndex - 1 );
-    final IProfileRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
-    final IProfileRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
+    final int leftIndex = profil.indexOfPoint( leftP );
+    final int rightIndex = profil.indexOfPoint( rightP );
+    final IRecord[] leftForeland = profil.getPoints( 0, leftIndex - 1 );
+    final IRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
+    final IRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
 
-    if( !Arrays.isEmpty( riverTube ) && WspmProfileHelper.getBuilding( profil, IProfileBuilding.class ) == null )
+    if( !Arrays.isEmpty( riverTube ) )
     {
       int i = leftIndex;
       for( final IRecord point : riverTube )
@@ -135,7 +134,7 @@ public class BewuchsRule extends AbstractValidatorRule
 
         final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
 
-        if( leftForelandHasValues && !ax1.isNaN() && ax1 == 0.0 )
+        if( leftForelandHasValues && !ax1.isNaN() && leftForelandHasValues && ax1 == 0.0 )
         {
           collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.2" ), String.format( "km %.4f", profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );// , //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -150,13 +149,13 @@ public class BewuchsRule extends AbstractValidatorRule
     }
   }
 
-  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IProfileRecord[] subList ) throws CoreException
+  private boolean validateArea( final IProfil profil, final IValidatorMarkerCollector collector, final IRecord[] subList ) throws CoreException
   {
     boolean hasValues = false;
     boolean hasErrors = false;
     if( subList.length < 1 )
       return false;
-    for( final IProfileRecord point : subList )
+    for( final IRecord point : subList )
     {
       final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
       final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
@@ -171,47 +170,30 @@ public class BewuchsRule extends AbstractValidatorRule
 
         hasErrors = true;
         final String stationFormatted = String.format( Messages.getString( "BewuchsRule.0" ), profil.getStation() ); //$NON-NLS-1$
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, point.getIndex(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      else if( ax < 0 || ay < 0 || dp < 0 )
-      {
-        // displays only first error
-        if( hasErrors )
-        {
-          continue;
-        }
-
-        hasErrors = true;
-        final String stationFormatted = String.format( Messages.getString( "BewuchsRule.0" ), profil.getStation() ); //$NON-NLS-1$
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.8" ), stationFormatted, point.getIndex(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
-
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.7" ), stationFormatted, profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {
         if( ax + ay + dp != 0.0 )
           if( ax * ay * dp == 0.0 )
           {
-            if( hasErrors )
-            {
-              continue;
-            }
             final StringBuffer stringBuffer = new StringBuffer();
             if( ax == 0.0 )
             {
-              stringBuffer.append( "aX" ); //$NON-NLS-1$
+              stringBuffer.append( "aX, " ); //$NON-NLS-1$
             }
             if( ay == 0.0 )
             {
-              stringBuffer.append( stringBuffer.length() == 0 ? "aY" : ", aY" ); //$NON-NLS-1$
+              stringBuffer.append( "aY, " ); //$NON-NLS-1$
             }
             if( dp == 0.0 )
             {
-              stringBuffer.append( stringBuffer.length() == 0 ? "dP" : ", dp" ); //$NON-NLS-1$
+              stringBuffer.append( "dP" ); //$NON-NLS-1$
             }
 
             final String text = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9", stringBuffer.toString() ); //$NON-NLS-1$
-            hasErrors = true;
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, String.format( "km %.4f", profil.getStation() ), point.getIndex(), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$
+
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, text, String.format( "km %.4f", profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ); //$NON-NLS-1$
           }
           else
           {

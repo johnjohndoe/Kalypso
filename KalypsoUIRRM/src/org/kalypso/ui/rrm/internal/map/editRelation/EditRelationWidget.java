@@ -46,7 +46,7 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -57,9 +57,9 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -71,7 +71,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author doemming
  */
-public class EditRelationWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private static final int GRAB_RADIUS = 30;
 

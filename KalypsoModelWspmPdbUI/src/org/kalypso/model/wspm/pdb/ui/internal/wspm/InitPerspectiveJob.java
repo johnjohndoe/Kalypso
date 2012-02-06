@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
@@ -49,8 +49,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -68,7 +68,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.core.jaxb.TemplateUtilities;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.light.WspmGmvViewPart;
@@ -83,13 +82,11 @@ import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
  */
 public class InitPerspectiveJob extends Job
 {
-  static final String STR_LOCAL_DATA = Messages.getString( "InitPerspectiveJob.0" ); //$NON-NLS-1$
-
   private final PdbWspmProject m_project;
 
   public InitPerspectiveJob( final PdbWspmProject project )
   {
-    super( Messages.getString( "InitPerspectiveJob.1" ) ); //$NON-NLS-1$
+    super( "Initializing WSPM Views" );
 
     m_project = project;
   }
@@ -97,7 +94,7 @@ public class InitPerspectiveJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    monitor.beginTask( getName(), 100 );
+    monitor.beginTask( "", 100 );
 
     initGmvView();
     monitor.worked( 50 );
@@ -135,7 +132,7 @@ public class InitPerspectiveJob extends Job
     final String inputContent = createGmvInput();
 
     final StringStorage storage = new StringStorage( inputContent, null );
-    storage.setName( STR_LOCAL_DATA );
+    storage.setName( "Local Data" );
 
     final IStorageEditorInput input = new StorageEditorInput( storage );
     setGmvInput( gmvView, input );
@@ -151,7 +148,7 @@ public class InitPerspectiveJob extends Job
       final Gistreeview gistreeview = TemplateUtilities.OF_GISTREEVIEW.createGistreeview();
       final LayerType layerType = TemplateUtilities.OF_TEMPLATE_TYPES.createLayerType();
 
-      layerType.setFeatureXPath( "id( 'root' )/wspm:waterBodyMember" ); // root feature //$NON-NLS-1$
+      layerType.setFeatureXPath( "id( 'root' )/wspm:waterBodyMember" ); // root feature
       layerType.setHref( modelURL.toExternalForm() );
       layerType.setLinktype( "gml" ); //$NON-NLS-1$
 
@@ -184,7 +181,7 @@ public class InitPerspectiveJob extends Job
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        gmvView.setPartName( STR_LOCAL_DATA );
+        gmvView.setPartName( "Local Data" );
         return Status.OK_STATUS;
       }
     };

@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.INTERPOLATION_METHOD;
 
@@ -68,12 +64,10 @@ public class Command1D2DTimestepsInterpolationWizard extends Wizard implements I
     else
       m_page = new Command1D2DTimestepsInterpolationWizardPage( initRelaxationFactor.toString() );
   }
-
+  
   /**
    * additional constructor
-   * 
-   * @param initRelaxationFactor
-   *          changed to string to allow more flexible expansion of "Relaxation Factor"
+   * @param initRelaxationFactor changed to string to allow more flexible expansion of "Relaxation Factor"
    */
   public Command1D2DTimestepsInterpolationWizard( final Command1D2DTimestepsInterpolate commandHandler, final String initRelaxationFactor )
   {
@@ -90,26 +84,18 @@ public class Command1D2DTimestepsInterpolationWizard extends Wizard implements I
   @Override
   public boolean performFinish( )
   {
-    try
-    {
-      final INTERPOLATION_METHOD method = m_page.getInterpolationMethod();
-      final int numberOfSteps = m_page.getNumberOfSteps();
-      final long timeInterval = m_page.getTimeInterval();
-      final String relaxationFactor = m_page.getRelaxationFactorValue();
-      m_commandHandler.doInterpolate( method, numberOfSteps, timeInterval, relaxationFactor );
-      return true;
-    }
-    catch( Exception e )
-    {
-      ErrorDialog.openError( getShell(), getWindowTitle(), e.getLocalizedMessage(), new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, e.getLocalizedMessage(), e ) );
-      return false;
-    }
+    final INTERPOLATION_METHOD method = m_page.getInterpolationMethod();
+    final int numberOfSteps = m_page.getNumberOfSteps();
+    final long timeInterval = m_page.getTimeInterval();
+    final String relaxationFactor = m_page.getRelaxationFactorValue();
+    m_commandHandler.doInterpolate( method, numberOfSteps, timeInterval, relaxationFactor );
+    return true;
   }
 
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizard.1" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizard.1") ); //$NON-NLS-1$
     addPage( m_page );
   }
 

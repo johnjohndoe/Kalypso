@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.wspm;
 
@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.wspm.CheckinCalculationPdbOperation;
 import org.kalypso.model.wspm.tuhh.core.gml.CalculationWspmTuhhSteadyState;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -77,10 +76,10 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "CheckinCalculationOperation.0" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( "Upload waterlevel into database", 100 );
 
     if( m_lengthSection == null )
-      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "CheckinCalculationOperation.1" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "No result was selected" );
 
     Session session = null;
 
@@ -117,7 +116,7 @@ public class CheckinCalculationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.STR_OPERATION_FAILED, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Operation failed", e );
       throw new CoreException( status );
     }
     finally

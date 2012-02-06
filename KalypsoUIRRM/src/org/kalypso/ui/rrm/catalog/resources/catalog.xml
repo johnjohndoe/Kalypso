@@ -1,41 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
   <!--  Node -->
-  <system uri="Node.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:default" />
-  <system uri="NodeNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" />
+  <catalog:system uri="Node.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:default" />
+  <catalog:system uri="NodeNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" />
 
-  <system uri="Subcatchments.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:default" />
-  <system uri="SubcatchmentsNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:net" />
-  <system uri="GroundwaterNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" />
+  <catalog:system uri="Subcatchments.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:default" />
+  <catalog:system uri="SubcatchmentsNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:net" />
+  <catalog:system uri="GroundwaterNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" />
 
-  <system uri="ombrometer.sld" systemId="urn:ogc:gml:featuretype:http___org.kalypso.ombrometer:Ombrometer:sld:default" />
+  <catalog:system uri="ombrometer.sld" systemId="urn:ogc:gml:featuretype:http___org.kalypso.ombrometer:Ombrometer:sld:default" />
 
   <!-- RHBChannel -->
-  <system uri="RHBChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:default" />
-  <system uri="RHBChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:net" />
-  <system uri="RHBChannel.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:featureview:default" />
+  <catalog:system uri="RHBChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:default" />
+  <catalog:system uri="RHBChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:net" />
+  <catalog:system uri="RHBChannel.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:featureview:default" />
 
   <!-- Virtual Channel -->
-  <system uri="VChannel.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:featureview:default" />
-  <system uri="VChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:default" />
-  <system uri="VChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:net" />
+  <catalog:system uri="VChannel.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:featureview:default" />
+  <catalog:system uri="VChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:default" />
+  <catalog:system uri="VChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:net" />
 
   <!-- KMChannel -->
-  <system uri="KMChannel.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:featureview:default" />
-  <system uri="KMChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:default" />
-  <system uri="KMChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:net" />
+  <catalog:system uri="KMChannel.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:featureview:default" />
+  <catalog:system uri="KMChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:default" />
+  <catalog:system uri="KMChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:net" />
 
-  <system uri="Hydrotope.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
+  <catalog:system uri="Hydrotope.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
 
-  <system uri="NAModellControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.namodell.control_v2:NAModellControl:featureview:default" />
-  <system uri="NAControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.na.control_v2:NAControl:featureview:default" />
+  <catalog:system uri="NAModellControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.namodell.control:NAModellControl:featureview:default" />
 
-  <system uri="ThiessenPage.xml" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:layout" />
-  <system uri="ThiessenMap.gmt" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:mapgmt" />
-  <system uri="ThiessenList.gtt" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:tablegtt" />
-  <system uri="Thiessen.gft" systemId="urn:sourceforge:kalypso:hydrology:thiessen:wizard:featureviewgft" />
-
-  <system uri="ThiessenStation.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:default" />
-  <system uri="ThiessenStation_selected.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:selected" />
-</catalog>
+</catalog:catalog>

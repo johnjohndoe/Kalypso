@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;

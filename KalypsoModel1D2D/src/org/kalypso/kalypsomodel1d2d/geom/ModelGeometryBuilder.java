@@ -57,23 +57,24 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * Provide methods to build the geometry of the 1D 2D finite element model constituants like 2D element, continuity line
  * ...
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class ModelGeometryBuilder
 {
 
   /**
    * Create a surface given its exterior ring represented by a list of nodes
-   * 
+   *
    * @param nodes
-   *          the nodes representing the exterior of the surface
+   *            the nodes representing the exterior of the surface
    * @return a surface which has its exterior specified by the nodes or null if less than 3 nodes have been provided
-   * 
+   *
    * @throws IllegalArgumentException
-   *           if nodes is null
+   *             if nodes is null
    */
+  @SuppressWarnings("unchecked")
   public static final GM_Surface createSurfaceFromNode( final List<IFE1D2DNode> nodes ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( nodes, "nodes" ); //$NON-NLS-1$
@@ -98,6 +99,7 @@ public class ModelGeometryBuilder
     return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], crs );
   }
 
+  @SuppressWarnings("unchecked")
   public static final GM_Curve computeEgdeGeometry( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge ) throws GM_Exception
   {
     // REMARK: we assume here, that all nodes live in the same coordinate
@@ -133,15 +135,15 @@ public class ModelGeometryBuilder
 
     // FIXME: we must make sure that the envelope is updated when the location of the nodes
     // or the coordinate system has changed.
-    // Sadly we cannot call edge.setEnvelopesUpdated();
+    // Sadly we cannot call edge.getFeature().setEnvelopesUpdated();
     // here, as this calls getEnvelope immediately
 
     // This does not work, but is would be necessary
-    // final GM_Envelope envelope = edge.getEnvelope();
+    // final GM_Envelope envelope = edge.getFeature().getEnvelope();
     // final String envCrs = envelope.getCoordinateSystem();
     // final String curveCrs = curve.getCoordinateSystem();
     // if( curveCrs != null && !curveCrs.equals( envCrs ) )
-    // edge.setEnvelopesUpdated();
+    // edge.getFeature().setEnvelopesUpdated();
 
     return curve;
   }

@@ -48,7 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.model.hydrology.binding.model.channels.Channel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.INode;

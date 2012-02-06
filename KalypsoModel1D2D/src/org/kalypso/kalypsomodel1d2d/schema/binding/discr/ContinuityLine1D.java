@@ -2,55 +2,56 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -59,9 +60,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class ContinuityLine1D extends FELine implements IContinuityLine1D
 {
-  public ContinuityLine1D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public ContinuityLine1D( Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    this( featureToBind, IContinuityLine1D.QNAME );
+  }
+
+  public ContinuityLine1D( Feature featureToBind, QName featureQName )
+  {
+    super( featureToBind, featureQName );
   }
 
   /**
@@ -71,15 +77,15 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() != 1 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.0" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.0") ) ); //$NON-NLS-1$
     final IFE1D2DNode continuityLineNode = nodes.get( 0 );
-    final FeatureList nodeList = (FeatureList) getProperty( IFELine.PROP_NODES );
+    final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
-    nodeList.add( continuityLineNode.getId() );
+    nodeList.add( continuityLineNode.getFeature().getId() );
     IFE1D2DNode neighbour1 = null;
     IFE1D2DNode neighbour2 = null;
-    final IFeatureBindingCollection<Feature> containers = continuityLineNode.getContainers();
-    for( final Feature container : containers )
+    final IFeatureWrapperCollection<IFeatureWrapper2> containers = continuityLineNode.getContainers();
+    for( final IFeatureWrapper2 container : containers )
     {
       if( container instanceof IFE1D2DEdge )
       {
@@ -99,12 +105,12 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     {
       recalculateGeometry( continuityLineNode, neighbour1, neighbour2 );
     }
-    catch( final GM_Exception e )
+    catch( GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.1") + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     nodeList.invalidate();
-    setEnvelopesUpdated();
+    getFeature().invalidEnvelope();
     return m_nodes;
   }
 
@@ -120,17 +126,17 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
       list.addAll( getNodes() );
       createFullNodesList( list );
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       e.printStackTrace();
     }
-    return (GM_Object) getProperty( IFELine.PROP_GEOMETRY );
+    return (GM_Object) getFeature().getProperty( IFELine.PROP_GEOMETRY );
   }
 
   private void recalculateGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws CoreException, GM_Exception
   {
     if( neighbour1 == null && neighbour2 == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.2" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D.2") ) ); //$NON-NLS-1$
     final GM_Object geometry;
     if( neighbour1 == null )
       geometry = getGeometry( node, neighbour2 );
@@ -156,8 +162,8 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   private GM_Object getGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws GM_Exception
   {
     final GM_Point pointToCreateLineAt = node.getPoint();
-    final double xcenter = pointToCreateLineAt.getX();
-    final double ycenter = pointToCreateLineAt.getY();
+    double xcenter = pointToCreateLineAt.getX();
+    double ycenter = pointToCreateLineAt.getY();
     GM_Point p1 = neighbour1.getPoint();
     GM_Point p2 = neighbour2.getPoint();
 
@@ -169,8 +175,8 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
       p2 = GeometryFactory.createGM_Point( xcenter + (p2.getX() - xcenter) / length2 * length1, ycenter + (p2.getY() - ycenter) / length2 * length1, pointToCreateLineAt.getCoordinateSystem() );
 
     final GM_Point centerpoint = GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2.0, (p1.getY() + p2.getY()) / 2.0, node.getPoint().getCoordinateSystem() );
-    final double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
-    final double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
+    double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
+    double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
 
     GM_Point pointtocreatefrom = null;
     if( length1 >= length2 )
@@ -178,10 +184,10 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     else
       pointtocreatefrom = p2;
 
-    final double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
-    final double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
-    final double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
-    final double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
+    double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
+    double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
+    double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
+    double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
 
     final GM_Position[] positions = new GM_Position[] { GeometryFactory.createGM_Position( x1, y1 ), GeometryFactory.createGM_Position( x2, y2 ) };
     return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );

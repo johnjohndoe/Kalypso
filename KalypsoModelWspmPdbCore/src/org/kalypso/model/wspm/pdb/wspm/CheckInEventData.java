@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.constants.EventConstants.TYPE;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -86,7 +85,7 @@ public class CheckInEventData<W extends Feature> implements IEditEventPageData
     m_event.setMeasurementDate( now );
     m_event.setName( wspmObject.getName() );
     m_event.setDescription( wspmObject.getDescription() );
-    m_event.setSource( Messages.getString( "CheckInEventData_0" ) ); //$NON-NLS-1$
+    m_event.setSource( "WSPM Local Data" );
     m_event.setEditingDate( now );
     m_event.setType( TYPE.Measurement );
   }

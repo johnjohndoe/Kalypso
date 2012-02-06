@@ -52,8 +52,8 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
@@ -233,7 +233,6 @@ public class NAControlConverter
     // writer.append( "n       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
 
     writer.append( getBoolean( controlFE.doGenerateHYD() ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
-
     // if "2": output of *.txt and *.bil
     if( controlFE.doGenerateBIL() )
       writer.append( "2" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$

@@ -101,6 +101,9 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
     return null;
   }
 
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
   @Override
   public void updateElement( final UIElement element, final Map parameters )
   {

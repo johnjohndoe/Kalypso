@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.db.utils.StateUtils;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -63,7 +62,7 @@ public class DeleteStateOperation implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return String.format( Messages.getString( "DeleteStateOperation.0" ), m_name ); //$NON-NLS-1$
+    return String.format( "Delete State '%s'", m_name );
   }
 
   @Override

@@ -76,21 +76,6 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
   }
 
   @Override
-  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
-  {
-    final File file = m_profileFileChooserPage.getFile();
-    final SinkExporter exporter = new SinkExporter( new LngSink() );
-    exporter.export( profiles, file, monitor );
-
-    if( m_profileFileChooserPage.doOpenPlotter() )
-    {
-      openInPlotter( file );
-    }
-
-    return Status.OK_STATUS;
-  }
-
-  @Override
   protected int getMinimumSelectionCount( )
   {
     // Two profiles needed for length section.
@@ -110,6 +95,19 @@ public class LngExportProfilesWizard extends ExportProfilesWizard
     m_profileFileChooserPage.setFileGroupText( STR_EXPORT_FILE_GROUP_TEXT );
 
     addPage( m_profileFileChooserPage );
+  }
+
+  @Override
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  {
+    final File file = m_profileFileChooserPage.getFile();
+    final SinkExporter exporter = new SinkExporter( new LngSink() );
+    exporter.export( profiles, file, monitor );
+
+    if( m_profileFileChooserPage.doOpenPlotter() )
+    {
+      openInPlotter( file );
+    }
   }
 
   private void openInPlotter( final File file ) throws CoreException

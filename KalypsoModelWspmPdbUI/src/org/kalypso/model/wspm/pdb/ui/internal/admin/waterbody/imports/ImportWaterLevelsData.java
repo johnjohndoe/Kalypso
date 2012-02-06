@@ -45,8 +45,8 @@ import java.nio.charset.Charset;
 import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.hibernate.Session;
 import org.kalypso.commons.java.util.AbstractModelObject;

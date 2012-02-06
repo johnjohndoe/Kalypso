@@ -31,7 +31,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -40,20 +40,18 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Provides the mechanism to create automaticaly fem element within a grid
- * 
+ *
  * @author Patrice Congo
  */
-public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this );
-
-  // private GridWidgetFace m_gridWidgetFace;
+//  private GridWidgetFace m_gridWidgetFace;
 
   private Point m_currentPoint = null;
 
   final GridPointCollector m_gridPointCollector = new GridPointCollector();
-
-  // GridPointCollector m_gridPointCollector ;
+//  GridPointCollector m_gridPointCollector ;
 
   private boolean isActivated = false;
 
@@ -71,6 +69,7 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
 
   private boolean m_snappingActive = true;
 
+  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
@@ -82,8 +81,8 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
   public CreateGridWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    // m_gridWidgetFace = new GridWidgetFace( this );
-    // m_gridPointCollector = new GridPointCollector();
+//    m_gridWidgetFace = new GridWidgetFace( this );
+//    m_gridPointCollector = new GridPointCollector();
   }
 
   /**
@@ -98,8 +97,8 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
-    // m_gridWidgetFace = new GridWidgetFace( this );
-    // m_gridPointCollector = new GridPointCollector();
+//    m_gridWidgetFace = new GridWidgetFace( this );
+//    m_gridPointCollector = new GridPointCollector();
     // find the right themes to edit i.e. the discretisation model
     if( isActivated == false )
     {
@@ -126,6 +125,7 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
     m_gridPointCollector.reset( targetCrs );
   }
 
+  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -142,6 +142,7 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
     return newNode;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
@@ -166,6 +167,7 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -220,6 +222,7 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void dragged( final Point p )
   {
@@ -303,7 +306,7 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
     {
       final int x = (int) transform.getDestX( toCompare.getX() );
       final int y = (int) transform.getDestY( toCompare.getY() );
-      return x > ref.getX() - m_radius && x > ref.getY() - m_radius && y < ref.getX() + m_radius && y < ref.getY() + m_radius;
+      return (x > (ref.getX() - m_radius)) && (x > (ref.getY() - m_radius)) && (y < (ref.getX() + m_radius)) && (y < (ref.getY() + m_radius));
     }
 
   }
@@ -314,7 +317,8 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
       return false;
     else
     {
-      return toCompare.getX() > ref.getX() - m_radius && toCompare.getY() > ref.getY() - m_radius && toCompare.getX() < ref.getX() + m_radius && toCompare.getY() < ref.getY() + m_radius;
+      return (toCompare.getX() > (ref.getX() - m_radius)) && (toCompare.getY() > (ref.getY() - m_radius)) && (toCompare.getX() < (ref.getX() + m_radius))
+          && (toCompare.getY() < (ref.getY() + m_radius));
     }
   }
 
@@ -470,13 +474,12 @@ public class CreateGridWidget extends DeprecatedMouseWidget implements IWidgetWi
       }
     };
     final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-    if( status.equals( Status.OK_STATUS ) )
-    {
+    if( status.equals( Status.OK_STATUS ) ){
       try
       {
         workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }

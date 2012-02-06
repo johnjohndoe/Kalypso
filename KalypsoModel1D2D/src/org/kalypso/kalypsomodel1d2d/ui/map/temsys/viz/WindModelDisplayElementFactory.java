@@ -83,7 +83,7 @@ public class WindModelDisplayElementFactory
     {
       return null;
     }
-    IWindDataModel lActWindDataModel = WindDataWidgetDataModel.getActualWindDataModel( lWindDataModelSystem.getId() );
+    IWindDataModel lActWindDataModel = WindDataWidgetDataModel.getActualWindDataModel( lWindDataModelSystem.getGmlID() );
     if( lActWindDataModel == null || !lWindDataModelSystem.equals( lSelectedWindSystem ) )
     {
       return null;

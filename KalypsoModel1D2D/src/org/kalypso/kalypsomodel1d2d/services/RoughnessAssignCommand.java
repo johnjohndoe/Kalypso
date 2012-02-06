@@ -49,12 +49,12 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * Command used for assigning roughnesses to elements.
  * <p>
- * Overrides "applyChanges" method of its superclass (ChangeFeaturesCommand) to send RoughnessAssignServiceModellEvent
- * instead of FeatureChangeModellEvent. This is needed for RoughnessAssignListener to diferentiate between external and
- * own changes.
+ * Overrides "applyChanges" method of its superclass (ChangeFeaturesCommand) to send 
+ * RoughnessAssignServiceModellEvent instead of FeatureChangeModellEvent. 
+ * This is needed for RoughnessAssignListener to diferentiate between external and own changes.
  * 
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class RoughnessAssignCommand extends ChangeFeaturesCommand
 {
@@ -62,18 +62,18 @@ public class RoughnessAssignCommand extends ChangeFeaturesCommand
   {
     super( workspace, changes );
   }
-
+  
   @Override
   protected void applyChanges( final FeatureChange[] changes )
   {
-    // final Set<Feature> changedFeaturesList = new HashSet<Feature>();
+//    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     final Feature[] changedFeatures = new Feature_Impl[changes.length];
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      changedFeatures[i] = change.getFeature();
+      changedFeatures[i] =change.getFeature();
       changedFeatures[i].setProperty( change.getProperty(), change.getNewValue() );
-      // changedFeaturesList.add( change );
+//      changedFeaturesList.add( change.getFeature() );
     }
 
     if( m_workspace != null )

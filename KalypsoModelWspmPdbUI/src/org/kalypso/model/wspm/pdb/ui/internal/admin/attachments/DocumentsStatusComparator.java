@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.Document;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class DocumentsStatusComparator extends ViewerComparator
 {
@@ -60,11 +61,8 @@ public class DocumentsStatusComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final DocumentInfo info1 = m_documentData.getInfo( (Document) e1 );
-    final DocumentInfo info2 = m_documentData.getInfo( (Document) e2 );
-
-    final IStatus s1 = info1.getStatus();
-    final IStatus s2 = info2.getStatus();
+    final IStatus s1 = m_documentData.getStatus( (Document) e1 );
+    final IStatus s2 = m_documentData.getStatus( (Document) e2 );
 
     final int sev1 = s1.getSeverity();
     final int sev2 = s2.getSeverity();

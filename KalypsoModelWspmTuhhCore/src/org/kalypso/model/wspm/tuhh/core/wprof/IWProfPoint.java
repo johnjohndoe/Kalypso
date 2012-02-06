@@ -63,14 +63,10 @@ public interface IWProfPoint
 
   double getValue( );
 
-  // TODO: rename
-  // TODO: 'Objekttyp Verbundprofil'
   String getObjectType( );
 
-  // TODO: 'Objekttyp Punkt'
   int getPunktattribut( );
 
-  // TODO: 'Objekttyp Profil'
   WProfProfileType getProfileType( );
 
   URI[] getPhotos( );

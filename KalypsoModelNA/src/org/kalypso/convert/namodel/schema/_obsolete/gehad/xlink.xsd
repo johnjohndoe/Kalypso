@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<schema targetNamespace="http://www.w3.org/1999/xlink" elementFormDefault="qualified" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2001/XMLSchema">
+	<!--                 typeEnum             -->
+	<simpleType name="typeEnum">
+		<restriction base="string">
+			<enumeration value="simple"/>
+			<enumeration value="extended"/>
+			<enumeration value="locator"/>
+			<enumeration value="arc"/>
+			<enumeration value="resource"/>
+			<enumeration value="title"/>
+		</restriction>
+	</simpleType>
+	<!--                 showEnum             -->
+	<simpleType name="showEnum">
+		<restriction base="string">
+			<enumeration value="new"/>
+			<enumeration value="replace"/>
+			<enumeration value="embed"/>
+			<enumeration value="other"/>
+			<enumeration value="none"/>
+		</restriction>
+	</simpleType>
+	<!--                 actuateEnum             -->
+	<simpleType name="actuateEnum">
+		<restriction base="string">
+			<enumeration value="onLoad"/>
+			<enumeration value="onRequest"/>
+			<enumeration value="other"/>
+			<enumeration value="none"/>
+		</restriction>
+	</simpleType>
+	<attribute name="type" type="xlink:typeEnum"/>
+	<attribute name="role" type="string"/>
+	<attribute name="arcrole" type="string"/>
+	<attribute name="title" type="string"/>
+	<attribute name="show" type="xlink:showEnum"/>
+	<attribute name="actuate" type="xlink:actuateEnum"/>
+	<attribute name="label" type="NCName"/>
+	<attribute name="from" type="NCName"/>
+	<attribute name="to" type="NCName"/>
+	<attribute name="href" type="anyURI"/>
+	<complexType name="xlink-base">
+		<attribute ref="xlink:type" use="required"/>
+		<attribute ref="xlink:href" use="required"/>
+		<attribute ref="xlink:actuate" use="required"/>
+	</complexType>
+</schema>

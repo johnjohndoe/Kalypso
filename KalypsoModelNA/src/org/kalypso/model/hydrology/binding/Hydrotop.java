@@ -48,14 +48,14 @@ import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Binding class for {http://www.tuhh.de/hydrotop}Hydrotop<br/>
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class Hydrotop extends Feature_Impl implements IHydrotope
@@ -174,15 +174,15 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   }
 
   @Override
-  public IXLinkedFeature getCatchmentMember( )
+  public XLinkedFeature_Impl getCatchmentMember( )
   {
-    return getProperty( QNAME_PROP_CATCHMENT_MEMBER, IXLinkedFeature.class );
+    return getProperty( QNAME_PROP_CATCHMENT_MEMBER, XLinkedFeature_Impl.class );
   }
 
   @Override
-  public void setCatchmentMember( final String href )
+  public void setCatchmentMember( final XLinkedFeature_Impl value )
   {
-    setLink( QNAME_PROP_CATCHMENT_MEMBER, href );
+    setProperty( QNAME_PROP_CATCHMENT_MEMBER, value );
   }
 
   @Override

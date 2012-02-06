@@ -9,6 +9,5 @@ Export-Package: org.kalypso.optimize,
  org.kalypso.optimize.transform,
  org.kalypso.optimizer,
  org.w3._2001.xmlschema
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.kalypso.core,
+Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.kalypso.simulation.core

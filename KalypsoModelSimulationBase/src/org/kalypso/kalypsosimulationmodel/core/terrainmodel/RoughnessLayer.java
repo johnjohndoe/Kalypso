@@ -40,19 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Dejan Antanaskovic
- * 
  */
-public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
+public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessLayer
 {
-  public RoughnessLayer( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public RoughnessLayer( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IRoughnessLayer.QNAME );
+  }
+
+  public RoughnessLayer( final Feature featureToBind, final QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
   }
 
   /**
@@ -61,7 +66,7 @@ public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
   @Override
   public boolean isEditable( )
   {
-    final Boolean isEditable = (Boolean) getProperty( IRoughnessLayer.PROP_EDITABLE );
+    final Boolean isEditable = (Boolean) getFeature().getProperty( IRoughnessLayer.PROP_EDITABLE );
     if( isEditable == null )
       return false;
     return isEditable.booleanValue();
@@ -73,7 +78,7 @@ public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
   @Override
   public void setEditable( final boolean status )
   {
-    setProperty( IRoughnessLayer.PROP_EDITABLE, status );
+    getFeature().setProperty( IRoughnessLayer.PROP_EDITABLE, status );
   }
 
   /**
@@ -82,7 +87,7 @@ public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
   @Override
   public boolean isBasicLayer( )
   {
-    final Boolean isBasicLayer = (Boolean) getProperty( IRoughnessLayer.PROP_LAYER_TYPE );
+    final Boolean isBasicLayer = (Boolean) getFeature().getProperty( IRoughnessLayer.PROP_LAYER_TYPE );
     if( isBasicLayer == null )
       return false;
     return isBasicLayer.booleanValue();
@@ -96,5 +101,4 @@ public class RoughnessLayer extends Feature_Impl implements IRoughnessLayer
   {
     return !isBasicLayer();
   }
-
 }

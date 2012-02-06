@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.views.ScenarioContentProvider;
 import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -78,10 +79,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.ResultMetaInfoViewer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-
-import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Gernot Belger
@@ -226,7 +225,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       return m_resultParents.get( meta );
     }
 
-    return findScenario( meta.getOwner() );
+    return findScenario( meta.getParent() );
   }
 
   /**
@@ -256,7 +255,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
           m_workspace.add( workspace );
           final IResultMeta rootMeta = (IResultMeta) workspace.getRootFeature().getAdapter( IResultMeta.class );
 
-          final IFeatureBindingCollection<IResultMeta> metaChildren = rootMeta.getChildren();
+          final IFeatureWrapperCollection<IResultMeta> metaChildren = rootMeta.getChildren();
 
           final List<IResultMeta> wspChildren = filterMetaChildren( metaChildren );
 
@@ -346,7 +345,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       }
     }
 
-    final IFeatureBindingCollection<IResultMeta> children = resultMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
     for( final IResultMeta child : children )
     {
       final IResultMeta childsWspDoc = findFirstWspTinMetaChild( child );
@@ -385,7 +384,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     if( element instanceof IResultMeta )
     {
       final IResultMeta result = (IResultMeta) element;
-      final IResultMeta parentResult = result.getOwner();
+      final IResultMeta parentResult = result.getParent();
       if( parentResult != null )
       {
         return parentResult;

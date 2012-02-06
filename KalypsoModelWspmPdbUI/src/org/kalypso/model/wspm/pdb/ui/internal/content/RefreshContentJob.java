@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
@@ -48,7 +48,6 @@ import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -63,7 +62,7 @@ public class RefreshContentJob extends Job
 
   public RefreshContentJob( final IPdbConnection connection )
   {
-    super( Messages.getString( "RefreshContentJob.0" ) ); //$NON-NLS-1$
+    super( "Refresh..." );
 
     m_connection = connection;
   }
@@ -71,7 +70,7 @@ public class RefreshContentJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    monitor.beginTask( getName(), IProgressMonitor.UNKNOWN );
+    monitor.beginTask( "Refresh...", IProgressMonitor.UNKNOWN );
 
     Session session = null;
     try
@@ -86,7 +85,7 @@ public class RefreshContentJob extends Job
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "RefreshContentJob.1" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to connect to database", e );
     }
     finally
     {

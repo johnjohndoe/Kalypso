@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -54,16 +56,16 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger, ig
  */
 public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D implements IBuildingFlowRelation2D
 {
-
-  public BuildingFlowRelation2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public BuildingFlowRelation2D( final Feature featureToBind, final QName qname )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qname ); 
   }
 
   /**
@@ -72,7 +74,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public KIND2D getKind( )
   {
-    final Integer kindInt = (Integer) getProperty( QNAME_PROP_KIND );
+    final Integer kindInt = (Integer) getFeature().getProperty( QNAME_PROP_KIND );
     if( kindInt == null )
       return null;
 
@@ -100,7 +102,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
 
   private Feature getObservationFeature( )
   {
-    return (Feature) getProperty( QNAME_PROP_OBSERVATION );
+    return (Feature) getFeature().getProperty( QNAME_PROP_OBSERVATION );
   }
 
   /**
@@ -108,7 +110,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
    * <p>
    * If it does not exist yet or is not yet initialized, both is done.
    * </p>
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getBuildingObservation()
    */
   @Override
@@ -120,7 +122,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
     final Feature obsFeature;
     if( obsFeatureIfPresent == null )
     {
-      final Feature feature = this;
+      final Feature feature = getFeature();
       final GMLWorkspace workspace = feature.getWorkspace();
       final IRelationType parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_OBSERVATION );
       obsFeature = workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
@@ -169,7 +171,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public int getDirection( )
   {
-    return ((BigInteger) getProperty( QNAME_PROP_DIRECTION )).intValue();
+    return ((BigInteger) getFeature().getProperty( QNAME_PROP_DIRECTION )).intValue();
   }
 
   /**
@@ -178,7 +180,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   @Override
   public void setDirection( final int degrees )
   {
-    setProperty( QNAME_PROP_DIRECTION, BigInteger.valueOf( degrees ) );
+    getFeature().setProperty( QNAME_PROP_DIRECTION, BigInteger.valueOf( degrees ) );
   }
 
   /**
@@ -187,7 +189,7 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
    * The building parameters are NOT backed by the underlying featre, so changed to the feature are not refelcted in the
    * building parameters.
    * </p>
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getBuildingParameters()
    */
   @Override
@@ -196,18 +198,33 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
     return new BuildingParameters( getBuildingObservation() );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
+   */
   @Override
   public IProfileFeature getProfile( )
   {
-    return (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
+    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+    return profileFeature;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
+   */
   @Override
   public void setProfileLink( final String profileRef )
   {
-    setLink( QNAME_PROP_PROFILE, profileRef );
+    final Feature feature = getFeature();
+
+    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
+    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
+    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    feature.setProperty( profileRelation, profileLinkFeature );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation2D#getStation()
+   */
   @Override
   public BigDecimal getStation( )
   {

@@ -48,7 +48,6 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +64,7 @@ public class OpenConnectionJob extends Job
 
   public OpenConnectionJob( final IPdbSettings settings, final boolean closeConnection )
   {
-    super( Messages.getString( "OpenConnectionJob_0" ) ); //$NON-NLS-1$
+    super( "Connect to PDB" );
 
     m_settings = settings;
     m_closeConnection = closeConnection;
@@ -99,13 +98,13 @@ public class OpenConnectionJob extends Job
         m_connection = connection;
 
       if( info == null )
-        m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "OpenConnectionJob_1" ) ); //$NON-NLS-1$
+        m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Failed to access database" );
       else
         m_connectionStatus = info.getStatus();
     }
     catch( final Exception e )
     {
-      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, Messages.getString( "OpenConnectionJob_2" ), e ); //$NON-NLS-1$
+      m_connectionStatus = new Status( IStatus.ERROR, WspmPdbCorePlugin.PLUGIN_ID, "Connection failed", e );
     }
     finally
     {

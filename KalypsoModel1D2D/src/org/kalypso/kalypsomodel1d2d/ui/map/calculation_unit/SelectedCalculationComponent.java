@@ -69,12 +69,11 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -132,7 +131,7 @@ public class SelectedCalculationComponent
     } );
 
     final IFEDiscretisationModel1d2d discModel = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final GMLWorkspace workspace = discModel.getWorkspace();
+    final GMLWorkspace workspace = discModel.getFeature().getWorkspace();
     final ModellEventListener modelListener = new ModellEventListener()
     {
       @Override
@@ -215,9 +214,9 @@ public class SelectedCalculationComponent
     final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( m_dataModel );
     final Feature bcHolderFeature = workspace.getRootFeature();
     final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    final IFeatureBindingCollection<IFlowRelationship> allFlowRelationshipsList = flowRelationshipsModel.getFlowRelationsShips();
+    final List<IFeatureWrapper2> allFlowRelationshipsList = new ArrayList<IFeatureWrapper2>( flowRelationshipsModel );
     final List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>();
-    for( final Feature relationship : allFlowRelationshipsList )
+    for( final IFeatureWrapper2 relationship : allFlowRelationshipsList )
     {
       if( relationship instanceof IBoundaryCondition )
         conditions.add( (IBoundaryCondition) relationship );

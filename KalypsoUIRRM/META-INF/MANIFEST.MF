@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.kalypso.model.rrm.ui;singleton:=true
+Bundle-SymbolicName: org.kalypso.ui.rrm; singleton:=true
 Bundle-Version: 11.6.4.qualifier
-Bundle-Activator: org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin
+Bundle-Activator: org.kalypso.ui.rrm.KalypsoUIRRMPlugin
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -12,17 +12,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.kalypso.ui,
  org.eclipse.ui.intro,
- org.kalypso.model.rrm.core,
+ org.kalypso.NACalcJob,
  org.kalypso.afgui,
  org.kalypso.project.database.client,
  org.kalypso.simulation.ui,
  org.kalypso.model.rrm.project.template,
  org.kalypso.module,
  org.kalypso.ModelSimulationBase,
- org.kalypso.gml.ui,
- org.kalypso.zml.ui;bundle-version="11.6.4",
- org.kalypso.model.rcm;bundle-version="11.6.4",
- org.kalypso.featureview;bundle-version="11.6.4"
+ org.kalypso.gml.ui
 Bundle-ActivationPolicy: lazy
-Export-Package: org.kalypso.ui.rrm
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.kalypso.ui.rrm.extension
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

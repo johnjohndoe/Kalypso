@@ -1,7 +1,7 @@
 package org.kalypso.model.wspm.tuhh.ui.actions.dtm;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -77,7 +77,7 @@ final class CreateNewProfileJob extends AbstractDemProfileJob
 
     final CommandableWorkspace workspace = theme.getWorkspace();
     final FeatureList profileFeatures = theme.getFeatureList();
-    final Feature parentFeature = profileFeatures.getOwner();
+    final Feature parentFeature = profileFeatures.getParentFeature();
     final WspmWaterBody water = ProfileUiUtils.findWaterbody( parentFeature );
     final TuhhReach reach = ProfileUiUtils.findReach( parentFeature );
 

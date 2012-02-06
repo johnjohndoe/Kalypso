@@ -48,10 +48,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -68,8 +66,8 @@ import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -83,12 +81,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -104,7 +101,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -237,13 +234,13 @@ public class ResultMeta1d2dHelper
           {
             if( lDir instanceof File )
               try
-            {
+              {
                 FileUtils.deleteDirectory( (File) lDir );
-            }
-            catch( final IOException e1 )
-            {
-              e1.printStackTrace();
-            }
+              }
+              catch( final IOException e1 )
+              {
+                e1.printStackTrace();
+              }
           }
         }
       }
@@ -287,7 +284,7 @@ public class ResultMeta1d2dHelper
    */
   public static IStatus removeResultMetaFileWithChidren( final IResultMeta resultMeta ) throws CoreException
   {
-    final IFeatureBindingCollection<IResultMeta> children = resultMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
 
     /* delete children */
     for( final IResultMeta child : children )
@@ -307,7 +304,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * removes the specified result meta entry and all of its children. Files will be removed, too.
-   *
+   * 
    * @param resultMeta
    *          the result entry
    */
@@ -318,7 +315,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * removes the specified result meta entry and all of its children. Files will be removed, too.
-   *
+   * 
    * @param resultMeta
    *          the result entry
    * @param includeOriginal
@@ -330,7 +327,7 @@ public class ResultMeta1d2dHelper
     if( !removeResultMetaFile( resultMeta, removeOriginalRawRes ).isOK() )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.1" ) ); //$NON-NLS-1$
 
-    final IResultMeta parent = resultMeta.getOwner();
+    final IResultMeta parent = resultMeta.getParent();
     if( parent == null )
       return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.2" ) ); //$NON-NLS-1$
 
@@ -341,7 +338,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
-   *
+   * 
    * @param resultMeta
    *          result meta to which the document result is added to
    * @param name
@@ -358,7 +355,7 @@ public class ResultMeta1d2dHelper
    *          min value of the document
    * @param maxValue
    *          max value of the document
-   *
+   * 
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
@@ -381,7 +378,7 @@ public class ResultMeta1d2dHelper
 
   /**
    * adds a specified {@link IDocumentResultMeta} to the specified {@link IResultMeta}
-   *
+   * 
    * @param resultMeta
    *          result meta to which the document result is added to
    * @param name
@@ -398,7 +395,7 @@ public class ResultMeta1d2dHelper
    *          min value of the document
    * @param maxValue
    *          max value of the document
-   *
+   * 
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final NodeResultMinMaxCatcher minMaxCatcher )
   {
@@ -426,7 +423,7 @@ public class ResultMeta1d2dHelper
   {
     final Set<String> toDelete = new HashSet<String>( Arrays.asList( idsToDelete ) );
 
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
@@ -436,7 +433,7 @@ public class ResultMeta1d2dHelper
     {
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.4" ) + child.getName() ); //$NON-NLS-1$
 
-      if( toDelete.contains( child.getId() ) )
+      if( toDelete.contains( child.getGmlID() ) )
       {
         stati.add( removeResult( child, includeOriginal ) );
       }
@@ -451,7 +448,7 @@ public class ResultMeta1d2dHelper
   {
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
@@ -485,7 +482,7 @@ public class ResultMeta1d2dHelper
   {
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3" ), children.size() ); //$NON-NLS-1$
 
@@ -540,7 +537,7 @@ public class ResultMeta1d2dHelper
    */
   public static Date[] getStepDates( final ICalcUnitResultMeta calcUnitMeta )
   {
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     final Set<Date> dates = new HashSet<Date>();
     for( final IResultMeta child : children )
@@ -573,7 +570,7 @@ public class ResultMeta1d2dHelper
 
   public static Map<String, Date> getAllIDs( final ICalcUnitResultMeta calcUnitMeta )
   {
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
     final HashMap<String, Date> ids = new HashMap<String, Date>();
     for( final IResultMeta child : children )
@@ -611,7 +608,7 @@ public class ResultMeta1d2dHelper
         }
       }
 
-      ids.put( child.getId(), l_date );
+      ids.put( child.getGmlID(), l_date );
     }
 
     return ids;
@@ -621,8 +618,8 @@ public class ResultMeta1d2dHelper
   {
     final IKalypsoTheme[] allThemes = modell.getAllThemes();
 
-    final IResultMeta calcUnitMeta = stepResult.getOwner();
-    final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
+    final IResultMeta calcUnitMeta = stepResult.getParent();
+    final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
 
     for( final IResultMeta stepChild : children )
     {
@@ -662,7 +659,7 @@ public class ResultMeta1d2dHelper
   public static String getNodeResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta, final String strType )
   {
     return docResult.getName() + STR_THEME_NAME_SEPARATOR + strType + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR
-        + stepResult.getProperty( IStepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
+        + stepResult.getFeature().getProperty( IStepResultMeta.QNAME_PROP_STEP_TYPE ) + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName();
   }
 
   public static String getIsolineResultLayerName( final IResultMeta docResult, final IResultMeta stepResult, final IResultMeta calcUnitMeta )
@@ -690,31 +687,32 @@ public class ResultMeta1d2dHelper
         + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11" ) + STR_THEME_NAME_SEPARATOR + stepResult.getName() + STR_THEME_NAME_SEPARATOR + calcUnitMeta.getName(); //$NON-NLS-1$
   }
 
+  /**
+   *
+   */
   public static Date resolveDateFromResultStep( final FileObject pFileResult )
   {
+    Date lDateRes = null;
     try
     {
-      return interpreteDateFromURL( pFileResult.getParent().getURL() );
+      lDateRes = interpreteDateFromURL( pFileResult.getParent().getURL() );
     }
     catch( final FileSystemException e0 )
     {
-      // FIXME: will never happen due to gerneric exception caught in the first call
       try
       {
-        // DEAD CODE:
-        return interpreteRMA10TimeLine( findFirstSpecifiedLine2dFile( pFileResult, "DA" ) ); //$NON-NLS-1$
+        lDateRes = interpreteRMA10TimeLine( findFirstSpecifiedLine2dFile( pFileResult, "DA" ) ); //$NON-NLS-1$
       }
-      catch( final Exception e1 )
+      catch( final IOException e1 )
       {
       }
     }
-
-    return null;
+    return lDateRes;
   }
 
   /**
    * parse the given {@link URL} for the standard(Kalypso-RMA-Results) time step pattern
-   *
+   * 
    * @return Date from given {@link URL}, if there is no matching pattern return null
    */
   public static Date interpreteDateFromURL( final URL url )
@@ -726,16 +724,19 @@ public class ResultMeta1d2dHelper
       final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
       final SimpleDateFormat lSimpleDateFormatFull = new SimpleDateFormat( lStrTimeFormatFull );
       final int indexOfStepDate = url.toExternalForm().indexOf( TIME_STEP_PREFIX ) + TIME_STEP_PREFIX.length();
-
+      // Date lDateRes = lSimpleDateFormat.parse( url.toExternalForm().substring( indexOfStepDate, indexOfStepDate +
+      // lStrTimeFormat.length() ) );
+      Date lDateRes = null;
       final String dateString = url.toExternalForm().substring( indexOfStepDate );
       try
       {
-        return lSimpleDateFormatFull.parse( dateString );
+        lDateRes = lSimpleDateFormatFull.parse( dateString );
       }
       catch( final Exception e )
       {
-        return lSimpleDateFormat.parse( dateString );
+        lDateRes = lSimpleDateFormat.parse( dateString );
       }
+      return lDateRes;
     }
     catch( final Exception e )
     {
@@ -747,63 +748,64 @@ public class ResultMeta1d2dHelper
   /**
    * parse the time string from the "2d" result file with according format, interprets the date given in Kalypso-RMA
    * format, checks the need for additional day in case of leap year
-   *
+   * 
    * @return {@link Date} interpreted from given line, in case of invalid format or bad string - null
-   *
+   * 
    */
   public static Date interpreteRMA10TimeLine( final String line )
   {
-    if( line.length() < 32 )
-      return null;
-
-    final String yearString = line.substring( 6, 13 ).trim();
-    final String hourString = line.substring( 18, 32 ).trim();
-
-    final int year = Integer.parseInt( yearString );
-
-    return parseTimelineHour( hourString, year );
-  }
-
-  public static Date parseTimelineHour( final String hourString, final int year )
-  {
-    final BigDecimal hours = NumberUtils.parseQuietDecimal( hourString );
-    if( hours == null )
-      return null;
-
-    // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
-    final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
-    calendar.clear();
-    calendar.set( year, 0, 1 );
-
-    BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
-    final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
-    if( wholeHours.intValue() > 1 )
+    if( line.length() >= 32 )
     {
-      wholeHours = new BigDecimal( wholeHours.intValue() - 1 );
-    }
-    calendar.add( Calendar.HOUR, wholeHours.intValue() );
-    calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+      try
+      {
+        final String yearString = line.substring( 6, 13 ).trim();
+        final String hourString = line.substring( 18, 32 ).trim();
 
-    final boolean lBoolLeapYear = DateUtilities.isLeapYear( calendar );
-    if( lBoolLeapYear && calendar.get( Calendar.DAY_OF_YEAR ) > 59 )
+        final int year = Integer.parseInt( yearString );
+        final BigDecimal hours = new BigDecimal( hourString );
+
+        // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
+        final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+        calendar.clear();
+        calendar.set( year, 0, 1 );
+
+        BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
+        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
+        if( wholeHours.intValue() > 1 )
+        {
+          wholeHours = new BigDecimal( wholeHours.intValue() - 1 );
+        }
+        calendar.add( Calendar.HOUR, wholeHours.intValue() );
+        calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+        final boolean lBoolLeapYear = DateUtilities.isLeapYear( calendar );
+        if( lBoolLeapYear && calendar.get( Calendar.DAY_OF_YEAR ) > 59 )
+        {
+          calendar.clear();
+          calendar.set( year, 0, 1 );
+          calendar.add( Calendar.HOUR, wholeHours.intValue() - 24 );
+          calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+        }
+        return calendar.getTime();
+      }
+      catch( final NumberFormatException e )
+      {
+        return null;
+      }
+    }
+    else
     {
-      calendar.clear();
-      calendar.set( year, 0, 1 );
-      calendar.add( Calendar.HOUR, wholeHours.intValue() - 24 );
-      calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
+      return null;
     }
-
-    return calendar.getTime();
   }
 
   /**
    * @param file
    *          {@link FileObject} is the file object to search in, with linePrefix {@link String} will be specified what
    *          kind of line should be found, e.g. "DA" - is the time line according to 2d-files documentation
-   *
+   * 
    * @return {@link String} the first matching line
    */
-  public static String findFirstSpecifiedLine2dFile( final FileObject file, final String linePrefix ) throws IOException, URISyntaxException
+  public static String findFirstSpecifiedLine2dFile( final FileObject file, final String linePrefix ) throws IOException
   {
     if( linePrefix == null || linePrefix.equals( "" ) || file == null ) {//$NON-NLS-1$
       return "";//$NON-NLS-1$
@@ -811,7 +813,7 @@ public class ResultMeta1d2dHelper
 
     String lStrRes = "";//$NON-NLS-1$
     final String lStrParam = linePrefix.trim().toUpperCase();
-    final InputStream lInStream = VFSUtilities.getInputStreamFromFileObject( file );
+    final InputStream lInStream = FileUtilities.getInputStreamFromFileObject( file );
 
     final Reader lReader = new InputStreamReader( lInStream );
     final BufferedReader lBufferedReader = new BufferedReader( lReader );
@@ -852,7 +854,7 @@ public class ResultMeta1d2dHelper
     {
       return stepResultMeta.getFullPath();
     }
-    final IFeatureBindingCollection<IResultMeta> children = stepResultMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = stepResultMeta.getChildren();
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
       if( child instanceof IStepResultMeta )
@@ -880,7 +882,7 @@ public class ResultMeta1d2dHelper
    */
   public static IPath getSavedSWANRawResultData( final ICalcUnitResultMeta calcUnitMeta )
   {
-    final IFeatureBindingCollection<IResultMeta> children = calcUnitMeta.getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
       if( child instanceof IStepResultMeta )
@@ -929,10 +931,10 @@ public class ResultMeta1d2dHelper
   public static String resolveResultTypeFromSldFileName( final String sldFileName, final String strType )
   {
     if( sldFileName == null || "".equals( sldFileName ) || strType == null || "".equals( strType ) ) { //$NON-NLS-1$ //$NON-NLS-2$
-      return ""; //$NON-NLS-1$
+      return ""; //$NON-NLS-1$ 
     }
     final int beginIndex = sldFileName.toLowerCase().indexOf( strType.toLowerCase() ) + strType.length();
-    final int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$
+    final int endIndex = sldFileName.toLowerCase().indexOf( "style" ); //$NON-NLS-1$ 
     return sldFileName.substring( beginIndex, endIndex );
   }
 
@@ -946,7 +948,7 @@ public class ResultMeta1d2dHelper
 
   public static boolean containsTerrain( final IStepResultMeta stepResultMeta )
   {
-    for( final IResultMeta resultMetaStep : stepResultMeta.getOwner().getChildren() )
+    for( final IResultMeta resultMetaStep : stepResultMeta.getParent().getChildren() )
     {
       if( resultMetaStep instanceof IDocumentResultMeta )
       {
@@ -988,7 +990,7 @@ public class ResultMeta1d2dHelper
       return (ICalcUnitResultMeta) result;
     else
     {
-      final IResultMeta parent = result.getOwner();
+      final IResultMeta parent = result.getParent();
       if( parent != null )
       {
         return getCalcUnitResultMeta( parent );
@@ -997,26 +999,4 @@ public class ResultMeta1d2dHelper
     return null;
   }
 
-  public static IDocumentResultMeta[] findDocumentsByType( final IResultMeta parent, final DOCUMENTTYPE searchType )
-  {
-    final Collection<IDocumentResultMeta> documents = new ArrayList<IDocumentResultMeta>();
-
-    final IFeatureBindingCollection<IResultMeta> children = parent.getChildren();
-    for( final IResultMeta child : children )
-    {
-      if( child instanceof IDocumentResultMeta )
-      {
-        final IDocumentResultMeta document = (IDocumentResultMeta) child;
-        final DOCUMENTTYPE documentType = document.getDocumentType();
-        if( searchType == documentType )
-          documents.add( document );
-      }
-
-      /* Recurse */
-      final IDocumentResultMeta[] childDocs = findDocumentsByType( child, searchType );
-      documents.addAll( Arrays.asList( childDocs ) );
-    }
-
-    return documents.toArray( new IDocumentResultMeta[documents.size()] );
-  }
 }

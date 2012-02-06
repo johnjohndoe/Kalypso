@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
@@ -45,8 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,7 +55,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.pdb.db.constants.WaterBodyConstants.STATIONING_DIRECTION;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
-import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.SHP2GM_Object;
@@ -74,8 +72,6 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
  */
 public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
 {
-  private static final String STR_FAILED_TO_READ_WATER_BODIES_FROM_SHAPE = Messages.getString( "ReadWaterBodiesOperation.0" ); //$NON-NLS-1$
-
   private WaterBody[] m_waterBodies;
 
   private final ImportWaterBodiesData m_data;
@@ -116,7 +112,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_BODIES_FROM_SHAPE, e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to read water bodies from shape", e );
       throw new CoreException( status );
     }
 
@@ -126,7 +122,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, STR_FAILED_TO_READ_WATER_BODIES_FROM_SHAPE, e );
+      final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, "Failed to read water bodies from shape", e );
       throw new CoreException( status );
     }
 
@@ -165,19 +161,18 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final GM_Curve[] allCurves = multi.getAllCurves();
     if( allCurves.length == 0 )
     {
-      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "ReadWaterBodiesOperation.1" ) ) ); //$NON-NLS-1$
+      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "Geometry is Null" ) );
       return null;
     }
 
     if( allCurves.length > 1 )
-      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, Messages.getString( "ReadWaterBodiesOperation.2" ) ) ); //$NON-NLS-1$
+      m_waterBodyStatus.put( waterBody, new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, "Multi Polyline (using first)" ) );
 
     return allCurves[0];
   }
 
   private Object findValue( final ImportAttributeInfo< ? > info, final IDBFField[] fields, final Object[] data ) throws CoreException
   {
-    final String property = info.getProperty();
     final IDBFField field = info.getField();
     if( field == ImportAttributeInfo.FIELD_USE_DEFAULT )
       return info.getDefaultValue();
@@ -185,29 +180,12 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final int fieldIndex = findFieldIndex( field.getName(), fields );
     final Object value = data[fieldIndex];
 
-    switch( property )
-    {
-      case WaterBody.PROPERTY_DIRECTION_OF_STATIONING:
-        return parseDirection( value );
-
-      case WaterBody.PROPERTY_RANK:
-        return parseRank( value );
-
-      case WaterBody.PROPERTY_DESCRIPTION:
-      case WaterBody.PROPERTY_LABEL:
-      case WaterBody.PROPERTY_NAME:
-        return parseAsString( value );
-    }
+    if( WaterBody.PROPERTY_DIRECTION_OF_STATIONING.equals( info.getProperty() ) )
+      return parseDirection(value);
+    if( WaterBody.PROPERTY_RANK.equals( info.getProperty() ) )
+      return parseRank( value );
 
     return value;
-  }
-
-  private String parseAsString( final Object value )
-  {
-    if( value instanceof String )
-      return (String) value;
-
-    return ObjectUtils.toString( value );
   }
 
   private Integer parseRank( final Object value ) throws CoreException
@@ -225,7 +203,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     }
     catch( final NumberFormatException e )
     {
-      final String msg = String.format( Messages.getString( "ReadWaterBodiesOperation.3" ), text ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to parse rank from value '%s'. Value should be a number.", text );
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }
@@ -243,7 +221,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     catch( final IllegalArgumentException e )
     {
       final String possibleValues = StringUtils.join( STATIONING_DIRECTION.values() );
-      final String msg = String.format( Messages.getString( "ReadWaterBodiesOperation.4" ), value, possibleValues ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to parse stationing direction from value '%s'. Possible values are: %s", value, possibleValues );
       final IStatus status = new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }

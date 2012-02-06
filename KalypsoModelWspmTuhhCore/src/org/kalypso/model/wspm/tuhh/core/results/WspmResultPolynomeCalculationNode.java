@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.results;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

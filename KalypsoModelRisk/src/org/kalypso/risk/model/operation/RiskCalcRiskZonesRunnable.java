@@ -21,6 +21,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.observation.IObservation;
@@ -30,6 +32,7 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.risk.i18n.Messages;
@@ -44,7 +47,6 @@ import org.kalypso.risk.model.simulation.RiskZonesGrid;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
-import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -82,7 +84,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     final int importantDigits = KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION;
     final SubMonitor subMonitor = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.7" ), 100 ); //$NON-NLS-1$
     if( m_rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
-      return new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
 
     try
     {
@@ -94,7 +96,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
       final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( m_rasterModel.getSpecificDamageCoverageCollection() );
       final ICoverageCollection baseCoverages = maxCoveragesCollection;
-      final IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
       for( int i = 0; i < baseCoveragesList.size(); i++ )
       {
         final ICoverage srcSpecificDamageCoverage = baseCoveragesList.get( i );
@@ -115,8 +117,8 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         coverage.setDescription( Messages.getString( "org.kalypso.risk.model.operation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
-        final GMLWorkspace workspace = m_rasterModel.getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_rasterModel, new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        final GMLWorkspace workspace = m_rasterModel.getFeature().getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_rasterModel.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       // statistics...
@@ -145,9 +147,15 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     /* task: create an observation */
-    final Feature controlModelFeature = controlModel;
+    final Feature controlModelFeature = controlModel.getFeature();
+    final CommandableWorkspace workspace = new CommandableWorkspace( controlModelFeature.getWorkspace() );
 
-    final Feature fObs = controlModelFeature.createSubFeature( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+    final IPropertyType property = controlModelFeature.getFeatureType().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+    final IRelationType relation = (IRelationType) property;
+
+    final Feature fObs = workspace.createFeature( controlModelFeature, relation, relation.getTargetFeatureType() );
+
+    workspace.setFeatureAsComposition( controlModelFeature, relation, fObs, true );
 
     // new observation
     final TupleResult result = new TupleResult();

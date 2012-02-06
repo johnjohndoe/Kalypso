@@ -8,49 +8,48 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.TooltipFormatter;
+import org.kalypso.model.wspm.tuhh.ui.chart.utils.ProfilChartTooltip;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionBridgeLayer extends TupleResultLineLayer
 {
-  public LengthSectionBridgeLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
+  public LengthSectionBridgeLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( provider, data, styleSet );
+    super( provider, data, lineStyle, pointStyle );
   }
 
   @Override
   public void paint( final GC gc )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    if( valueData == null )
+    if( m_data == null )
       return;
 
-    valueData.open();
-    final IObservation<TupleResult> obs = valueData.getObservation();
+    m_data.open();
+    final IObservation<TupleResult> obs = m_data.getObservation();
     if( obs == null )
       return;
+    final PointFigure pf = getPointFigure();
+    final IPointStyle ps = pf.getStyle();
     final FullRectangleFigure rf = new FullRectangleFigure();
-    final IPointStyle ps = getPointStyle();
     rf.setStyle( new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), true ) );
     for( int i = 0; i < obs.getResult().size(); i++ )
     {
       final Rectangle rect = getScreenRect( i );
       if( rect != null )
       {
-        if( rect.width < 1 )
-          rect.width = 1;
         rf.setRectangle( rect );
         rf.paint( gc );
       }
@@ -60,8 +59,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
   @Override
   protected final String getTooltip( final int index )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult tr = valueData.getObservation().getResult();
+    final TupleResult tr = m_data.getObservation().getResult();
     final IRecord rec = tr.get( index );
 
     final int stationIndex = tr.indexOfComponent( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION );
@@ -80,24 +78,27 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double ok = ProfilUtil.getDoubleValueFor( okIndex, rec );
     final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
 
-    final String comment = commentIndex >= 0 ? (String) tr.get( index ).getValue( commentIndex ) : "";
+    final ProfilChartTooltip tooltip = new ProfilChartTooltip();
+    tooltip.add( stationLabel, station );
+    tooltip.add( okLabel, ok );
+    tooltip.add( ukLabel, uk );
+    tooltip.add( widthLabel, bw );
 
-    final TooltipFormatter tooltip = new TooltipFormatter( comment );
-    tooltip.addLine( stationLabel, station.toString() );
-    tooltip.addLine( okLabel, ok.toString() );
-    tooltip.addLine( ukLabel, uk.toString() );
-    tooltip.addLine( widthLabel, bw.toString() );
+    if( commentIndex >= 0 )
+    {
+      final String comment = (String) tr.get( index ).getValue( commentIndex );
+      tooltip.add( comment, null );
+    }
 
-    return tooltip.format();
+    return tooltip.toString();
   }
 
   @Override
   public EditInfo getHover( final Point pos )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
     if( !isVisible() )
       return null;
-    for( int i = 0; i < valueData.getDomainValues().length; i++ )
+    for( int i = 0; i < m_data.getDomainValues().length; i++ )
     {
       final Rectangle hover = getScreenRect( i );
       if( hover != null && hover.contains( pos ) )
@@ -108,8 +109,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
 
   private Rectangle getScreenRect( final int i )
   {
-    final TupleResultDomainValueData< ? , ? > valueData = getValueData();
-    final TupleResult result = valueData.getObservation().getResult();
+    final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
 
     final Double uK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );

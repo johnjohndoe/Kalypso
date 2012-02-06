@@ -48,7 +48,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
-import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,7 +66,7 @@ public final class GetPdbList<T> implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return Messages.getString( "GetPdbList_0" ); //$NON-NLS-1$
+    return "Get elements";
   }
 
   @SuppressWarnings("unchecked")
@@ -83,7 +82,7 @@ public final class GetPdbList<T> implements IPdbOperation
     {
       e.printStackTrace();
 
-      final String message = String.format( Messages.getString( "GetPdbList_1" ), m_type.getName() ); //$NON-NLS-1$
+      final String message = String.format( "Failed to retreive: %s", m_type.getName() );
       throw new PdbConnectException( message, e );
     }
   }

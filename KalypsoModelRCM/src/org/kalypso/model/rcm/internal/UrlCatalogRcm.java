@@ -41,7 +41,6 @@
 
 package org.kalypso.model.rcm.internal;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -50,26 +49,16 @@ import org.kalypso.model.rcm.RcmConstants;
 
 public class UrlCatalogRcm extends AbstractUrlCatalog implements RcmConstants
 {
+  /**
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   */
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    try
-    {
-      catalog.put( NS_OMBROMETER, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/ombrometer.xsd" ) ); //$NON-NLS-1$
-      prefixes.put( NS_OMBROMETER, "ombr" ); //$NON-NLS-1$
+    catalog.put( NS_OMBROMETER, UrlCatalogRcm.class.getResource( "schema/ombrometer.xsd" ) );
+    prefixes.put( NS_OMBROMETER, "ombr" );
 
-      catalog.put( NS_THIESSEN, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/thiessenStations.xsd" ) ); //$NON-NLS-1$
-      prefixes.put( NS_THIESSEN, "th" ); //$NON-NLS-1$
-
-      catalog.put( NS_RCM, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/rainfallCatchmentModel_v2.xsd" ) ); //$NON-NLS-1$
-      prefixes.put( NS_RCM, "rcm" ); //$NON-NLS-1$
-
-      catalog.put( NS_CM, new URL( "platform:/plugin/org.kalypso.model.rcm/etc/schema/catchmentModel.xsd" ) ); //$NON-NLS-1$
-      prefixes.put( NS_CM, "cm" ); //$NON-NLS-1$
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
+    catalog.put( NS_RCM, UrlCatalogRcm.class.getResource( "schema/rainfallCatchmentModel_v2.xsd" ) );
+    prefixes.put( NS_RCM, "rcm" );
   }
 }

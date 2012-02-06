@@ -63,7 +63,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
@@ -286,7 +285,7 @@ public class PrfSource implements IProfilSource
     final IProfileBuilding building;
     switch( dbh.getSpecification( 8 ) )
     {
-    // important: changing property-positions will cause wrong parameter for building
+      // important: changing property-positions will cause wrong parameter for building
       case IWspWinConstants.SPEZIALPROFIL_TRAPEZ:
       {
         building = new BuildingTrapez();
@@ -427,12 +426,13 @@ public class PrfSource implements IProfilSource
     final IComponent cHoehe = p.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     p.addPointProperty( cBreite );
     p.addPointProperty( cHoehe );
-
+    final int iBreite = p.indexOfProperty( cBreite );
+    final int iHoehe = p.indexOfProperty( cHoehe );
     for( int i = 0; i < xs.length; i++ )
     {
-      final IProfileRecord point = p.createProfilPoint();
-      point.setBreite( xs[i] );
-      point.setHoehe( ys[i] );
+      final IRecord point = p.createProfilPoint();
+      point.setValue( iBreite, xs[i] );
+      point.setValue( iHoehe, ys[i] );
       p.addPoint( point );
     }
     return xs.length;
@@ -483,8 +483,8 @@ public class PrfSource implements IProfilSource
       return;
     final int pCount = db.getCoordCount();
 
-    IProfileRecord p1 = null;
-    IProfileRecord p2 = null;
+    IRecord p1 = null;
+    IRecord p2 = null;
     int pos1 = 0;
     int pos2 = 0;
 
@@ -501,25 +501,25 @@ public class PrfSource implements IProfilSource
     if( pCount > 2 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.29", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
     }
 
     if( p1 != null )
     {
       final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p1 );
-      marker.setInterpretedValue( pos1 == 3 );
+      marker.setInterpretedValue( (pos1 == 3) );
     }
 
     if( p2 != null )
     {
       final IProfilPointMarker marker = p.createPointMarker( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, p2 );
-      marker.setInterpretedValue( pos2 == 4 );
+      marker.setInterpretedValue( (pos2 == 4) );
     }
   }
 
   private void readDurchStr( final IProfil p, final PrfReader pr )
   {
-    final IProfileRecord[] points = p.getPoints();
+    final IRecord[] points = p.getPoints();
     if( points.length == 0 )
       return;
     final IDataBlock db = pr.getDataBlock( "DURCHSTROEMTE" ); //$NON-NLS-1$
@@ -527,8 +527,8 @@ public class PrfSource implements IProfilSource
       return;
     final int pCount = db.getCoordCount();
 
-    IProfileRecord p1 = null;
-    IProfileRecord p2 = null;
+    IRecord p1 = null;
+    IRecord p2 = null;
 
     if( pCount > 0 )
     {
@@ -541,7 +541,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 2 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.32", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
     }
 
     if( p1 != null )
@@ -567,7 +567,7 @@ public class PrfSource implements IProfilSource
     final Double[] pos = dbt.getX();
     for( int i = 0; i < pos.length; i++ )
     {
-      final IProfileRecord point = ProfilUtil.findPoint( p, pos[i], 0 );
+      final IRecord point = ProfilUtil.findPoint( p, pos[i], 0 );
       if( point != null )
         if( values != null && values.length > i + 1 )
         {
@@ -658,15 +658,15 @@ public class PrfSource implements IProfilSource
 
   private void readBordVoll( final IProfil p, final PrfReader pr )
   {
-    final IProfileRecord[] points = p.getPoints();
+    final IRecord[] points = p.getPoints();
     if( points.length == 0 )
       return;
     final IDataBlock db = pr.getDataBlock( "BORDVOLL" ); //$NON-NLS-1$
     if( db == null )
       return;
     final int pCount = db.getCoordCount();
-    IProfileRecord p1 = null;
-    IProfileRecord p2 = null;
+    IRecord p1 = null;
+    IRecord p2 = null;
 
     if( pCount > 0 )
     {
@@ -679,7 +679,7 @@ public class PrfSource implements IProfilSource
     if( pCount > 2 )
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource.43", p.getStation() ) //$NON-NLS-1$
-      , null ) ); //$NON-NLS-1$
+          , null ) ); //$NON-NLS-1$
     }
 
     if( p1 != null )

@@ -3,6 +3,8 @@ package org.kalypso.risk.model.operation;
 import java.util.ArrayList;
 import java.util.List;
 
+import ogc31.www.opengis.net.gml.FileType;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -14,14 +16,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -29,7 +30,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * Difference RiskImportWaterdepthRunnable: Ascii raster files are already converted to bin files
- *
+ * 
  * @author Thomas Jung
  * @author Dirk Kuch
  */
@@ -56,7 +57,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     {
       monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
 
-      final GMLWorkspace workspace = m_rasterDataModel.getWorkspace();
+      final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
       final IFeatureBindingCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
 
       for( final AsciiRasterInfo raster : m_rasters )
@@ -67,9 +68,10 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         // @hack: append .bin to path to get the binary ascii grid file
         final IFile iFile = raster.getiSourceFile();
 
-        final String binFileName = "platform:/resource//" + iFile.getProject().getName() + "/" + iFile.getProjectRelativePath().toString() + "." + BIN_EXTENSION; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
-        final RangeSetFile rangeSetFile = new RangeSetFile( binFileName );
+        final String binFileName = "platform:/resource//" + iFile.getProject().getName() + "/" + iFile.getProjectRelativePath().toString() + "." + BIN_EXTENSION; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        rangeSetFile.setFileName( binFileName );
         rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
         // remove existing (invalid) coverage collections from the model
@@ -85,7 +87,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "HQ " + raster.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( raster.getReturnPeriod() );
-        final IFeatureType rgcFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( RectifiedGridCoverage.QNAME );
+        final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
         final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
         final Feature coverageFeature = workspace.createFeature( annualCoverageCollection, parentRelation, rgcFeatureType );
 
