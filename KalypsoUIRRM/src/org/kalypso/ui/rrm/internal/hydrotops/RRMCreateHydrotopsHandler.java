@@ -40,28 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.hydrotops;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
 import org.kalypso.model.hydrology.binding.IHydrotope;
@@ -69,12 +62,9 @@ import org.kalypso.model.hydrology.binding.LanduseCollection;
 import org.kalypso.model.hydrology.binding.NAHydrotop;
 import org.kalypso.model.hydrology.binding.SoilTypeCollection;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.operation.hydrotope.HydrotopeCreationOperation;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -87,9 +77,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class RRMCreateHydrotopsHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -98,7 +85,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
 
     final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( selection );
     if( themes.length != 5 )
-      return error( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.0") ); //$NON-NLS-1$
+      return error( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.0" ) ); //$NON-NLS-1$
 
     FeatureList flLanduse = null;
     FeatureList flPedology = null;
@@ -111,7 +98,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       final IRelationType featureTypeProperty = list.getPropertyType();
       final Feature parentFeature = list.getOwner();
       if( featureTypeProperty == null )
-        return error( shell,  Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
+        return error( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.1", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
 
       if( parentFeature instanceof NAHydrotop )
         flHydrotops = ((NAHydrotop) parentFeature).getHydrotopes();
@@ -127,11 +114,11 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
           flCatchment = list;
 
         if( list.size() == 0 )
-          return error( shell,  Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.2", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
+          return error( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.2", kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
       }
     }
     if( flLanduse == null || flPedology == null || flGeology == null || flCatchment == null || flHydrotops == null )
-      return error( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.3") ); //$NON-NLS-1$
+      return error( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.3" ) ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = flHydrotops.getParentFeature().getWorkspace();
     final IFile outputFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
@@ -141,63 +128,21 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final FeatureList fflCatchment = flCatchment;
     final IFeatureBindingCollection<IHydrotope> fflHydrotops = flHydrotops;
 
-    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.4"), Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.4" ), Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.5" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final Job job = new Job( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.6") ) //$NON-NLS-1$
-    {
-      /**
-       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-       */
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace, null );
-        op.setDissolveMode( true );
-        try
-        {
-          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.7"), 1000 ); //$NON-NLS-1$
+    final ICoreRunnableWithProgress operation = new CreateHydrotopesOperation( workspace, outputFile, fflCatchment, fflHydrotops, fflPedology, fflGeology, fflLanduse );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    final String commandName = HandlerUtils.getCommandName( event );
+    StatusDialog.open( shell, status, commandName );
+    // Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.6" ) );
 
-          op.run( progress.newChild( 900, SubMonitor.SUPPRESS_BEGINTASK ) );
-
-          monitor.subTask( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.8") ); //$NON-NLS-1$
-          final File file = outputFile.getLocation().toFile();
-          GmlSerializer.serializeWorkspace( file, workspace, "UTF-8" ); //$NON-NLS-1$
-          ProgressUtilities.worked( progress, 90 );
-          outputFile.refreshLocal( IResource.DEPTH_ZERO, progress.newChild( 10 ) );
-        }
-        catch( final CoreException ce )
-        {
-          return ce.getStatus();
-        }
-        catch( final InvocationTargetException ite )
-        {
-          final Throwable targetException = ite.getTargetException();
-          if( targetException instanceof CoreException )
-            return ((CoreException) targetException).getStatus();
-
-          return StatusUtilities.createStatus( IStatus.ERROR, targetException.getLocalizedMessage(), targetException );
-        }
-        catch( final IOException e )
-        {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.10"), e ); //$NON-NLS-1$
-        }
-        catch( final GmlSerializeException e )
-        {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.10" ), e ); //$NON-NLS-1$
-        }
-        return Status.OK_STATUS;
-      }
-    };
-    job.setUser( true );
-    job.setPriority( Job.LONG );
-    job.schedule();
     return null;
   }
 
   private Object error( final Shell shell, final String message )
   {
-    MessageDialog.openError( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.12"), message ); //$NON-NLS-1$
+    MessageDialog.openError( shell, Messages.getString( "org.kalypso.ui.rrm.internal.hydrotops.RRMCreateHydrotopsHandler.12" ), message ); //$NON-NLS-1$
     return null;
   }
 

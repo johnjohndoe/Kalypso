@@ -50,11 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.Geology;
-import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.SoilType;
@@ -213,10 +209,6 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
       int count = 0;
 
-      final IFeatureType hydrotopeFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.QNAME );
-      final IRelationType sudsMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_SUD_MEMBERS );
-      final IRelationType catchmentMemberRT = (IRelationType) hydrotopeFT.getProperty( Hydrotop.QNAME_PROP_CATCHMENT_MEMBER );
-
       for( final Geometry geometry : intersectionList )
       {
         if( count % 100 == 0 )
@@ -275,7 +267,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         {
           if( feature instanceof org.kalypso.model.hydrology.binding.model.Catchment )
           {
-            final String href = String.format( ".models/modell.gml#%s", feature.getId() ); //$NON-NLS-1$
+            final String href = String.format( "modell.gml#%s", feature.getId() ); //$NON-NLS-1$
 
             hydrotop.setCatchmentMember( href );
 
