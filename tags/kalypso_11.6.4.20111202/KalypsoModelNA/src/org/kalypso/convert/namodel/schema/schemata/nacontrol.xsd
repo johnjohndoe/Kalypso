@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.namodell.control" elementFormDefault="qualified" version="0.8">
+
+  <import namespace="http://www.opengis.net/gml"/>
+  <import namespace="obslink.zml.kalypso.org"/>
+	
+  <element name="NAModellControl" type="na:NAModellControlType" substitutionGroup="gml:_Feature"/>
+  <complexType name="NAModellControlType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="description" type="string"/>
+					<element name="name" type="string"/>
+					<element name="tmp" type="boolean"/>
+					<element name="pre" type="boolean"/>
+					<element name="sch" type="boolean"/>
+					<element name="bof" type="boolean"/>
+					<element name="bsp" type="boolean"/>
+					<element name="gws" type="boolean"/>
+					<element name="qgs" type="boolean"/>
+					<element name="qgg" type="boolean"/>
+					<element name="qna" type="boolean"/>
+					<element name="qif" type="boolean"/>
+					<element name="qvs" type="boolean"/>
+					<element name="qbs" type="boolean"/>
+					<!-- JH: Ausgabe Kluftgrundwasser wurde nie getestet, funktioniert sie???-->
+					<element name="qt1" type="boolean"/>
+					<element name="qtg" type="boolean"/>
+					<element name="qgw" type="boolean"/>
+					<!-- JH: wird vom Modell nicht berechne, Ausgabe daher sinnlos-->
+					<!--
+					<element name="kap" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>kap. Aufstieg</label>
+								<tooltip>Ergebnisse kapillarer Aufstieg</tooltip>
+								<description>Ausgabe der Ergebnisse zum kapillaren Aufstieg (zur Zeit nicht aktiv)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>capillary rise</label>
+								<tooltip>capillary rise output</tooltip>
+								<description>output of the results for capillary rise (not active for the momment)</description>
+							</documentation>
+						</annotation>
+					</element>
+-->
+					<element name="vet" type="boolean"/>
+					<element name="qmr" type="boolean">
+                      <annotation>
+                        <documentation>Deprecated: Mulden Rigolen sind jetzt anders implementiert</documentation>
+                      </annotation>
+                    </element>
+					<!--JH: hier muss 1 oder 2 stehen,1 für Jahreswerte - 2 für Mittelwerte (evtl. im Fortran-Code umstellen?!?)-->
+					<element name="hyd" type="boolean"/>
+					<!--JH: hier kann true (Abflussbilanz bil.dat), false, 1 (Abflussbilanz bil.txt) oder 2 (Abflussbilanz bil.dat und bil.txt) angegeben werden (evtl. im Fortran-Code umstellen)-->
+					<element name="bil" type="boolean"/>
+					<element name="nmq" type="boolean"/>
+					<!--JH: es werden durch true an dieser stelle spi.dat, sph.dat, spv.dat, spn.dat und spb.dat erzeugt-->
+					<element name="spi" type="boolean"/>
+					<!--
+					<element name="sph" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Wasserspiegelhoehe</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="spv" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Verdunstung aus der Talsperre</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="spn" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlag in Talsperre</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="spb" type="boolean">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zehrung</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
+-->
+					<element name="sup" type="boolean"/>
+
+                    <element name="InitialValueDate" minOccurs="0" maxOccurs="100">
+                        <complexType>
+                            <sequence>
+                                <element ref="na:initialValues"/>
+                            </sequence>
+                        </complexType>
+                    </element>
+          
+					<!-- parameter fuer den prognose-kallibrierung -->
+                    <!-- DEPRECATED: moved into naopti.xsd; should be removed eventually -->
+					<element name="automaticCallibration" type="boolean"/>
+					<element name="Catchments" type="string"/>
+					<element name="CatchmentsBianf" type="double"/>
+					<element name="CatchmentsFaktorRetobTetint" type="double"/>
+					<element name="CatchmentsFaktn" type="double"/>
+					<element name="CatchmentsFaktorAigw" type="double"/>
+					<element name="KMChannels" type="string"/>
+					<element name="KMChannelsFaktorRkf" type="double"/>
+					<element name="KMChannelsFaktorRnf" type="double"/>
+					<!-- fuer die erstellung der netzdatei -->
+					<element name="rootNode" type="string" minOccurs="0"/>
+					<!-- link auf den pegel -->
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<!-- link auf das simulationsergebnis -->
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="accuracyPrediction" type="double" minOccurs="0"/>
+					<element name="useOffsetStartPrediction" type="boolean" minOccurs="0"/>
+					<element name="useOffsetEndPrediction" type="boolean" minOccurs="0"/>
+					<element name="qAblageSpurMittlerer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="qAblageSpurOberer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="qAblageSpurUnterer" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="useResults" type="boolean" minOccurs="0"/>
+                    <!-- DEPRECATED: END -->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+  
+	<element name="initialValues" substitutionGroup="gml:_Feature">
+    	<complexType >
+    		<complexContent>
+    			<extension base="gml:AbstractFeatureType">
+    				<sequence>
+    					<element name="write" type="boolean" default="false"/>
+    					<element name="initialDate" type="date"/>
+    				</sequence>
+    			</extension>
+    		</complexContent>
+    	</complexType>
+	</element>
+</schema>

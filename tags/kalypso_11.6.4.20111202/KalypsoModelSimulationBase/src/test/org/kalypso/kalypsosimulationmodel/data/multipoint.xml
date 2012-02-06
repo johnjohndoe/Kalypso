@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+
+<wbGml:MultiPoint
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gml="http://www.opengis.net/gml" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml" 
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	>	
+	<gml:pointMember>
+		<gml:Point>
+			<gml:pos>0 0</gml:pos>
+		</gml:Point>
+	</gml:pointMember>
+	<gml:pointMember>
+		<gml:Point>
+			<gml:pos>0 1</gml:pos>
+		</gml:Point>
+	</gml:pointMember>
+	<gml:pointMember>
+		<gml:Point>
+			<gml:pos>1 0</gml:pos>
+		</gml:Point>
+	</gml:pointMember>
+</wbGml:MultiPoint>
+
+	

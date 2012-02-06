@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DistinctType class="oracle.dbtools.crest.model.design.datatypes.DistinctType" name="Vegetation_Ax" id="CF13DBDC-1F88-61F3-B990-482F4F73709E" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-20 12:42:28 UTC</createdTime>
+   <changedBy>thuel</changedBy>
+   <changedTime>2011-06-07 09:31:58 UTC</changedTime>
+   <comment>[m]</comment>
+   <ownerDesignName>pdb_V0.0.2</ownerDesignName>
+   <predefined>false</predefined>
+   <logicalDataType>LOGDT019</logicalDataType>
+   <precision>8</precision>
+   <scale>3</scale>
+   <size>0</size>
+</DistinctType>

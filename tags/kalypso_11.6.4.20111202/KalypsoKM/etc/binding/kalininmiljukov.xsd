@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns:km="http://www.kalypso.wb.tu-harburg.de/rrm/kalininmiljukov" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://www.kalypso.wb.tu-harburg.de/rrm/kalininmiljukov" elementFormDefault="qualified" version="0.1">
+
+	<element name="KalininMiljukovGroup" type="km:KalininMiljukovGroupType"/>
+
+	<complexType name="KalininMiljukovGroupType">
+		<sequence>
+			<element name="KalininMiljukov" type="km:KalininMiljukovType" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+    </complexType>
+
+	<complexType name="KalininMiljukovType">
+		<sequence>
+			<!-- If this element should be processed --> 
+            <element name="enabled" type="boolean"/>
+    
+			<!-- optional word like "elbe" --> 
+			<element name="riverName" type="string" minOccurs="0"/>
+	
+			<!-- start km -->
+			<element name="kmStart" type="decimal" minOccurs="0"/>
+
+			<!-- end km --> 
+			<element name="kmEnd" type="decimal" minOccurs="0"/>
+			
+			<!-- path used for dialog -->
+			<element name="file" type="string"/>
+	
+			<!-- here are the profiles -->
+			<element name="profile" minOccurs="0" maxOccurs="unbounded">
+				<complexType>
+					<!-- some profiles may be disabled -->
+					<attribute name="enabled" type="boolean" default="true"/>
+
+					<!-- info of position in m -->
+					<attribute name="station" type="decimal"/>
+				</complexType>
+			</element> 
+		</sequence>
+		<!-- id that must match the FeatureID from the model !--> 
+		<attribute name="id" type="string"/>
+	</complexType>
+</schema>

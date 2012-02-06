@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende
+		Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers),
+		http://www.bjoernsen.de Technische Universität Hamburg-Harburg,
+		Institut für Wasserbau, Hamburg, Germany (Technical University
+		Hamburg-Harburg, Institute of River and Coastal Engineering),
+		http://www.tu-harburg.de/wb/ Kalypso is free software: you can
+		redistribute it and/or modify it under the terms of the GNU Lesser
+		General Public License (LGPL) as published by the Free Software
+		Foundation, either version 3 of the License, or (at your option) any
+		later version. Kalypso is distributed in the hope that it will be
+		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+		Lesser General Public License for more details. You should have
+		received a copy of the GNU Lesser General Public License along with
+		Kalypso. If not, see <http://www.gnu.org/licenses/>.
+	-->
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cov="org.kalypso.gml.common.coverage"
+	xmlns:krrdm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="org.kalypso.gml.common.coverage" />
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:element name="RasterDataModel" type="krrdm:RasterDataModelType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+	<xs:complexType name="RasterDataModelType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krrdm:waterlevelCoverageCollection"
+						minOccurs="1" maxOccurs="1" />
+					<xs:element ref="krrdm:specificDamageCoverageCollection"
+						minOccurs="1" maxOccurs="1" />
+
+					<!--
+						optional element; not used any more, backward compatibility only
+					-->
+					<xs:element name="landuseCoverage" type="krrdm:CoverageCollectionPropertyType"
+						minOccurs="0" maxOccurs="1" />
+
+					<xs:element name="riskZonesCoverage" type="krrdm:CoverageCollectionPropertyType"
+						minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="waterlevelCoverageCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="krrdm:AnnualCoverageCollection"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="specificDamageCoverageCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="krrdm:AnnualCoverageCollection"
+					minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AnnualCoverageCollection" type="krrdm:AnnualCoverageCollectionType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation>
+                                <![CDATA[Ereignis]]>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AnnualCoverageCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krrdm:annualCoverageMember" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="annualCoverageMember" type="krrdm:AnnualCoverageMemberPropertyType" />
+	<xs:complexType name="AnnualCoverageMemberPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrdm:AnnualCoverage" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AnnualCoverage" type="krrdm:AnnualCoverageType"
+		substitutionGroup="cov:CoverageCollection">
+		<xs:annotation>
+			<xs:documentation>
+                                <![CDATA[Ereignis]]>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AnnualCoverageType">
+		<xs:complexContent>
+			<xs:extension base="cov:CoverageCollectionType">
+				<xs:sequence>
+					<xs:element name="annuality" type="xs:int" minOccurs="0"
+						maxOccurs="1" default="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoverageCollectionPropertyType">
+		<xs:sequence>
+			<xs:element ref="cov:CoverageCollection" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

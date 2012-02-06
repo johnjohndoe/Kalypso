@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="State__CS" id="1DC4B004-B885-C12D-27AD-0E581302216D" directorySegmentName="seg_0">
+   <createdBy>thuel2</createdBy>
+   <createdTime>2011-05-18 07:38:33 UTC</createdTime>
+   <changedBy>thuel2</changedBy>
+   <changedTime>2011-05-26 09:16:42 UTC</changedTime>
+   <ownerDesignName>pdb_V0.0.1</ownerDesignName>
+   <identifying>false</identifying>
+   <nameOnTarget>State</nameOnTarget>
+   <optionalSource>false</optionalSource>
+   <optionalTarget>false</optionalTarget>
+   <sourceCardinality>1</sourceCardinality>
+   <sourceEntity>4DDF1425-19B6-FBE3-AE6E-5807076C47F7</sourceEntity>
+   <targetCardinalityString>*</targetCardinalityString>
+   <targetEntity>F3312B0B-F118-9941-3B08-AA935F40274A</targetEntity>
+   <transferable>true</transferable>
+</Relation>
