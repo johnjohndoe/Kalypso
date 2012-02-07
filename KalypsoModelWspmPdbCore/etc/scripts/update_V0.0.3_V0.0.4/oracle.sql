@@ -1,6 +1,51 @@
 -- Version setzen auf "creating" oder "updateing"
 UPDATE INFO set value='updating 0.0.3 to 0.0.4'  where key ='Version';
 
+-- 
+ALTER TABLE Document DROP CONSTRAINT "Document Name UK" CASCADE;
+ALTER TABLE DOCUMENT DROP CONSTRAINT CS_DOCUMENT CASCADE;
+ALTER TABLE DOCUMENT ADD
+(
+  CONSTRAINT CS_DOCUMENT 
+  FOREIGN KEY( CROSS_SECTION_ID)
+  REFERENCES CROSS_SECTION( ID)
+  ON DELETE CASCADE 
+  NOT DEFERRABLE
+  ENABLE
+);
+
+
+ALTER TABLE DOCUMENT DROP CONSTRAINT STATE_DOCUMENT CASCADE;
+ALTER TABLE DOCUMENT ADD
+(
+  CONSTRAINT STATE_DOCUMENT 
+  FOREIGN KEY( STATE_ID)
+  REFERENCES STATE( ID)
+  ON DELETE CASCADE 
+  NOT DEFERRABLE
+  ENABLE
+);
+
+ALTER TABLE DOCUMENT DROP CONSTRAINT WB_DOCUMENT CASCADE;
+ALTER TABLE DOCUMENT ADD
+(
+  CONSTRAINT WB_DOCUMENT 
+  FOREIGN KEY( WATER_BODY_ID)
+  REFERENCES WATER_BODY( ID)
+  ON DELETE CASCADE 
+  NOT DEFERRABLE
+  ENABLE
+);
+
+ALTER TABLE Point ADD( Roughness_Factor NUMBER (8,5) NULL );
+COMMENT ON COLUMN Point.Roughness_Factor IS 'factor to apply to roughness value';
+
+ALTER TABLE Roughness ADD( Color VARCHAR2(10) NULL );
+COMMENT ON COLUMN Roughness.Color IS 'color (hex)';
+
+ALTER TABLE Vegetation ADD( Color VARCHAR2(10) NULL );
+COMMENT ON COLUMN Vegetation.Color IS 'color (hex)';
+
 -- update tables roughness and vegetation to overcome encoding problems
  update roughness set label='Schotter, mittlerer Grobkies, verkrautete Erdkanäle', description='Schotter, mittlerer Grobkies, verkrautete Erdkanäle' where name ='6';
  update roughness set label='Steinschüttung, stark geschiebeführender Fluss, Wurzeln', description='Steinschüttung, stark geschiebeführender Fluss, Wurzeln' where name ='8';
@@ -83,53 +128,6 @@ update roughness set color='#00FA9A' where name ='55';
 update roughness set color='#9ACD32' where name ='56';
 update roughness set color='#228B22' where name ='57';
 update roughness set color='#006400' where name ='58';
-
--- 
-ALTER TABLE Document DROP CONSTRAINT "Document Name UK" CASCADE;
-ALTER TABLE DOCUMENT DROP CONSTRAINT CS_DOCUMENT CASCADE;
-ALTER TABLE DOCUMENT ADD
-(
-  CONSTRAINT CS_DOCUMENT 
-  FOREIGN KEY( CROSS_SECTION_ID)
-  REFERENCES CROSS_SECTION( ID)
-  ON DELETE CASCADE 
-  NOT DEFERRABLE
-  ENABLE
-);
-
-
-ALTER TABLE DOCUMENT DROP CONSTRAINT STATE_DOCUMENT CASCADE;
-ALTER TABLE DOCUMENT ADD
-(
-  CONSTRAINT STATE_DOCUMENT 
-  FOREIGN KEY( STATE_ID)
-  REFERENCES STATE( ID)
-  ON DELETE CASCADE 
-  NOT DEFERRABLE
-  ENABLE
-);
-
-ALTER TABLE DOCUMENT DROP CONSTRAINT WB_DOCUMENT CASCADE;
-ALTER TABLE DOCUMENT ADD
-(
-  CONSTRAINT WB_DOCUMENT 
-  FOREIGN KEY( WATER_BODY_ID)
-  REFERENCES WATER_BODY( ID)
-  ON DELETE CASCADE 
-  NOT DEFERRABLE
-  ENABLE
-);
-
-ALTER TABLE Point ADD( Roughness_Factor NUMBER (8,5) NULL );
-COMMENT ON COLUMN Point.Roughness_Factor IS 'factor to apply to roughness value';
-
-ALTER TABLE Roughness ADD( Color VARCHAR2(10) NULL );
-COMMENT ON COLUMN Roughness.Color IS 'color (hex)';
-
-ALTER TABLE Vegetation ADD( Color VARCHAR2(10) NULL );
-COMMENT ON COLUMN Vegetation.Color IS 'color (hex)';
-
-
 
 -- Version endgültig setzen
 UPDATE INFO set value='0.0.4'  where key ='Version';
