@@ -5,6 +5,39 @@ UPDATE INFO set value='updating 0.0.3 to 0.0.4'  where key ='Version';
 GRANT USAGE ON SCHEMA pdb TO pdb_user;
 GRANT SELECT, UPDATE ON TABLE pdb.seq_pdb TO pdb_admin;
 
+-- 
+ALTER TABLE "document" DROP CONSTRAINT "Document Name UK";
+
+ALTER TABLE "document" DROP CONSTRAINT cs_document;
+ALTER TABLE "document"
+  ADD CONSTRAINT cs_document FOREIGN KEY (cross_section_id)
+      REFERENCES cross_section (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+
+ALTER TABLE "document" DROP CONSTRAINT state_document;
+ALTER TABLE "document"
+  ADD CONSTRAINT state_document FOREIGN KEY (state_id)
+      REFERENCES state (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+
+ALTER TABLE "document" DROP CONSTRAINT wb_document;
+ALTER TABLE "document"
+  ADD CONSTRAINT wb_document FOREIGN KEY (water_body_id)
+      REFERENCES water_body (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+
+
+
+ALTER TABLE Point ADD COLUMN Roughness_Factor numeric (8,5);
+COMMENT ON COLUMN Point.Roughness_Factor IS 'factor to apply to roughness value';
+
+ALTER TABLE Roughness ADD COLUMN Color character varying(10);
+COMMENT ON COLUMN Roughness.Color IS 'color (hex)';
+
+ALTER TABLE Vegetation ADD COLUMN Color character varying(10);
+COMMENT ON COLUMN Vegetation.Color IS 'color (hex)';
+
+
 -- update tables roughness and vegetation to overcome encoding problems
  update roughness set label='Schotter, mittlerer Grobkies, verkrautete Erdkanäle', description='Schotter, mittlerer Grobkies, verkrautete Erdkanäle' where name ='6';
  update roughness set label='Steinschüttung, stark geschiebeführender Fluss, Wurzeln', description='Steinschüttung, stark geschiebeführender Fluss, Wurzeln' where name ='8';
@@ -89,39 +122,6 @@ update roughness set color='#00FA9A' where name ='55';
 update roughness set color='#9ACD32' where name ='56';
 update roughness set color='#228B22' where name ='57';
 update roughness set color='#006400' where name ='58';
-
--- 
-ALTER TABLE "document" DROP CONSTRAINT "Document Name UK";
-
-ALTER TABLE "document" DROP CONSTRAINT cs_document;
-ALTER TABLE "document"
-  ADD CONSTRAINT cs_document FOREIGN KEY (cross_section_id)
-      REFERENCES cross_section (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE;
-
-ALTER TABLE "document" DROP CONSTRAINT state_document;
-ALTER TABLE "document"
-  ADD CONSTRAINT state_document FOREIGN KEY (state_id)
-      REFERENCES state (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE;
-
-ALTER TABLE "document" DROP CONSTRAINT wb_document;
-ALTER TABLE "document"
-  ADD CONSTRAINT wb_document FOREIGN KEY (water_body_id)
-      REFERENCES water_body (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE;
-
-
-
-ALTER TABLE Point ADD COLUMN Roughness_Factor numeric (8,5);
-COMMENT ON COLUMN Point.Roughness_Factor IS 'factor to apply to roughness value';
-
-ALTER TABLE Roughness ADD COLUMN Color character varying(10);
-COMMENT ON COLUMN Roughness.Color IS 'color (hex)';
-
-ALTER TABLE Vegetation ADD COLUMN Color character varying(10);
-COMMENT ON COLUMN Vegetation.Color IS 'color (hex)';
-
 
 
 -- Version endgültig setzen
