@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -66,13 +67,13 @@ class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "<Empty>";
+    return Messages.getString("EmptyNodeUiHandler_0"); //$NON-NLS-1$
   }
 
   @Override
   public String getTreeLabel( )
   {
-    return "<empty database>";
+    return Messages.getString("EmptyNodeUiHandler_1"); //$NON-NLS-1$
   }
 
   @Override

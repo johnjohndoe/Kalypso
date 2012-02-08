@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * Helper the guesses the catchment timeserties from the former referenced timeseries.
@@ -99,12 +100,12 @@ public class CatchmentTimeseriesGuesser
     if( m_result != null )
     {
       final String href = m_result.getHref();
-      m_log.add( IStatus.OK, "Found timeseries: %s", null, href );
+      m_log.add( IStatus.OK, Messages.getString("CatchmentTimeseriesGuesser_0"), null, href ); //$NON-NLS-1$
     }
 
     // TODO: validate: check if values of existing timeseries correspond to guessed timeseries
 
-    final String message = String.format( "Guess timeseries for catchment '%s'", m_modelTargetLink.getFeature().getName() );
+    final String message = String.format( Messages.getString("CatchmentTimeseriesGuesser_1"), m_modelTargetLink.getFeature().getName() ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( message, message );
   }
 
@@ -112,14 +113,14 @@ public class CatchmentTimeseriesGuesser
   {
     if( !m_modelTargetLink.isLinkSet() )
     {
-      final String message = String.format( "Timeseries link not set, aborting guess." );
+      final String message = String.format( Messages.getString("CatchmentTimeseriesGuesser_2") ); //$NON-NLS-1$
       m_log.add( IStatus.WARNING, message );
       return false;
     }
 
     if( !m_modelTargetLink.isLinkExisting() )
     {
-      final String message = String.format( "Referenced timeseries does not exist. Only guess by file name." );
+      final String message = String.format( Messages.getString("CatchmentTimeseriesGuesser_3") ); //$NON-NLS-1$
       m_log.add( IStatus.WARNING, message );
     }
 
@@ -153,13 +154,13 @@ public class CatchmentTimeseriesGuesser
 
   private TimeseriesIndexEntry guessByFilename( )
   {
-    m_log.add( IStatus.INFO, "Try to find timeseries by filename" );
+    m_log.add( IStatus.INFO, Messages.getString("CatchmentTimeseriesGuesser_4") ); //$NON-NLS-1$
 
     final String existingTimeseriesFilename = findExistingFilename();
 
     if( StringUtils.isBlank( existingTimeseriesFilename ) )
     {
-      m_log.add( IStatus.WARNING, "Filename is empty, aborting." );
+      m_log.add( IStatus.WARNING, Messages.getString("CatchmentTimeseriesGuesser_5") ); //$NON-NLS-1$
       return null;
     }
 
@@ -172,7 +173,7 @@ public class CatchmentTimeseriesGuesser
   {
     if( ArrayUtils.isEmpty( infos ) )
     {
-      m_log.add( IStatus.WARNING, "No timeseries with same filename found" );
+      m_log.add( IStatus.WARNING, Messages.getString("CatchmentTimeseriesGuesser_6") ); //$NON-NLS-1$
       return null;
     }
 
@@ -185,12 +186,12 @@ public class CatchmentTimeseriesGuesser
       if( parameterType.equals( m_parameterType ) )
       {
         // TODO: also use timestep to determine best guess; find all infos with same type
-        m_log.add( IStatus.INFO, "Multiple timeseries with same file name found, using first one with same parameter type." );
+        m_log.add( IStatus.INFO, Messages.getString("CatchmentTimeseriesGuesser_7") ); //$NON-NLS-1$
         return info;
       }
     }
 
-    m_log.add( IStatus.WARNING, "Multiple timeseries with same file name found, but none with parameter type '%s'", null, m_parameterType );
+    m_log.add( IStatus.WARNING, Messages.getString("CatchmentTimeseriesGuesser_8"), null, m_parameterType ); //$NON-NLS-1$
 
     return null;
   }

@@ -135,7 +135,7 @@ public class SobekFrictionDatExportUI
 
     final Button buttonClasses = new Button( parent, SWT.CHECK );
     buttonClasses.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
-    buttonClasses.setText( "Prefer Roughness Classes" );
+    buttonClasses.setText( Messages.getString("SobekFrictionDatExportUI.1") ); //$NON-NLS-1$
     buttonClasses.setSelection( m_info.getPreferRoughnessClasses() );
 
     buttonClasses.addSelectionListener( new SelectionAdapter()

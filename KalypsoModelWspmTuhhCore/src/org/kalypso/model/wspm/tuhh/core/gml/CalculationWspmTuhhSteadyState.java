@@ -66,6 +66,6 @@ public class CalculationWspmTuhhSteadyState extends TuhhCalculation
   @Override
   public String toString( )
   {
-    return String.format( "%s\n%s", super.toString(), getName() );
+    return String.format( "%s\n%s", super.toString(), getName() ); //$NON-NLS-1$
   }
 }

@@ -47,6 +47,7 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -63,8 +64,8 @@ public class EditGeneratorAction extends Action
     m_model = model;
     m_generator = generator;
 
-    setText( "Edit" );
-    setToolTipText( "Edits the properties of the generator" );
+    setText( Messages.getString("EditGeneratorAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("EditGeneratorAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
   }

@@ -48,6 +48,7 @@ import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -93,7 +94,7 @@ public class GlobalConversionData
     catch( final Exception e )
     {
       e.printStackTrace();
-      log.add( IStatus.WARNING, "Failed to read model file '%s'. Unable to guess catchment models for converted simulations", e, path );
+      log.add( IStatus.WARNING, Messages.getString("GlobalConversionData_0"), e, path ); //$NON-NLS-1$
       return null;
     }
   }
@@ -118,7 +119,7 @@ public class GlobalConversionData
     catch( final Exception e )
     {
       e.printStackTrace();
-      log.add( IStatus.WARNING, "Failed to save model file '%s'. Unable to guess catchment models for converted simulations", e, path );
+      log.add( IStatus.WARNING, Messages.getString("GlobalConversionData_1"), e, path ); //$NON-NLS-1$
     }
   }
 

@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.data.SimpleShapeData;
@@ -116,11 +117,11 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
       final Collection<IDBFField> fields = new ArrayList<>();
 
       // TODO: get length from available data
-      fields.add( new DBFField( "WaterBody", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
-      fields.add( new DBFField( "RefId", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
-      fields.add( new DBFField( "Reach", FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) );
-      fields.add( new DBFField( "Type", FieldType.C, FIELD_LENGTH_TYPE, (short) 0 ) );
-      fields.add( new DBFField( "Status", FieldType.C, FIELD_LENGTH_STATUS, (short) 0 ) );
+      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_0"), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_1"), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_2"), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_3"), FieldType.C, FIELD_LENGTH_TYPE, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_4"), FieldType.C, FIELD_LENGTH_STATUS, (short) 0 ) ); //$NON-NLS-1$
 
       return fields.toArray( new IDBFField[fields.size()] );
     }
@@ -141,29 +142,29 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
   {
     final Feature[] flatElements = flattenExportableElements();
 
-    monitor.beginTask( "Computing banklines", flatElements.length );
+    monitor.beginTask( Messages.getString("BanklineExportShapeWorker_5"), flatElements.length ); //$NON-NLS-1$
 
     for( int i = 0; i < flatElements.length; i++ )
     {
       final Feature feature = flatElements[i];
-      monitor.subTask( String.format( "%s (%d/%d)", feature.getName(), i + 1, flatElements.length ) );
+      monitor.subTask( String.format( "%s (%d/%d)", feature.getName(), i + 1, flatElements.length ) ); //$NON-NLS-1$
 
       try
       {
         addData( feature, new SubProgressMonitor( monitor, 1 ) );
-        m_log.add( IStatus.OK, "%s", null, feature.getName() );
+        m_log.add( IStatus.OK, "%s", null, feature.getName() ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {
         e.printStackTrace();
-        m_log.add( IStatus.ERROR, "%s", e, feature.getName() );
+        m_log.add( IStatus.ERROR, "%s", e, feature.getName() ); //$NON-NLS-1$
       }
 
       if( monitor.isCanceled() )
         throw new OperationCanceledException();
     }
 
-    final String message = "Creating shape data";
+    final String message = Messages.getString("BanklineExportShapeWorker_9"); //$NON-NLS-1$
     return m_log.asMultiStatus( message );
   }
 
@@ -186,7 +187,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
         flatElements.add( feature );
       else
       {
-        final String message = String.format( "Unable to export element of type: %s", feature.getFeatureType().getQName() );
+        final String message = String.format( Messages.getString("BanklineExportShapeWorker_10"), feature.getFeatureType().getQName() ); //$NON-NLS-1$
         m_log.add( IStatus.ERROR, message );
       }
     }
@@ -196,7 +197,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
   private void addData( final Feature element, final IProgressMonitor monitor ) throws ShapeDataException, GM_Exception
   {
-    monitor.beginTask( "Building buffer", 1 );
+    monitor.beginTask( Messages.getString("BanklineExportShapeWorker_11"), 1 ); //$NON-NLS-1$
 
     // The built geometries are in Kalypso-SRS, because the geometries are derived from the wspm-workspace
     final String kalypsoSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();

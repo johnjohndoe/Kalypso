@@ -187,12 +187,12 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
 
     /* Link to underlying timeseries */
     final String refId = timeseries.getId();
-    final String href = String.format( "%s//%s#%s", UrlResolver.PROJECT_PROTOCOLL, INaProjectConstants.GML_STATIONS_PATH, refId );
+    final String href = String.format( "%s//%s#%s", UrlResolver.PROJECT_PROTOCOLL, INaProjectConstants.GML_STATIONS_PATH, refId ); //$NON-NLS-1$
     newThiessenStation.setStation( href );
 
     /* Copy properties from station and timeseries, it is hard to access them via gtt and gmt templates */
     final String timestepText = PeriodUtils.formatDefault( timeseries.getTimestep() );
-    final String description = String.format( "%s (%s)", timeseries.getDescription(), timestepText );
+    final String description = String.format( "%s (%s)", timeseries.getDescription(), timestepText ); //$NON-NLS-1$
     newThiessenStation.setDescription( description );
     newThiessenStation.setName( station.getDescription() );
     newThiessenStation.setStationLocation( station.getStationLocation() );

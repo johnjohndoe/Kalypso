@@ -55,6 +55,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -129,7 +130,7 @@ public class TreePropertiesView extends ViewPart
 
   private void updateNullNode( )
   {
-    m_form.setText( "- no element selected -" );
+    m_form.setText( Messages.getString("TreePropertiesView_0") ); //$NON-NLS-1$
   }
 
   private void updateNonNullNode( final TreeNode node )

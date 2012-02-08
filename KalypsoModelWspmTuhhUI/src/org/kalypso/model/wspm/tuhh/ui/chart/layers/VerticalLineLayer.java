@@ -98,7 +98,7 @@ public class VerticalLineLayer extends AbstractLineLayer
       final Integer yMax = targetAxis.numericToScreen( numericRange.getMax() );
 
       final PolylineFigure polylineFigure = new PolylineFigure();
-      polylineFigure.setStyle( (ILineStyle) getStyleSet().getStyle( "line_style" ) );
+      polylineFigure.setStyle( (ILineStyle) getStyleSet().getStyle( "line_style" ) ); //$NON-NLS-1$
       polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
       polylineFigure.paint( gc );
     }

@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.UpdateSimulationWorker;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -92,7 +93,7 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
   @Override
   protected void execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Refreshing simulations", m_simulations.length );
+    monitor.beginTask( Messages.getString("RefreshSimulationsOperation_0"), m_simulations.length ); //$NON-NLS-1$
 
     for( final NAControl simulation : m_simulations )
     {
@@ -106,14 +107,14 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
       }
       catch( final CoreException e )
       {
-        m_log.add( IStatus.ERROR, "%s: failed to create simulation", e, name );
+        m_log.add( IStatus.ERROR, Messages.getString("RefreshSimulationsOperation_1"), e, name ); //$NON-NLS-1$
       }
 
       // check for cancel, only after completion of one simulation to avoid inconsistent simulations
       ProgressUtilities.worked( monitor, 0 );
     }
 
-    final IStatus status = m_log.asMultiStatusOrOK( "Problem(s) while refreshing simulations", "Simulations successfully refreshed" );
+    final IStatus status = m_log.asMultiStatusOrOK( Messages.getString("RefreshSimulationsOperation_2"), Messages.getString("RefreshSimulationsOperation_3") ); //$NON-NLS-1$ //$NON-NLS-2$
     throw new CoreException( status );
   }
 
@@ -123,14 +124,14 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
 
     final IFolder simulationFolder = createFolder( m_baseFolder, simulation );
 
-    monitor.beginTask( String.format( "Refreshing simulation: %s", simulationFolder.getName() ), 100 );
+    monitor.beginTask( String.format( Messages.getString("RefreshSimulationsOperation_4"), simulationFolder.getName() ), 100 ); //$NON-NLS-1$
 
     /* Delete existing data */
     // TODO: should we always do that? What about existing results etc.?
     // TODO: give warning to user!
     if( simulationFolder.exists() )
     {
-      monitor.subTask( "delete existing data" );
+      monitor.subTask( Messages.getString("RefreshSimulationsOperation_5") ); //$NON-NLS-1$
       simulationFolder.delete( false, false, new SubProgressMonitor( monitor, 10 ) );
     }
 
@@ -192,7 +193,7 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to save control file for simulation: %s", simulation.getName() );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("RefreshSimulationsOperation_6"), simulation.getName() ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

@@ -59,6 +59,7 @@ import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -117,7 +118,7 @@ public class TimeseriesThiessenPolygons
       catch( final GM_Exception e )
       {
         e.printStackTrace();
-        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read thiessen polygon data", e );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesThiessenPolygons_0"), e ); //$NON-NLS-1$
         throw new CoreException( status );
       }
     }
@@ -158,7 +159,7 @@ public class TimeseriesThiessenPolygons
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to load thiessen stations", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesThiessenPolygons_1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

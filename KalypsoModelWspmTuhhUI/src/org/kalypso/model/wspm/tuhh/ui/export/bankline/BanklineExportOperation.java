@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeOperation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.shape.deegree.IShapeDataFactory;
 
 /**
@@ -67,13 +68,13 @@ public class BanklineExportOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Export Banklines", 100 );
+    monitor.beginTask( Messages.getString("BanklineExportOperation_0"), 100 ); //$NON-NLS-1$
 
     final IShapeDataFactory shapeDataFactory = createShapeData( new SubProgressMonitor( monitor, 90 ) );
 
     exportShape( new SubProgressMonitor( monitor, 10 ), shapeDataFactory );
 
-    return m_log.asMultiStatusOrOK( null, "Bankline export successfully terminated" );
+    return m_log.asMultiStatusOrOK( null, Messages.getString("BanklineExportOperation_1") ); //$NON-NLS-1$
   }
 
   private IShapeDataFactory createShapeData( final IProgressMonitor monitor )
@@ -91,14 +92,14 @@ public class BanklineExportOperation implements ICoreRunnableWithProgress
       final ExportShapeOperation operation = new ExportShapeOperation( m_data.getExportShapeBase(), shapeDataFactory, m_data.getWritePrj() );
       final IStatus status = operation.execute( monitor );
       if( status.isOK() )
-        m_log.add( IStatus.OK, "Write shape file" );
+        m_log.add( IStatus.OK, Messages.getString("BanklineExportOperation_2") ); //$NON-NLS-1$
       else
         m_log.add( status );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_log.add( IStatus.ERROR, "Failed to write shape file", e );
+      m_log.add( IStatus.ERROR, Messages.getString("BanklineExportOperation_3"), e ); //$NON-NLS-1$
     }
   }
 }

@@ -74,6 +74,7 @@ import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -170,7 +171,7 @@ public class EditCatchmentsDialog extends TrayDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Edit Catchment Model" );
+    getShell().setText( Messages.getString("EditCatchmentsDialog_0") ); //$NON-NLS-1$
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -197,7 +198,7 @@ public class EditCatchmentsDialog extends TrayDialog
     final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainGroupData.widthHint = 250;
     m_mainGroup.setLayoutData( mainGroupData );
-    m_mainGroup.setText( "Generator" );
+    m_mainGroup.setText( Messages.getString("EditCatchmentsDialog_1") ); //$NON-NLS-1$
 
     /* Create the content of the main group. */
     createMainContent( m_mainGroup );
@@ -206,7 +207,7 @@ public class EditCatchmentsDialog extends TrayDialog
     m_detailsGroup = new Group( body, SWT.NONE );
     m_detailsGroup.setLayout( new GridLayout( 1, false ) );
     m_detailsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_detailsGroup.setText( "Details" );
+    m_detailsGroup.setText( Messages.getString("EditCatchmentsDialog_2") ); //$NON-NLS-1$
 
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup, null );
@@ -265,7 +266,7 @@ public class EditCatchmentsDialog extends TrayDialog
     /* Create a label. */
     final Label label = new Label( parent, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    label.setText( "Catchments" );
+    label.setText( Messages.getString("EditCatchmentsDialog_3") ); //$NON-NLS-1$
 
     /* Create the catchment viewer. */
     m_catchmentViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
@@ -316,7 +317,7 @@ public class EditCatchmentsDialog extends TrayDialog
   {
     /* Create the name column. */
     final TableViewerColumn nameColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    nameColumn.getColumn().setText( "Name" );
+    nameColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_4") ); //$NON-NLS-1$
     nameColumn.getColumn().setWidth( 150 );
     nameColumn.setLabelProvider( new NameColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( nameColumn.getColumn() );
@@ -326,7 +327,7 @@ public class EditCatchmentsDialog extends TrayDialog
     if( m_bean.hasDescription() )
     {
       final TableViewerColumn descriptionColumn = new TableViewerColumn( viewer, SWT.LEFT );
-      descriptionColumn.getColumn().setText( "Description" );
+      descriptionColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_5") ); //$NON-NLS-1$
       descriptionColumn.getColumn().setWidth( 150 );
       descriptionColumn.setLabelProvider( new DescriptionColumnLabelProvider() );
       ColumnsResizeControlListener.setMinimumPackWidth( descriptionColumn.getColumn() );
@@ -369,7 +370,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Set the status. */
     if( catchmentBean == null )
-      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("EditCatchmentsDialog_6") ) ); //$NON-NLS-1$
     else
     {
       catchmentBean.updateStatus();
@@ -398,7 +399,7 @@ public class EditCatchmentsDialog extends TrayDialog
           m_statusComposite.setStatus( m_catchmentBean.getStatus() );
         }
         else
-          m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+          m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("EditCatchmentsDialog_7") ) ); //$NON-NLS-1$
 
         m_catchmentViewer.refresh();
       }
@@ -414,7 +415,7 @@ public class EditCatchmentsDialog extends TrayDialog
   {
     /* Create the group column. */
     final TableViewerColumn groupColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    groupColumn.getColumn().setText( "Group" );
+    groupColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_8") ); //$NON-NLS-1$
     groupColumn.getColumn().setWidth( 150 );
     groupColumn.setLabelProvider( new GroupColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( groupColumn.getColumn() );
@@ -422,7 +423,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Create the station column. */
     final TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    stationColumn.getColumn().setText( "Station" );
+    stationColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_9") ); //$NON-NLS-1$
     stationColumn.getColumn().setWidth( 150 );
     stationColumn.setLabelProvider( new StationColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
@@ -430,7 +431,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Create the timestep column. */
     final TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    timestepColumn.getColumn().setText( "Timestep" );
+    timestepColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_10") ); //$NON-NLS-1$
     timestepColumn.getColumn().setWidth( 75 );
     timestepColumn.setLabelProvider( new TimestepColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( timestepColumn.getColumn() );
@@ -438,7 +439,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Create the quality column. */
     final TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    qualityColumn.getColumn().setText( "Quality" );
+    qualityColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_11") ); //$NON-NLS-1$
     qualityColumn.getColumn().setWidth( 150 );
     qualityColumn.setLabelProvider( new QualityColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( qualityColumn.getColumn() );
@@ -446,7 +447,7 @@ public class EditCatchmentsDialog extends TrayDialog
 
     /* Create the factor column. */
     final TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    factorColumn.getColumn().setText( "Factor [%]" );
+    factorColumn.getColumn().setText( Messages.getString("EditCatchmentsDialog_12") ); //$NON-NLS-1$
     factorColumn.getColumn().setWidth( 75 );
     factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
     factorColumn.setEditingSupport( new FactorEditingSupport( viewer ) );
@@ -511,7 +512,7 @@ public class EditCatchmentsDialog extends TrayDialog
     else
     {
       m_timeseriesViewer.setInput( new FactorizedTimeseriesBean[] {} );
-      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No catchment selected." ) );
+      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("EditCatchmentsDialog_13") ) ); //$NON-NLS-1$
     }
   }
 

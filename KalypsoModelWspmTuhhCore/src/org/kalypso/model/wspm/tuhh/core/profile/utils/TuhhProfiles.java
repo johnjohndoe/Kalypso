@@ -80,7 +80,7 @@ public final class TuhhProfiles
   public static IProfil clone( final IProfil profile )
   {
     if( TuhhProfiles.class.equals( profile.getClass() ) )
-      throw new IllegalStateException( String.format( "Cloning of profile class %s not supported", profile.getClass().getName() ) );
+      throw new IllegalStateException( String.format( "Cloning of profile class %s not supported", profile.getClass().getName() ) ); //$NON-NLS-1$
 
     final TuhhProfil clone = new TuhhProfil( TupleResultUtilities.clone( profile.getResult() ), null );
     clone.setName( profile.getName() );

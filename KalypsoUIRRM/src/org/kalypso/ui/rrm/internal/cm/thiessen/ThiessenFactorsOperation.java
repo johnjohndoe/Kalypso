@@ -55,6 +55,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -86,10 +87,10 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
   {
     final CatchmentBean[] catchments = m_generator.getCatchments();
 
-    monitor.beginTask( "Calculate thiessen factors", m_pages.length + catchments.length + 1 );
+    monitor.beginTask( Messages.getString("ThiessenFactorsOperation_0"), m_pages.length + catchments.length + 1 ); //$NON-NLS-1$
 
     /* Save pages */
-    monitor.subTask( "saving wizard data..." );
+    monitor.subTask( Messages.getString("ThiessenFactorsOperation_1") ); //$NON-NLS-1$
     for( final IWizardPage wizardPage : m_pages )
     {
       if( wizardPage instanceof ILayoutWizardPage )
@@ -99,7 +100,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
     }
 
     /* Get thiessen polgons */
-    monitor.subTask( "loading data for thiessen factors..." );
+    monitor.subTask( Messages.getString("ThiessenFactorsOperation_2") ); //$NON-NLS-1$
     final TimeseriesThiessenPolygons thiessenPolygons = new TimeseriesThiessenPolygons();
     thiessenPolygons.loadData();
     monitor.worked( 1 );
@@ -127,7 +128,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       final GM_Surface< ? > catchmentArea = bean.getCatchmentArea();
       if( catchmentArea == null )
       {
-        System.out.println( "sososo" );
+        System.out.println( "sososo" ); //$NON-NLS-1$
       }
 
       final Geometry catchmentPolygon = JTSAdapter.export( catchmentArea );
@@ -152,7 +153,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
       final String name = bean.getCatchmentName();
       final String description = bean.getCatchmentDescription();
-      m_log.add( IStatus.ERROR, "Failed to calculate thiessen weights for catchment '%s (%s)'", e, name, description );
+      m_log.add( IStatus.ERROR, Messages.getString("ThiessenFactorsOperation_4"), e, name, description ); //$NON-NLS-1$
     }
   }
 }

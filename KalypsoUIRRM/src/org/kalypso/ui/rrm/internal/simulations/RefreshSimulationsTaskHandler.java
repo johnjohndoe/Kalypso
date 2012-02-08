@@ -71,6 +71,7 @@ import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.gistableeditor.command.GmlTableHandlerUtils;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -111,7 +112,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
 
     final RefreshSimulationsOperation operation = new RefreshSimulationsOperation( simulationsFolder, chosenSimulations );
 
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation, "Problems during refresh" );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, Messages.getString("RefreshSimulationsTaskHandler_0") ); //$NON-NLS-1$
     StatusDialog.open( shell, status, title );
 
     return null;
@@ -126,7 +127,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
     final String duplicateName = findDuplicates( allSimulations );
     if( duplicateName != null )
     {
-      final String message = String.format( "Simulations with identical name detected: '%s.\nPlease rename the simulations.", duplicateName );
+      final String message = String.format( Messages.getString("RefreshSimulationsTaskHandler_1"), duplicateName ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, title, message );
       return null;
     }
@@ -142,13 +143,13 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
 
         final IFolder simulationFolder = RefreshSimulationsOperation.createFolder( simulationsFolder, (NAControl) element );
         if( simulationFolder.exists() )
-          return String.format( "%s (exists)", text );
+          return String.format( Messages.getString("RefreshSimulationsTaskHandler_2"), text ); //$NON-NLS-1$
 
         return text;
       }
     };
 
-    final ListSelectionDialog<NAControl> dialog = new ListSelectionDialog<>( shell, "Please select the simulations to refresh", allSimulations, selectedSimulations, labelProvider, NAControl.class );
+    final ListSelectionDialog<NAControl> dialog = new ListSelectionDialog<>( shell, Messages.getString("RefreshSimulationsTaskHandler_3"), allSimulations, selectedSimulations, labelProvider, NAControl.class ); //$NON-NLS-1$
     if( dialog.open() != Window.OK )
       return null;
 
@@ -205,7 +206,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
     /* check names (= calc case folder names) for empty names */
     if( hasEmptyNames( simulations ) )
     {
-      final String message = String.format( "Simulations with empty name detected\nPlease rename the simulations." );
+      final String message = String.format( Messages.getString("RefreshSimulationsTaskHandler_4") ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, title, message );
       return false;
     }

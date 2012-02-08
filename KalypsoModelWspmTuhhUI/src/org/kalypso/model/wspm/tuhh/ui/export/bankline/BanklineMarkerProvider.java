@@ -81,7 +81,7 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
   public String getId( )
   {
     final String className = getClass().getSimpleName();
-    return String.format( "%s: %s (%s)", className, m_markerTyp, m_markerTypeFallback );
+    return String.format( "%s: %s (%s)", className, m_markerTyp, m_markerTypeFallback ); //$NON-NLS-1$
   }
 
   @Override

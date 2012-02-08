@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.printer;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.KnaufSA40Bean;
 
 /**
@@ -101,7 +102,7 @@ public class KnaufSA40Printer extends AbstractKnaufPrinter
      */
     builder.append( String.format( Locale.US, "%10.2f", 0.0 ) ); //$NON-NLS-1$ //TODO
 
-    builder.append( StringUtils.repeat( " ", 2 ) );
+    builder.append( StringUtils.repeat( " ", 2 ) ); //$NON-NLS-1$
 
     /**
      * char [35], type I1, Steuerparameter IDRUCK (nur für IVZ <> 0)<br>
@@ -110,7 +111,7 @@ public class KnaufSA40Printer extends AbstractKnaufPrinter
      */
     builder.append( String.format( Locale.US, "%1d", 0 ) ); //$NON-NLS-1$
 
-    builder.append( StringUtils.repeat( " ", 2 ) );
+    builder.append( StringUtils.repeat( " ", 2 ) ); //$NON-NLS-1$
 
     /**
      * char [38-39], type I2, Kennzeichnung der Varianten für die Hintereinanderschaltung von mehreren
@@ -123,7 +124,7 @@ public class KnaufSA40Printer extends AbstractKnaufPrinter
      * char [40-79], type A40, Überschrift (4.Zeile im Tabellenkopf) zur Variantenkennzeichnung, beliebiger Text
      * anstelle von SA13 wenn Spalten 40+41 leer sind, wird neuer Text nicht übernommen
      */
-    builder.append( String.format( Locale.US, "%s", "KalypsoWSPM Profile Export" ) ); //$NON-NLS-1$
+    builder.append( String.format( Locale.US, "%s", Messages.getString("KnaufSA40Printer_2") ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return builder.toString();
   }

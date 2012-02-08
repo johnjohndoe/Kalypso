@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -119,6 +120,6 @@ public class NewCalcCaseAction extends AbstractHandler
   private IStatus doUpdateTimeseries( final IFolder newFolder )
   {
     final WorkspaceModifyOperation operation = new UpdateCalcCaseOperation( new IFolder[] { newFolder } );
-    return ProgressUtilities.busyCursorWhile( operation, "Update calc case" );
+    return ProgressUtilities.busyCursorWhile( operation, Messages.getString("NewCalcCaseAction_0") ); //$NON-NLS-1$
   }
 }

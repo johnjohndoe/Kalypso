@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.featureview.dialog.PointDialog;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -69,7 +70,7 @@ public class EditStationLocationAction extends Action
   {
     m_bean = bean;
 
-    setText( "Edit Location" );
+    setText( Messages.getString("EditStationLocationAction_0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -106,7 +107,7 @@ public class EditStationLocationAction extends Action
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "", e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
   }

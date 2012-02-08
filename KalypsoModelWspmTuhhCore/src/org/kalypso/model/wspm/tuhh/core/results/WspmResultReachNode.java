@@ -117,6 +117,6 @@ public class WspmResultReachNode extends AbstractWspmResultNode
   @Override
   public String toString( )
   {
-    return String.format( "%s\n%s", super.toString(), m_reach.getName() );
+    return String.format( "%s\n%s", super.toString(), m_reach.getName() ); //$NON-NLS-1$
   }
 }

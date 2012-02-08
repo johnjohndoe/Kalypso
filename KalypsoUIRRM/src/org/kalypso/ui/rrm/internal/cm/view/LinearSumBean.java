@@ -59,6 +59,7 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -154,7 +155,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     workspace.postCommand( command );
 
     /* The delete commands. */
-    final CompositeCommand deleteCommands = new CompositeCommand( "Updating catchments..." );
+    final CompositeCommand deleteCommands = new CompositeCommand( Messages.getString("LinearSumBean_0") ); //$NON-NLS-1$
 
     /* Get all catchments. */
     final List<ICatchment> catchments = feature.getCatchments();

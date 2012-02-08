@@ -58,6 +58,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -95,10 +96,10 @@ public class ThiessenGeneratorWizard extends Wizard
 
     final Arguments arguments = createPageDefinition();
 
-    final IWizardPage thiessenPage = new LayoutWizardPage( "thiessenPage", argumentLocation, arguments );
+    final IWizardPage thiessenPage = new LayoutWizardPage( "thiessenPage", argumentLocation, arguments ); //$NON-NLS-1$
 
-    thiessenPage.setTitle( "Thiessen Method" );
-    thiessenPage.setDescription( "Please select the timeseries that should be used to generate the catchment model." );
+    thiessenPage.setTitle( Messages.getString("ThiessenGeneratorWizard_1") ); //$NON-NLS-1$
+    thiessenPage.setDescription( Messages.getString("ThiessenGeneratorWizard_2") ); //$NON-NLS-1$
 
     addPage( thiessenPage );
   }
@@ -121,28 +122,28 @@ public class ThiessenGeneratorWizard extends Wizard
   {
     final Arguments arguments = new Arguments();
 
-    arguments.put( "pageLayout", URN_PAGE_LAYOUT );
+    arguments.put( "pageLayout", URN_PAGE_LAYOUT ); //$NON-NLS-1$
 
     /* MAP */
     final Arguments mapArguments = new Arguments();
-    arguments.put( "gisMap.1", mapArguments );
+    arguments.put( "gisMap.1", mapArguments ); //$NON-NLS-1$
 
-    mapArguments.put( "mapTemplate", URN_MAP_GMT );
+    mapArguments.put( "mapTemplate", URN_MAP_GMT ); //$NON-NLS-1$
 
     final Arguments mapToolbarArguments = new Arguments();
-    mapArguments.put( "mapToolbar", mapToolbarArguments );
+    mapArguments.put( "mapToolbar", mapToolbarArguments ); //$NON-NLS-1$
     // TODO:
-    mapToolbarArguments.put( "uri", URN_MAP_TOOLBAR );
+    mapToolbarArguments.put( "uri", URN_MAP_TOOLBAR ); //$NON-NLS-1$
 
     /* LIST */
     final Arguments listArguments = new Arguments();
-    arguments.put( "gisTable.1", listArguments );
-    listArguments.put( "tableTemplate", URN_TABLE_GTT );
+    arguments.put( "gisTable.1", listArguments ); //$NON-NLS-1$
+    listArguments.put( "tableTemplate", URN_TABLE_GTT ); //$NON-NLS-1$
 
     /* Feature View */
     final Arguments featureviewArguments = new Arguments();
-    arguments.put( "featureView.1", featureviewArguments );
-    featureviewArguments.put( "featureTemplate", URN_THIESSEN_GFT );
+    arguments.put( "featureView.1", featureviewArguments ); //$NON-NLS-1$
+    featureviewArguments.put( "featureTemplate", URN_THIESSEN_GFT ); //$NON-NLS-1$
 
 //    <!-- Tabelle -->
 //    <arg name="zmlNewTable.1">

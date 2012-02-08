@@ -47,6 +47,7 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -63,8 +64,8 @@ public class EditLinearSumThiessenAction extends Action
     m_model = model;
     m_generator = generator;
 
-    setText( "Edit Thiessen" );
-    setToolTipText( "Recalculate Thiessen factors of of the selected generator" );
+    setText( Messages.getString("EditLinearSumThiessenAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("EditLinearSumThiessenAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
   }

@@ -51,6 +51,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -59,7 +60,7 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
  */
 public class GroupUiHandler extends AbstractTreeNodeUiHandler
 {
-  static final String UNDEFINED_GROUP_LABEL = "<undefined group>";
+  static final String UNDEFINED_GROUP_LABEL = Messages.getString("GroupUiHandler_0"); //$NON-NLS-1$
   private final String m_group;
 
   private final ITreeNodeModel m_model;
@@ -73,7 +74,7 @@ public class GroupUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Group";
+    return Messages.getString("GroupUiHandler_1"); //$NON-NLS-1$
   }
 
   @Override

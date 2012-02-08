@@ -110,6 +110,6 @@ public class WspmResultWaterNode extends AbstractWspmResultNode
   @Override
   public String toString( )
   {
-    return String.format( "%s\n%s", super.toString(), m_water.getName() );
+    return String.format( "%s\n%s", super.toString(), m_water.getName() ); //$NON-NLS-1$
   }
 }

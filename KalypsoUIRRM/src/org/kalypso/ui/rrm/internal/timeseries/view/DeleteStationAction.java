@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -69,15 +70,15 @@ public class DeleteStationAction extends Action
     m_model = model;
     m_stations = station;
 
-    setText( "Delete Station" );
-    setToolTipText( "Delete selected station(s)" );
+    setText( Messages.getString("DeleteStationAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("DeleteStationAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
     if( station.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( "Element contains no stations" );
+      setToolTipText( Messages.getString("DeleteStationAction_2") ); //$NON-NLS-1$
     }
   }
 
@@ -108,7 +109,7 @@ public class DeleteStationAction extends Action
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete station(s)", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("DeleteStationAction_3"), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
   }
@@ -116,8 +117,8 @@ public class DeleteStationAction extends Action
   private String getDeleteMessage( )
   {
     if( m_stations.length > 1 )
-      return "Delete selected station(s)? This operation cannot made undone!";
+      return Messages.getString("DeleteStationAction_4"); //$NON-NLS-1$
 
-    return String.format( "Delete station '%s'? This operation cannot made undone!", m_stations[0].getDescription() );
+    return String.format( Messages.getString("DeleteStationAction_5"), m_stations[0].getDescription() ); //$NON-NLS-1$
   }
 }

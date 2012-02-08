@@ -45,6 +45,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.utils.GuessStationPattern;
 import org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -58,9 +59,9 @@ public class SobekImportData extends AbstractModelObject
 {
   public enum GUESS_STATION_STRATEGY
   {
-    doNotGuess("... do not guess station"),
-    sectionId("... from 'id'"),
-    sectionNm("... from 'nm'");
+    doNotGuess(Messages.getString("SobekImportData_0")), //$NON-NLS-1$
+    sectionId(Messages.getString("SobekImportData_1")), //$NON-NLS-1$
+    sectionNm(Messages.getString("SobekImportData_2")); //$NON-NLS-1$
 
     private final String m_label;
 

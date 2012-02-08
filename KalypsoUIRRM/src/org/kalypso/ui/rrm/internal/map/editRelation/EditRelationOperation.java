@@ -137,7 +137,7 @@ public class EditRelationOperation implements Runnable
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Operation failed", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("EditRelationOperation.0"), e ); //$NON-NLS-1$
       StatusDialog.open( m_shell, status, title );
     }
   }

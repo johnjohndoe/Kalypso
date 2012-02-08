@@ -77,6 +77,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.imports.ImportObservationData;
@@ -138,7 +139,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
   private Period findTimestep( final IObservation observation ) throws CoreException
   {
-    final String message = "Failed to determine timestep";
+    final String message = Messages.getString("ImportTimeseriesOperation_0"); //$NON-NLS-1$
 
     try
     {
@@ -180,7 +181,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
       if( timestepAmount == Integer.MAX_VALUE || timestepField == null )
       {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to determine timestep of timeseries" );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ImportTimeseriesOperation_1") ); //$NON-NLS-1$
         throw new CoreException( status );
       }
 
@@ -201,7 +202,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to create new timeseries definition", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ImportTimeseriesOperation_2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -209,7 +210,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   private String buildTargetPath( final IFile targetFile )
   {
     final IPath projectRelativePath = targetFile.getProjectRelativePath();
-    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath.toPortableString();
+    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath.toPortableString(); //$NON-NLS-1$
 
     return projectPath;
   }
@@ -224,7 +225,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to write result file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportTimeseriesOperation_4"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -242,7 +243,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Failed to import timeseries" );
+      final String message = String.format( Messages.getString("ImportTimeseriesOperation_5") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

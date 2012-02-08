@@ -57,6 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSChartFile;
 import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSTableFile;
 import org.kalypso.observation.IObservation;
@@ -110,7 +111,7 @@ public class CalculationResultConverter
 
     if( !calcFile.isFile() )
     {
-      m_log.add( IStatus.WARNING, "Length section missing for calculation: %s (%s)", null, bean.getName(), calcFilename );
+      m_log.add( IStatus.WARNING, Messages.getString("CalculationResultConverter_0"), null, bean.getName(), calcFilename ); //$NON-NLS-1$
       return;
     }
 
@@ -147,7 +148,7 @@ public class CalculationResultConverter
     try
     {
       /* Build pathes */
-      final IFolder calculationResultSubFolder = calculationResultFolder.getFolder( "Import" );
+      final IFolder calculationResultSubFolder = calculationResultFolder.getFolder( "Import" ); //$NON-NLS-1$
 
       final IPath relativeLSpath = new Path( IWspmTuhhConstants.DIR_RESULT_DATEN ).append( IWspmTuhhConstants.FILE_LAENGSSCHNITT_GML );
 

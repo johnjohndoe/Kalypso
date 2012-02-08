@@ -131,6 +131,6 @@ public class WspmResultQIntervalNode extends AbstractWspmResultNode implements I
   @Override
   public String toString( )
   {
-    return String.format( "%s\n%s", super.toString(), m_qIntervalPath.toOSString() );
+    return String.format( "%s\n%s", super.toString(), m_qIntervalPath.toOSString() ); //$NON-NLS-1$
   }
 }

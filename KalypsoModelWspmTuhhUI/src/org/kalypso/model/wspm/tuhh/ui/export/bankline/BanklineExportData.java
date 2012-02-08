@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -68,7 +69,7 @@ public class BanklineExportData extends AbstractModelObject
 {
   private final BanklineMarkerProviderFactory m_banklineMarkerProviderFactory = new BanklineMarkerProviderFactory();
 
-  private static final String UNKNOWN_PROJECT_NAME = "Unknown";
+  private static final String UNKNOWN_PROJECT_NAME = Messages.getString("BanklineExportData_0"); //$NON-NLS-1$
 
   public static final String PROPERTY_MARKER_CHOOSER = "markerChooser"; //$NON-NLS-1$
 

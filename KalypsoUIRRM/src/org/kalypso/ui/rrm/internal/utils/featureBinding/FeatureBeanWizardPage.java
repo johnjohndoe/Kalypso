@@ -47,6 +47,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -57,8 +58,8 @@ public abstract class FeatureBeanWizardPage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Edit Properties" );
-    setDescription( "Change the properties of the selected element" );
+    setTitle( Messages.getString("FeatureBeanWizardPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("FeatureBeanWizardPage_1") ); //$NON-NLS-1$
   }
 
   @Override

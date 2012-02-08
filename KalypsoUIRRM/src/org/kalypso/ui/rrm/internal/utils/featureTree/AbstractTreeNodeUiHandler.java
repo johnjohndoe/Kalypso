@@ -50,6 +50,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +66,7 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
     GridLayoutFactory.fillDefaults().applyTo( panel );
 
     final Section controlSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
-    controlSection.setText( "Properties" );
+    controlSection.setText( Messages.getString("AbstractTreeNodeUiHandler_0") ); //$NON-NLS-1$
     controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( controlSection );
@@ -82,7 +83,7 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
 
     /* Action section */
     final Section actionSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
-    actionSection.setText( "Actions" );
+    actionSection.setText( Messages.getString("AbstractTreeNodeUiHandler_1") ); //$NON-NLS-1$
     actionSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final Composite actionPanel = toolkit.createComposite( actionSection );

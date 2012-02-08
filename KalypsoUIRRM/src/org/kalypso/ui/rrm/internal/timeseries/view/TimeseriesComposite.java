@@ -55,6 +55,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
@@ -104,7 +105,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( this, "Timestep" );
+    toolkit.createLabel( this, Messages.getString("TimeseriesComposite_0") ); //$NON-NLS-1$
 
     final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -122,7 +123,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( this, "Data File" );
+    toolkit.createLabel( this, Messages.getString("TimeseriesComposite_1") ); //$NON-NLS-1$
 
     final StatusComposite statusComposite = new StatusComposite( toolkit, this, SWT.NONE );
     statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

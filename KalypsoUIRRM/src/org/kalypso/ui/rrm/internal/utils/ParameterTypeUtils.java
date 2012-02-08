@@ -59,6 +59,6 @@ public final class ParameterTypeUtils
   {
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String parameterUnit = TimeseriesUtils.getUnit( parameterType );
-    return String.format( "%s [%s]", parameterName, parameterUnit );
+    return String.format( "%s [%s]", parameterName, parameterUnit ); //$NON-NLS-1$
   }
 }

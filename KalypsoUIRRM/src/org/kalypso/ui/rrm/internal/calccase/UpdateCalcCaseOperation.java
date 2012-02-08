@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,7 +68,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
   @Override
   protected void execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Updating calc case(s)", m_calcCases.length );
+    monitor.beginTask( Messages.getString("UpdateCalcCaseOperation_0"), m_calcCases.length ); //$NON-NLS-1$
 
     final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -89,7 +90,7 @@ public class UpdateCalcCaseOperation extends WorkspaceModifyOperation
       ProgressUtilities.worked( monitor, 0 );
     }
 
-    final IStatus resultStatus = collector.asMultiStatusOrOK( "Problem(s) occured during update" );
+    final IStatus resultStatus = collector.asMultiStatusOrOK( Messages.getString("UpdateCalcCaseOperation_1") ); //$NON-NLS-1$
     if( !resultStatus.isOK() )
       throw new CoreException( resultStatus );
   }

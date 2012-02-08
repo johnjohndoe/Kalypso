@@ -139,7 +139,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final NaModell naModel = m_data.loadNaModel();
 
     fixTimeseriesLinks( naModel, getLog() );
-    getLog().add( IStatus.INFO, "Timeseries links have been updated." );
+    getLog().add( IStatus.INFO, Messages.getString("CalcCaseConverter.4") ); //$NON-NLS-1$
 
     final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
 
@@ -192,7 +192,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
     else
     {
-      getLog().add( IStatus.INFO, "Missing 'Pegel' folder in calculation case. Creating an empty folder." );
+      getLog().add( IStatus.INFO, Messages.getString("CalcCaseConverter.5") ); //$NON-NLS-1$
       modelTargetDir.mkdirs();
     }
   }
@@ -270,7 +270,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     newControl.setUsePrecipitationForm( oldControl.isUsePrecipitationForm() );
     newControl.setPrecipitationForm( oldControl.getPrecipitationForm() );
 
-    getLog().add( IStatus.OK, "Control parameters have been converted" );
+    getLog().add( IStatus.OK, Messages.getString("CalcCaseConverter.8") ); //$NON-NLS-1$
 
     return newControl;
   }
@@ -312,7 +312,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       newInitialValue.setActive( isActive );
     }
 
-    getLog().add( IStatus.OK, "Output control parameters have been converted" );
+    getLog().add( IStatus.OK, Messages.getString("CalcCaseConverter.9") ); //$NON-NLS-1$
 
     return newControl;
   }
@@ -399,7 +399,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     catch( final Exception e )
     {
       e.printStackTrace();
-      getLog().add( IStatus.WARNING, "Failed to add new entry to global simulation table", e );
+      getLog().add( IStatus.WARNING, Messages.getString("CalcCaseConverter.10"), e ); //$NON-NLS-1$
     }
   }
 }

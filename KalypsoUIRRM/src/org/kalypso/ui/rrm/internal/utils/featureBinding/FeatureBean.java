@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -185,7 +186,7 @@ public class FeatureBean<F extends Feature>
 
   public ICommand applyChanges( )
   {
-    final CompositeCommand composite = new CompositeCommand( "Edit properties" );
+    final CompositeCommand composite = new CompositeCommand( Messages.getString("FeatureBean_0") ); //$NON-NLS-1$
 
     for( final QName property : m_dirtyProperties )
     {

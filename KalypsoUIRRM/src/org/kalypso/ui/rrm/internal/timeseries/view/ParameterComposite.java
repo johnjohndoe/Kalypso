@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -74,8 +75,8 @@ public class ParameterComposite extends Composite
 
   private void createContents( )
   {
-    createInfoField( "Name", TimeseriesUtils.getName( m_parameterType ) );
-    createInfoField( "Unit", TimeseriesUtils.getUnit( m_parameterType ) );
+    createInfoField( Messages.getString("ParameterComposite_0"), TimeseriesUtils.getName( m_parameterType ) ); //$NON-NLS-1$
+    createInfoField( Messages.getString("ParameterComposite_1"), TimeseriesUtils.getUnit( m_parameterType ) ); //$NON-NLS-1$
 
     // TODO: list contained timeseries
   }

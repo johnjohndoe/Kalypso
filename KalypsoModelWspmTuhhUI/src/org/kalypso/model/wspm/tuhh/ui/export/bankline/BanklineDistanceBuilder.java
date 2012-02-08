@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileGeocoordinatesRunnable;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -115,12 +116,12 @@ public class BanklineDistanceBuilder
       catch( final Exception e )
       {
         e.printStackTrace();
-        m_log.add( IStatus.ERROR, "Failed to calculate distances for cross section '%s'", e, profile.getBigStation() );
+        m_log.add( IStatus.ERROR, Messages.getString("BanklineDistanceBuilder_0"), e, profile.getBigStation() ); //$NON-NLS-1$
       }
 
     }
 
-    final String logMessage = String.format( "Determine bank line distances" );
+    final String logMessage = String.format( Messages.getString("BanklineDistanceBuilder_1") ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( logMessage, logMessage );
   }
 
@@ -133,7 +134,7 @@ public class BanklineDistanceBuilder
     final LineString crossSection = (LineString) JTSAdapter.export( line );
     if( crossSection == null || crossSection.getNumPoints() < 2 )
     {
-      m_log.add( IStatus.WARNING, "Invalid geometry for for cross section '%s'", null, profileFeature.getBigStation() );
+      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_2"), null, profileFeature.getBigStation() ); //$NON-NLS-1$
       return;
     }
 
@@ -143,14 +144,14 @@ public class BanklineDistanceBuilder
     if( intersections.length == 0 )
     {
       final double distance = crossSection.distance( m_riverLine );
-      m_log.add( IStatus.WARNING, "Cross section '%s' does not intersect with center line (distance is %.2f [m])", null, profileFeature.getBigStation(), distance );
+      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_3"), null, profileFeature.getBigStation(), distance ); //$NON-NLS-1$
       return;
     }
 
     if( intersections.length > 1 )
     {
       final double distance = crossSection.distance( m_riverLine );
-      m_log.add( IStatus.WARNING, "Cross section '%s' intersect with center line more than once.", null, profileFeature.getBigStation(), distance );
+      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_4"), null, profileFeature.getBigStation(), distance ); //$NON-NLS-1$
       return;
     }
 

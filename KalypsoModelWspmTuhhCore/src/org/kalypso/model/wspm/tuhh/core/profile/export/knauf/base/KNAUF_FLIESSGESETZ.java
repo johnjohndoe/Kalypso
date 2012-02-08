@@ -41,20 +41,21 @@
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.base;
 
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Dirk Kuch
  */
 public enum KNAUF_FLIESSGESETZ
 {
-  eManningStrickler(1, "Manning-Strickler"),
-  ePrandtlColeBrook(2, "Prandtl-Colebrook (Pc)"),
-  eEinstein(3, "Einstein (Manning-Strickler)"),
-  ePcBewuchsKaiser(4, "Prandtl-Colebrook und Bewuchs nach Kaiser"),
-  ePcBewuchsNuding(5, "Prandtl-Colebrook und Bewuchs nach Nuding"),
-  ePcBewuchsMertens(6, "Prandtl-Colebrook und Bewuchs nach Mertens"),
-  ePcBewuchsPasche(7, "Prandtl-Colebrook und Bewuchs nach Pasche"),
-  ePcEinstein(8, "Prandtl-Colebrook und Einstein - ohne Bewuchs");
+  eManningStrickler(1, Messages.getString("KNAUF_FLIESSGESETZ_0")), //$NON-NLS-1$
+  ePrandtlColeBrook(2, Messages.getString("KNAUF_FLIESSGESETZ_1")), //$NON-NLS-1$
+  eEinstein(3, Messages.getString("KNAUF_FLIESSGESETZ_2")), //$NON-NLS-1$
+  ePcBewuchsKaiser(4, Messages.getString("KNAUF_FLIESSGESETZ_3")), //$NON-NLS-1$
+  ePcBewuchsNuding(5, Messages.getString("KNAUF_FLIESSGESETZ_4")), //$NON-NLS-1$
+  ePcBewuchsMertens(6, Messages.getString("KNAUF_FLIESSGESETZ_5")), //$NON-NLS-1$
+  ePcBewuchsPasche(7, Messages.getString("KNAUF_FLIESSGESETZ_6")), //$NON-NLS-1$
+  ePcEinstein(8, Messages.getString("KNAUF_FLIESSGESETZ_7")); //$NON-NLS-1$
 
   private final Integer m_type;
 

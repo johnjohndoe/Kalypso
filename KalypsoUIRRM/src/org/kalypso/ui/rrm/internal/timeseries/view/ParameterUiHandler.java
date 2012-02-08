@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -80,7 +81,7 @@ public class ParameterUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Parameter Type";
+    return Messages.getString("ParameterUiHandler_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -109,7 +110,7 @@ public class ParameterUiHandler extends AbstractTreeNodeUiHandler
 
     /* Delete timeseries */
     final String stationLabel = m_station.getDescription();
-    final String deleteMessage = String.format( "Delete all timeseries from parameter '%s' of station '%s'?", getTreeLabel(), stationLabel );
+    final String deleteMessage = String.format( Messages.getString("ParameterUiHandler_1"), getTreeLabel(), stationLabel ); //$NON-NLS-1$
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }

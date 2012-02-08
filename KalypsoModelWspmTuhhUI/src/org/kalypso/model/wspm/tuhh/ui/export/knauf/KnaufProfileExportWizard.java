@@ -110,7 +110,7 @@ public class KnaufProfileExportWizard extends ExportProfilesWizard
     }
     catch( final Exception e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), "Export of Knauf Profiles failed.", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getID(), Messages.getString("KnaufProfileExportWizard.0"), e ) ); //$NON-NLS-1$
     }
   }
 }

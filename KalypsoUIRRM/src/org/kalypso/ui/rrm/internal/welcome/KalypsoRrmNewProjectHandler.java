@@ -80,7 +80,7 @@ public class KalypsoRrmNewProjectHandler implements INewProjectHandler
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to move localized data into project", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to move localized data into project", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
