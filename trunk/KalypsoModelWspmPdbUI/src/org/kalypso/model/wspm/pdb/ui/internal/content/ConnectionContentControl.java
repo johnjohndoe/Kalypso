@@ -2,45 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.content;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -71,8 +73,10 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.ui.internal.IWaterBodyStructure;
+import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.state.StatesViewer;
 import org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.WaterBodyViewer;
 
@@ -83,12 +87,14 @@ public class ConnectionContentControl extends Composite
 {
   private static final String TOOLBAR_URI = "toolbar:org.kalypso.model.wspm.pdb.ui.content"; //$NON-NLS-1$
 
+  private static final IStatus STATUS_UPDATE = new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, "Updating data..." ); //$NON-NLS-1$
+
   private final IJobChangeListener m_refreshJobListener = new JobChangeAdapter()
   {
     @Override
     public void done( final IJobChangeEvent event )
     {
-      handleRefreshDone();
+      handleRefreshDone( event.getResult() );
     }
   };
 
@@ -99,6 +105,8 @@ public class ConnectionContentControl extends Composite
   private final ToolBarManager m_manager;
 
   private final IServiceLocator m_serviceLocator;
+
+  private StatusComposite m_statusBar;
 
   public ConnectionContentControl( final IServiceLocator serviceLocator, final FormToolkit toolkit, final Composite parent, final IPdbConnection connection )
   {
@@ -118,10 +126,17 @@ public class ConnectionContentControl extends Composite
 
     m_manager = new ToolBarManager( SWT.FLAT | SWT.SHADOW_OUT );
     createToolbar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    createStatusBar( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     createTreeViewer( toolkit, this ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createActions();
 
     refresh( null );
+  }
+
+  private Control createStatusBar( final FormToolkit toolkit, final Composite parent )
+  {
+    m_statusBar = new StatusComposite( toolkit, parent, StatusComposite.DETAILS | StatusComposite.HIDE_DETAILS_IF_DISABLED );
+    return m_statusBar;
   }
 
   @Override
@@ -229,6 +244,8 @@ public class ConnectionContentControl extends Composite
 
   public void refresh( final ElementSelector elementToSelect )
   {
+    updateStatusBar( STATUS_UPDATE );
+
     // TODO: it would also be nice to directly update any changed elements
     // Hm, maybe we should directly always work on the current state?
 
@@ -253,7 +270,7 @@ public class ConnectionContentControl extends Composite
     refreshColumnSizes();
   }
 
-  protected void handleRefreshDone( )
+  protected void handleRefreshDone( final IStatus status )
   {
     final ConnectionInput input = m_refreshJob.getInput();
     final ElementSelector selector = m_refreshJob.getElementToSelect();
@@ -270,9 +287,35 @@ public class ConnectionContentControl extends Composite
         viewer.getControl().setFont( normalFont );
 
         applySelection( selector );
+
+        if( status.isOK() )
+          refreshStatusBar();
+        else
+          updateStatusBar( status );
       }
     };
     ViewerUtilities.execute( m_viewer, operation, true );
+  }
+
+  protected void refreshStatusBar( )
+  {
+    final IConnectionContentProvider contentProvider = (IConnectionContentProvider) m_viewer.getContentProvider();
+    final IStatus status = contentProvider.getInputStatus();
+    updateStatusBar( status );
+  }
+
+  protected void updateStatusBar( final IStatus status )
+  {
+    m_statusBar.setStatus( status );
+
+    final boolean wasVisible = m_statusBar.isVisible();
+    final boolean isVisible = !status.isOK();
+
+    m_statusBar.setVisible( isVisible );
+    ((GridData) m_statusBar.getLayoutData()).exclude = !isVisible;
+
+    if( isVisible != wasVisible )
+      layout( true, true );
   }
 
   protected void applySelection( final ElementSelector selector )
