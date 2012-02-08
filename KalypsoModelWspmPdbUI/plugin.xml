@@ -268,15 +268,10 @@
       <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard" name="%wizard.name.2" icon="icons/waterBody.gif">
         <description>%wizard.description.2</description>
       </wizard>
-      <wizard
-            category="pdbWizardsCategory"
-            class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
-            icon="icons/waterBody.gif"
-            id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
+      <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
+            icon="icons/waterBody.gif" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard"
             name="%wizard.name.6">
-         <description>
-            %wizard.description.6
-         </description>
+         <description> %wizard.description.6</description>
       </wizard>
       <wizard category="pdbWizardsCategory" class="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" id="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard" name="%wizard.name.3" icon="icons/event.gif">
         <description>%wizard.description.3</description>
@@ -310,6 +305,32 @@
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterBodiesWizard">
        <enablement>
               <reference definitionId="isPdbAdminAndPdbViewVisible"/>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.WspmImportWaterBodiesWizard">
+       <enablement>
+          <and>
+            <with variable="activeWorkbenchWindow.activePerspective">
+                <not>
+                    <equals value="WspmLightPerspective"/>
+                </not>
+            </with>
+            <with variable="selection">
+                <and>>
+                    <count value="1"/>
+                    <iterate operator="and" ifEmpty="false">
+                        <or>
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmproj}WspmProject" />
+                            <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody" />
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody" />
+                            <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspmprofile}Profile" />
+                            <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}AbstractReach" />
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState" />
+                        </or>
+                    </iterate>
+                </and>
+            </with>
+          </and>
        </enablement>
     </wizardEnablement>
     <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.ImportWaterLevelsWizard">
