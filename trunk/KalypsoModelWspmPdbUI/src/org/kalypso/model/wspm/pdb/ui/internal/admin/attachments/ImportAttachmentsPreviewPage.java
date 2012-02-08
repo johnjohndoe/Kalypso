@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.attachments;
 
@@ -131,14 +131,6 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     m_checkStateHandler = new DocumentsCheckstateHandler( m_viewer, m_data );
     m_viewer.setCheckStateProvider( m_checkStateHandler );
 
-    // status
-    final TableViewerColumn statusColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
-    statusColumn.setLabelProvider( new DocumentsStatusProvider( m_documentData ) );
-    statusColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.2" ) ); //$NON-NLS-1$
-    statusColumn.getColumn().setResizable( false );
-    ColumnViewerSorter.registerSorter( statusColumn, new DocumentsStatusComparator( m_documentData ) );
-    ColumnsResizeControlListener.setMinimumPackWidth( statusColumn.getColumn() );
-
     // station
     final TableViewerColumn stationColumn = new TableViewerColumn( m_viewer, SWT.RIGHT );
     stationColumn.setLabelProvider( new DocumentsStationProvider( m_documentData ) );
@@ -162,6 +154,14 @@ public class ImportAttachmentsPreviewPage extends WizardPage implements IUpdatea
     typeColumn.getColumn().setResizable( false );
     ColumnViewerSorter.registerSorter( typeColumn, new DocumentsTypeComparator() );
     ColumnsResizeControlListener.setMinimumPackWidth( typeColumn.getColumn() );
+
+    // status
+    final TableViewerColumn statusColumn = new TableViewerColumn( m_viewer, SWT.LEFT );
+    statusColumn.setLabelProvider( new DocumentsStatusProvider( m_documentData ) );
+    statusColumn.getColumn().setText( Messages.getString( "ImportAttachmentsPreviewPage.2" ) ); //$NON-NLS-1$
+    statusColumn.getColumn().setResizable( false );
+    ColumnViewerSorter.registerSorter( statusColumn, new DocumentsStatusComparator( m_documentData ) );
+    ColumnsResizeControlListener.setMinimumPackWidth( statusColumn.getColumn() );
 
     table.addControlListener( new ColumnsResizeControlListener() );
 
