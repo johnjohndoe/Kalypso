@@ -71,14 +71,8 @@ import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
  */
 public abstract class AbstractImportWaterBodiesWizard extends Wizard implements IWorkbenchWizard, IGenericWizard
 {
-  /**
-   * The page listener.
-   */
   private final IPageChangedListener m_pageListener = new IPageChangedListener()
   {
-    /**
-     * @see org.eclipse.jface.dialogs.IPageChangedListener#pageChanged(org.eclipse.jface.dialogs.PageChangedEvent)
-     */
     @Override
     public void pageChanged( final PageChangedEvent event )
     {
@@ -86,29 +80,14 @@ public abstract class AbstractImportWaterBodiesWizard extends Wizard implements 
     }
   };
 
-  /**
-   * The select shape file page.
-   */
   private SelectShapeFilePage m_shapeFilePage;
 
-  /**
-   * The import water bodies data.
-   */
   private ImportWaterBodiesData m_data;
 
-  /**
-   * The workbench part.
-   */
   private IWorkbenchPart m_part;
 
-  /**
-   * The selection.
-   */
   private IStructuredSelection m_selection;
 
-  /**
-   * The constructor.
-   */
   public AbstractImportWaterBodiesWizard( )
   {
     /* Initialize some settings. */
@@ -117,10 +96,6 @@ public abstract class AbstractImportWaterBodiesWizard extends Wizard implements 
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
@@ -141,9 +116,6 @@ public abstract class AbstractImportWaterBodiesWizard extends Wizard implements 
     addPage( new ImportWaterbodiesPreviewPage( "previewPage", m_data ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.dialogs.IGenericWizard#postInit(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus postInit( final IProgressMonitor monitor ) throws InvocationTargetException
   {
@@ -167,9 +139,6 @@ public abstract class AbstractImportWaterBodiesWizard extends Wizard implements 
     }
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
   @Override
   public boolean canFinish( )
   {
@@ -179,9 +148,6 @@ public abstract class AbstractImportWaterBodiesWizard extends Wizard implements 
     return canFinish && !hasNextPage;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
-   */
   @Override
   public void setContainer( final IWizardContainer wizardContainer )
   {
