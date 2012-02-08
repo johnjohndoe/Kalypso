@@ -75,19 +75,10 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
    */
   private final Map<String, WspmWaterBody> m_features;
 
-  /**
-   * The workspace.
-   */
   private CommandableWorkspace m_workspace;
 
-  /**
-   * The wspm project.
-   */
   private WspmProject m_wspmProject;
 
-  /**
-   * The constructor.
-   */
   public WspmImportWaterBodiesWizard( )
   {
     m_features = new HashMap<String, WspmWaterBody>();
@@ -95,10 +86,6 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     m_wspmProject = null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports.AbstractImportWaterBodiesWizard#initData(org.eclipse.ui.IWorkbenchPart,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   protected WaterBody[] initData( final IWorkbenchPart part, final IStructuredSelection selection )
   {
