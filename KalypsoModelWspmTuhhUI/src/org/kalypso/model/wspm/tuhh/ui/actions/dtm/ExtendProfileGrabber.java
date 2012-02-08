@@ -87,8 +87,8 @@ public class ExtendProfileGrabber
   {
     final FeatureList profileFeatures = getProfileFeatures();
     final IFeatureType targetFeatureType = profileFeatures.getPropertyType().getTargetFeatureType();
-    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QN_PROFILE ) )
-      return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, m_snapRadius, profileFeatures, IProfileFeature.QN_PROPERTY_LINE );
+    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.FEATURE_PROFILE ) )
+      return (IProfileFeature) GeometryUtilities.findNearestFeature( pos, m_snapRadius, profileFeatures, IProfileFeature.PROPERTY_LINE );
 
     final TuhhReachProfileSegment nearest = (TuhhReachProfileSegment) GeometryUtilities.findNearestFeature( pos, m_snapRadius, profileFeatures, TuhhReachProfileSegment.PROPERTY_PROFILE_LOCATION );
     if( nearest == null )

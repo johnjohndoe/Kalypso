@@ -92,7 +92,7 @@ public class WspmResultInterpolationProfile
   {
     try
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IProfileFeature.QN_PROFILE, null, GmlSerializer.DEFAULT_FACTORY );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IProfileFeature.FEATURE_PROFILE, null, GmlSerializer.DEFAULT_FACTORY );
       return (IProfileFeature) workspace.getRootFeature();
     }
     catch( final GMLSchemaException e )

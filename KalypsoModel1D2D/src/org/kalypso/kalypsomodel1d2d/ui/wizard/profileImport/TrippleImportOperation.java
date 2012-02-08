@@ -118,7 +118,7 @@ final class TrippleImportOperation implements ICoreRunnableWithProgress
 
     for( final IProfil profile : profiles )
     {
-      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( networkFeature, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.QN_PROFILE );
+      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( networkFeature, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, IProfileFeature.FEATURE_PROFILE );
       profileFeature.setEnvelopesUpdated();
       ((ProfileFeatureBinding) profileFeature).setProfile( profile );
       profileFeature.setSrsName( m_crs );

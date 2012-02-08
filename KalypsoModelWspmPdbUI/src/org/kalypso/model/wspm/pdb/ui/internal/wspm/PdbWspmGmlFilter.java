@@ -68,7 +68,7 @@ public class PdbWspmGmlFilter extends ViewerFilter
 
   public PdbWspmGmlFilter( )
   {
-    m_filteredElements.add( IProfileFeature.QN_PROFILE );
+    m_filteredElements.add( IProfileFeature.FEATURE_PROFILE );
 
     m_filteredElements.add( WspmWaterBody.MEMBER_PROFILE );
     m_filteredElements.add( WspmWaterBody.MEMBER_RUNOFF );
