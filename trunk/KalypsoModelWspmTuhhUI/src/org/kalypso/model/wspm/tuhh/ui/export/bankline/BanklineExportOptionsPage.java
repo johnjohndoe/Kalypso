@@ -54,6 +54,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -70,8 +71,8 @@ public class BanklineExportOptionsPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Export Options" );
-    setDescription( "Choose the options for bankline export on this page" );
+    setTitle( Messages.getString("BanklineExportOptionsPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("BanklineExportOptionsPage_1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -92,7 +93,7 @@ public class BanklineExportOptionsPage extends WizardPage
   private void createMarkerChooser( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Bankline Position" );
+    label.setText( Messages.getString("BanklineExportOptionsPage_2") ); //$NON-NLS-1$
 
     final ComboViewer markerCombo = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     markerCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

@@ -82,18 +82,18 @@ public class BasicModelConverter extends AbstractLoggingOperation
   @Override
   protected void doExecute( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "convert basic data", 100 );
+    monitor.beginTask( Messages.getString("BasicModelConverter.0"), 100 ); //$NON-NLS-1$
 
     try
     {
       /* Copy basic .gml files */
-      monitor.subTask( "copy gml files" );
+      monitor.subTask( Messages.getString("BasicModelConverter.1") ); //$NON-NLS-1$
       final IPath basisPath = new Path( INaProjectConstants.FOLDER_BASIS );
 
       copyFile( new Path( INaProjectConstants.GML_MODELL_FILE ), basisPath.append( INaProjectConstants.GML_MODELL_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_HYDROTOP_FILE ), basisPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PARAMETER_FILE ), basisPath.append( INaProjectConstants.GML_PARAMETER_PATH ) );
-      copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) );
+      copyFile( new Path( "calcSynthN.gml" ), basisPath.append( INaProjectConstants.GML_SYNTH_N_PATH ) ); //$NON-NLS-1$
       copyFile( new Path( INaProjectConstants.GML_LANDUSE_FILE ), basisPath.append( INaProjectConstants.GML_LANDUSE_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_GEOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_GEOLOGIE_PATH ) );
       copyFile( new Path( INaProjectConstants.GML_PEDOLOGIE_FILE ), basisPath.append( INaProjectConstants.GML_PEDOLOGIE_PATH ) );
@@ -101,11 +101,11 @@ public class BasicModelConverter extends AbstractLoggingOperation
       monitor.worked( 5 );
 
       /* Copy timeseries */
-      monitor.subTask( "copy and convert timeseries files" );
+      monitor.subTask( Messages.getString("BasicModelConverter.3") ); //$NON-NLS-1$
       m_timeseriesIndex = copyBasicTimeseries( new SubProgressMonitor( monitor, 90 ) );
 
       /* timeseries links */
-      monitor.subTask( "convert timeseries links" );
+      monitor.subTask( Messages.getString("BasicModelConverter.4") ); //$NON-NLS-1$
 
       copyObservationConf( m_timeseriesIndex );
 
@@ -120,9 +120,9 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private TimeseriesIndex copyBasicTimeseries( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Converting timeseries", 100 );
+    monitor.beginTask( Messages.getString("BasicModelConverter.5"), 100 ); //$NON-NLS-1$
 
-    monitor.subTask( "read station file" );
+    monitor.subTask( Messages.getString("BasicModelConverter.6") ); //$NON-NLS-1$
     final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
     importer.readStations();
     monitor.worked( 5 );
@@ -139,7 +139,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     copyTimeseries( importer, monitor, "Zufluss" ); //$NON-NLS-1$
     copyTimeseries( importer, monitor, "Tributary" ); //$NON-NLS-1$
 
-    monitor.subTask( "save station file" );
+    monitor.subTask( Messages.getString("BasicModelConverter.7") ); //$NON-NLS-1$
     importer.saveStations();
     monitor.worked( 5 );
 
@@ -148,7 +148,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
   private void copyTimeseries( final TimeseriesImporter importer, final IProgressMonitor monitor, final String folder )
   {
-    monitor.subTask( String.format( "convert timeseries from folder '%s'", folder ) );
+    monitor.subTask( String.format( Messages.getString("BasicModelConverter.8"), folder ) ); //$NON-NLS-1$
     importer.copyTimeseries( folder, new SubProgressMonitor( monitor, (90 / 7) ) ); //$NON-NLS-1$
   }
 
@@ -159,10 +159,10 @@ public class BasicModelConverter extends AbstractLoggingOperation
   {
     final ObservationconfConverter converter = new ObservationconfConverter( timeseriesIndex, m_sourceDir, m_targetDir );
 
-    getLog().add( converter.execute( "ObsQZuMapping.gml" ) );
-    getLog().add( converter.execute( "ObsQMapping.gml" ) );
+    getLog().add( converter.execute( "ObsQZuMapping.gml" ) ); //$NON-NLS-1$
+    getLog().add( converter.execute( "ObsQMapping.gml" ) ); //$NON-NLS-1$
     // FIXME: remove everything from the mapping except sea evaporation timeseries
-    getLog().add( converter.execute( "ObsEMapping.gml" ) );
+    getLog().add( converter.execute( "ObsEMapping.gml" ) ); //$NON-NLS-1$
   }
 
   private void copyFile( final IPath sourcePath, final IPath targetPath ) throws IOException
@@ -180,7 +180,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     CalcCaseConverter.fixTimeseriesLinks( naModel, getLog() );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
-    getLog().add( IStatus.INFO, "Timeseries links have been updated." );
+    getLog().add( IStatus.INFO, Messages.getString("BasicModelConverter.12") ); //$NON-NLS-1$
   }
 
   public TimeseriesIndex getTimeseriesIndex( )

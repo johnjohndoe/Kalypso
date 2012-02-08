@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -62,7 +63,7 @@ public class NewLinearSumGeneratorAction extends Action
     m_model = model;
     m_parameterType = parameterType;
 
-    setText( "New Catchment Model (Linear Sum)" );
+    setText( Messages.getString("NewLinearSumGeneratorAction_0") ); //$NON-NLS-1$
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
   }
 

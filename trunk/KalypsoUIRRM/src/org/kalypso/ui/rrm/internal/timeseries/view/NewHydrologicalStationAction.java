@@ -50,6 +50,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -67,8 +68,8 @@ public class NewHydrologicalStationAction extends Action
     m_model = model;
     m_group = group;
 
-    setText( "New Hydrological Station" );
-    setToolTipText( "Creates a new hydrologcial station" );
+    setText( Messages.getString("NewHydrologicalStationAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("NewHydrologicalStationAction_1") ); //$NON-NLS-1$
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_HYDROLOGICAL ) );
   }
 

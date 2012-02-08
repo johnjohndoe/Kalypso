@@ -200,7 +200,7 @@ public final class TuhhLayersAdder
 
   public static void addCodeLayer( final IProfilPointPropertyProvider provider, final IProfil profil )
   {
-    final IProfilChange change = new PointPropertyAdd( profil, provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_CODE ), "" );
+    final IProfilChange change = new PointPropertyAdd( profil, provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_CODE ), "" ); //$NON-NLS-1$
 
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.0" ), profil, new IProfilChange[] { change }, true ); //$NON-NLS-1$
     new ProfilOperationJob( operation ).schedule();

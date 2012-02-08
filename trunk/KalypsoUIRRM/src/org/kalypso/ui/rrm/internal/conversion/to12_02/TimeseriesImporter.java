@@ -75,6 +75,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -118,7 +119,7 @@ public class TimeseriesImporter
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read stations.gml", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesImporter_0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -133,14 +134,14 @@ public class TimeseriesImporter
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read stations.gml", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesImporter_1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
 
   public void copyTimeseries( final String folder, final IProgressMonitor monitor )
   {
-    final String name = String.format( "Converting timeseries: %s", folder );
+    final String name = String.format( Messages.getString("TimeseriesImporter_2"), folder ); //$NON-NLS-1$
     monitor.beginTask( name, IProgressMonitor.UNKNOWN );
 
     final File sourceTimeseriesDir = new File( m_sourceDir, folder );
@@ -152,7 +153,7 @@ public class TimeseriesImporter
     final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     /* Find all .zml */
-    final Iterator<File> zmlIterator = FileUtils.iterateFiles( sourceTimeseriesDir, new String[] { "zml" }, true );
+    final Iterator<File> zmlIterator = FileUtils.iterateFiles( sourceTimeseriesDir, new String[] { "zml" }, true ); //$NON-NLS-1$
     for( final Iterator<File> iterator = zmlIterator; iterator.hasNext(); )
     {
       final File zmlFile = iterator.next();
@@ -171,7 +172,7 @@ public class TimeseriesImporter
       {
         final String relativePath = FileUtilities.getRelativePathTo( sourceTimeseriesDir, zmlFile );
 
-        final String message = String.format( "Failed to convert timeseries '%s'", relativePath );
+        final String message = String.format( Messages.getString("TimeseriesImporter_4"), relativePath ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message, e );
         stati.add( status );
       }
@@ -180,7 +181,7 @@ public class TimeseriesImporter
     }
 
     /* Log it */
-    final String message = String.format( "Importing timeseries from '%s'", folder );
+    final String message = String.format( Messages.getString("TimeseriesImporter_5"), folder ); //$NON-NLS-1$
     final IStatus status = stati.asMultiStatusOrOK( message, message );
     m_log.add( status );
 
@@ -200,7 +201,7 @@ public class TimeseriesImporter
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
     if( dateAxis == null )
     {
-      final String message = String.format( "Skipped timeseries '%s': no date axis", relativePath );
+      final String message = String.format( Messages.getString("TimeseriesImporter_6"), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -209,14 +210,14 @@ public class TimeseriesImporter
 
     if( valueAxes.length == 0 )
     {
-      final String message = String.format( "Skipped timeseries '%s': no value axis", relativePath );
+      final String message = String.format( Messages.getString("TimeseriesImporter_7"), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
 
     if( valueAxes.length > 1 )
     {
-      final String message = String.format( "Failed to import timeseries '%s': more than one value axis.", relativePath );
+      final String message = String.format( Messages.getString("TimeseriesImporter_8"), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -276,7 +277,7 @@ public class TimeseriesImporter
     final QName stationType = StationClassesCatalog.getTypeFor( parameterType );
     if( stationType == null )
     {
-      final String message = String.format( "Unsupported parameter type '%s' for timeseries '%s'", parameterType, relativePath );
+      final String message = String.format( Messages.getString("TimeseriesImporter_9"), parameterType, relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -311,7 +312,7 @@ public class TimeseriesImporter
 
     final IStation newStation = stations.addNew( stationType );
     newStation.setDescription( description );
-    newStation.setComment( "Created by project conversion" );
+    newStation.setComment( Messages.getString("TimeseriesImporter_10") ); //$NON-NLS-1$
     newStation.setGroup( group );
 
     return newStation;
@@ -322,7 +323,7 @@ public class TimeseriesImporter
     final ITimeseries newTimeseries = station.getTimeseries().addNew( ITimeseries.FEATURE_TIMESERIES );
     newTimeseries.setDescription( timeseriesDescription );
 
-    final String quality = "Project Conversion";
+    final String quality = Messages.getString("TimeseriesImporter_11"); //$NON-NLS-1$
 
     newTimeseries.setParameterType( parameterType );
     newTimeseries.setQuality( quality );
@@ -342,8 +343,8 @@ public class TimeseriesImporter
 
   private String getProjectPath( final String timeseriesPath )
   {
-    final String projectRelativePath = INaProjectConstants.PATH_TIMESERIES + "/" + timeseriesPath;
-    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath;
+    final String projectRelativePath = INaProjectConstants.PATH_TIMESERIES + "/" + timeseriesPath; //$NON-NLS-1$
+    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath; //$NON-NLS-1$
     return projectPath;
   }
 

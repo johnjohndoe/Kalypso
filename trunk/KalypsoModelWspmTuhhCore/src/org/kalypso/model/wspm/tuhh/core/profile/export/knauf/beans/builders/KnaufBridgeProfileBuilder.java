@@ -136,7 +136,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
     if( !isBetween( Math.min( previous.getStation(), next.getStation() ), station, Math.max( previous.getStation(), next.getStation() ) ) )
     {
-      final String msg = String.format( "Konflikt! Kann KalypsoWSPM Brückenprofil nicht in Unterwasser-Richtung verschieben. Neue Stationierung %.3f km kollidiert mit bestehenden Nachbar-Profilen (%.3f km, %.3f km)", station, previous.getStation(), next.getStation() );
+      final String msg = String.format( Messages.getString("KnaufBridgeProfileBuilder.0"), station, previous.getStation(), next.getStation() ); //$NON-NLS-1$
       final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), msg );
 
       return status;
@@ -144,7 +144,7 @@ public class KnaufBridgeProfileBuilder extends AbstractKnaufProfileBeanBuilder
 
     m_profile.getProfile().setStation( station );
 
-    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), "Verschiebung des Brückenprofils in Unterwasser-Richtung" );
+    return new Status( IStatus.OK, KalypsoModelWspmTuhhCorePlugin.getID(), Messages.getString("KnaufBridgeProfileBuilder.1") ); //$NON-NLS-1$
   }
 
   private boolean isBetween( final double before, final double bridge, final double next )

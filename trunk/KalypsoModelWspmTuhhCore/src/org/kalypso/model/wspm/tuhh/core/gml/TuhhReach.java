@@ -297,6 +297,6 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   @Override
   public String toString( )
   {
-    return String.format( "%s\n%s", super.toString(), getName() );
+    return String.format( "%s\n%s", super.toString(), getName() ); //$NON-NLS-1$
   }
 }

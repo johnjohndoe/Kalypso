@@ -65,7 +65,7 @@ public class KnaufSA94Bean extends AbstractKnaufProjectBean
 
   public String getText( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
 }

@@ -103,10 +103,10 @@ public class Lng2LengthSection
 
   private String mapComponent( final String blockHeader )
   {
-    if( blockHeader.toUpperCase().startsWith( "SOHLHOEHE" ) )
+    if( blockHeader.toUpperCase().startsWith( "SOHLHOEHE" ) ) //$NON-NLS-1$
       return IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_GROUND;
 
-    if( blockHeader.toUpperCase().startsWith( "WASSERSPIEGEL" ) )
+    if( blockHeader.toUpperCase().startsWith( "WASSERSPIEGEL" ) ) //$NON-NLS-1$
       return IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL;
 
     // TODO: convert other result data as well

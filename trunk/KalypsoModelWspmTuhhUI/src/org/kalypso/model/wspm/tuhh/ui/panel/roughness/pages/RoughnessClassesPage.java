@@ -123,7 +123,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
       @Override
       public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
       {
-        if( MessageDialog.openConfirm( lnkRemove.getShell(), "Delete", "Are you really sure?" ) )
+        if( MessageDialog.openConfirm( lnkRemove.getShell(), Messages.getString("RoughnessClassesPage.11"), Messages.getString("RoughnessClassesPage.12") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
       }
     } );
@@ -163,7 +163,7 @@ public class RoughnessClassesPage extends AbstractRoughnessPage
         final UpdateSimpleRoughnessProperty worker = new UpdateSimpleRoughnessProperty( profile, property, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
 
-        final ProfilOperation operation = new ProfilOperation( "updating roughness values", profile, true );
+        final ProfilOperation operation = new ProfilOperation( "Updating roughness values", profile, true ); //$NON-NLS-1$
         operation.addChange( worker.getChanges() );
 
         new ProfilOperationJob( operation ).schedule();

@@ -141,7 +141,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
       @Override
       public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
       {
-        if( MessageDialog.openConfirm( lnkRemove.getShell(), "Delete", "Are you really sure?" ) )
+        if( MessageDialog.openConfirm( lnkRemove.getShell(), Messages.getString("VegetationClassesPage.10"), Messages.getString("VegetationClassesPage.11") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           RoughnessPanelHelper.removeRoughness( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
       }
     } );
@@ -175,7 +175,7 @@ public class VegetationClassesPage extends AbstractElementPage implements IEleme
         final UpdateVegetationProperties worker = new UpdateVegetationProperties( m_profile, overwriteValues );
         ProgressUtilities.busyCursorWhile( worker );
 
-        final ProfilOperation operation = new ProfilOperation( "updating vegatation  values", m_profile, true );
+        final ProfilOperation operation = new ProfilOperation( "updating vegatation  values", m_profile, true ); //$NON-NLS-1$
         operation.addChange( worker.getChanges() );
 
         new ProfilOperationJob( operation ).schedule();

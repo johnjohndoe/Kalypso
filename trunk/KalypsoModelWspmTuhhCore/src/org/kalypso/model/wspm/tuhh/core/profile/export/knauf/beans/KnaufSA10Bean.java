@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans;
 
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+
 
 /**
  * Header
@@ -61,7 +63,7 @@ public class KnaufSA10Bean extends AbstractKnaufProjectBean
 
   public String getTitle( )
   {
-    return "Kalypso WSPM Knauf Profile Export";
+    return Messages.getString("KnaufSA10Bean_0"); //$NON-NLS-1$
   }
 
 }

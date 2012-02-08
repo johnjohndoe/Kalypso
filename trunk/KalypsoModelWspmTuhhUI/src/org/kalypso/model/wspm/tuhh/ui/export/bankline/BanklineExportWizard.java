@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapePage;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -62,7 +63,7 @@ public class BanklineExportWizard extends Wizard implements IWorkbenchWizard
 
   public BanklineExportWizard( )
   {
-    setWindowTitle( "Bankline Export" );
+    setWindowTitle( Messages.getString("BanklineExportWizard_0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() ) );

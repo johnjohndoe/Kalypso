@@ -180,7 +180,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
       @Override
       public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
       {
-        if( MessageDialog.openConfirm( lnkRemove.getShell(), "Delete", "Are you really sure?" ) )
+        if( MessageDialog.openConfirm( lnkRemove.getShell(), Messages.getString("AbstractRoughnessPage.11"), Messages.getString("AbstractRoughnessPage.12") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           RoughnessPanelHelper.removeRoughness( getProfile(), getComponent().getId() );
       }
     } );
@@ -210,7 +210,7 @@ public abstract class AbstractRoughnessPage extends AbstractElementPage
           final GuessRoughessClassesRunnable worker = new GuessRoughessClassesRunnable( getProfile(), getComponent().getId(), overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
-          final ProfilOperation operation = new ProfilOperation( "Guessing roughness classes", getProfile(), overwriteValues );
+          final ProfilOperation operation = new ProfilOperation( "Guessing roughness classes", getProfile(), overwriteValues ); //$NON-NLS-1$
           operation.addChange( worker.getChanges() );
 
           new ProfilOperationJob( operation ).schedule();

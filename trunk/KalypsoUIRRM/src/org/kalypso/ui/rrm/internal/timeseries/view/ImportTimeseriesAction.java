@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.ui.imports.ImportObservationData;
@@ -75,8 +76,8 @@ public class ImportTimeseriesAction extends Action
     m_parameterType = parameterType;
     m_model = model;
 
-    setText( "Import Timeseries" );
-    setToolTipText( "Imports a timeseries from an external data source and adds it to the selected station." );
+    setText( Messages.getString("ImportTimeseriesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("ImportTimeseriesAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.IMPORT_TIMESERIES ) );
   }

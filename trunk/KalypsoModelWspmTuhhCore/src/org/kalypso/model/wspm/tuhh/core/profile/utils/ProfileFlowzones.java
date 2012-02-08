@@ -89,7 +89,7 @@ public final class ProfileFlowzones
 
     final Object value = findCommonValue( profile, component, zone[0], zone[1] );
 
-    return Objects.firstNonNull( value, "" ).toString();
+    return Objects.firstNonNull( value, "" ).toString(); //$NON-NLS-1$
   }
 
   public static Double findLeftFloodplainValue( final IProfil profile, final IComponent component )
@@ -114,7 +114,7 @@ public final class ProfileFlowzones
 
     final Object value = findCommonValue( profile, component, zone[0], zone[1] );
 
-    return Objects.firstNonNull( value, "" ).toString();
+    return Objects.firstNonNull( value, "" ).toString(); //$NON-NLS-1$
 
   }
 
@@ -140,7 +140,7 @@ public final class ProfileFlowzones
 
     final Object value = findCommonValue( profile, component, zone[0], zone[1] );
 
-    return Objects.firstNonNull( value, "" ).toString();
+    return Objects.firstNonNull( value, "" ).toString(); //$NON-NLS-1$
   }
 
   public static Double findRiverTubeValue( final IProfil profile, final IComponent component )
@@ -205,7 +205,7 @@ public final class ProfileFlowzones
   private static void setCommonValue( final IProfil profile, final IComponent component, final int p1, final int p2, final Object value )
   {
     final PointPropertyEdit changes = new PointPropertyEdit( profile.getPoints( p1, p2 ), component, value );
-    final ProfilOperation operation = new ProfilOperation( "updating profile properties", profile, changes, true );
+    final ProfilOperation operation = new ProfilOperation( "updating profile properties", profile, changes, true ); //$NON-NLS-1$
     new ProfilOperationJob( operation ).schedule();
   }
 

@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -68,15 +69,15 @@ public class DeleteGeneratorAction extends Action
     m_model = model;
     m_generators = generators;
 
-    setText( "Delete Catchment Model(s)" );
-    setToolTipText( "Delete selected catchment model(s)" );
+    setText( Messages.getString("DeleteGeneratorAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("DeleteGeneratorAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
     if( generators.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( "Element contains no models" );
+      setToolTipText( Messages.getString("DeleteGeneratorAction_2") ); //$NON-NLS-1$
     }
   }
 
@@ -108,8 +109,8 @@ public class DeleteGeneratorAction extends Action
   private String getDeleteMessage( )
   {
     if( m_generators.length > 1 )
-      return "Delete selected catchment model(s)? This operation cannot made undone!";
+      return Messages.getString("DeleteGeneratorAction_3"); //$NON-NLS-1$
 
-    return String.format( "Delete catchment model '%s'? This operation cannot made undone!", m_generators[0].getDescription() );
+    return String.format( Messages.getString("DeleteGeneratorAction_4"), m_generators[0].getDescription() ); //$NON-NLS-1$
   }
 }

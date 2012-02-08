@@ -73,7 +73,7 @@ public class UIRrmImages
 
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
 
-    IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"),
+    IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
 
     EDIT_STATION("icons/timeseries/editStation.png"), //$NON-NLS-1$
 

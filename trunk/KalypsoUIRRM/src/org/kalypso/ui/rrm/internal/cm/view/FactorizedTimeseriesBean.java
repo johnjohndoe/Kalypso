@@ -137,9 +137,9 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
   public String getFactorText( )
   {
     if( m_factor <= 0 )
-      return "";
+      return ""; //$NON-NLS-1$
 
-    return String.format( Locale.PRC, "%d", m_factor );
+    return String.format( Locale.PRC, "%d", m_factor ); //$NON-NLS-1$
   }
 
   /**

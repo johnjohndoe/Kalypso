@@ -202,11 +202,11 @@ public class BewuchsRule extends AbstractValidatorRule
             }
             if( ay == 0.0 )
             {
-              stringBuffer.append( stringBuffer.length() == 0 ? "aY" : ", aY" ); //$NON-NLS-1$
+              stringBuffer.append( stringBuffer.length() == 0 ? "aY" : ", aY" ); //$NON-NLS-1$ //$NON-NLS-2$
             }
             if( dp == 0.0 )
             {
-              stringBuffer.append( stringBuffer.length() == 0 ? "dP" : ", dp" ); //$NON-NLS-1$
+              stringBuffer.append( stringBuffer.length() == 0 ? "dP" : ", dp" ); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             final String text = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule.9", stringBuffer.toString() ); //$NON-NLS-1$

@@ -51,6 +51,7 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -95,19 +96,19 @@ public class ObservationconfConverter
         final ZmlLink oldLink = new ZmlLink( feature, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP );
 
         final String href = oldLink.getHref();
-        final String projectRelativeHref = StringUtils.removeStart( href, UrlResolver.PROJECT_PROTOCOLL + "/" );
+        final String projectRelativeHref = StringUtils.removeStart( href, UrlResolver.PROJECT_PROTOCOLL + "/" ); //$NON-NLS-1$
 
         if( StringUtils.isBlank( href ) )
         {
           // skip entry
-          log.add( IStatus.WARNING, "Skit empty link: %s", null, feature.getName() );
+          log.add( IStatus.WARNING, Messages.getString("ObservationconfConverter_1"), null, feature.getName() ); //$NON-NLS-1$
         }
         else
         {
           final TimeseriesIndexEntry entry = m_timeseriesIndex.findTimeseriesByOldHref( projectRelativeHref );
           if( entry == null )
           {
-            log.add( IStatus.WARNING, "Unable to convert old timeseries link: %s", null, projectRelativeHref );
+            log.add( IStatus.WARNING, Messages.getString("ObservationconfConverter_2"), null, projectRelativeHref ); //$NON-NLS-1$
           }
           else
           {
@@ -127,10 +128,10 @@ public class ObservationconfConverter
     catch( final Exception e )
     {
       e.printStackTrace();
-      log.add( IStatus.WARNING, "Failed to convert mapping file: %s", e, filename );
+      log.add( IStatus.WARNING, Messages.getString("ObservationconfConverter_3"), e, filename ); //$NON-NLS-1$
     }
 
-    final String msg = String.format( "Convert timeseries mapping: %s", filename );
+    final String msg = String.format( Messages.getString("ObservationconfConverter_4"), filename ); //$NON-NLS-1$
     return log.asMultiStatusOrOK( msg, msg );
   }
 

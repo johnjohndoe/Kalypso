@@ -68,6 +68,7 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumNewComposite;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -110,7 +111,7 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     GridLayoutFactory.fillDefaults().applyTo( panel );
 
     final Section propertiesSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    propertiesSection.setText( "General Properties" );
+    propertiesSection.setText( Messages.getString("ThiessenWizardLayoutPart_0") ); //$NON-NLS-1$
     propertiesSection.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, true) );
 
     final Composite body = toolkit.createComposite( propertiesSection );
@@ -125,7 +126,7 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
 
     /* header for gis table below */
     final Section tableSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    tableSection.setText( "Timeseries used for Thiessen" );
+    tableSection.setText( Messages.getString("ThiessenWizardLayoutPart_1") ); //$NON-NLS-1$
     tableSection.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false ) );
 
 
@@ -154,7 +155,7 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     final IWizard wizard = context.getPage().getWizard();
     final String windowTitle = wizard.getWindowTitle();
 
-    final String message = "Changing the parameter type needs to update the list of timeseries. Unsaved changes will be lost. Continue?";
+    final String message = Messages.getString("ThiessenWizardLayoutPart_2"); //$NON-NLS-1$
 
     if( !MessageDialog.openConfirm( shell, windowTitle, message ) )
     {

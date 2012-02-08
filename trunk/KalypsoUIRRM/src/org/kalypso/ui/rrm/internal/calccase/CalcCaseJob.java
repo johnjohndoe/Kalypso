@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.NASimulationOperation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -70,7 +71,7 @@ public class CalcCaseJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Running simulation", m_calcCases.length );
+    monitor.beginTask( Messages.getString("CalcCaseJob_0"), m_calcCases.length ); //$NON-NLS-1$
 
     final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -90,6 +91,6 @@ public class CalcCaseJob extends Job
       }
     }
 
-    return log.asMultiStatusOrOK( "Problem(s) during simulation", "Simulation terminated" );
+    return log.asMultiStatusOrOK( Messages.getString("CalcCaseJob_1"), Messages.getString("CalcCaseJob_2") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

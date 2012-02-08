@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * Factory for available {@link IBanklineMarkerProvider}s.
@@ -68,10 +69,10 @@ public class BanklineMarkerProviderFactory
   {
     final Collection<IBanklineMarkerProvider> providers = new ArrayList<>();
 
-    providers.add( new BanklineMarkerProvider( "Trennflächen", IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, null ) );
-    providers.add( new BanklineMarkerProvider( "Bordvollpunkte", IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    providers.add( new BanklineMarkerProvider( "Durchströmte Bereiche", IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, null ) );
-    providers.add( new BanklineMarkerProvider( "Modellrand", null, null ) );
+    providers.add( new BanklineMarkerProvider( Messages.getString("BanklineMarkerProviderFactory_0"), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, null ) ); //$NON-NLS-1$
+    providers.add( new BanklineMarkerProvider( Messages.getString("BanklineMarkerProviderFactory_1"), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ); //$NON-NLS-1$
+    providers.add( new BanklineMarkerProvider( Messages.getString("BanklineMarkerProviderFactory_2"), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, null ) ); //$NON-NLS-1$
+    providers.add( new BanklineMarkerProvider( Messages.getString("BanklineMarkerProviderFactory_3"), null, null ) ); //$NON-NLS-1$
 
     // TODO: add provider for all known codes
     // TODO: add provider for all currently available results

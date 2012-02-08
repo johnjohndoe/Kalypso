@@ -80,7 +80,7 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final Double ok = ProfilUtil.getDoubleValueFor( okIndex, rec );
     final Double bw = ProfilUtil.getDoubleValueFor( bridgeWidthIndex, rec );
 
-    final String comment = commentIndex >= 0 ? (String) tr.get( index ).getValue( commentIndex ) : "";
+    final String comment = commentIndex >= 0 ? (String) tr.get( index ).getValue( commentIndex ) : ""; //$NON-NLS-1$
 
     final TooltipFormatter tooltip = new TooltipFormatter( comment );
     tooltip.addLine( stationLabel, station.toString() );

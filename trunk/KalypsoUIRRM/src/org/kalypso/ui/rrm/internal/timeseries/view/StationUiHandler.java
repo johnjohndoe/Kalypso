@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -79,7 +80,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return "Station";
+    return Messages.getString("StationUiHandler_0"); //$NON-NLS-1$
   }
 
   @Override
@@ -89,7 +90,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     if( StringUtils.isBlank( identifier ) )
       return m_station.getDescription();
 
-    return String.format( "%s (%s)", m_station.getDescription(), identifier );
+    return String.format( "%s (%s)", m_station.getDescription(), identifier ); //$NON-NLS-1$
   }
 
   @Override
@@ -131,7 +132,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
     final ITimeseries[] allTimeseries = timeseries.toArray( new ITimeseries[timeseries.size()] );
 
-    final String deleteMessage = String.format( "Delete all timeseries from of station '%s'?", getTreeLabel() );
+    final String deleteMessage = String.format( Messages.getString("StationUiHandler_2"), getTreeLabel() ); //$NON-NLS-1$
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, allTimeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
 

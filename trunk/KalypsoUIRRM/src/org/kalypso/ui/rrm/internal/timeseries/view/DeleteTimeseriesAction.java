@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
@@ -72,15 +73,15 @@ public class DeleteTimeseriesAction extends Action
     m_timeseries = timeseries;
     m_deleteMessage = deleteMessage;
 
-    setText( "Delete Timeseries" );
-    setToolTipText( "Delete selected timeseries" );
+    setText( Messages.getString("DeleteTimeseriesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("DeleteTimeseriesAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
     if( timeseries.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( "Element contains no timeseries" );
+      setToolTipText( Messages.getString("DeleteTimeseriesAction_2") ); //$NON-NLS-1$
     }
   }
 
@@ -111,7 +112,7 @@ public class DeleteTimeseriesAction extends Action
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete timeseries", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("DeleteTimeseriesAction_3"), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
   }

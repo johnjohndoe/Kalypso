@@ -69,19 +69,19 @@ public class LengthSectionLayerProvider extends TupleResultLineLayerProvider
     final IStyleSet styleSet = getStyleSet();
     final String layerId = getId();
 
-    if( "Bridge".equals( layerId ) )
+    if( "Bridge".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionBridgeLayer( this, getDataContainer(), styleSet );
 
-    if( "Weir".equals( layerId ) )
+    if( "Weir".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionWeirLayer( this, getDataContainer(), styleSet );
 
-    if( "Culvert".equals( layerId ) )
+    if( "Culvert".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionCulvertLayer( this, getDataContainer(), styleSet );
 
-    if( "runOff".equals( layerId ) )
+    if( "runOff".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionRunOffLayer( this, getDataContainer(), styleSet );
 
-    if( "soil".equals( layerId ) )
+    if( "soil".equals( layerId ) ) //$NON-NLS-1$
       return new LengthSectionSoilLayer( this, getDataContainer(), styleSet );
 
     return new TupleResultLineLayer( this, getDataContainer(), styleSet );

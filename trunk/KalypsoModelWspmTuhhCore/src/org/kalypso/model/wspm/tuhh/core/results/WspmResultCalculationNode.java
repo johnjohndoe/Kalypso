@@ -207,7 +207,7 @@ public class WspmResultCalculationNode extends AbstractWspmResultNode implements
   @Override
   public String toString( )
   {
-    return String.format( "%s\n%s", super.toString(), m_calculation.getName() );
+    return String.format( "%s\n%s", super.toString(), m_calculation.getName() ); //$NON-NLS-1$
   }
 
 }

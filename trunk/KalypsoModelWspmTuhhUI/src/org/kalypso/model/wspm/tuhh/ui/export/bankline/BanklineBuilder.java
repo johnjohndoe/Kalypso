@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineDistanceBuilder.SIDE;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -95,20 +96,20 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
     if( water == null )
     {
-      final String message = String.format( "Failed to find water body for element: %s", m_waterOrReach.getName() );
+      final String message = String.format( Messages.getString("BanklineBuilder_0"), m_waterOrReach.getName() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
     }
 
     final GM_Curve centerLine = water.getCenterLine();
     if( centerLine == null )
     {
-      final String message = String.format( "Unable to build bank lines for element '%s': no center line defined in water body", m_waterOrReach.getName() );
+      final String message = String.format( Messages.getString("BanklineBuilder_1"), m_waterOrReach.getName() ); //$NON-NLS-1$
       return new Status( IStatus.INFO, KalypsoModelWspmTuhhUIPlugin.getID(), message );
     }
 
     if( profiles == null )
     {
-      final String message = String.format( "Failed to find cross sections for element: %s", m_waterOrReach.getName() );
+      final String message = String.format( Messages.getString("BanklineBuilder_2"), m_waterOrReach.getName() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
     }
 
@@ -129,7 +130,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     }
     catch( final GM_Exception e )
     {
-      final String message = String.format( "Unable to build bank lines for element '%s': bad no center line in water body", m_waterOrReach.getName() );
+      final String message = String.format( Messages.getString("BanklineBuilder_3"), m_waterOrReach.getName() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message, e );
     }
   }
@@ -145,7 +146,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
     m_mainChannel = buildVariableBuffer( riverLine, profiles, log );
 
-    final String logMessage = String.format( "Compute bank line for '%s'", m_waterOrReach.getName() );
+    final String logMessage = String.format( Messages.getString("BanklineBuilder_4"), m_waterOrReach.getName() ); //$NON-NLS-1$
     return log.asMultiStatusOrOK( logMessage, logMessage );
   }
 
@@ -242,7 +243,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
         {
           if( Double.isNaN( coordinate.x ) )
           {
-            System.out.println( "soso" );
+            System.out.println( "soso" ); //$NON-NLS-1$
           }
         }
 

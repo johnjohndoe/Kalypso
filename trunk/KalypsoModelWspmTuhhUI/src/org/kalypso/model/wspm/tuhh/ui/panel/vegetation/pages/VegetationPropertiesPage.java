@@ -126,7 +126,7 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
       @Override
       public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
       {
-        if( MessageDialog.openConfirm( lnkRemove.getShell(), "Delete", "Are you really sure?" ) )
+        if( MessageDialog.openConfirm( lnkRemove.getShell(), Messages.getString("VegetationPropertiesPage.3"), Messages.getString("VegetationPropertiesPage.15") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           VegetationPanelHelper.removeVegetationTypes( m_profile );
       }
     } );
@@ -152,7 +152,7 @@ public class VegetationPropertiesPage extends AbstractElementPage implements IEl
           final GuessVegetationClassesRunnable worker = new GuessVegetationClassesRunnable( m_profile, overwriteValues, Double.MAX_VALUE );
           ProgressUtilities.busyCursorWhile( worker );
 
-          final ProfilOperation operation = new ProfilOperation( "Guessing vegetation classes", m_profile, overwriteValues );
+          final ProfilOperation operation = new ProfilOperation( "Guessing vegetation classes", m_profile, overwriteValues ); //$NON-NLS-1$
           operation.addChange( worker.getChanges() );
 
           new ProfilOperationJob( operation ).schedule();

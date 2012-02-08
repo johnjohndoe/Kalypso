@@ -157,12 +157,12 @@ public class ProfileCreatorStrategy implements IProfileCreatorStrategy
 
   private String findSoilPolygonNameForBridgeOrCulvert( final ProfilePolygones polygones )
   {
-    if( polygones.hasPoints( "V01" ) )
-      return "V01";
-    if( polygones.hasPoints( "D01" ) )
-      return "V01";
-    if( polygones.hasPoints( "D91" ) )
-      return "V01";
+    if( polygones.hasPoints( "V01" ) ) //$NON-NLS-1$
+      return "V01"; //$NON-NLS-1$
+    if( polygones.hasPoints( "D01" ) ) //$NON-NLS-1$
+      return "V01"; //$NON-NLS-1$
+    if( polygones.hasPoints( "D91" ) ) //$NON-NLS-1$
+      return "V01"; //$NON-NLS-1$
 
     // TODO Auto-generated method stub
     return null;

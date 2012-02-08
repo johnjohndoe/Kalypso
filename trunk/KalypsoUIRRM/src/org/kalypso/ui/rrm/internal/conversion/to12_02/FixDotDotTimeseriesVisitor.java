@@ -67,7 +67,7 @@ public class FixDotDotTimeseriesVisitor implements ITimeseriesVisitor
     if( StringUtils.isBlank( href ) )
       return Status.OK_STATUS;
 
-    final String newHref = "../" + href;
+    final String newHref = "../" + href; //$NON-NLS-1$
     link.setHref( newHref );
 
     return Status.OK_STATUS;

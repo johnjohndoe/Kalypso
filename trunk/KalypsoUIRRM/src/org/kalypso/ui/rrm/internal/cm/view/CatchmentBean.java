@@ -68,6 +68,7 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -206,15 +207,15 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     }
 
     if( completeFactor <= 0 )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, "The sum of factors (%d%%) is not allowed to be zero or negative.", completeFactor ) );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString("CatchmentBean_0"), completeFactor ) ); //$NON-NLS-1$
 
     if( completeFactor > 100 )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, "The sum of factors (%d%%) is not allowed to be greater than 100.", completeFactor ) );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString("CatchmentBean_1"), completeFactor ) ); //$NON-NLS-1$
 
     if( completeFactor > 0 && completeFactor < 100 )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, "The sum of factors (%d%%) is not 100%%.", completeFactor ) );
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString("CatchmentBean_2"), completeFactor ) ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "100 Percent" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentBean_3") ); //$NON-NLS-1$
   }
 
   /**
@@ -246,7 +247,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     final Feature newFeature = command.getNewFeature();
 
     /* Build the area link. */
-    final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef;
+    final String href = INaProjectConstants.GML_MODELL_FILE + "#" + m_catchmentRef; //$NON-NLS-1$
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( ICatchment.PROPERTY_AREA_LINK );
     final IXLinkedFeature areaLink = FeatureFactory.createXLink( newFeature, relation, null, href );
 

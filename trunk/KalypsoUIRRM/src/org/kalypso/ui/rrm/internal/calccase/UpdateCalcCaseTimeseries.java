@@ -82,7 +82,7 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
       return null;
 
     final WorkspaceModifyOperation operation = new UpdateCalcCaseOperation( calcCases );
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation, "Update calc cases" );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, Messages.getString("UpdateCalcCaseTimeseries.0") ); //$NON-NLS-1$
     if( !status.isOK() )
       StatusDialog.open( shell, status, HandlerUtils.getCommandName( event ) );
 

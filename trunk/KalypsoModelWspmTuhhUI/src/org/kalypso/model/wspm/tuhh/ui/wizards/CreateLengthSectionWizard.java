@@ -151,10 +151,10 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
       final WspmWaterBody waterBody = ((IProfileFeature) profilFeatures[0]).getWater();
       if( waterBody != null && waterBody.isDirectionUpstreams() == false )
       {
-        return "POSITIVE";
+        return "POSITIVE"; //$NON-NLS-1$
       }
     }
-    return "NEGATIVE";
+    return "NEGATIVE"; //$NON-NLS-1$
   }
 
   private IFile doExport( final Object[] profilFeatures, final URL context, final IFolder parentFolder ) throws CoreException, GMLSchemaException, IOException, GmlSerializeException
@@ -187,7 +187,7 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     final IFile kodFile = targetFolder.getFile( new Path( fName + ".kod" ) ); //$NON-NLS-1$
     final IFile tableFile = targetFolder.getFile( new Path( fName + ".gft" ) ); //$NON-NLS-1$
     copyResourceFile( "resources/LS_no_result.kod", kodFile, fName, title, getAxisDirection( profilFeatures ) ); //$NON-NLS-1$
-    copyResourceFile( "resources/table.gft", tableFile, fName, title, "" ); //$NON-NLS-1$
+    copyResourceFile( "resources/table.gft", tableFile, fName, title, "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return kodFile;
   }

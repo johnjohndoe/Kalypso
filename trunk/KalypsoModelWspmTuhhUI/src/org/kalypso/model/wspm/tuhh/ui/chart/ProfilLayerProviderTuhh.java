@@ -395,7 +395,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     }
     if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_CODE ) ) )
     {
-      addableLayer.add( new LayerDescriptor( "Code", IWspmLayers.LAYER_CODE ) );
+      addableLayer.add( new LayerDescriptor( Messages.getString("ProfilLayerProviderTuhh.0"), IWspmLayers.LAYER_CODE ) ); //$NON-NLS-1$
     }
 
     final ISinuositaetProfileObject[] sinObj = profile.getProfileObjects( ISinuositaetProfileObject.class );

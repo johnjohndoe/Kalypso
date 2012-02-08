@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -76,7 +77,7 @@ public class GroupComposite extends Composite
   {
     final FormToolkit toolkit = m_binding.getToolkit();
 
-    toolkit.createLabel( this, "Name" );
+    toolkit.createLabel( this, Messages.getString("GroupComposite_0") ); //$NON-NLS-1$
 
     final String groupName = StringUtils.isBlank( m_group ) ? GroupUiHandler.UNDEFINED_GROUP_LABEL : m_group;
 

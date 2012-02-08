@@ -84,7 +84,7 @@ public class ResultLSChartFile extends AbstractResultLSFile
   {
     super( outDir, runoffName );
 
-    m_isDirectionUpstreams = isDirectionUpstreams ? "NEGATIVE" : "POSITIVE";
+    m_isDirectionUpstreams = isDirectionUpstreams ? "NEGATIVE" : "POSITIVE"; //$NON-NLS-1$ //$NON-NLS-2$
     m_dataFilename = dataFilename;
     m_chartTitle = chartTitle;
     m_calculation = calculation;
@@ -119,11 +119,11 @@ public class ResultLSChartFile extends AbstractResultLSFile
     final String kodContent = UrlUtilities.toString( kodResource, "UTF-8" ); //$NON-NLS-1$
     String kodContentReplaced = kodContent.replaceAll( TOKEN_GMLFILENAME, m_dataFilename );
     kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_ROOT_ID, m_rootId );
-    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_GML, "./../../../modell.gml" );
-    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_CHART_TITLE, String.format( Messages.getString( "ResultLengthSection.2" ), m_chartTitle ) );
+    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_GML, "./../../../modell.gml" ); //$NON-NLS-1$
+    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_CHART_TITLE, String.format( Messages.getString( "ResultLengthSection.2" ), m_chartTitle ) ); //$NON-NLS-1$
     kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_AXIS_DIRECTION, m_isDirectionUpstreams );
     final Feature fixation = getWaterLevelFixationMember();
-    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_OBS_ID, Objects.isNull( fixation ) ? "" : fixation.getId() );
+    kodContentReplaced = kodContentReplaced.replaceAll( TOKEN_MODELL_OBS_ID, Objects.isNull( fixation ) ? "" : fixation.getId() ); //$NON-NLS-1$
 
     final FileWriter writer =new FileWriter( outputFile);
     final InputStream inputStream = IOUtils.toInputStream( kodContentReplaced, "UTF-8" ); //$NON-NLS-1$

@@ -72,15 +72,15 @@ public abstract class AbstractKnaufPrinter implements IKnaufPrinter
     if( StringUtils.length( output ) > getMaxRowSize() )
     {
       final CharSequence cutted = output.subSequence( 0, getMaxRowSize() );
-      System.out.println( "Knauf Export - too long output string has been detected - cutted:" );
+      System.out.println( "Knauf Export - too long output string has been detected - cutted:" ); //$NON-NLS-1$
       System.out.println( output );
-      System.out.println( " -> " );
+      System.out.println( " -> " ); //$NON-NLS-1$
       System.out.println( cutted );
 
       return cutted;
     }
 
-    return String.format( "%s\r\n", output );
+    return String.format( "%s\r\n", output ); //$NON-NLS-1$
   }
 
   protected abstract String getContent( );

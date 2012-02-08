@@ -46,6 +46,7 @@ import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.WspmProject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.KnaufCalculation;
 
 /**
@@ -73,12 +74,12 @@ public class KnaufSA11Bean extends AbstractKnaufProjectBean
   {
     final WspmProject wspm = m_calculation.getProject();
     if( Objects.isNull( wspm ) )
-      return "Projekt: n/a";
+      return Messages.getString("KnaufSA11Bean_0"); //$NON-NLS-1$
 
     final URL context = wspm.getWorkspace().getContext();
     final IProject project = ResourceUtilities.findProjectFromURL( context );
 
-    return String.format( "Projekt: %s", project.getName() );
+    return String.format( Messages.getString("KnaufSA11Bean_1"), project.getName() ); //$NON-NLS-1$
   }
 
 }

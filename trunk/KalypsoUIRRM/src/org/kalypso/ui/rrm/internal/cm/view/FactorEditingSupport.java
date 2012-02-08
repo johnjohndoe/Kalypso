@@ -95,10 +95,10 @@ public class FactorEditingSupport extends EditingSupport
     if( element instanceof FactorizedTimeseriesBean )
     {
       final int factor = ((FactorizedTimeseriesBean) element).getFactor();
-      return String.format( Locale.PRC, "%d", factor );
+      return String.format( Locale.PRC, "%d", factor ); //$NON-NLS-1$
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**
