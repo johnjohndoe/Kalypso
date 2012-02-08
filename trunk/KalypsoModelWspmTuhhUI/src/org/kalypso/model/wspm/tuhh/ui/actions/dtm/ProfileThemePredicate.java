@@ -80,7 +80,7 @@ public class ProfileThemePredicate implements IKalypsoThemePredicate
       return false;
 
     final IFeatureType targetFeatureType = targetType.getTargetFeatureType();
-    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.QN_PROFILE ) )
+    if( GMLSchemaUtilities.substitutes( targetFeatureType, IProfileFeature.FEATURE_PROFILE ) )
       return true;
 
     if( GMLSchemaUtilities.substitutes( targetFeatureType, TuhhReachProfileSegment.QNAME_PROFILEREACHSEGMENT ) )

@@ -145,7 +145,7 @@ public class QIntervallResult extends Feature_Impl
    */
   public void setProfileLink( final IProfileFeature profile )
   {
-    final IFeatureType ftProfile = GMLSchemaUtilities.getFeatureTypeQuiet( IProfileFeature.QN_PROFILE );
+    final IFeatureType ftProfile = GMLSchemaUtilities.getFeatureTypeQuiet( IProfileFeature.FEATURE_PROFILE );
 
     final String href = "project:/modell.gml#" + profile.getId(); //$NON-NLS-1$
     setLink( QNAME_P_QIntervallResult_profileMember, href, ftProfile );
