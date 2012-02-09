@@ -108,9 +108,9 @@ public class ZustandBean
     return m_waterName;
   }
 
-  public WspWinZustand readZustand( final File profDir, final WspWinProfProj profProj ) throws IOException, ParseException
+  public WspWinZustand readZustand( final File profDir ) throws IOException, ParseException
   {
-    final WspWinZustand zustand = new WspWinZustand( this, profProj );
+    final WspWinZustand zustand = new WspWinZustand( this );
     zustand.read( new File( profDir, getFileName() ) );
 
     final RunOffEventBean[] runOffs = readRunOffs( profDir );

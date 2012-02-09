@@ -55,6 +55,7 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.IObservationFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -68,6 +69,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.wspwin.core.ProfileBean;
 import org.kalypso.wspwin.core.RunOffEventBean;
 import org.kalypso.wspwin.core.WspCfg;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
@@ -99,17 +101,54 @@ public class WspWinProjectWriter
     m_wspCfg = new WspCfg( projectType );
   }
 
-  public void addReach( final TuhhReach reach )
+  /**
+   * Adds a water body and some of its reaches to this exporter.<br/>
+   * All reaches MUST be part of the given water body.
+   */
+  public void addReaches( final WspmWaterBody waterBody, final TuhhReach[] reaches )
   {
-    final WspmWaterBody waterBody = reach.getWaterBody();
-    final String waterName = waterBody.getName();
-    final String zustandFilename = findZustandFilename( waterName );
-    final String zustandName = reach.getName();
+    for( final TuhhReach tuhhReach : reaches )
+      Assert.isTrue( tuhhReach.getWaterBody() == waterBody );
 
+    /* Add the water body */
     final URL context = waterBody.getWorkspace().getContext();
     final IProject project = ResourceUtilities.findProjectFromURL( context );
     if( project != null )
       m_wspCfg.setProjectName( project.getName() );
+
+    /* Add all profiles of water body */
+    final Map<IProfileFeature, ProfileBean> profileIndex = new HashMap<IProfileFeature, ProfileBean>();
+    final IFeatureBindingCollection<IProfileFeature> profiles = waterBody.getProfiles();
+    for( final IProfileFeature profileFeature : profiles )
+    {
+      final BigDecimal station = profileFeature.getBigStation();
+
+      final int prfCount = m_prfCount++;
+      final String prfName = formatPrfName( prfCount );
+
+      final String waterName = waterBody.getName();
+      final ProfileBean profileBean = m_wspCfg.createProfile( waterName, "export", station.doubleValue(), prfName ); //$NON-NLS-1$
+      profileIndex.put( profileFeature, profileBean );
+
+      /* Add real profile */
+      final IProfil profil = profileFeature.getProfil();
+      m_profiles.put( prfCount, profil );
+    }
+
+    /* Add all reaches */
+    for( final TuhhReach reach : reaches )
+      addReach( reach, profileIndex );
+  }
+
+  private void addReach( final TuhhReach reach, final Map<IProfileFeature, ProfileBean> profileIndex )
+  {
+    final WspmWaterBody waterBody = reach.getWaterBody();
+
+    // TODO: shorten name?
+    final String waterName = waterBody.getName();
+
+    final String zustandFilename = findZustandFilename( waterName );
+    final String zustandName = reach.getName();
 
     final WspWinZustand zustand = m_wspCfg.createZustand( zustandName, zustandFilename, waterName, new Date() );
 
@@ -119,7 +158,7 @@ public class WspWinProjectWriter
     Arrays.sort( segments, stationComparator );
 
     for( final TuhhReachProfileSegment segment : segments )
-      addProfile( segment, zustand );
+      addZustandProfile( segment, zustand, profileIndex );
 
     final IFeatureBindingCollection<IRunOffEvent> runoffEvents = waterBody.getRunoffEvents();
     for( final IRunOffEvent runoffEvent : runoffEvents )
@@ -196,19 +235,12 @@ public class WspWinProjectWriter
     return names.toArray( new String[names.size()] );
   }
 
-  private void addProfile( final TuhhReachProfileSegment segment, final WspWinZustand zustand )
+  private void addZustandProfile( final TuhhReachProfileSegment segment, final WspWinZustand zustand, final Map<IProfileFeature, ProfileBean> profileIndex )
   {
-    final BigDecimal station = segment.getStation();
-
-    final int prfCount = m_prfCount++;
-    final String prfName = formatPrfName( prfCount );
-    zustand.addProfile( prfName, station );
-
-    /* Add real profile */
     final IProfileFeature profileMember = segment.getProfileMember();
-    final IProfil profil = profileMember.getProfil();
-    profil.setStation( station.doubleValue() );
-    m_profiles.put( prfCount, profil );
+
+    final ProfileBean profileBean = profileIndex.get( profileMember );
+    zustand.addProfile( profileBean );
   }
 
   private String formatPrfName( final int prfCount )

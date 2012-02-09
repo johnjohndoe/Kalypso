@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.wspwin.core.WspCfg.TYPE;
 
@@ -58,8 +59,11 @@ public class WspWinProjectExporter
 
   private final TYPE m_projectType;
 
-  public WspWinProjectExporter( final TuhhReach[] reaches, final TYPE projectType )
+  private final WspmWaterBody m_waterBody;
+
+  public WspWinProjectExporter( final WspmWaterBody waterBody, final TuhhReach[] reaches, final TYPE projectType )
   {
+    m_waterBody = waterBody;
     m_reaches = reaches;
     m_projectType = projectType;
   }
@@ -69,9 +73,7 @@ public class WspWinProjectExporter
     outputDir.mkdirs();
 
     final WspWinProjectWriter wspWinProjectWriter = new WspWinProjectWriter( null, m_projectType, outputDir );
-
-    for( final TuhhReach reach : m_reaches )
-      wspWinProjectWriter.addReach( reach );
+    wspWinProjectWriter.addReaches( m_waterBody, m_reaches );
 
     wspWinProjectWriter.write();
   }

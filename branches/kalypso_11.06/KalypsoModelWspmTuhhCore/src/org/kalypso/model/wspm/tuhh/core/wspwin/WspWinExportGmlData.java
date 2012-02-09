@@ -118,6 +118,9 @@ public class WspWinExportGmlData extends WspWinExportData
 
   public TuhhReach[] getReaches( final WspmWaterBody waterBody )
   {
+    if( !m_reaches.containsKey( waterBody ) )
+      return new TuhhReach[0];
+
     final Set<TuhhReach> reaches = m_reaches.get( waterBody );
     return reaches.toArray( new TuhhReach[reaches.size()] );
   }
