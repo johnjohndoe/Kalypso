@@ -72,7 +72,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileO
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.ui.chart.data.TuhhResultDataProvider;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.CulvertLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RoughnessLayer;
@@ -341,7 +340,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return new BuildingWeirTheme( profil, subLayers, cmLeft, cmScreen );
     }
     else if( layerID.equals( IWspmTuhhConstants.LAYER_TUBES ) )
-      return new BuildingTubesTheme( profil, new IProfilChartLayer[] { new CulvertLayer( profil, m_styleProvider ) }, cmLeft );
+      return new BuildingTubesTheme( profil, cmLeft, m_styleProvider );
     else if( layerID.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
       return new SinuositaetLayer( profil );
     else if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
@@ -357,9 +356,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#createLayers(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfilChartLayer[] createLayers( final IProfil profile, final Object result )
   {
