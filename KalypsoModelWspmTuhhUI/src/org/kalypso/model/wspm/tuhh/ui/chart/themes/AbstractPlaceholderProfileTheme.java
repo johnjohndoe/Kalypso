@@ -40,28 +40,48 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+
 /**
- * @author kimwerner
+ * This is just a placeholder for themes that only represents columns of the table.<br/>
+ * Used to add/remove the columns to/from the table.
+ * 
+ * @author Gernot Belger
  */
-public class GeoCoordinateTheme extends AbstractPlaceholderProfileTheme
+public class AbstractPlaceholderProfileTheme extends AbstractProfilTheme
 {
-  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.0" ); //$NON-NLS-1$
+  private final String[] m_componentIDs;
 
-  private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT };
-
-  public GeoCoordinateTheme( final IProfil profil )
+  public AbstractPlaceholderProfileTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final String[] componentIDs )
   {
-    super( profil, IWspmConstants.LAYER_GEOKOORDINATEN, TITLE, subLayers( profil ), COMPONENTS );
+    super( profil, id, title, chartLayers, null );
+
+    m_componentIDs = componentIDs;
   }
 
-  private static IProfilChartLayer[] subLayers( final IProfil profil )
+  @Override
+  public IChartLayer[] getLegendNodes( )
   {
-    return new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) };
+    return new IChartLayer[] {};
+  }
+
+  @Override
+  public final void removeYourself( )
+  {
+    final IProfil profil = getProfil();
+
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.1" ), getProfil(), true ); //$NON-NLS-1$
+
+    for( final String component : m_componentIDs )
+      operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( component ) ) );
+    new ProfilOperationJob( operation ).schedule();
   }
 }

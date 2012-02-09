@@ -42,26 +42,19 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class GeoCoordinateTheme extends AbstractPlaceholderProfileTheme
+public class CodeTheme extends AbstractPlaceholderProfileTheme
 {
-  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.0" ); //$NON-NLS-1$
+  public static final String TITLE = "Code";
 
-  private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT };
+  private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_CODE };
 
-  public GeoCoordinateTheme( final IProfil profil )
+  public CodeTheme( final IProfil profil )
   {
-    super( profil, IWspmConstants.LAYER_GEOKOORDINATEN, TITLE, subLayers( profil ), COMPONENTS );
-  }
-
-  private static IProfilChartLayer[] subLayers( final IProfil profil )
-  {
-    return new IProfilChartLayer[] { new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ), new ComponentLayer( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) };
+    super( profil, IWspmConstants.LAYER_CODE, TITLE, new IProfilChartLayer[0], COMPONENTS );
   }
 }
