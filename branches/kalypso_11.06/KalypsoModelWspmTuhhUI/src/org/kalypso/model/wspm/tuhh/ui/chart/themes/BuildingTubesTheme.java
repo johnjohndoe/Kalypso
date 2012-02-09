@@ -47,6 +47,8 @@ import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.CulvertLayer;
+import org.kalypso.model.wspm.tuhh.ui.chart.utils.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.CulvertPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -65,15 +67,11 @@ public class BuildingTubesTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0" ); //$NON-NLS-1$
 
-  public BuildingTubesTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingTubesTheme( final IProfil profil, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, chartLayers, cm );
+    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, new IProfilChartLayer[] { new CulvertLayer( profil, styleProvider ) }, cm );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
@@ -83,18 +81,12 @@ public class BuildingTubesTheme extends AbstractProfilTheme
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getLegendNodes()
-   */
   @Override
   public IChartLayer[] getLegendNodes( )
   {
     return new IChartLayer[] {};
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {
@@ -109,13 +101,9 @@ public class BuildingTubesTheme extends AbstractProfilTheme
     new ProfilOperationJob( operation ).schedule();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
     return new CulvertPanel( getProfil() );
   }
-
 }
