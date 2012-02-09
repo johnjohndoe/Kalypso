@@ -85,7 +85,6 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
   {
     super( observation );
     addPointProperties( profil );
-
   }
 
   private void addPointProperties( final IProfil profil )
@@ -102,9 +101,6 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getId()
-   */
   @Override
   public String getId( )
   {
@@ -116,5 +112,4 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
   {
     return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
   }
-
 }
