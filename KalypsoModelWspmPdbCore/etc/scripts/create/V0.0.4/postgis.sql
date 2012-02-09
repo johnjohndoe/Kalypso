@@ -165,7 +165,7 @@ CREATE TABLE Point
      Width Numeric (8,4) ,
      Height Numeric (8,4) ,
      Roughness_Point_Kind Varchar (50) ,
-     Roughness_K_Value Numeric (8,1) ,
+     Roughness_K_Value Numeric (10,3) ,
      Roughness_Kst_Value Numeric (8,1) ,
      Vegetation_Dp Numeric (8,3) ,
      Vegetation_Ax Numeric (8,3) ,
@@ -230,7 +230,7 @@ ALTER TABLE Point_Kind
 CREATE TABLE Roughness
     (
      Name Varchar (50)  NOT NULL ,
-     K_Value Numeric (8,1) ,
+     K_Value Numeric (10,3) ,
      Kst_Value Numeric (8,1) ,
      Label Varchar (100) ,
      Source Varchar (255) ,
@@ -736,7 +736,7 @@ COMMENT ON COLUMN Point.Height IS '[m NN]'
 ;
 
 
-COMMENT ON COLUMN Point.Roughness_K_Value IS '[mm]'
+COMMENT ON COLUMN Point.Roughness_K_Value IS '[m]'
 ;
 
 
@@ -760,7 +760,7 @@ COMMENT ON COLUMN Point_Kind.Name IS 'Quelle für Import: GAF, WPROF, ...'
 ;
 
 
-COMMENT ON COLUMN Roughness.K_Value IS '[mm]'
+COMMENT ON COLUMN Roughness.K_Value IS '[m]'
 ;
 
 
