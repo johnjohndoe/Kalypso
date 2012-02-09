@@ -217,7 +217,7 @@ public class WspCfg
       /* Read zusteande */
       for( final ZustandBean zustandBean : zustandBeans )
       {
-        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir, m_profProj );
+        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
         m_zustaende.add( wspwinZustand );
       }
 
@@ -233,7 +233,7 @@ public class WspCfg
   public WspWinZustand createZustand( final String name, final String filename, final String waterName, final Date creationDate )
   {
     final ZustandBean bean = new ZustandBean( name, waterName, filename, Double.NaN, Double.NaN, creationDate );
-    final WspWinZustand zustand = new WspWinZustand( bean, m_profProj );
+    final WspWinZustand zustand = new WspWinZustand( bean );
     m_zustaende.add( zustand );
     return zustand;
   }
@@ -293,5 +293,15 @@ public class WspCfg
   {
     for( final WspWinZustand zustand : m_zustaende )
       zustand.updateSegmentInfo();
+  }
+
+  /**
+   * Creates a profile ands it to the global definition (profproj)
+   */
+  public ProfileBean createProfile( final String waterName, final String stateName, final double station, final String fileName )
+  {
+    final ProfileBean bean = new ProfileBean( waterName, stateName, station, fileName );
+    m_profProj.add( bean );
+    return bean;
   }
 }

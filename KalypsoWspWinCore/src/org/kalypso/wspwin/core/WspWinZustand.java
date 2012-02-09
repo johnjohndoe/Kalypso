@@ -46,7 +46,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,12 +77,9 @@ public class WspWinZustand
 
   private final ZustandBean m_bean;
 
-  private final WspWinProfProj m_profProj;
-
-  public WspWinZustand( final ZustandBean bean, final WspWinProfProj profProj )
+  public WspWinZustand( final ZustandBean bean )
   {
     m_bean = bean;
-    m_profProj = profProj;
   }
 
   public ZustandBean getBean( )
@@ -101,7 +97,7 @@ public class WspWinZustand
     return m_segmentBeans.toArray( new ZustandSegmentBean[m_segmentBeans.size()] );
   }
 
-  private void addProfile( final ProfileBean profile )
+  public void addProfile( final ProfileBean profile )
   {
     m_profileBeans.add( profile );
   }
@@ -180,16 +176,14 @@ public class WspWinZustand
     return beans.toArray( new ZustandSegmentBean[beans.size()] );
   }
 
-  public void addProfile( final String prfName, final BigDecimal station )
-  {
-    final String waterName = m_bean.getWaterName();
-    final String name = m_bean.getName();
-
-    final ProfileBean profileBean = new ProfileBean( waterName, name, station.doubleValue(), prfName );
-    m_profileBeans.add( profileBean );
-
-    m_profProj.add( profileBean );
-  }
+// public void addProfile( final ProfileBean profile )
+// {
+// final String waterName = m_bean.getWaterName();
+// final String name = m_bean.getName();
+//
+// final ProfileBean profileBean = new ProfileBean( waterName, name, station.doubleValue(), prfName );
+// m_profileBeans.add( profile );
+// }
 
   void updateSegmentInfo( )
   {

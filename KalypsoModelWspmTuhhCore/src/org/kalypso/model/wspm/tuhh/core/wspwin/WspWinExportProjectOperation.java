@@ -146,7 +146,7 @@ public class WspWinExportProjectOperation implements ICoreRunnableWithProgress
       {
         FileUtils.deleteDirectory( outputDir );
 
-        final WspWinProjectExporter exporter = new WspWinProjectExporter( reaches, projectType );
+        final WspWinProjectExporter exporter = new WspWinProjectExporter( waterBody, reaches, projectType );
         exporter.export( outputDir, new NullProgressMonitor() );
       }
     }
