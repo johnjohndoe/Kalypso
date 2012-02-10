@@ -22,27 +22,30 @@
             class="org.kalypso.model.km.internal.ui.kmupdate.KMUpdateHandler"
             commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters">
          <enabledWhen>
+            <and>
+               <systemTest
+                     property="org.kalypso.rrrm.km.updateAction"
+                     value="isActive">
+               </systemTest>
                <with
                      variable="selection">
                   <iterate ifEmpty="false">
 	                  <test
-	                        property="org.kalypso.gml.qname"
+	                        property="org.kalypso.core.qname"
 	                        value="{http://www.tuhh.de/kalypsoNA}KMChannel">
 	                  </test>
                   </iterate>
                </with>
+            </and>
          </enabledWhen>
       </handler>
    </extension>
    
 <extension point="org.eclipse.ui.menus">
-    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=gmlToolsStart">
-      <command commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters" style="push">
-         <visibleWhen checkEnabled="true"/>
-      </command>
-    </menuContribution>
-    <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
-      <command commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters" style="push">
+    <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <command
+            commandId="org.kalypso.rrm.kalininmiljukov.commands.updateKparameters"
+            style="push">
          <visibleWhen checkEnabled="true"/>
       </command>
     </menuContribution>

@@ -48,7 +48,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xml.serializer.ToXMLStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
@@ -65,8 +64,10 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import com.sun.org.apache.xml.internal.serializer.ToXMLStream;
+
 /**
- *
+ * 
  * @author Gernot Belger
  */
 public class TinResultWriter
@@ -107,7 +108,7 @@ public class TinResultWriter
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   *
+   * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
   public void add( final GM_Position... nodes ) throws SAXException, GM_Exception
@@ -121,7 +122,7 @@ public class TinResultWriter
     final GM_Triangle_Impl triangle = new GM_Triangle_Impl( nodes[0], nodes[1], nodes[2], m_crs );
     if( triangle != null )
     {
-      m_marshaller.marshallTriangle( triangle );
+      m_marshaller.marshallTriangle( triangle, m_crs );
     }
   }
 
@@ -176,7 +177,7 @@ public class TinResultWriter
       final XMLReader xmlReader = XMLReaderFactory.createXMLReader();
       xmlReader.setContentHandler( m_xmlStream );
 
-      m_marshaller = new TriangulatedSurfaceMarshaller( xmlReader, m_crs );
+      m_marshaller = new TriangulatedSurfaceMarshaller( xmlReader, null );
 
       m_xmlStream.startDocument();
 
@@ -192,7 +193,7 @@ public class TinResultWriter
         atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( m_crs ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       }
 
-      m_marshaller.startSurface( null, atts );
+      m_marshaller.startSurface( atts );
     }
     catch( final Exception e )
     {
@@ -205,4 +206,5 @@ public class TinResultWriter
   {
     m_props.add( nameAndString );
   }
+
 }

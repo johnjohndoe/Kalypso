@@ -62,7 +62,8 @@
 			<element ref="tuhh:QIntervallResult" />
 		</sequence>
 	</complexType>
-	<element name="QIntervallResult" type="tuhh:QIntervallType" substitutionGroup="gml:_Feature">
+	<element name="QIntervallResult" type="tuhh:QIntervallType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation>Result</documentation>
 		</annotation>
@@ -84,11 +85,6 @@
 					<element name="slope" type="decimal" minOccurs="0">
 						<annotation>
 							<documentation>Slope</documentation>
-						</annotation>
-					</element>
-					<element name="bankfullHeight" type="decimal" minOccurs="0">
-						<annotation>
-							<documentation>Bankfull Height [mNN]</documentation>
 						</annotation>
 					</element>
 					<element name="buildingId" type="string" minOccurs="0">

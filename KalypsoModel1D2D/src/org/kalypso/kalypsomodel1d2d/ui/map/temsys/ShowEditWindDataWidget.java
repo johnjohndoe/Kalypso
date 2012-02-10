@@ -69,7 +69,6 @@ import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.kalypsosimulationmodel.core.wind.NativeWindDataModelHelper;
-import org.kalypso.kalypsosimulationmodel.core.wind.NativeWindDataModelWrapper;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -117,7 +116,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
   public ShowEditWindDataWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { NativeWindDataModelWrapper.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$  
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$  
     m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.2" ) );//$NON-NLS-1$  
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
@@ -220,7 +219,8 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final IFeatureType ftp = ft.getFeatureType();
         final QName qName = ftp == null ? null : ftp.getQName();
-        if( IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS.equals( qName ) )
+        // if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER.equals( qName ) )
+        if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS.equals( qName ) )
         {
           final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
           fts[0] = ft;
@@ -230,12 +230,12 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     }
 
     // find and set wind model system
-    IKalypsoFeatureTheme lWindDataTheme = UtilMap.findEditableTheme( mapPanel, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS );
+    IKalypsoFeatureTheme lWindDataTheme = UtilMap.findEditableTheme( mapPanel, KalypsoModelSimulationBaseConsts.SIM_BASE_F_WIND_ELE_SYS );
     // IKalypsoFeatureTheme lWindDataTheme = UtilMap.findEditableTheme( mapPanel,
     // KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL );
     if( lWindDataTheme != null )
     {
-      final Feature lWindSystemFeature = lWindDataTheme.getFeatureList().getOwner();
+      final Feature lWindSystemFeature = lWindDataTheme.getFeatureList().getParentFeature();
       final IWindModel lWindModel = (IWindModel) lWindSystemFeature.getAdapter( IWindModel.class );
       if( lWindModel.getWindDataModelSystems().size() > 0 )
       {
@@ -340,7 +340,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
           tooltipText.append( String.format( "; %.3f U %.3f V ", wind1.first, wind1.second ) ); //$NON-NLS-1$ 
         }
         else
-          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) );
       }
       else
         tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.4" ) ); //$NON-NLS-1$ 

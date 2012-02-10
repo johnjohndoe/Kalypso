@@ -169,6 +169,7 @@ public class DataCenterTuppleModel implements ITupleModel
   @Override
   public void accept( final ITupleModelVisitor visitor, final int direction ) throws SensorException
   {
+
     if( direction >= 0 )
     {
       for( int index = 0; index < m_tupples.length; index++ )
@@ -244,6 +245,7 @@ public class DataCenterTuppleModel implements ITupleModel
         m_tupples[index].setValue( ((Number) value).doubleValue() );
       }
     } );
+
   }
 
   /**

@@ -65,7 +65,8 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -74,6 +75,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * @author Madanagopal
  * @author Patrice Congo
+ * 
  */
 public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements IFeatureSelectionListener
 {
@@ -84,11 +86,11 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public static final String NODE_THEME = "_NODE_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
-    SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
+      SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
 
   private final boolean m_ignoreMapSelection = false;
 
-  private final ICaseDataProvider<Feature> m_dataProvider;
+  private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
   private List<IFE1D2DNode> m_selectedNodeList;
 
@@ -99,7 +101,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
   public void setMapModell( final IMapModell mapModell )
@@ -133,7 +135,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   {
     try
     {
-      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class.getName() );
+      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class );
     }
     catch( final IllegalArgumentException e )
     {
@@ -241,7 +243,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setSelectedNode( nodes );
   }
 
-  public final IFeatureBindingCollection<ITerrainElevationModel> getTerrainElevationModels( )
+  public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     final ITerrainElevationModelSystem elevationModelSystem = getElevationModelSystem();
     if( elevationModelSystem == null )
@@ -262,6 +264,14 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public void saveModels( ) throws CoreException
   {
+    // try
+    // {
     m_dataProvider.saveModel( new NullProgressMonitor() );
+    // }
+    // catch( CoreException e )
+    // {
+    // e.printStackTrace();
+    // }
   }
+
 }

@@ -46,10 +46,8 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -63,53 +61,29 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchWizard
+public abstract class ExportProfilesWizard extends Wizard
 {
-  public static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString( "ExportProfilesWizard_0" ); //$NON-NLS-1$
+  protected static final String STR_CHOOSE_EXPORT_FILE_TITLE = Messages.getString("ExportProfilesWizard_0"); //$NON-NLS-1$
 
-  public static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString( "ExportProfilesWizard_1" ); //$NON-NLS-1$
+  protected static final String STR_CHOOSE_EXPORT_FILE_MESSAGE = Messages.getString("ExportProfilesWizard_1"); //$NON-NLS-1$
 
-  public static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString( "ExportProfilesWizard_2" ); //$NON-NLS-1$
+  protected static final String STR_EXPORT_FILE_GROUP_TEXT = Messages.getString("ExportProfilesWizard_2"); //$NON-NLS-1$
 
-  private ProfilesChooserPage m_profileChooserPage;
+  private final ProfilesChooserPage m_profileChooserPage;
 
-  private ProfileSelection m_profileSelection;
-
-  public ExportProfilesWizard( )
+  public ExportProfilesWizard( final ProfileSelection selection )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ExportProfilesWizard_3" ) ); //$NON-NLS-1$
-  }
+    setWindowTitle( Messages.getString("ExportProfilesWizard_3") ); //$NON-NLS-1$
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_profileSelection = new ProfileSelection( selection );
-    final Feature[] profiles = m_profileSelection.getProfiles();
+    final Feature[] profiles = selection.getProfiles();
 
-    final Feature[] selectedProfiles = m_profileSelection.getSelectedProfiles();
+    final Feature[] selectedProfiles = selection.getSelectedProfiles();
 
-    final String pageMessage = Messages.getString( "ExportProfilesWizard_4" ); //$NON-NLS-1$
-    final int numToSelect = getMinimumSelectionCount();
-    m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, numToSelect, false );
+    final String pageMessage = Messages.getString("ExportProfilesWizard_4"); //$NON-NLS-1$
+    m_profileChooserPage = new ProfilesChooserPage( pageMessage, profiles, new Object[0], selectedProfiles, 1, false );
 
     addPage( m_profileChooserPage );
-  }
-
-  /**
-   * The minimal number of profiles that the user needs to select. <code>1</code> by default.<br/>
-   * Overwrite to change.
-   * 
-   * @return <code>1</code>.
-   */
-  protected int getMinimumSelectionCount( )
-  {
-    return 1;
-  }
-
-  protected ProfileSelection getProfileSelection( )
-  {
-    return m_profileSelection;
   }
 
   public void setShowResultInterpolationSettings( final boolean showResultInterpolationSettings )
@@ -125,56 +99,53 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   private IProfileFeature[] getChosenProfiles( final Object[] profilFeatures )
   {
     final Collection<IProfileFeature> profiles = new ArrayList<IProfileFeature>( profilFeatures.length );
+
     for( final Object profilFeature : profilFeatures )
     {
       if( profilFeature instanceof IProfileFeature )
       {
         final IProfileFeature wspmProfil = (IProfileFeature) profilFeature;
         if( wspmProfil != null )
-        {
           profiles.add( wspmProfil );
-        }
       }
     }
-
     return profiles.toArray( new IProfileFeature[] {} );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
     final IProfileFeature[] chosenProfiles = getChosenProfiles( profilFeatures );
 
-    final ICoreRunnableWithProgress exportJob = new ICoreRunnableWithProgress()
+    final ICoreRunnableWithProgress m_exportJob = new ICoreRunnableWithProgress()
     {
       @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
+      public IStatus execute( final IProgressMonitor monitor )
       {
         try
         {
-          monitor.beginTask( Messages.getString( "ExportProfilesWizard_5" ), profilFeatures.length ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString("ExportProfilesWizard_5"), profilFeatures.length ); //$NON-NLS-1$
 
-          return exportProfiles( chosenProfiles, monitor );
+          exportProfiles( chosenProfiles, monitor );
+
+          return Status.OK_STATUS;
         }
         catch( final CoreException e )
         {
-          final IStatus status = e.getStatus();
-          if( status.matches( IStatus.CANCEL ) )
-            throw new InterruptedException();
-
-          return status;
+          return e.getStatus();
         }
       }
     };
 
-    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, exportJob );
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, m_exportJob );
     if( !result.isOK() )
-    {
       new StatusDialog( getShell(), result, getWindowTitle() ).open();
-    }
     return !result.matches( IStatus.ERROR );
   }
 
-  protected abstract IStatus exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
+  protected abstract void exportProfiles( IProfileFeature[] profiles, IProgressMonitor monitor ) throws CoreException;
 }

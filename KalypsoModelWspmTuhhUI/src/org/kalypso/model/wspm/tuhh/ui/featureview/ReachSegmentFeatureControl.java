@@ -67,7 +67,8 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
@@ -75,7 +76,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * @author belger
  * @author jung
  */
-public class ReachSegmentFeatureControl extends AbstractFeatureControl
+public class ReachSegmentFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   protected final class ChangeCheckstateAction extends Action
   {
@@ -171,16 +172,12 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
     {
       final boolean checked = m_viewer.getChecked( object );
       if( checked != check )
-      {
         toToggle.add( (IProfileFeature) object );
-      }
     }
 
     final IProfileFeature[] profilesToCheck = toToggle.toArray( new IProfileFeature[toToggle.size()] );
     if( profilesToCheck.length > 0 )
-    {
       handleCheckStateChanged( profilesToCheck, check );
-    }
   }
 
   /**
@@ -211,12 +208,10 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
 
       final WspmWaterBody waterBody = reach.getWaterBody();
       if( waterBody == null )
-      {
         m_viewer.setInput( new Object[] {} );
-      }
       else
       {
-        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.MEMBER_PROFILE );
+        final List< ? > profiles = (List< ? >) waterBody.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
         m_viewer.setInput( profiles );
       }
     }
@@ -245,38 +240,13 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl
   {
     final Collection<TuhhReachProfileSegment> segments = new ArrayList<TuhhReachProfileSegment>( profileFeatures.length );
 
-    final FeatureList segmentList = (FeatureList) reach.getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
+    final FeatureList segmentList = (FeatureList) reach.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
 
     for( final IProfileFeature profileFeature : profileFeatures )
     {
       final TuhhReachProfileSegment segment = findSegment( segmentList, profileFeature );
       if( segment != null )
-      {
         segments.add( segment );
-      }
-    }
-
-    /* HACK: we use this time here to cleanup-broken reaches as well: remove everything than cannot be here */
-    final WspmWaterBody segmentWater = reach.getWaterBody();
-    for( final Object segmentElement : segmentList )
-    {
-      final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) segmentElement;
-
-      /* Remove segments without profile and segments with a profile from the wrong water body */
-      /* This might happen, if the water body was duplicated */
-      final IProfileFeature profileMember = segment.getProfileMember();
-      if( profileMember == null )
-      {
-        segments.add( segment );
-      }
-      else
-      {
-        final WspmWaterBody water = profileMember.getWater();
-        if( !segmentWater.equals( water ) )
-        {
-          segments.add( segment );
-        }
-      }
     }
 
     return segments.toArray( new TuhhReachProfileSegment[segments.size()] );

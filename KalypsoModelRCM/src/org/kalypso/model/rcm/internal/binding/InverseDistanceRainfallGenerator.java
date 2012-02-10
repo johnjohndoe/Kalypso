@@ -77,6 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -100,11 +101,15 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
   static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
 
+  static final QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
+
   static final QName PROPERTY_stationLocationPath = new QName( UrlCatalogRcm.NS_RCM, "stationLocationPath" );
 
   static final QName PROPERTY_numberOmbrometers = new QName( UrlCatalogRcm.NS_RCM, "numberOmbrometers" );
 
   static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+
+  private final FeatureBindingCollection<IZmlFilter> m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
 
   public InverseDistanceRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
@@ -150,7 +155,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
 
       /* Convert to an array. */
       final List<Feature> featureList = new ArrayList<Feature>( ombrometerList.size() );
-      final GMLWorkspace workspace = ombrometerList.getOwner().getWorkspace();
+      final GMLWorkspace workspace = ombrometerList.getParentFeature().getWorkspace();
       for( final Object object : ombrometerList )
       {
         final Feature feature = FeatureHelper.getFeature( workspace, object );
@@ -171,7 +176,8 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       monitor.subTask( "Konvertiere..." );
 
       /* Convert to zml observations . */
-      final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
+      final IZmlFilter[] filters = m_filters.toArray( new IZmlFilter[m_filters.size()] );
+
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Monitor. */
@@ -367,7 +373,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       final Double distance = distances.get( i );
 
       /* Calculate the factor. */
-      final double factor = distance.doubleValue() / sumDistances;
+      final double factor = (distance.doubleValue() / sumDistances);
 
       /* Add it to the corresponding element. */
       element.setFactor( factor );

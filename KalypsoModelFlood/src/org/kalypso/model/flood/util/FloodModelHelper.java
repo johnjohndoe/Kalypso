@@ -72,6 +72,7 @@ import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -96,10 +97,10 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList != null && featureList.getPropertyType().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
+        if( featureList != null && featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
-          final Feature parentFeature = featureList.getOwner();
-          if( parentFeature.getId().equals( runoffEvent.getId() ) )
+          final Feature parentFeature = featureList.getParentFeature();
+          if( parentFeature.getId().equals( runoffEvent.getFeature().getId() ) )
             return i;
         }
       }
@@ -123,13 +124,13 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList != null && featureList.getOwner() != null )
+        if( featureList != null && featureList.getParentFeature() != null )
         {
-          final Feature grandPa = featureList.getOwner();
+          final Feature grandPa = featureList.getParentFeature();
           if( grandPa != null && grandPa.getParentRelation() != null && grandPa.getParentRelation().getQName().equals( IRunoffEvent.QNAME_PROP_RESULT_COVERAGES ) )
           {
             final Feature grandGrandPa = grandPa.getOwner();
-            if( grandGrandPa.getId().equals( runoffEvent.getId() ) )
+            if( grandGrandPa.getId().equals( runoffEvent.getFeature().getId() ) )
               return i;
           }
         }
@@ -154,15 +155,15 @@ public class FloodModelHelper
         final FeatureList featureList = ft.getFeatureList();
         if( featureList == null )
           continue;
-        final QName memberFT = featureList.getPropertyType().getQName();
+        final QName memberFT = featureList.getParentFeatureTypeProperty().getQName();
         if( eventsToRemove != null )
         {
           for( final IRunoffEvent runoffEvent : eventsToRemove )
           {
-            Feature parentFeature = featureList.getOwner();
+            Feature parentFeature = featureList.getParentFeature();
             while( parentFeature != null )
             {
-              if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) && runoffEvent.getId().equals( parentFeature.getId() ) )
+              if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) && runoffEvent.getGmlID().equals( parentFeature.getId() ) )
               {
                 wspTheme.removeTheme( theme );
                 break;
@@ -191,7 +192,7 @@ public class FloodModelHelper
     final StyledLayerType wspLayer = new StyledLayerType();
 
     wspLayer.setName( Messages.getString( "org.kalypso.model.flood.util.FloodModelHelper.0", event.getName() ) ); //$NON-NLS-1$
-    wspLayer.setFeaturePath( "#fid#" + event.getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
     wspLayer.setType( "simple" ); //$NON-NLS-1$
     wspLayer.setVisible( true );
@@ -269,7 +270,7 @@ public class FloodModelHelper
    * 
    * @return a array of selected {@link IRunoffEvent}
    */
-  public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureBindingCollection<IRunoffEvent> events )
+  public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events )
   {
     final LabelProvider labelProvider = new RunoffEventForProcessingLabelProvider();
 

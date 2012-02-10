@@ -45,17 +45,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NaAsciiDirs;
 import org.kalypso.model.hydrology.internal.NaResultDirs;
@@ -64,7 +61,6 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
 import org.kalypso.model.hydrology.internal.preprocessing.hydrotope.HydroHash;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -72,9 +68,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class NaPostProcessor
 {
-  private static final String VERSION_PATTERN = ".*\\*+[ \\t]+VERS\\.[ \\t]+(\\d+\\.\\d+)\\.\\d+[ \\t\\w\\.:]+\\*+.*"; //$NON-NLS-1$
-
   private static final String STRING_RESULT_SUCCESSFUL_1 = "berechnung wurde ohne fehler beendet"; //$NON-NLS-1$
+
+  private static final String STRING_RESULT_SUCCESSFUL_2 = "Berechnung wurde ohne Fehler beendet!";
 
   private static final String FILENAME_OUTPUT_RES = "output.res"; //$NON-NLS-1$
 
@@ -82,13 +78,13 @@ public class NaPostProcessor
 
   private final GMLWorkspace m_modelWorkspace;
 
+  private boolean m_isSucceeded;
+
   private final NAModellControl m_naControl;
 
   private final HydroHash m_hydroHash;
 
   private final IDManager m_idManager;
-
-  private ENACoreResultsFormat m_coreResultsFormat;
 
   public NaPostProcessor( final IDManager idManager, final Logger logger, final GMLWorkspace modelWorkspace, final NAModellControl naControl, final HydroHash hydroHash )
   {
@@ -107,7 +103,9 @@ public class NaPostProcessor
 
     copyNaExeLogs( asciiDirs, currentResultDirs );
 
-    checkSuccessAndResultsFormat( asciiDirs );
+    m_isSucceeded = checkSuccess( asciiDirs );
+    if( !m_isSucceeded )
+      return;
 
     final NAStatistics statistics = loadTSResults( asciiDirs.outWeNatDir, simDirs.currentResultDir );
     statistics.writeStatistics( simDirs.currentResultDir, currentResultDirs.reportDir );
@@ -134,7 +132,7 @@ public class NaPostProcessor
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String msg = String.format( Messages.getString( "NaPostProcessor.4" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final String msg = String.format( "Failed to copy Kalypso-NA log files.", e.getLocalizedMessage() );
       m_logger.severe( msg );
     }
     finally
@@ -156,72 +154,36 @@ public class NaPostProcessor
     logTranslater.translate( resultFile );
   }
 
-  /**
-   * Checks if the calculation was successful or not; if yes, checks for the results file version. Starting from NA core
-   * 2.2 dates for block time series are written as YYYYMMDD, older versions are using YYMMDD format.
-   */
-  private void checkSuccessAndResultsFormat( final NaAsciiDirs asciiDirs ) throws SimulationException
+  private boolean checkSuccess( final NaAsciiDirs asciiDirs )
   {
-    final List<String> logContent = readOutputRes( asciiDirs.startDir );
-    if( logContent == null || logContent.size() == 0 )
-      throw new SimulationException( Messages.getString("NaPostProcessor.0") ); //$NON-NLS-1$
+    final String logContent = readOutputRes( asciiDirs.startDir );
+    if( logContent == null )
+      return false;
 
-    checkLogForSuccess( logContent );
+    if( logContent.contains( STRING_RESULT_SUCCESSFUL_1 ) )
+      return true;
+    if( logContent.contains( STRING_RESULT_SUCCESSFUL_2 ) )
+      return true;
 
-    m_coreResultsFormat = findCoreResultsFormat( logContent );
+    return false;
   }
 
-  private ENACoreResultsFormat findCoreResultsFormat( final List<String> logContent )
-  {
-    final Pattern versionPattern = Pattern.compile( VERSION_PATTERN );
-    for( int i = 0; i < logContent.size(); i++ )
-    {
-      final String line = logContent.get( i );
-      final Matcher matcher = versionPattern.matcher( line );
-      if( matcher.matches() )
-      {
-        final String[] strings = matcher.group( 1 ).split( "\\." ); //$NON-NLS-1$
-        if( Integer.parseInt( strings[0] ) > 2 )
-          return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
-
-        if( Integer.parseInt( strings[0] ) == 2 )
-        {
-          if( Integer.parseInt( strings[1] ) >= 2 )
-            return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
-          else
-            return ENACoreResultsFormat.FMT_2_1_AND_OLDER;
-        }
-
-        return ENACoreResultsFormat.FMT_2_1_AND_OLDER;
-      }
-    }
-
-    return ENACoreResultsFormat.FMT_2_2_AND_NEWER;
-  }
-
-  private void checkLogForSuccess( final List<String> logContent ) throws SimulationException
-  {
-    for( int i = logContent.size() - 1; i >= 0; i-- )
-    {
-      final String line = logContent.get( i ).toLowerCase();
-      if( line.contains( STRING_RESULT_SUCCESSFUL_1 ) )
-        return;
-    }
-
-    throw new SimulationException( Messages.getString("NaPostProcessor.1") ); //$NON-NLS-1$
-  }
-
-  private List<String> readOutputRes( final File startDir )
+  private String readOutputRes( final File startDir )
   {
     try
     {
-      return FileUtils.readLines( new File( startDir, FILENAME_OUTPUT_RES ), null );
+      return FileUtils.readFileToString( new File( startDir, FILENAME_OUTPUT_RES ), null );
     }
     catch( final IOException e )
     {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public boolean isSucceeded( )
+  {
+    return m_isSucceeded;
   }
 
   /** kopiere statistische Ergebnis-Dateien */
@@ -239,7 +201,7 @@ public class NaPostProcessor
     {
       try
       {
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) ); //$NON-NLS-1$
+        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.220", bilFile.getName() ) );
         final File resultFile = new File( resultDirs.bilanzDir, "Bilanz.txt" ); //$NON-NLS-1$ 
         FileUtils.copyFile( bilFile, resultFile );
       }
@@ -248,7 +210,7 @@ public class NaPostProcessor
         final String inputPath = outWeNatDir.getName() + bilFile.getName();
         e.printStackTrace();
 
-        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() ); //$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.224", inputPath, e.getLocalizedMessage() );
         m_logger.severe( msg );
       }
     }
@@ -256,13 +218,8 @@ public class NaPostProcessor
 
   private NAStatistics loadTSResults( final File outWeNatDir, final File resultDir ) throws SensorException
   {
-    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, m_idManager, getCoreResultsFormat(), m_logger );
+    final ResultTimeseriesLoader resultProcessor = new ResultTimeseriesLoader( outWeNatDir, resultDir, m_modelWorkspace, m_idManager, m_logger );
     resultProcessor.processResults();
     return resultProcessor.getStatistics();
-  }
-
-  public ENACoreResultsFormat getCoreResultsFormat( )
-  {
-    return m_coreResultsFormat;
   }
 }

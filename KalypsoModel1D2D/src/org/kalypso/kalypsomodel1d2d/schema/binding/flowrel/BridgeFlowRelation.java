@@ -40,18 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public class BridgeFlowRelation extends BuildingFlowRelation implements IBridgeFlowRelation
 {
-
-  public BridgeFlowRelation( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public BridgeFlowRelation( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IBridgeFlowRelation.QNAME );
   }
-
 }

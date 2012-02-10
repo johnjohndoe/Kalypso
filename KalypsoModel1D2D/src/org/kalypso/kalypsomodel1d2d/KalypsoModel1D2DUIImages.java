@@ -66,16 +66,13 @@ public class KalypsoModel1D2DUIImages
     HYDROGRAPH_REMOVE("icons/elcl16/hydrograph_delete.gif"), //$NON-NLS-1$
     HYDROGRAPH_JUMP_TO("icons/elcl16/nav_go.gif"), //$NON-NLS-1$
     HYDROGRAPH_EXPORT("icons/elcl16/hydrograph_export.gif"), //$NON-NLS-1$
-    HYDROGRAPH_IMPORT("icons/elcl16/hydrograph_import.gif"), //$NON-NLS-1$
     HYDROGRAPH_COLLECTION_ADD("icons/elcl16/add.gif"), //$NON-NLS-1$
     HYDROGRAPH_COLLECTION_REMOVE("icons/elcl16/remove.gif"), //$NON-NLS-1$
     HYDROGRAPH_COLLECTION_PROCESS("icons/elcl16/hydro_process.gif"), //$NON-NLS-1$
     ELEVATION_SHOW("icons/elcl16/23_show_elevationmodel.gif"), //$NON-NLS-1$
     ELEVATION_DELETE("icons/elcl16/25_cut_elevationmodel.gif"), //$NON-NLS-1$
     ELEVATION_MOVE_UP("icons/elcl16/list_up.gif"), //$NON-NLS-1$
-    ELEVATION_MOVE_DOWN("icons/elcl16/list_down.gif"),
-    IMPORT_EXTERNAL_RESULT("icons/obj16/importExternalResult.gif"), //$NON-NLS-1$
-    IMPORT_2D_ELEMENTS("icons/obj16/import2dElements.gif"); //$NON-NLS-1$
+    ELEVATION_MOVE_DOWN("icons/elcl16/list_down.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

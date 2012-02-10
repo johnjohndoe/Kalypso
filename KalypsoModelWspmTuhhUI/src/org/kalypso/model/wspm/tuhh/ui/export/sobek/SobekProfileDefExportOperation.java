@@ -46,16 +46,14 @@ import java.util.Collection;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.utils.hw.BridgeResult;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -70,15 +68,20 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class SobekProfileDefExportOperation extends AbstractSobekFileExportOperation
 {
+  public static final String PROFILE_DEF = "profile.def"; //$NON-NLS-1$
+
   public SobekProfileDefExportOperation( final SobekExportInfo info )
   {
-    super( info, ISobekConstants.PROFILE_DEF );
+    super( info, PROFILE_DEF );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.export.sobek.ISobekProfileExportOperation#getLabel()
+   */
   @Override
   public String getLabel( )
   {
-    return ISobekConstants.PROFILE_DEF;
+    return PROFILE_DEF;
   }
 
   @Override
@@ -136,14 +139,10 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
 
       final Formatter formatter = getFormatter();
       if( profileObject instanceof BuildingBruecke )
-      {
         writeBridge( formatter, buildingId, profileName, points, profil );
-        // TODO: support other building types (tube, ...)
-      }
+      // TODO: support other building types (tube, ...)
       else
-      {
         reallyExportedBuildings--;
-      }
     }
   }
 
@@ -184,7 +183,7 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
     }
 
     /* Only for testing purposes: write tube geometry into shape file */
-    final File tempDir = new File( getInfo().getTargetDir(), "struct" ); //$NON-NLS-1$
+    final File tempDir = new File( getInfo().getTargetDir(), "struct" );
     tempDir.mkdirs();
     final String shapeFileName = "struct_";//$NON-NLS-1$
 
@@ -211,11 +210,11 @@ public class SobekProfileDefExportOperation extends AbstractSobekFileExportOpera
       return profil.getPoints();
     }
 
-    final IProfileRecord startPoint = markers[0].getPoint();
-    final IProfileRecord endPoint = markers[1].getPoint();
+    final IRecord startPoint = markers[0].getPoint();
+    final IRecord endPoint = markers[1].getPoint();
 
-    final int startIndex = startPoint.getIndex();
-    final int endIndex = endPoint.getIndex();
+    final int startIndex = profil.indexOfPoint( startPoint );
+    final int endIndex = profil.indexOfPoint( endPoint );
 
     return profil.getPoints( startIndex, endIndex );
   }

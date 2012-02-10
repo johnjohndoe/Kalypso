@@ -62,9 +62,9 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
 {
   public static final QName QNAME_PROFILEREACHSEGMENT = new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_STATION = new QName( NS_WSPM_TUHH, "station" );//$NON-NLS-1$
+  private static final QName PROPERTY_STATION = new QName( NS_WSPM_TUHH, "station" );//$NON-NLS-1$
 
-  public static final QName MEMBER_PROFILE = new QName( NS_WSPM_TUHH, "profileMember" ); //$NON-NLS-1$
+  private static final QName PROPERTY_PROFILE_MEMBER = new QName( NS_WSPM_TUHH, "profileMember" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_PROFILE_LOCATION = new QName( NS_WSPM_TUHH, "profileLocation" ); //$NON-NLS-1$
 
@@ -77,7 +77,7 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
   {
     setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getId() ); //$NON-NLS-1$
 
-    setEnvelopesUpdated();
+    invalidEnvelope();
   }
 
   // Commented out, because not used by the tuhh-model
@@ -96,19 +96,20 @@ public class TuhhReachProfileSegment extends Feature_Impl implements IWspmTuhhCo
   // m_reachSegment.setProperty( new QName( NS_WSPM_TUHH, "distanceR" ), distanceR );
   // }
 
-  // explicitly set scale fixes the bug #591
+  //explicitly set scale fixes the bug #591
   public BigDecimal getStation( )
   {
-    final Object lStation = getProperty( PROPERTY_STATION, BigDecimal.class );
-    if( lStation instanceof BigDecimal )
+    Object lStation = getProperty( PROPERTY_STATION, BigDecimal.class );
+    if( lStation instanceof BigDecimal ){
       return ((BigDecimal) lStation).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
-    // return not valid BigDecimal value, unfortunally we have a lot of data with some invalid entries
+    }
+    //return not valid BigDecimal value, unfortunally we have a lot of data with some invalid entries 
     return getProperty( PROPERTY_STATION, BigDecimal.class );
   }
 
   public IProfileFeature getProfileMember( )
   {
-    final String href = (String) getProperty( MEMBER_PROFILE );
+    final String href = (String) getProperty( PROPERTY_PROFILE_MEMBER );
     final GMLWorkspace workspace = getWorkspace();
     final Feature feature = workspace == null ? null : workspace.getFeature( href );
 

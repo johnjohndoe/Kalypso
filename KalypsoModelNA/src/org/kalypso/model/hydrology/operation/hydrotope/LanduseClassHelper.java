@@ -53,16 +53,12 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dirk Kuch
  */
-public final class LanduseClassHelper
+public class LanduseClassHelper
 {
-  private LanduseClassHelper( )
-  {
-  }
-
   public static Map<String, String> resolve( final GMLWorkspace landuseClassesWorkspace )
   {
     final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
-
+    
     final Map<String, String> landuseClasses = new HashMap<String, String>();
     for( final Object object : landuseClassesFeatures )
     {

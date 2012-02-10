@@ -44,18 +44,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.deegree.model.spatialschema.GeometryException;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -83,11 +73,11 @@ public class SimpleNodeResult implements INodeResult
   private double m_dvxdtPrevStep;
 
   private double m_dvydtPrevStep;
-
+  
   private double m_waveHsig;
-
+  
   private double m_waveDir;
-
+  
   private double m_wavePer;
 
   private double m_depth;
@@ -193,7 +183,7 @@ public class SimpleNodeResult implements INodeResult
    *      double)
    */
   @Override
-  public void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep )
+  public void setResultPrevStepValues( double vxPrevStep, double vyPrevStep, double virtDepPrevStep )
   {
     m_vxPrevStep = vxPrevStep;
     m_vyPrevStep = vyPrevStep;
@@ -206,7 +196,7 @@ public class SimpleNodeResult implements INodeResult
    *      double)
    */
   @Override
-  public void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt )
+  public void setTimeDerivativeValues( double vxWRTt, double vyWRTt, double virtDepWRTt )
   {
     m_dvxdt = vxWRTt;
     m_dvydt = vyWRTt;
@@ -219,7 +209,7 @@ public class SimpleNodeResult implements INodeResult
    *      double, double)
    */
   @Override
-  public void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep )
+  public void setTimeDerivativeValuesPrevStep( double vxWRTtPrevStep, double vyWRTtPrevStep, double virtDepWRTtPrevStep )
   {
     m_dvxdtPrevStep = vxWRTtPrevStep;
     m_dvydtPrevStep = vyWRTtPrevStep;
@@ -306,7 +296,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#getDescription()
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
   @Override
   public String getDescription( )
@@ -315,16 +305,16 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#getId()
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
    */
   @Override
-  public String getId( )
+  public String getGmlID( )
   {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#getName()
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
    */
   @Override
   public String getName( )
@@ -333,7 +323,16 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#setDescription(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getFeature()
+   */
+  @Override
+  public Feature getFeature( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
   @Override
   public void setDescription( final String desc )
@@ -342,7 +341,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#setName(java.lang.String)
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
   @Override
   public void setName( final String name )
@@ -433,7 +432,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#getLocation()
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
    */
   @Override
   public GM_Object getLocation( )
@@ -442,7 +441,7 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.binding.Feature#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
    */
   @Override
   public void setLocation( final GM_Object location )
@@ -489,7 +488,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTime(java.util.List)
    */
   @Override
-  public void setVelOverTime( final List<Double> velOverTime )
+  public void setVelOverTime( List<Double> velOverTime )
   {
     m_dVelDt = velOverTime;
     m_dvxdt = velOverTime.get( 0 );
@@ -501,7 +500,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTimePrevStep(java.util.List)
    */
   @Override
-  public void setVelOverTimePrevStep( final List<Double> velOverTimePrevStep )
+  public void setVelOverTimePrevStep( List<Double> velOverTimePrevStep )
   {
     m_dVelDtPrevStep = velOverTimePrevStep;
     m_dvxdtPrevStep = velOverTimePrevStep.get( 0 );
@@ -513,7 +512,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelPrevStep(java.util.List)
    */
   @Override
-  public void setVelPrevStep( final List<Double> velPrevStep )
+  public void setVelPrevStep( List<Double> velPrevStep )
   {
     m_velocityPrevStep = velPrevStep;
     m_vxPrevStep = velPrevStep.get( 0 );
@@ -525,7 +524,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTime(double)
    */
   @Override
-  public void setVirtDepOverTime( final double virtDepOverTime )
+  public void setVirtDepOverTime( double virtDepOverTime )
   {
     m_dDepthDt = virtDepOverTime;
   }
@@ -534,7 +533,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTimePrevStep(double)
    */
   @Override
-  public void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep )
+  public void setVirtDepOverTimePrevStep( double virtDepOverTimePrevStep )
   {
     m_dDepthDtPrevStep = virtDepOverTimePrevStep;
   }
@@ -543,7 +542,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepPrevStep(double)
    */
   @Override
-  public void setVirtDepPrevStep( final double virtDepthPrevStep )
+  public void setVirtDepPrevStep( double virtDepthPrevStep )
   {
     m_depthPrevStep = virtDepthPrevStep;
   }
@@ -633,7 +632,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveDirection(double)
    */
   @Override
-  public void setWaveDirection( final double direction )
+  public void setWaveDirection( double direction )
   {
     m_waveDir = direction;
   }
@@ -642,7 +641,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaveHsig(double)
    */
   @Override
-  public void setWaveHsig( final double hsig )
+  public void setWaveHsig( double hsig )
   {
     m_waveHsig = hsig;
   }
@@ -651,7 +650,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWavePeriod(double)
    */
   @Override
-  public void setWavePeriod( final double period )
+  public void setWavePeriod( double period )
   {
     m_wavePer = period;
   }
@@ -661,7 +660,7 @@ public class SimpleNodeResult implements INodeResult
     return m_vxPrevStep;
   }
 
-  public final void setVxPrevStep( final double vxPrevStep )
+  public final void setVxPrevStep( double vxPrevStep )
   {
     m_vxPrevStep = vxPrevStep;
   }
@@ -671,7 +670,7 @@ public class SimpleNodeResult implements INodeResult
     return m_vyPrevStep;
   }
 
-  public final void setVyPrevStep( final double vyPrevStep )
+  public final void setVyPrevStep( double vyPrevStep )
   {
     m_vyPrevStep = vyPrevStep;
   }
@@ -681,7 +680,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvxdt;
   }
 
-  public final void setDvxdt( final double dvxdt )
+  public final void setDvxdt( double dvxdt )
   {
     m_dvxdt = dvxdt;
   }
@@ -691,7 +690,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvydt;
   }
 
-  public final void setDvydt( final double dvydt )
+  public final void setDvydt( double dvydt )
   {
     m_dvydt = dvydt;
   }
@@ -701,7 +700,7 @@ public class SimpleNodeResult implements INodeResult
     return m_dvxdtPrevStep;
   }
 
-  public final void setDvxdtPrevStep( final double dvxdtPrevStep )
+  public final void setDvxdtPrevStep( double dvxdtPrevStep )
   {
     m_dvxdtPrevStep = dvxdtPrevStep;
   }
@@ -711,269 +710,10 @@ public class SimpleNodeResult implements INodeResult
     return m_dvydtPrevStep;
   }
 
-  public final void setDvydtPrevStep( final double dvydtPrevStep )
+  public final void setDvydtPrevStep( double dvydtPrevStep )
   {
     m_dvydtPrevStep = dvydtPrevStep;
   }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getProperty(org.kalypso.gmlschema.property.IPropertyType)
-   */
-  @Override
-  public Object getProperty( final IPropertyType propertyType )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getEnvelope()
-   */
-  @Override
-  public GM_Envelope getEnvelope( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#getWorkspace()
-   */
-  @Override
-  public GMLWorkspace getWorkspace( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public IRelationType getParentRelation( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void setProperty( final IPropertyType propertyType, final Object value )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.BaseFeature#setProperty(javax.xml.namespace.QName, java.lang.Object)
-   */
-  @Override
-  public void setProperty( final QName propQName, final Object value )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public Object getProperty( final String propLocalName )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Object getProperty( final QName propQName )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    return null;
-  }
-
-  @Override
-  public QName getQualifiedName( )
-  {
-    return null;
-  }
-
-  @Override
-  public void setId( final String fid )
-  {
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getFeatureType()
-   */
-  @Override
-  public IFeatureType getFeatureType( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
-   */
-  @Override
-  public void setFeatureType( final IFeatureType ft )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getProperties()
-   */
-  @Override
-  public Object[] getProperties( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
-   */
-  @Override
-  public GM_Object[] getGeometryPropertyValues( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
-   */
-  @Override
-  public GM_Object getDefaultGeometryPropertyValue( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
-   */
-  @Override
-  public GM_Envelope getBoundedBy( ) throws GeometryException
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
-   */
-  @Override
-  public Feature getOwner( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
-   */
-  @Override
-  public void setEnvelopesUpdated( )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public Feature getMember( final IRelationType relation )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Feature getMember( final QName relation )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relationName, final String href )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureType )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relation, final String href, final IFeatureType featureType )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relation, final String href, final QName featureType )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Feature createSubFeature( final IRelationType relation, final QName featureTypeName )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Feature createSubFeature( final IRelationType relation )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Feature createSubFeature( final QName relationName, final QName featureTypeName )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Feature createSubFeature( final QName relationName )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final QName relationName, final Class<T> type )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IFeatureBindingCollection<Feature> getMemberList( final IRelationType relation )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final IRelationType relation, final Class<T> type )
-  {
-    throw new UnsupportedOperationException();
-  }
+  
+  
 }

@@ -68,9 +68,7 @@ class ProfilePolygon
     m_objectType = objectType;
 
     for( final IWProfPoint point : points )
-    {
       add( point );
-    }
   }
 
   public void add( final IWProfPoint wprofPoint )

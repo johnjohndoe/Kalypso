@@ -46,7 +46,6 @@ import java.util.Collection;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.phenomenon.IPhenomenon;
@@ -80,9 +79,7 @@ public class ProfileWaterlevelWriter
     {
       final IDataBlock db = createDataBlock( property );
       if( db != null )
-      {
         dbs.add( db );
-      }
     }
 
     return dbs.toArray( new IDataBlock[dbs.size()] );
@@ -92,11 +89,11 @@ public class ProfileWaterlevelWriter
   {
     final IPhenomenon phenomenon = property.getPhenomenon();
     final String phenomenonId = phenomenon.getID();
-    if( !IWspmPhenomenonConstants.PHENOMENON_WATERLEVEL_2D.equals( phenomenonId ) )
+    if( !IWspmConstants.PHENOMENON_WATERLEVEL_2D.equals( phenomenonId ) )
       return null;
 
     final String componentName = property.getName();
-    final String strandName = Messages.getString( "ProfileWaterlevelWriter_0" ); //$NON-NLS-1$
+    final String strandName = Messages.getString("ProfileWaterlevelWriter_0"); //$NON-NLS-1$
     final String secondLine = String.format( "%100s%s@%s", " ", componentName, strandName ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final CoordDataBlockCreator creator = new CoordDataBlockCreator( IDataBlockNames.WSP_HOEHE, secondLine );

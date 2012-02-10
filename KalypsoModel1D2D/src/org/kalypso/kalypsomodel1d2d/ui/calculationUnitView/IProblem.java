@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * TODO: change this to an geo status!
@@ -70,5 +70,5 @@ public interface IProblem
   /**
    * Sets focus on particular Feature
    */
-  public Feature showFocusOn( );
+  public IFeatureWrapper2 showFocusOn( );
 }

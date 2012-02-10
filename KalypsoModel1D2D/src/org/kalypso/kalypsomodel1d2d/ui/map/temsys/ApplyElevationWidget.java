@@ -80,8 +80,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * 
  * @author Patrice Congo
  * @author Madanagopal
+ * 
  */
 public class ApplyElevationWidget extends AbstractDelegateWidget implements IWidgetWithOptions
 {
@@ -148,7 +150,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapPanel, NativeTerrainElevationModelWrapper.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     if( terrainElevationTheme != null )
     {
-      final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getOwner();
+      final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
       final ITerrainElevationModelSystem system = (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( ITerrainElevationModelSystem.class );
 
       m_dataModel.setElevationModelSystem( system );
@@ -159,6 +161,9 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, elevationTheme );
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -395,9 +400,12 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     return true;
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
   @Override
   public String getPartName( )
   {
-    return Messages.getString("ApplyElevationWidget.0"); //$NON-NLS-1$
+    return null;
   }
 }

@@ -33,14 +33,6 @@
             qname="{org.kalypso.model.rcm.ombrometer}OmbrometerCollection">
       </feature>
       <feature
-            class="org.kalypso.model.rcm.internal.binding.ThiessenStation"
-            qname="{org.kalypso.model.rcm.thiessen}ThiessenStation">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.ThiessenStationCollection"
-            qname="{org.kalypso.model.rcm.thiessen}ThiessenStationCollection">
-      </feature>
-      <feature
             class="org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator"
             qname="{org.kalypso.model.rcm.v2}OmbrometerRainfallGenerator">
       </feature>
@@ -63,18 +55,6 @@
       <feature
             class="org.kalypso.model.rcm.internal.binding.Target"
             qname="{org.kalypso.model.rcm.v2}Target">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.LinearSumGenerator"
-            qname="{org.kalypso.model.cm}LinearSumGenerator">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.Catchment"
-            qname="{org.kalypso.model.cm}Catchment">
-      </feature>
-      <feature
-            class="org.kalypso.model.rcm.internal.binding.FactorizedTimeseries"
-            qname="{org.kalypso.model.cm}FactorizedTimeseries">
       </feature>
    </extension>
 

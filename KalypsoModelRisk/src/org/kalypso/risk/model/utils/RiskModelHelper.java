@@ -43,11 +43,12 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -69,6 +70,7 @@ import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -101,7 +103,6 @@ public class RiskModelHelper
   private static enum FIELD
   {
     STYLE_URN,
-    STYLE_NAME,
     THEMEINFO_CLASS,
     I18N_THEMEINFO_LABEL,
     I18N_LAYER_NAME
@@ -113,7 +114,7 @@ public class RiskModelHelper
       put( LAYER_TYPE.WATERLEVEL, new HashMap<FIELD, String>()
       {
         {
-          put( FIELD.STYLE_URN, "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
+          put( FIELD.STYLE_URN, "urn:style:sld:risk:inundation:waterlevel" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.gml.ui.map.CoverageThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_THEMEINFO_LABEL, "WaterlevelMap.gismapview.themeInfoLabel" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "WaterlevelMap.gismapview.layer" ); //$NON-NLS-1$
@@ -123,7 +124,6 @@ public class RiskModelHelper
       {
         {
           put( FIELD.STYLE_URN, "urn:style:sld:risk:damage:specific" ); //$NON-NLS-1$
-          put( FIELD.STYLE_NAME, "default" ); //$NON-NLS-1$
           put( FIELD.THEMEINFO_CLASS, "org.kalypso.risk.plugin.DamagePotentialThemeInfo" ); //$NON-NLS-1$
           put( FIELD.I18N_LAYER_NAME, "SpecificDamagePotentialMap.gismapview.layer" ); //$NON-NLS-1$
         }
@@ -164,7 +164,7 @@ public class RiskModelHelper
     sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
   }
 
-  public synchronized static void fillStatistics( final int returnPeriod, final ILanduseClass landuseClass, final double damageValue, final double cellSize )
+  public static void fillStatistics( final int returnPeriod, final ILanduseClass landuseClass, final double damageValue, final double cellSize )
   {
     final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
     final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
@@ -187,13 +187,13 @@ public class RiskModelHelper
    * @throws Exception
    */
   // TODO: nor more used, remove!?
-  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
+  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
 
     final int returnPeriod = sourceCoverageCollection.getReturnPeriod();
 
-    final IFeatureBindingCollection<ICoverage> coverages = sourceCoverageCollection.getCoverages();
+    IFeatureBindingCollection<ICoverage> coverages = sourceCoverageCollection.getCoverages();
     for( int i = 0; i < coverages.size(); i++ )
     {
       final ICoverage inputCoverage = coverages.get( i );
@@ -229,7 +229,7 @@ public class RiskModelHelper
               final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
               /* Transform query position into the cs of the polygons. */
-              final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
+              IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
               final GM_Position position = geoTransformer.transform( positionAt, inputGrid.getSourceCRS() );
 
               /* This list has some unknown cs. */
@@ -314,7 +314,6 @@ public class RiskModelHelper
     final String themeInfoClass = propertyMap.get( FIELD.THEMEINFO_CLASS );
     final String localizedThemeInfoLabel = propertyMap.containsKey( FIELD.I18N_THEMEINFO_LABEL ) ? Messages.getString( propertyMap.get( FIELD.I18N_THEMEINFO_LABEL ) ) : null;
     final String styleURN = propertyMap.get( FIELD.STYLE_URN );
-    final String styleName = propertyMap.get( FIELD.STYLE_NAME );
 
     final StyledLayerType layer = new StyledLayerType();
     layer.setName( layerName );
@@ -340,7 +339,7 @@ public class RiskModelHelper
     final List<Style> styleList = layer.getStyle();
     final Style style = new Style();
     style.setLinktype( "sld" ); //$NON-NLS-1$
-    style.setStyle( styleName );
+    style.setStyle( "default" ); //$NON-NLS-1$
     style.setActuate( "onRequest" ); //$NON-NLS-1$
     style.setHref( styleURN );
     style.setType( "simple" ); //$NON-NLS-1$
@@ -363,13 +362,13 @@ public class RiskModelHelper
    * @param scenarioFolder
    * @throws Exception
    */
-  public static void insertSpecificDamageMapLayer( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
+  public static void insertSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection ) throws Exception
   {
     final StyledLayerType layer = createMapLayer( LAYER_TYPE.SPECIFIC_DAMAGE_POTENTIAL, coverageCollection );
     parentKalypsoTheme.addLayer( layer );
   }
 
-  public static void deleteExistingMapLayers( final IKalypsoCascadingTheme parentKalypsoTheme )
+  public static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme )
   {
     final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
     for( final IKalypsoTheme childTheme : childThemes )
@@ -417,11 +416,11 @@ public class RiskModelHelper
    *          landuse polygons that give the landuse class ordinal number
    * @throws Exception
    */
-  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final IProgressMonitor monitor )
+  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IProgressMonitor monitor )
   {
     try
     {
-      final IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
       for( int i = 0; i < coverages.size(); i++ )
       {
         final ICoverage inputCoverage = coverages.get( i );
@@ -460,7 +459,7 @@ public class RiskModelHelper
                 final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
                 /* Transform query position into the cs of the polygons. */
-                final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
+                IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
                 final GM_Position position = geoTransformer.transform( positionAt, inputGrid.getSourceCRS() );
 
                 /* This list has some unknown cs. */
@@ -537,7 +536,8 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFeatureBindingCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final IKalypsoCascadingTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__DAMAGE_POTENTIAL, THEME_ID__DAMAGE_POTENTIAL ); //$NON-NLS-1$
+
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__DAMAGE_POTENTIAL, THEME_ID__DAMAGE_POTENTIAL ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -547,9 +547,7 @@ public class RiskModelHelper
     /* add the coverage collections to the map */
     for( final IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
       insertSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection );
-
-    if( parentKalypsoTheme instanceof IKalypsoSaveableTheme )
-      ((IKalypsoSaveableTheme) parentKalypsoTheme).saveFeatures( new NullProgressMonitor() );
+    parentKalypsoTheme.saveFeatures( new NullProgressMonitor() );
   }
 
   /**
@@ -566,7 +564,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final IKalypsoCascadingTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__WATERDEPTH, THEME_ID__WATERDEPTH ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, THEME_NAME__WATERDEPTH, THEME_ID__WATERDEPTH ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -600,7 +598,7 @@ public class RiskModelHelper
 
   }
 
-  private static void deleteExistingMapLayers( final IKalypsoCascadingTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
+  private static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
   {
     final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
 
@@ -617,7 +615,7 @@ public class RiskModelHelper
       parentKalypsoTheme.removeTheme( themeToRemove );
   }
 
-  private static void createWaterdepthLayer( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws Exception
+  private static void createWaterdepthLayer( final CascadingKalypsoTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws Exception
   {
     final StyledLayerType layer = createMapLayer( LAYER_TYPE.WATERLEVEL, annualCoverageCollection );
     parentKalypsoTheme.addLayer( layer );
@@ -777,7 +775,7 @@ public class RiskModelHelper
     /* The active scenario must have changed to the risk project. We can now access risk project data. */
     final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
 
-    final String failedToLoadRiskMsg = String.format( Messages.getString( "RiskModelHelper.0" ) ); //$NON-NLS-1$
+    final String failedToLoadRiskMsg = String.format( Messages.getString("RiskModelHelper.0") ); //$NON-NLS-1$
     final IStatus failedToLoadRiskStatus = new Status( IStatus.ERROR, PluginUtilities.id( KalypsoRiskPlugin.getDefault() ), failedToLoadRiskMsg );
     if( !riskDataProvider.waitForModelToLoad( IRasterDataModel.class.getName(), 5 * 1000 ) )
       throw new CoreException( failedToLoadRiskStatus );
@@ -813,7 +811,7 @@ public class RiskModelHelper
       createdFeatures.add( annualCoverageCollection );
 
       int coverageCount = 0;
-      final IFeatureBindingCollection<ICoverage> coverages = grids[i].getCoverages();
+      IFeatureBindingCollection<ICoverage> coverages = grids[i].getCoverages();
       for( final ICoverage coverage : coverages )
       {
         final String subtaks = Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.17", names[i], coverageCount + 1, coverages.size() ); //$NON-NLS-1$
@@ -844,8 +842,8 @@ public class RiskModelHelper
 
     /* ------ */
     // TODO: maybe save other models?
-    final Feature f1 = (Feature) rasterDataModel.getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
-    final GMLWorkspace workspace = rasterDataModel.getWorkspace();
+    final Feature f1 = (Feature) rasterDataModel.getFeature().getProperty( IRasterDataModel.PROPERTY_WATERLEVEL_COVERAGE_COLLECTION );
+    final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, f1, createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     riskDataProvider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.20" ), false ) ); //$NON-NLS-1$
     riskDataProvider.saveModel( IRasterDataModel.class.getName(), new NullProgressMonitor() );
@@ -854,7 +852,7 @@ public class RiskModelHelper
   public static IKalypsoCascadingTheme getHQiTheme( final IMapModell mapModell )
   {
     // activate cascading theme that contains the events
-    final IKalypsoCascadingTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
+    final AbstractCascadingLayerTheme byThemeId = CascadingThemeHelper.getCascadingThemeByProperty( mapModell, THEME_ID__WATERDEPTH );
     if( byThemeId != null )
       return byThemeId;
 
@@ -864,7 +862,7 @@ public class RiskModelHelper
   /**
    * Finds and activates the event theme if present.
    * 
-   * @return <code>true</code>, if the theme was successfully activated.
+   * @return <code>true</code>, if the theme was succesfully activated.
    * */
   public static boolean activateEventTheme( final IMapPanel mapPanel )
   {

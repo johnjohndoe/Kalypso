@@ -69,8 +69,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -110,9 +110,9 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
       m_roughnessIDProvider = null;
     else
     {
-      m_roughnessIDProvider = new IdMap( roughnessModel.getRoughnessClasses().size() );
-      for( final IRoughnessCls o : roughnessModel.getRoughnessClasses() )
-        m_roughnessIDProvider.getOrAdd( o.getId() );
+      m_roughnessIDProvider = new IdMap( roughnessModel.size() );
+      for( final IRoughnessCls o : roughnessModel )
+        m_roughnessIDProvider.getOrAdd( o.getGmlID() );
     }
   }
 
@@ -121,12 +121,12 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
   @Override
-  public int getConversionID( final Feature feature )
+  public int getConversionID( final IFeatureWrapper2 feature )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
 
-    final String id = feature.getId();
+    final String id = feature.getGmlID();
     if( feature instanceof IFE1D2DNode )
       return m_nodesIDProvider.getOrAdd( id );
 
@@ -193,7 +193,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
   {
     writeHeaderLine( formatter );
 
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     writeElementsAndNodes( formatter, elements );
   }
 
@@ -216,12 +216,12 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
     {
       // TODO: only write nodes, which are within the requested calculation unit!
 
-      if( m_writtenNodesIDs.contains( node.getId() ) )
+      if( m_writtenNodesIDs.contains( node.getGmlID() ) )
         continue;
 
       checkElevation( node );
 
-      m_writtenNodesIDs.add( node.getId() );
+      m_writtenNodesIDs.add( node.getGmlID() );
 
       /* The node itself */
       final int nodeID = getConversionID( node );
@@ -280,7 +280,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    */
   @SuppressWarnings("unchecked")
-  private void writeElementsAndNodes( final Formatter formatter, final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException, IOException
+  private void writeElementsAndNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws CoreException, IOException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;
     final Set<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
@@ -338,7 +338,7 @@ public class Gml2SMSConv implements INativeIDProvider, I2DMeshConverter
 
     for( final IFE1D2DEdge edge : edgeSet )
     {
-      final IFeatureBindingCollection<IFE1D2DNode> nodes = edge.getNodes();
+      final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
       for( IFE1D2DNode node : nodes )
       {
         nodeSet.add( node );

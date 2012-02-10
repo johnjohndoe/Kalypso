@@ -56,9 +56,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileUtil;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -214,7 +214,7 @@ public class IterationInfoSWAN implements IIterationInfo
 
     if( line != null && line.trim().startsWith( "Time of computation" ) ) //$NON-NLS-1$
     {
-      String lStrDate = line.substring( line.indexOf( "->" ) + 3 ); //$NON-NLS-1$
+      String lStrDate = line.substring( line.indexOf( "->" ) + 3 );
 
       if( !lStrDate.equals( m_strActDate ) )
       {
@@ -271,7 +271,7 @@ public class IterationInfoSWAN implements IIterationInfo
       // REMARK: convert to calendar with correct time zone, so formatting works correct
       final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       calendar.setTime( stepDate );
-      m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", calendar ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      m_obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", m_calendarFirst ) + "-" + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7", calendar ) ); //$NON-NLS-1$
     }
 
     final TupleResult result = m_obs.getResult();
@@ -290,7 +290,7 @@ public class IterationInfoSWAN implements IIterationInfo
       String strActDateSWAN = (String) stepNrObj;
       return SWANDataConverterHelper.getDateForStepFromString( strActDateSWAN.trim() );
     }
-    else if( stepNrObj == null && m_strActDate != null )
+    else if( stepNrObj == null )
     {
       return SWANDataConverterHelper.getDateForStepFromString( m_strActDate.trim() );
     }

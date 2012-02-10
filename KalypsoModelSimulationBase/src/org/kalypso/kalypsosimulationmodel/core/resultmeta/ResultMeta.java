@@ -40,15 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.resultmeta;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.afgui.model.UnversionedModel;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -56,23 +56,29 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
  */
 public abstract class ResultMeta extends UnversionedModel implements IResultMeta
 {
-  private final IFeatureBindingCollection<IResultMeta> m_children = new FeatureBindingCollection<IResultMeta>( this, IResultMeta.class, QNAME_PROP_CHILDREN );
+  private final IFeatureWrapperCollection<IResultMeta> m_children = new FeatureWrapperCollection<IResultMeta>( getFeature(), IResultMeta.class, QNAME_PROP_CHILDREN );
 
-  public ResultMeta( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public ResultMeta( final Feature featureToBind, final QName qnameToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qnameToBind );
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getChildren()
+   */
   @Override
-  public IFeatureBindingCollection<IResultMeta> getChildren( )
+  public IFeatureWrapperCollection<IResultMeta> getChildren( )
   {
     return m_children;
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getParent()
+   */
   @Override
-  public IResultMeta getOwner( )
+  public IResultMeta getParent( )
   {
-    final Feature parentFeature = super.getOwner();
+    final Feature parentFeature = getFeature().getParent();
     if( parentFeature == null )
       return null;
 
@@ -85,7 +91,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   @Override
   public IPath getPath( )
   {
-    final String path = (String) getProperty( QNAME_PROP_PATH );
+    final String path = (String) getFeature().getProperty( QNAME_PROP_PATH );
     if( path == null )
       return null;
 
@@ -98,7 +104,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   @Override
   public IStatus getStatus( )
   {
-    final Feature statusFeature = (Feature) getProperty( QNAME_PROP_STATUS );
+    final Feature statusFeature = (Feature) getFeature().getProperty( QNAME_PROP_STATUS );
     if( statusFeature == null )
       return null;
 
@@ -111,7 +117,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   @Override
   public void setPath( final IPath path )
   {
-    setProperty( QNAME_PROP_PATH, path.toPortableString() );
+    getFeature().setProperty( QNAME_PROP_PATH, path.toPortableString() );
   }
 
   /**
@@ -121,18 +127,21 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   public void setStatus( final IStatus status )
   {
     if( status instanceof org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus )
-      setProperty( QNAME_PROP_STATUS, status );
+      getFeature().setProperty( QNAME_PROP_STATUS, ((org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus) status).getFeature() );
     else
     {
       // TODO: create new Status and copy values to it
     }
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta#getFullPath()
+   */
   @Override
   public IPath getFullPath( )
   {
     final IPath path = getPath();
-    final IResultMeta parent = getOwner();
+    final IResultMeta parent = getParent();
     if( parent == null )
       return path;
 
@@ -149,7 +158,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   @Override
   public void removeChild( final IResultMeta result )
   {
-    final IFeatureBindingCollection<IResultMeta> children = getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     if( children != null )
       children.remove( result );
   }

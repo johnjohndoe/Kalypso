@@ -49,7 +49,7 @@ import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.util.swt.ListSelectionWizardPage;
 
 /**
@@ -76,7 +76,7 @@ public class ImportWspmWizardPage extends ListSelectionWizardPage
   {
     m_calculation = calculation;
 
-    final List< ? > reaches = (List< ? >) m_calculation.getReach().getProperty( TuhhReach.QNAME_MEMBER_REACHSEGMENT );
+    final List< ? > reaches = (List< ? >) m_calculation.getReach().getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
     setInput( reaches );
 
     setCheckedElements( reaches.toArray( new Object[reaches.size()] ) );

@@ -66,7 +66,7 @@ public class NodeOps
 
   public static final IFE1D2DNode findeNodeImpl( final GM_Point point, final FE1D2DDiscretisationModel model )
   {
-    final FeatureList elementList = model.getElements().getFeatureList();
+    final FeatureList elementList = model.getElements().getWrappedList();
     final FeatureList element2DList = new FilteredFeatureList( elementList, IPolyElement.QNAME, true );
 
     // 1. Try: look, if the position is within an element

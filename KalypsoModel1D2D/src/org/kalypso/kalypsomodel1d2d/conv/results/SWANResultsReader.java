@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.conv.SWANDataConverterHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -171,7 +171,7 @@ public class SWANResultsReader
   private static void printDebugParsedSWANRawData( final MatFileReader mfr, final String outputPath ) throws IOException, MatlabIOException
   {
     String outputPathTmp = "d:/temp/MatReaderOut-"; //$NON-NLS-1$
-    if( outputPath != null && !"".equals( outputPath ) ) //$NON-NLS-1$
+    if( outputPath != null && !"".equals( outputPath ) )
     {
       outputPathTmp = outputPath;
     }
@@ -192,7 +192,7 @@ public class SWANResultsReader
   private static void printDebugResultData( Map<String, Map<GM_Position, Double>> pRes, final String outputPath ) throws IOException, MatlabIOException
   {
     String outputPathTmp = "d:/temp/MatReaderOutRes-"; //$NON-NLS-1$
-    if( outputPath != null && !"".equals( outputPath ) ) //$NON-NLS-1$
+    if( outputPath != null && !"".equals( outputPath ) )
     {
       outputPathTmp = outputPath;
     }
@@ -202,18 +202,18 @@ public class SWANResultsReader
     int iCount = 0;
     for( final String lStrKey : lSetKeys )
     {
-      out.write( " " + lStrKey ); //$NON-NLS-1$
+      out.write( " " + lStrKey );
 
       Map<GM_Position, Double> lValues = pRes.get( lStrKey );
       Set<GM_Position> lSetKeysData = lValues.keySet();
       for( Iterator<GM_Position> iterator = lSetKeysData.iterator(); iterator.hasNext(); )
       {
         GM_Position gmPosition = iterator.next();
-        out.write( "gm_p: " + gmPosition ); //$NON-NLS-1$
+        out.write( "gm_p: " + gmPosition );
 
-        out.write( "value:: " + lValues.get( gmPosition ) + ", count: " + iCount++ + ";" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        out.write( "value:: " + lValues.get( gmPosition ) + ", count: " + iCount++ + ";" );
       }
-      out.write( "\n" ); //$NON-NLS-1$
+      out.write( "\n" );
     }
     // out.write( lValues.contentToString() );
     out.close();
@@ -241,7 +241,7 @@ public class SWANResultsReader
 
     if( lIntAmountCoordinates != lListY.size() )
     {
-      throw new Exception( "Incorrect SWAN output as matlab array class(Level4): amount of x-coordinates and y-coordinates are not equal " ); //$NON-NLS-1$
+      throw new Exception( "Incorrect SWAN output as matlab array class(Level4): amount of x-coordinates and y-coordinates are not equal " );
     }
     lListGM_Positions = createListOfPositions( lListX, lListY );
     for( final String lStrKey : lSetKeys )
@@ -254,7 +254,7 @@ public class SWANResultsReader
 
       if( lIntAmountCoordinates != lListValuesAct.size() )
       {
-        throw new Exception( "Incorrect SWAN output as matlab array class(Level4): amount of coordinates and data are not equal " ); //$NON-NLS-1$
+        throw new Exception( "Incorrect SWAN output as matlab array class(Level4): amount of coordinates and data are not equal " );
       }
       lMapResult.put( lStrKey.toLowerCase(), createMapWithCoordinates( lListGM_Positions, lListValuesAct ) );
 
@@ -308,7 +308,7 @@ public class SWANResultsReader
     List<Double> lListRes = new ArrayList<Double>();
     if( pMLArray == null )
     {
-      throw new Exception( "Incorrect SWAN output as matlab array class(Level4): data information has incorrect precision " ); //$NON-NLS-1$
+      throw new Exception( "Incorrect SWAN output as matlab array class(Level4): data information has incorrect precision " );
     }
     MLNumericArray lMLArray = (MLNumericArray) pMLArray;
 

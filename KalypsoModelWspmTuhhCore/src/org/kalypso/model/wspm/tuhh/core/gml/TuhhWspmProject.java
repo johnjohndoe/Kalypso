@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -52,9 +54,8 @@ import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
@@ -72,8 +73,6 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 {
   public static final QName QNAME_PROP_CALC_MEMBER = new QName( NS_WSPM, "calculationMember" ); //$NON-NLS-1$
 
-  private IFeatureBindingCollection<TuhhCalculation> m_calculation;
-
   public TuhhWspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -87,14 +86,14 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public TuhhReach createNewReach( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody newWater = createOrGetWaterBody( waterName, isDirectionUpstreams );
+    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     return createNewReachForWaterBody( newWater );
   }
 
-  /** Not in waterbody, as we create a TuhhReach */
+  /** Not in waterbody, as we create a TuhhWaterBody */
   public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
   {
-    final TuhhReach tuhhReach = (TuhhReach) FeatureHelper.addFeature( waterBody, WspmWaterBody.MEMBER_REACH, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) ); //$NON-NLS-1$
+    final TuhhReach tuhhReach = (TuhhReach) FeatureHelper.addFeature( waterBody, WspmWaterBody.QNAME_REACH_MEMBER, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) ); //$NON-NLS-1$
 
     tuhhReach.setWaterBody( waterBody );
 
@@ -109,7 +108,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public IProfileFeature createNewProfile( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody newWater = createOrGetWaterBody( waterName, isDirectionUpstreams );
+    final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
     final IProfileFeature newProfile = newWater.createNewProfile();
     newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
     return newProfile;
@@ -117,20 +116,32 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException
   {
-    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QN_TUHH_CALC, -1 );
+    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC, -1 );
   }
 
   public TuhhCalculation createReibConstCalculation( ) throws GMLSchemaException
   {
-    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QN_TUHH_CALC_REIB_CONST, -1 );
+    return (TuhhCalculation) FeatureHelper.addFeature( this, QNAME_PROP_CALC_MEMBER, TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST, -1 );
   }
 
-  public IFeatureBindingCollection<TuhhCalculation> getCalculations( )
+  public TuhhCalculation[] getCalculations( )
   {
-    if( m_calculation == null )
-      m_calculation = new FeatureBindingCollection<TuhhCalculation>( this, TuhhCalculation.class, QNAME_PROP_CALC_MEMBER );
+    final GMLWorkspace workspace = getWorkspace();
 
-    return m_calculation;
+    final FeatureList calcList = getProperty( QNAME_PROP_CALC_MEMBER, FeatureList.class );
+    final List<TuhhCalculation> calcs = new ArrayList<TuhhCalculation>( calcList.size() );
+    for( final Object o : calcList )
+    {
+      final Feature calcFeature;
+      if( o instanceof Feature )
+        calcFeature = (Feature) o;
+      else
+        calcFeature = workspace.getFeature( (String) o );
+
+      calcs.add( (TuhhCalculation) calcFeature );
+    }
+
+    return calcs.toArray( new TuhhCalculation[calcs.size()] );
   }
 
   /**
@@ -138,20 +149,8 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
    */
   public static TuhhWspmProject create( final URL context, final IFeatureProviderFactory factory ) throws GMLSchemaException
   {
-    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QN_TYPE, context, factory );
+    final GMLWorkspace projectWorkspace = FeatureFactory.createGMLWorkspace( QNAME, context, factory );
     final Feature rootFeature = projectWorkspace.getRootFeature();
     return (TuhhWspmProject) rootFeature;
-  }
-
-  public Object findCalculationByName( final String name )
-  {
-    final IFeatureBindingCollection<TuhhCalculation> calculations = getCalculations();
-    for( final TuhhCalculation calculation : calculations )
-    {
-      if( name.equals( calculation.getName() ) )
-        return calculation;
-    }
-
-    return null;
   }
 }

@@ -49,35 +49,34 @@ import org.kalypso.model.hydrology.NaModelConstants;
 
 /**
  * class UrlCatalogNA provides the schemas for kalypso rainfall runoff simulation created by
- *
+ * 
  * @author doemming (08.05.2005)
  */
 public class UrlCatalogNA extends AbstractUrlCatalog
 {
   public static final String PREFIX_RRM = "rrm";//$NON-NLS-1$
 
+  /**
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   */
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( NaModelConstants.NS_NAMETA_11_6, myClass.getResource( "/etc/schema/gml/11.6/control.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NACONTROL_11_6, myClass.getResource( "/etc/schema/gml/11.6/nacontrol.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "schemata/control.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "schemata/namodell.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "schemata/nacontrol.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "schemata/hydrotop.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "schemata/parameter.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "schemata/ombrometer.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "schemata/synthN.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "schemata/initialValues.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "schemata/NAFortranLog.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAOPTIMIZE, myClass.getResource( "schemata/naoptimize.xsd" ) ); //$NON-NLS-1$
 
-    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "/etc/schema/gml/control.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "/etc/schema/gml/namodell.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "/etc/schema/gml/nacontrol.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "/etc/schema/gml/hydrotop.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "/etc/schema/gml/parameter.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "/etc/schema/gml/ombrometer.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "/etc/schema/gml/synthN.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "/etc/schema/gml/initialValues.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "/etc/schema/gml/NAFortranLog.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAOPTIMIZE, myClass.getResource( "/etc/schema/gml/naoptimize.xsd" ) ); //$NON-NLS-1$
-
-    catalog.put( NaModelConstants.NS_NALANDUSE, myClass.getResource( "/etc/schema/gml/landuse.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAPEDOLOGIE, myClass.getResource( "/etc/schema/gml/pedologie.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAGEOLOGIE, myClass.getResource( "/etc/schema/gml/geologie.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NASUDS, myClass.getResource( "/etc/schema/gml/suds.xsd" ) ); //$NON-NLS-1$
-
+    catalog.put( NaModelConstants.NS_NALANDUSE, myClass.getResource( "schemata/landuse.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAPEDOLOGIE, myClass.getResource( "schemata/pedologie.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAGEOLOGIE, myClass.getResource( "schemata/geologie.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NASUDS, myClass.getResource( "schemata/suds.xsd" ) ); //$NON-NLS-1$
 
     // REMARK: these prefix definition are crucial for the optimisation, as the
     // sce xpathes rely on this special prefix.
@@ -96,11 +95,5 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NAGEOLOGIE, "rrmGeo" ); //$NON-NLS-1$
     prefixes.put( NaModelConstants.NS_NASUDS, "rrmSuds" ); //$NON-NLS-1$
-
-    catalog.put( NaModelConstants.NS_TIMESERIES_MANAGEMENT, myClass.getResource( "/etc/schema/gml/timeseriesManagement.xsd" ) ); //$NON-NLS-1$
-    prefixes.put( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "tm" ); //$NON-NLS-1$
-
-    catalog.put( NaModelConstants.NS_CATCHMENT_MODEL, myClass.getResource( "/etc/schema/gml/catchmentModel.xsd" ) ); //$NON-NLS-1$
-    prefixes.put( NaModelConstants.NS_CATCHMENT_MODEL, "cmrrm" ); //$NON-NLS-1$
   }
 }

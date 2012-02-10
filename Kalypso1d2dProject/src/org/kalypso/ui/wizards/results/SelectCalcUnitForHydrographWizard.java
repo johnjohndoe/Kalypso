@@ -58,8 +58,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.map.HydrographUtils;
@@ -70,9 +70,11 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -80,10 +82,11 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
-public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbenchWizard
+public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalypsoDataImportWizard
 {
+
   private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
   private IScenarioResultMeta m_resultModel;
@@ -92,7 +95,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
 
   private IKalypsoLayerModell m_mapModell;
 
-  private ICaseDataProvider<Feature> m_dataProvider;
+  private ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
   public SelectCalcUnitForHydrographWizard( )
   {
@@ -107,7 +110,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
   {
     final NonCalcUnitResultViewerFilter resultFilter = new NonCalcUnitResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$
+    SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2" ), null, resultFilter, comparator, null, null ); //$NON-NLS-1$ 
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -127,8 +130,10 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
 
     // final List<IResultMeta> resultList = new LinkedList<IResultMeta>();
 
-    for( final IResultMeta resultMeta : results )
+    for( int i = 0; i < results.length; i++ )
     {
+      final IResultMeta resultMeta = results[i];
+
       if( resultMeta instanceof ICalcUnitResultMeta )
       {
 
@@ -152,7 +157,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
             HydrographUtils.addHydrographTheme( m_mapModell, hydrograph, calcUnitResult );
 
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           e.printStackTrace();
           StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.3" ) ); //$NON-NLS-1$
@@ -164,8 +169,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
 
   }
 
-  // FIXME: please let the pool handle the saving!!!
-  private void saveModel( final ICalcUnitResultMeta calcUnitResult, final Feature hydrograph ) throws GmlSerializeException, CoreException, IOException
+  private void saveModel( final ICalcUnitResultMeta calcUnitResult, IFeatureWrapper2 hydrograph ) throws GmlSerializeException, CoreException, IOException
   {
     // get a path
     final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" ); //$NON-NLS-1$
@@ -173,15 +177,14 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
 
     final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" ); //$NON-NLS-1$
 
-    final Feature feature = hydrograph;
+    final Feature feature = hydrograph.getFeature();
     OutputStreamWriter writer = null;
     try
     {
-      // final String charset = gmlResultFile.getCharset();
-      // FIXME: use stream + charset instead of writer
+      final String charset = gmlResultFile.getCharset();
 
       writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
-      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), "UTF-8", false ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( writer, feature.getWorkspace(), charset, false );
       writer.close();
 
       // refresh workspace
@@ -195,7 +198,21 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     }
   }
 
-  public void setMapModel( final IKalypsoLayerModell modell )
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setCommandTarget(org.kalypso.commons.command.ICommandTarget)
+   */
+  @Override
+  public void setCommandTarget( ICommandTarget commandTarget )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
+   */
+  @Override
+  public void setMapModel( IKalypsoLayerModell modell )
   {
     m_mapModell = modell;
   }
@@ -211,7 +228,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     try
     {
@@ -225,7 +242,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     }
   }
 
-  public void setResultModel( final IScenarioResultMeta resultModel )
+  public void setResultModel( IScenarioResultMeta resultModel )
   {
     m_resultModel = resultModel;
   }

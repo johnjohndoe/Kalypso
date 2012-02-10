@@ -95,20 +95,35 @@ public class SoilTypeCollection extends Feature_Impl
     {
       switch( importType )
       {
-        case DIFFERENCE:
+        case DELETE_INTERSECTING:
+        {
+          m_soilTypes.remove( existingPedology );
+          final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.1", existingPedology.getId() ); //$NON-NLS-1$
+          log.add( IStatus.WARNING, message );
+        }
+        break;
+
+        case IGNORE_INTERSECTING:
+        {
+          final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.2", label ); //$NON-NLS-1$
+          log.add( IStatus.WARNING, message );
+        }
+        return null;
+
+        case INTERSECT:
         {
           final GM_MultiSurface existingGeometry = existingPedology.getGeometry();
           final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
           if( difference != null )
           {
             existingPedology.setGeometry( difference );
-            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.3", existingPedology.getId(), label ); //$NON-NLS-1$
+            final String message =  Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.3", existingPedology.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message );
           }
           else
           {
             m_soilTypes.remove( existingPedology );
-            final String message = Messages.getString( "org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.4", existingPedology.getId(), label ); //$NON-NLS-1$
+            final String message = Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.4", existingPedology.getId(), label ); //$NON-NLS-1$
             log.add( IStatus.INFO, message );
           }
         }

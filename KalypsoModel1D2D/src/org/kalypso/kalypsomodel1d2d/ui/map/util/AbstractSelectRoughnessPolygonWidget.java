@@ -67,7 +67,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -83,7 +83,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMouseWidget
+public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidget
 {
   private final int m_grabRadius = 5;
 
@@ -242,7 +242,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMou
           final GM_Point maxPoint = MapUtilities.transform( mapPanel, pmax );
 
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition(), minPoint.getCoordinateSystem() );
-          final GMLWorkspace workspace = m_featureList.getOwner().getWorkspace();
+          final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
           final List result = m_featureList.query( envelope, null );
           final Feature[] selectedFeatures = new Feature[result.size()];
           for( int i = 0; i < selectedFeatures.length; i++ )
@@ -260,7 +260,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMou
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.0" ), status ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.0"), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -277,7 +277,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMou
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void rightClicked( final Point p )
+  public void rightClicked( Point p )
   {
     // super.rightClicked( p );
     try
@@ -297,7 +297,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMou
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.1" ), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.1"), status ); //$NON-NLS-1$
         }
       } );
     }
@@ -359,7 +359,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends DeprecatedMou
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.2" ), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget.2"), status ); //$NON-NLS-1$
         }
       } );
     }

@@ -55,7 +55,7 @@ import java.util.Set;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -129,7 +129,7 @@ public class Control1D2DConverterSWAN
 
   private String m_strStepLength = ""; //$NON-NLS-1$
 
-  private final String m_strStepLengthUnit = "MIN"; //$NON-NLS-1$
+  private String m_strStepLengthUnit = "MIN"; //$NON-NLS-1$
 
   private String m_strStationary = ""; //$NON-NLS-1$
 
@@ -137,27 +137,27 @@ public class Control1D2DConverterSWAN
 
   private final IGeoLog m_log;
 
-  private final Map<IFELine, Integer> m_mapContiLinesWithConditions;
+  private Map<IFELine, Integer> m_mapContiLinesWithConditions;
 
-  private final Double m_version = 1.0;
+  private Double m_version = 1.0;
 
-  private final List<Date> m_listWritenDatesWind;
+  private List<Date> m_listWritenDatesWind;
 
-  private final RectifiedGridDomain m_gridDescriptor;
+  private RectifiedGridDomain m_gridDescriptor;
 
-  private final long m_intMilisecInMinute = 60000;
+  private long m_intMilisecInMinute = 60000;
 
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private final FileObject m_fileObjWorkingDir;
+  private FileObject m_fileObjWorkingDir;
 
   private Date[] m_calculatedSteps;
 
-  private final Double m_doubleShiftY;
+  private Double m_doubleShiftY;
 
-  private final Double m_doubleShiftX;
+  private Double m_doubleShiftX;
 
-  public Control1D2DConverterSWAN( final FileObject pFileObjWorkingDir, final IFEDiscretisationModel1d2d pDiscModel, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IGeoLog log, final ResultManager resultManager, final Map<IFELine, Integer> mapContiLineWithSWANBoundaryToCondition, final List<Date> pListWrittenDates, final RectifiedGridDomain pWrittenGridDescriptor, final double shiftX, final double shiftY )
+  public Control1D2DConverterSWAN( final FileObject pFileObjWorkingDir, final IFEDiscretisationModel1d2d pDiscModel, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IGeoLog log, final ResultManager resultManager, final Map<IFELine, Integer> mapContiLineWithSWANBoundaryToCondition, final List<Date> pListWrittenDates, final RectifiedGridDomain pWrittenGridDescriptor, double shiftX, double shiftY )
   {
     m_controlModel = controlModel;
     m_resultManager = resultManager;
@@ -171,8 +171,8 @@ public class Control1D2DConverterSWAN
     m_doubleShiftY = shiftY;
 
     /* Initialize boundary conditions */
-    final String calculationUnit = controlModel.getCalculationUnit().getId();
-    for( final IFlowRelationship relationship : flowModel.getFlowRelationsShips() )
+    final String calculationUnit = controlModel.getCalculationUnit().getGmlID();
+    for( final IFlowRelationship relationship : flowModel )
     {
       if( relationship instanceof IBoundaryCondition )
       {
@@ -239,7 +239,7 @@ public class Control1D2DConverterSWAN
 
   private void formateCoordinatesShift( ) throws IOException
   {
-    final Formatter lFormatter = getFormatter( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
+    Formatter lFormatter = getFormatter( ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_FILE );
     lFormatter.format( "Kalypso-SWAN Coordinates shift\n" ); //$NON-NLS-1$
     lFormatter.format( "%s=%f\n%s=%f\nEND\n", ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_X, m_doubleShiftX, ISimulation1D2DConstants.SIM_SWAN_COORD_SHIFT_Y, m_doubleShiftY ); //$NON-NLS-1$
     lFormatter.close();
@@ -260,8 +260,8 @@ public class Control1D2DConverterSWAN
 
       if( calculatedSteps != null && calculatedSteps.length > 1 )
       {
-        final long lLongStepLen = ((calculatedSteps[1].getTime() - calculatedSteps[0].getTime()) / m_intMilisecInMinute);
-        final Date lDateZero = new Date( calculatedSteps[0].getTime() - lLongStepLen * m_intMilisecInMinute );
+        long lLongStepLen = ((calculatedSteps[1].getTime() - calculatedSteps[0].getTime()) / m_intMilisecInMinute);
+        Date lDateZero = new Date( calculatedSteps[0].getTime() - lLongStepLen * m_intMilisecInMinute );
         m_strTimeFromZero = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( lDateZero );
 
         m_strTimeFrom = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( calculatedSteps[0] );
@@ -269,10 +269,10 @@ public class Control1D2DConverterSWAN
         m_strStepLength = "" + lLongStepLen; //$NON-NLS-1$
       }
       m_strStationary = m_controlModel.isUnsteadySelected() ? "NONSTATIONARY " : ""; //$NON-NLS-1$ //$NON-NLS-2$ //STATIONARY  
-      m_strSeries = (m_controlModel.isUnsteadySelected() ? "SERIES " : ""); //$NON-NLS-1$ //$NON-NLS-2$
+      m_strSeries = (m_controlModel.isUnsteadySelected() ? "SERIES " : ""); //$NON-NLS-1$
 
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       m_log.formatLog( 1, 1, e.getLocalizedMessage() );
     }
@@ -281,7 +281,7 @@ public class Control1D2DConverterSWAN
     m_strTimeZeroFromToFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit + " " + //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         (m_controlModel.isUnsteadySelected() ? m_strTimeTo : ""); //$NON-NLS-1$  
 
-    m_strTimeZeroFromFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit; //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    m_strTimeZeroFromFormated = "" + (m_controlModel.isUnsteadySelected() ? m_strTimeFromZero : "") + " " + m_strStepLength + " " + m_strStepLengthUnit; //$NON-NLS-1$    //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   private String getSeriesFileNameFormated( final String pStrInitialFileName )
@@ -293,6 +293,7 @@ public class Control1D2DConverterSWAN
   /**
    * writes the header block with some defaults into the SWAN-Kalypso controlFile (INPUT)
    */
+  @SuppressWarnings("deprecation")
   private void formateControlHeader( final Formatter formatter )
   {
     /* FILES DATA BLOCK */
@@ -307,7 +308,7 @@ public class Control1D2DConverterSWAN
         "$********************MODEL INPUT*************************\n" + //$NON-NLS-1$
         "$\n" + //$NON-NLS-1$
         "SET LEVEL %f\n" + //$NON-NLS-1$
-        //        "SET NAUTICAL\n" + //$NON-NLS-1$
+//        "SET NAUTICAL\n" + //$NON-NLS-1$
         "set maxerr=3\n" + //$NON-NLS-1$
         "$\n" + //$NON-NLS-1$
         "MODE %s TWOD\n" + //$NON-NLS-1$
@@ -315,10 +316,10 @@ public class Control1D2DConverterSWAN
         "COORD %s\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
 
-    m_controlModel.getDescription(), m_version.toString(), m_controlModel.getId(), m_strTimeFrom, m_strTimeTo, ((new Date()).toGMTString()), // date
-        // and time of actual simulation run
-        0.0, // TODO: check if the default see level can be other
-        m_strStationary, COORD ); // TODO: check if we have some different coordinates as Cartesian
+    m_controlModel.getDescription(), m_version.toString(), m_controlModel.getGmlID(), m_strTimeFrom, m_strTimeTo, ((new Date()).toGMTString()), // date
+    // and time of actual simulation run
+    0.0, // TODO: check if the default see level can be other
+    m_strStationary, COORD ); // TODO: check if we have some different coordinates as Cartesian
   }
 
   /**
@@ -331,8 +332,8 @@ public class Control1D2DConverterSWAN
     formatter.format( "CGRID UNSTRUCTURED CIRCLE 36 0.0521 1. 31\n" + //$NON-NLS-1$
         "READGRID UNSTRUCTURED triangle '%s'\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
-        ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
-    formatter.format( "$internal shift in X:%f, internal shift in Y:%f\n$\n", m_doubleShiftX, m_doubleShiftY ); //$NON-NLS-1$
+    ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
+    formatter.format( "$internal shift in X:%f, internal shift in Y:%f\n$\n", m_doubleShiftX, m_doubleShiftY );
   }
 
   /**
@@ -344,7 +345,7 @@ public class Control1D2DConverterSWAN
     formatter.format( "INPGRID BOTTOM UNSTRUCTURED EXC %s\n" + //$NON-NLS-1$
         "READINP BOTTOM -1. '%s.bot' 1 0 FREE\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
-        ISimulation1D2DConstants.SIM_SWAN_EXCLUSION_NUMBER, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
+    ISimulation1D2DConstants.SIM_SWAN_EXCLUSION_NUMBER, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE );
 
   }
 
@@ -370,31 +371,29 @@ public class Control1D2DConverterSWAN
       if( m_controlModel.isConstantWindSWAN() )
       {
         formatter.format( "WIND %s\n$\n", //$NON-NLS-1$
-            m_controlModel.getConstantWindParSWAN() );
+        m_controlModel.getConstantWindParSWAN() );
       }
       else
       {
         if( m_gridDescriptor == null )
           return;
-        final String lStrCRS = m_gridDescriptor.getCoordinateSystem();
-        final String lStrStartTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( 0 ) );
-        final String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
-        if( m_listWritenDatesWind.size() == 1 )
-        {
+        String lStrCRS = m_gridDescriptor.getCoordinateSystem();
+        String lStrStartTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( 0 ) );
+        String lStrEndTimeWind = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( m_listWritenDatesWind.get( m_listWritenDatesWind.size() - 1 ) );
+        if( m_listWritenDatesWind.size() == 1 ){
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s\n", //$NON-NLS-1$ 
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind );
         }
-        else
-        {
-          final String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$  
+        else{
+          String lStrTimeStepLen = "" + (m_listWritenDatesWind.get( 1 ).getTime() - m_listWritenDatesWind.get( 0 ).getTime()) / m_intMilisecInMinute; //$NON-NLS-1$  
           formatter.format( "INPGRID WIND REG %d %d 0 %d %d %.1f %.1f %s %s %s %s %s\n", //$NON-NLS-1$ 
               ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getX() - m_doubleShiftX)).intValue(), ((Double) (m_gridDescriptor.getOrigin( lStrCRS ).getY() - m_doubleShiftY)).intValue(), m_gridDescriptor.getNumColumns() - 1, m_gridDescriptor.getNumRows() - 1, Math.abs( m_gridDescriptor.getOffsetX( lStrCRS ) ), Math.abs( m_gridDescriptor.getOffsetY( lStrCRS ) ), m_strStationary, lStrStartTimeWind, lStrTimeStepLen, m_strStepLengthUnit, lStrEndTimeWind );
         }
         formatter.format( "READINP WIND 1. SERIES '%s' 3 0 FREE\n$\n", //$NON-NLS-1$ 
-            ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
+        ISimulation1D2DConstants.SIM_SWAN_WIND_FILE + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT );
       }
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
@@ -409,7 +408,7 @@ public class Control1D2DConverterSWAN
     formatter.format( "INPGRID CURRENT UNSTRUCTURED %s %s\n" + //$NON-NLS-1$
         "READINP CURRENT 1. %s'%s' 1 0 FREE\n" + //$NON-NLS-1$
         "$\n", //$NON-NLS-1$
-        m_strStationary, m_strTimeFromToFormated, m_strSeries, getSeriesFileNameFormated( ISimulation1D2DConstants.SIM_SWAN_CURRENT_DATA_FILE ) );
+    m_strStationary, m_strTimeFromToFormated, m_strSeries, getSeriesFileNameFormated( ISimulation1D2DConstants.SIM_SWAN_CURRENT_DATA_FILE ) );
 
   }
 
@@ -421,7 +420,7 @@ public class Control1D2DConverterSWAN
     // //format the currents
     final Integer lInitVal = m_controlModel.getINITialValuesSWAN();
     String lStrInitVal = INIT_DEF;
-    final String lStrInitPAR = ""; //$NON-NLS-1$
+    String lStrInitPAR = "";
     switch( lInitVal )
     {
       case 0:
@@ -441,7 +440,7 @@ public class Control1D2DConverterSWAN
     }
     formatter.format( "INIT %s", lStrInitVal ); //$NON-NLS-1$
 
-    if( !"".equals( lStrInitPAR ) ) //$NON-NLS-1$
+    if( !"".equals( lStrInitPAR ) )
     {
       formatter.format( " %s", lStrInitPAR ); //$NON-NLS-1$
     }
@@ -478,7 +477,7 @@ public class Control1D2DConverterSWAN
 
     for( final IFELine line : continuityLines )
     {
-      final int lIntContiLineId = m_mapContiLinesWithConditions.get( line );
+      int lIntContiLineId = m_mapContiLinesWithConditions.get( line );
       // format the boundaries
       formatter.format( "BOUN SHAPE %s PEAK DSPR POWER\n" //$NON-NLS-1$
       , lStrBoundaryMethod );
@@ -491,12 +490,12 @@ public class Control1D2DConverterSWAN
    */
   private void formateSimulationOperationsSpec( final Formatter formatter )
   {
-    final String lOperationSpec = m_controlModel.getAdditionalSimParSWAN();
+    String lOperationSpec = m_controlModel.getAdditionalSimParSWAN();
     if( lOperationSpec != null )
     {
       formatter.format( "$\n" + //$NON-NLS-1$
           "%s\n", //$NON-NLS-1$
-          lOperationSpec ); //$NON-NLS-1$
+      lOperationSpec ); //$NON-NLS-1$
 
     }
     // TODO: what calculations do we exactly need, what can be default?
@@ -537,9 +536,9 @@ public class Control1D2DConverterSWAN
     ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, m_controlModel.isUnsteadySelected() ? ("OUTPUT " + m_strTimeZeroFromFormated) : "", //$NON-NLS-1$   //$NON-NLS-2$
 
     ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, ISimulation1D2DConstants.SIM_SWAN_TRIANGLE_FILE, m_controlModel.isUnsteadySelected() ? "TIME " : "", //$NON-NLS-1$   //$NON-NLS-2$
-        m_controlModel.isUnsteadySelected() ? "OUTPUT " + m_strTimeZeroFromFormated : "", //$NON-NLS-1$   //$NON-NLS-2$
-        m_controlModel.isUnsteadySelected() ? "NONST" : "STATIONARY", //$NON-NLS-1$  //$NON-NLS-2$
-        m_strTimeZeroFromToFormated );
+    m_controlModel.isUnsteadySelected() ? "OUTPUT " + m_strTimeZeroFromFormated : "", //$NON-NLS-1$   //$NON-NLS-2$
+    m_controlModel.isUnsteadySelected() ? "NONST" : "STATIONARY", //$NON-NLS-1$  //$NON-NLS-2$
+    m_strTimeZeroFromToFormated );
 
   }
 
@@ -555,7 +554,7 @@ public class Control1D2DConverterSWAN
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
         final IComponent abscissaComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-        final IComponent ordinateComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
+        IComponent ordinateComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
 
         if( abscissaComponent != null && ordinateComponent != null )
         {
@@ -564,7 +563,7 @@ public class Control1D2DConverterSWAN
           {
             lContiLineAct = m_discretisationModel.findContinuityLine( boundaryCondition.getPosition(), 0.01 );
           }
-          catch( final Exception e )
+          catch( Exception e )
           {
             continue;
           }
@@ -578,8 +577,8 @@ public class Control1D2DConverterSWAN
             return;
           }
 
-          final String lStrBoundFileNameAct = ISimulation1D2DConstants.SWAN_BOUNDARY_FILE_PREFIX + pIntContiLineId + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
-          final Formatter lFormatter = getFormatter( lStrBoundFileNameAct );
+          String lStrBoundFileNameAct = ISimulation1D2DConstants.SWAN_BOUNDARY_FILE_PREFIX + pIntContiLineId + ISimulation1D2DConstants.SIM_SWAN_DATA_FILE_EXT;
+          Formatter lFormatter = getFormatter( lStrBoundFileNameAct );
           lFormatter.format( "TPAR\n" ); //$NON-NLS-1$
 
           final IComponent lComponentTime = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
@@ -603,7 +602,7 @@ public class Control1D2DConverterSWAN
             final IRecord record = tupleIterator.next();
             final XMLGregorianCalendar lGregCalendar = (XMLGregorianCalendar) record.getValue( lIndexTime );
 
-            final Date lDateAct = DateUtilities.toDate( lGregCalendar );
+            Date lDateAct = DateUtilities.toDate( lGregCalendar );
             if( m_calculatedSteps[0].getTime() <= lDateAct.getTime() && m_calculatedSteps[m_calculatedSteps.length - 1].getTime() >= lDateAct.getTime() )
             {
               final String lStrTime = SWANDataConverterHelper.getTimeStringFormatedForSWANInput( lDateAct );
@@ -641,7 +640,7 @@ public class Control1D2DConverterSWAN
   {
     Formatter lFormatter = null;
     {
-      final FileObject lFileDataAdditional = m_fileObjWorkingDir.resolveFile( pStrFileName );
+      FileObject lFileDataAdditional = m_fileObjWorkingDir.resolveFile( pStrFileName );
       lFormatter = new Formatter( lFileDataAdditional.getContent().getOutputStream(), Charset.defaultCharset().name(), Locale.US );
     }
 

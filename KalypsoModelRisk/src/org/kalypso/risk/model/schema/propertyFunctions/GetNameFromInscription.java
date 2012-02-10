@@ -49,8 +49,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * This function property returns a string from an inscription according to the active language (defaults to en).
@@ -122,8 +122,8 @@ public class GetNameFromInscription extends FeaturePropertyFunction
         final Object langFeat = f.getProperty( langProp );
         if( langFeat != null )
         {
-          final String languageUri = ((IXLinkedFeature) langFeat).getUri();
-          final String languageHref = ((IXLinkedFeature) langFeat).getHref();
+          final String languageUri = ((XLinkedFeature_Impl) langFeat).getUri();
+          final String languageHref = ((XLinkedFeature_Impl) langFeat).getHref();
           final String lang = languageHref.replaceAll( languageUri + "#", "" ); //$NON-NLS-1$ //$NON-NLS-2$
           final IPropertyType labelProp = inscriptionFtp.getProperty( QN_STATE_INSCRIPTION_LABEL );
           final Object label = f.getProperty( labelProp );

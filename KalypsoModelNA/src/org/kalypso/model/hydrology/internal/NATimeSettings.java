@@ -42,19 +42,19 @@ import org.kalypso.core.KalypsoCorePlugin;
  * 
  * @author doemming
  */
-public final class NATimeSettings
+public class NATimeSettings
 {
-  private static NATimeSettings INSTANCE = null;
+  private static NATimeSettings m_instance = null;
 
   private final TimeZone m_timeZone;
 
   private final Calendar m_calendar;
 
-  public static synchronized NATimeSettings getInstance( )
+  public synchronized static NATimeSettings getInstance( )
   {
-    if( INSTANCE == null )
-      INSTANCE = new NATimeSettings();
-    return INSTANCE;
+    if( m_instance == null )
+      m_instance = new NATimeSettings();
+    return m_instance;
   }
 
   private NATimeSettings( )
@@ -63,9 +63,9 @@ public final class NATimeSettings
     // The initial values must be written as days. If we change the time-zone between user interface and
     // calc-core, we may shift the initial values by one day.
     // IMPORTANT: if we run Kalypso on the server side, we must make sure, that it is run in the
-    // same time zone as the client....
+    // same time zone as the client.... 
     // This is not always possible, so it would be better to get the time zone to use from outside?
-    m_timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    m_timeZone = KalypsoCorePlugin.getDefault().getTimeZone(); 
     m_calendar = Calendar.getInstance( m_timeZone );
   }
 

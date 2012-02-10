@@ -75,7 +75,7 @@ public class ExecutePreRMAKalypso
 
   private final String m_calcUnitID;
 
-  private final Modeldata m_modelInput;
+  private Modeldata m_modelInput;
 
   private String m_modelFileUrl;
 
@@ -119,6 +119,7 @@ public class ExecutePreRMAKalypso
     m_wpsRequest = new WPSRequest( PreRMAKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
   }
 
+  @SuppressWarnings("deprecation")
   public IStatus run( final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 1000 );
@@ -134,7 +135,7 @@ public class ExecutePreRMAKalypso
       // for getting WPS input list relative to scenario
       final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
-      final SimulationDelegate delegate = new SimulationDelegate( PreRMAKalypso.ID, scenarioFolder, m_modelInput );
+      final SimulationDelegate delegate = new SimulationDelegate( RMAKalypsoSimulation.ID, scenarioFolder, m_modelInput );
       delegate.init();
 
       final ProcessDescriptionType processDescription = m_wpsRequest.getProcessDescription( progress.newChild( 100, SubMonitor.SUPPRESS_ALL_LABELS ) );
@@ -234,7 +235,7 @@ public class ExecutePreRMAKalypso
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("ExecutePreRMAKalypso.0") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, "One or more of the required input files for RMA-Kalypso cannot be found." );
     }
   }
 

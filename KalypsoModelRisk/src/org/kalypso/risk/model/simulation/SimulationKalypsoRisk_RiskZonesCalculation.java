@@ -57,6 +57,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.observation.IObservation;
@@ -66,6 +68,7 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -94,7 +97,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
@@ -149,7 +152,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     }
     catch( final Exception e )
     {
-      throw new SimulationException( "Risk zones calculation failed.", e );
+      throw new SimulationException( e.getLocalizedMessage() );
     }
   }
 
@@ -164,7 +167,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     {
       /* remove existing (invalid) coverages from the model and clean statistic */
       final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
-      final IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> outputCoveragesList = outputCoverages.getCoverages();
       for( final ICoverage coverage : outputCoveragesList )
         CoverageManagementHelper.deleteGridFile( coverage );
 
@@ -172,7 +175,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       controlModel.resetStatistics();
 
       final ICoverageCollection baseCoverages = RiskModelHelper.getMaxReturnPeriodCollection( rasterModel.getSpecificDamageCoverageCollection() );
-      final IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
+      IFeatureBindingCollection<ICoverage> baseCoveragesList = baseCoverages.getCoverages();
 
       final int ticks = 100 / baseCoveragesList.size();
       for( int i = 0; i < baseCoveragesList.size(); i++ )
@@ -196,8 +199,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         newCoverage.setDescription( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
-        final GMLWorkspace workspace = rasterModel.getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel, new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        final GMLWorkspace workspace = rasterModel.getFeature().getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, rasterModel.getFeature(), new Feature[] { outputCoverages }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       // statistics...
@@ -225,9 +228,15 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     /* task: create an observation */
-    final Feature controlModelFeature = controlModel;
+    final Feature controlModelFeature = controlModel.getFeature();
+    final CommandableWorkspace workspace = new CommandableWorkspace( controlModelFeature.getWorkspace() );
 
-    final Feature fObs = controlModelFeature.createSubFeature( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+    final IPropertyType property = controlModelFeature.getFeatureType().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+    final IRelationType relation = (IRelationType) property;
+
+    final Feature fObs = workspace.createFeature( controlModelFeature, relation, relation.getTargetFeatureType() );
+
+    workspace.setFeatureAsComposition( controlModelFeature, relation, fObs, true );
 
     // new observation
     final TupleResult result = new TupleResult();
@@ -343,19 +352,22 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
           }
         }
       }
-
+      
       result.add( newRecord );
-
       final int recordSize = newRecord.getOwner().getComponents().length;
       for( int i = 1; i < recordSize - 1; i++ )
       {
         final Object value = newRecord.getValue( i );
         if( value == null )
+        {
           newRecord.setValue( i, new BigDecimal( 0.0 ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+        }
       }
 
       // average annual damage value for the whole landuse class
       newRecord.setValue( recordSize - 1, landuseClass.getAverageAnnualDamage() );
+
+      result.add( newRecord );
     }
 
     calculateLastRow( result );

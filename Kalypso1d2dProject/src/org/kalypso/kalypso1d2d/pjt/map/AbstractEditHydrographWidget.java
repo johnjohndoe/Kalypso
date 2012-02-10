@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.util.MapUtils;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Thomas Jung
  * 
  */
-public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
+public abstract class AbstractEditHydrographWidget extends AbstractWidget
 {
   private final int m_grabRadius = 20;
 
@@ -145,7 +145,7 @@ public abstract class AbstractEditHydrographWidget extends DeprecatedMouseWidget
           final GM_Point maxPoint = MapUtilities.transform( mapPanel, pmax );
 
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition(), minPoint.getCoordinateSystem() );
-          final GMLWorkspace workspace = m_featureList.getOwner().getWorkspace();
+          final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
           final List< ? > result = m_featureList.query( envelope, null );
           final Feature[] selectedFeatures = new Feature[result.size()];
           for( int i = 0; i < selectedFeatures.length; i++ )

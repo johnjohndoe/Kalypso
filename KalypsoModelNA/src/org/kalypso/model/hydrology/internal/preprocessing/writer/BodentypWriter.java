@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 
 package org.kalypso.model.hydrology.internal.preprocessing.writer;
@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
@@ -59,7 +60,6 @@ import org.kalypso.model.hydrology.binding.suds.IGreenRoof.EUsageType;
 import org.kalypso.model.hydrology.binding.suds.ISwale;
 import org.kalypso.model.hydrology.binding.suds.ISwaleInfiltrationDitch;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -112,7 +112,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
   }
 
   @Override
-  protected void writeContent( final PrintWriter buffer )
+  protected void writeContent( final PrintWriter buffer ) throws Exception
   {
     final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
     final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
@@ -122,7 +122,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final List<Layer> layers = new ArrayList<Layer>();
       for( final Feature fe : bodartList )
       {
-        final Feature bodArtLink = fe.getMember( NaModelConstants.PARA_SOIL_LAYER_LINK );
+        final Feature bodArtLink = m_parameterWorkspace.resolveLink( fe, (IRelationType) fe.getFeatureType().getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) );
         if( bodArtLink != null )
         {
           Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
@@ -139,6 +139,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
         m_soilTypes.put( layerName, layers );
     }
     addSudsSoilLayers();
+
 
     buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
     final Iterator<String> soilTypesIterator = m_soilTypes.keySet().iterator();
@@ -162,15 +163,15 @@ public class BodentypWriter extends AbstractCoreFileWriter
   {
     // add Greenroof type
     final List<Layer> greenroofExternalLayers = new ArrayList<Layer>();
-    greenroofExternalLayers.add( new Layer( "GR-stau", 1.35, false ) ); //$NON-NLS-1$
-    greenroofExternalLayers.add( new Layer( "Substr", 0.8, false ) ); //$NON-NLS-1$
-    greenroofExternalLayers.add( new Layer( "Drain", 0.5, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
+    greenroofExternalLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
     m_soilTypes.put( EUsageType.EXTENSIVE.getSoilTypeID(), greenroofExternalLayers ); //$NON-NLS-1$
 
     final List<Layer> greenroofInternalLayers = new ArrayList<Layer>();
-    greenroofInternalLayers.add( new Layer( "GR-stau", 1.7, false ) ); //$NON-NLS-1$
-    greenroofInternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
-    greenroofInternalLayers.add( new Layer( "Drain", 1.2, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "GR-stau", 2.0, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "Substr", 6.0, false ) ); //$NON-NLS-1$
+    greenroofInternalLayers.add( new Layer( "Drain", 1.0, false ) ); //$NON-NLS-1$
     m_soilTypes.put( EUsageType.INTENSIVE.getSoilTypeID(), greenroofInternalLayers ); //$NON-NLS-1$
 
     final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
@@ -193,7 +194,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final List<Layer> layers = new ArrayList<Layer>();
       layers.add( new Layer( "mulde", mrsTypes.get( typeName ), false ) ); //$NON-NLS-1$
       layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "filter", 6.0, false ) ); //$NON-NLS-1$
+      layers.add( new Layer( "filter", 7.0, false ) ); //$NON-NLS-1$
       layers.add( new Layer( "base", 1.0, false ) ); //$NON-NLS-1$
       m_soilTypes.put( typeName, layers );
     }
@@ -204,7 +205,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
       final List<Layer> layers = new ArrayList<Layer>();
       layers.add( new Layer( "mulde", muldeTypes.get( typeName ), false ) ); //$NON-NLS-1$
       layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
-      layers.add( new Layer( "basem", 3.0, false ) ); //$NON-NLS-1$
       m_soilTypes.put( typeName, layers );
     }
   }
@@ -212,7 +212,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
   /**
    * Returns the predefined soil type name for given swale
    */
-  public static final String getSwaleSoiltypeName( final IAbstractSwale swale ) throws NAPreprocessorException
+  public static final String getSwaleSoiltypeName( final IAbstractSwale swale ) throws Exception
   {
     final Double profileThickness = swale.getProfileThickness();
     if( swale instanceof ISwale )
@@ -239,6 +239,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
         return "mrs_80"; //$NON-NLS-1$
       return "mrs"; //$NON-NLS-1$
     }
-    throw new NAPreprocessorException( "Unknown swale type, class: " + swale.getClass().getCanonicalName() ); //$NON-NLS-1$
+    throw new Exception( "Unknown swale type, class: " + swale.getClass().getCanonicalName() ); //$NON-NLS-1$
   }
 }

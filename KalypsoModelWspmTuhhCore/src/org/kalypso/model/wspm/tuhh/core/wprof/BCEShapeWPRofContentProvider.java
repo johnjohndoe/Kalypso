@@ -45,13 +45,11 @@ import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -104,7 +102,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     if( propertyType == null )
     {
       final String property = m_specifiction.getProperty( propertySpecificationName );
-      final String msg = String.format( Messages.getString( "BCEShapeWPRofContentProvider_0" ), property ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString("BCEShapeWPRofContentProvider_0"), property ); //$NON-NLS-1$
       throw new IllegalArgumentException( msg );
     }
   }
@@ -135,9 +133,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
       }
     }
 
-    if( type.isAssignableFrom( String.class ) )
-      return type.cast( ObjectUtils.toString( value ) );
-
     /* Will throw an ClassCastException, that is intended */
     return type.cast( value );
   }
@@ -163,6 +158,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     return outType.cast( in );
   }
 
+  @SuppressWarnings("deprecation")
   private IPropertyType getPropertyType( final String propertySpecificationName )
   {
     final String property = m_specifiction.getProperty( propertySpecificationName );
@@ -183,7 +179,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getRiverName( )
   {
-    return "" + getProperty( "GEWAESSER_NAME", Object.class, Messages.getString( "BCEShapeWPRofContentProvider_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return "" + getProperty( "GEWAESSER_NAME", Object.class, Messages.getString("BCEShapeWPRofContentProvider_1") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override
@@ -241,7 +237,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getObjectType( )
   {
-    return getProperty( "OBJECT_TYPE", String.class, "21" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return getProperty( "OBJECT_TYPE", String.class, "Unknown" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -258,21 +254,40 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   }
 
   @Override
-  public URI[] getPhotos( )
+  public URL[] getPhotos( )
   {
-    final File photoDir = getContextDir( m_photoContext );
-    if( photoDir == null || !photoDir.exists() || !photoDir.isDirectory() )
-      return new URI[] {};
-
-    final String[] photoNames = getPhotoNames( photoDir );
-
-    final URI[] pathes = new URI[photoNames.length];
-    for( int i = 0; i < pathes.length; i++ )
+    try
     {
-      pathes[i] = new File( photoDir, photoNames[i] ).toURI();
-    }
+      final File photoDir = getContextDir( m_photoContext );
+      if( photoDir == null || !photoDir.exists() || !photoDir.isDirectory() )
+        return new URL[] {};
 
-    return pathes;
+      final String[] photoNames = getPhotoNames( photoDir );
+
+      final URL[] pathes = new URL[photoNames.length];
+      for( int i = 0; i < pathes.length; i++ )
+        pathes[i] = new File( photoDir, photoNames[i] ).toURI().toURL();
+
+      return pathes;
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+//      final String message = String.format( "Unable to create profile at %s", getStation() ); //$NON-NLS-1$
+// final Status status = new Status( IStatus.ERROR, KalypsoModelWspmTuhhCorePlugin.getID(), message, e );
+// throw new CoreException( status );
+      return new URL[] {};
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint#hasPhotos()
+   */
+  @Override
+  public boolean hasPhotos( )
+  {
+    final String[] imageNames = getImageNames();
+    return imageNames.length > 0;
   }
 
   private String[] getPhotoNames( final File photoDir )
@@ -289,8 +304,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final String pNam = getPNam();
 
     final FilenameFilter jpgFilter = new PrefixSuffixFilter( pNam, ".jpg" ); //$NON-NLS-1$
-// new WildcardFileFilter( pNam + "*.jpg" , IOCase.INSENSITIVE );
-
 //    final FilenameFilter gifFilter = new PrefixSuffixFilter( pNam, ".gif" ); //$NON-NLS-1$
 //    final FilenameFilter pngFilter = new PrefixSuffixFilter( pNam, ".png" ); //$NON-NLS-1$
 
@@ -325,22 +338,16 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   @Override
   public String getProfileComment( )
   {
+    // FIXME
     final Date date = getDate();
     final String dateText = date == null ? "-" : DateFormat.getDateInstance( DateFormat.MEDIUM ).format( date ); //$NON-NLS-1$
+// final String dateText = (String) m_feature.getProperty( "DATUM" );
 
     final String pnam = getPNam();
 
-    final StringBuilder builder = new StringBuilder();
-    builder.append( String.format( "Gew-ID: %s%nProfilname: %s%nErster Punkt: %s%nErster Obj_Typ: %s%n", getRiverId(), pnam, getComment(), getObjectType() ) ); //$NON-NLS-1$
-    builder.append( String.format( "Aufgenommen am: %s", dateText ) ); //$NON-NLS-1$
-
     final String pdfUrl = getPdfUrl();
-    if( pdfUrl != null )
-    {
-      builder.append( String.format( "%nPDF: %s ", pdfUrl ) ); //$NON-NLS-1$
-    }
 
-    return builder.toString();
+    return String.format( "Gew-ID: %s%nProfilname: %s%nErster Punkt: %s%nErster Obj_Typ: %s%nAufgenommen am: %s%nPDF: %s ", getRiverId(), pnam, getComment(), getObjectType(), dateText, pdfUrl ); //$NON-NLS-1$
   }
 
   private String getPdfUrl( )
@@ -348,8 +355,6 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     final File contextDir = getContextDir( m_pdfContext );
     final String pNam = getPNam();
     final File pdfFile = new File( contextDir, pNam + ".pdf" ); //$NON-NLS-1$
-    if( !pdfFile.exists() )
-      return null;
 
     try
     {
@@ -359,7 +364,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return null; //$NON-NLS-1$
+      return ""; //$NON-NLS-1$
     }
   }
 

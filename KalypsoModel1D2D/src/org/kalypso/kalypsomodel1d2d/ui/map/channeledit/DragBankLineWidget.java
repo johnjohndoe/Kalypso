@@ -57,7 +57,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -84,7 +84,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * @author Thomas Jung
  */
-public class DragBankLineWidget extends DeprecatedMouseWidget
+public class DragBankLineWidget extends AbstractWidget
 {
   /**
    * This list stores all handles of the selected feature.
@@ -127,7 +127,7 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
 
   private GM_PointSnapper m_pointSnapper;
 
-  // private Point m_currentMapPoint;
+// private Point m_currentMapPoint;
 
   private GM_Point m_snapPoint;
 
@@ -327,7 +327,7 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
   @Override
   public void leftReleased( final Point p )
   {
-    if( m_handles == null || m_startPoint == null || m_currentPoint == null )
+    if( (m_handles == null) || (m_startPoint == null) || (m_currentPoint == null) )
       return;
 
     /* Set all handles inactive. */

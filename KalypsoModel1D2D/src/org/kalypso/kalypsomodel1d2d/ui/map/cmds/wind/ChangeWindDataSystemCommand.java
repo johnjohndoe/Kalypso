@@ -61,15 +61,16 @@ import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * Composite command used to change the wind data model command. This composite takes the responsibility to notifies the
  * commandable workspace about the changes introduced by its sub command
- *
- *
+ * 
+ * 
  * @author ig
- *
+ * 
  */
 public class ChangeWindDataSystemCommand implements ICommand
 {
@@ -96,8 +97,8 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   public ChangeWindDataSystemCommand( final CommandableWorkspace commandableWorkspace, final IWindModel pWindModel, final String description )
   {
-    Assert.throwIAEOnNullParam( pWindModel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.1" ) ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.2" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( pWindModel, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.1" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( description, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand.2" ) ); //$NON-NLS-1$
     m_commandableWorkspace = commandableWorkspace;
     m_windModel = pWindModel;
     m_description = description;
@@ -106,7 +107,6 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  @Override
   public String getDescription( )
   {
     return m_description;
@@ -115,7 +115,6 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  @Override
   public boolean isUndoable( )
   {
     return isUndoable;
@@ -124,7 +123,7 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  @Override
+  @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
     final List<Feature> changedFeatures = new ArrayList<Feature>();
@@ -133,18 +132,18 @@ public class ChangeWindDataSystemCommand implements ICommand
       try
       {
         command.process();
-        final Feature[] changedFeatures2 = command.getChangedFeature();
+        final IFeatureWrapper2[] changedFeatures2 = command.getChangedFeature();
         if( changedFeatures2 != null )
         {
-          for( final Feature changedFeature : changedFeatures2 )
+          for( final IFeatureWrapper2 changedFeature : changedFeatures2 )
           {
             if( changedFeature != null )
             {
-              final Feature wrappedFeature = changedFeature;
+              final Feature wrappedFeature = changedFeature.getFeature();
               if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
-                wrappedFeature.setEnvelopesUpdated();
+                wrappedFeature.invalidEnvelope();
               }
             }
           }
@@ -163,13 +162,12 @@ public class ChangeWindDataSystemCommand implements ICommand
   {
     final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel, changedFeaturesArray, m_intEventType ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_windModel.getFeature(), changedFeaturesArray, m_intEventType ) );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  @Override
   public void redo( ) throws Exception
   {
     for( final IFeatureChangeCommand command : m_commands )
@@ -188,7 +186,6 @@ public class ChangeWindDataSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  @Override
   public void undo( ) throws Exception
   {
 
@@ -221,15 +218,15 @@ public class ChangeWindDataSystemCommand implements ICommand
         IFile lIFile;
         try
         {
-          final File lFile = new File( lWindDataWrapper.getDataFileURL().toURI() );
-          final IPath path = new Path( lFile.getAbsolutePath() );
+          File lFile = new File( lWindDataWrapper.getDataFileURL().toURI() );
+          IPath path = new Path( lFile.getAbsolutePath() );
           lIFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
 //          lFile = new IFile( lWindDataWrapper.getDataFileURL().toURI() );
         }
-        catch( final URISyntaxException e )
+        catch( URISyntaxException e )
         {
-          final File lFile = new File( lWindDataWrapper.getDataFileURL().getPath() );
-          final IPath path = new Path( lFile.getAbsolutePath() );
+          File lFile = new File( lWindDataWrapper.getDataFileURL().getPath() );
+          IPath path = new Path( lFile.getAbsolutePath() );
           lIFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
         }
         m_files.add( lIFile );
@@ -243,7 +240,7 @@ public class ChangeWindDataSystemCommand implements ICommand
 
   public IStatus deleteFiles( )
   {
-    final MultiStatus status = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindModelCommand.4" ), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 1, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeWindSystemCommand.4" ), null ); //$NON-NLS-1$
     for( final IFile lFile : m_files )
     {
       try

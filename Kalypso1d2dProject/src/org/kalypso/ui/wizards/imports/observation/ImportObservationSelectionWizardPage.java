@@ -46,9 +46,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -62,6 +68,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -81,17 +89,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
-import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
 import org.kalypso.ui.wizards.i18n.Messages;
-import org.kalypso.zml.ui.imports.ObservationImportSelection;
-import org.kalypso.zml.ui.imports.TimezoneEtcFilter;
 
 /**
  * FIXME: this is a stupid copy/paste from the original ImportObservationSelectionWizardPage, however it does almost the
  * same thing -> we need to combine the two pages again!
- *
+ * 
  * @author doemming
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -101,7 +107,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private static final String DEFAUL_FILE_LABEL = ""; //$NON-NLS-1$
 
-  private final INativeObservationAdapter[] m_adapter;
+  private final List<INativeObservationAdapter> m_adapter;
 
   final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
 
@@ -131,14 +137,49 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public ImportObservationSelectionWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.Description" ) ); //$NON-NLS-1$
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.Title" ) ); //$NON-NLS-1$
     setPageComplete( false );
 
-    m_adapter = KalypsoCoreExtensions.createNativeAdapters();
+    m_adapter = createNativeAdapters();
   }
 
+  private List<INativeObservationAdapter> createNativeAdapters( )
+  {
+    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" ); //$NON-NLS-1$
+
+    if( extensionPoint == null )
+      return adapters;
+
+    final IExtension[] extensions = extensionPoint.getExtensions();
+    for( final IExtension extension : extensions )
+    {
+      final IConfigurationElement[] elements = extension.getConfigurationElements();
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          adapters.add( adapter );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return adapters;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -254,8 +295,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_formatCombo.setInput( m_adapter );
     m_formatCombo.addSelectionChangedListener( this );
 
-    if( m_adapter.length > 0 )
-      m_formatCombo.setSelection( new StructuredSelection( m_adapter[0] ) );
+    if( m_adapter.size() > 0 )
+      m_formatCombo.setSelection( new StructuredSelection( m_adapter.get( 0 ) ) );
 
     // just a placeholder
     new Label( group, SWT.NONE );
@@ -276,7 +317,20 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     comboTimeZones.setLabelProvider( new LabelProvider() );
     comboTimeZones.setInput( tz );
 
-    comboTimeZones.addFilter( new TimezoneEtcFilter() );
+    comboTimeZones.addFilter( new ViewerFilter()
+    {
+      @Override
+      public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+      {
+        if( element instanceof String )
+        {
+          final String name = (String) element;
+          return !name.toLowerCase().startsWith( "etc/" ); //$NON-NLS-1$
+        }
+
+        return true;
+      }
+    } );
 
     comboTimeZones.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -422,7 +476,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     // setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15" ) ); //$NON-NLS-1$
 
     if( m_timezone == null )
-      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.0"), ERROR ); //$NON-NLS-1$
+      return new MessageProvider( "Please select a valid time zone", ERROR );
 
     return null;
   }
@@ -451,9 +505,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private void fireSelectionChanged( )
   {
-    if( m_sourceFile == null ){
-      return;
-    }
     for( final ISelectionChangedListener iSelectionChangedListener : m_selectionListener )
       (iSelectionChangedListener).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }

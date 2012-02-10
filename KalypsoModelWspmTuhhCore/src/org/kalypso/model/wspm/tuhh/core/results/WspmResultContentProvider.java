@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.results;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -101,9 +101,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    if( parentElement instanceof IWspmResultNode[] )
-      return (IWspmResultNode[]) parentElement;
-
     if( parentElement instanceof IWspmResultNode )
       return ((IWspmResultNode) parentElement).getChildResults();
 
@@ -116,9 +113,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
-    if( element instanceof IWspmResultNode[] )
-      return null;
-
     if( element instanceof IWspmResultNode )
       return ((IWspmResultNode) element).getParent();
 
@@ -131,9 +125,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof IWspmResultNode[] )
-      return ((IWspmResultNode[]) element).length > 0;
-
     if( element instanceof IWspmResultNode )
       return ((IWspmResultNode) element).getChildResults().length > 0;
 
@@ -146,9 +137,6 @@ public class WspmResultContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement instanceof IWspmResultNode[] )
-      return (IWspmResultNode[]) inputElement;
-
     if( inputElement instanceof IWspmResultNode )
       return ((IWspmResultNode) inputElement).getChildResults();
 
@@ -166,9 +154,7 @@ public class WspmResultContentProvider implements ITreeContentProvider
 
     final String[] properties = new String[items.length];
     for( int i = 0; i < properties.length; i++ )
-    {
       properties[i] = ((Property) items[i].getData( DATA_PROPERTY )).name();
-    }
 
     final ColumnViewer columnViewer = (ColumnViewer) viewer;
     columnViewer.setColumnProperties( properties );

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
@@ -64,7 +64,8 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -74,9 +75,9 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- *
+ * 
  * @author Dejan Antanaskovic
- *
+ * 
  */
 
 public class GeometryRecalculator
@@ -97,7 +98,7 @@ public class GeometryRecalculator
   {
     m_flowRelationsModelTheme = flowRelationsModelTheme;
     final FeatureList featureList = m_flowRelationsModelTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
+    final Feature parentFeature = featureList.getParentFeature();
     m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
     init( changedFeatures );
   }
@@ -128,7 +129,7 @@ public class GeometryRecalculator
 
   private void addToNodes( final IFE1D2DNode node )
   {
-    final Feature feature = node;
+    final Feature feature = node.getFeature();
     if( m_nodeList.contains( feature ) )
       return;
     addToDiscretisationModelChanges( node );
@@ -136,15 +137,15 @@ public class GeometryRecalculator
     m_nodesAdded = true;
   }
 
-  private void addToDiscretisationModelChanges( final Feature element )
+  private void addToDiscretisationModelChanges( final IFeatureWrapper2 element )
   {
-    final Feature feature = element;
+    final Feature feature = element.getFeature();
     if( m_discretisationModelChanges.contains( feature ) )
       return;
-    feature.setEnvelopesUpdated();
+    feature.invalidEnvelope();
     m_discretisationModelChanges.add( feature );
     final String featureID = feature.getId();
-    for( final Object object : m_flowRelCollection.getFlowRelationsShips() )
+    for( final Object object : m_flowRelCollection.getWrappedList() )
     {
       final IBoundaryCondition boundaryCondition = (IBoundaryCondition) ((Feature) object).getAdapter( IBoundaryCondition.class );
       if( boundaryCondition != null )
@@ -157,38 +158,38 @@ public class GeometryRecalculator
     }
   }
 
-  private void addToFlowRelationshipsModelChanges( final IBoundaryCondition boundaryCondition, final Feature element )
+  private void addToFlowRelationshipsModelChanges( final IBoundaryCondition boundaryCondition, final IFeatureWrapper2 element )
   {
-    final Feature feature = boundaryCondition;
+    final Feature feature = boundaryCondition.getFeature();
     if( m_flowRelationshipsModelChanges.contains( feature ) )
       return;
-    feature.setEnvelopesUpdated();
+    feature.invalidEnvelope();
     final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( element instanceof IFELine )
     {
       int countBCs = 0;
-      for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips() )
+      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
-        if( bc.getParentElementID().equals( element.getId() ) )
+        if( bc.getParentElementID().equals( element.getGmlID() ) )
           countBCs++;
       }
       int i = 0;
-      for( final Object bcFeature : m_flowRelCollection.getFlowRelationsShips() )
+      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
         final IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
-        if( bc.getParentElementID().equals( element.getId() ) )
+        if( bc.getParentElementID().equals( element.getGmlID() ) )
         {
           final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( element, countBCs, ++i );
           bc.setPosition( GeometryFactory.createGM_Point( position.getX(), position.getY(), crs ) );
-          m_flowRelationshipsModelChanges.add( bc );
+          m_flowRelationshipsModelChanges.add( bc.getFeature() );
         }
       }
     }
     else
     {
       boundaryCondition.setPosition( GeometryFactory.createGM_Point( FlowRelationUtilitites.getFlowPositionFromElement( element ), crs ) );
-      m_flowRelationshipsModelChanges.add( boundaryCondition );
+      m_flowRelationshipsModelChanges.add( boundaryCondition.getFeature() );
     }
     m_flowRelationshipsModelChanges.add( feature );
   }
@@ -202,9 +203,9 @@ public class GeometryRecalculator
       for( final Feature feature : m_nodeList )
       {
         final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
-        final IFeatureBindingCollection<Feature> containers = node.getContainers();
+        final IFeatureWrapperCollection<IFeatureWrapper2> containers = node.getContainers();
 
-        for( final Feature container : containers )
+        for( final IFeatureWrapper2 container : containers )
         {
           if( container instanceof IFELine )
           {
@@ -224,8 +225,8 @@ public class GeometryRecalculator
           else if( container instanceof IFE1D2DEdge )
           {
             final IFE1D2DEdge edge = (IFE1D2DEdge) container;
-            final IFeatureBindingCollection<Feature> edgeContainers = edge.getContainers();
-            for( final Feature edgeContainer : edgeContainers )
+            final IFeatureWrapperCollection<IFeatureWrapper2> edgeContainers = edge.getContainers();
+            for( final IFeatureWrapper2 edgeContainer : edgeContainers )
               addToDiscretisationModelChanges( container );
           }
           addToDiscretisationModelChanges( container );
@@ -252,11 +253,11 @@ public class GeometryRecalculator
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       if( !m_flowRelationshipsModelChanges.isEmpty() )
-        ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       // ((ICommandPoster) modelProvider).postCommand( IOperationalModel.class, new EmptyCommand( "Get dirty!", false )
       // ); //$NON-NLS-1$
       // ((ICommandPoster) modelProvider).postCommand( IOperationalModel1D2D.class, new EmptyCommand( "Get dirty!",

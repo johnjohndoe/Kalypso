@@ -64,8 +64,8 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
       /*
        * Save model and map, as undo is not possible here and the user should not be able to 'verwerfen' the changes
        */
-      final GMLWorkspace workspace = m_model.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, newCoverageCollection.getOwner(), new Feature[] { newCoverageCollection }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      final GMLWorkspace workspace = m_model.getFeature().getWorkspace();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, newCoverageCollection.getParent(), new Feature[] { newCoverageCollection }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       m_provider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
       m_provider.saveModel( IRasterDataModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );
 

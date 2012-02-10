@@ -45,10 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateDirectory;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
@@ -58,41 +55,38 @@ import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.export.ProfileResultExportPage;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author kimwerner
  */
 public class PrfExportProfilesWizard extends ExportProfilesWizard
 {
-  private ExportPrfFileChooserPage m_profileFileChooserPage;
+  private final ExportPrfFileChooserPage m_profileFileChooserPage;
 
-  private ProfileResultExportPage m_resultPage;
+  private final ProfileResultExportPage m_resultPage;
 
-  public PrfExportProfilesWizard( )
+  public PrfExportProfilesWizard( final ProfileSelection selection )
   {
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
+    super( selection );
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    super.init( workbench, selection );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final FileChooserDelegateDirectory dirDelegate = new FileChooserDelegateDirectory();
     m_profileFileChooserPage = new ExportPrfFileChooserPage( dirDelegate );
-    m_profileFileChooserPage.setTitle( Messages.getString( "PrfExportProfilesWizard_0" ) ); //$NON-NLS-1$
-    m_profileFileChooserPage.setDescription( Messages.getString( "PrfExportProfilesWizard_1" ) ); //$NON-NLS-1$
-    m_profileFileChooserPage.setFileGroupText( Messages.getString( "PrfExportProfilesWizard_2" ) ); //$NON-NLS-1$
+    m_profileFileChooserPage.setTitle( Messages.getString("PrfExportProfilesWizard_0") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setDescription( Messages.getString("PrfExportProfilesWizard_1") ); //$NON-NLS-1$
+    m_profileFileChooserPage.setFileGroupText( Messages.getString("PrfExportProfilesWizard_2") ); //$NON-NLS-1$
     addPage( m_profileFileChooserPage );
 
-    final IWspmResultNode results = WspmResultFactory.createResultNode( null, getProfileSelection().getContainer() );
+    final IWspmResultNode results = WspmResultFactory.createResultNode( null, selection.getContainer() );
     m_resultPage = new ProfileResultExportPage( "profileResults", results ); //$NON-NLS-1$
     m_resultPage.setShowComponentChooser( false );
     addPage( m_resultPage );
   }
 
   @Override
-  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final File exportDir = m_profileFileChooserPage.getFile();
     final String filenamePattern = m_profileFileChooserPage.getFilenamePattern();
@@ -104,7 +98,5 @@ public class PrfExportProfilesWizard extends ExportProfilesWizard
     final IStatus export = prfExporter.export( profiles, monitor );
     if( !export.isOK() )
       throw new CoreException( export );
-
-    return Status.OK_STATUS;
   }
 }

@@ -43,23 +43,27 @@ package org.kalypso.model.wspm.tuhh.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointMarkerWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
-import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 
 /**
  * @author Dirk Kuch
  */
-public final class WspmProfileHelper
+public class WspmProfileHelper
 {
-  private WspmProfileHelper( )
+  /**
+   * @return breite of sohlpunkt
+   */
+  public static double findSohlpunkt( final IProfil profile )
   {
+    final ProfileWrapper wrapper = new ProfileWrapper( profile );
+
+    return findSohlpunkt( wrapper );
   }
 
   public static double findSohlpunkt( final IProfil profile, final double fuzziness )
@@ -69,7 +73,7 @@ public final class WspmProfileHelper
 
   public static double findSohlpunkt( final ProfileWrapper wrapper )
   {
-    return findSohlpunkt( wrapper, Profiles.FUZZINESS );
+    return findSohlpunkt( wrapper, org.kalypso.model.wspm.core.util.WspmProfileHelper.FUZZINESS );
   }
 
   /**
@@ -79,20 +83,20 @@ public final class WspmProfileHelper
    */
   public static double findSohlpunkt( final ProfileWrapper wrapper, final double fuziness )
   {
-    final IProfilPointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final ProfilePointMarkerWrapper[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( dbs.length != 2 )
       throw new IllegalStateException();
 
-    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( wrapper.getProfile(), dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
+    final ProfilePointWrapper[] points = wrapper.findPointsBetween( dbs[0].getBreite(), dbs[1].getBreite(), true );
 
-    final List<IProfileRecord> sohle = new ArrayList<>();
+    final List<ProfilePointWrapper> sohle = new ArrayList<ProfilePointWrapper>();
     boolean lastIterationAdd = false;
     double sohlpunkt = Double.MAX_VALUE;
-    for( final IProfileRecord point : points )
+    for( final ProfilePointWrapper point : points )
     {
       final Double h = point.getHoehe();
 
-      if( h < sohlpunkt - fuziness )
+      if( h < (sohlpunkt - fuziness) )
       {
         sohle.clear();
 
@@ -101,7 +105,7 @@ public final class WspmProfileHelper
 
         lastIterationAdd = true;
       }
-      else if( h - sohlpunkt < fuziness && lastIterationAdd )
+      else if( (h - sohlpunkt) < fuziness && lastIterationAdd == true )
       {
         sohle.add( point );
       }
@@ -114,8 +118,8 @@ public final class WspmProfileHelper
     if( sohle.size() == 1 )
       return sohle.get( 0 ).getBreite();
 
-    final IProfileRecord p1 = sohle.get( 0 );
-    final IProfileRecord p2 = sohle.get( sohle.size() - 1 );
+    final ProfilePointWrapper p1 = sohle.get( 0 );
+    final ProfilePointWrapper p2 = sohle.get( sohle.size() - 1 );
 
     final double distance = Math.abs( p1.getBreite() - p2.getBreite() );
 
@@ -128,23 +132,4 @@ public final class WspmProfileHelper
     return ArrayUtils.isEmpty( profileObjects ) ? null : buildingType.cast( profileObjects[0] );
   }
 
-  public static IProfileRecord getSohlpunktPoint( final ProfileWrapper wrapper )
-  {
-    final IProfilPointMarker[] dbs = wrapper.getProfilePointMarkerWrapper( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    if( dbs.length != 2 )
-      throw new IllegalStateException();
-
-    final IProfileRecord[] points = ProfileVisitors.findPointsBetween( wrapper.getProfile(), dbs[0].getPoint().getBreite(), dbs[1].getPoint().getBreite(), true );
-    IProfileRecord ptr = null;
-
-    for( final IProfileRecord point : points )
-    {
-      if( ptr == null )
-        ptr = point;
-      else if( point.getHoehe() < ptr.getHoehe() )
-        ptr = point;
-    }
-
-    return ptr;
-  }
 }

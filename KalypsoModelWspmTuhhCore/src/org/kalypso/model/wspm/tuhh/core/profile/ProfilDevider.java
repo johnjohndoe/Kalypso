@@ -40,17 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
  */
 public class ProfilDevider extends PointMarker
 {
-  public ProfilDevider( final IComponent typ, final IProfileRecord point )
+  public ProfilDevider( final IComponent typ, final IRecord point )
   {
     super( typ, point );
   }
@@ -59,7 +60,7 @@ public class ProfilDevider extends PointMarker
   @Override
   public Object getIntepretedValue( )
   {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getComponent().getId() ) )
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getId().getId() ) )
     {
       final Object value = getValue();
 
@@ -79,25 +80,21 @@ public class ProfilDevider extends PointMarker
   @Override
   public void setInterpretedValue( final Object value )
   {
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getComponent().getId() ) )
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( getId().getId() ) )
     {
       if( value instanceof Boolean )
       {
         final Boolean flag = (Boolean) value;
 
         if( flag )
-        {
           setValue( "high" ); //$NON-NLS-1$
-        }
         else
-        {
           setValue( "low" ); //$NON-NLS-1$
-        }
 
         return;
       }
 
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
     }
 
     setValue( value );

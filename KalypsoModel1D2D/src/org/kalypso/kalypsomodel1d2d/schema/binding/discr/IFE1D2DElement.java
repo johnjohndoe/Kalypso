@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface for classes that represents a feature of the type wb1d2d:Element
@@ -100,7 +100,7 @@ public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE
    * 
    * @return a list of complex element features containg this element
    */
-  public IFeatureBindingCollection<CT> getContainers( );
+  public IFeatureWrapperCollection<CT> getContainers( );
 
   /**
    * To get the nodes of this element

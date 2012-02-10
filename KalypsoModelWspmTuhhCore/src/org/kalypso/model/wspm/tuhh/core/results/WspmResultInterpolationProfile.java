@@ -44,7 +44,7 @@ import java.math.BigDecimal;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -79,11 +79,11 @@ public class WspmResultInterpolationProfile
 
     final ProfileInterpolation interpolation = new ProfileInterpolation( previousProfile.getProfil(), nextProfile.getProfil(), onlyRiverChannel );
     final IProfil newProfile = interpolation.interpolate( m_interpolatedStation, IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    final String name = String.format( Messages.getString( "WspmResultInterpolationProfile_0" ), m_previousStation, m_nextStation ); //$NON-NLS-1$
+    final String name = String.format( Messages.getString("WspmResultInterpolationProfile_0"), m_previousStation, m_nextStation ); //$NON-NLS-1$
     newProfile.setName( name );
 
     final IProfileFeature profileFeature = createProfileFeature();
-    ((ProfileFeatureBinding) profileFeature).setProfile( newProfile );
+    ProfileFeatureFactory.toFeature( newProfile, profileFeature );
 
     return profileFeature;
   }
@@ -92,7 +92,7 @@ public class WspmResultInterpolationProfile
   {
     try
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IProfileFeature.FEATURE_PROFILE, null, GmlSerializer.DEFAULT_FACTORY );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IProfileFeature.QN_PROFILE, null, GmlSerializer.DEFAULT_FACTORY );
       return (IProfileFeature) workspace.getRootFeature();
     }
     catch( final GMLSchemaException e )

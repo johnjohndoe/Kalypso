@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.net.URL;
 import java.util.HashMap;
 
 import org.eclipse.swt.graphics.GC;
@@ -58,14 +57,14 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
 {
-  private static final HashMap<String, RGB> MARKER_TYPES = new HashMap<String, RGB>();
+  private static final HashMap<String, RGB> m_markerTypes = new HashMap<String, RGB>();
 
   public DeviderProvider( )
   {
-    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
-    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
-    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
-    MARKER_TYPES.put( IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
   }
 
   /**
@@ -75,7 +74,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   public void drawMarker( final String[] markers, final GC gc )
   {
     final int cnt = markers.length;
-    final int offset = (gc.getClipping().width - 3 * cnt) / 2 + 1;
+    final int offset = ((gc.getClipping().width - (3 * cnt)) / 2)+1;
     int i = 0;
     final PolylineFigure rf = new PolylineFigure();
 
@@ -83,39 +82,24 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     rf.getStyle().setWidth( 3 );
     for( final String marker : markers )
     {
-      final RGB rgb = MARKER_TYPES.get( marker );
+      final RGB rgb = m_markerTypes.get( marker );
       if( rgb != null )
       {
 
         rf.getStyle().setColor( rgb );
 
-        rf.setPoints( new Point[] { new Point( offset + 4 * i, gc.getClipping().y ), new Point( offset + 4 * i++, gc.getClipping().height ) } );
+        rf.setPoints( new Point[]{ new Point( offset + 4 * i, gc.getClipping().y),new Point(offset + 4 * i++, gc.getClipping().height )} );
         rf.paint( gc );
       }
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
+   */
   @Override
   public RGB getColorFor( final String marker )
   {
-    return MARKER_TYPES.get( marker );
-  }
-
-  @Override
-  public URL getSld( final String marker )
-  {
-    switch( marker )
-    {
-      case IWspmTuhhConstants.MARKER_TYP_BORDVOLL:
-        return getClass().getResource( "marker/symbolization/bordvoll.point.sld" ); //$NON-NLS-1$
-      case IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE:
-        return getClass().getResource( "marker/symbolization/durstroemt.point.sld" ); //$NON-NLS-1$
-      case IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE:
-        return getClass().getResource( "marker/symbolization/trennflaeche.point.sld" ); //$NON-NLS-1$
-      case IWspmTuhhConstants.MARKER_TYP_WEHR:
-        return getClass().getResource( "marker/symbolization/wehr.sld" ); //$NON-NLS-1$
-    }
-
-    return null;
+    return m_markerTypes.get( marker );
   }
 }

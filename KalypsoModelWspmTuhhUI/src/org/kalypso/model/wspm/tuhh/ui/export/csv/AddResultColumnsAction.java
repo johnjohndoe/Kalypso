@@ -47,7 +47,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.dialog.SinglePageDialog;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultLengthSectionColumn;
@@ -59,6 +58,7 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class AddResultColumnsAction extends Action
 {
@@ -71,8 +71,8 @@ public class AddResultColumnsAction extends Action
     m_columnsComposite = columnsComposite;
     m_profileSelection = profileSelection;
 
-    setText( Messages.getString( "AddResultColumnsAction_0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "AddResultColumnsAction_1" ) ); //$NON-NLS-1$
+    setText( Messages.getString("AddResultColumnsAction_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("AddResultColumnsAction_1") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.ADD_CSV_EXPORT_COLUMN );
     setImageDescriptor( image );

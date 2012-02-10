@@ -49,7 +49,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
@@ -111,8 +111,8 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     Calendar lCal = Calendar.getInstance();
     lCal.setTime( actDate );
     double lDoubleTime = lCal.get( Calendar.HOUR_OF_DAY );
-    lDoubleTime += ((double) lCal.get( Calendar.MINUTE )) / 60;
-    formatterWindData.format( "DY          %2.2f %7d %7d\n", lDoubleTime, lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.YEAR ) ); //$NON-NLS-1$
+    lDoubleTime += ((double) lCal.get( Calendar.MINUTE )) / 100;
+    formatterWindData.format( "DY           %2.2f %7d %7d\n", lDoubleTime, lCal.get( Calendar.DAY_OF_YEAR ), lCal.get( Calendar.YEAR ) ); //$NON-NLS-1$
   }
 
   /**
@@ -131,7 +131,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     {
       e.printStackTrace();
     }
-    finally
+    finally 
     {
       lFormatter.close();
     }
@@ -141,22 +141,22 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
   private void writeRMA10WindNodes( )
   {
     Formatter lFormatter = null;
-    int lIntSecondCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns();
-    int lIntThirdCorner = m_descriptorWrittenGrid == null ? 0 : m_descriptorWrittenGrid.getNumColumns() * (m_descriptorWrittenGrid.getNumRows() - 1) + 1;
+    int lIntSecondCorner = m_descriptorWrittenGrid == null? 0: m_descriptorWrittenGrid.getNumColumns();
+    int lIntThirdCorner = m_descriptorWrittenGrid == null? 0: m_descriptorWrittenGrid.getNumColumns() * (m_descriptorWrittenGrid.getNumRows() - 1) + 1;
     int lIntSize = m_listRMA10Nodes == null ? 0 : m_listRMA10Nodes.size();
     int lIntCount = 1;
     try
     {
       lFormatter = getFormatter( ISimulation1D2DConstants.WIND_RMA10_COORDS_File );
-      lFormatter.format( "NVT     %8d\n", lIntSize ); //$NON-NLS-1$
+      lFormatter.format( "NVT    %d\n", lIntSize ); //$NON-NLS-1$
       if( hasWritten() )
       {
         for( final GM_Position lPositionNode : m_listRMA10Nodes )
         {
-          lFormatter.format( "CRD     %8d %13.2f %13.2f\n", lIntCount++, lPositionNode.getX(), lPositionNode.getY() ); //$NON-NLS-1$
+          lFormatter.format( "CRD            %d %5.5f %5.5f\n", lIntCount++, lPositionNode.getX(), lPositionNode.getY() ); //$NON-NLS-1$
         }
-        lFormatter.format( "OUT     %8d%8d%8d%8d\n", 1, lIntSecondCorner, lIntThirdCorner, lIntSize );//$NON-NLS-1$
-      }
+        lFormatter.format( "OUT            %d      %d      %d      %d\n", 1, lIntSecondCorner, lIntThirdCorner, lIntSize );//$NON-NLS-1$
+      } 
 
       lFormatter.format( "ENDDATA\n" );//$NON-NLS-1$
     }
@@ -183,7 +183,7 @@ public class RMA10WindDataWriter extends AbstractWindDataWriter
     try
     {
       Formatter lFormatter = getFormatter( null );
-      lFormatter.format( "TI      Winddata for RMA10\n" ); //$NON-NLS-1$
+      lFormatter.format( "TT      Winddata for RMA10\n" ); //$NON-NLS-1$
     }
     catch( IOException e )
     {

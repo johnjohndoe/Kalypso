@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing;
 
@@ -45,9 +45,10 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.postprocessing.statistics.NAStatistics;
@@ -68,11 +69,10 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts result timeseries of Kalypso-NA.exe to zml's.
- *
+ * 
  * @author Gernot Belger
  */
 public class ResultTimeseriesLoader
@@ -89,15 +89,12 @@ public class ResultTimeseriesLoader
 
   private final NAStatistics m_naStatistics;
 
-  private final ENACoreResultsFormat m_resultsFormat;
-
-  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final ENACoreResultsFormat resultsFormat, final Logger logger )
+  public ResultTimeseriesLoader( final File inputDir, final File outputDir, final GMLWorkspace modelWorkspace, final IDManager idManager, final Logger logger )
   {
     m_inputDir = inputDir;
     m_outputDir = outputDir;
     m_modelWorkspace = modelWorkspace;
     m_idManager = idManager;
-    m_resultsFormat = resultsFormat;
     m_logger = logger;
 
     m_naStatistics = new NAStatistics( logger );
@@ -112,6 +109,8 @@ public class ResultTimeseriesLoader
 
   private void loadTSResults( final TSResultDescriptor descriptor ) throws SensorException
   {
+    final IFeatureType resultFT = m_modelWorkspace.getGMLSchema().getFeatureType( descriptor.getFeatureType() );
+
     final String suffix = descriptor.name();
 
     final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*" + suffix + "*" }, false, false, true ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -119,12 +118,12 @@ public class ResultTimeseriesLoader
     if( qgsFiles.length == 0 )
       return;
 
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.123" ) + qgsFiles[0].getName() + "\n" ); //$NON-NLS-2$
 
-    final BlockTimeSeries ts = new BlockTimeSeries(m_resultsFormat);
+    final BlockTimeSeries ts = new BlockTimeSeries();
     ts.importBlockFile( qgsFiles[0] );
 
-    final Feature[] resultFeatures = FeatureHelper.getFeaturesWithName( m_modelWorkspace, descriptor.getFeatureType() );
+    final Feature[] resultFeatures = m_modelWorkspace.getFeatures( resultFT );
     for( final Feature resultFeature : resultFeatures )
       processResultFeature( resultFeature, descriptor, ts );
   }
@@ -151,7 +150,7 @@ public class ResultTimeseriesLoader
     }
 
     final String suffix = descriptor.name();
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" );  //$NON-NLS-1$//$NON-NLS-2$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.125", key, resultFeature.getFeatureType().getQName(), suffix ) + "\n" ); //$NON-NLS-2$
 
     final String resultPathRelative = generateResultPath( resultFeature, descriptor );
 
@@ -191,7 +190,7 @@ public class ResultTimeseriesLoader
       final String href = resultLink.getHref();
       if( href == null )
       {
-        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.134", resultFeature.getId() ) ); //$NON-NLS-1$
+        m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.134", resultFeature.getId() ) ); //$NON-NLS-1$ 
         return DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, null );
       }
 
@@ -274,7 +273,7 @@ public class ResultTimeseriesLoader
     // FIXME: Arrg! Is this really possible to happen? Most probably something else is wrong. We should not
     // do such terrible things here!
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.136", resultPathRelative ) ); //$NON-NLS-1$
-    final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String extra = "(ID" + Integer.toString( m_idManager.getAsciiID( resultFeature ) ).trim() + ")";
     final String resultPath = DefaultPathGenerator.generateResultPathFor( resultFeature, suffix, extra ); //$NON-NLS-1$ //$NON-NLS-2$
     m_logger.info( Messages.getString( "org.kalypso.convert.namodel.NaModelInnerCalcJob.140", resultPath ) ); //$NON-NLS-1$
 

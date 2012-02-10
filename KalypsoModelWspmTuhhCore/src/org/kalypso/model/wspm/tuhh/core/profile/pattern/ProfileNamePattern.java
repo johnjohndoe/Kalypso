@@ -51,6 +51,10 @@ public final class ProfileNamePattern extends AbstractProfileStringPattern
     super( "Name", Messages.getString( "ProfilePatternInputReplacer_0" ) ); //$NON-NLS-1$  //$NON-NLS-2$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getValue(org.kalypso.model.wspm.tuhh.core.profile.pattern.IProfilePatternData,
+   *      java.lang.String)
+   */
   @Override
   public String getValue( final IProfilePatternData data, final String params )
   {
@@ -71,6 +75,9 @@ public final class ProfileNamePattern extends AbstractProfileStringPattern
     return name.substring( 0, maxLength );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.pattern.IValueWithFormat#getDefaultWidth(java.lang.String)
+   */
   @Override
   public int getDefaultWidth( final String params )
   {

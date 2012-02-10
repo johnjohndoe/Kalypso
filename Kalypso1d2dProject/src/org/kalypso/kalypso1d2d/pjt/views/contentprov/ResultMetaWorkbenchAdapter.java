@@ -54,9 +54,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * @author Thomas Jung
- *
+ * 
  * Adapter class that defines the label and images for the result view.
- *
+ * 
  */
 public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
 {
@@ -72,17 +72,23 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
     return super.getChildren( object );
   }
 
+  /**
+   * @see org.eclipse.ui.model.WorkbenchAdapter#getParent(java.lang.Object)
+   */
   @Override
   public Object getParent( final Object object )
   {
     if( object instanceof IResultMeta )
-      return ((IResultMeta) object).getOwner();
+      return ((IResultMeta) object).getParent();
 
     return super.getParent( object );
   }
 
+  /**
+   * @see org.eclipse.ui.model.WorkbenchAdapter#getLabel(java.lang.Object)
+   */
   @Override
-  public String getLabel( final Object object )
+  public String getLabel( Object object )
   {
     if( object instanceof IResultMeta )
       return ((IResultMeta) object).getName();
@@ -94,7 +100,7 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
    * @see org.eclipse.ui.model.WorkbenchAdapter#getImageDescriptor(java.lang.Object)
    */
   @Override
-  public ImageDescriptor getImageDescriptor( final Object object )
+  public ImageDescriptor getImageDescriptor( Object object )
   {
     if( object instanceof IScenarioResultMeta )
       return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_SCENARIO );
@@ -115,7 +121,7 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
 
   }
 
-  private ImageDescriptor getDocumentResultImage( final Object object )
+  private ImageDescriptor getDocumentResultImage( Object object )
   {
     final DOCUMENTTYPE documentType = ((IDocumentResultMeta) object).getDocumentType();
     switch( documentType )
@@ -155,7 +161,7 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
     }
   }
 
-  private ImageDescriptor getStepResultImage( final Object object )
+  private ImageDescriptor getStepResultImage( Object object )
   {
     final STEPTYPE stepType = ((IStepResultMeta) object).getStepType();
     switch( stepType )

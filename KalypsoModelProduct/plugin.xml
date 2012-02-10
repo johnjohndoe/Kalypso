@@ -4,8 +4,7 @@
    <extension
          id="kalypsomodelapplication"
          point="org.eclipse.core.runtime.applications">
-      <application
-            icon="etc/launchericons/icon_16_32.bmp">
+      <application>
          <run class="org.kalypso.model.product.application.KalypsoModelApplication"/>
       </application>
    </extension>
@@ -110,7 +109,6 @@
            </toolbar>
         </menuContribution>
     </extension>
-  
-   
+
 
 </plugin>

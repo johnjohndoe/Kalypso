@@ -41,37 +41,37 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
- * Interface to be implemented by classes to provide a java representation compatible with the wb1d2d:ComplexElement
+ * Interface to be implemented by classes to provide a java 
+ * representation compatible with the wb1d2d:ComplexElement
  * 
  */
-public interface IFE1D2DComplexElement extends Feature
+public interface IFE1D2DComplexElement extends IFeatureWrapper2
 {
-
+  
   /**
    * To get the element this complex element is made of
    * 
-   * @return a {@link IFeatureBindingCollection} of element composing this complex elements
+   * @return a {@link IFeatureWrapperCollection} of element 
+   *            composing this complex elements
    */
-  public IFeatureBindingCollection<IFENetItem> getElements( );
-
+  public IFeatureWrapperCollection<IFENetItem> getElements( );
+  
   /**
    * Adds the given element as reference to this complex type
-   * 
-   * @param element
-   *          the 1d 2d element to be added as reference
-   * @return true if the element has been added otherwise false
+   * @param element the 1d 2d element to be added as reference
+   * @return true if the element has been added  otherwise false
    */
-  public boolean addElementAsRef( IFENetItem element );
-
+  public boolean addElementAsRef(IFENetItem element);
+  
   /**
    * Remove all reference to this element from this complex element
-   * 
-   * @return true if a referen to the given element as been added otherwis false
+   * @return true if a referen to the given element as been added
+   *    otherwis false
    */
-  public void removeElementAsRef( IFENetItem elment );
+  public void removeElementAsRef(IFENetItem elment);
 
 }

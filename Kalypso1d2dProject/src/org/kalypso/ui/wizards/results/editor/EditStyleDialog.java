@@ -335,9 +335,9 @@ public class EditStyleDialog extends TitleAreaDialog
             /*
              * getting the according values from sld file, needen to save the last selected configuration for next calls
              */
-            CssParameter cssFillMin = (CssParameter) m_fill.getCssParameters().get( "minColor" ); //$NON-NLS-1$
-            CssParameter cssFillMax = (CssParameter) m_fill.getCssParameters().get( "maxColor" ); //$NON-NLS-1$
-            CssParameter cssValueAmountClasses = (CssParameter) m_fill.getCssParameters().get( "amountClasses" ); //$NON-NLS-1$
+            final CssParameter cssFillMin = m_fill.getCssParameters().get( "minColor" );
+            final CssParameter cssFillMax = m_fill.getCssParameters().get( "maxColor" );
+            final CssParameter cssValueAmountClasses = m_fill.getCssParameters().get( "amountClasses" );
             Color fromColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType ) );
             Color toColor = resolveColor( m_mapSldSettingsIntern.get( NodeResultHelper.COLOR_MAX_PREFIX + nodeStyleType ) );
             Double amountOfClasses = ((Double) m_mapSldSettingsIntern.get( NodeResultHelper.AMOUNT_OF_CLASSES_PREFIX + nodeStyleType ));
@@ -376,17 +376,17 @@ public class EditStyleDialog extends TitleAreaDialog
                 /*
                  * changing the name is needed to be placed in sld file.
                  */
-               final CssParameter newMinColor = getFromEntry().getFill().getCssParameters().get( "fill" ); //$NON-NLS-1$
-                (newMinColor).setName( "minColor" ); //$NON-NLS-1$
-                m_fill.getCssParameters().put( "minColor", newMinColor ); //$NON-NLS-1$
-                final CssParameter newMaxColor = getToEntry().getFill().getCssParameters().get( "fill" ); //$NON-NLS-1$
-                (newMaxColor).setName( "maxColor" ); //$NON-NLS-1$
-                m_fill.getCssParameters().put( "maxColor", newMaxColor ); //$NON-NLS-1$
+                final CssParameter newMinColor = getFromEntry().getFill().getCssParameters().get( "fill" );
+                (newMinColor).setName( "minColor" );
+                m_fill.getCssParameters().put( "minColor", newMinColor );
+                final CssParameter newMaxColor = getToEntry().getFill().getCssParameters().get( "fill" );
+                (newMaxColor).setName( "maxColor" );
+                m_fill.getCssParameters().put( "maxColor", newMaxColor );
 
                 final Double newAmountClasses = ((Integer) getAmountOfClassesForInterpolation()).doubleValue();
-                final CssParameter cssNewValueAmountClasses = m_fill.getCssParameters().get( "amountClasses" ); //$NON-NLS-1$
-                cssNewValueAmountClasses.setValue( "" + newAmountClasses ); //$NON-NLS-1$
-                m_fill.getCssParameters().put( "amountClasses", cssNewValueAmountClasses ); //$NON-NLS-1$
+                final CssParameter cssNewValueAmountClasses = m_fill.getCssParameters().get( "amountClasses" );
+                cssNewValueAmountClasses.setValue( "" + newAmountClasses );
+                m_fill.getCssParameters().put( "amountClasses", cssNewValueAmountClasses );
 
                 final Color extractedCssValueMinColor = (Color) extractCssValue( newMinColor );
                 m_mapSldSettingsIntern.put( NodeResultHelper.COLOR_MIN_PREFIX + nodeStyleType, extractedCssValueMinColor );

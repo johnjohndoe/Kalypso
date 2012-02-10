@@ -46,21 +46,23 @@ import java.util.List;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
  */
 public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITeschkeFlowRelation
 {
-  private final IFeatureBindingCollection<IPolynomial1D> m_polynomes = new FeatureBindingCollection<IPolynomial1D>( this, IPolynomial1D.class, QNAME_PROP_POLYNOMES );
+  private final IFeatureWrapperCollection<IPolynomial1D> m_polynomes = new FeatureWrapperCollection<IPolynomial1D>( getFeature(), IPolynomial1D.class, QNAME_PROP_POLYNOMES );
 
-  public TeschkeFlowRelation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public TeschkeFlowRelation( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, ITeschkeFlowRelation.QNAME );
   }
 
   /**
@@ -69,7 +71,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public BigDecimal getStation( )
   {
-    return (BigDecimal) getProperty( QNAME_PROP_STATION );
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_STATION );
   }
 
   /**
@@ -78,7 +80,7 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public void setStation( final BigDecimal station )
   {
-    setProperty( QNAME_PROP_STATION, station );
+    getFeature().setProperty( QNAME_PROP_STATION, station );
   }
 
   /**
@@ -96,29 +98,43 @@ public class TeschkeFlowRelation extends AbstractFlowRelation1D implements ITesc
   @Override
   public double getSlope( )
   {
-    final BigDecimal slope = (BigDecimal) getProperty( QNAME_PROP_SLOPE );
-    if( slope == null )
-      return Double.NaN;
-
+    final BigDecimal slope = (BigDecimal) getFeature().getProperty( QNAME_PROP_SLOPE );
     return slope.doubleValue();
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setSlope(double)
+   */
   @Override
   public void setSlope( final double slope )
   {
     final BigDecimal slopeDec = new BigDecimal( slope ).setScale( 5, BigDecimal.ROUND_HALF_UP );
-    setProperty( QNAME_PROP_SLOPE, slopeDec );
+    getFeature().setProperty( QNAME_PROP_SLOPE, slopeDec );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
+   */
   @Override
   public IProfileFeature getProfile( )
   {
-    return (IProfileFeature) FeatureHelper.resolveLink( this, QNAME_PROP_PROFILE, true );
+    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+
+    return profileFeature;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
+   */
   @Override
   public void setProfileLink( final String profileRef )
   {
-    setLink( QNAME_PROP_PROFILE, profileRef );
+    final Feature feature = getFeature();
+
+    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
+    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
+    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    feature.setProperty( profileRelation, profileLinkFeature );
   }
+
 }

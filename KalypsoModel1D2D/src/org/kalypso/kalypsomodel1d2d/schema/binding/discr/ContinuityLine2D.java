@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
@@ -45,13 +45,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -60,10 +61,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class ContinuityLine2D extends FELine implements IContinuityLine2D
 {
-
-  public ContinuityLine2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public ContinuityLine2D( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    this( featureToBind, IContinuityLine2D.QNAME );
+  }
+
+  public ContinuityLine2D( final Feature featureToBind, final QName featureQName )
+  {
+    super( featureToBind, featureQName );
   }
 
   /**
@@ -83,12 +88,12 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     {
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
-    final FeatureList nodeList = (FeatureList) getProperty( IFELine.PROP_NODES );
+    final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
     for( final IFE1D2DNode node : fullNodeList )
-      nodeList.add( node.getId() );
+      nodeList.add( node.getFeature().getId() );
     nodeList.invalidate();
-    setEnvelopesUpdated();
+    getFeature().invalidEnvelope();
     return m_nodes;
   }
 
@@ -108,7 +113,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     {
       e.printStackTrace();
     }
-    return (GM_Object) getProperty( IFELine.PROP_GEOMETRY );
+    return (GM_Object) getFeature().getProperty( IFELine.PROP_GEOMETRY );
   }
 
   private List<IFE1D2DNode> recalculateGeometry( final List<IFE1D2DNode> nodes ) throws GM_Exception, CoreException
@@ -128,7 +133,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   {
     final Iterator<IFE1D2DNode> iterator = nodes.iterator();
     final IFE1D2DNode startNode = iterator.next();
-    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) startNode.getWorkspace().getRootFeature();
+    final IFEDiscretisationModel1d2d model = new FE1D2DDiscretisationModel( startNode.getFeature().getWorkspace().getRootFeature() );
     final List<IFE1D2DNode> curveNodes = new ArrayList<IFE1D2DNode>();
     curveNodes.add( startNode );
     IFE1D2DNode currentNode = startNode;
@@ -136,12 +141,12 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     {
       final IFE1D2DNode nextMilestoneNode = iterator.next();
       // TODO: !!!Potential endless loop!! I once got it (Gernot)
-      while( !nextMilestoneNode.getId().equals( currentNode.getId() ) )
+      while( !nextMilestoneNode.getGmlID().equals( currentNode.getGmlID() ) )
       {
         final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
         if( neighbourNodes.size() == 0 )
         {
-          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.2" ) + currentNode.getId() ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.2" ) + currentNode.getFeature().getId() ); //$NON-NLS-1$
           throw new CoreException( status );
         }
         IFE1D2DNode bestCandidateNode = null;

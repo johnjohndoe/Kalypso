@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FeatureTypeStyle xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>fts_node</Name>
-	<Title>%fts_node_title</Title>
+	<Title>%fts_node_title=Geometrie</Title>
 	<Rule>
 		<Name>rule_Ort</Name>
-		<Title>%rule_Ort_title</Title>
+		<Title>%rule_Ort_title=Geoemtrie</Title>
 		<PointSymbolizer uom="pixel">
 			<Geometry>
 				<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -50,21 +50,20 @@
 						<AnchorPointY>0.0</AnchorPointY>
 					</AnchorPoint>
 					<Displacement>
-						<DisplacementX>10.0</DisplacementX>
-						<DisplacementY>10.0</DisplacementY>
+						<DisplacementX>0.0</DisplacementX>
+						<DisplacementY>0.0</DisplacementY>
 					</Displacement>
 					<Rotation>0.0</Rotation>
 				</PointPlacement>
 			</LabelPlacement>
 			<Halo>
-                <Radius>3</Radius>
 				<Fill>
-					<CssParameter name="fill-opacity">1.0</CssParameter>
-					<CssParameter name="fill">#ff3030</CssParameter>
+					<CssParameter name="fill-opacity">0.6</CssParameter>
+					<CssParameter name="fill">#ff0000</CssParameter>
 				</Fill>
 				<Stroke>
 					<CssParameter name="stroke">#000000</CssParameter>
-					<CssParameter name="stroke-width">2.0</CssParameter>
+					<CssParameter name="stroke-width">1.0</CssParameter>
 					<CssParameter name="stroke-linejoin">round</CssParameter>
 					<CssParameter name="stroke-opacity">1.0</CssParameter>
 					<CssParameter name="stroke-linecap">square</CssParameter>
@@ -74,7 +73,7 @@
 	</Rule>
 	<Rule>
 		<Name>rule_Pegel</Name>
-		<Title>%rule_Pegel_title</Title>
+		<Title>%rule_Pegel_title=Pegel</Title>
 		<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 			<ogc:Not>
 				<ogc:PropertyIsNull>

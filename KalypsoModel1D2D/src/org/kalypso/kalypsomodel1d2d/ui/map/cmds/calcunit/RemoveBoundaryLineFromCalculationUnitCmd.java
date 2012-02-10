@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -91,15 +92,15 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     if( done )
     {
-      return new Feature[] { calculationUnit, bLineToRemove };
+      return new IFeatureWrapper2[] { calculationUnit, bLineToRemove };
     }
     else
     {
-      return new Feature[] {};
+      return new IFeatureWrapper2[] {};
     }
   }
 
@@ -153,11 +154,11 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
 
   private final void fireProcessChanges( )
   {
-    final Feature calUnitFeature = calculationUnit;
-    final Feature model1d2dFeature = model1d2d;
+    final Feature calUnitFeature = calculationUnit.getFeature();
+    final Feature model1d2dFeature = model1d2d.getFeature();
     List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
-    features.add( bLineToRemove );
+    features.add( bLineToRemove.getFeature() );
 
     GMLWorkspace workspace = calUnitFeature.getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace

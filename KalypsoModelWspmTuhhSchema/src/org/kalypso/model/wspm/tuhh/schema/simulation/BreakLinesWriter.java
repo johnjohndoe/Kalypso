@@ -48,8 +48,8 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.Range;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.math.NumberRange;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class BreakLinesWriter implements IWspmConstants
 {
-  private Range<Double> m_range;
+  private NumberRange m_range;
 
   private final TuhhReachProfileSegment[] m_segments;
 
@@ -133,11 +133,11 @@ public class BreakLinesWriter implements IWspmConstants
     m_breaklinesWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), null, null ); //$NON-NLS-1$
     final Feature rootFeature = m_breaklinesWorkspace.getRootFeature();
 
-    final String gmlVersion = rootFeature.getFeatureType().getGMLSchema().getGMLVersion();
+    final String gmlVersion = m_breaklinesWorkspace.getGMLSchema().getGMLVersion();
 
     // debug
     GM_Curve lastProfile = null;
-    Range<Double> range = null;
+    NumberRange range = null;
     for( final TuhhReachProfileSegment reach : m_segments )
     {
       final GM_Curve geometry = reach.getGeometry();
@@ -151,9 +151,9 @@ public class BreakLinesWriter implements IWspmConstants
       if( wsp != null )
       {
         if( range == null )
-          range = Range.is( wsp );
+          range = new NumberRange( wsp );
         else
-          range = Range.between( Math.min( wsp, range.getMinimum() ), Math.max( wsp, range.getMaximum() ) );
+          range = new NumberRange( Math.min( wsp, range.getMinimumDouble() ), Math.max( wsp, range.getMaximumDouble() ) );
 
         // ignore profiles without result (no value in length section). This can occur if the
         // simulation does not cover the whole reach.
@@ -172,7 +172,7 @@ public class BreakLinesWriter implements IWspmConstants
           ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp ); //$NON-NLS-1$
 
           // Interpolate triangles between two adjacent curves and add them to the triangulated surface
-          final GM_Position[] polygonPosesOpen = ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
+          final GM_Position[] polygonPosesOpen = (GM_Position[]) ArrayUtils.remove( polygonPosesClosed, polygonPosesClosed.length - 1 );
           final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPosesOpen );
           for( final GM_Position[] triangle : triangles )
           {
@@ -232,7 +232,7 @@ public class BreakLinesWriter implements IWspmConstants
     GmlSerializer.serializeWorkspace( outputFile, m_triangleWorkspace, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
   }
 
-  public Range<Double> getRange( ) throws GMLSchemaException, GM_Exception
+  public NumberRange getRange( ) throws GMLSchemaException, GM_Exception
   {
     init();
 

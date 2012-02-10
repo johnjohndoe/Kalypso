@@ -47,18 +47,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.model.hydrology.binding.model.Branching;
+import org.kalypso.model.hydrology.binding.model.BranchingWithNode;
 import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
-import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
-import org.kalypso.model.hydrology.binding.model.nodes.Branching;
-import org.kalypso.model.hydrology.binding.model.nodes.BranchingWithNode;
-import org.kalypso.model.hydrology.binding.model.nodes.INode;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Node;
+import org.kalypso.model.hydrology.binding.model.StorageChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.model.hydrology.internal.preprocessing.net.visitors.RootNodeCollector;
@@ -138,19 +136,19 @@ public class NetFileAnalyser
 
         if( upstreamNodeChannel == null )
         {
-          final String message = String.format( Messages.getString( "NetFileAnalyser_0" ), upStreamNode.getName() ); //$NON-NLS-1$
+          final String message = String.format( "Inconsistent net: Node '%s' with branch has no upstream channel.", upStreamNode.getName() );
           throw new SimulationException( message );
         }
 
         if( downStreamChannelFE == null )
         {
-          final String message = String.format( Messages.getString( "NetFileAnalyser_1" ), upStreamNode.getName() ); //$NON-NLS-1$
+          final String message = String.format( "Inconsistent net: Node '%s' with branch has no downstream channel.", upStreamNode.getName() );
           throw new SimulationException( message );
         }
 
         if( upstreamNodeChannel == downStreamChannelFE )
         {
-          logWarning( Messages.getString( "NetFileAnalyser_2" ), upstreamNodeChannel ); //$NON-NLS-1$
+          logWarning( "Impossible net at %s: Node-Node relation to itself", upstreamNodeChannel );
           // FIXME: shouldn't we throw an exception here?
           continue;
         }
@@ -168,20 +166,20 @@ public class NetFileAnalyser
       final Node downStreamNode = channel.getDownstreamNode();
       if( downStreamNode == null )
       {
-        logWarning( Messages.getString( "NetFileAnalyser_3" ), channel ); //$NON-NLS-1$
+        logWarning( "%s is outside network", channel );
         continue;
       }
 
       final Channel downStreamChannel = downStreamNode.getDownstreamChannel();
       if( downStreamChannel == null )
       {
-        logWarning( Messages.getString( "NetFileAnalyser_4" ), downStreamNode ); //$NON-NLS-1$
+        logWarning( "%s has no downstream connection", downStreamNode );
         continue;
       }
       // set dependency
       if( channel == downStreamChannel )
       {
-        logWarning( Messages.getString( "NetFileAnalyser_5" ), channel ); //$NON-NLS-1$
+        logWarning( "Impossible net at %s: channel discharges to itself", channel );
         continue;
       }
 
@@ -196,7 +194,7 @@ public class NetFileAnalyser
     {
       if( channel instanceof StorageChannel )
       {
-        final INode overflowNode = ((StorageChannel) channel).getOverflowNode();
+        final Node overflowNode = ((StorageChannel) channel).getOverflowNode();
         if( overflowNode != null )
         {
           final Channel downstreamChannel = overflowNode.getDownstreamChannel();
@@ -219,7 +217,7 @@ public class NetFileAnalyser
       final Channel upstreamChannel = catchment.getChannel();
       if( upstreamChannel == null )
       {
-        logWarning( Messages.getString( "NetFileAnalyser_6" ), catchment ); //$NON-NLS-1$
+        logWarning( "%s is not connected to network", catchment );
         continue;
       }
 
@@ -246,20 +244,20 @@ public class NetFileAnalyser
         final Catchment downStreamCatchmentFE = abflussFE.getNgwzu();
         if( downStreamCatchmentFE == null )
         {
-          logWarning( Messages.getString( "NetFileAnalyser_7" ), abflussFE ); //$NON-NLS-1$
+          logWarning( "Downstream catchment for %s cannot be resolved.", abflussFE );
           continue;
         }
         final Channel downStreamChannelFE = downStreamCatchmentFE.getChannel();
         if( downStreamChannelFE == null )
         {
-          logWarning( Messages.getString( "NetFileAnalyser_8" ), downStreamCatchmentFE ); //$NON-NLS-1$
+          logWarning( "%s is not connected to network.", downStreamCatchmentFE );
           continue;
         }
 
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
         if( downStreamElement == null )
         {
-          logWarning( Messages.getString( "NetFileAnalyser_9" ), downStreamCatchmentFE ); //$NON-NLS-1$
+          logWarning( "%s has no downstream net element.", downStreamCatchmentFE );
           continue;
         }
 
@@ -314,18 +312,18 @@ public class NetFileAnalyser
    */
   private static String getLogLabel( final Feature netElement )
   {
-    final String defaultName = String.format( Messages.getString( "NetFileAnalyser_10" ), netElement.getId() ); //$NON-NLS-1$
+    final String defaultName = String.format( "<Unbekannt> (GML-ID: %s)", netElement.getId() );
     final String gmlName = netElement.getName();
     final String name = StringUtils.isBlank( gmlName ) ? defaultName : gmlName;
 
     if( netElement instanceof Catchment )
-      return String.format( Messages.getString( "NetFileAnalyser_11" ), name ); //$NON-NLS-1$
+      return String.format( "Teilgebiet #%s", name );
 
     if( netElement instanceof Channel )
-      return String.format( Messages.getString( "NetFileAnalyser_12" ), name ); //$NON-NLS-1$
+      return String.format( "Strang #%s", name );
 
     if( netElement instanceof Node )
-      return String.format( Messages.getString( "NetFileAnalyser_13" ), name ); //$NON-NLS-1$
+      return String.format( "Knoten #%s", name );
 
     return name;
   }

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
@@ -63,11 +63,8 @@ import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.binding.IOmbrometerCollection;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
-import org.kalypso.model.rcm.util.BufferBoundaryCalculator;
-import org.kalypso.model.rcm.util.IBoundaryCalculator;
 import org.kalypso.model.rcm.util.OmbrometerUtils;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
-import org.kalypso.model.rcm.util.ThiessenAreaOperation;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -78,22 +75,24 @@ import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Implementation that generates rainfall from ombrometer stations with Thiessen.
- *
+ * 
  * @author Gernot Belger
  */
 public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
@@ -106,9 +105,13 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
   static final QName PROPERTY_timeseriesLinkPath = new QName( UrlCatalogRcm.NS_RCM, "timeseriesLinkPath" );
 
+  static final QName MEMBER_FILTER = new QName( UrlCatalogRcm.NS_RCM, "filterMember" );
+
   static final QName PROPERTY_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
   static final QName PROPERTY_catchmentAreaPath = new QName( UrlCatalogRcm.NS_RCM, "catchmentAreaPath" );
+
+  private final FeatureBindingCollection<IZmlFilter> m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
 
   public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
@@ -132,7 +135,7 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       LogUtilities.logQuietly( log, new Status( IStatus.INFO, KalypsoModelRcmActivator.PLUGIN_ID, "Generator Ombrometer (Thiessen) wurde gestartet.", null ) );
 
       /* Get the needed properties. */
-      final IXLinkedFeature ombrometerCollectionLink = getProperty( MEMBER_ombrometerCollection, IXLinkedFeature.class );
+      final XLinkedFeature_Impl ombrometerCollectionLink = getProperty( MEMBER_ombrometerCollection, XLinkedFeature_Impl.class );
       final IOmbrometerCollection ombrometerCollection = (IOmbrometerCollection) ombrometerCollectionLink.getFeature();
       final String collectionPath = getProperty( PROPERTY_ombrometerFeaturePath, String.class );
       final String areaPath = getProperty( PROPERTY_areaPath, String.class );
@@ -163,8 +166,8 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
       monitor.worked( 100 );
       monitor.subTask( "Konvertiere und wende die Thiessenmethode an..." );
 
-      /* Read the observations. */
-      final IZmlFilter[] filters = getFilters().toArray( new IZmlFilter[] {} );
+      final IZmlFilter[] filters = m_filters.toArray( new IZmlFilter[m_filters.size()] );
+
       final IObservation[] ombrometerObservations = RainfallGeneratorUtilities.readObservations( ombrometerFeatures, linkXPath, filters, range );
 
       /* Apply thiessen, if not yet done. */
@@ -177,12 +180,21 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
       final GM_Surface< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaXPath, new GM_Surface[ombrometerFeatures.length] );
 
-      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      final GM_Surface< ? >[] transformedAreas = GeometryUtilities.transform( ombrometerAreas, transformer );
-
       /* Convert to JTS geometries. */
-      final Polygon[] ombrometerPolygons = JTSAdapter.export( transformedAreas, Polygon.class );
-      monitor.worked( 100 );
+      final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      for( int i = 0; i < ombrometerAreas.length; i++ )
+      {
+        if( ombrometerAreas[i] != null )
+        {
+          final GM_Surface< ? > ombrometerArea = ombrometerAreas[i];
+          final GM_Object ombrometerTransformed = transformer.transform( ombrometerArea );
+          ombrometerPolygons[i] = (Polygon) JTSAdapter.export( ombrometerTransformed );
+        }
+
+        /* Monitor. */
+        monitor.worked( 200 / ombrometerAreas.length );
+      }
 
       /* Monitor. */
       monitor.subTask( "Hole Einzugsgebiete..." );
@@ -276,14 +288,13 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
     // REMARK: huge buffer ratio. Does not really change the result (as long as all catchments are covered), but we do
     // not need to worry where to get the buffer as we don't save the result here. Mainly needed for the visualisation.
-    final IBoundaryCalculator bufferCalculator = new BufferBoundaryCalculator( 10.0 );
+    final double bufferRatio = 10;
 
     /* Recalculate Thiessen */
-    final ThiessenAreaOperation worker = new ThiessenAreaOperation( IOmbrometer.QNAME_PROP_STATIONLOCATION, IOmbrometer.QNAME_PROP_ISUSED );
-    final Map<Feature, GM_Surface< ? >> areas = worker.execute( Arrays.asList( ombrometerFeatures ), bufferCalculator, monitor );
-    for( final Entry<Feature, GM_Surface< ? >> entry : areas.entrySet() )
+    final Map<IOmbrometer, GM_Surface<GM_SurfacePatch>> areas = OmbrometerUtils.thiessenPolygons( Arrays.asList( ombrometerFeatures ), bufferRatio, monitor );
+    for( final Entry<IOmbrometer, GM_Surface<GM_SurfacePatch>> entry : areas.entrySet() )
     {
-      final IOmbrometer ombrometer = (IOmbrometer) entry.getKey();
+      final IOmbrometer ombrometer = entry.getKey();
       ombrometer.setAffectedArea( entry.getValue() );
     }
   }

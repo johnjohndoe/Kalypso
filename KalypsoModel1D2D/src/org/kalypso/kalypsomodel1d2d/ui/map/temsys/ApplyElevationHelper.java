@@ -52,7 +52,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -60,10 +60,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ApplyElevationHelper
 {
-  @SuppressWarnings("unchecked")
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
-    final IFeatureBindingCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
+    final IFeatureWrapperCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();
     if( elevationModels == null )
     {
       return;
@@ -91,7 +90,7 @@ public class ApplyElevationHelper
     if( workspace == null )
       return;
 
-    final List<IFE1D2DNode> lListNodesToAssign = new ArrayList<IFE1D2DNode>();
+    List<IFE1D2DNode> lListNodesToAssign = new ArrayList<IFE1D2DNode>();
     lListNodesToAssign.addAll( nodeList );
     // to provide real assign of elevations according to selected order in elevations model view
     for( int i = 0; i < elevationModels.size() && lListNodesToAssign.size() > 0; ++i )
@@ -105,21 +104,21 @@ public class ApplyElevationHelper
       for( int j = lListNodesToAssign.size() - 1; j >= 0; --j )
       // for( final IFE1D2DNode node : nodeList )
       {
-        final IFE1D2DNode node = lListNodesToAssign.get( j );
+        IFE1D2DNode node = lListNodesToAssign.get( j );
         if( node != null )
         {
           try
           {
             final double elevation = elevationProvider.getElevation( node.getPoint() );
+            changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
+            changePosCmd.process();
+            compositeCommand.addCommand( changePosCmd, null );
             if( !Double.isNaN( elevation ) )
             {
-              changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
-              changePosCmd.process();
-              compositeCommand.addCommand( changePosCmd, null );
               lListNodesToAssign.remove( node );
             }
           }
-          catch( final Exception e )
+          catch( Exception e )
           {
           }
         }
@@ -142,6 +141,7 @@ public class ApplyElevationHelper
 
     for( int i = 0; i < allNodes.size(); i++ )
     {
+
       try
       {
         if( !NodeOps.hasElevation( allNodes.get( i ) ) )
@@ -157,5 +157,7 @@ public class ApplyElevationHelper
     }
 
     return noElevationNodes.toArray( new IFE1D2DNode[] {} );
+
   }
+
 }

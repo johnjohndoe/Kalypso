@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
@@ -44,11 +44,11 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
@@ -92,7 +92,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
   public BuildingParameterLayer( final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId, final IStyleSet styleSet )
   {
-    super( null,new StyleSet() );
+    super( null );
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
     final TupleResult result = obs.getResult();
@@ -167,13 +167,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
       final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
 
-      if( domainValue == null || targetValue == null )
-        continue;
-
       // convert to screen-point
-
-      // FIXME: this does not work correct
-
       final int x = xAxis.numericToScreen( domainValue );
       final int y = yAxis.numericToScreen( targetValue );
       final Point pos = new Point( x, y );
@@ -232,7 +226,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
   }
@@ -241,7 +235,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return rangeForComponent( m_valueComponent );
   }
@@ -254,10 +248,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     for( final IRecord record : m_result )
     {
       final BigDecimal value = (BigDecimal) record.getValue( component );
-
-      if( value == null )
-        continue;
-
       max = max.max( value );
       min = min.min( value );
     }
@@ -315,9 +305,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
       final BigDecimal domainValue = (BigDecimal) record.getValue( m_domainComponent );
       final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
-
-      if( domainValue == null || targetValue == null )
-        continue;
 
       if( !ObjectUtils.equals( classValue, lastClass ) )
       {
@@ -402,7 +389,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // HACK: we post the command directly to the flow-model.... it would be of course much better to get the commandable
     // workspace from outside...
 
-    KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class.getName(), command );
+    KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, command );
 
     ProgressUtilities.worked( monitor, 1 );
 
@@ -439,6 +426,24 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     getEventHandler().fireLayerContentChanged( this );
 
     return info;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IEditableChartLayer#setActivePoint(java.lang.Object)
+   */
+  public void setActivePoint( final Object data )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -501,4 +506,5 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // TODO Auto-generated method stub
 
   }
+
 }

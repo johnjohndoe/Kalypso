@@ -7,7 +7,7 @@ import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
-public interface IRasterDataModel extends IModel 
+public interface IRasterDataModel extends IModel
 {
   public static final String MODEL_NAME = "RasterDataModel"; //$NON-NLS-1$
 

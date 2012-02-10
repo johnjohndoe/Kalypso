@@ -44,7 +44,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
@@ -52,28 +51,27 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
-import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
-
 /**
  * @author Gernot Belger
  */
 public class EditBuildingParameterHandler extends AbstractHandler implements IElementUpdater
 {
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
+    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
+    if( chartPart == null )
+      return null;
 
-    final EditBuildingParameterMouseHandler plotDragZoomInHandler = new EditBuildingParameterMouseHandler( chart );
-    final IChartHandlerManager plotHandler = chart.getPlotHandler();
-    plotHandler.activatePlotHandler( plotDragZoomInHandler );
+    final EditBuildingParameterMouseHandler plotDragZoomInHandler = new EditBuildingParameterMouseHandler( chartPart.getChartComposite() );
+    chartPart.getPlotDragHandler().activatePlotHandler( plotDragZoomInHandler );
 
-    final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
-    if( part != null )
-      ChartHandlerUtilities.updateElements( part );
+    ChartHandlerUtilities.updateElements( chartPart );
 
     return null;
   }

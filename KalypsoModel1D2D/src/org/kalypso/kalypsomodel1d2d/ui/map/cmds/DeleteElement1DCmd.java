@@ -52,7 +52,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Command for deleting one 1D element. The change event has to fired from outside!
@@ -69,13 +70,13 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private Set< Feature > m_setFeatureToRemove = null;
-  
+  private Set<Feature> m_setFeatureToRemove = null;
+
   public DeleteElement1DCmd( final IFEDiscretisationModel1d2d model1d2d, final Feature pFeature )
   {
     m_model1d2d = model1d2d;
-    m_listAffectedFeatures = new ArrayList< Feature >();
-    m_setFeatureToRemove = new HashSet< Feature >();
+    m_listAffectedFeatures = new ArrayList<Feature>();
+    m_setFeatureToRemove = new HashSet<Feature>();
     addElementToRemove( pFeature );
   }
 
@@ -85,7 +86,7 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -101,52 +102,52 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void process( ) throws Exception
   {
-    Set< Feature > lSetEdges = new HashSet< Feature >();
-    Set< Feature > lSet1DElements = new HashSet< Feature >();
-    
+    Set<Feature> lSetEdges = new HashSet<Feature>();
+    Set<Feature> lSet1DElements = new HashSet<Feature>();
+
     final RemoveEdgeWithoutContainerOrInvCmd lCmdEdgeRemove = new RemoveEdgeWithoutContainerOrInvCmd( m_model1d2d, null );
 
-    for( final Feature lFeature: m_setFeatureToRemove ){
+    for( final Feature lFeature : m_setFeatureToRemove )
+    {
       IElement1D lElement = (IElement1D) lFeature.getAdapter( IElement1D.class );
-      final String elementID = lElement.getId();
+      final String elementID = lElement.getGmlID();
       lSet1DElements.add( lFeature );
       m_listAffectedFeatures.add( lFeature );
       complexElements = lElement.getContainers();
       for( final IFE1D2DComplexElement complexElement : complexElements )
-      { 
+      {
         complexElement.getElements().remove( elementID );
-        m_listAffectedFeatures.add( complexElement );
+        m_listAffectedFeatures.add( complexElement.getFeature() );
       }
-      
+
       final IFE1D2DEdge edge = lElement.getEdge();
 
-      final IFeatureBindingCollection containers = edge.getContainers();
+      final IFeatureWrapperCollection containers = edge.getContainers();
       boolean isRemoved = containers.remove( elementID );
 
-      final IFeatureBindingCollection nodes = edge.getNodes();
+      final IFeatureWrapperCollection nodes = edge.getNodes();
       for( Iterator iterator = nodes.iterator(); iterator.hasNext(); )
       {
-        Feature featureWrapper = (Feature) iterator.next();
-        Feature wrappedFeature = featureWrapper;
+        IFeatureWrapper2 featureWrapper = (IFeatureWrapper2) iterator.next();
+        Feature wrappedFeature = featureWrapper.getFeature();
         m_listAffectedFeatures.add( wrappedFeature );
       }
-      
+
       if( !isRemoved )
       {
-        throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1") ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1" ) ); //$NON-NLS-1$
       }
-      lSetEdges.add( edge );
-     
-      m_listAffectedFeatures.add( edge );
-      
+      lSetEdges.add( edge.getFeature() );
+
+      m_listAffectedFeatures.add( edge.getFeature() );
+
       lCmdEdgeRemove.addEdgeToRemove( edge );
     }
     lCmdEdgeRemove.process();
-    m_model1d2d.getElements().removeAll( lSetEdges );
-    m_model1d2d.getElements().removeAll( lSet1DElements );
+    m_model1d2d.getElements().removeAllAtOnce( lSetEdges );
+    m_model1d2d.getElements().removeAllAtOnce( lSet1DElements );
   }
 
   /**
@@ -171,10 +172,10 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     return null;
-//    return new Feature[] { m_element1D };
+    // return new IFeatureWrapper2[] { m_element1D };
   }
 
   /**
@@ -190,8 +191,9 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
   {
     return m_listAffectedFeatures;
   }
-  
-  public void addElementToRemove( Feature pFeature ){
+
+  public void addElementToRemove( Feature pFeature )
+  {
     if( pFeature != null )
       m_setFeatureToRemove.add( pFeature );
   }

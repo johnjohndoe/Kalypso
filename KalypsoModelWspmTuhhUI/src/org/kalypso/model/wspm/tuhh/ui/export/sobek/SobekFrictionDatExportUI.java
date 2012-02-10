@@ -51,17 +51,14 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -72,7 +69,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class SobekFrictionDatExportUI
 {
-  private static final LabelProvider LABELPROVIDER = new LabelProvider()
+  private final static LabelProvider LABELPROVIDER = new LabelProvider()
   {
     /**
      * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -97,28 +94,25 @@ public class SobekFrictionDatExportUI
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 3, false ) );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( Messages.getString( "SobekFrictionDatExportUI.0" ) ); //$NON-NLS-1$
+    group.setText( "Rauheit" );
 
     createRoughnessCombo( group );
     createZoneChooser( group );
 
     if( group.getChildren().length == 0 )
-    {
       group.dispose();
-    }
   }
 
   private void createRoughnessCombo( final Composite parent )
   {
-    final String[] input = new String[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST };
+    final String[] input = new String[] { IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST };
 
     final Label roughnessLabel = new Label( parent, SWT.NONE );
-    roughnessLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, true, false ) );
-    roughnessLabel.setText( Messages.getString( "SobekFricFileChooser_0" ) ); //$NON-NLS-1$
-    roughnessLabel.setToolTipText( Messages.getString( "SobekFricFileChooser_1" ) ); //$NON-NLS-1$
+    roughnessLabel.setText( Messages.getString("SobekFricFileChooser_0") ); //$NON-NLS-1$
+    roughnessLabel.setToolTipText( Messages.getString("SobekFricFileChooser_1") ); //$NON-NLS-1$
 
     final ComboViewer roughnessViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
-    roughnessViewer.getControl().setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, true, false ) );
+    roughnessViewer.getControl().setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false, 2, 1 ) );
     roughnessViewer.setContentProvider( new ArrayContentProvider() );
     roughnessViewer.setLabelProvider( LABELPROVIDER );
     roughnessViewer.setInput( input );
@@ -132,24 +126,6 @@ public class SobekFrictionDatExportUI
         handleRoughnessSelectionChanged( (IStructuredSelection) event.getSelection() );
       }
     } );
-
-    final Button buttonClasses = new Button( parent, SWT.CHECK );
-    buttonClasses.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
-    buttonClasses.setText( Messages.getString("SobekFrictionDatExportUI.1") ); //$NON-NLS-1$
-    buttonClasses.setSelection( m_info.getPreferRoughnessClasses() );
-
-    buttonClasses.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handlePrefereRoughnessClassesSelectionChanged( buttonClasses.getSelection() );
-      }
-    } );
-
   }
 
   protected void handleRoughnessSelectionChanged( final IStructuredSelection selection )
@@ -158,17 +134,12 @@ public class SobekFrictionDatExportUI
     m_info.setRoughnessID( roughnessId );
   }
 
-  protected void handlePrefereRoughnessClassesSelectionChanged( final boolean selection )
-  {
-    m_info.setPreferRoughnessClasses( selection );
-  }
-
   private void createZoneChooser( final Composite parent )
   {
     final Label zoneLabel = new Label( parent, SWT.NONE );
     zoneLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
-    zoneLabel.setText( Messages.getString( "SobekFricFileChooser_2" ) ); //$NON-NLS-1$
-    zoneLabel.setToolTipText( Messages.getString( "SobekFricFileChooser_3" ) ); //$NON-NLS-1$
+    zoneLabel.setText( Messages.getString("SobekFricFileChooser_2") ); //$NON-NLS-1$
+    zoneLabel.setToolTipText( Messages.getString("SobekFricFileChooser_3") ); //$NON-NLS-1$
 
     final Table table = new Table( parent, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
@@ -193,9 +164,7 @@ public class SobekFrictionDatExportUI
   {
     final IFlowZoneType[] zoneTypes = new IFlowZoneType[objects.length];
     for( int i = 0; i < objects.length; i++ )
-    {
       zoneTypes[i] = (IFlowZoneType) objects[i];
-    }
 
     m_info.setRoughnessZoneTypes( zoneTypes );
   }

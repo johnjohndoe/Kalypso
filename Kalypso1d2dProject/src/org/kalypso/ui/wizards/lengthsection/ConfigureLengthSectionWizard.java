@@ -83,14 +83,14 @@ import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Wizard to show length sections to the chart view.
- *
+ * 
  * @author Thomas Jung
  */
 public class ConfigureLengthSectionWizard extends Wizard
@@ -188,7 +188,7 @@ public class ConfigureLengthSectionWizard extends Wizard
           {
             final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
 
-            final IFeatureBindingCollection<IResultMeta> children = stepResult.getChildren();
+            final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
             for( final IResultMeta child : children )
             {
               // get all documents
@@ -223,11 +223,11 @@ public class ConfigureLengthSectionWizard extends Wizard
             }
 
             // for terrain values we have to ask the parent, because the terrain result is assigned to him
-            final IResultMeta parent = stepResult.getOwner();
+            final IResultMeta parent = stepResult.getParent();
             if( parent instanceof ICalcUnitResultMeta )
             {
               final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;
-              final IFeatureBindingCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
+              final IFeatureWrapperCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
               for( final IResultMeta child : calcUniChildren )
               {
                 if( child instanceof IDocumentResultMeta )

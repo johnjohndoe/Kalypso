@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm;
 
@@ -62,27 +62,33 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.rcm.binding.IMetadata;
 import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.utils.log.GeoStatusLog;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * This task generates rainfall for catchment areas.
- *
+ * 
  * @author Gernot Belger
  */
 public class RainfallGenerationOperation implements ICoreRunnableWithProgress
@@ -91,13 +97,13 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
   private IObservation[] m_result;
 
+  private final URL m_rcmLocation;
+
   private final IStatusCollector m_stati = new StatusCollector( KalypsoModelRcmActivator.PLUGIN_ID );
 
-  private final IRainfallModelProvider m_modelProvider;
-
-  public RainfallGenerationOperation( final IRainfallModelProvider modelProvider, final IStringResolver variables )
+  public RainfallGenerationOperation( final URL rcmLocation, final IStringResolver variables )
   {
-    m_modelProvider = modelProvider;
+    m_rcmLocation = rcmLocation;
     m_variables = variables;
   }
 
@@ -120,12 +126,12 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     {
       // Real work starts here: create the operation, convert and validate parameters
       final SubMonitor progress = SubMonitor.convert( monitor, "Gebietsniederschlagermittlung", 100 );
+      progress.subTask( "Definition wird geladen..." );
 
-      rcm = m_modelProvider.getRainfallCatchmentModell( progress.newChild( 9 ) );
+      rcm = loadRainfallCatchmentModell( progress.newChild( 9 ) );
       log = initializeLog( rcm );
 
       final ITarget targetDefinition = rcm.getTarget();
-
       if( targetDefinition == null )
       {
         final String message = String.format( "Zeitreihenziel nicht definiert, Modell wird nicht berechnet." );
@@ -134,7 +140,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
         return status;
       }
 
-      final Feature[] catchments = targetDefinition.resolveCatchments();
+      final Feature[] catchments = targetDefinition.getCatchments();
 
       final IMetadata[] metadata = rcm.getMetadata().toArray( new IMetadata[0] );
       final IRainfallGenerator[] generators = rcm.getGenerators().toArray( new IRainfallGenerator[0] );
@@ -181,6 +187,29 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
     }
   }
 
+  private IRainfallCatchmentModel loadRainfallCatchmentModell( final SubMonitor progress ) throws Exception
+  {
+    final GMLWorkspace rcmWorkspace = GmlSerializer.createGMLWorkspace( m_rcmLocation, null );
+
+    final Feature rootFeature = rcmWorkspace.getRootFeature();
+    if( !(rootFeature instanceof IRainfallCatchmentModel) )
+    {
+      final String msg = String.format( "Root feature must be of type %s", IRainfallCatchmentModel.QNAME );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelRcmActivator.PLUGIN_ID, msg );
+      throw new CoreException( status );
+    }
+
+    final IRainfallCatchmentModel rcm = (IRainfallCatchmentModel) rootFeature;
+
+    // TODO: do we really need to do that? No geo-operations will be done
+    final TransformVisitor transformVisitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    rcmWorkspace.accept( transformVisitor, rootFeature, TransformVisitor.DEPTH_INFINITE );
+
+    ProgressUtilities.done( progress );
+
+    return rcm;
+  }
+
   /** Create a log, if a log file was provided. */
   private GeoStatusLog initializeLog( final IRainfallCatchmentModel rcm ) throws CoreException
   {
@@ -219,16 +248,26 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
       for( int i = 0; i < links.length; i++ )
       {
-        final IObservation obs = observations[i];
         final TimeseriesLinkType link = links[i];
-        if( obs == null || link == null )
+        if( link == null )
           continue;
 
-        final URL context = catchmentFeatures[i].getWorkspace().getContext();
+        /* Get the observation. */
+        /* If it is null, use the request defined in the filter to create a default one. */
+        IObservation obs = observations[i];
+        if( obs == null )
+          obs = RequestFactory.createDefaultObservation( targetFilter );
+
+        /* If it is still null, continue. */
+        if( obs == null )
+          continue;
 
         final IObservation filteredObs = ZmlFactory.decorateObservation( obs, targetFilter, null );
         final IRequest request = new ObservationRequest( period );
+
+        final URL context = catchmentFeatures[i].getWorkspace().getContext();
         final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+
         File file = ResourceUtilities.findJavaFileFromURL( location );
         if( file == null )
           file = FileUtils.toFile( location );

@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.results.SimpleNodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -237,21 +237,21 @@ public class SWANAdditionalDataConverter
           {
             List<Double> lListDoubleVelocity = lResultAct.getVelocity();// AbsoluteVelocity();
             lFormatterCurrent.format( "%.2f\n", lListDoubleVelocity.get( 0 ) ); //$NON-NLS-1$
-            lStrBuffY.append( String.format( Locale.US, "%.2f\n", lListDoubleVelocity.get( 1 ) ) ); //$NON-NLS-1$
+            lStrBuffY.append( String.format( Locale.US, "%.2f\n", lListDoubleVelocity.get( 1 ) ) );
           }
           catch( Exception e )
           {
             lFormatterCurrent.format( "%s\n", m_strDefaulCurrentValue ); //$NON-NLS-1$
-            lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) ); //$NON-NLS-1$
+            lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) );
           }
         }
         else
         {
           lFormatterCurrent.format( "%s\n", m_strDefaulCurrentValue ); //$NON-NLS-1$
-          lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) ); //$NON-NLS-1$
+          lStrBuffY.append( String.format( Locale.US, "%s\n", m_strDefaulCurrentValue ) );
         }
       }
-      lFormatterCurrent.format( "%s\n", lStrBuffY.toString() ); //$NON-NLS-1$
+      lFormatterCurrent.format( "%s\n", lStrBuffY.toString() );
 
       FormatterUtils.checkIoException( lFormatterCurrent );
     }

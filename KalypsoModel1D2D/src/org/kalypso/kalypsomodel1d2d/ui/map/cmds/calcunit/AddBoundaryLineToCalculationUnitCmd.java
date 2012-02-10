@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
@@ -82,12 +83,12 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     if( m_commandProcessed )
-      return new Feature[] { m_calculationUnit, m_feLine };
+      return new IFeatureWrapper2[] { m_calculationUnit, m_feLine };
     else
-      return new Feature[] {};
+      return new IFeatureWrapper2[] {};
   }
 
   /**
@@ -141,10 +142,10 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   private final void fireProcessChanges( )
   {
     final List<Feature> features = new ArrayList<Feature>();
-    features.add( m_calculationUnit );
-    features.add( m_feLine );
-    final GMLWorkspace workspace = m_calculationUnit.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d, features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    features.add( m_calculationUnit.getFeature() );
+    features.add( m_feLine.getFeature() );
+    final GMLWorkspace workspace = m_calculationUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
     m_commandProcessed = true;
   }

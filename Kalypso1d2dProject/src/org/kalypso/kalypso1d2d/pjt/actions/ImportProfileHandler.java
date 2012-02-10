@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -70,8 +70,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Thomas Jung
@@ -87,7 +87,7 @@ public class ImportProfileHandler extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider<IModel> modelProvider = (ICaseDataProvider<IModel>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IModel> modelProvider = (ICaseDataProvider<IModel>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
     ITerrainModel terrainModel;
     try
@@ -104,7 +104,7 @@ public class ImportProfileHandler extends AbstractHandler
 
     final ImportTrippleWizard importWizard = new ImportTrippleWizard( networkModel );
 
-    importWizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
+    importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
     dialog.setRememberSize( true );
@@ -114,7 +114,7 @@ public class ImportProfileHandler extends AbstractHandler
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class.getName(), new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
+      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -133,9 +133,9 @@ public class ImportProfileHandler extends AbstractHandler
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
 
         final IRiverProfileNetwork network = importWizard.getAddedRiverNetwork();
-        final FeaturePath networkPath = new FeaturePath( network);
+        final FeaturePath networkPath = new FeaturePath( network.getFeature() );
         final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-        final String source = terrainModel.getWorkspace().getContext().toString();
+        final String source = terrainModel.getFeature().getWorkspace().getContext().toString();
         // TODO: aktivates the theme, is this ok?
         final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source ); //$NON-NLS-1$
         mapView.postCommand( command, null );

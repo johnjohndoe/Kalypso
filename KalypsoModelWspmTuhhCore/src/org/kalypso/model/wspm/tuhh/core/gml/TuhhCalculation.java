@@ -47,13 +47,13 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.gml.IRunOffEvent;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -62,11 +62,69 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for CalculationReibConstWspmTuhhSteadyState AND CalculationWspmTuhhSteadyState
- *
+ * 
  * @author Gernot Belger
  */
-public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalculation
+public abstract class TuhhCalculation extends Feature_Impl implements IWspmConstants, IWspmTuhhConstants
 {
+  public static final QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" ); //$NON-NLS-1$
+
+  public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" ); //$NON-NLS-1$
+
+  public static final QName QNAME_TUHH_CALC_REIB_CONST = new QName( NS_WSPM_TUHH, "CalculationReibConstWspmTuhhSteadyState" ); //$NON-NLS-1$
+
+  private static final QName QNAME_PROP_POLYNOME_MEMBER = new QName( NS_WSPM_TUHH, "calcPolynomesMember" ); //$NON-NLS-1$
+
+  private static final QName QNAME_PROP_WATERLEVEL_PARAMS = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" ); //$NON-NLS-1$
+
+  private static final QName QNAME_PROP_EXE_VERSION = new QName( NS_WSPM_TUHH, "exeVersion" ); //$NON-NLS-1$
+
+  private static final QName QNAME_PROP_SPECIAL_OPTIONS_MEMBER = new QName( NS_WSPM_TUHH, "specialOptionsMember" ); //$NON-NLS-1$
+
+  private static final QName QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS = new QName( NS_WSPM_TUHH, "useExtremeRoughness" ); //$NON-NLS-1$
+
+  public static enum MODE
+  {
+    WATERLEVEL,
+    BF_UNIFORM,
+    BF_NON_UNIFORM,
+    REIB_KONST;
+  }
+
+  public static enum FLIESSGESETZ
+  {
+    DARCY_WEISBACH_OHNE_FORMEINFLUSS,
+    DARCY_WEISBACH_MIT_FORMEINFLUSS,
+    MANNING_STRICKLER;
+  }
+
+  public static enum START_KONDITION_KIND
+  {
+    CRITICAL_WATER_DEPTH,
+    UNIFORM_BOTTOM_SLOPE,
+    WATERLEVEL;
+  }
+
+  public static enum WSP_ITERATION_TYPE
+  {
+    SIMPLE,
+    EXACT;
+  }
+
+  public static enum VERZOEGERUNSVERLUST_TYPE
+  {
+    DVWK,
+    BJOERNSEN,
+    DFG,
+    NON;
+  }
+
+  public static enum REIBUNGSVERLUST_TYPE
+  {
+    TRAPEZ_FORMULA,
+    GEOMETRIC_FORMULA
+  }
+
   public TuhhCalculation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -82,7 +140,8 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     {
       // neues machen
       final GMLWorkspace workspace = getWorkspace();
-      final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NS_WSPM, "CalcCreation" ) ); //$NON-NLS-1$
+      final IGMLSchema schema = workspace.getGMLSchema();
+      final IFeatureType featureType = schema.getFeatureType( new QName( NS_WSPM, "CalcCreation" ) ); //$NON-NLS-1$
       final IRelationType parentRelation = (IRelationType) getFeatureType().getProperty( qname );
       calcCreationFeature = workspace.createFeature( this, parentRelation, featureType );
       setProperty( qname, calcCreationFeature );
@@ -94,12 +153,12 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public void setReachRef( final TuhhReach reach )
   {
-    setProperty( QN_PROPERTY_STEADY_STATE_MEMBER, reach.getId() ); //$NON-NLS-1$
+    setProperty( new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ), reach.getId() ); //$NON-NLS-1$
   }
 
   public void setFliessgesetz( final FLIESSGESETZ gesetz )
   {
-    setProperty( QN_PROPERTY_FLIESSGESETZ, gesetz.name() ); //$NON-NLS-1$
+    setProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), gesetz.name() ); //$NON-NLS-1$
   }
 
   public FLIESSGESETZ getFliessgesetz( )
@@ -110,34 +169,16 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
         return FLIESSGESETZ.DARCY_WEISBACH_OHNE_FORMEINFLUSS;
 
       default:
-        final String property = getProperty( QN_PROPERTY_FLIESSGESETZ, String.class ); //$NON-NLS-1$
+        final String property = getProperty( new QName( NS_WSPM_TUHH, "fliessgesetz" ), String.class ); //$NON-NLS-1$
         return FLIESSGESETZ.valueOf( property );
     }
-  }
 
-  @Override
-  public boolean isPreferingRoughnessClasses( )
-  {
-    final Object property = getProperty( QN_PROPERTY_PREFERE_ROUGHNESS_CLASSES );
-    if( Objects.isNull( property ) )
-      return false;
-
-    return Boolean.valueOf( property.toString() );
-  }
-
-  @Override
-  public boolean isPreferingVegetationClasses( )
-  {
-    final Object property = getProperty( QN_PROPERTY_PREFERE_VEGETATION_CLASSES );
-    if( Objects.isNull( property ) )
-      return false;
-
-    return Boolean.valueOf( property.toString() );
   }
 
   public void setSubReachDef( final double startStation, final double endStation )
   {
-    final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
+    final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
+    final Feature subReachFeature = FeatureHelper.getSubFeature( this, qname );
 
     final BigDecimal bigStart = ProfilUtil.stationToBigDecimal( startStation );
     final BigDecimal bigEnd = ProfilUtil.stationToBigDecimal( endStation );
@@ -147,14 +188,16 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public BigDecimal getStartStation( )
   {
-    final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
+    final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
+    final Feature subReachFeature = FeatureHelper.getSubFeature( this, qname );
 
     return (BigDecimal) subReachFeature.getProperty( new QName( NS_WSPM_TUHH, "startStation" ) ); //$NON-NLS-1$
   }
 
   public BigDecimal getEndStation( )
   {
-    final Feature subReachFeature = FeatureHelper.getSubFeature( this, QN_PROPERTY_SUB_REACH_DEFINITION_MEMBER );
+    final QName qname = new QName( NS_WSPM_TUHH, "subReachDefinitionMember" ); //$NON-NLS-1$
+    final Feature subReachFeature = FeatureHelper.getSubFeature( this, qname );
 
     return (BigDecimal) subReachFeature.getProperty( new QName( NS_WSPM_TUHH, "endStation" ) ); //$NON-NLS-1$
   }
@@ -231,21 +274,21 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, final boolean doCalcBarrages, final boolean useExtremeRoughness )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
 
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "wspIteration" ), iterationType.name() ); //$NON-NLS-1$
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ), verzType.name() ); //$NON-NLS-1$
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ), reibType.name() ); //$NON-NLS-1$
 
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QN_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
     specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ), Boolean.valueOf( doCalcBridges ) ); //$NON-NLS-1$
     specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ), Boolean.valueOf( doCalcBarrages ) ); //$NON-NLS-1$
-    specialFeature.setProperty( QN_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS, Boolean.valueOf( useExtremeRoughness ) );
+    specialFeature.setProperty( QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS, Boolean.valueOf( useExtremeRoughness ) );
   }
 
   public WSP_ITERATION_TYPE getIterationType( )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
 
     return WSP_ITERATION_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "wspIteration" ) ) ); //$NON-NLS-1$
   }
@@ -258,7 +301,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
         return VERZOEGERUNSVERLUST_TYPE.NON;
 
       default:
-        final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
+        final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
 
         return VERZOEGERUNSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ) ) ); //$NON-NLS-1$
     }
@@ -266,15 +309,15 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public REIBUNGSVERLUST_TYPE getReibungsverlust( )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
 
     return REIBUNGSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ) ) ); //$NON-NLS-1$
   }
 
   public boolean isCalcBridges( )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QN_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
     final Boolean value = (Boolean) specialFeature.getProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ) ); //$NON-NLS-1$
     if( value == null )
       return false;
@@ -284,8 +327,8 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public boolean isCalcBarrages( )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QN_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
     final Boolean value = (Boolean) specialFeature.getProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ) ); //$NON-NLS-1$
     if( value == null )
       return false;
@@ -295,9 +338,9 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public boolean isUseExtremeRoughness( )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QN_PROP_SPECIAL_OPTIONS_MEMBER );
-    final Boolean useExtremeRoughness = (Boolean) specialFeature.getProperty( QN_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Boolean useExtremeRoughness = (Boolean) specialFeature.getProperty( QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS );
     if( useExtremeRoughness == null )
       return false;
 
@@ -309,13 +352,13 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
     setProperty( new QName( NS_WSPM_TUHH, "mode" ), mode.name() ); //$NON-NLS-1$
   }
 
-  public void setQRange( final double minQ, final double maxQ, final double qStep )
+  public void setQRange( final double minQ, final double maxQ, final double Qstep )
   {
     final Feature feature = FeatureHelper.getSubFeature( this, new QName( NS_WSPM_TUHH, "runOffIntervalMember" ) ); //$NON-NLS-1$
 
     feature.setProperty( new QName( NS_WSPM_TUHH, "minimalRunOff" ), new Double( minQ ) ); //$NON-NLS-1$
     feature.setProperty( new QName( NS_WSPM_TUHH, "maximalRunOff" ), new Double( maxQ ) ); //$NON-NLS-1$
-    feature.setProperty( new QName( NS_WSPM_TUHH, "runOffStep" ), new Double( qStep ) ); //$NON-NLS-1$
+    feature.setProperty( new QName( NS_WSPM_TUHH, "runOffStep" ), new Double( Qstep ) ); //$NON-NLS-1$
   }
 
   public Double getMinQ( )
@@ -343,7 +386,7 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public TuhhReach getReach( )
   {
-    final Feature reachFeature = FeatureHelper.resolveLink( this, QN_PROPERTY_STEADY_STATE_MEMBER ); //$NON-NLS-1$
+    final Feature reachFeature = FeatureHelper.resolveLink( this, new QName( NS_WSPM_TUHH, "reachWspmTuhhSteadyStateMember" ) ); //$NON-NLS-1$
     return (TuhhReach) reachFeature;
   }
 
@@ -354,10 +397,10 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
 
   public MODE getCalcMode( )
   {
-    if( QN_TUHH_CALC_REIB_CONST.equals( getQName() ) )
+    if( QNAME_TUHH_CALC_REIB_CONST.equals( getQName() ) )
       return MODE.REIB_KONST;
 
-    final String value = (String) getProperty( PROPERTY_MODE ); //$NON-NLS-1$
+    final String value = (String) getProperty( new QName( NS_WSPM_TUHH, "mode" ) ); //$NON-NLS-1$
     return MODE.valueOf( value );
   }
 
@@ -369,23 +412,23 @@ public abstract class TuhhCalculation extends Feature_Impl implements ITuhhCalcu
   /** Only valid for REIB_KONST mode. */
   public PolynomeProperties getPolynomeProperties( )
   {
-    final Feature polyFeature = (Feature) getProperty( QN_PROP_POLYNOME_MEMBER );
+    final Feature polyFeature = (Feature) getProperty( QNAME_PROP_POLYNOME_MEMBER );
     if( polyFeature == null )
       return null;
 
-    return (PolynomeProperties) polyFeature;
+    return new PolynomeProperties( polyFeature );
   }
 
   public String getVersion( )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
-    return (String) parameterFeature.getProperty( QN_PROP_EXE_VERSION );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
+    return (String) parameterFeature.getProperty( QNAME_PROP_EXE_VERSION );
   }
 
   public void setVersion( final String version )
   {
-    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QN_PROP_WATERLEVEL_PARAMS );
-    parameterFeature.setProperty( QN_PROP_EXE_VERSION, version == null ? null : version );
+    final Feature parameterFeature = FeatureHelper.getSubFeature( this, QNAME_PROP_WATERLEVEL_PARAMS );
+    parameterFeature.setProperty( QNAME_PROP_EXE_VERSION, version == null ? null : version );
   }
 
   public IPath getResultFolder( )

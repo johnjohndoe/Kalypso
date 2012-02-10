@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.postprocessing;
 
@@ -59,13 +59,12 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.initialValues.InitialValues;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.channels.Channel;
+import org.kalypso.model.hydrology.binding.model.Channel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.NATimeSettings;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
@@ -155,7 +154,7 @@ public class LzsToGml
     GmlSerializer.serializeWorkspace( resultFile, m_lzWorkspace, "UTF-8" ); //$NON-NLS-1$
 
     final String iniDate = m_dateFormat.format( m_initialDate );
-    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.42", iniDate ) ); //$NON-NLS-1$
+    m_logger.info( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.42", iniDate ) ); //$NON-NLS-1$        
   }
 
   private void readCatchmentStartCondition( final Catchment catchment ) throws Exception
@@ -171,6 +170,7 @@ public class LzsToGml
     final String fileName = String.format( "we%s.lzs", asciiID ); //$NON-NLS-1$
     final File lzsFile = new File( m_lzsimDir, fileName );
 
+
     FileReader fileReader = null;
     try
     {
@@ -178,9 +178,9 @@ public class LzsToGml
       readLzsFile( fileReader, catchment, iniCatchment );
       fileReader.close();
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
-      m_logger.warning( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", catchment.getName()) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.convert.namodel.manager.LzsimManager.27", asciiID, catchment.getName() ) ); //$NON-NLS-1$ 
     }
     finally
     {
@@ -192,7 +192,7 @@ public class LzsToGml
   {
     final LineNumberReader reader = new LineNumberReader( fileReader );
 
-    final IFeatureType lzCatchmentFT = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NaModelConstants.NS_INIVALUES, "Catchment" ) ); //$NON-NLS-1$
+    final IFeatureType lzCatchmentFT = m_lzWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_INIVALUES, "Catchment" ) ); //$NON-NLS-1$
     final IRelationType lzinitHydMemberRT = (IRelationType) lzCatchmentFT.getProperty( NaModelConstants.INI_CATCHMENT_LINK_HYD_PROP );
 
     final String iniDate = m_dateFormat.format( m_initialDate );
@@ -248,7 +248,7 @@ public class LzsToGml
             counterHydros = 0;
           }
         }
-          break;
+        break;
 
         case READ_GWSP:
         {
@@ -259,7 +259,7 @@ public class LzsToGml
           lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb ); //$NON-NLS-1$
           status = CatchmentStatus.SEARCH_HEADER;
         }
-          break;
+        break;
 
         case READ_SNOW:
           final String[] strings = cleanLine.split( " " ); //$NON-NLS-1$

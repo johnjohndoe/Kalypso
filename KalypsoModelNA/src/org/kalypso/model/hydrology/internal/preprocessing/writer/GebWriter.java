@@ -45,15 +45,15 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.NAControl;
 import org.kalypso.model.hydrology.binding.model.Bodenschichtkorrektur;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.Grundwasserabfluss;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.i18n.Messages;
-import org.kalypso.model.hydrology.internal.preprocessing.NAPreprocessorException;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author doemming
@@ -82,14 +82,17 @@ public class GebWriter extends AbstractCoreFileWriter
     m_fileManager = fileManager;
   }
 
+  /**
+   * @see org.kalypso.model.hydrology.internal.preprocessing.writer.AbstractWriter#writeContent(java.io.PrintWriter)
+   */
   @Override
-  protected void writeContent( final PrintWriter writer ) throws NAPreprocessorException
+  protected void writeContent( final PrintWriter writer ) throws Exception
   {
     for( final Catchment catchment : m_catchments )
       writeFeature( writer, catchment );
   }
 
-  private void writeFeature( final PrintWriter writer, final Catchment catchment ) throws NAPreprocessorException
+  private void writeFeature( final PrintWriter writer, final Catchment catchment ) throws Exception
   {
     // 0
     final int asciiID = m_idManager.getAsciiID( catchment );
@@ -126,13 +129,13 @@ public class GebWriter extends AbstractCoreFileWriter
       // TODO: copy the we999 into the inp.dat folder or stop calculation!
     }
     else
-      writer.append( "we_nat.zft\n" ); //$NON-NLS-1$
+      writer.append( "we_nat.zft\n" );
 
     writer.append( "we.hyd\n" ); //$NON-NLS-1$
 
     // 7
     // (snowtype,a15)(ftem,*)_(fver,*)
-    writer.format( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() ); //$NON-NLS-1$
+    writer.format( "%-15s%s %s\n", catchment.getSnowtype(), catchment.getFtem(), catchment.getFver() );
 
     // 8
     writeBodenKorrektur( writer, catchment );
@@ -171,14 +174,14 @@ public class GebWriter extends AbstractCoreFileWriter
     if( izknNode == null )
       writer.append( " 0\n" ); //$NON-NLS-1$
     else
-      writer.append( String.format( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ) ); //$NON-NLS-1$
+      writer.append( String.format( Locale.US, " %4d\n", m_idManager.getAsciiID( izknNode ) ) );
 
     // KommentarZeile
     writer.append( "ende gebietsdatensatz\n" ); //$NON-NLS-1$//$NON-NLS-2$
 
   }
 
-  private void writeGrundwasserabfluss( final Catchment catchment, final PrintWriter writer ) throws NAPreprocessorException
+  private void writeGrundwasserabfluss( final Catchment catchment, final PrintWriter writer ) throws SimulationException
   {
     final Grundwasserabfluss[] grundwasserAbflussFeatures = catchment.getGrundwasserAbflussFeatures();
     writer.format( Locale.US, "%d\n", grundwasserAbflussFeatures.length ); //$NON-NLS-1$
@@ -187,7 +190,7 @@ public class GebWriter extends AbstractCoreFileWriter
 
     final double sumGwwi = catchment.getSumGwwi();
     if( sumGwwi > 1.001 )
-      throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchment.getName() ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.84", catchment.getName() ) ); //$NON-NLS-1$
 
     if( sumGwwi < 0.999 )
     {
@@ -200,14 +203,14 @@ public class GebWriter extends AbstractCoreFileWriter
     writeLine14( catchment, sumGwwi, writer );
   }
 
-  private void writeLine13( final Catchment catchment, final double sumGwwi, final PrintWriter writer ) throws NAPreprocessorException
+  private void writeLine13( final Catchment catchment, final double sumGwwi, final PrintWriter writer ) throws SimulationException
   {
     final Grundwasserabfluss[] grundwasserAbflussFeatures = catchment.getGrundwasserAbflussFeatures();
     for( final Grundwasserabfluss gwa : grundwasserAbflussFeatures )
     {
       final Catchment linkedFE = gwa.getNgwzu();
       if( linkedFE == null )
-        throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", catchment.getName() ) ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString( "org.kalypso.convert.namodel.manager.CatchmentManager.80", catchment.getName() ) ); //$NON-NLS-1$ 
 
       writer.format( Locale.US, "%d ", m_idManager.getAsciiID( linkedFE ) ); //$NON-NLS-1$
     }

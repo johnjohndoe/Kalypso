@@ -5,7 +5,7 @@
 	<Rule>
 		<Name>rule_downstream_strand</Name>
 		<Title>%rule_downstream_strand_title</Title>
-		<LineSymbolizer uom="pixel">
+		<LineSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>link_downStreamChannelMember</ogc:PropertyName>
 			</Geometry>
@@ -15,30 +15,6 @@
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>
-                <CssParameter name="stroke-arrow-type">line</CssParameter>
-                <CssParameter name="stroke-arrow-widget">open</CssParameter>
-                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
-                <CssParameter name="stroke-arrow-size">35</CssParameter>
-			</Stroke>
-		</LineSymbolizer>
-	</Rule>
-	<Rule>
-		<Name>rule_qqRelatedNode</Name>
-		<Title>%rule_qqRelatedNode_title</Title>
-		<LineSymbolizer>
-			<Geometry>
-				<ogc:PropertyName>link_qqRelatedNode</ogc:PropertyName>
-			</Geometry>
-			<Stroke>
-				<CssParameter name="stroke">#22b14C</CssParameter>
-				<CssParameter name="stroke-width">2.0</CssParameter>
-				<CssParameter name="stroke-linejoin">mitre</CssParameter>
-				<CssParameter name="stroke-opacity">1.0</CssParameter>
-				<CssParameter name="stroke-linecap">butt</CssParameter>
-                <CssParameter name="stroke-arrow-type">line</CssParameter>
-                <CssParameter name="stroke-arrow-widget">open</CssParameter>
-                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
-                <CssParameter name="stroke-arrow-size">35</CssParameter>
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
@@ -55,14 +31,10 @@
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">butt</CssParameter>
-                <CssParameter name="stroke-arrow-type">line</CssParameter>
-                <CssParameter name="stroke-arrow-widget">open</CssParameter>
-                <CssParameter name="stroke-arrow-alignment">end</CssParameter>
-                <CssParameter name="stroke-arrow-size">35</CssParameter>
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
-    <Rule>
+<Rule>
         <Name>rule_location</Name>
         <Title>%rule_location_title</Title>
         <PointSymbolizer uom="pixel">
@@ -94,8 +66,9 @@
                 <ogc:PropertyName>name</ogc:PropertyName>
             </Label>
             <Font>
+                <CssParameter name="font-family" />
                 <CssParameter name="font-color">#000000</CssParameter>
-                <CssParameter name="font-size">12.0</CssParameter>
+                <CssParameter name="font-size">10.0</CssParameter>
                 <CssParameter name="font-style">normal</CssParameter>
                 <CssParameter name="font-weight">normal</CssParameter>
             </Font>
@@ -106,23 +79,22 @@
                         <AnchorPointY>0.0</AnchorPointY>
                     </AnchorPoint>
                     <Displacement>
-                        <DisplacementX>10.0</DisplacementX>
-                        <DisplacementY>10.0</DisplacementY>
+                        <DisplacementX>4.0</DisplacementX>
+                        <DisplacementY>-10.0</DisplacementY>
                     </Displacement>
                     <Rotation>0.0</Rotation>
                 </PointPlacement>
             </LabelPlacement>
             <Halo>
-                <Radius>3</Radius>
                 <Fill>
-                    <CssParameter name="fill-opacity">1.0</CssParameter>
-                    <CssParameter name="fill">#ff6060</CssParameter>
+                    <CssParameter name="fill-opacity">0.0</CssParameter>
+                    <CssParameter name="fill">#ff0000</CssParameter>
                 </Fill>
                 <Stroke>
                     <CssParameter name="stroke">#000000</CssParameter>
-                    <CssParameter name="stroke-width">2.0</CssParameter>
+                    <CssParameter name="stroke-width">1.0</CssParameter>
                     <CssParameter name="stroke-linejoin">round</CssParameter>
-                    <CssParameter name="stroke-opacity">1.0</CssParameter>
+                    <CssParameter name="stroke-opacity">0.0</CssParameter>
                     <CssParameter name="stroke-linecap">square</CssParameter>
                 </Stroke>
             </Halo>

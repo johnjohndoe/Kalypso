@@ -18,9 +18,8 @@
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 
 	<!-- Zeitreihen als Verzeichnisse -->
-    <input id="NiederschlagDir" description="Precipitation Timeseries" optional="true"/>
-    <input id="KlimaDir" description="Temperature Timeseries" optional="true"/>
-
+    <input id="NiederschlagDir" description="description" optional="true"/>
+    <input id="KlimaDir" description="description" optional="true"/>
     <input id="PegelDir" description="description" optional="true"/>
     <input id="ErgebnisDir" description="description" optional="true"/>
 

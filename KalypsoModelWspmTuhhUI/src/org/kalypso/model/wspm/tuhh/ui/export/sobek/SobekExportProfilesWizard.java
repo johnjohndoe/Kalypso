@@ -47,39 +47,28 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 
 /**
  * @author kimwerner
  */
 public class SobekExportProfilesWizard extends ExportProfilesWizard
 {
-  private SobekProfileExportFileChooserPage m_profileFileChooserPage;
+  private final SobekProfileExportFileChooserPage m_profileFileChooserPage;
 
-  public SobekExportProfilesWizard( )
+  public SobekExportProfilesWizard( final ProfileSelection selection )
   {
+    super( selection );
+
     setHelpAvailable( false );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.export.ExportProfilesWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    super.init( workbench, selection );
 
     m_profileFileChooserPage = new SobekProfileExportFileChooserPage();
     addPage( m_profileFileChooserPage );
@@ -90,12 +79,12 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
+  protected void exportProfiles( final IProfileFeature[] profiles, final IProgressMonitor monitor ) throws CoreException
   {
     final ISobekProfileExportOperation[] operations = m_profileFileChooserPage.getOperations( profiles );
     final Collection<IStatus> problems = new ArrayList<IStatus>( operations.length );
 
-    monitor.beginTask( Messages.getString( "SobekExportProfilesWizard_0" ), operations.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("SobekExportProfilesWizard_0"), operations.length ); //$NON-NLS-1$
 
     for( final ISobekProfileExportOperation operation : operations )
     {
@@ -103,19 +92,15 @@ public class SobekExportProfilesWizard extends ExportProfilesWizard
 
       final IStatus execute = operation.execute( new SubProgressMonitor( monitor, 1 ) );
       if( !execute.isOK() )
-      {
         problems.add( execute );
-      }
     }
 
     final IStatus[] problemChildren = problems.toArray( new IStatus[problems.size()] );
     if( problemChildren.length > 0 )
     {
-      final String message = Messages.getString( "SobekExportProfilesWizard_1" ); //$NON-NLS-1$
+      final String message = Messages.getString("SobekExportProfilesWizard_1"); //$NON-NLS-1$
       final IStatus status = new MultiStatus( KalypsoModelWspmTuhhUIPlugin.getID(), 0, problemChildren, message, null );
       throw new CoreException( status );
     }
-
-    return Status.OK_STATUS;
   }
 }

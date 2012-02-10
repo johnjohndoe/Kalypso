@@ -26,10 +26,11 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
- *
+ * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class Transformer implements ICoreRunnableWithProgress
@@ -117,7 +118,7 @@ public class Transformer implements ICoreRunnableWithProgress
             final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
             m_NumberOfEntriesAdded++;
             roughnessPolygon.setSurface( element );
-            m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
+            m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
           }
         }
         else if( gm_Whatever instanceof GM_Surface )
@@ -125,7 +126,7 @@ public class Transformer implements ICoreRunnableWithProgress
           final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
           m_NumberOfEntriesAdded++;
           roughnessPolygon.setSurface( (GM_Surface< ? >) gm_Whatever );
-          m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getId(), propertyValue );
+          m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
         }
         else
           throw new ClassCastException( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.Transformer.2" ) + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
@@ -152,21 +153,24 @@ public class Transformer implements ICoreRunnableWithProgress
   private void setSelectedRoughnessChoice( ) throws Exception
   {
     final GMLWorkspace shpWorkspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
-    final GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getParentFeature().getWorkspace();
+    final GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getFeature().getWorkspace();
     for( final String key : m_data.getRoughnessShapeStaticRelationMap().keySet() )
     {
       final Feature feature = myWorkspace.getFeature( key );
       final Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        RoughnessPolygon.createClassLink( feature, RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature );
+        final StringBuffer xlinkBuffer = new StringBuffer( 50 );
+        xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize(); //$NON-NLS-1$ //$NON-NLS-2$
+        final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        feature.setProperty( RoughnessPolygon.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
     // use (dummy) command to make workspace dirty
     final SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
     if( caseDataProvider != null )
     {
-      caseDataProvider.postCommand( ITerrainModel.class.getName(), new AddRoughnessPolygonsCmd() );
+      caseDataProvider.postCommand( ITerrainModel.class, new AddRoughnessPolygonsCmd() );
     }
 
   }
@@ -175,14 +179,14 @@ public class Transformer implements ICoreRunnableWithProgress
   {
 
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
-    final FeatureList wrappedList = roughnessPolygonCollection.getFeatureList();
-    final Feature parentFeature = wrappedList.getOwner();
+    final FeatureList wrappedList = roughnessPolygonCollection.getWrappedList();
+    final Feature parentFeature = wrappedList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     // fire event for roughness changes
     // TODO Patrice check it
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getOwner(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getParent(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // TODO: also post the adds as commands to the dataProvider
 
     //

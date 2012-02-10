@@ -7,6 +7,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Gernot Belger
+ *
  */
 public final class DialogSettingsByNameComparator implements Comparator<IDialogSettings>
 {

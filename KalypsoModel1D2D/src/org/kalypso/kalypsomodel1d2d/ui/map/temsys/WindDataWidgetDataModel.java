@@ -58,8 +58,8 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -67,18 +67,18 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author ig
- *
+ * 
  */
 public class WindDataWidgetDataModel extends KeyBasedDataModel
 {
-  public static final String STR_WIND_STEP_PROP_NAME = "windStepActual"; //$NON-NLS-1$
+  public static final String STR_WIND_STEP_PROP_NAME = "windStepActual";
 
   public static final String WIND_THEME = "_WINDDATA_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { IWindModel.class.toString(), IWindDataModelSystem.class.toString(), IWindDataModel.class.toString(), IMapModell.class.toString(), IMapPanel.class.toString(),
     WIND_THEME };
 
-  private final ICaseDataProvider<Feature> m_dataProvider;
+  private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
   @SuppressWarnings("unchecked")
   public WindDataWidgetDataModel( )
@@ -87,7 +87,7 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
   public void setMapModell( final IMapModell mapModell )
@@ -100,11 +100,12 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
     return (IMapModell) getData( IMapModell.class.toString() );
   }
 
+  @SuppressWarnings("deprecation")
   public CommandableWorkspace getWindModelWorkspace( )
   {
     try
     {
-      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IWindModel.class.getName() );
+      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IWindModel.class );
     }
     catch( final IllegalArgumentException e )
     {
@@ -171,7 +172,7 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
     setData( IMapPanel.class.toString(), mapPanel );
   }
 
-  public final IFeatureBindingCollection<IWindDataModel> getWindDataModels( )
+  public final IFeatureWrapperCollection<IWindDataModel> getWindDataModels( )
   {
     final IWindDataModelSystem lWindDataModelSystem = getWindDataModelSystem();
     if( lWindDataModelSystem == null )

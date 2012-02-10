@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -50,6 +47,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -62,7 +60,7 @@ public class ProfileAltitudeValidator
 
   private final double m_delta;
 
-  private final IComponent m_breite;
+  private final IComponent m_Breite;
 
   private final IValidatorMarkerCollector m_collector;
 
@@ -70,8 +68,8 @@ public class ProfileAltitudeValidator
 
   public ProfileAltitudeValidator( final IProfil profil, final IValidatorMarkerCollector collector )
   {
-    m_breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    m_delta = m_breite == null ? 0.0001 : m_breite.getPrecision();
+    m_Breite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    m_delta = m_Breite == null ? 0.0001 : m_Breite.getPrecision();
     m_station = String.format( "km %.4f", profil.getStation() ); //$NON-NLS-1$
     m_profil = profil;
     m_collector = collector;
@@ -92,19 +90,19 @@ public class ProfileAltitudeValidator
     m_collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, m_station, pos, componentID, new IProfilMarkerResolution[] { resolution } );
   }
 
-  public final int whileEqual( final int begin, final int end, final Map<Integer, Double> interpolatedValues )
+  public final int whileEqual( final int begin, final int end, final String componentID )
   {
-    return validate( begin, end, interpolatedValues, 0, false );
+    return validate( begin, end, componentID, 0, false );
   }
 
-  public final int whileUpper( final int begin, final int end, final Map<Integer, Double> interpolatedValues, final boolean orEqual )
+  public final int whileUpper( final int begin, final int end, final String componentID, final boolean orEqual )
   {
-    return validate( begin, end, interpolatedValues, orEqual ? -1 : 1, orEqual );
+    return validate( begin, end, componentID, orEqual ? -1 : 1, orEqual );
   }
 
-  public final int whileLower( final int begin, final int end, final Map<Integer, Double> interpolatedValues, final boolean orEqual )
+  public final int whileLower( final int begin, final int end, final String componentID, final boolean orEqual )
   {
-    return validate( begin, end, interpolatedValues, orEqual ? 1 : -1, orEqual );
+    return validate( begin, end, componentID, orEqual ? 1 : -1, orEqual );
   }
 
   public final int whileNaN( final int begin, final int end, final String componentID )
@@ -126,7 +124,7 @@ public class ProfileAltitudeValidator
   public final boolean compare( final Double d1, final Double d2, final int signum, final boolean orEqual )
   {
     final int sign = (int) (Math.abs( d1 - d2 ) < m_delta ? 0 : Math.signum( d1 - d2 ));
-    return orEqual ^ sign == signum;
+    return orEqual ^ (sign == signum);
   }
 
   /**
@@ -138,22 +136,22 @@ public class ProfileAltitudeValidator
    *          will NOT be validated
    * @return the index of last point check fits or -1 if validation succeed
    */
-  public final int validate( final int begin, final int end, final Map<Integer, Double> interpolatedValues, final int check, final boolean orEqual )
+  public final int validate( final int begin, final int end, final String componentID, final int check, final boolean orEqual )
   {
     if( begin < 0 )
       return -1;
     final int step = begin < end ? 1 : -1;
     int i = begin;
-    int lastPos = begin < end ? begin : end;
+    int lastPos = -1;
 
     final IRecord[] points = m_profil.getPoints();
     while( i != end )
     {
       final IRecord point = points[i];
-      final Double h1 = interpolatedValues.get( i );
-      if( h1 != null )
+      final Double h1 = ProfilUtil.getDoubleValueFor( componentID, point );
+      if( !h1.isNaN() )
       {
-        final Double h2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+        final Double h2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, point );
         if( !compare( h1, h2, check, orEqual ) )
           return lastPos;
         lastPos = i;
@@ -163,40 +161,4 @@ public class ProfileAltitudeValidator
     return -1;
   }
 
-  public final Map<Integer, Double> getInterpolatedValues( final int begin, final int end, final String componentID )
-  {
-    if( begin < 0 )
-      return new HashMap<Integer, Double>();
-    int startPos = begin < end ? begin : end;
-    int lastPos = begin < end ? end : begin;
-
-    final IRecord[] points = m_profil.getPoints();
-    final HashMap<Integer, Double> result = new HashMap<Integer, Double>( lastPos - startPos + 1 );
-    Double m = Double.NaN;
-    for( int i = startPos; i <= lastPos; i++ )
-    {
-      final IRecord point = points[i];
-      Double h1 = ProfilUtil.getDoubleValueFor( componentID, point );
-      if( h1.isNaN() )
-      {
-        final double last = result.get( i - 1 );
-        if( m.isNaN() )
-        {
-
-          final int next = ProfilUtil.getNextNonNull( points, i, m_profil.indexOfProperty( componentID ) );
-          final Double distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[next] )
-              - ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
-          m = (ProfilUtil.getDoubleValueFor( componentID, points[next] ) - last) / distance;
-        }
-        final double dist = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] ) - ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
-        h1 = last + m * dist;
-      }
-      else
-      {
-        m = Double.NaN;
-      }
-      result.put( i, h1 );
-    }
-    return result;
-  }
 }

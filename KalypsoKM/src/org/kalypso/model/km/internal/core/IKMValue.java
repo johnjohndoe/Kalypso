@@ -57,15 +57,10 @@ public interface IKMValue
 
   double getNForeland( );
 
-  double getLowerQ( );
+  double getQ( );
 
-  double getUpperQ( );
+  double getQForeland( );
 
-  double getLowerQchannel( );
+  double getQSum( );
 
-  double getUpperQchannel( );
-
-  double getLowerQforeland( );
-
-  double getUpperQforeland( );
 }

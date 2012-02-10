@@ -57,8 +57,8 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
-import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -73,13 +73,13 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 /**
  * @author Thomas Jung
  */
-public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private final CreateChannelData m_data = new CreateChannelData( this );
 
   private CreateMainChannelComposite m_composite;
 
-  private IDeprecatedMouseWidget m_delegateWidget = null;
+  private IWidget m_delegateWidget = null;
 
   public CreateMainChannelWidget( )
   {
@@ -109,7 +109,7 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
     }
   }
 
-  public void setDelegate( final IDeprecatedMouseWidget delegateWdget )
+  public void setDelegate( final IWidget delegateWdget )
   {
     if( m_delegateWidget != null )
       m_delegateWidget.finish();
@@ -141,7 +141,7 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
 
       for( final Feature feature : selectedProfiles )
       {
-        final IProfileFeature profile = (IProfileFeature) feature;
+        final IProfileFeature profile = (IProfileFeature) (feature);
         final GM_Curve line = profile.getLine();
 
         final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );
@@ -166,7 +166,7 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
         m_data.paintAllSegments( g, mapPanel );
 
       /* draw editable bankline */
-      if( m_composite.isBankEdit() == true && m_data.getMeshStatus() == true )
+      if( (m_composite.isBankEdit() == true && m_data.getMeshStatus() == true) )
         m_data.drawBankLines( g );
       if( m_delegateWidget != null )
         m_delegateWidget.paint( g );
@@ -414,14 +414,13 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
 
     m_composite.getDisplay().syncExec( new Runnable()
     {
-      @Override
+      @Override 
       @SuppressWarnings("synthetic-access")
       public void run( )
       {
         // check if all needed data is specified
         // m_data.completationCheck();
-        if( !m_composite.isDisposed() )
-        {
+        if( !m_composite.isDisposed() ){
           m_composite.updateControl( false ); // false means calculate all again
         }
         getPanel().repaintMap();

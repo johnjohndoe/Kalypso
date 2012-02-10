@@ -88,6 +88,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -169,8 +170,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    //should not be done for calculated by RMA results
-    // extrapolateWaterLevel( 0 );
+    extrapolateWaterLevel( 0 );
     // create the triangles for each element
     for( final ElementResult element : m_elemIndex.values() )
     {
@@ -213,7 +213,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
    */
-  public List<Feature> getCreatedFeatures( )
+  public List<IFeatureWrapper2> getCreatedFeatures( )
   {
     return null;
   }
@@ -232,9 +232,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* store the information of the connection between arcs and elements at the element object */
     /* left element */
     writeArcInfoAtElement( elementLeftID, arcResult );
-    if (elementLeftID != elementRightID)
-      /* right element */
-      writeArcInfoAtElement( elementRightID, arcResult );
+    /* right element */
+    writeArcInfoAtElement( elementRightID, arcResult );
 
     if( middleNodeID == 0 )
       return; // maybe this is a good place to mark the 1d-nodes....
@@ -470,8 +469,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* check the element (number of arcs, nodes, mid-side nodes) */
 
         /* check water levels for dry nodes */
-        //should not be done for calculated by RMA results
-        //        elementResult.checkWaterlevels();
+        elementResult.checkWaterlevels();
       }
     }
     else
@@ -531,10 +529,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
 
     if( area == null )
-    {
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getNodeID(), station.doubleValue() ); //$NON-NLS-1$
-      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
-    }
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18", nodeResult.getGmlID(), station.doubleValue() ) ); //$NON-NLS-1$
 
     final BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
     nodeResult.setDischarge( discharge.doubleValue() );
@@ -582,11 +577,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         break;
 
       /* check, if node was already handled for lengthsection */
-      if( !m_lengthsection1dNodes.contains( nodes[i].getId() ) )
+      if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
         handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
         // TODO: right now, no consequences of the returned status
-        m_lengthsection1dNodes.add( nodes[i].getId() );
+        m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
 
       final IProfileFeature profile = flowRelation1d.getProfile();
@@ -597,10 +592,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     /* Probably profile information missing */
     if( curves[0] == null || curves[1] == null )
-    {
-      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ); //$NON-NLS-1$
-      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg );
-    }
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ) ); //$NON-NLS-1$
 
     final double curveDistance = curves[0].distance( curves[1] );
     create1dTriangles( nodes, curves, curveDistance );
@@ -1288,8 +1280,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @Override
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
-    final Feature parentFeature = m_resultList.getOwner();
-    final IRelationType parentRelation = m_resultList.getPropertyType();
+    final Feature parentFeature = m_resultList.getParentFeature();
+    final IRelationType parentRelation = m_resultList.getParentFeatureTypeProperty();
 
     try
     {
@@ -1298,7 +1290,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       m_resultWorkspace.addFeatureAsComposition( parentFeature, parentRelation, -1, feature );
 
       /* Remember node result for additional result data */
-      final GMLNodeResult result = (GMLNodeResult) feature;
+      final GMLNodeResult result = new GMLNodeResult( feature );
       m_nodeIndex.put( id, result );
 
       /* Fill node result with data */
@@ -1307,14 +1299,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
       // result.setDescription( "" + id );
 
-      result.setCalcId( id );
+      result.setCalcId( id ); 
       result.setLocation( easting, northing, elevation, m_crs );
       // if swan results found.
       if( m_mapSWANResults != null )
-      {
+      { 
         final GM_Position lPositionKey = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( easting, SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( northing, SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
         try
-        {
+        { 
           result.setWaveDirection( m_mapWAVEDir.get( lPositionKey ) );
           result.setWaveHsig( m_mapWAVEHsig.get( lPositionKey ) );
           result.setWavePeriod( m_mapWAVEPeriod.get( lPositionKey ) );
@@ -1335,15 +1327,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       e.printStackTrace();
     }
-  }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double, double)
-   */
-  @Override
-  public void handleNode( final String line, final int id, final double easting, final double northing, final double elevation, final double stationName )
-  {
-    this.handleNode( line, id, easting, northing, elevation );
   }
 
   /**
@@ -1357,6 +1341,19 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
+   */
+  @Override
+  public void handlerUnIdentifyable( final String lineString )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
+   */
   @Override
   public void start( )
   {
@@ -1429,7 +1426,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         break;
       case LINE_VA:
-        System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" ); //$NON-NLS-1$
+        System.out.println( "normally the handleResult function can be called without water stage information! The 2D-file may be 'broken'" );
         break;
 
         // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
@@ -1545,25 +1542,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-  }
 
-  @Override
-  public void handle1dPolynomialRangesInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges )
-  {
-  }
-
-  @Override
-  public void handle1dPolynomeMinMax( final String line, final int id, final double min, final double max )
-  {
-  }
-
-  @Override
-  public void handle1dSplittedPolynomialsInformation( final String line, final String lStrPolyKind, final int lIntNodeId, final int lIntAmountRanges, final List<Double> lListPolyAreaMaxRanges, final Double lIntSlope )
-  {
-  }
-
-  @Override
-  public void handleRoughness( final String id, final String label )
-  {
   }
 }

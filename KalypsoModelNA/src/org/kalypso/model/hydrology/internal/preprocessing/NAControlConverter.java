@@ -52,11 +52,11 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.control.NAModellControl;
+import org.kalypso.model.hydrology.binding.NAControl;
+import org.kalypso.model.hydrology.binding.NAModellControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.binding.model.nodes.Node;
+import org.kalypso.model.hydrology.binding.model.Node;
 import org.kalypso.model.hydrology.binding.suds.Greenroof;
 import org.kalypso.model.hydrology.binding.suds.Swale;
 import org.kalypso.model.hydrology.binding.suds.SwaleInfiltrationDitch;
@@ -91,7 +91,7 @@ public class NAControlConverter
     m_startFile = new File( startDir, FILENAME_START_FILE );
   }
 
-  public void writeFalstart( ) throws IOException, NAPreprocessorException
+  public void writeFalstart( ) throws IOException
   {
     PrintWriter writer = null;
     try
@@ -106,7 +106,7 @@ public class NAControlConverter
     }
   }
 
-  private void writeFalstart( final PrintWriter writer ) throws NAPreprocessorException
+  private void writeFalstart( final PrintWriter writer )
   {
     final String system = "we";// "sys"; //$NON-NLS-1$
     final String zustand = "nat"; //$NON-NLS-1$
@@ -128,16 +128,11 @@ public class NAControlConverter
       final String preFormText = m_metaControl.getPrecipitationForm();
       final int preForm = convertPreform( preFormText );
       if( preForm == 0 )
-        throw new NAPreprocessorException( Messages.getString( "org.kalypso.convert.namodel.NAControlConverter.49" ) ); //$NON-NLS-1$
+        // FIXME: use logger
+        System.out.println( Messages.getString( "org.kalypso.convert.namodel.NAControlConverter.49" ) ); //$NON-NLS-1$
 
       final double annuality = m_metaControl.getAnnuality();
-      if( Double.isNaN( annuality ) )
-        throw new NAPreprocessorException( Messages.getString( "NAControlConverter.0" ) ); //$NON-NLS-1$
-
       final double duration = m_metaControl.getDurationHours();
-      if( Double.isNaN( duration ) )
-        throw new NAPreprocessorException( Messages.getString( "NAControlConverter.1" ) ); //$NON-NLS-1$
-
       writer.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" ); //$NON-NLS-1$
       writer.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( annuality, "f6.3" ) + " " + FortranFormatHelper.printf( duration, "f9.3" ) //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
           + " " + Integer.toString( preForm ) + " " + pathStartFile + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -233,7 +228,6 @@ public class NAControlConverter
     // writer.append( "n       Ausgabe MRS                .qmr\n" ); //$NON-NLS-1$
 
     writer.append( getBoolean( controlFE.doGenerateHYD() ) + "       Ausgabe Hydrotope          .hyd\n" ); //$NON-NLS-1$
-
     // if "2": output of *.txt and *.bil
     if( controlFE.doGenerateBIL() )
       writer.append( "2" + "       Abflussbilanz              .bil\n" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -293,6 +287,7 @@ public class NAControlConverter
     }
     writer.append( "99999\n" ); //$NON-NLS-1$
   }
+
 
   private static String getBoolean( final boolean property )
   {

@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
-import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
 import org.kalypso.model.wspm.tuhh.core.results.WspmResultFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -51,13 +50,40 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class TuhhSegmentProfileFeatureProvider implements IProfileFeatureProvider
 {
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
-  public IWspmResultNode getResult( final IProfileFeature profile )
+  public IProfileFeature getProfile( final Feature feature )
   {
-    if( profile == null )
+    if( feature instanceof TuhhReach )
+    {
+      final TuhhReach reach = (TuhhReach) feature;
+      final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
+      if( reachProfileSegments.length > 0 )
+        return reachProfileSegments[0].getProfileMember();
+    }
+
+    if( feature instanceof TuhhReachProfileSegment )
+    {
+      final TuhhReachProfileSegment segment = (TuhhReachProfileSegment) feature;
+      return segment.getProfileMember();
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public Object getResult( Feature feature )
+  {
+    if( feature == null )
       return null;
 
-    final Feature parent = profile.getOwner();
+    final Feature parent = feature.getParent();
     return WspmResultFactory.createResultNode( null, parent );
   }
+
 }

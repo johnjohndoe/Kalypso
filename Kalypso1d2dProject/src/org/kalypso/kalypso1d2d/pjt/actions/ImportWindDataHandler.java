@@ -77,23 +77,22 @@ public class ImportWindDataHandler extends AbstractHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
-      /* Always open the manage dtm widget - now the widget will be opened after the operation with the wizard */
       final SelectWidgetHandler handler = new SelectWidgetHandler();
       final Map<String, String> newParameterMap = new HashMap<String, String>();
       newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget" ); //$NON-NLS-1$
       newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" ); //$NON-NLS-1$
       handler.setInitializationData( null, null, newParameterMap );
       final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
-//      handler.execute( exc );
+      handler.execute( exc );
 
       /* Open import elevation model wizard */
+      @SuppressWarnings("deprecation")
       final IWindModel lWindModel = szenarioDataProvider.getModel( IWindModel.class );
       final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
@@ -107,6 +106,15 @@ public class ImportWindDataHandler extends AbstractHandler
       final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
       final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
       final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+      
+//      final ImportWspmWizard importWizard = new ImportWspmWizard( discModel, networkModel, flowRelationModel );
+//      importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
+
+//      final WizardDialog2 dialog = new WizardDialog2( shell, importWizard );
+//      dialog.setRememberSize( true );
+//      if( dialog.open() != Window.OK )
+//        return Status.CANCEL_STATUS;
+//      final ImportWindDataWizard
 
       wizard.init( workbench, selection );
 
@@ -116,7 +124,6 @@ public class ImportWindDataHandler extends AbstractHandler
         handler.execute( exc );
         return Status.OK_STATUS;
       }
-      handler.execute( exc );
     }
     catch( final CoreException e )
     {

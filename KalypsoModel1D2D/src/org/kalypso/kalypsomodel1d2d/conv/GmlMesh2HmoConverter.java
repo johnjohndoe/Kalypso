@@ -54,8 +54,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.ogc.gml.serialize.Gml2HmoConverter;
 import org.kalypso.ogc.gml.serialize.HMOSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -82,7 +82,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   @SuppressWarnings("unchecked")
-  public void writeElements( IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException
+  public void writeElements( IFeatureWrapperCollection<IFE1D2DElement> elements ) throws CoreException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;
     final List<List<IFE1D2DNode>> triangularElements = new ArrayList<List<IFE1D2DNode>>();
@@ -112,7 +112,6 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   /* splits quadrangular element in 2 triangular elements */
-  @SuppressWarnings("unchecked")
   private void tranformToTriangularElement( final List<IFE1D2DNode> nodes, List<List<IFE1D2DNode>> triangularElements )
   {
     List<IFE1D2DNode> newTriangle = new ArrayList<IFE1D2DNode>();
@@ -131,7 +130,6 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     triangularElements.add( anotherNewTriangle );
   }
 
-  @SuppressWarnings("unchecked")
   private void writeTriangles( final List<List<IFE1D2DNode>> triangularElements )
   {
     int count = 1;
@@ -145,12 +143,11 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
 
   }
 
-  @SuppressWarnings("unchecked")
   private void writeNodes( final List<IFE1D2DNode> nodes )
   {
     for( final IFE1D2DNode node : nodes )
     {
-      if( !m_nodesIDProvider.contains( node.getId() ) )
+      if( !m_nodesIDProvider.contains( node.getGmlID() ) )
       {
         final int id = getConversionID( node );
         final GM_Point point = node.getPoint();
@@ -164,11 +161,10 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
    * @see org.kalypso.ogc.gml.serialize.Gml2HmoConverter#writeHmo(java.io.File)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void writeHmo( final File file ) throws Exception
   {
     hmoSerializer = new HMOSerializer( file );
-    final IFeatureBindingCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
     writeElements( elements );
     hmoSerializer.finish();
   }
@@ -183,16 +179,15 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(org.kalypsodeegree.model.feature.binding.Feature)
+   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
   @Override
-  @SuppressWarnings("unchecked")
-  public int getConversionID( Feature feature )
+  public int getConversionID( IFeatureWrapper2 feature )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
 
-    final String id = feature.getId();
+    final String id = feature.getGmlID();
     if( feature instanceof IFE1D2DNode )
       return m_nodesIDProvider.getOrAdd( id );
 

@@ -2,49 +2,46 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.wprof;
 
 import java.math.BigDecimal;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.net.URL;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -54,6 +51,7 @@ import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -63,8 +61,6 @@ import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wprof.IWProfPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Gernot
@@ -109,6 +105,9 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     return m_data.getMarkers();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileCreator#addProfiles(org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject)
+   */
   @Override
   public final IProfil addProfile( final TuhhWspmProject project ) throws CoreException
   {
@@ -129,6 +128,10 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
       final IStatus status = e.getStatus();
       profile.setComment( status.toString() );
     }
+    finally
+    {
+      ProfileFeatureFactory.toFeature( profile, profileFeature );
+    }
 
     return profile;
   }
@@ -146,13 +149,13 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     {
       final String riverId = anyPoint.getRiverId();
       final String riverName = anyPoint.getRiverName();
-      final URI[] photoUrls = profilePolygones.getPhotoUrls();
+      final URL[] photoUrls = profilePolygones.getPhotoUrls();
 
       final IProfileFeature profileFeature = project.createNewProfile( riverName, true );
       profileFeature.getWater().setRefNr( riverId );
 
       profileFeature.setSrsName( m_data.getTransformer().getTarget() );
-      for( final URI url : photoUrls )
+      for( final URL url : photoUrls )
       {
         final Image image = profileFeature.addImage( url );
         final String path = url.getPath();
@@ -206,14 +209,12 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final int numPoints = profilePolygones.getNumPoints();
     final String[] objTypes = profilePolygones.getAllIDs();
     final String objTypesString = Arrays.toString( objTypes, ", " ); //$NON-NLS-1$
-    final String profileComment = comment + Messages.getString( "AbstractProfileCreator_0" ) + objTypesString + Messages.getString( "AbstractProfileCreator_1" ) + numPoints; //$NON-NLS-1$ //$NON-NLS-2$
+    final String profileComment = comment + Messages.getString("AbstractProfileCreator_0") + objTypesString + Messages.getString("AbstractProfileCreator_1") + numPoints; //$NON-NLS-1$ //$NON-NLS-2$
     if( m_createProfileComment )
-    {
       profile.setComment( profileComment );
-    }
 
     // FIXME:
-    profile.setStation( Double.valueOf( (Double) Objects.firstNonNull( station, -999.999 ) ) );
+    profile.setStation( station == null ? -999.999 : station.doubleValue() );
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
@@ -228,32 +229,6 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
   public void setOverwriteStation( final BigDecimal station )
   {
     m_overwriteStation = station;
-  }
-
-  public IWProfPoint[] getPointsForObjekttypPunkt( final int type )
-  {
-    final List<IWProfPoint> foundPoints = new ArrayList<>();
-
-    /* Fetch all points of given type */
-    final ProfilePolygones profilePolygones = m_data.getProfilePolygones();
-    final String[] allIDs = profilePolygones.getAllIDs();
-    for( final String id : allIDs )
-    {
-      final ProfilePolygon profilePolygon = profilePolygones.get( id );
-      final IWProfPoint[] points = profilePolygon.getPoints();
-      for( final IWProfPoint point : points )
-      {
-        final int punktattribut = point.getPunktattribut();
-        if( punktattribut == type )
-          foundPoints.add( point );
-      }
-
-    }
-
-    /* sort by number */
-    Collections.sort( foundPoints, new WProfPointComparator() );
-
-    return foundPoints.toArray( new IWProfPoint[foundPoints.size()] );
   }
 
   protected abstract void configure( IProfil profile ) throws CoreException;

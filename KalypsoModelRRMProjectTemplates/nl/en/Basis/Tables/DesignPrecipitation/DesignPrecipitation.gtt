@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:gistableview xmlns:ns2="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <ns2:layer id="id" featurePath="synthNMember" linktype="gml" xlink:type="simple" xlink:href="../../.models/synthN.gml" xlink:actuate="onRequest">
-    <ns2:column width="215" name="description" editable="true" alignment="16384" />
-    <ns2:column width="100" name="name" editable="true" alignment="16384" />
-    <ns2:column width="100" name="statNParameterMember" editable="true" alignment="16384" />
-  </ns2:layer>
-</ns2:gistableview>
-

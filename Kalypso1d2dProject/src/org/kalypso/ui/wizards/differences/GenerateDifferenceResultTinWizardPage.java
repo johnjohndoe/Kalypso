@@ -363,7 +363,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     // get Features
     m_riverFeatures = theme.getFeatureList();
-    final IFeatureType targetFeatureType = m_riverFeatures.getPropertyType().getTargetFeatureType();
+    final IFeatureType targetFeatureType = m_riverFeatures.getParentFeatureTypeProperty().getTargetFeatureType();
 
     // get field names for river name field and station fields
     final IPropertyType[] properties = targetFeatureType.getProperties();

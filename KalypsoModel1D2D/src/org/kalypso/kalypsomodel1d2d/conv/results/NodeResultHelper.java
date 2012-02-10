@@ -59,10 +59,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -191,14 +191,6 @@ public class NodeResultHelper
     midsideNode.setWaterlevel( waterlevel );
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
-    // double waveDirectionDown = nodeDown.getWaveDirection();
-    // double waveDirectionUp = nodeUp.getWaveDirection();
-    // if( waveDirectionDown > 180 || waveDirectionDown < -180 ){
-    //
-    // }
-    midsideNode.setWaveDirection( 0 );
-    midsideNode.setWaveHsig( 0 );
-    midsideNode.setWavePeriod( 0 );
     midsideNode.setDepth( depth );
   }
 
@@ -209,7 +201,7 @@ public class NodeResultHelper
     {
       sum = sum + values.get( i );
     }
-    return sum / values.size();
+    return (sum / values.size());
   }
 
   private static void assignMidsideNodeData( final INodeResult node, final INodeResult midsideNode )
@@ -291,6 +283,24 @@ public class NodeResultHelper
     return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
+  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final String crs ) throws Exception, GM_Exception
+  {
+    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
+    IProfil cutProfile = null;
+
+    if( points != null )
+    {
+      if( points.length > 1 )
+      {
+        cutProfile = WspmProfileHelper.cutIProfile( profil, points[0], points[points.length - 1] );
+      }
+    }
+
+    // final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
+    final GM_Curve curve = ProfilUtil.getLine( cutProfile, crs );
+    return curve;
+  }
+
   /**
    * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
    * x-coordinates (x2-x1) = dx12.
@@ -311,7 +321,7 @@ public class NodeResultHelper
   public static boolean checkTriangleArc( final INodeResult node1, final INodeResult node2 )
   {
     /* get the split point (inundation point) */
-    if( node1.isWet() && !node2.isWet() || !node1.isWet() && node2.isWet() )
+    if( (node1.isWet() && !node2.isWet()) || (!node1.isWet() && node2.isWet()) )
       return true;
     else
       return false;
@@ -334,7 +344,7 @@ public class NodeResultHelper
       if( i > 0 )
         width = width + geoPoint.distance( linePoints[i - 1] );
 
-      final IProfileRecord point = boundaryProfil.createProfilPoint();
+      final IRecord point = boundaryProfil.createProfilPoint();
 
       /* calculate the width of the intersected profile */
       // sort intersection points by width
@@ -345,7 +355,7 @@ public class NodeResultHelper
 
       boundaryProfil.addPoint( point );
     }
-    return WspmProfileHelper.cutProfileAtWaterlevel( waterlevel, boundaryProfil, crs );
+    return cutProfileAtWaterlevel( waterlevel, boundaryProfil, crs );
 
   }
 
@@ -431,8 +441,9 @@ public class NodeResultHelper
 
   private static void fillMapStyleWithDefaults( final Map<String, Object> mapStyle )
   {
-    for( final String key : NodeStyleTypes )
+    for( int i = 0; i < NodeStyleTypes.length; i++ )
     {
+      String key = NodeStyleTypes[i];
       mapStyle.put( COLOR_MIN_PREFIX + key.toLowerCase(), DEFAULT_COLOR_MIN );
       mapStyle.put( COLOR_MAX_PREFIX + key.toLowerCase(), DEFAULT_COLOR_MAX );
       mapStyle.put( VALUE_MIN_PREFIX + key.toLowerCase(), 0. );
@@ -457,7 +468,7 @@ public class NodeResultHelper
     else
     {
       mapStep = createMapStep( styleType );
-      final Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
+      Map<String, Object> mapStyle = mapStep.get( styleType.toLowerCase() );
       mapStyle.put( key.toLowerCase(), value );
       m_styleSettings.put( stepDate.toLowerCase(), mapStep );
     }

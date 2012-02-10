@@ -68,8 +68,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -91,7 +90,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-      final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
       /* Get network collection */
       final ITerrainModel terrainModel;
@@ -119,9 +118,9 @@ public class AddProfileToMapHandler extends AbstractHandler
       { 
           final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
 
-          final FeaturePath networkPath = new FeaturePath( network );
+          final FeaturePath networkPath = new FeaturePath( network.getFeature() );
           final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
-          final String source = terrainModel.getWorkspace().getContext().toString();
+          final String source = terrainModel.getFeature().getWorkspace().getContext().toString();
          
           final IKalypsoThemePredicate predicate = new SoureAndPathThemePredicate( source, profilesPath.toString() );
           final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
@@ -137,7 +136,7 @@ public class AddProfileToMapHandler extends AbstractHandler
           mapView.postCommand( command, null );
 
           /* Zoom to new profiles in fe-map? */
-          final GM_Envelope envelope = network.getProfiles().getFeatureList().getBoundingBox();
+          final GM_Envelope envelope = network.getWrappedList().getBoundingBox();
           if( envelope != null )
             mapView.postCommand( new ChangeExtentCommand( mapView.getMapPanel(), envelope ), null );
       }
@@ -155,8 +154,7 @@ public class AddProfileToMapHandler extends AbstractHandler
 
   private Object[] showNetworksDialog( final Shell shell, final IRiverProfileNetworkCollection riverProfileNetworkCollection )
   {
-    final IFeatureBindingCollection<IRiverProfileNetwork> riverProfileNetworks = riverProfileNetworkCollection.getRiverProfileNetworks();
-    if( riverProfileNetworks.size() == 0 )
+    if( riverProfileNetworkCollection.size() == 0 )
     {
       MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.5" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.22" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
@@ -179,10 +177,10 @@ public class AddProfileToMapHandler extends AbstractHandler
       }
     } );
 
-    dialog.setInput( riverProfileNetworks );
+    dialog.setInput( riverProfileNetworkCollection );
 
-    if( riverProfileNetworks.size() > 0 )
-      dialog.setInitialSelections( new Object[] { riverProfileNetworks.get( 0 ) } );
+    if( riverProfileNetworkCollection.size() > 0 )
+      dialog.setInitialSelections( new Object[] { riverProfileNetworkCollection.get( 0 ) } );
 
     if( dialog.open() != Window.OK )
       return null;

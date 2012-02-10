@@ -47,7 +47,6 @@ import java.net.URL;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -88,7 +87,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public final class HydrographProcessResultOperation implements ICoreRunnableWithProgress
 {
@@ -134,14 +133,14 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
 
       final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
 
-      for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
+      for( final IHydrograph hydrograph : m_hydrographs )
       {
 
         final GM_Object location = hydrograph.getLocation();
         if( location instanceof GM_Point )
         {
           final GM_Point point = (GM_Point) location;
-          final Feature wrappedFeature = hydrograph;
+          final Feature wrappedFeature = hydrograph.getFeature();
           final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( wrappedFeature );
 
           /* clear existing results */
@@ -160,7 +159,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       {
         final Date date = entry.getValue();
         count++;
-        progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1", count, resultSize ) ); //$NON-NLS-1$
+        progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1" , count, resultSize ) ); //$NON-NLS-1$
 
         /* get the observation */
 
@@ -183,12 +182,12 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         final Feature feature = w.getRootFeature();
         final INodeResultCollection nodeResultCollection = (INodeResultCollection) feature.getAdapter( INodeResultCollection.class );
 
-        final FeatureList nodeList = nodeResultCollection.getNodeResults().getFeatureList();
+        final FeatureList nodeList = nodeResultCollection.getWrappedList();
 
         int hyd = 0;
 
         /* get the hydrograph locations and observations */
-        for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
+        for( final IHydrograph hydrograph : m_hydrographs )
         {
           hyd++;
 
@@ -198,7 +197,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
             final GM_Point point = (GM_Point) location;
 
             // TODO: check for right time zone
-            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2", count, resultSize, date.toString(), hyd, m_hydrographs.getHydrographs().size() ) ); //$NON-NLS-1$
+            progress.subTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.2" , count, resultSize, date.toString(), hyd, m_hydrographs.size() ) ); //$NON-NLS-1$
             addResult( obsMap, calendar, nodeList, point );
           }
         }
@@ -234,7 +233,6 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
     final IComponent depthComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DEPTH );
     final IComponent velocityComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY );
-    final IComponent velocityDirComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_VELOCITY_DIRECTION );
     final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
     final IComponent waveHsigComp = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_WAVE_HSIG );
@@ -253,49 +251,73 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       final Double waterlevel = nodeResult.getWaterlevel();
       final Double discharge = nodeResult.getDischarge();
       final double absoluteVelocity = nodeResult.getAbsoluteVelocity();
-      final List<Double> velocityList = nodeResult.getVelocity();
-      double velocityDir = 0;
-      if( !(velocityList == null || velocityList.size() != 2) )
-        velocityDir = GeometryUtilities.directionFromVector( velocityList.get( 0 ), velocityList.get( 1 ) );
-      if( Double.isNaN( velocityDir ) )
-      {
-        velocityDir = 0;
+      
+      Double lDoubleHsig = Double.NaN;
+      Double lDoublePer = Double.NaN;
+      Double lDoubleDir = Double.NaN;
+      
+      try{
+        lDoubleHsig = nodeResult.getWaveHsig();
+        lDoublePer = nodeResult.getWavePeriod();
+        lDoubleDir = nodeResult.getWaveDirection();
+      }catch (Exception e) {
+        // TODO: handle exception
       }
-
-      final Double lDoubleHsig = nodeResult.getWaveHsig();
-      final Double lDoublePer = nodeResult.getWavePeriod();
-      final Double lDoubleDir = nodeResult.getWaveDirection();
 
       /* add the data to the observation */
       final IRecord newRecord = tuples.createRecord();
 
       newRecord.setValue( dateComp, DATATYPE_FACTORY.newXMLGregorianCalendar( calendar ) );
-      newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( velocityDirComp, new BigDecimal( velocityDir ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      if( !Double.isNaN( waterlevel ) )
+      {
+        newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
+      else
+        System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.10" ) ); //$NON-NLS-1$
+      if( !Double.isNaN( depth ) )
+      {
+        newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
+      else
+        System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.11" ) ); //$NON-NLS-1$
+      if( !Double.isNaN( depth ) )
+      {
+        newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
+      else
+        System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
+      // newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       if( discharge != null )
-        newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      {
+        newRecord.setValue( dischargeComp, new BigDecimal( discharge ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
       else
-        newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
-
-      // Wave parameter
-
+        newRecord.setValue( dischargeComp, new BigDecimal( 0.0 ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      
+      // Wave parameter 
       if( lDoubleHsig != null && !Double.isNaN( lDoubleHsig ) )
-        newRecord.setValue( waveHsigComp, new BigDecimal( lDoubleHsig ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      {
+        newRecord.setValue( waveHsigComp, new BigDecimal( lDoubleHsig ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-
+     
       if( lDoublePer != null && !Double.isNaN( lDoublePer ) )
-        newRecord.setValue( wavePerComp, new BigDecimal( lDoublePer ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      {
+        newRecord.setValue( wavePerComp, new BigDecimal( lDoublePer ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-
+      
       if( lDoubleDir != null && !Double.isNaN( lDoubleDir ) )
-        newRecord.setValue( waveDirComp, new BigDecimal( lDoubleDir ).setScale( 10, BigDecimal.ROUND_HALF_UP ) );
+      {
+        newRecord.setValue( waveDirComp, new BigDecimal( lDoubleDir ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      }
       else
         System.out.println( Messages.getString( "org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12" ) ); //$NON-NLS-1$
-
+      
+      
       tuples.add( newRecord );
       o.setResult( tuples );
     }
@@ -304,10 +326,10 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
   private void saveToHydrographFeature( final Map<GM_Point, IObservation<TupleResult>> obsMap )
   {
     /* save the obs in the feature */
-    for( final IHydrograph hydrograph : m_hydrographs.getHydrographs() )
+    for( final IHydrograph hydrograph : m_hydrographs )
     {
       final GM_Object location = hydrograph.getLocation();
-      final Feature feature = hydrograph;
+      final Feature feature = hydrograph.getFeature();
       if( location instanceof GM_Point )
       {
         final GM_Point point = (GM_Point) location;

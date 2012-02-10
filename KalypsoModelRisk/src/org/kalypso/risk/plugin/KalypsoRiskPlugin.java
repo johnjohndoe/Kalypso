@@ -1,10 +1,6 @@
 package org.kalypso.risk.plugin;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -18,6 +14,7 @@ import org.kalypso.risk.preferences.KalypsoRiskPreferencePage;
 import org.kalypso.risk.project.SzenarioController;
 import org.osgi.framework.BundleContext;
 
+import de.renew.workflow.connector.worklist.TaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -26,9 +23,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class KalypsoRiskPlugin extends AbstractUIPlugin
 {
-  public static final String PLUGIN_ID = "org.kalypso.risk"; //$NON-NLS-1$
-
   private static KalypsoRiskPlugin PLUGIN;
+
+  private TaskExecutionAuthority m_taskExecutionAuthority;
 
   private TaskExecutionListener m_taskExecutionListener;
 
@@ -60,6 +57,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
       m_taskExecutionListener = new TaskExecutionListener();
       commandService.addExecutionListener( m_taskExecutionListener );
+      m_taskExecutionAuthority = new TaskExecutionAuthority();
     }
 
     // delete tmp images both on startup and shutdown
@@ -67,23 +65,10 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     m_imageProvider.resetTmpFiles();
 
     // force plug-in to start
-    // Dangerous: do not call this stuff in plugin-start method -> rather start a job to do it...
-    final Job job = new Job( "" )
-    {
-      @Override
-      protected IStatus run( final IProgressMonitor arg0 )
-      {
-        final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-        setSzenarioController( new SzenarioController() );
-        dataProvider.addScenarioDataListener( getSzenarioController() );
-        getSzenarioController().scenarioChanged( dataProvider.getScenario() );
-        return Status.OK_STATUS;
-      }
-    };
-    job.setSystem( true );
-    job.setUser( false );
-    job.setPriority( Job.LONG );
-    job.schedule();
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    m_szenarioController = new SzenarioController();
+    dataProvider.addScenarioDataListener( m_szenarioController );
+    m_szenarioController.scenarioChanged( dataProvider.getScenario() );
   }
 
   /**
@@ -102,11 +87,16 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
       final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      caseDataProvider.removeScenarioDataListener( getSzenarioController() );
+      caseDataProvider.removeScenarioDataListener( m_szenarioController );
     }
 
     PLUGIN = null;
     super.stop( context );
+  }
+
+  public TaskExecutionAuthority getTaskExecutionAuthority( )
+  {
+    return m_taskExecutionAuthority;
   }
 
   /**
@@ -116,7 +106,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   {
     return getDefault().m_imageProvider;
   }
-
+  
   public static final int getPreferences_themeInfoPrecision( )
   {
     final IPreferenceStore preferences = KalypsoRiskPlugin.getDefault().getPreferenceStore();
@@ -124,16 +114,6 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
     if( digits < KalypsoRiskPreferencePage.MIN_RISKTHEMEINFO_PRECISION || digits > KalypsoRiskPreferencePage.MAX_RISKTHEMEINFO_PRECISION )
       digits = KalypsoRiskPreferencePage.DEFAULT_RISKTHEMEINFO_PRECISION;
     return digits;
-  }
-
-  public SzenarioController getSzenarioController( )
-  {
-    return m_szenarioController;
-  }
-
-  protected void setSzenarioController( final SzenarioController szenarioController )
-  {
-    m_szenarioController = szenarioController;
   }
 
 }

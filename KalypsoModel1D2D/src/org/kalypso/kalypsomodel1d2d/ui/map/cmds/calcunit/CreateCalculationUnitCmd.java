@@ -67,10 +67,11 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -78,9 +79,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to create new calculation unit
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
@@ -111,17 +112,17 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   * 
+   *
    * @param cuFeatureQName
-   *          the q-name of the calculation unit to create
+   *            the q-name of the calculation unit to create
    * @param model1d2d
-   *          the model that should hold the new calculation unit
+   *            the model that should hold the new calculation unit
    * @param name
-   *          a name for the calculation unit if one has to be set or null
+   *            a name for the calculation unit if one has to be set or null
    * @param description
-   *          text describing the calculation unit or null
+   *            text describing the calculation unit or null
    * @throws IllegalArgumentException
-   *           if cuFeatureQName or model1d2d is null
+   *             if cuFeatureQName or model1d2d is null
    */
   public CreateCalculationUnitCmd( final QName calcUnitFeatureQName, final IFEDiscretisationModel1d2d model1d2d, final String name, final String decription )
   {
@@ -135,12 +136,12 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   @Override
-  public Feature[] getChangedFeature( )
+  public IFeatureWrapper2[] getChangedFeature( )
   {
     if( m_calculationUnit != null )
-      return new Feature[] { m_model1d2d, m_calculationUnit };
+      return new IFeatureWrapper2[] { m_model1d2d, m_calculationUnit };
     else
-      return new Feature[] {};
+      return new IFeatureWrapper2[] {};
   }
 
   /**
@@ -178,7 +179,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
-      final IFeatureBindingCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+      final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
       m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
       if( m_calcUnitName != null )
         m_calculationUnit.setName( m_calcUnitName );
@@ -197,11 +198,11 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   * 
+   *
    * @param calculationUnit
-   *          the added or removed calculation unit
+   *            the added or removed calculation unit
    * @param added
-   *          true if the calculation unit was added false otherwise
+   *            true if the calculation unit was added false otherwise
    */
   private final void fireProcessChanges( final ICalculationUnit calculationUnit, final boolean added )
   {
@@ -210,8 +211,8 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
     else
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
-    final GMLWorkspace workspace = calculationUnit.getWorkspace();
-    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d, new Feature[] { calculationUnit }, changedType );
+    final GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getFeature(), new Feature[] { calculationUnit.getFeature() }, changedType );
     workspace.fireModellEvent( event );
   }
 
@@ -233,7 +234,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   @Override
   public void undo( ) throws Exception
   {
-    final IFeatureBindingCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
     ce.remove( m_calculationUnit );
     final ICalculationUnit deletedCreatedCU = m_calculationUnit;
     m_calculationUnit = null;
@@ -251,7 +252,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> szenarioDataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     IControlModelGroup modelGroup = null;
     try
     {
@@ -261,7 +262,8 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     {
       throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
     }
-    final IControlModel1D2DCollection parentFeature = modelGroup.getModel1D2DCollection();
+    final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
+    final Feature parentFeature = model1D2DCollection.getFeature();
     final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
     final int pos = 0;
@@ -270,7 +272,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, controlModelFeatureType, parentFeature, relationType, pos, null, null, -1 )
     {
       /**
-       * @see org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand#process()
+       * @see org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand#process()
        */
       @Override
       public void process( ) throws Exception
@@ -281,7 +283,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
         // newControlModel.setName( Messages.getString( "CreateCalculationUnitCmd.2" ) + m_calcUnitName ); //$NON-NLS-1$
         newControlModel.setCalculationUnit( m_calculationUnit );
-        parentFeature.setActiveControlModel( newControlModel );
+        model1D2DCollection.setActiveControlModel( newControlModel );
 
         final Feature obsFeature = (Feature) newControlFeature.getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
 
@@ -304,12 +306,12 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           * 
-           * 
-           * 
-           * IPhenomenon phenomenon = new DictionaryPhenomenon(
-           * "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", "", "");
-           * obs.setPhenomenon( phenomenon );
+           *
+           *
+           *
+           * IPhenomenon phenomenon = new
+           * DictionaryPhenomenon("urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D",
+           * "", ""); obs.setPhenomenon( phenomenon );
            */
 
           final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME,

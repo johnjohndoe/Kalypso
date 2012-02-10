@@ -41,15 +41,18 @@
 package org.kalypso.model.hydrology.util.optimize;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.Iterator;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
-import org.apache.xpath.XPathAPI;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
-import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypso.optimize.OptimizeJaxb;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -66,10 +69,6 @@ import org.w3c.dom.NodeList;
  */
 public class NaOptimizeLoader
 {
-  private static final String STR_UNABLE_TO_FIND_NA_OPTIMIZE_CONFIG_FOR_PATH_S = Messages.getString( "NaOptimizeLoader_0" ); //$NON-NLS-1$
-
-  private static final String STR_FEHLER_BEI_LESEN_DER_OPTIMIERUNGSKONFIGURATION = Messages.getString( "NaOptimizeLoader_1" ); //$NON-NLS-1$
-
   private final URL m_optimizeDataLocation;
 
   private final String m_optimizePath;
@@ -89,7 +88,7 @@ public class NaOptimizeLoader
   {
     m_autocalibrationLocation = (URL) SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZECONF_ID );
     m_optimizeDataLocation = SimulationDataUtils.getInputOrNull( dataProvider, NaModelConstants.IN_OPTIMIZE_ID );
-    m_optimizePath = SimulationDataUtils.getInputOrDefault( dataProvider, NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "." ); //$NON-NLS-1$
+    m_optimizePath = SimulationDataUtils.getInputOrDefault( dataProvider, NaModelConstants.IN_OPTIMIZE_FEATURE_PATH_ID, "." );
     m_optimizeStep = optimizeStep;
   }
 
@@ -112,7 +111,7 @@ public class NaOptimizeLoader
         return new NaOptimizeData( calibration, null );
 
       if( optimizeNodes.getLength() == 0 )
-        throw new SimulationException( String.format( STR_UNABLE_TO_FIND_NA_OPTIMIZE_CONFIG_FOR_PATH_S, m_optimizePath ) );
+        throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
       final Node optimizeDom = optimizeNodes.item( 0 );
 
@@ -127,9 +126,10 @@ public class NaOptimizeLoader
       throw e;
     }
     catch( final Exception e )
+
     {
       e.printStackTrace();
-      throw new SimulationException( STR_FEHLER_BEI_LESEN_DER_OPTIMIERUNGSKONFIGURATION, e );
+      throw new SimulationException( "Fehler bei Lesen der Optimierungskonfiguration", e );
     }
   }
 
@@ -139,7 +139,39 @@ public class NaOptimizeLoader
       return null;
 
     final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
-    return XPathAPI.selectNodeList( dom, m_optimizePath, dom );
+
+    final XPathFactory xpFactory = XPathFactory.newInstance();
+    final javax.xml.xpath.XPath xp = xpFactory.newXPath();
+    final NamespaceContext namespaceContext = new NamespaceContext()
+    {
+      @Override
+      public String getNamespaceURI( final String prefix )
+      {
+        // REALLY UGLY: xpath does not know how to handle the default namespace; so we can only use an xpath with a
+        // prefix; but this prefix is not defined in the gml, so it is never found.
+        // We assume that the used prefix is always 'gnModell', but is meant to be the default namespace
+        // TODO: we should get the prefix mapping from the input as well
+        if( "gnModell".equals( prefix ) )
+          return dom.getDocumentElement().getNamespaceURI();
+
+        return dom.lookupNamespaceURI( prefix );
+      }
+
+      @Override
+      public String getPrefix( final String namespaceURI )
+      {
+        return dom.lookupPrefix( namespaceURI );
+      }
+
+      @Override
+      public Iterator< ? > getPrefixes( final String namespaceURI )
+      {
+        return Collections.emptyList().iterator();
+      }
+    };
+
+    xp.setNamespaceContext( namespaceContext );
+    return (NodeList) xp.evaluate( m_optimizePath, dom, XPathConstants.NODESET );
   }
 
   private AutoCalibration loadCalibration( ) throws JAXBException
@@ -162,14 +194,14 @@ public class NaOptimizeLoader
     {
       final NodeList optimizeNodes = loadOptimizeNodes();
       if( optimizeNodes == null || optimizeNodes.getLength() == m_optimizeStep )
-        throw new SimulationException( String.format( STR_UNABLE_TO_FIND_NA_OPTIMIZE_CONFIG_FOR_PATH_S, m_optimizePath ) );
+        throw new SimulationException( String.format( "Unable to find NaOptimizeConfig for path '%s'", m_optimizePath ) );
 
       return optimizeNodes;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SimulationException( STR_FEHLER_BEI_LESEN_DER_OPTIMIERUNGSKONFIGURATION );
+      throw new SimulationException( "Fehler bei Lesen der Optimierungskonfiguration" );
     }
   }
 }

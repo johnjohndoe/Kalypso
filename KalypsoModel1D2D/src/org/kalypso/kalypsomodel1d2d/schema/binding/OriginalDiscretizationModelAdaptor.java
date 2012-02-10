@@ -71,6 +71,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
   }
 
   // Ignore deprecation, we are using this stuff for backwards compatibility
+  @SuppressWarnings("deprecation")
   protected IStatus execute( final GMLWorkspace workspace, final IProgressMonitor monitor )
   {
     final List<IStatus> statusList = new ArrayList<IStatus>();
@@ -278,7 +279,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
     catch( final Exception e )
     {
       
-      statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) ); //$NON-NLS-1$
+      statusList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.loader.GmlLoader.12" ) ) );
       statusList.add( StatusUtilities.statusFromThrowable( e ) );
       
 //       update the gml version even in failure case, to avoid the dead-lock recursion 
@@ -290,7 +291,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       {
         changeFeaturesCommand.process();
       }
-      catch( final Exception e1 )
+      catch( Exception e1 )
       {
         // ... well, FIXME?
       }
@@ -349,7 +350,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
 
   private Feature[] getFeatures( final FeatureList featureList )
   {
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
 
     final Feature[] result = new Feature[featureList.size()];
     int counter = 0;
@@ -387,7 +388,7 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
       if( !collectEdges.containsKey( id ) )
         collectEdges.put( id, edge );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       return false;
     } 

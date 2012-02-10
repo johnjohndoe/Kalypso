@@ -76,9 +76,9 @@ public class KMParameter extends AbstractNaModelElement
     return getDoubleProperty( PROP_QRK, 0.0 );
   }
 
-  public void setQrk( final double qrk )
+  public void setQrk( final double Qrk )
   {
-    setProperty( PROP_QRK, qrk );
+    setProperty( PROP_QRK, Qrk );
   }
 
   public double getRkf( )

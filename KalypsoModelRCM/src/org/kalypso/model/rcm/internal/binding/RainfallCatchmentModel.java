@@ -45,7 +45,7 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IMetadata;
@@ -67,6 +67,8 @@ public class RainfallCatchmentModel extends Feature_Impl implements IRainfallCat
   private static final QName PROPERTY_METADATA_MEMBER = new QName( UrlCatalogRcm.NS_RCM, "metadataMember" ); //$NON-NLS-1$
 
   private static final QName PROPERTY_GENERATOR_MEMBER = new QName( UrlCatalogRcm.NS_RCM, "generatorMember" ); //$NON-NLS-1$
+
+  private static final QName PROPERTY_TARGET_MEMBER = new QName( UrlCatalogRcm.NS_RCM, "targetMember" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<IMetadata> m_metadataMembers = null;
 
@@ -107,15 +109,6 @@ public class RainfallCatchmentModel extends Feature_Impl implements IRainfallCat
   public ITarget getTarget( )
   {
     return getProperty( PROPERTY_TARGET_MEMBER, ITarget.class );
-  }
-
-  /**
-   * @see org.kalypso.model.rcm.binding.IRainfallCatchmentModel#setTarget(org.kalypso.model.rcm.binding.ITarget)
-   */
-  @Override
-  public void setTarget( final ITarget target )
-  {
-    setProperty( PROPERTY_TARGET_MEMBER, target );
   }
 
   /**

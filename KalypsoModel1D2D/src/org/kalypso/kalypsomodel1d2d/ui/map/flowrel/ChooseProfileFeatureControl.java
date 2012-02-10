@@ -2,48 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
-import java.math.BigDecimal;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -70,30 +67,29 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 
 /**
  * Lets the user choose a profile for a flow relation.
- *
+ * 
  * @author Gernot Belger
  */
 public class ChooseProfileFeatureControl extends AbstractFeatureControl
@@ -194,9 +190,9 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class );
 
-      final GMLWorkspace root = terrainModel.getWorkspace();
+      final GMLWorkspace root = terrainModel.getFeature().getWorkspace();
       final GMLContentProvider cp = new GMLContentProvider( false, false );
-      cp.setRootPath( new GMLXPath( terrainModel.getRiverProfileNetworkCollection() ) );
+      cp.setRootPath( new GMLXPath( terrainModel.getRiverProfileNetworkCollection().getFeature() ) );
       final TreeSingleSelectionDialog treeSelectionDialog = new TreeSingleSelectionDialog( shell, root, cp, new GMLLabelProvider(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.2" ) ); //$NON-NLS-1$
 
       if( realProfileFeature != null )
@@ -206,8 +202,6 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
         return;
 
       final Feature newProfileLink = (Feature) treeSelectionDialog.getResult()[0];
-      if( !(newProfileLink instanceof IProfileFeature) )
-        return;
 
       // TODO: check, if the chosen profile is suitable for this relation
       final IProfil profile = ((IProfileFeature) newProfileLink).getProfil();
@@ -215,9 +209,9 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       final String profileRef = "terrain.gml#" + newProfileLink.getId(); //$NON-NLS-1$
       if( flowRel instanceof ITeschkeFlowRelation )
       {
-        final Feature newLinkFeature = feature.setLink( ITeschkeFlowRelation.QNAME_PROP_PROFILE, profileRef );
-        final IRelationType pt = (IRelationType) flowRel.getFeatureType().getProperty( ITeschkeFlowRelation.QNAME_PROP_PROFILE );
-        fireFeatureChange( new ChangeFeatureCommand( flowRel, pt, newLinkFeature ) );
+        final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty( ITeschkeFlowRelation.QNAME_PROP_PROFILE );
+        final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
       }
       else if( flowRel instanceof IBuildingFlowRelation )
       {
@@ -234,9 +228,9 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
             MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.13" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           else
           {
-            final IRelationType pt = (IRelationType) flowRel.getFeatureType().getProperty( IBuildingFlowRelation.QNAME_PROP_PROFILE );
-            final Feature newLinkFeature = feature.setLink( pt, profileRef );
-            fireFeatureChange( new ChangeFeatureCommand( flowRel, pt, newLinkFeature ) );
+            final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty( IBuildingFlowRelation.QNAME_PROP_PROFILE );
+            final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+            fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
           }
         }
       }
@@ -248,23 +242,17 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       //          MessageDialog.openWarning( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.9"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControl.10") ); //$NON-NLS-1$ //$NON-NLS-2$
       // else
       // {
-      // final IRelationType pt = (IRelationType) flowRel.getFeatureType().getProperty(
+      // final IRelationType pt = (IRelationType) flowRel.getFeature().getFeatureType().getProperty(
       // IBuildingFlowRelation2D.QNAME_PROP_PROFILE );
       //          final Feature newLinkFeature = new XLinkedFeature_Impl( feature, pt, pt.getTargetFeatureType(), profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      // fireFeatureChange( new ChangeFeatureCommand( flowRel, pt, newLinkFeature ) );
+      // fireFeatureChange( new ChangeFeatureCommand( flowRel.getFeature(), pt, newLinkFeature ) );
       // }
       // }
 
       // TODO: set name of flowrel according to profile or create a dummy name
-      final double station = profile.getStation();
-      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
+      if( flowRel.getName().equals( "" ) ) //$NON-NLS-1$
+        flowRel.setName( "" + profile.getStation() ); //$NON-NLS-1$
 
-      if( StringUtils.isBlank( flowRel.getName() ) )
-        flowRel.setName( bigStation.toString() ); //$NON-NLS-1$
-
-      // Automatically update station of TeschkeFlowRelation
-      if( flowRel instanceof TeschkeFlowRelation )
-        ((TeschkeFlowRelation) flowRel).setStation( bigStation );
     }
     catch( final CoreException e )
     {
@@ -291,7 +279,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
     if( profileFeature == null )
       return null;
 
-    final Feature realProfileFeature = profileFeature;
+    final Feature realProfileFeature = ((XLinkedFeature_Impl) profileFeature).getFeature();
     return realProfileFeature;
   }
 

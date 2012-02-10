@@ -81,7 +81,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogPageUtilitites;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -91,6 +90,8 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * Constructs a simple boundary for wave parameters.
@@ -110,13 +111,13 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   private static final String MSG_PAGE = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.0" ); //$NON-NLS-1$
 
   private static final String DEFAULTSTEP = "10"; //$NON-NLS-1$
-
+  
   private static final double DEFAULT_BOUNDARY_HSIG = 0.5;
-
+  
   private static final double DEFAULT_BOUNDARY_PER = 4.5;
 
   private static final double DEFAULT_BOUNDARY_DIR = 180;
-
+  
   private static final double DEFAULT_BOUNDARY_DD = 2.0;
 
   protected final Date[] m_dates = new Date[2];
@@ -132,20 +133,21 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   private final Double[] m_arrayDoubleHSig = new Double[2];
 
   private final Double[] m_arrayDoublePer = new Double[2];
-
+  
   private final Double[] m_arrayDoubleDD = new Double[2];
-
+  
   private final Double[] m_arrayDoubleDir = new Double[2];
-
+  
   private int m_field = Calendar.HOUR;
-
+  
   private Integer m_step;
 
   private boolean m_stateAbsoluteCond = false;
 
+
   public WaveStepDescriptor( final String name )
   {
-    // m_name = "Wave Boundary Parameters";//name;
+//    m_name = "Wave Boundary Parameters";//name;
     m_name = name;
 
     m_domainComponentUrn = Kalypso1D2DDictConstants.DICT_COMPONENT_TIME;
@@ -156,7 +158,6 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.jface.wizard.WizardPage)
    */
-  @Override
   public Control createControl( final Composite parent, final WizardPage page )
   {
     m_page = page;
@@ -164,19 +165,18 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout( 5, false );
     container.setLayout( gridLayout );
-
-    createDateEntryLine( container, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.5" ), 0, 0 ); //$NON-NLS-1$
-    createDateEntryLine( container, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.6" ), 1, 24 ); //$NON-NLS-1$
+    
+    createDateEntryLine( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.5"), 0, 0 ); //$NON-NLS-1$
+    createDateEntryLine( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.6"), 1, 24 ); //$NON-NLS-1$
 
     final Label stepLabel = new Label( container, SWT.NONE );
     stepLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    stepLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.7" ) ); //$NON-NLS-1$
+    stepLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.7") ); //$NON-NLS-1$
 
     final Text dateTimeStep = new Text( container, SWT.BORDER );
     dateTimeStep.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     dateTimeStep.addModifyListener( new ModifyListener()
     {
-      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String text = dateTimeStep.getText();
@@ -202,7 +202,6 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     comboViewer.setInput( new Object[] { FIELD.WEEK_OF_YEAR, FIELD.DAY_OF_YEAR, FIELD.HOUR, FIELD.MINUTE } );
     comboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final int field = ((FIELD) ((IStructuredSelection) event.getSelection()).getFirstElement()).getField();
@@ -210,30 +209,29 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
       }
     } );
     comboViewer.setSelection( new StructuredSelection( FIELD.HOUR ), true );
-
+    
     new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
     new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
     new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
-
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.0" ) ); //$NON-NLS-1$
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.1" ) ); //$NON-NLS-1$
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.2" ) ); //$NON-NLS-1$
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.units.3" ) ); //$NON-NLS-1$
-
-    createFromToLineWaveParams( container, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.4" ), 0, new double[] { 0.0, 0.0, 0.0, DEFAULT_BOUNDARY_DD } ); //$NON-NLS-1$, 0.0, 0.0, m_arrayDoubleHSig
-    createFromToLineWaveParams( container, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.5" ), 1, new double[] { DEFAULT_BOUNDARY_HSIG, DEFAULT_BOUNDARY_PER, DEFAULT_BOUNDARY_DIR, DEFAULT_BOUNDARY_DD } ); //$NON-NLS-1$, 0.0, 3.5, m_arrayDoublePer
+    
+    new Label( container, SWT.NONE ).setText( "hSig [m]" ); 
+    new Label( container, SWT.NONE ).setText( "Per [s]" ); 
+    new Label( container, SWT.NONE ).setText( "Direction" ); 
+    new Label( container, SWT.NONE ).setText( "DD" ); 
+  
+    createFromToLineWaveParams( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.4"), 0, new double[]{ 0.0, 0.0, 0.0, DEFAULT_BOUNDARY_DD } ); //$NON-NLS-1$, 0.0, 0.0, m_arrayDoubleHSig
+    createFromToLineWaveParams( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.5"), 1, new double[]{ DEFAULT_BOUNDARY_HSIG, DEFAULT_BOUNDARY_PER, DEFAULT_BOUNDARY_DIR, DEFAULT_BOUNDARY_DD } ); //$NON-NLS-1$, 0.0, 3.5, m_arrayDoublePer
 
     new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$
-
+    
     final Label constBCLabel = new Label( container, SWT.NONE );
     constBCLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    constBCLabel.setText( Messages.getString( "WaveStepDescriptor.4" ) ); //$NON-NLS-1$
+    constBCLabel.setText( "Constant boundary condition only" ); 
 
     Button m_checkbox = new Button( container, SWT.CHECK );
-    m_checkbox.setToolTipText( "" ); //$NON-NLS-1$
+    m_checkbox.setToolTipText( "" );
     m_checkbox.addSelectionListener( new SelectionListener()
     {
-      @Override
       public void widgetSelected( final SelectionEvent e )
       {
         setBoundaryAbsoluteChanged();
@@ -246,15 +244,16 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
 
     } );
 
+
     updatePageState( Status.OK_STATUS );
 
     return container;
   }
-
+  
   protected void setBoundaryAbsoluteChanged( )
   {
-    m_stateAbsoluteCond = !m_stateAbsoluteCond;
-
+    m_stateAbsoluteCond = !m_stateAbsoluteCond ;
+    
   }
 
   private void createFromToLineWaveParams( final Composite container, final String pStrLabel, final int pIntPosInArr, final double[] pArrInitValues )
@@ -265,23 +264,23 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
 
     final Text textHSig = new Text( container, SWT.BORDER );
     textHSig.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    textHSig.addModifyListener( createModifyListener( m_arrayDoubleHSig, textHSig, pIntPosInArr ) );
-    textHSig.setText( String.format( "%s", pArrInitValues[0] ) ); //$NON-NLS-1$
+    textHSig.addModifyListener( createModifyListener( m_arrayDoubleHSig, textHSig, pIntPosInArr) ); 
+    textHSig.setText( String.format( "%s", pArrInitValues[ 0 ] ) ); //$NON-NLS-1$
 
     final Text textPer = new Text( container, SWT.BORDER );
     textPer.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    textPer.addModifyListener( createModifyListener( m_arrayDoublePer, textPer, pIntPosInArr ) );
-    textPer.setText( String.format( "%s", pArrInitValues[1] ) ); //$NON-NLS-1$
-
+    textPer.addModifyListener( createModifyListener( m_arrayDoublePer, textPer, pIntPosInArr ) ); 
+    textPer.setText( String.format( "%s", pArrInitValues[ 1 ] ) ); //$NON-NLS-1$
+    
     final Text textDir = new Text( container, SWT.BORDER );
     textDir.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    textDir.addModifyListener( createModifyListener( m_arrayDoubleDir, textDir, pIntPosInArr ) );
-    textDir.setText( String.format( "%s", pArrInitValues[2] ) ); //$NON-NLS-1$
-
+    textDir.addModifyListener( createModifyListener( m_arrayDoubleDir, textDir, pIntPosInArr ) ); 
+    textDir.setText( String.format( "%s", pArrInitValues[ 2 ] ) ); //$NON-NLS-1$
+    
     final Text textDD = new Text( container, SWT.BORDER );
     textDD.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    textDD.addModifyListener( createModifyListener( m_arrayDoubleDD, textDD, pIntPosInArr ) );
-    textDD.setText( String.format( "%s", pArrInitValues[3] ) ); //$NON-NLS-1$
+    textDD.addModifyListener( createModifyListener( m_arrayDoubleDD, textDD, pIntPosInArr ) ); 
+    textDD.setText( String.format( "%s", pArrInitValues[ 3 ] ) ); //$NON-NLS-1$
 
   }
 
@@ -289,7 +288,6 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   {
     return new ModifyListener()
     {
-      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String text = textH.getText();
@@ -309,7 +307,6 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
 
     dateText.addModifyListener( new ModifyListener()
     {
-      @Override
       public void modifyText( final ModifyEvent e )
       {
         final String text = dateText.getText();
@@ -327,7 +324,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
+       */ 
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -339,7 +336,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
         }
       }
     } );
-
+    
     new Label( parent, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
     new Label( parent, SWT.NONE ).setText( "" ); //$NON-NLS-1$;
 
@@ -348,7 +345,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   protected void updatePageState( final IStatus status )
   {
     final IStatus pageStatus = status.isOK() ? checkPageComplete() : status;
-    if( pageStatus.isOK() )
+    if( pageStatus.isOK() ) 
       m_page.setMessage( MSG_PAGE, DialogPage.NONE );
     else
       m_page.setMessage( pageStatus.getMessage(), DialogPageUtilitites.severityToMessagecode( pageStatus ) );
@@ -359,33 +356,31 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   private IStatus checkPageComplete( )
   {
     if( m_arrayDoubleHSig[0] == null )
-      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.9" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.9") ); //$NON-NLS-1$
     if( m_arrayDoubleHSig[1] == null )
-      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.10" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.10") ); //$NON-NLS-1$
     if( m_arrayDoubleDir[0] == null )
-      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.11" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.11") ); //$NON-NLS-1$
     if( m_arrayDoubleDir[1] == null )
-      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.12" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.12") ); //$NON-NLS-1$
     if( m_step == null )
-      return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.13" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.13") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
-
+  
   protected void handleFieldChanged( final int field )
   {
     m_field = field;
 
     updatePageState( Status.OK_STATUS );
   }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#activate()
    */
-  @Override
   public void activate( )
   {
-    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) ); //$NON-NLS-1$
+    m_page.setTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.15" ) );
     m_page.setDescription( MSG_PAGE );
 
     updatePageState( Status.OK_STATUS );
@@ -402,7 +397,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#fillObservation(org.kalypso.observation.IObservation)
    */
-  @Override
+  @SuppressWarnings("deprecation")
   public void fillObservation( final IObservation<TupleResult> obs ) throws InvocationTargetException
   {
     try
@@ -410,16 +405,16 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
       final TupleResult result = obs.getResult();
 
       obs.setName( getName() );
-
+      
       obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) ); //$NON-NLS-1$
 
       final IComponent[] components = result.getComponents();
-      final IComponent domainComponent = components[0];
-      final IComponent valueComponent1 = components[1];
-      final IComponent valueComponent2 = components[2];
-      final IComponent valueComponent3 = components[3];
-      final IComponent valueComponent4 = components[4];
-
+      final IComponent domainComponent = components[ 0 ];
+      final IComponent valueComponent1 = components[ 1 ];
+      final IComponent valueComponent2 = components[ 2 ];
+      final IComponent valueComponent3 = components[ 3 ];
+      final IComponent valueComponent4 = components[ 4 ];
+      
       result.setSortComponents( new IComponent[] { domainComponent } );
 
       final Double lDoubleHsigStart = m_arrayDoubleHSig[0];
@@ -433,14 +428,14 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
 
       final GregorianCalendar calendarFrom = new GregorianCalendar();
       final GregorianCalendar calendarTo = new GregorianCalendar();
-
+      
       calendarFrom.setTime( m_dates[0] );
       calendarTo.setTime( m_dates[1] );
 
       while( !calendarFrom.after( calendarTo ) )
       {
         final IRecord record = result.createRecord();
-        record.setValue( domainComponent, DateUtilities.toXMLGregorianCalendar( calendarFrom.getTime() ) );
+        record.setValue( domainComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
 
         final BigDecimal valueHsig = interpolateValue( calendarFrom, lDoubleHsigStart, lDoubleHsigStop );
         final BigDecimal valueDir = interpolateValue( calendarFrom, lDoubleDirStart, lDoubleDirStop );
@@ -451,7 +446,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
         {
           record.setValue( valueComponent1, valueHsig );
         }
-
+        
         if( valuePer != null )
         {
           record.setValue( valueComponent2, valuePer );
@@ -467,7 +462,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
           record.setValue( valueComponent4, valueDD );
         }
         result.add( record );
-
+        
         calendarFrom.add( m_field, m_step );
       }
     }
@@ -480,7 +475,6 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#getName()
    */
-  @Override
   public String getName( )
   {
     return m_name;
@@ -495,7 +489,7 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Cannot parse integer on step change for wave boundary" ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.18") ); //$NON-NLS-1$
       m_step = null;
     }
 
@@ -507,13 +501,13 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     IStatus status = Status.OK_STATUS;
     try
     {
-      pArrayDoubleTarget[index] = new Double( text );
+      pArrayDoubleTarget[ index ] = new Double( text );
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Cannot parse double on step change for wave boundary" ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WaveStepDescriptor.18" ) );//"org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.19") ); //$NON-NLS-1$
 
-      pArrayDoubleTarget[index] = null;// -9999.0;
+      pArrayDoubleTarget[ index ] = null;//-9999.0;
     }
 
     updatePageState( status );
@@ -528,18 +522,17 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.24" ) + DATEFORMAT.format( new Date() ) ); //$NON-NLS-1$
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.24") + DATEFORMAT.format( new Date() ) ); //$NON-NLS-1$
 
       m_dates[index] = null;
     }
 
     updatePageState( status );
   }
-
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getDomainComponentUrn()
    */
-  @Override
   public String getDomainComponentUrn( )
   {
     return m_domainComponentUrn;
@@ -548,15 +541,14 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor#getValueComponentUrn()
    */
-  @Override
   public String getValueComponentUrn( )
   {
     return m_hsigComponentUrn;
   }
-
+  
   protected BigDecimal interpolateValue( final GregorianCalendar calendar, Double pDoubleStartValue, Double pDoubleStopValue )
   {
-
+    
     /* Linear interpolation */
     final XMLGregorianCalendar from = DateUtilities.toXMLGregorianCalendar( m_dates[0] );
     final XMLGregorianCalendar to = DateUtilities.toXMLGregorianCalendar( m_dates[1] );
@@ -589,5 +581,5 @@ public class WaveStepDescriptor implements IBoundaryConditionDescriptor
   {
     return m_stateAbsoluteCond;
   }
-
+  
 }

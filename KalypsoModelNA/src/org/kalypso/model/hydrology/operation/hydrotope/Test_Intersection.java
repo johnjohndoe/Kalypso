@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Ignore;
 import org.kalypso.model.hydrology.binding.Geology;
 import org.kalypso.model.hydrology.binding.GeologyCollection;
+import org.kalypso.model.hydrology.binding.Hydrotop;
 import org.kalypso.model.hydrology.binding.IHydrotope;
 import org.kalypso.model.hydrology.binding.Landuse;
 import org.kalypso.model.hydrology.binding.LanduseCollection;
@@ -64,10 +65,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -81,14 +82,14 @@ public class Test_Intersection extends TestCase
 {
   public void test( ) throws Exception
   {
-    final File catchmentGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\modell.gml" ); //$NON-NLS-1$
-    final File landuseGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\landuse.gml" ); //$NON-NLS-1$
-    final File pedologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\pedologie.gml" ); //$NON-NLS-1$
-    final File geologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\geologie.gml" ); //$NON-NLS-1$
+    final File catchmentGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\modell.gml" );
+    final File landuseGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\landuse.gml" );
+    final File pedologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\pedologie.gml" );
+    final File geologyGML = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\geologie.gml" );
 
-    final File template = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\hydrotop.gml" ); //$NON-NLS-1$
+    final File template = new File( "P:\\FE_Projekte\\2009_PlanerClient\\03_Modelle\\031_Kollau_Modelle\\Testing_02032010\\Gesamtmodell\\01_PLC_Kollau_NA_Gesamt_\\hydrotop.gml" );
 // final File template = new File( "D:\\eclipse_runtime_Connector\\01-Kollau-NA-PlanerClient\\template.gml" );
-    final File outputGML = new File( "d:\\temp\\__test_output_" + new Date().getTime() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final File outputGML = new File( "d:\\temp\\__test_output_" + new Date().getTime() + ".gml" );
     if( outputGML.exists() )
       outputGML.delete();
     outputGML.createNewFile();
@@ -119,25 +120,25 @@ public class Test_Intersection extends TestCase
 
     for( final Geometry geometry : intersectionList )
     {
-      final IHydrotope hydrotop = hydrotopes.addNew( IHydrotope.QNAME );
+      final IHydrotope hydrotop = hydrotopes.addNew( Hydrotop.QNAME );
       final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
       final List<Catchment> catchmentList = ((IFeatureBindingCollection<Catchment>) catchments).query( envelope );
-      Catchment catchment = null;
       if( catchmentList.size() == 0 )
         continue;
       else
       {
+        boolean catchmentFound = false;
         for( final Catchment object : catchmentList )
         {
           if( object.getDefaultGeometryPropertyValue().contains( point ) )
           {
-            catchment = object;
+            catchmentFound = true;
             break;
           }
         }
-        if( catchment == null )
+        if( !catchmentFound )
           continue;
       }
 
@@ -156,14 +157,13 @@ public class Test_Intersection extends TestCase
         if( landuse == null )
           continue;
         final Object landuseClassLink = landuse.getLanduse();
-        String value = ""; //$NON-NLS-1$
-        if( landuseClassLink instanceof IXLinkedFeature )
-          value = ((IXLinkedFeature) landuseClassLink).getFeatureId();
+        String value = "";
+        if( landuseClassLink instanceof XLinkedFeature_Impl )
+          value = ((XLinkedFeature_Impl) landuseClassLink).getFeatureId();
         else
-          value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
+          value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 );
         hydrotop.setLanduse( value );
-        final double corrSealing = landuse.getCorrSealing() * catchment.getCorrSealing();
-        hydrotop.setCorrSealing( corrSealing );
+        hydrotop.setCorrSealing( landuse.getCorrSealing() );
       }
       else
         continue;
@@ -185,11 +185,11 @@ public class Test_Intersection extends TestCase
           continue;
 
         final Object soiltypeClassLink = soilType.getSoilType();
-        String value = ""; //$NON-NLS-1$
-        if( soiltypeClassLink instanceof IXLinkedFeature )
-          value = ((IXLinkedFeature) soiltypeClassLink).getFeatureId();
+        String value = "";
+        if( soiltypeClassLink instanceof XLinkedFeature_Impl )
+          value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
         else
-          value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
+          value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 );
 
         hydrotop.setSoilType( value );
       }
@@ -217,7 +217,7 @@ public class Test_Intersection extends TestCase
       hydrotop.setGeometry( (GM_MultiSurface) JTSAdapter.wrap( JTSAdapter.jtsFactory.createMultiPolygon( new Polygon[] { (Polygon) geometry } ) ) );
     }
 
-    GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" ); //$NON-NLS-1$
+    GmlSerializer.serializeWorkspace( outputGML, outputWS, "UTF-8" );
   }
 
 }

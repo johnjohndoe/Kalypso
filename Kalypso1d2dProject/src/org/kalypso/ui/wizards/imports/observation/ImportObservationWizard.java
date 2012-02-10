@@ -41,6 +41,7 @@
 package org.kalypso.ui.wizards.imports.observation;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -48,13 +49,13 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
@@ -64,42 +65,40 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryContainerSingelton;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.file.FileItem;
+import org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage;
+import org.kalypso.ui.wizard.sensor.ObservationImportSelection;
 import org.kalypso.ui.wizards.i18n.Messages;
-import org.kalypso.zml.ui.imports.ImportObservationAxisMappingWizardPage;
-import org.kalypso.zml.ui.imports.ImportObservationData;
-import org.kalypso.zml.ui.imports.ImportObservationOperation;
-import org.kalypso.zml.ui.imports.ObservationImportSelection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
-/**
- *
- * FIXME: aaarggg! Copy/Paste of ImportObservationWizard from KalypsoUI!
- *
- * @deprecated Merge this class with the other import wizard!
- */
-@Deprecated
 public class ImportObservationWizard extends Wizard implements INewWizard
 {
-  private ImportObservationSelectionWizardPage m_importPage = null;
+  private ImportObservationSelectionWizardPage m_page1 = null;
 
   private IStructuredSelection m_selection;
 
-  private ImportObservationAxisMappingWizardPage m_axisMappingPage;
+  private ImportObservationAxisMappingWizardPage m_page2;
 
   private IFolder m_timeseriesFolder;
 
@@ -196,53 +195,144 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     return repository;
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#addPages()
+   */
   @Override
   public void addPages( )
   {
     super.addPages();
+    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_timeseriesFolder ); //$NON-NLS-1$
+    m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" ); //$NON-NLS-1$
 
-    m_importPage = new ImportObservationSelectionWizardPage( "importPage", m_timeseriesFolder ); //$NON-NLS-1$
-    m_axisMappingPage = new ImportObservationAxisMappingWizardPage( "sourcePage" ); //$NON-NLS-1$
+    addPage( m_page1 );
+    addPage( m_page2 );
 
-    addPage( m_importPage );
-    addPage( m_axisMappingPage );
-
-    m_importPage.setSelection( m_selection );
-    m_importPage.addSelectionChangedListener( m_axisMappingPage );
+    m_page1.setSelection( m_selection );
+    m_page1.addSelectionChangedListener( m_page2 );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#performCancel()
+   */
+  @Override
+  public boolean performCancel( )
+  {
+    return true;
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
-    final String[] allowedTypes = new String[] { ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE,
-        ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_EVAPORATION };
-
-    final ImportObservationData data = new ImportObservationData( allowedTypes );
-
-    /* Translate old selection to data */
-    final ObservationImportSelection selection = (ObservationImportSelection) m_importPage.getSelection();
-    data.getSourceFileData().setFile( selection.getFileSource() );
-    data.setTargetFile( selection.getFileTarget() );
-
-    final TimeZone timezone = selection.getSourceTimezone();
-    data.setTimezone( timezone.getID() );
-
-    final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
-    data.setAdapter( nativaAdapter );
-
-    /* Run operation */
-    final Shell shell = getShell();
-
-    final IAxis[] axesSrc = m_axisMappingPage.getAxisMappingSrc();
-    final IAxis[] axesNew = m_axisMappingPage.getAxisMappingTarget();
-
-    final ImportObservationOperation importOperation = new ImportObservationOperation( data, shell, axesSrc, axesNew, selection );
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, importOperation );
-    if( !status.isOK() )
-      StatusDialog.open( getShell(), status, getWindowTitle() );
-
     try
     {
+      final ObservationImportSelection selection = (ObservationImportSelection) m_page1.getSelection();
+      final File fileSource = selection.getFileSource();
+      final IFile fileTarget = selection.getFileTarget();
+
+      final TimeZone timezone = selection.getSourceTimezone();
+
+      final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
+      IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, false );
+      if( srcObservation == null )
+      {
+        final MessageBox messageBox = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
+        messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ) ); //$NON-NLS-1$
+        messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ) ); //$NON-NLS-1$
+        if( messageBox.open() == SWT.NO )
+          return true;
+        else
+          srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, true );
+      }
+
+      final IAxis[] axesSrc = m_page2.getAxisMappingSrc();
+      final IAxis[] axesNew = m_page2.getAxisMappingTarget();
+
+      final ITupleModel tuppelModelSrc = srcObservation.getValues( null );
+      final int countSrc = tuppelModelSrc.size();
+
+      final IObservation targetObservation;
+      final ITupleModel tuppelModelTarget;
+      final int countTarget;
+      if( fileTarget.exists() && (selection.isAppend() || selection.isRetainMetadata()) )
+      {
+        final URL targetLocation = ResourceUtilities.createURL( fileTarget );
+        targetObservation = ZmlFactory.parseXML( targetLocation );
+        tuppelModelTarget = targetObservation.getValues( null );
+        if( selection.isAppend() )
+          countTarget = tuppelModelTarget.size();
+        else
+          countTarget = 0;
+      }
+      else
+      {
+        targetObservation = null;
+        tuppelModelTarget = null;
+        countTarget = 0;
+      }
+      // create new values
+      final ITupleModel newTuppelModel;
+      if( tuppelModelTarget != null )
+      {
+        // w/q specials...
+        if( tuppelModelTarget instanceof WQTuppleModel )
+        {
+          final WQTuppleModel wq = (WQTuppleModel) (tuppelModelTarget);
+          final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
+          final ITupleModel model = new SimpleTupleModel( axesNew, newValues );
+          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter(), wq.getDestAxisPos(), wq.getDestStatusAxisPos() );
+        }
+        else
+        {
+          final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length];
+          newTuppelModel = new SimpleTupleModel( axesNew, newValues );
+        }
+      }
+      else
+      {
+        final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length];
+        newTuppelModel = new SimpleTupleModel( axesNew, newValues );
+      }
+      // fill from source
+      for( int i = 0; i < countSrc; i++ )
+      {
+        for( int a = 0; a < axesNew.length; a++ )
+        {
+          final Object newValue;
+          if( axesSrc[a] == null )
+          {
+            if( KalypsoStatusUtils.isStatusAxis( axesNew[a] ) )
+              newValue = new Integer( KalypsoStati.BIT_USER_MODIFIED );
+            else
+              newValue = null;
+          }
+          else
+            newValue = tuppelModelSrc.get( i, axesSrc[a] );
+          if( newValue != null )
+            newTuppelModel.set( i, axesNew[a], newValue );
+        }
+      }
+      // append from existing target
+      if( tuppelModelTarget != null )
+      {
+        for( int i = 0; i < countTarget; i++ )
+          for( final IAxis element : axesNew )
+            newTuppelModel.set( countSrc + i, element, tuppelModelTarget.get( i, element ) );
+      }
+      final String href = ""; //$NON-NLS-1$
+      final String name = srcObservation.getName();
+      final MetadataList metadata = new MetadataList();
+      if( targetObservation != null && selection.isRetainMetadata() )
+        metadata.putAll( targetObservation.getMetadataList() );
+      metadata.putAll( srcObservation.getMetadataList() );
+
+      final IObservation newObservation = new SimpleObservation( href, name, metadata, newTuppelModel );
+
+      ZmlFactory.writeToFile( newObservation, fileTarget );
+
       m_timeseriesFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
 
       /* Reload repositories in order show new timeserie */
@@ -254,23 +344,19 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       // or something similar
       if( m_timeseriesView != null )
       {
-        final IFile targetFile = data.getTargetFile();
-        final File targetJavaFile = targetFile.getLocation().toFile();
+        final File targetJavaFile = fileTarget.getLocation().toFile();
         final FileItem item = m_configuredRepository.createItem( targetJavaFile );
         m_timeseriesView.getViewSite().getSelectionProvider().setSelection( new StructuredSelection( item ) );
       }
     }
-    catch( final CoreException e )
+    catch( final Exception e )
     {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
       final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ); //$NON-NLS-1$
       final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ); //$NON-NLS-1$
-
-      final IStatus error = new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, message, e );
-
-      StatusDialog.open( shell, error, title );
+      ErrorDialog.openError( getShell(), title, message, status );
       return false;
     }
-
-    return !status.matches( IStatus.ERROR );
+    return true;
   }
 }

@@ -91,9 +91,7 @@ public abstract class AbstractSobekFileExportOperation extends AbstractSobekExpo
   protected void closeQuiet( )
   {
     if( m_formatter != null )
-    {
       m_formatter.close();
-    }
   }
 
   private void checkIO( ) throws IOException
