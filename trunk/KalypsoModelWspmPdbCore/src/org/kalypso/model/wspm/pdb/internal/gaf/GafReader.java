@@ -237,7 +237,7 @@ public class GafReader
     if( item instanceof BigDecimal )
       return (BigDecimal) item;
 
-    final String message = String.format( "Field '%s' is not a number", label );
+    final String message = String.format( Messages.getString("GafReader.14"), label ); //$NON-NLS-1$
     throw failLine( IStatus.ERROR, message );
   }
 

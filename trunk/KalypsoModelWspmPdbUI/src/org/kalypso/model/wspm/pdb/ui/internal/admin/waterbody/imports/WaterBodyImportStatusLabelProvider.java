@@ -106,7 +106,7 @@ public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
       if( combinedStatus.size() == 1 )
         return combinedStatus.getAllStati()[0];
 
-      return combinedStatus.asMultiStatusOrOK( "multiple warnings" );
+      return combinedStatus.asMultiStatusOrOK( Messages.getString("WaterBodyImportStatusLabelProvider.1") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

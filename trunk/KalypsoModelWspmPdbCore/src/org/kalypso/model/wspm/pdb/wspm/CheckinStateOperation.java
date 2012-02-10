@@ -193,6 +193,6 @@ public class CheckinStateOperation implements ICoreRunnableWithProgress
     if( station == null )
       return StringUtils.EMPTY;
 
-    return String.format( "%.4f", station );
+    return String.format( "%.4f", station ); //$NON-NLS-1$
   }
 }

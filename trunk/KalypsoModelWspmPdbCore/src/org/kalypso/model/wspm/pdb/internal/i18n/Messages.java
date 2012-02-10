@@ -55,7 +55,7 @@ public final class Messages
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
   // IMPORTANT: MUST be initialized after the call to getBundle
-  public static String STR_OPERATION_FAILED = getString( "CheckInEventOperation.2" );
+  public static String STR_OPERATION_FAILED = getString( "CheckInEventOperation.2" ); //$NON-NLS-1$
 
   private Messages( )
   {

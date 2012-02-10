@@ -91,11 +91,11 @@ public class WspmImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
   {
     m_workspace = findWorkspace( selection );
     if( m_workspace == null )
-      throw new IllegalStateException( "No commandable workspace was found..." );
+      throw new IllegalStateException( "No commandable workspace was found..." ); //$NON-NLS-1$
 
     m_wspmProject = findWspmProject( selection );
     if( m_wspmProject == null )
-      throw new IllegalStateException( "No WSPM project was found..." );
+      throw new IllegalStateException( "No WSPM project was found..." ); //$NON-NLS-1$
 
     int cnt = 0;
     final List<WaterBody> waterBodies = new ArrayList<WaterBody>();

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.pdb.connect.command;
 import org.hibernate.Session;
 import org.kalypso.model.wspm.pdb.connect.IPdbOperation;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,7 +62,7 @@ public class GetCoefficients implements IPdbOperation
   @Override
   public String getLabel( )
   {
-    return "Loading coefficients from database...";
+    return Messages.getString("GetCoefficients_0"); //$NON-NLS-1$
   }
 
   public Coefficients getCoefficients( )

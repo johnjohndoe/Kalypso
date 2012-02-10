@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.pdb.gaf.GafCode;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
 import org.kalypso.model.wspm.pdb.internal.gaf.Coefficients;
 import org.kalypso.model.wspm.pdb.internal.gaf.GafCodes;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -202,7 +203,7 @@ public class CheckinPartOperation
     }
 
     final double station = m_profil.getStation();
-    final String warning = String.format( "Cross section km %.4f, part '%s'", station, m_partBuilder.getCategory() );
+    final String warning = String.format( Messages.getString("CheckinPartOperation_0"), station, m_partBuilder.getCategory() ); //$NON-NLS-1$
     return m_stati.asMultiStatusOrOK( warning );
   }
 
@@ -215,7 +216,7 @@ public class CheckinPartOperation
     if( vegetation == null )
     {
       final Vegetation unknownVegetation = m_coefficients.getUnknownVegetation();
-      m_stati.add( IStatus.WARNING, "Unknown vegetation class '%s'. Using class '%s' instead.", null, vegetationClassId, unknownVegetation.getLabel() );
+      m_stati.add( IStatus.WARNING, Messages.getString("CheckinPartOperation_1"), null, vegetationClassId, unknownVegetation.getLabel() ); //$NON-NLS-1$
       return unknownVegetation;
     }
 
@@ -233,7 +234,7 @@ public class CheckinPartOperation
     if( roughness == null )
     {
       final Roughness unknownRoughness = m_coefficients.getUnknownRoughness();
-      m_stati.add( IStatus.WARNING, "Unknown roughness class '%s'. Using class '%s' instead.", null, roughnessClassId, unknownRoughness.getLabel() );
+      m_stati.add( IStatus.WARNING, Messages.getString("CheckinPartOperation_2"), null, roughnessClassId, unknownRoughness.getLabel() ); //$NON-NLS-1$
       return unknownRoughness;
     }
 
