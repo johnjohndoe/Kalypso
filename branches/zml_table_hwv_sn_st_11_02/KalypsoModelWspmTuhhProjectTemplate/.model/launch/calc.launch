@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.ant.AntLaunchConfigurationType">
+	<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+		<listEntry value="1"/>
+	</listAttribute>
+	<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${simulation_project_loc}/.model/launch"/>
+	<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+	<stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="runCalculation,"/>
+	<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-e"/>
+	<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+		<listEntry value="/1D_neu/.model/launch/build.xml"/>
+	</listAttribute>
+	<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${simulation_project_loc}/.model/launch/build.xml"/>
+</launchConfiguration>
