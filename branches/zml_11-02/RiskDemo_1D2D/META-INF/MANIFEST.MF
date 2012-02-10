@@ -1,0 +1,9 @@
+Manifest-Version: 1.0 
+Bundle-ManifestVersion: 2
+Bundle-Name: Risk_1D2D_Demo Plug-in
+Bundle-SymbolicName: org.kalypso.model.risk.project.1d2d_demo;singleton:=true
+Bundle-Version: 11.6.2.qualifier
+Bundle-Vendor: kalypso.sourceforge.net
+Require-Bundle: org.kalypso.contribs.eclipseplatform
+Bundle-Localization: plugin
+

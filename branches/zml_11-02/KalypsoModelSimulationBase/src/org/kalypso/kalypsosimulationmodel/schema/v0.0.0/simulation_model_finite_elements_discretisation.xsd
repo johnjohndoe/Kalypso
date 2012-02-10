@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  
+	Provide schema elements for a finite element discretisation model.
+	The model kann be view in a different levels of complexity:
+	i)level 0 the nodes
+	Typically nodes wrapps points, i.e. the have 
+	a geographical property.		
+	ii)level 1 the edges
+	Typical simple edges are made of node, one starting and one stoping node. 
+	But the can also starts a a point and ends at an edges depending to the
+	model need.	
+	iii) the elements
+	Groups edges.
+	iv) level 4 the complexe element.
+	complex elements groups element in a meaningfull context 
+	or concept Elements are   
+	All types and elements define here are abtract modellers are required to
+	build costum type and elements for their domain 
+	
+	About node nature; while extending the node type to principle may be followed concerning
+	the node nature:
+	i) Multiple node type
+	ii)Single node type with implicit nature to membership in an element
+	or in a complex type.  
+	About geometry Association:
+	i) geometry should be assoiated to node.
+	ii)other element geometry are implicitely defined.
+	iii)Extra geometric shape may be associated to elements or complex element
+	in the case the shape are not esy to derive from their sub elements  	
+	@author Patrice Congo, Stefan Kurzbach
+-->
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:include schemaLocation="simulation_model_base.xsd" />	
+
+	<!--================================================================= 
+		_FEDiscretisationModel
+		====================================================================-->
+	<!-- Property (for backward compatibility) -->
+	<xs:element name="feDiscretisationModel"
+		type="simBase:FEDiscretisationModelPropertyType" abstract="true">
+	</xs:element>
+	<xs:complexType name="FEDiscretisationModelPropertyType">
+		<xs:sequence>
+			<xs:element ref="simBase:_FEDiscretisationModel"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- end Property (for backward compatibility) -->
+	<xs:element name="_FEDiscretisationModel" 
+		type="simBase:FEAbstractDiscretisationModelType" abstract="true"
+		substitutionGroup="simBase:_Model">
+		<xs:annotation>
+			<xs:documentation>
+				Represents a finite element discretisation with complex
+				element, simple elements, edges and nodes.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="FEAbstractDiscretisationModelType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				Abstract type for a finite element network.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractModelType" />
+		</xs:complexContent>
+	</xs:complexType>
+	
+</xs:schema>

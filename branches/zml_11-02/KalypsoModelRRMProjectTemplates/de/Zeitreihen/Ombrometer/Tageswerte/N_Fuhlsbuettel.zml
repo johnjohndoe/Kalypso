@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>Ombrometer Fuhlsbuettel</name>
+    <metadataList/>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-06-25T07:30:00;2004-06-26T07:30:00;2004-06-27T07:30:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Niederschlag" type="N" unit="mm">
+        <valueArray separator=";">3.3;0.0;0.2</valueArray>
+    </axis>
+</observation>
+
