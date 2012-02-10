@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.export.knauf.beans.init.KnaufBea
  */
 public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanBuilder implements ICoreRunnableWithProgress
 {
-
   protected IStatus[] buildDefaultBeans( final KnaufProfileWrapper profile )
   {
     final KnaufSA20Bean sa20 = new KnaufSA20Bean( profile );
@@ -103,5 +102,4 @@ public abstract class AbstractKnaufProfileBeanBuilder extends AbstractKnaufBeanB
 
     return false;
   }
-
 }
