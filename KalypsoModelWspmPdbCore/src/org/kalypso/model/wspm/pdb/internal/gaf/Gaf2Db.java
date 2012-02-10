@@ -63,7 +63,11 @@ import org.kalypso.model.wspm.pdb.gaf.GafProfiles;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
 import org.kalypso.model.wspm.pdb.internal.utils.PDBNameGenerator;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.linearref.LinearLocation;
+import com.vividsolutions.jts.linearref.LocationIndexedLine;
 
 /**
  * Writes a gaf profile into the database.
@@ -141,8 +145,11 @@ public class Gaf2Db implements IPdbOperation
   {
     final CrossSection crossSection = commitCrossSection( session, dbType, profile );
 
-    /* add parts */
+    /* Get PP part */
     final GafPart[] parts = profile.getParts();
+    final GafPart ppPart = profile.findPart( IGafConstants.KZ_CATEGORY_PROFILE );
+
+    /* add parts */
     for( final GafPart gafPart : parts )
     {
       final PDBNameGenerator partNameGenerator = new PDBNameGenerator();
@@ -155,7 +162,7 @@ public class Gaf2Db implements IPdbOperation
       {
         final PDBNameGenerator pointNameGenerator = new PDBNameGenerator();
         final GafPoint gafPoint = points[j];
-        commitPoint( gafPart, session, csPart, gafPoint, j, pointNameGenerator );
+        commitPoint( gafPart, session, csPart, gafPoint, j, pointNameGenerator, ppPart );
       }
 
       addWaterlevels( session, profile, gafPart );
@@ -214,7 +221,7 @@ public class Gaf2Db implements IPdbOperation
     return csPart;
   }
 
-  private void commitPoint( final GafPart gafPart, final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator )
+  private void commitPoint( final GafPart gafPart, final Session session, final CrossSectionPart csPart, final GafPoint gafPoint, final int index, final PDBNameGenerator nameGenerator, final GafPart projectionPart )
   {
     final Point point = new Point();
 
@@ -227,7 +234,7 @@ public class Gaf2Db implements IPdbOperation
     final String name = nameGenerator.createUniqueName( gafPoint.getPointId() );
 
     final com.vividsolutions.jts.geom.Point location = gafPoint.getPoint();
-    final BigDecimal width = getOrCalculatePoint( gafPart, gafPoint );
+    final BigDecimal width = getOrCalculatePoint( gafPart, gafPoint, projectionPart );
 
     /* Write data into db point */
     point.setName( name );
@@ -256,14 +263,42 @@ public class Gaf2Db implements IPdbOperation
     session.save( point );
   }
 
-  private BigDecimal getOrCalculatePoint( final GafPart gafPart, final GafPoint gafPoint )
+  /**
+   * Calculates the widht of a point if it is not set in the gaf file.<br/>
+   * For PP points, it is just the distance to the first point.<br/>
+   * For non-pp points, it is the station of the point projected to the pp-line.
+   */
+  private BigDecimal getOrCalculatePoint( final GafPart gafPart, final GafPoint gafPoint, final GafPart projectionPart )
   {
     final BigDecimal width = gafPoint.getWidth();
     if( width != null )
       return width;
 
     final com.vividsolutions.jts.geom.Point location = gafPoint.getPoint();
+    if( gafPart.getKind() == IGafConstants.KZ_CATEGORY_PROFILE || projectionPart == null )
+    {
+      return calculateWidthFromDistance( gafPart, location );
+    }
+    else
+    {
+      final Geometry line = projectionPart.getLine( m_dbType );
+      if( !(line instanceof LineString) || line.getNumPoints() < 2 )
+        return calculateWidthFromDistance( gafPart, location );
 
+      final LineString ls = (LineString) line;
+
+      final LocationIndexedLine lineRef = new LocationIndexedLine( line );
+      final LinearLocation loc = lineRef.project( location.getCoordinate() );
+      final Coordinate closestPt = loc.getCoordinate( line );
+
+      final double distance = ls.getCoordinateN( 0 ).distance( closestPt );
+      return new BigDecimal( distance ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+
+    }
+  }
+
+  private BigDecimal calculateWidthFromDistance( final GafPart gafPart, final com.vividsolutions.jts.geom.Point location )
+  {
     final GafPoint startPoint = gafPart.getPoints()[0];
     final com.vividsolutions.jts.geom.Point startLocation = startPoint.getPoint();
 
