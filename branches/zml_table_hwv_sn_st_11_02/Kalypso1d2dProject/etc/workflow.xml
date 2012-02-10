@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Workflow
+	URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WF_Kalypso1D2D"
+	xmlns="http://www.renew.de/workflow/base"
+	xmlns:con="http://www.renew.de/workflow/contexts"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	defaultTask="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetCstr">
+	<Help>NONE</Help>
+	<Name>Kalypso1D2D-Workflow</Name>
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing"
+		context="BaseMap">
+		<Help>%Kalypso1D2D_Preprocessing_help</Help>
+		<Name>%Kalypso1D2D_Preprocessing</Name>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataLoad"
+			context="BaseMap">
+			<Help>%Kalypso1D2D_Preprocessing_DataLoad_help</Help>
+			<Name>%Kalypso1D2D_Preprocessing_DataLoad</Name>
+			<Task context="ImportBaseMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__MapLoad">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_MapLoad_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_MapLoad</Name>
+			</Task>
+			<Task context="FenetMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_ElevLoad_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_ElevLoad</Name>
+			</Task>
+			<Task context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_WindLoad_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_WindLoad</Name>
+			</Task>
+			<!--
+				<Task context="BaseMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RivNetLoad">
+				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
+				<Name>Import eines Gewässernetzes</Name>
+				</Task>
+				<TaskGroup context="BaseMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfImpLoad">
+				<Help>Einladen von 1D-Profildaten (WSPWIN/DA66)</Help>
+				<Name>Import von 1D-Profilen</Name>
+				</TaskGroup>
+			-->
+			<Task context="ImportRoughness"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughLoad">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_RoughLoad_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_RoughLoad</Name>
+			</Task>
+			<Task context="ImportObservations"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TimeSerLoad">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_TimeSerLoad_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_TimeSerLoad</Name>
+			</Task>
+			<Task context="FenetMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport">
+				<Help>%Kalypso1D2D_Preprocessing_DataLoad_ProfileImport_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataLoad_ProfileImport</Name>
+			</Task>
+		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetCstr"
+			context="FenetMap">
+			<Help>%Kalypso1D2D_Preprocessing_NetCstr_help</Help>
+			<Name>%Kalypso1D2D_Preprocessing_NetCstr</Name>
+			<TaskGroup
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DRivGroup"
+				context="FenetMap">
+				<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup</Name>
+				<TaskGroup
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImport"
+					context="FenetMap">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Net1DImport_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Net1DImport</Name>
+					<!-- <Task context="ImportWSPM" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm">
+						<Help>FE-1D-Netz aus stationärem Modell (WSPM) erzeugen</Help>
+						<Name>WSPM Modell</Name>
+						</Task>
+					-->
+					<Task context="Context1dElementTheme"
+						URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm">
+						<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Net1DImport_Net1DImportWspm_help</Help>
+						<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Net1DImport_Net1DImportWspm</Name>
+					</Task>
+					<Task context="FenetMapWithProfileView"
+						URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap">
+						<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Net1DImport_AddProfileNetworkToMap_help</Help>
+						<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Net1DImport_AddProfileNetworkToMap</Name>
+					</Task>
+				</TaskGroup>
+				<Task type="ASYNCHRONOUS"
+					context="Context1dElementTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Edit1DNet">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Edit1DNet_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Edit1DNet</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS"
+					context="FlowRelationshipTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Edit1DNetParameters">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Edit1DNetParameters_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net1DRivGroup_Edit1DNetParameters</Name>
+				</Task>
+			</TaskGroup>
+			<TaskGroup
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DGroup"
+				context="FenetMap">
+				<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup</Name>
+				<Task context="Import2dNet"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DImport">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_Net2DImport_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_Net2DImport</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS"
+					context="Context2dElementTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__EditNet2D">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditNet2D_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditNet2D</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS"
+					context="FlowRelationshipTheme2D"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__EditNet2D">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditParams2D_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_EditParams2D</Name>
+				</Task>
+				<!-- 
+				<Task type="ASYNCHRONOUS"
+					context="WindData"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__EditWindData2D">
+					<Help>TODO: Label edit wind data 2d Help</Help>
+					<Name>TODO: Label edit wind data 2d Name</Name>
+				</Task>
+				-->
+				<Task type="ASYNCHRONOUS" context="FenetMap"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_Chan2DGen_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_Chan2DGen</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS" context="FenetMap"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_BandGen_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_BandGen</Name>
+				</Task>
+
+				<Task type="ASYNCHRONOUS" context="FenetMap"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_AssignElevs_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_AssignElevs</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS" context="FenetMap"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_ShowWindData_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_Net2DGroup_ShowWindData</Name>
+				</Task>
+			</TaskGroup>
+			<TaskGroup
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup"
+				context="FenetMap">
+				<Help>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup</Name>
+				<Task type="ASYNCHRONOUS" context="ContLineTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ContilineGen">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_ContilineGen_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_ContilineGen</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS"
+					context="BoundaryConditionTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_BCDef_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_BCDef</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS" context="JunctionElementContextTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineJunction">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_SetEltLineJunction_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_SetEltLineJunction</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS" context="TransitionElementContextTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_SetEltLineTrans_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_SetEltLineTrans</Name>
+				</Task>
+				<Task type="ASYNCHRONOUS" context="FenetMap"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
+					<Help>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_CalculationUnit_help</Help>
+					<Name>%Kalypso1D2D_Preprocessing_NetCstr_TransGroup_CalculationUnit</Name>
+				</Task>
+			</TaskGroup>
+		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod"
+			context="FenetMap">
+			<Help>%Kalypso1D2D_Preprocessing_RoughMod_help</Help>
+			<Name>%Kalypso1D2D_Preprocessing_RoughMod</Name>
+			<Task context="RoughnessDatabase"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ClassDefGroup">
+				<Help>%Kalypso1D2D_Preprocessing_RoughMod_ClassDefGroup_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_RoughMod_ClassDefGroup</Name>
+			</Task>
+			<Task context="RoughnessTheme"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef">
+				<Help>%Kalypso1D2D_Preprocessing_RoughMod_RCDef_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_RoughMod_RCDef</Name>
+			</Task>
+		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataExport"
+			context="FenetMap">
+			<Help>%Kalypso1D2D_Preprocessing_DataExport_help</Help>
+			<Name>%Kalypso1D2D_Preprocessing_DataExport</Name>
+			<Task context="Export2DNet"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetExport">
+				<Help>%Kalypso1D2D_Preprocessing_DataExport_NetExport_help</Help>
+				<Name>%Kalypso1D2D_Preprocessing_DataExport_NetExport</Name>
+			</Task>
+		</TaskGroup>
+	</TaskGroup>
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Processing"
+		context="FenetMap">
+		<Help>%Kalypso1D2D_Processing_help</Help>
+		<Name>%Kalypso1D2D_Processing</Name>
+		<Task type="ASYNCHRONOUS" context="CalcParams"
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalcSet">
+			<Help>%Kalypso1D2D_Processing_CalcSet_help</Help>
+			<Name>%Kalypso1D2D_Processing_CalcSet</Name>
+		</Task>
+		<Task type="ASYNCHRONOUS" context="FenetMap"
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
+			<Help>%Kalypso1D2D_Processing_StartCalculationWithProblemsView_help</Help>
+			<Name>%Kalypso1D2D_Processing_StartCalculationWithProblemsView</Name>
+		</Task>
+	</TaskGroup>
+
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Postprocessing"
+		context="ResultMap">
+		<Help>%Kalypso1D2D_Postprocessing_help</Help>
+		<Name>%Kalypso1D2D_Postprocessing</Name>
+		<Task context="ResultMap"
+				URI="workflow1d2d_ResultDataManager">
+				<Help>%Kalypso1D2D_Postprocessing_ResultDataManager_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_ResultDataManager</Name>
+		</Task>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapGroup"
+			context="ResultMap">
+			<Help>%Kalypso1D2D_Postprocessing_ResultMapGroup_help</Help>
+			<Name>%Kalypso1D2D_Postprocessing_ResultMapGroup</Name>
+
+			<Task context="ResultMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
+				<Help>%Kalypso1D2D_Postprocessing_ResultMapGroup_ConfigureResultMap_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_ResultMapGroup_ConfigureResultMap</Name>
+			</Task>
+			<Task context="ResultMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultMap">
+				<Help>%Kalypso1D2D_Postprocessing_ResultMapGroup_ShowResultMap_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_ResultMapGroup_ShowResultMap</Name>
+			</Task>
+			<Task type="ASYNCHRONOUS" context="ResultMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph">
+				<Help>%Kalypso1D2D_Postprocessing_ResultMapGroup_ManageResultHydrograph_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_ResultMapGroup_ManageResultHydrograph</Name>
+			</Task>
+		</TaskGroup>
+
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultLengthSectionViewGroup"
+			context="LengthSectionView">
+			<Help>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup_help</Help>
+			<Name>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup</Name>
+			<Task context="ResultMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
+				<Help>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup_ConfigureResultLengthSectionView_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup_ConfigureResultLengthSectionView</Name>
+			</Task>
+			<Task
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
+				<Help>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup_ShowResultLengthSectionView_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_ResultLengthSectionViewGroup_ShowResultLengthSectionView</Name>
+			</Task>
+		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DifferenceResultViewGroup"
+			context="ResultMap">
+			<Help>%Kalypso1D2D_Postprocessing_DifferenceResultViewGroup_help</Help>
+			<Name>%Kalypso1D2D_Postprocessing_DifferenceResultViewGroup</Name>
+			<Task context="ResultMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
+				<Help>%Kalypso1D2D_Postprocessing_DifferenceResultViewGroup_GenerateDifferenceResultView_help</Help>
+				<Name>%Kalypso1D2D_Postprocessing_DifferenceResultViewGroup_GenerateDifferenceResultView</Name>
+			</Task>
+		</TaskGroup>
+	</TaskGroup>
+	<Perspectives>
+		<con:PerspectiveContext id="Context1d2dModelling"
+			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+			<con:ViewContext id="FeatureView"
+				partId="org.kalypso.ui.views.featuretemplateview"
+				parent="Context1d2dModelling">
+				<con:ExtensionContext id="RoughnessDatabase"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="gml"
+						value="project:/.metadata/roughness.gml" />
+					<con:Parameter name="viewTitle"
+						value="Rauheitsdatenbank" />
+				</con:ExtensionContext>
+				<con:ExtensionContext id="CalcParams"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="gml"
+						value="models/control.gml" />
+					<con:Parameter name="viewTitle"
+						value="Berechnungseinstellungen" />
+				</con:ExtensionContext>
+			</con:ViewContext>
+
+			<con:ViewContext id="LengthSectionView"
+				partId="org.kalypso.chart.ui.view.ChartView"
+				parent = "Context1d2dModelling">
+			</con:ViewContext>
+
+			<con:WorkbenchSiteContext id="MapAndProfileViewContext"
+				parent="Context1d2dModelling">
+				<con:ViewContext id="MapAndProfileViewContextMapOutlineView"
+					partId="org.kalypso.ui.views.outline" parent="MapAndProfileViewContext" />
+				<con:ViewContext id="ProfileViewWithMapView"
+					partId="org.kalypso.model.wspm.ui.view.chart.ChartView"
+					parent="MapAndProfileViewContext" />
+				<con:ViewContext id="MapViewWithProfileView"
+					partId="org.kalypso.ui.views.mapView"
+					parent="MapAndProfileViewContext">
+					<con:ExtensionContext id="FenetMapWithProfileView"
+						parent="MapViewWithProfileView"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/fenet.gmt" />
+					</con:ExtensionContext>
+				</con:ViewContext>
+			</con:WorkbenchSiteContext>
+			<con:WorkbenchSiteContext id="TimeSeriesContext"
+				parent="Context1d2dModelling">
+				<con:WizardContext id="ImportObservations"
+					wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
+					wizardType="NEW_WIZARD" parent="TimeSeriesContext" />
+				<con:ViewContext id="TimeSeriesRepositoryView"
+					partId="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
+					parent="TimeSeriesContext" />
+				<con:ViewContext id="TimeSeriesDiagramView"
+					partId="org.kalypso.ogc.sensor.view.DiagramViewPart"
+					parent="TimeSeriesContext" />
+				<con:ViewContext id="TimeSeriesTableView"
+					partId="org.kalypso.ogc.sensor.view.TableViewPart"
+					parent="TimeSeriesContext" />
+			</con:WorkbenchSiteContext>
+			<con:WorkbenchSiteContext id="MapContext"
+				parent="Context1d2dModelling">
+				<con:ViewContext id="MapOutlineView"
+					partId="org.kalypso.ui.views.outline" parent="MapContext" />
+				<con:ViewContext id="MapView"
+					partId="org.kalypso.ui.views.mapView" parent="MapContext">
+					<con:ExtensionContext id="BaseMap"
+						parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:WizardContext id="ImportBaseMap"
+							wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
+							wizardType="NEW_WIZARD" parent="BaseMap" />
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/base.gmt" />
+					</con:ExtensionContext>
+					<con:ExtensionContext id="RoughnessMap"
+						parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:ExtensionContext id="RoughnessPolygonTheme"
+							parent="RoughnessMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:WizardContext id="ImportRoughness"
+								wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard"
+								wizardType="NEW_WIZARD" parent="RoughnessPolygonTheme" />
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+						</con:ExtensionContext>
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<!--
+						<con:Parameter name="input"
+							value="maps/roughness.gmt" />
+						 -->
+						<con:Parameter name="input"
+							value="maps/fenet.gmt" />
+					</con:ExtensionContext>
+					<con:ExtensionContext id="FenetMap"
+						parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:ExtensionContext id="Context1dElementTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="FlowRelationshipTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="Context2dElementTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:WizardContext id="Import2dNet"
+								wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
+								wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
+							<con:WizardContext id="Export2DNet"
+								wizardId="org.kalypso.wizards.export2d.ExportWizard"
+								wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="FlowRelationshipTheme2D"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation2D" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="TransitionElementContextTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
+						</con:ExtensionContext>
+
+						<con:ExtensionContext id="JunctionElementContextTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement" />
+						</con:ExtensionContext>
+
+						<con:ExtensionContext id="ContLineTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="RoughnessTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+						</con:ExtensionContext>
+						<con:ExtensionContext
+							id="BoundaryConditionTheme" parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
+						</con:ExtensionContext>
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/fenet.gmt" />
+					</con:ExtensionContext>
+					<con:ExtensionContext id="ResultMap"
+						parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:ExtensionContext id="ResultMapHydrograph"
+							parent="ResultMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
+						</con:ExtensionContext>
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="results/result.gmt" />
+					</con:ExtensionContext>
+
+
+
+				</con:ViewContext>
+			</con:WorkbenchSiteContext>
+			<con:ViewContext id="FeatureSelectionView"
+				partId="org.kalypso.featureview.views.FeatureView"
+				parent="Context1d2dModelling" />
+		</con:PerspectiveContext>
+	</Perspectives>
+</Workflow>
