@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bibliography>
+  <title>Literaturverzeichnis</title>
+
+  <bibliomixed>
+    <editor>
+      <surname>Bund der Ingenieure für Wasserwirtschaft, Abfallwirtschaft und
+      Kulturbau e.V. (BWK)</surname>
+    </editor>
+
+    <title>Hydraulische Berechnung von naturnahen Fließgewässern,</title>
+
+    <volumenum> Teil 1 (Merkblatt 1), </volumenum>
+
+    <date>September 1999</date>
+  </bibliomixed>
+
+  <bibliomixed>
+    <editor>
+      <surname>Deutscher Verband für Wasserwirtschaft und Kulturbau e.V.
+      (DVWK)</surname>
+    </editor>
+
+    <title>Merkblätter zur Wasserwirtschaft 220/1991</title>
+
+    <subtitle>, Hydraulische Berechnung von Fließgewässern</subtitle>
+
+    <publisher>
+      <publishername>Kommissionsvertrieb, Verlag Paul Parey, Hamburg und
+      Berlin</publishername>
+    </publisher>
+
+    <isbn>ISBN 3- 490-32097-2 Heft 220/1991</isbn>
+  </bibliomixed>
+
+  <bibliomixed>
+    <author>
+      <surname>Pasche</surname>
+    </author>
+
+    <title>Theoretische Grundlagen des Rechenkerns nach Prof. Pasche</title>
+  </bibliomixed>
+</bibliography>
