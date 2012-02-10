@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2011-09-01 15:17:25 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-09-01 15:17:25 UTC</changedTime>
+   <changedTime>2012-02-10 14:28:33 UTC</changedTime>
    <generatorID>480B6FE1-2108-B39A-1A5F-9991AC72C51E</generatorID>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Point PK</pkName>
@@ -163,9 +163,9 @@
          <createdBy>thuel</createdBy>
          <createdTime>2011-09-01 15:17:25 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2011-09-01 15:17:25 UTC</changedTime>
-         <comment>[mm]</comment>
-         <commentInRDBMS>[mm]</commentInRDBMS>
+         <changedTime>2012-02-10 14:28:33 UTC</changedTime>
+         <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <generatorID>319D6A89-0BC9-CCF9-845C-12D3E81A5E71</generatorID>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>

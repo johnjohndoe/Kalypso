@@ -3,7 +3,7 @@
    <createdBy>thuel</createdBy>
    <createdTime>2011-09-01 15:17:25 UTC</createdTime>
    <changedBy>thuel</changedBy>
-   <changedTime>2011-09-01 15:17:25 UTC</changedTime>
+   <changedTime>2012-02-10 14:28:33 UTC</changedTime>
    <generatorID>F918C2D5-A991-197A-232D-DB50525D9467</generatorID>
    <ownerDesignName>pdb</ownerDesignName>
    <pkName>Roughness PK</pkName>
@@ -59,9 +59,9 @@
          <createdBy>thuel</createdBy>
          <createdTime>2011-09-01 15:17:25 UTC</createdTime>
          <changedBy>thuel</changedBy>
-         <changedTime>2011-09-01 15:17:25 UTC</changedTime>
-         <comment>[mm]</comment>
-         <commentInRDBMS>[mm]</commentInRDBMS>
+         <changedTime>2012-02-10 14:28:33 UTC</changedTime>
+         <comment>[m]</comment>
+         <commentInRDBMS>[m]</commentInRDBMS>
          <generatorID>D9783E67-9102-6F4C-EAF7-033CC92CD9F4</generatorID>
          <ownerDesignName>pdb</ownerDesignName>
          <nullsAllowed>true</nullsAllowed>
