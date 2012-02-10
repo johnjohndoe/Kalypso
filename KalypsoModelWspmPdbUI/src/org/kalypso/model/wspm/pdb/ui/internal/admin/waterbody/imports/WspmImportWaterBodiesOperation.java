@@ -141,7 +141,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
       monitor = new NullProgressMonitor();
 
     /* Monitor. */
-    monitor.beginTask( Messages.getString( "WspmImportWaterBodiesOperation.0" ), 10 + 10 * m_waterBodies.length );
+    monitor.beginTask( Messages.getString( "WspmImportWaterBodiesOperation.0" ), 10 + 10 * m_waterBodies.length ); //$NON-NLS-1$
 
     try
     {
@@ -162,7 +162,7 @@ public class WspmImportWaterBodiesOperation implements ICoreRunnableWithProgress
       }
 
       /* Monitor. */
-      monitor.subTask( Messages.getString( "WspmImportWaterBodiesOperation.1" ) );
+      monitor.subTask( Messages.getString( "WspmImportWaterBodiesOperation.1" ) ); //$NON-NLS-1$
 
       /* Fire events. */
       fireEvents();

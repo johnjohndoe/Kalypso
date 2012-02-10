@@ -180,7 +180,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( "Warnings occured during check-in" );
+    return m_stati.asMultiStatusOrOK( Messages.getString("CheckinStatePdbOperation.7") ); //$NON-NLS-1$
   }
 
   private void uploadProfile( final Session session, final IProfileFeature feature ) throws PdbConnectException

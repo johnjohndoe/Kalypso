@@ -73,7 +73,7 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     {
       /* Check the viewer. */
       if( !(part instanceof IConnectionViewer) )
-        throw new IllegalStateException( "Part must be of the type IConnectionViewer..." );
+        throw new IllegalStateException( "Part must be of the type IConnectionViewer..." ); //$NON-NLS-1$
 
       /* Cast. */
       final IConnectionViewer viewer = (IConnectionViewer) part;
@@ -122,7 +122,7 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     /* Get the workbench part. */
     final IWorkbenchPart part = getPart();
     if( (part == null) || !(part instanceof IConnectionViewer) )
-      throw new IllegalStateException( "Part must be of the type IConnectionViewer..." );
+      throw new IllegalStateException( "Part must be of the type IConnectionViewer..." ); //$NON-NLS-1$
 
     /* Get the connection. */
     final IConnectionViewer viewer = (IConnectionViewer) part;

@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.pdb.db.mapping.IPdbClass;
 import org.kalypso.model.wspm.pdb.db.mapping.Roughness;
 import org.kalypso.model.wspm.pdb.db.mapping.Vegetation;
 import org.kalypso.model.wspm.pdb.internal.WspmPdbCorePlugin;
+import org.kalypso.model.wspm.pdb.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -68,7 +69,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ClassChecker
 {
-  private static final String STR_EMPTY = "<empty>";
+  private static final String STR_EMPTY = Messages.getString("ClassChecker_0"); //$NON-NLS-1$
 
   private final IStatusCollector m_stati = new StatusCollector( WspmPdbCorePlugin.PLUGIN_ID );
 
@@ -97,14 +98,14 @@ public class ClassChecker
   {
     final IWspmClassification classification = findClassification();
     if( classification == null )
-      m_stati.add( IStatus.WARNING, "Failed to check classes, unable to find WSPM classifications." );
+      m_stati.add( IStatus.WARNING, Messages.getString("ClassChecker_1") ); //$NON-NLS-1$
     else
     {
       checkRoughness( classification );
       checkVegetation( classification );
     }
 
-    return m_stati.asMultiStatusOrOK( "Warning(s) occured during check of class definitions." );
+    return m_stati.asMultiStatusOrOK( Messages.getString("ClassChecker_2") ); //$NON-NLS-1$
   }
 
   private IWspmClassification findClassification( )
@@ -199,7 +200,7 @@ public class ClassChecker
   private void addWarning( final BigDecimal local, final BigDecimal remote, final String classLabel, final String valueLabel )
   {
     final String valuesText = formatValues( local, remote );
-    m_stati.add( IStatus.WARNING, "Different remote and local values for class '%s' (parameter '%s'). %s", null, classLabel, valueLabel, valuesText );
+    m_stati.add( IStatus.WARNING, Messages.getString("ClassChecker_3"), null, classLabel, valueLabel, valuesText ); //$NON-NLS-1$
   }
 
   private String formatValues( final BigDecimal local, final BigDecimal remote )
@@ -207,6 +208,6 @@ public class ClassChecker
     final String localText = local == null ? STR_EMPTY : local.toString();
     final String remoteText = remote == null ? STR_EMPTY : remote.toString();
 
-    return String.format( "WSPM value = '%s'. Database value = '%s'", localText, remoteText );
+    return String.format( Messages.getString("ClassChecker_4"), localText, remoteText ); //$NON-NLS-1$
   }
 }

@@ -122,7 +122,7 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
     for( final Feature feature : changedFeatures )
       checkForClassChange( stati, feature );
 
-    return stati.asMultiStatusOrOK( "Some class definitions of the WSPM project have been overwritten with values from the database. Please check your data." );
+    return stati.asMultiStatusOrOK( Messages.getString("CheckoutPdbOperation.1") ); //$NON-NLS-1$
   }
 
   private void checkForClassChange( final IStatusCollector stati, final Feature feature )
@@ -131,7 +131,7 @@ public class CheckoutPdbOperation implements ICoreRunnableWithProgress
     {
       final IClassificationClass cc = (IClassificationClass) feature;
       final String typeName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
-      stati.add( IStatus.WARNING, "%s class '%s' (id = '%s')", null, typeName, cc.getDescription(), cc.getName() );
+      stati.add( IStatus.WARNING, Messages.getString("CheckoutPdbOperation.2"), null, typeName, cc.getDescription(), cc.getName() ); //$NON-NLS-1$
     }
   }
 }

@@ -304,7 +304,7 @@ public class PdbView extends ViewPart implements IConnectionViewer
 
     /* Problem: set status and show dialog */
     if( !checkResult.matches( IStatus.CANCEL ) )
-      StatusDialog.open( shell, checkResult, "Open Connection" );
+      StatusDialog.open( shell, checkResult, Messages.getString("PdbView.3") ); //$NON-NLS-1$
 
     PdbUtils.closeQuietly( connection );
     return null;
