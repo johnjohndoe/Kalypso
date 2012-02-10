@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <!--  Node -->
+  <catalog:system uri="Node.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:default" />
+  <catalog:system uri="NodeNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" />
+
+  <catalog:system uri="Subcatchments.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:default" />
+  <catalog:system uri="SubcatchmentsNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:net" />
+  <catalog:system uri="GroundwaterNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" />
+
+  <catalog:system uri="ombrometer.sld" systemId="urn:ogc:gml:featuretype:http___org.kalypso.ombrometer:Ombrometer:sld:default" />
+
+  <catalog:system uri="RHBChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:default" />
+  <catalog:system uri="RHBChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:StorageChannel:sld:net" />
+
+  <!-- Virtual Channel -->
+  <catalog:system uri="VChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:default" />
+  <catalog:system uri="VChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:VirtualChannel:sld:net" />
+
+  <catalog:system uri="KMChannel.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:default" />
+  <catalog:system uri="KMChannelNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KMChannel:sld:net" />
+
+  <catalog:system uri="Hydrotope.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_hydrotop:Hydrotop:sld:default" />
+
+  <catalog:system uri="NAModellControl.gft" systemId="urn:ogc:gml:featuretype:org.kalypso.namodell.control:NAModellControl:featureview:default" />
+
+</catalog:catalog>
+
