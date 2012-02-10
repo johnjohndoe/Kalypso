@@ -23,7 +23,11 @@ public class KalypsoModelSimulationBaseConsts
 
   public static final QName SIM_BASE_F_WIND_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "windDataModel" ); //$NON-NLS-1$
 
+  public static final QName SIM_BASE_F_WIND_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "WindDataModelSystem" ); //$NON-NLS-1$
+
   public static final QName SIM_BASE_PROP_WIND_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "windDataModelSystem" ); //$NON-NLS-1$
+  
+  public static final QName SIM_BASE_F_NATIVE_WIND_ELE_WRAPPER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "NativeWindDataModelWrapper" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_F_BASE_WIND_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "_WindDataModel" ); //$NON-NLS-1$
 
