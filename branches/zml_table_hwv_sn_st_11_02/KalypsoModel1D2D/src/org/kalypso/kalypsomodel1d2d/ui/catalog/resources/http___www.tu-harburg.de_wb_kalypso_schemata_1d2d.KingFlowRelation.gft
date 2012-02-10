@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="wb1d2d:KingFlowRelation" style="SWT.NONE"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	xmlns:gft="featureview.template.kalypso.org" xmlns:ns0="gistableview.template.kalypso.org"
+	xmlns:xlink="http://www.w3.org/1999/xlink"  xmlns:gml="http://www.opengis.net/gml">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
+		grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="4" />
+	<gft:label property="gml:name"  visible="true"  style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="gml:name" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="gml:description"  visible="true"  style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE" xmlns:gml="http://www.opengis.net/gml">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="wb1d2d:width" visible="true"  style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="wb1d2d:width"  style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="wb1d2d:width" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="wb1d2d:ss1" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="wb1d2d:ss1"  style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="wb1d2d:ss1" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="wb1d2d:ss2" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="wb1d2d:ss2" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="wb1d2d:ss2" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="wb1d2d:wids" visible="true"  style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="wb1d2d:wids"  style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="wb1d2d:wids" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="wb1d2d:widbs" visible="true" style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="wb1d2d:widbs" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="wb1d2d:widbs" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+        <gft:label property="wb1d2d:wss" visible="true"  style="SWT.NONE">
+            <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:label>
+        <gft:text editable="true" property="wb1d2d:wss" style="SWT.BORDER">
+            <gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
+        </gft:text>
+        <gft:validatorlabel property="wb1d2d:wss" visible="true" style="SWT.NONE">
+            <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+        </gft:validatorlabel>
+
+		<gft:extensioncontrol property="wb1d2d:pointsMember" extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
+			<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+			<gft:param name="configuration" value="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default" />
+			<gft:param name="featureKeyName" value="kingFeatureKey" />
+		</gft:extensioncontrol>
+        
+</gft:featureview>
+
