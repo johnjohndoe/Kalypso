@@ -66,10 +66,6 @@ public class KreisOWCreator implements IProfileSecondaryCreator, IWspmTuhhConsta
     m_data = data;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.IProfileSecondaryCreator#execute(org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject,
-   *      org.kalypso.model.wspm.tuhh.core.profile.importer.wprof.ProfileData[])
-   */
   @Override
   public void execute( final TuhhWspmProject project, final ProfileData[] data ) throws CoreException
   {
