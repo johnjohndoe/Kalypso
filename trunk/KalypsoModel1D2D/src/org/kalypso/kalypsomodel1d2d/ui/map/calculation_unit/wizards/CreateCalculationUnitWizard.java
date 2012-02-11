@@ -81,11 +81,9 @@ public class CreateCalculationUnitWizard extends Wizard
     final QName calcUnitType = m_page.getCalculationUnitType();
     final String calcUnitDescription = m_page.getCalculationUnitDescription();
 
-    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( calcUnitType, Util.getModel( IFEDiscretisationModel1d2d.class ), calcUnitName, calcUnitDescription )
+    final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( calcUnitType, model, calcUnitName, calcUnitDescription )
     {
-      /**
-       * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
-       */
       @Override
       public void process( ) throws Exception
       {

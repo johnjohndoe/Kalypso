@@ -168,7 +168,7 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
       final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapPanel, IBoundaryCondition.QNAME );
       m_dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );
 
-      final IFlowRelationshipModel bcModel = Util.getModel( IFlowRelationshipModel.class );// (IFlowRelationshipModel)
+      final IFlowRelationshipModel bcModel = Util.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
 
       calcUnitTheme.setModelBoundaryConditions( bcModel );
     }

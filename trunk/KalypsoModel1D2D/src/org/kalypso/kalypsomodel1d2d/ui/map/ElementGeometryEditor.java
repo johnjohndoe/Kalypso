@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This class is used to edit 1D2D Elements
- * 
+ *
  * @author Thomas Jung
  */
 public class ElementGeometryEditor
@@ -117,12 +117,12 @@ public class ElementGeometryEditor
 
   /**
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
-   * 
+   *
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
   public void finish( ) throws Exception
   {
-    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
     final GM_Point newPosition = ChangeNodePositionCommand.createPoint( m_startNode.getPoint().getZ(), m_endPoint );
     final ICommand changeCommand = new ChangeNodePositionCommand( discModel, m_startNode, newPosition, true );
     Util.postCommand( IFEDiscretisationModel1d2d.class, changeCommand );

@@ -93,14 +93,14 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
 
     try
     {
-      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
 
       // open wizard
       final GenerateDifferenceResultTinWizard wizard = new GenerateDifferenceResultTinWizard( scenarioFolder, resultModel );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       if( wizardDialog2.open() == Window.OK )
       {
-        modelProvider.saveModel( IScenarioResultMeta.class, new NullProgressMonitor() );
+        modelProvider.saveModel( IScenarioResultMeta.class.getName(), new NullProgressMonitor() );
 
         return Status.OK_STATUS;
       }
