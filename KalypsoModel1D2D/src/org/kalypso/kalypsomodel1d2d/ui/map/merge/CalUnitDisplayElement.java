@@ -67,13 +67,12 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Provides the mechanism to paint a calculation unit.
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class CalUnitDisplayElement implements DisplayElementDecorator
 {
@@ -277,7 +276,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     }
     catch( final Exception e )
     {
-      Debug.debugException( e, "" ); //$NON-NLS-1$
+      e.printStackTrace();
     }
     return null;
   }
@@ -311,7 +310,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   /**
    * Copied and modified from {@link org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement}
-   * 
+   *
    * calculates the coordintes (image or screen coordinates) where to draw the curve.
    */
   public static final int[][] calcTargetCoordinates( final GeoTransform projection, final GM_Curve curve ) throws Exception
@@ -353,7 +352,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   /**
    * Copied from {@link org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement}
-   * 
+   *
    */
   public static final double distance( final double x1, final double y1, final double x2, final double y2 )
   {
