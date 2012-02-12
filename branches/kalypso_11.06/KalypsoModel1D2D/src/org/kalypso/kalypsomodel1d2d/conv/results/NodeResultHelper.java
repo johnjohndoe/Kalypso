@@ -68,6 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
@@ -241,7 +242,7 @@ public class NodeResultHelper
    * @param nodeResult
    *          1d-node
    */
-  public static GM_Curve getProfileCurveFor1dNode( final IProfileFeature profile ) throws GM_Exception
+  public static GM_Curve getProfileCurveFor1dNode( final IProfileFeature profile ) throws Exception
   {
     final IProfil profil = profile.getProfil();
 
@@ -258,11 +259,11 @@ public class NodeResultHelper
     // final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     // final GM_Curve curve = cutProfileAtWaterlevel( waterlevel, profil, crs );
     final GM_Curve curve = ProfilUtil.getLine( profil, crs );
-
+    GM_Curve transformCurve = (GM_Curve) curve.transform( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     /* simplify the profile */
     final double epsThinning = 1.0;
-    final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
-    thinnedCurve.setCoordinateSystem( crs );
+    final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( transformCurve, epsThinning );
+    thinnedCurve.setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
     /* set the water level as new z-coordinate of the profile line */
     // return GeometryUtilities.setValueZ( thinnedCurve.getAsLineString(), waterlevel );
