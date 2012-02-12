@@ -248,7 +248,6 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private String getStyle( final String resFolder, final String type )
   {
-
     final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
     final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
 
