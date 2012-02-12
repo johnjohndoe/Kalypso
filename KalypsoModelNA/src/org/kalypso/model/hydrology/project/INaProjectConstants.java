@@ -43,7 +43,7 @@ package org.kalypso.model.hydrology.project;
 /**
  * Constants relevant for the project structure of an na model.<br/>
  * Most pathes are relative to the project root.
- * 
+ *
  * @author Gernot Belger
  * @deprecated Use {@link ScenarioAccessor} instead. Move all constant into that class.
  */
@@ -59,8 +59,6 @@ public interface INaProjectConstants
   String FOLDER_MODEL = ".model";//$NON-NLS-1$
 
   String FOLDER_MODELS = ".models"; //$NON-NLS-1$
-
-  String FOLDER_OBSERVATION_CONF = FOLDER_MODEL + "/observationConf";//$NON-NLS-1$
 
   String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 

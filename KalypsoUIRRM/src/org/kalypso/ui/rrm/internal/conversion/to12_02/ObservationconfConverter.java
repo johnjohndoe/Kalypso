@@ -43,11 +43,12 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -84,7 +85,9 @@ public class ObservationconfConverter
 
     try
     {
-      final File mappingSourceFolder = new File( m_sourceDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
+      final IPath observationConfPath = RrmProject.getObservationConfPath();
+
+      final File mappingSourceFolder = new File( m_sourceDir, observationConfPath.toOSString() );
       final File mappingSourceFile = new File( mappingSourceFolder, filename );
 
       final GMLWorkspace mappingWorkspace = GmlSerializer.createGMLWorkspace( mappingSourceFile, GmlSerializer.DEFAULT_FACTORY );
@@ -121,7 +124,7 @@ public class ObservationconfConverter
         }
       }
 
-      final File targetMappingDir = new File( m_targetDir, INaProjectConstants.FOLDER_OBSERVATION_CONF );
+      final File targetMappingDir = new File( m_targetDir, observationConfPath.toOSString() );
       final File targetMappingFile = new File( targetMappingDir, filename );
       GmlSerializer.serializeWorkspace( targetMappingFile, mappingWorkspace, Charsets.UTF_8.name() );
     }

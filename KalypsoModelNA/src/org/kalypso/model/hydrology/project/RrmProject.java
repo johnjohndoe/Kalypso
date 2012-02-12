@@ -40,56 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
- * Helper that encapsulates the constants to access data inside a rrm scenario.
+ * Just a wrapper that facilitates to access certain folders of a RRM project.
  *
  * @author Gernot Belger
  */
-public class ScenarioAccessor
+public class RrmProject
 {
-  private final String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
+  static final String FOLDER_MODEL = ".model"; //$NON-NLS-1$
 
-  private final IFolder m_scenarioFolder;
+  static final String FOLDER_OBSERVATION_CONF = "observationConf"; //$NON-NLS-1$
 
-  public ScenarioAccessor( final IFolder scenarioFolder )
+  private final IProject m_project;
+
+  public RrmProject( final IProject project )
   {
-    m_scenarioFolder = scenarioFolder;
+    m_project = project;
   }
 
-  public IFile getSimulationsGtt( )
+  public IProject getProject( )
   {
-    final IFolder viewsFolder = getViewsFolder();
-
-    return viewsFolder.getFile( "Simulations.gtt" );
+    return m_project;
   }
 
-  public IFolder getViewsFolder( )
+  public IFolder getModelFolder( )
   {
-    return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
+    return m_project.getFolder( FOLDER_MODEL );
   }
 
-  public IFolder getSimulationsFolder( )
+  public IFolder getObservationConfFolder( )
   {
-    return m_scenarioFolder.getFolder( FOLDER_RECHENVARIANTEN );
+    return getModelFolder().getFolder( FOLDER_OBSERVATION_CONF );
   }
 
-  /**
-   * Check if a folder is a scenario folder.
-   */
-  public static boolean isScenarioFolder( final IFolder parent )
+  public static IPath getObservationConfPath( )
   {
-    final ScenarioAccessor accessor = new ScenarioAccessor( parent );
-
-    /* check for some key files */
-    final IFolder simulationsFolder = accessor.getSimulationsFolder();
-    if( !simulationsFolder.exists() )
-      return false;
-
-    // TODO: should check more...
-
-    return true;
+    return new Path( FOLDER_MODEL ).append( FOLDER_OBSERVATION_CONF );
   }
 }
