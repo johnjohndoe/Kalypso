@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.model.product"
       label="%Feature.featureName"
-      version="11.6.4.qualifier"
+      version="11.6.5.qualifier"
       provider-name="%Feature.providerName"
       plugin="org.kalypso.model.product">
 
@@ -19,7 +19,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://master.dl.sourceforge.net/project/kalypso/Kalypso/10.10/update-site"/>
+      <update label="%updateSiteName" url="http://netcologne.dl.sourceforge.net/project/kalypso/Kalypso/update-site/stable/"/>
    </url>
 
    <includes
@@ -272,7 +272,7 @@
          id="org.kalypso.model.product"
          download-size="0"
          install-size="0"
-         version="11.6.4.qualifier"
+         version="11.6.5.qualifier"
          unpack="false"/>
 
    <plugin
