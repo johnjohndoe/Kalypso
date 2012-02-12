@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
@@ -82,6 +83,25 @@ public class RrmSimulation
   public RrmSimulation( final IFolder simulationFolder )
   {
     m_simulation = simulationFolder;
+  }
+
+  public RrmProject getProject( )
+  {
+    return new RrmProject( m_simulation.getProject() );
+  }
+
+  public ScenarioAccessor getScenario( )
+  {
+    IContainer parent = m_simulation.getParent();
+    while( parent instanceof IFolder )
+    {
+      if( ScenarioAccessor.isScenarioFolder( (IFolder) parent ) )
+        return new ScenarioAccessor( (IFolder) parent );
+      else
+        parent = parent.getParent();
+    }
+
+    throw new IllegalStateException();
   }
 
   public IFolder getSimulationFolder( )
