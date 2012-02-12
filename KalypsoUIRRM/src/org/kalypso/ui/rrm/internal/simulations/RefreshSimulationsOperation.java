@@ -51,11 +51,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author Gernot Belger
  */
-public class RefreshSimulationsOperation extends WorkspaceModifyOperation
+public class RefreshSimulationsOperation implements ICoreRunnableWithProgress
 {
   private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -83,15 +83,13 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
 
   public RefreshSimulationsOperation( final IContainer baseFolder, final NAControl... simulations )
   {
-    super( baseFolder );
-
     m_baseFolder = baseFolder;
 
     m_simulations = simulations;
   }
 
   @Override
-  protected void execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString("RefreshSimulationsOperation_0"), m_simulations.length ); //$NON-NLS-1$
 
@@ -114,8 +112,7 @@ public class RefreshSimulationsOperation extends WorkspaceModifyOperation
       ProgressUtilities.worked( monitor, 0 );
     }
 
-    final IStatus status = m_log.asMultiStatusOrOK( Messages.getString("RefreshSimulationsOperation_2"), Messages.getString("RefreshSimulationsOperation_3") ); //$NON-NLS-1$ //$NON-NLS-2$
-    throw new CoreException( status );
+    return m_log.asMultiStatusOrOK( Messages.getString( "RefreshSimulationsOperation_2" ), Messages.getString( "RefreshSimulationsOperation_3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private IStatus refreshSimulation( final NAControl simulation, final IProgressMonitor monitor ) throws CoreException

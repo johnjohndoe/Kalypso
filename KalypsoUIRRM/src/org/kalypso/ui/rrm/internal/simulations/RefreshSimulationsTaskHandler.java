@@ -112,7 +112,7 @@ public class RefreshSimulationsTaskHandler extends AbstractHandler
 
     final RefreshSimulationsOperation operation = new RefreshSimulationsOperation( simulationsFolder, chosenSimulations );
 
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation, Messages.getString("RefreshSimulationsTaskHandler_0") ); //$NON-NLS-1$
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
     StatusDialog.open( shell, status, title );
 
     return null;
