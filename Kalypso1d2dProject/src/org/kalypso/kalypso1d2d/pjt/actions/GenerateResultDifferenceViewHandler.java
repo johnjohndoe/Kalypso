@@ -96,7 +96,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
       final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
 
       // open wizard
-      final GenerateDifferenceResultTinWizard wizard = new GenerateDifferenceResultTinWizard( scenarioFolder, resultModel );
+      final GenerateDifferenceResultTinWizard wizard = new GenerateDifferenceResultTinWizard( scenarioFolder, resultModel, modelProvider );
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       if( wizardDialog2.open() == Window.OK )
       {
