@@ -179,43 +179,43 @@
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
-               name="Bewuchs hinzufügen">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution"
-               name="Bewuchs entfernen">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution"
-               name="Marker einfügen">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution"
-               name="Marker verschieben">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
-               name="Werte ändern">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
-               name="Marker löschen">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution"
-               name="Rauheit entfernen">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution.name">
          </reparator>
          <reparator
                class="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
                description="Entfernt eine Komponente aus dem Profil"
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution"
-               name="Komponente entfernen">
+               name="%org.kalypso.model.wspm.tuhh.ui.resolutions.RemovePropertyResolution.name">
          </reparator>
       </extension>
        <extension
