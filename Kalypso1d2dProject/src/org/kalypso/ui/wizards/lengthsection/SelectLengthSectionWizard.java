@@ -125,7 +125,9 @@ public class SelectLengthSectionWizard extends Wizard
         IResultMeta result = null;
         monitor.beginTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.7" ), 2 ); //$NON-NLS-1$
 
+        
         // get the first length section element
+        
         for( final IResultMeta resultMeta : results )
         {
           if( resultMeta instanceof IDocumentResultMeta )

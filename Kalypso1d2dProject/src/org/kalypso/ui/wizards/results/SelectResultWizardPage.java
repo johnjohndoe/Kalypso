@@ -161,6 +161,8 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
     /* Info View for one result */
     final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE, m_factory );
+    
+    //TODO: allow user to set an individually name of the difference result
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {

@@ -188,7 +188,11 @@ public class GenerateDifferenceResultTinWizard extends Wizard
     else
     {
       IResultMeta destResult = null;
-
+      
+      
+      //TODO: allow the user to set an individual result name and store information about master and slave in the ResultMeta entry
+      
+      
       // take the first selected step result
       for( final IResultMeta resultMeta : destinationResults )
       {

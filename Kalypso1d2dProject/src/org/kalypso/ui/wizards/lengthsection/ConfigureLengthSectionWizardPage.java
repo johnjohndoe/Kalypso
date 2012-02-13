@@ -309,7 +309,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     stationSpinner.setLayoutData( gridDatastationSpinner );
 
     final BigDecimal selectionValue = new BigDecimal( m_stationWidth ).setScale( 0, BigDecimal.ROUND_HALF_UP );
-    stationSpinner.setValues( selectionValue.intValue(), 10, 1000, 0, 10, 100 );
+    stationSpinner.setValues( selectionValue.intValue(), 1, 1000, 0, 1, 100 );
 
     stationSpinner.addSelectionListener( new SelectionAdapter()
     {
