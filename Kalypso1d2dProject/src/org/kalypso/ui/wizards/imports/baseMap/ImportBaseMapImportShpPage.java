@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -24,6 +25,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypso.ui.ImageProvider;
@@ -33,7 +36,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportBaseMapImportShpPage extends WizardPage
+public class ImportBaseMapImportShpPage extends WizardPage implements IImportBaseMapPage
 {
   private Text sourceFileField;
 
@@ -57,7 +60,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   * 
+   *
    * @param parent
    *          the parent composite
    */
@@ -131,7 +134,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
 
   /**
    * Called by the wizard to initialize the receiver's cached selection.
-   * 
+   *
    * @param selection
    *          the selection or <code>null</code> if none
    */
@@ -224,7 +227,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
 
   /**
    * Open a file dialog for selecting a file
-   * 
+   *
    * @param path
    *          the initially selected file
    * @param mustExist
@@ -254,8 +257,6 @@ public class ImportBaseMapImportShpPage extends WizardPage
    */
   public IPath getSourceLocation( )
   {
-    // if(m_sourcePath != null)
-    // return m_sourcePath;
     final String text = sourceFileField.getText().trim();
     if( text.length() == 0 )
       return null;
@@ -270,13 +271,18 @@ public class ImportBaseMapImportShpPage extends WizardPage
     return m_crs;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
-   */
   @Override
   public IWizardPage getNextPage( )
   {
     return null;
   }
 
+  @Override
+  public IImportBaseMapOperation createOperation( final ICommandTarget cmdTarget, final IKalypsoLayerModell mapModell, final IFolder scenarioFolder )
+  {
+    final IPath sourceLocation = getSourceLocation();
+    final String srs = getCoordinateSystem();
+
+    return new ImportBaseMapImportShpOperation( sourceLocation, srs, cmdTarget, mapModell, scenarioFolder );
+  }
 }
