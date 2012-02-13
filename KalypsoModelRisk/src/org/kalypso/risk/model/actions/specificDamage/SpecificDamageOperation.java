@@ -40,19 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.specificDamage;
 
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
-import org.kalypso.simulation.core.calccase.SimulationFactory;
+import org.kalypso.simulation.core.refactoring.ISimulationRunner;
+import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
@@ -79,6 +85,13 @@ public class SpecificDamageOperation implements ICoreRunnableWithProgress
       return new Status( IStatus.WARNING, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$
 
     final Modeldata modeldata = SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.SPECIFIC_DAMAGE_CALCULATION );
-    return SimulationFactory.runCalculation( m_scenarioFolder, monitor, modeldata );
+
+    final URL scenarioURL = ResourceUtilities.createQuietURL( m_scenarioFolder );
+
+    final Map<String, Object> inputs = SimulationRunnerFactory.resolveInputs( modeldata.getInput() );
+    final List<String> outputs = SimulationRunnerFactory.resolveOutputs( modeldata.getOutput() );
+
+    final ISimulationRunner runner = SimulationRunnerFactory.createRunner( modeldata, scenarioURL );
+    return runner.run( inputs, outputs, monitor );
   }
 }

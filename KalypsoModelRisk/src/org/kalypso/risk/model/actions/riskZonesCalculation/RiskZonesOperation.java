@@ -40,14 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.riskZonesCalculation;
 
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
 import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
-import org.kalypso.simulation.core.calccase.SimulationFactory;
+import org.kalypso.simulation.core.refactoring.ISimulationRunner;
+import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
+import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
  * @author Gernot Belger
@@ -64,6 +71,16 @@ public class RiskZonesOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    return SimulationFactory.runCalculation( m_scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
+    final Modeldata modeldata = SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION );
+    final URL scenarioURL = ResourceUtilities.createQuietURL( m_scenarioFolder );
+
+    final Map<String, Object> inputs = SimulationRunnerFactory.resolveInputs( modeldata.getInput() );
+    final List<String> outputs = SimulationRunnerFactory.resolveOutputs( modeldata.getOutput() );
+
+    final ISimulationRunner runner = SimulationRunnerFactory.createRunner( modeldata, scenarioURL );
+    return runner.run( inputs, outputs, monitor );
+
+    // return SimulationFactory.runCalculation( m_scenarioFolder, monitor,
+    // SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
   }
 }

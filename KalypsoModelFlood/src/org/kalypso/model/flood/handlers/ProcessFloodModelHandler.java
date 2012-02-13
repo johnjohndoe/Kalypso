@@ -42,21 +42,16 @@ package org.kalypso.model.flood.handlers;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -67,11 +62,11 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
-import org.kalypso.model.flood.core.SimulationKalypsoFlood;
 import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.model.flood.util.RunoffEventForProcessingLabelProvider;
@@ -80,9 +75,6 @@ import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.simulation.core.calccase.SimulationFactory;
-import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -94,11 +86,8 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * @author Thomas Jung
  * @author Dejan Antanaskovic
  */
-public class ProcessFloodModelHandler extends AbstractHandler implements IHandler
+public class ProcessFloodModelHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -257,60 +246,10 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       return;
     }
 
-    final Job job = new Job( Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.13" ) ) //$NON-NLS-1$
-    {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        final IStatus status;
-        try
-        {
-          status = SimulationFactory.runCalculation( scenarioFolder, monitor, getModeldata() );
-          if( status.isOK() )
-          {
-            // handle results if job is successful
-            // add all themes to map
-            for( final IRunoffEvent runoffEvent : eventsToProcess )
-            {
-              final int index = FloodModelHelper.findWspTheme( runoffEvent, wspTheme );
-              try
-              {
-                FloodModelHelper.addResultTheme( runoffEvent, wspTheme, index );
-              }
-              catch( final Exception e )
-              {
-                final String message = Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14" ) + e.getLocalizedMessage();
-                showErrorDialog( shell, message ); //$NON-NLS-1$
-                return new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, message, e );
-              }
-            }
-            showInfoDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.15" ) ); //$NON-NLS-1$
-          }
-          showErrorDialog( shell, Messages.getString( "org.kalypso.model.flood.handlers.ProcessFloodModelHandler.16" ), status ); //$NON-NLS-1$
-        }
-        catch( final Exception e )
-        {
-          final String message = "Failed to process flood model";
-          return new Status( IStatus.ERROR, KalypsoModelFloodPlugin.PLUGIN_ID, message, e );
-        }
-        return status;
-      }
-    };
-    job.setUser( true );
-    job.schedule( 50 );
-  }
+    final FloodModelOperation operation = new FloodModelOperation( scenarioFolder, shell, eventsToProcess, wspTheme );
 
-  final Modeldata getModeldata( )
-  {
-    final Map<String, String> inputs = new HashMap<String, String>();
-    inputs.put( SimulationKalypsoFlood.INPUT_FLOOD_MODEL, "models/flood.gml" ); //$NON-NLS-1$
-    inputs.put( SimulationKalypsoFlood.INPUT_GRID_FOLDER, "grids" ); //$NON-NLS-1$
-
-    final Map<String, String> outputs = new HashMap<String, String>();
-    outputs.put( SimulationKalypsoFlood.OUTPUT_FLOOD_MODEL, "models/flood.gml" ); //$NON-NLS-1$
-    outputs.put( SimulationKalypsoFlood.OUTPUT_EVENTS_BASE_FOLDER, "events" ); //$NON-NLS-1$
-
-    return SimulationUtilitites.createModelData( SimulationKalypsoFlood.TYPEID, inputs, true, outputs, true );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    StatusDialog.open( shell, status, "KalypsoFlood" ); //$NON-NLS-1$
   }
 
   protected static void showInfoDialog( final Shell shell, final String message )
