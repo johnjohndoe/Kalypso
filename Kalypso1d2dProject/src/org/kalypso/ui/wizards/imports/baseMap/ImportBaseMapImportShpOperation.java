@@ -118,10 +118,6 @@ public class ImportBaseMapImportShpOperation implements IImportBaseMapOperation
     importShapeData.setStyleImportType( StyleImport.generateDefault );
     importShapeData.getShapeFile().setPath( m_dstFileShape.getFullPath() );
 
-    // final String layerName = m_sourceLocation.removeFileExtension().lastSegment();
-    // final String shpHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_sourceLocation.removeFileExtension().lastSegment() + "#" + m_sourceSrs; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    // final AddThemeCommand command = new AddThemeCommand( m_mapModell, layerName, "shape", "featureMember", shpHref ); //$NON-NLS-1$ //$NON-NLS-2$
-
     m_operation = new ImportShapeOperation( importShapeData );
   }
 
