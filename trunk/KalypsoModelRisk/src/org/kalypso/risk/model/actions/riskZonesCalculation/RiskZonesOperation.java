@@ -79,8 +79,5 @@ public class RiskZonesOperation implements ICoreRunnableWithProgress
 
     final ISimulationRunner runner = SimulationRunnerFactory.createRunner( modeldata, scenarioURL );
     return runner.run( inputs, outputs, monitor );
-
-    // return SimulationFactory.runCalculation( m_scenarioFolder, monitor,
-    // SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
   }
 }
