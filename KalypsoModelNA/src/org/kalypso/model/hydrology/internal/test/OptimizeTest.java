@@ -68,7 +68,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.TestSimulationMonitor;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 import org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider;
 
 /**
