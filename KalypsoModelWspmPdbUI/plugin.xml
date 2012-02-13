@@ -34,7 +34,8 @@
              <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateProfileFromDEM" style="radio">
                 <visibleWhen checkEnabled="true"/>
              </command>
-             <command label="" commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio"/>
+             <command commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles" style="radio" label="" 
+                      tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles.tooltip"/>
              <command commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point" style="radio" />
 		     <command commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point" style="radio" />
 		     <separator name="seperator.toggle.commands" visible="true"/>
@@ -48,11 +49,7 @@
             id="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory"
             name="%category.name.0">
       </category>
-      <command
-            categoryId="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory"
-            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles"
-            name="%command.name">
-      </command>
+      <command name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles.tooltip" categoryId="org.kalypso.model.wspm.pdb.ui.commands.categories.MapCategory" id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectPdbProfiles"/>
    </extension>
 
    <extension
@@ -68,10 +65,6 @@
             <parameter
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                   value="icons/selectProfileWidget.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="Select Cross Sections">
             </parameter>
             <parameter
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
