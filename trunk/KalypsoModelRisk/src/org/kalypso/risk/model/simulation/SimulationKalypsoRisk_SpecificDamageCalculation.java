@@ -50,7 +50,6 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
@@ -130,10 +129,9 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       if( updateMap )
       {
         final URL mapURL = (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.MAP_SPECIFIC_DAMAGE_POTENTIAL.toString() );
-        final File mapFile = FileUtils.toFile( mapURL );
 
         /* Load the map template. */
-        final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapFile );
+        final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapURL );
         final Layers layers = gisview.getLayers();
         final List<JAXBElement< ? extends StyledLayerType>> layersList = layers.getLayer();
         layersList.clear();
