@@ -85,13 +85,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {
@@ -175,7 +172,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
     /*
      * As the default value is 1, this is cannot happen any more
-     * 
+     *
      * for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() ) { final Integer
      * returnPeriod = collection.getReturnPeriod(); if( returnPeriod == null || returnPeriod <= 0 ) throw new
      * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
