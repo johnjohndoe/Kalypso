@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -27,9 +28,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.widgets.FileDialogUtils;
 import org.kalypso.contribs.java.io.filter.IgnoreCaseFilenameFilter;
 import org.kalypso.grid.WorldFileFormat;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypso.ui.ImageProvider;
@@ -38,10 +41,10 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * FIXME: Totally copy/paste and double code.... Combine this one with the general image import page!
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportBaseMapImportImgPage extends WizardPage
+public class ImportBaseMapImportImgPage extends WizardPage implements IImportBaseMapPage
 {
   private Text m_sourceFileField;
 
@@ -63,7 +66,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   * 
+   *
    * @param parent
    *          the parent composite
    */
@@ -137,7 +140,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
 
   /**
    * Called by the wizard to initialize the receiver's cached selection.
-   * 
+   *
    * @param selection
    *          the selection or <code>null</code> if none
    */
@@ -250,7 +253,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
 
   /**
    * Open a file dialog for selecting a file
-   * 
+   *
    * @param path
    *          the initially selected file
    * @param mustExist
@@ -265,18 +268,18 @@ public class ImportBaseMapImportImgPage extends WizardPage
     String[] filterNames = new String[0];
     String[] filterExtensions = new String[0];
 
-    filterNames = (String[]) ArrayUtils.add( filterNames, WorldFileFormat.getAllSuportedFilterName() );
+    filterNames = ArrayUtils.add( filterNames, WorldFileFormat.getAllSuportedFilterName() );
     filterExtensions = (String[]) ArrayUtils.add( filterExtensions, WorldFileFormat.getAllSupportedFilters() );
 
     final WorldFileFormat[] availableFormats = WorldFileFormat.getAvailableFormats();
     for( final WorldFileFormat worldFileFormat : availableFormats )
     {
-      filterNames = (String[]) ArrayUtils.add( filterNames, worldFileFormat.getFilterName() );
-      filterExtensions = (String[]) ArrayUtils.add( filterExtensions, worldFileFormat.getFilterExtension() );
+      filterNames = ArrayUtils.add( filterNames, worldFileFormat.getFilterName() );
+      filterExtensions = ArrayUtils.add( filterExtensions, worldFileFormat.getFilterExtension() );
     }
 
-    filterNames = (String[]) ArrayUtils.add( filterNames, FileDialogUtils.FILTERNAME_ALL_FILES );
-    filterExtensions = (String[]) ArrayUtils.add( filterExtensions, FileDialogUtils.FILTER_ALL_FILES );
+    filterNames = ArrayUtils.add( filterNames, FileDialogUtils.FILTERNAME_ALL_FILES );
+    filterExtensions = ArrayUtils.add( filterExtensions, FileDialogUtils.FILTER_ALL_FILES );
 
     dialog.setFilterNames( filterNames );
     dialog.setFilterExtensions( filterExtensions );
@@ -315,13 +318,18 @@ public class ImportBaseMapImportImgPage extends WizardPage
     return m_crs;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
-   */
   @Override
   public IWizardPage getNextPage( )
   {
     return null;
   }
 
+  @Override
+  public IImportBaseMapOperation createOperation( final ICommandTarget cmdTarget, final IKalypsoLayerModell mapModell, final IFolder scenarioFolder )
+  {
+    final IPath sourceLocation = getSourceLocation();
+    final String coordinateSystem = getCoordinateSystem();
+
+    return new ImportBaseMapImportImgOperation( sourceLocation, coordinateSystem, cmdTarget, mapModell, scenarioFolder );
+  }
 }
