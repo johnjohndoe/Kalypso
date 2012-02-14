@@ -168,13 +168,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
       throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0" ) ); //$NON-NLS-1$
 
-    /*
-     * As the default value is 1, this is cannot happen any more
-     *
-     * for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() ) { final Integer
-     * returnPeriod = collection.getReturnPeriod(); if( returnPeriod == null || returnPeriod <= 0 ) throw new
-     * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
-     */
     try
     {
       /* clear existing data */
@@ -214,9 +207,11 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
 
         /* create annual damage coverage collection */
         final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
+        destCoverageCollection.setName( srcAnnualCoverages.getName() );
 
         final int returnPeriod = srcAnnualCoverages.getReturnPeriod();
 
+        /* For eeach grid */
         for( int i = 0; i < srcAnnualCoverageSize; i++ )
         {
           final ICoverage inputCoverage = srcAnnualCoveragesList.get( i );
@@ -232,14 +227,6 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final String outputCoverageFileName = String.format( "specificDamage_HQ%d_%02d.bin", srcAnnualCoverages.getReturnPeriod(), i ); //$NON-NLS-1$
           final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
           final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-
-          // create the output binaryGrid
-          // IGeoGrid outputGrid = GeoGridUtilities.createWriteableGrid( "image/bin", outputCoverageFile,
-          // inputGrid.getSizeX(), inputGrid.getSizeY(), importantDigits, inputGrid.getOrigin(), inputGrid.getOffsetX(),
-          // inputGrid.getOffsetY(), inputGrid.getSourceCRS(), false );
-
-          /* add the new coverage to the collection */
-          //          final ICoverage newCoverage = GeoGridUtilities.addSequentialBinaryGridAsCoverage( destCoverageCollection, outputGrid, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
           final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, inputGridReader, importantDigits, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", subMonitor.newChild( perCoverageTicks, SubMonitor.SUPPRESS_ALL_LABELS ) ); //$NON-NLS-1$
 
