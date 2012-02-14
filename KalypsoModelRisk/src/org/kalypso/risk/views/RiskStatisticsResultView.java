@@ -63,9 +63,6 @@ public class RiskStatisticsResultView extends ViewPart
 {
   private StatisticResultComposite m_compResult;
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -97,9 +94,6 @@ public class RiskStatisticsResultView extends ViewPart
     }
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
@@ -107,9 +101,6 @@ public class RiskStatisticsResultView extends ViewPart
       m_compResult.setFocus();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -117,5 +108,4 @@ public class RiskStatisticsResultView extends ViewPart
       m_compResult.dispose();
     super.dispose();
   }
-
 }

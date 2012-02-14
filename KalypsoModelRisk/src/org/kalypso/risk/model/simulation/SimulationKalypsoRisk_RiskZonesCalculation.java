@@ -102,19 +102,12 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
   private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {
     return getClass().getResource( "Specification_RiskZonesCalculation.xml" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -135,7 +128,9 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
       outputRasterTmpDir.mkdir();
 
+      // FIXME: move this into a separate operation
       doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, importantDigits, simulationMonitorAdaptor );
+
       final File tmpControlModel = File.createTempFile( IRasterizationControlModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
       final File tmpVectorModel = File.createTempFile( IVectorDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
@@ -215,7 +210,6 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       e.printStackTrace();
       throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcRiskZonesRunnable.6" ) + org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-
   }
 
   private static void createResultObsTable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel ) throws Exception

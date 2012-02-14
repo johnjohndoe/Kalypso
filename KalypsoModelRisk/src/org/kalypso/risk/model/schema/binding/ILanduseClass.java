@@ -12,86 +12,85 @@ import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
  */
 public interface ILanduseClass extends IColorStyledFeatureWrapper
 {
-  public static final QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "LanduseClass" ); //$NON-NLS-1$
+  static QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "LanduseClass" ); //$NON-NLS-1$
 
-  public static final QName PROP_NAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "name" ); //$NON-NLS-1$
+  static QName PROP_NAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "name" ); //$NON-NLS-1$
 
-  public static final QName PROP_DESCRIPTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "description" ); //$NON-NLS-1$
+  static QName PROP_DESCRIPTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "description" ); //$NON-NLS-1$
 
-  public static final QName PROP_ORDINAL_NUMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" ); //$NON-NLS-1$
+  static QName PROP_ORDINAL_NUMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" ); //$NON-NLS-1$
 
-  public static final QName PROP_COLOR_STYLE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "colorStyle" ); //$NON-NLS-1$
+  static QName PROP_COLOR_STYLE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "colorStyle" ); //$NON-NLS-1$
 
-  public static final QName PROP_DAMAGE_FUNCTION_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" ); //$NON-NLS-1$
+  static QName PROP_DAMAGE_FUNCTION_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" ); //$NON-NLS-1$
 
-  public static final QName PROP_ASSET_VALUE_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "AssetValueClassLink" ); //$NON-NLS-1$
+  static QName PROP_ASSET_VALUE_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "AssetValueClassLink" ); //$NON-NLS-1$
 
-  public static final QName PROP_RISK_LANDUSE_CATEGORY_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseRiskTypeLink" ); //$NON-NLS-1$
+  static QName PROP_RISK_LANDUSE_CATEGORY_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseRiskTypeLink" ); //$NON-NLS-1$
 
-  public static final QName PROP_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "minDamage" ); //$NON-NLS-1$
+  static QName PROP_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "minDamage" ); //$NON-NLS-1$
 
-  public static final QName PROP_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "maxDamage" ); //$NON-NLS-1$
+  static QName PROP_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "maxDamage" ); //$NON-NLS-1$
 
-  public static final QName PROP_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "totalDamage" ); //$NON-NLS-1$
+  static QName PROP_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "totalDamage" ); //$NON-NLS-1$
 
-  public static final QName PROP_ANNUAL_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "averageAnnualDamage" ); //$NON-NLS-1$
+  static QName PROP_ANNUAL_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "averageAnnualDamage" ); //$NON-NLS-1$
 
-  public static final QName PROP_DAMAGE_STATISTIC_LIST = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statisticClassMember" ); //$NON-NLS-1$
-
-  @Override
-  public void setName( final String name );
+  static QName PROP_DAMAGE_STATISTIC_LIST = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statisticClassMember" ); //$NON-NLS-1$
 
   @Override
-  public void setDescription( final String description );
-
-  public void setOrdinalNumber( final int value );
-
-  public void setMinAnnualDamage( final double value );
-
-  public void setMaxAnnualDamage( final double value );
-
-  public void setAverageAnnualDamage( final double value );
-
-  public void setTotalDamage( final double value );
-
-  public void setAssetValue( final IAssetValueClass assetValueClass );
-
-  public IAssetValueClass getAssetValue( );
-
-  public double getMinAnnualDamage( );
-
-  public double getMaxAnnualDamage( );
-
-  public double getAverageAnnualDamage( );
-
-  public double getTotalDamage( );
-
-  public String getDamageFunctionGmlID( );
-
-  public void setDamageFunction( final IDamageFunction damageFunction );
+  void setName( String name );
 
   @Override
-  public String getDescription( );
+  void setDescription( String description );
+
+  void setOrdinalNumber( int value );
+
+  void setMinAnnualDamage( double value );
+
+  void setMaxAnnualDamage( double value );
+
+  void setAverageAnnualDamage( double value );
+
+  void setTotalDamage( double value );
+
+  void setAssetValue( IAssetValueClass assetValueClass );
+
+  IAssetValueClass getAssetValue( );
+
+  double getMinAnnualDamage( );
+
+  double getMaxAnnualDamage( );
+
+  double getAverageAnnualDamage( );
+
+  double getTotalDamage( );
+
+  String getDamageFunctionGmlID( );
+
+  void setDamageFunction( IDamageFunction damageFunction );
 
   @Override
-  public String getName( );
+  String getDescription( );
 
-  public void updateStatistic( final int returnPeriod );
+  @Override
+  String getName( );
 
-  public IRiskLanduseStatistic getStatistic( final int returnPeriod );
+  void updateStatistic( int returnPeriod );
 
-  public IRiskLanduseStatistic createNewStatisticEntry( );
+  IRiskLanduseStatistic getStatistic( int returnPeriod );
 
-  public void clearStatisticEntries( );
+  IRiskLanduseStatistic createNewStatisticEntry( );
 
-  public boolean containsStatisticEntry( final int returnPeriod );
+  void clearStatisticEntries( );
 
-  public List<IRiskLanduseStatistic> getLanduseStatisticList( );
+  boolean containsStatisticEntry( int returnPeriod );
 
-  public void updateStatisticsAverageAnnualDamage( final double value );
+  List<IRiskLanduseStatistic> getLanduseStatisticList( );
 
-  public void setCellSize( final double size );
+  void updateStatisticsAverageAnnualDamage( double value );
 
-  public double getCellSize( );
+  void setCellSize( double size );
 
+  double getCellSize( );
 }

@@ -69,7 +69,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
-import org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable;
 import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
@@ -87,17 +86,17 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * This test extracts demo input data (landuse shape and waterdepth grids) from resources and converts them into risk
  * data format. <br>
  * This test only checks, if the input raster will be converted, but will not save the altered gml files.<br>
- * 
+ *
  * As a next step, the test uses a pre-defined set of risk-gmls in order to create the output raster data for: <li>
  * specific damage <li>risk zones <br>
  * by using the converted input data (see above).
- * 
+ *
  * <br>
  * <br>
  * Run this test as plug-in test.
- * 
+ *
  * @author Thomas Jung
- * 
+ *
  */
 public class TestRiskModel extends TestCase
 {
@@ -231,9 +230,14 @@ public class TestRiskModel extends TestCase
     // RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
 
     /* CREATE RSIK ZONES */
-    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Risikozonen...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ICoreRunnableWithProgress calcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterDataModel, vectorDataModel, rasterControlDataModel, folder );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, calcRiskZonesRunnable );
+
+    // FIXME: broken: this code should run on the original operation (which needs to be refaktored to be easily used),
+    // but NOT of a copy/pasted operation; that makes really no sense for a test...
+
+    //    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Risikozonen...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    // final ICoreRunnableWithProgress calcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterDataModel,
+    // vectorDataModel, rasterControlDataModel, folder );
+    // RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, calcRiskZonesRunnable );
 
     // TODO: generate ascii grid
 
