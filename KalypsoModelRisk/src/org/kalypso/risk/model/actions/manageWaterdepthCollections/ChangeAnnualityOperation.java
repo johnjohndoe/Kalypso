@@ -30,9 +30,9 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
 
   private final IAnnualCoverageCollection m_coverageCollection;
 
-  public ChangeAnnualityOperation( final Object selection, final int returnPeriod, final IRasterDataModel model, final IKalypsoCascadingTheme wspThemes, final SzenarioDataProvider provider )
+  public ChangeAnnualityOperation( final IAnnualCoverageCollection selection, final int returnPeriod, final IRasterDataModel model, final IKalypsoCascadingTheme wspThemes, final SzenarioDataProvider provider )
   {
-    m_coverageCollection = (IAnnualCoverageCollection) ((Feature) selection).getAdapter( IAnnualCoverageCollection.class );
+    m_coverageCollection = selection;
     m_newReturnPeriod = returnPeriod;
     m_model = model;
     m_wspThemes = wspThemes;
