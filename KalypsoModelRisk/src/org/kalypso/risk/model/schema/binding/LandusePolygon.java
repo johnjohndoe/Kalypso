@@ -13,15 +13,10 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class LandusePolygon extends Feature_Impl implements ILandusePolygon
 {
-  public LandusePolygon( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public LandusePolygon( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
-
-  private long m_statisticsNumberOfRasterCells = 0;
-
-  private double m_statisticsAverageAnnualDamage = 0.0;
-
 
   @Override
   public void setGeometry( final GM_Surface< ? > surface )
@@ -104,31 +99,6 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
       e.printStackTrace();
       return Double.NaN;
     }
-  }
-
-  /**
-   * adds a average annual damage value to the polygon
-   */
-  @Override
-  public void updateStatisticsAverageAnnualDamage( final double value )
-  {
-    /* get the current overall average annual damage value (€/a) */
-    final double currentValue = m_statisticsAverageAnnualDamage * m_statisticsNumberOfRasterCells;
-
-    /* add the new value */
-    final double updatedValue = currentValue + value;
-
-    /* raise number of cells */
-    m_statisticsNumberOfRasterCells++;
-
-    /* calculate the average annual damage value (€/a) per cell */
-    m_statisticsAverageAnnualDamage = updatedValue / m_statisticsNumberOfRasterCells;
-  }
-
-  @Override
-  public double getStatisticsAverageAnnualDamage( )
-  {
-    return m_statisticsAverageAnnualDamage;
   }
 
   private String getDamageFunctionProp( )
