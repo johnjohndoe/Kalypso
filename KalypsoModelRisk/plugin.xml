@@ -136,9 +136,24 @@
           name="PF_LandusePolygon_IsUrbanType">
     </function>
  </extension>
- <extension
-       point="org.eclipse.ui.handlers">
-    <!-- Handlers for workflow.xml, so unknown commandId is ok here. -->
+ 
+ <extension point="org.eclipse.ui.commands">
+    <command id="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler" name="-"/>
+    <command id="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler" name="-"/>
+    <command id="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsCalculationHandler" name="%StatisticsCalculationHandler.name" description="%StatisticsCalculationHandler.description"/>
+    
+    <command id="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler" name="-"/>
+    <command id="org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler" name="-"/>
+    <command id="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler" name="-"/>
+    <command id="org.kalypso.risk.model.handlers.ExportSpecificDamageCoveragesWidgetHandler" name="-"/>
+ </extension>
+ 
+ <extension point="org.eclipse.ui.commandImages">
+    <image commandId="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsCalculationHandler" icon="icons/etool16/workflow_statisticCalculation.png">
+    </image>
+ </extension>
+ 
+ <extension point="org.eclipse.ui.handlers">
     <handler
           class="org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
@@ -147,6 +162,12 @@
           class="org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
     </handler>
+
+    <handler
+          class="org.kalypso.risk.model.simulation.statistics.StatisticAnalysisHandler"
+          commandId="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsCalculationHandler">
+    </handler>
+
     <handler
           class="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler"
           commandId="org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler">
