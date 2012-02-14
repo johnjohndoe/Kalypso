@@ -62,14 +62,6 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Processing">
 		<Help>%KalypsoRisk_Processing_help</Help>
 		<Name>%KalypsoRisk_Processing</Name>
-		<!-- 
-		<Task type="ASYNCHRONOUS"
-			context="ImportWaterdepthRasterContext"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__LanduseRasterizationHandler">
-			<Help>%KalypsoRisk_Processing_LanduseRasterizationHandler_help</Help>
-			<Name>%KalypsoRisk_Processing_LanduseRasterizationHandler</Name>
-		</Task>
-		 -->
 		<Task type="SYNCHRONOUS"
 			context="ImportWaterdepthRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
@@ -80,7 +72,13 @@
 			context="ImportWaterdepthRasterContext"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesCalculationHandler">
 			<Help>%KalypsoRisk_Processing_RiskZonesCalculationHandler_help</Help>
-			<Name>%KalypsoRisk_Processing_RiskZonesCalculationHandler_help</Name>
+			<Name>%KalypsoRisk_Processing_RiskZonesCalculationHandler</Name>
+		</Task>
+		<Task type="SYNCHRONOUS"
+			context="ImportWaterdepthRasterContext"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsCalculationHandler">
+			<Help></Help>
+			<Name></Name>
 		</Task>
 	</TaskGroup>
 	<TaskGroup context="MainMap"
