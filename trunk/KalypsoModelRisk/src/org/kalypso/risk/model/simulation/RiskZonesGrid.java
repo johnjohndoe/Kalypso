@@ -240,14 +240,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           /* set statistic for landuse class */
           fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
 
-          final double riskZone = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
-          if( Double.isNaN( riskZone ) )
-            return Double.NaN;
-          final double returnValue;
-          if( m_produceZoneIdentifiers )
-            returnValue = riskZone;
-          else
-            returnValue = polygon.isUrbanLanduseType() ? averageAnnualDamageValue : -averageAnnualDamageValue;
+          final double returnValue = getReturnValue( averageAnnualDamageValue, polygon );
 
           if( Double.isInfinite( returnValue ) || Double.isNaN( returnValue ) )
             return Double.NaN;
@@ -255,9 +248,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           /* check min/max */
           m_min = m_min.min( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
           m_max = m_max.max( new BigDecimal( returnValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-
-          // if(!Double.isNaN( returnValue )&& returnValue!=0.0)
-          // System.out.println(returnValue);
 
           return returnValue;
         }
@@ -270,11 +260,27 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
   }
 
+  private double getReturnValue( final double averageAnnualDamageValue, final ILandusePolygon polygon )
+  {
+    if( m_produceZoneIdentifiers )
+    {
+      final double riskZone = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
+      if( Double.isNaN( riskZone ) )
+        return Double.NaN;
+
+      return riskZone;
+    }
+    else
+      return polygon.isUrbanLanduseType() ? averageAnnualDamageValue : -averageAnnualDamageValue;
+  }
+
   private void fillStatistics( final double averageAnnualDamageValue, final Integer landuseClassOrdinalNumber )
   {
     /* add the current average annual damage value to all landuse polygons that covers the current raster cell */
     // polygon.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
     /* find the right landuse class that holds the polygon */
+
+    // FIXME: a linear list search here?! -> this method is called for every grid cell!
     for( final ILanduseClass landuseClass : m_landuseClassesList )
     {
       final double cellSize = landuseClass.getCellSize();
@@ -292,7 +298,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   /**
    * returns the flow depth value for a given position.
-   * 
+   *
    * @param collection
    *          grid collection of water depth grids
    * @param x

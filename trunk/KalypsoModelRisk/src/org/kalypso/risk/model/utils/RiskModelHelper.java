@@ -171,21 +171,6 @@ public class RiskModelHelper
     statistic.updateStatistic( value );
   }
 
-  protected static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
-  {
-    /* find the right landuse class that holds the polygon */// TODO: potential list search problem!
-    for( final ILanduseClass landuseClass : landuseClassesList )
-    {
-      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
-      {
-        final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
-
-        final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-        statistic.updateStatistic( value );
-      }
-    }
-  }
-
   public static StyledLayerType createMapLayer( final LAYER_TYPE type, final IAnnualCoverageCollection coverageCollection ) throws Exception
   {
     final Map<FIELD, String> propertyMap = LAYER_PROPERTY_MAP.get( type );
@@ -516,7 +501,6 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for each landuse class<br>
    * The value is calculated by integrating the specific damage values.<br>
-   *
    */
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
@@ -744,7 +728,7 @@ public class RiskModelHelper
 
   /**
    * Finds and activates the event theme if present.
-   * 
+   *
    * @return <code>true</code>, if the theme was successfully activated.
    */
   public static boolean activateEventTheme( final IMapPanel mapPanel )

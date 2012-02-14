@@ -47,10 +47,5 @@ public interface ILandusePolygon extends Feature
 
   public Boolean isUrbanLanduseType( );
 
-  public void updateStatisticsAverageAnnualDamage( final double value );
-
-  public double getStatisticsAverageAnnualDamage( );
-
   public ILanduseClass getLanduseClass( final IRasterizationControlModel mode );
-
 }

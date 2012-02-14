@@ -166,9 +166,6 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
     setLink( ILanduseClass.PROP_ASSET_VALUE_LINK, xFeaturePath, assetValueClass.getFeatureType() );
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#updateStatistic(double, double)
-   */
   @Override
   public void updateStatistic( final int returnPeriod )
   {
