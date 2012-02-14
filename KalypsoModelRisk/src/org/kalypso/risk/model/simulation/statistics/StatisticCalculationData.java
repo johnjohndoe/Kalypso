@@ -58,7 +58,10 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
+import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
@@ -81,7 +84,7 @@ public class StatisticCalculationData extends AbstractModelObject
 
   static final String[] NO_ATTRIBUTES = new String[] { "<No useable attributes available>" };
 
-  private final IRasterizationControlModel m_model;
+  private final IRasterizationControlModel m_controlModel;
 
   private final IContainer m_scenarioFolder;
 
@@ -91,17 +94,31 @@ public class StatisticCalculationData extends AbstractModelObject
 
   private String m_selectedAttribute = null;
 
-  public StatisticCalculationData( final IRasterizationControlModel model, final IContainer scenarioFolder )
+  private final IRasterDataModel m_rasterModel;
+
+  private final IVectorDataModel m_vectorrModel;
+
+  public StatisticCalculationData( final IRasterDataModel rasterModel, final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel, final IContainer scenarioFolder )
   {
-    m_model = model;
+    m_rasterModel = rasterModel;
+    m_controlModel = controlModel;
+    m_vectorrModel = vectorModel;
     m_scenarioFolder = scenarioFolder;
   }
 
   public void init( )
   {
     initAvailableShapes();
-    // TODO Auto-generated method stub
+  }
 
+  public IRasterizationControlModel getControlModel( )
+  {
+    return m_controlModel;
+  }
+
+  public IRasterDataModel getRasterModel( )
+  {
+    return m_rasterModel;
   }
 
   /**
@@ -211,5 +228,19 @@ public class StatisticCalculationData extends AbstractModelObject
     m_selectedAttribute = selectedAttribute;
 
     firePropertyChange( PROPERTY_SELECTED_ATTRIBUTE, oldValue, selectedAttribute );
+  }
+
+  public ShapeFile loadSelectedShape( ) throws IOException, DBaseException
+  {
+    if( m_selectedShape == SHAPE_FILE_NONE )
+      return null;
+
+    final String shapeBase = FilenameUtils.removeExtension( m_selectedShape.getAbsolutePath() );
+    return new ShapeFile( shapeBase, Charset.defaultCharset(), FileMode.READ );
+  }
+
+  public ILandusePolygonCollection getLandusePolygons( )
+  {
+    return m_vectorrModel.getLandusePolygonCollection();
   }
 }
