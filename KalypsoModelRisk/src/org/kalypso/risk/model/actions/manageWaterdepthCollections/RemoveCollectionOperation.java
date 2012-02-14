@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -16,7 +17,8 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
  * @author Gernot Belger
@@ -41,20 +43,36 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
   {
     try
     {
+      // FIXME: also delete existing result
+      // - find corresponding existing result -> the specific damage needs a name on its feature, same as the name of
+      // this feature?
+      // - find themes of this result
+      // - delete theme, result and its coverages
+      // REMARK: there is currently no way to get rid of old results; they will not be deleted once the model is
+      // recalulated; only results with the same name get incidently overwritten
+
+      // FIXME: also delete risk-zones; they do not correspond to the input any more
+
       for( final Object element : m_treeSelection )
       {
-        final Feature featureToRemove = (Feature) element;
+        final IAnnualCoverageCollection runoffEvent = (IAnnualCoverageCollection) element;
 
         /* Delete associated themes */
-        final IAnnualCoverageCollection runoffEvent = (IAnnualCoverageCollection) featureToRemove.getAdapter( IAnnualCoverageCollection.class );
         if( runoffEvent != null )
         {
           /* Delete themes from map */
           deleteThemes( m_wspThemes, runoffEvent );
+
+          // TODO: delete result themes as well
         }
 
+        /* Delete underlying file */
+        final IFeatureBindingCollection<ICoverage> coverages = runoffEvent.getCoverages();
+        for( final ICoverage coverage : coverages )
+          CoverageManagementHelper.deleteGridFile( coverage );
+
         /* Delete coverage from collection */
-        final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
+        final DeleteFeatureCommand command = new DeleteFeatureCommand( runoffEvent );
         final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IRasterDataModel.class.getName() );
         workspace.postCommand( command );
       }
@@ -84,6 +102,7 @@ public final class RemoveCollectionOperation implements ICoreRunnableWithProgres
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
+        // FIXME: should use property on the theme instead
         if( featureTheme.getName().getKey().equals( "HQ " + event.getReturnPeriod() ) ) //$NON-NLS-1$
         {
           themeToRemove = kalypsoTheme;
