@@ -48,12 +48,12 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseStatistic, Comparable<IRiskLanduseStatistic>
 {
 
-  public RiskLanduseStatistic( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RiskLanduseStatistic( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -75,45 +75,12 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
   private BigDecimal m_cellSize = null;
 
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getAverageDamage()
-   */
   @Override
   public BigDecimal getAverageDamage( )
   {
     return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_AVERAGE_DAMAGE );
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getDamageSum()
-   */
-  @Override
-  public BigDecimal getDamageSum( )
-  {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_DAMAGE_SUM );
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getMaxDamage()
-   */
-  @Override
-  public BigDecimal getMaxDamage( )
-  {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_MAX_DAMAGE );
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getMinDamage()
-   */
-  @Override
-  public BigDecimal getMinDamage( )
-  {
-    return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_MIN_DAMAGE );
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getReturnPeriod()
-   */
   @Override
   public int getReturnPeriod( )
   {
@@ -121,9 +88,6 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
     return value == null ? 0 : value.intValue();
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#updateStatistic(java.math.BigDecimal)
-   */
   @Override
   public void updateStatistic( final BigDecimal value )
   {
@@ -175,51 +139,21 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
     setProperty( IRiskLanduseStatistic.PROPERTY_RETURN_PERIOD, returnPeriod );
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getTotalDamage()
-   */
   @Override
   public BigDecimal getTotalDamage( )
   {
     return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_TOTAL_DAMAGE );
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getAverageAnnualDamage()
-   */
-  @Override
-  public BigDecimal getAverageAnnualDamage( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#setTotalDamage(java.math.BigDecimal)
-   */
-  @Override
-  public void setTotalDamage( final BigDecimal averageAnnualDamage )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo( final IRiskLanduseStatistic o )
   {
     return Integer.valueOf( getReturnPeriod() ).compareTo( Integer.valueOf( o.getReturnPeriod() ) );
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getFloodedArea()
-   */
   @Override
   public BigDecimal getFloodedArea( )
   {
     return (BigDecimal) getProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA );
   }
-
 }

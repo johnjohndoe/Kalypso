@@ -24,7 +24,7 @@
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
+ *  Lesser General License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
@@ -49,76 +49,64 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Interface for statistical data of a landuse class
- * 
+ *
  * @author Thomas Jung
- * 
  */
 public interface IRiskLanduseStatistic extends Feature, Comparable<IRiskLanduseStatistic>
 {
-  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "StatisticClass" ); //$NON-NLS-1$
+  QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "StatisticClass" ); //$NON-NLS-1$
 
-  public QName PROPERTY_RETURN_PERIOD = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statReturnPeriod" ); //$NON-NLS-1$
+  QName PROPERTY_RETURN_PERIOD = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statReturnPeriod" ); //$NON-NLS-1$
 
   /**
    * The minimum damage value of all flooded cells.
    */
-  public QName PROPERTY_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMinDamage" ); //$NON-NLS-1$
+  QName PROPERTY_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMinDamage" ); //$NON-NLS-1$
 
   /**
    * The maximum damage value of all flooded cells.
    */
-  public QName PROPERTY_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMaxDamage" ); //$NON-NLS-1$
+  QName PROPERTY_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMaxDamage" ); //$NON-NLS-1$
 
   /**
    * Average damage value [€/m²]. The same as the summation value divided by the number of flooded cells.
    */
-  public QName PROPERTY_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageDamage" ); //$NON-NLS-1$
+  QName PROPERTY_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageDamage" ); //$NON-NLS-1$
 
   /**
    * Average annual damage value [€/m²/a].
    */
-  public QName PROPERTY_AVERAGE_ANNUAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageAnnualDamage" ); //$NON-NLS-1$
+  QName PROPERTY_AVERAGE_ANNUAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageAnnualDamage" ); //$NON-NLS-1$
 
   /**
    * summation of all flooded cells [€/m²]
    */
-  public QName PROPERTY_DAMAGE_SUM = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statSumDamage" ); //$NON-NLS-1$
+  QName PROPERTY_DAMAGE_SUM = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statSumDamage" ); //$NON-NLS-1$
 
   /**
    * Total damage [€]. The average value multiplied by the number of flooded cells multiplied with the area of a single
    * cell. Will only be calculated after the finish method was called.
    */
-  public QName PROPERTY_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statTotalDamage" ); //$NON-NLS-1$
+  QName PROPERTY_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statTotalDamage" ); //$NON-NLS-1$
 
   /**
    * The flooded area for this landuse
    */
-  public QName PROPERTY_FLOODED_AREA = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statFloodedArea" ); //$NON-NLS-1$
+  QName PROPERTY_FLOODED_AREA = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statFloodedArea" ); //$NON-NLS-1$
 
-  public void updateStatistic( final BigDecimal value );
+  void updateStatistic( BigDecimal value );
 
-  public int getReturnPeriod( );
+  int getReturnPeriod( );
 
-  public BigDecimal getMinDamage( );
+  BigDecimal getAverageDamage( );
 
-  public BigDecimal getMaxDamage( );
+  BigDecimal getTotalDamage( );
 
-  public BigDecimal getAverageDamage( );
+  BigDecimal getFloodedArea( );
 
-  public BigDecimal getDamageSum( );
+  void setReturnPeriod( int returnPeriod );
 
-  public BigDecimal getTotalDamage( );
+  void setCellSize( BigDecimal cellSize );
 
-  public BigDecimal getAverageAnnualDamage( );
-
-  public BigDecimal getFloodedArea( );
-
-  public void setTotalDamage( final BigDecimal averageAnnualDamage );
-
-  public void setReturnPeriod( final int returnPeriod );
-
-  public void setCellSize( final BigDecimal cellSize );
-
-  public void finish( );
-
+  void finish( );
 }
