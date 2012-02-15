@@ -184,8 +184,9 @@ public class LengthSectionParameters
     // handle null pointer
 
     double mod = min.doubleValue() % m_stationWidth.doubleValue();
-
-    double firstStep = min.doubleValue() - mod;
+    
+    //strange
+    double firstStep = min.doubleValue();// - mod;
 
     BigDecimal minDecimal = new BigDecimal( firstStep ).setScale( 1, BigDecimal.ROUND_FLOOR );
 
@@ -195,10 +196,10 @@ public class LengthSectionParameters
     final BigDecimal subtract = maxDecimal.subtract( minDecimal );
     final Double divide = subtract.doubleValue() / m_stationWidth.doubleValue();
     final BigDecimal value = new BigDecimal( divide ).setScale( 5, BigDecimal.ROUND_HALF_UP );
-    final int numOfClasses = (value).intValue() + 1;
+    final int numOfClasses = (value).intValue() + 2;
 
     m_stationList = new BigDecimal[numOfClasses];
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    for( int currentClass = 0; currentClass < numOfClasses-1; currentClass++ )
     {
       final double currentValue = minDecimal.doubleValue() + currentClass * m_stationWidth.doubleValue();
 
@@ -206,6 +207,13 @@ public class LengthSectionParameters
 
       m_stationList[currentClass] = station;
     }
+    
+    //add last point of the riverline
+    final double currentValue = maxDecimal.doubleValue();
+
+    BigDecimal station = new BigDecimal( currentValue );
+
+    m_stationList[numOfClasses-1] = station;
   }
 
   private BigDecimal getValue( Object o )
