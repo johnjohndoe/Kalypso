@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 
-	<Chart id="runoffChart">
+	<Chart id="runoffChart" legend="false">
 		<Title horizontalTextAnchor="CENTER">Ganglinie</Title>
 		<Description>Berechnungsergebnisse</Description>
 		<Layers>
@@ -555,7 +555,6 @@
 				</Provider>
 			</AxisRenderer>
 		</Renderers>
-
 	</Chart>
 
 
