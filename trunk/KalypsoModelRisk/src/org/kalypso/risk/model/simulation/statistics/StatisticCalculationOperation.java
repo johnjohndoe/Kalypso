@@ -104,9 +104,11 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       final ILandusePolygonCollection landusePolygons = m_data.getLandusePolygons();
 
       final ShapeFile shape = m_data.loadSelectedShape();
+      final String shapeNameAttribute = m_data.getSelectedAttribute();
+      final String shapeSRS = m_data.getShapeSRS();
 
       final StatisticElementBuilder builder = new StatisticElementBuilder( controlModel );
-      builder.addElements( landusePolygons, shape );
+      builder.addElements( landusePolygons, shape, shapeNameAttribute, shapeSRS );
       m_statistics.setItems( builder.getItems() );
     }
     catch( final Exception e )
@@ -151,6 +153,8 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
         try
         {
           final IGeoWalkingStrategy walkingStrategy = grid.getWalkingStrategy();
+          // TODO: would be nice to use the sequential way of accessing the grid here; but that api is not designed
+          // to be useed like that
           final IGeoGridWalker walker = new SpecificDamageWalker( m_statistics, returnPeriod );
           // FIXME: monitor
           walkingStrategy.walk( grid, walker, null, progress.newChild( 1, SubMonitor.SUPPRESS_BEGINTASK | SubMonitor.SUPPRESS_SUBTASK ) );

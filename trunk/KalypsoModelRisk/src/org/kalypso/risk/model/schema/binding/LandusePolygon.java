@@ -130,9 +130,6 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
     return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Surface.class );
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getLanduseClass()
-   */
   @Override
   public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
   {
@@ -142,5 +139,4 @@ public class LandusePolygon extends Feature_Impl implements ILandusePolygon
 
     return (ILanduseClass) feature;
   }
-
 }

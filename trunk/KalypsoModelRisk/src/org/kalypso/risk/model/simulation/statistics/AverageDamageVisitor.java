@@ -52,6 +52,8 @@ public class AverageDamageVisitor implements ItemVisitor
 
   private final double m_cellArea;
 
+  private int m_foundElement = 0;
+
   public AverageDamageVisitor( final Coordinate position, final double cellArea )
   {
     m_position = position;
@@ -61,8 +63,16 @@ public class AverageDamageVisitor implements ItemVisitor
   @Override
   public void visitItem( final Object item )
   {
-    final RiskStatisticItem collectorItem = (RiskStatisticItem) item;
-    if( collectorItem.contains( m_position ) )
-      collectorItem.addAverageAnnualDamage( m_position.z, m_cellArea );
+    final StatisticArea area = (StatisticArea) item;
+    if( area.contains( m_position ) )
+    {
+      area.getItem().addAverageAnnualDamage( m_position.z, m_cellArea );
+      m_foundElement++;
+    }
+  }
+
+  public int getFoundElements( )
+  {
+    return m_foundElement;
   }
 }

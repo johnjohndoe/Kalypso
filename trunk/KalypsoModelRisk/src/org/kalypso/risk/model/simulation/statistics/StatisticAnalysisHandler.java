@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -55,6 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -143,12 +146,18 @@ public class StatisticAnalysisHandler extends AbstractHandler
   {
     try
     {
+      scenarioDataProvider.postCommand( IRasterizationControlModel.class.getName(), new EmptyCommand( "Be dirty!", false ) ); //$NON-NLS-1$
       scenarioDataProvider.saveModel( IRasterizationControlModel.class.getName(), new NullProgressMonitor() );
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
       StatusDialog.open( shell, e.getStatus(), title );
+    }
+    catch( final InvocationTargetException e )
+    {
+      // will never happen
+      e.printStackTrace();
     }
   }
 

@@ -68,6 +68,7 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Gernot Belger
@@ -242,5 +243,14 @@ public class StatisticCalculationData extends AbstractModelObject
   public ILandusePolygonCollection getLandusePolygons( )
   {
     return m_vectorrModel.getLandusePolygonCollection();
+  }
+
+  public String getShapeSRS( )
+  {
+    // FIXME: where do we get the srs from?
+    // - the map knows it, or,
+    // - make sure a .proj (our format) is near the shape (during import)
+
+    return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 }

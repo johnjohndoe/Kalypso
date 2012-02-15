@@ -64,8 +64,8 @@ public class SpecificDamageVisitor implements ItemVisitor
   @Override
   public void visitItem( final Object item )
   {
-    final RiskStatisticItem collectorItem = (RiskStatisticItem) item;
-    if( collectorItem.contains( m_position ) )
-      collectorItem.addSpecificDamage( m_returnPeriod, m_position.z, m_cellArea );
+    final StatisticArea areaItem = (StatisticArea) item;
+    if( areaItem.contains( m_position ) )
+      areaItem.getItem().addSpecificDamage( m_returnPeriod, m_position.z, m_cellArea );
   }
 }

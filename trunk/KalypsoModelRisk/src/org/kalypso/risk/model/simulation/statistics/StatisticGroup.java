@@ -40,63 +40,52 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Gernot Belger
  */
-public class SpecificDamageStatistic
+public class StatisticGroup
 {
-  private final int m_returnPeriod;
+  private final String m_name;
 
-  private double m_min = Double.POSITIVE_INFINITY;
+  private final Polygon m_area;
 
-  private double m_max = Double.NEGATIVE_INFINITY;
-
-  private double m_sum = 0;
-
-  private double m_totalArea = 0;
-
-  public SpecificDamageStatistic( final int returnPeriod )
+  public StatisticGroup( final String name, final Polygon area )
   {
-    m_returnPeriod = returnPeriod;
+    m_name = name;
+    m_area = area;
   }
 
-  public void updateStatistic( final double value, final double cellArea )
+  public String getName( )
   {
-    m_min = Math.min( m_min, value );
-    m_max = Math.max( m_max, value );
-
-    m_sum += value * cellArea;
-    m_totalArea += cellArea;
+    return m_name;
   }
 
-  public double getTotalFloodedArea( )
+  public Polygon getArea( )
   {
-    return m_totalArea;
-  }
-
-  public double getTotalDamageValue( )
-  {
-    return m_sum;
-
-    // TODO: old, should be the same
-    // return getAverage() * getTotalFloodedArea();
-  }
-
-  public double getAverageDamage( )
-  {
-    return m_sum / m_totalArea;
-  }
-
-  public int getReturnPeriod( )
-  {
-    return m_returnPeriod;
+    return m_area;
   }
 
   @Override
-  public String toString( )
+  public int hashCode( )
   {
-    return ToStringBuilder.reflectionToString( this );
+    return m_name.hashCode();
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj == null )
+      return false;
+    if( obj == this )
+      return true;
+    if( obj.getClass() != getClass() )
+      return false;
+
+    final StatisticGroup rhs = (StatisticGroup) obj;
+    return new EqualsBuilder().append( m_name, rhs.m_name ).isEquals();
   }
 }
