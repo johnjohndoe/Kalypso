@@ -75,7 +75,7 @@ public class RiskSpecificDamageGrid extends SequentialBinaryGeoGridReader
 
   private final IGeoTransformer m_geoTransformer;
 
-  public RiskSpecificDamageGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final double cellSize, final int returnPeriod ) throws IOException
+  public RiskSpecificDamageGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ILandusePolygon> polygonCollection, final List<ILanduseClass> landuseClasses, final double cellSize, final int returnPeriod ) throws IOException, GeoGridException
   {
     super( inputGrid, pUrl );
 

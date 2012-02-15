@@ -79,9 +79,9 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
   // TODO: very ugly to need to overwrite this bean! We should find another way to quicken the process
   class FloodBean extends ParallelBinaryGridProcessorBean
   {
-    public FloodBean( final int blockSize, final int scale )
+    public FloodBean( final Double[] data, final long position )
     {
-      super( blockSize, scale );
+      super( data, position );
     }
 
     public GM_Triangle m_triangle = null;
@@ -100,12 +100,12 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
   private final IRunoffEvent m_event;
 
   @Override
-  protected ParallelBinaryGridProcessorBean createNewBean( final int blockSize, final int scale )
+  protected ParallelBinaryGridProcessorBean createNewBean( final Double[] data, final long position )
   {
-    return new FloodBean( blockSize, scale );
+    return new FloodBean( data, position );
   }
 
-  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
+  public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException, GeoGridException
   {
     super( inputGrid, pUrl );
 
