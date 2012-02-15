@@ -128,15 +128,18 @@ public class StatisticElementBuilder
       final int numRecords = shape.getNumRecords();
       for( int i = 0; i < numRecords; i++ )
       {
-        final ISHPGeometry shapeArea = shape.getShape( numRecords );
-
-        final Polygon area = (Polygon) shp2jts.transform( shapeSRID, shapeArea );
-        // TODO: transform to kalypso SRS
+        final ISHPGeometry shapeArea = shape.getShape( i );
 
         final String name = (String) shape.getRowValue( i, shapeNameField );
 
-        final StatisticGroup group = new StatisticGroup( name, area );
-        groups.add( group );
+        final Geometry transformedShapeArea = shp2jts.transform( shapeSRID, shapeArea );
+        final List<Polygon> polygons = PolygonExtracter.getPolygons( transformedShapeArea );
+        // TODO: transform to kalypso SRS
+        for( final Polygon polygon : polygons )
+        {
+          final StatisticGroup group = new StatisticGroup( name, polygon );
+          groups.add( group );
+        }
       }
     }
 
