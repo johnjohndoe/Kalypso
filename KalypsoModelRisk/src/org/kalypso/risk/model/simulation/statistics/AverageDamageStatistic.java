@@ -53,7 +53,7 @@ public class AverageDamageStatistic
 
   private double m_sum = 0.0;
 
-  private double m_totalArea;
+  private double m_totalArea = 0.0;
 
   /**
    * adds a average annual damage value to the polygon
@@ -70,7 +70,11 @@ public class AverageDamageStatistic
   /* calculate the average annual damage value (€/a) per cell */
   public double getAverageAnnualDamage( )
   {
-    return m_sum / m_totalArea;
+    final double averageAnnualDamage = m_sum / m_totalArea;
+    if( Double.isNaN( averageAnnualDamage ) || Double.isInfinite( averageAnnualDamage ) )
+      return 0.0;
+
+    return averageAnnualDamage;
   }
 
   public double getTotalAverageAnnualDamage( )

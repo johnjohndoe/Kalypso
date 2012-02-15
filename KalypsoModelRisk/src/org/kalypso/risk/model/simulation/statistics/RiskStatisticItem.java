@@ -57,14 +57,13 @@ public class RiskStatisticItem
 
   private final SortedMap<Integer, SpecificDamageStatistic> m_specificDamagestatistics = new TreeMap<>();
 
-  private final AverageDamageStatistic m_averageDamageStatistic;
+  private final AverageDamageStatistic m_averageDamageStatistic = new AverageDamageStatistic();
 
   private final StatisticItemKey m_key;
 
   public RiskStatisticItem( final StatisticItemKey key )
   {
     m_key = key;
-    m_averageDamageStatistic = new AverageDamageStatistic();
   }
 
   public void addSpecificDamage( final int returnPeriod, final double value, final double cellArea )
@@ -86,6 +85,11 @@ public class RiskStatisticItem
    */
   public void addAverageAnnualDamage( final double value, final double cellArea )
   {
+    if( m_key.getName().equals( "grassland" ) )
+    {
+      System.out.println();
+    }
+
     m_averageDamageStatistic.addAverageAnnualDamage( value, cellArea );
   }
 
