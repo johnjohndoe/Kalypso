@@ -51,32 +51,29 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Patrice Congo
  * @author Madanagopal
- * 
+ *
  */
 public class GridCoverageElevationModelWrapper extends Feature_Impl implements ITerrainElevationModel
 {
-
   public static final QName SIM_BASE_PROP_GRID_COVERAGE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "gridCoverage" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_F_GRID_COVERAGE_ELE_MODEL_WRAPPER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "GridCoverageElevationModelWrapper" ); //$NON-NLS-1$
 
   private final IGeoGrid doubleRaster;
 
-  public GridCoverageElevationModelWrapper( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public GridCoverageElevationModelWrapper( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
     final Feature coverageFeature = (Feature) getProperty( SIM_BASE_PROP_GRID_COVERAGE );
-    doubleRaster = new RectifiedGridCoverageGeoGrid( coverageFeature );
+    doubleRaster = new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) coverageFeature );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getElevation(org.kalypsodeegree.model.geometry.GM_Point)
-   */
   @Override
   public double getElevation( final GM_Point location )
   {
