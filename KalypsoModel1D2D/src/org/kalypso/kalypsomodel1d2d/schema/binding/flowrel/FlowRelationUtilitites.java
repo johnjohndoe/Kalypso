@@ -59,6 +59,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -71,12 +72,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * Helper class for {@link org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship}s.
  * 
  * @author Gernot Belger
- * 
  */
 @SuppressWarnings("unchecked")
 public class FlowRelationUtilitites
 {
   public static final double SEARCH_DISTANCE = 0.01;
+
   /**
    * Helper class, don't instantiate.
    */
@@ -236,71 +237,77 @@ public class FlowRelationUtilitites
 
     return null;
   }
-  
-  private static List< IFlowRelationship > findFlowrelationshipsForPosition( final GM_Position pPosition, final IFlowRelationshipModel model ){
-    List< IFlowRelationship > lListRes = new ArrayList<IFlowRelationship>();
-    
+
+  private static List<IFlowRelationship> findFlowrelationshipsForPosition( final GM_Position pPosition, final IFlowRelationshipModel model )
+  {
+    final List<IFlowRelationship> lListRes = new ArrayList<IFlowRelationship>();
+
     final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
-    
+
     final IFlowRelationship[] flowRels = model.findFlowrelationships( pPosition, 0.01 );
-    for( final IFlowRelationship flowRel: flowRels ){
+    for( final IFlowRelationship flowRel : flowRels )
+    {
       if( flowRel instanceof IFlowRelationship )
-        lListRes.add( ( IFlowRelationship) flowRel );
+        lListRes.add( flowRel );
     }
-    
+
     return lListRes;
   }
-  
+
   /**
    * Checks if a 1D-Element has an associated Buildings-Flow-Relation. returns set with found buildings
    */
-  public static Set< IFlowRelationship > findBuildingElements1D( final IElement1D element, final IFlowRelationshipModel model )
+  // FIXME: wrong method name: fnds ALL parameters (teschke, buildings, etc) on that element
+  public static Set<IFlowRelationship> findBuildingElements1D( final IElement1D element, final IFlowRelationshipModel model )
   {
-    Set< IFlowRelationship > lSetRes = new HashSet<IFlowRelationship>();
-    List< GM_Position > lListPositions = new ArrayList<GM_Position>();
+    final Set<IFlowRelationship> lSetRes = new HashSet<IFlowRelationship>();
+    final List<GM_Position> lListPositions = new ArrayList<GM_Position>();
     final List nodes = element.getNodes();
-    
-    if( nodes.size() < 2 ){
+
+    if( nodes.size() < 2 )
+    {
       lListPositions.add( getFlowPositionFromElement( element ) );
     }
-    else{
-      lListPositions.add( ( ( IFE1D2DNode )nodes.get( 0 ) ).getPoint().getPosition() );
-      lListPositions.add( ( ( IFE1D2DNode) nodes.get( 1 ) ).getPoint().getPosition() );
+    else
+    {
+      lListPositions.add( ((IFE1D2DNode) nodes.get( 0 )).getPoint().getPosition() );
+      lListPositions.add( ((IFE1D2DNode) nodes.get( 1 )).getPoint().getPosition() );
     }
-    
-    for( final GM_Position lPos: lListPositions ){
+
+    for( final GM_Position lPos : lListPositions )
+    {
       lSetRes.addAll( findFlowrelationshipsForPosition( lPos, model ) );
     }
     return lSetRes;
   }
-  
+
   /**
    * Checks if a 2D-Element has an associated Building-Flow-Relation.
    */
   public static IBuildingFlowRelation2D findBuildingElement2D( final IPolyElement element, final IFlowRelationshipModel model )
   {
     final GM_Position flowPosition = getFlowPositionFromElement( element );
-    
+
     final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IBuildingFlowRelation2D.class };
-    
+
     final IFlowRelationship lFlowRel = model.findFlowrelationship( flowPosition, 0.02, flowRelationTypes );
     if( lFlowRel instanceof IBuildingFlowRelation2D )
       return (IBuildingFlowRelation2D) lFlowRel;
-    
+
     return null;
   }
-  
+
   /**
    * Checks if on given position is an associated Building-Flow-Relation.
    */
   public static IFeatureWrapper2 findBuildingElementFromPosition( final GM_Point pPoint, final IFlowRelationshipModel model )
   {
     final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelation2D.class, IFlowRelation1D.class };
-    
+
     final IFlowRelationship lFlowRel = model.findFlowrelationship( pPoint.getPosition(), 0.02, flowRelationTypes );
     if( lFlowRel != null )
       return lFlowRel;
-    
+
     return null;
   }
 
@@ -354,52 +361,58 @@ public class FlowRelationUtilitites
 
   /**
    * this function decides what node is the upstream node from given nodes:
-   *    
+   * 
+   * <pre>
    *    0Node ----- 1Node
    *      |     ^     |
    *      |     |    -+--> v1
    *      |     |     |
    *    3Node --|-- 2Node
    *           v2
-   * in this case is the "3Node" the upstream node and the result will be 2(position in the given list).
-   * Important is that the 0-3 and 1-2 edges are the side edges 
-   *
+   * </pre>
+   * 
+   * in this case is the "3Node" the upstream node and the result will be 2(position in the given list). Important is
+   * that the 0-3 and 1-2 edges are the side edges
+   * 
    */
-  public static int findUpstreamNodePolyWeirPositionInNodesRing( final IFlowRelationship pBuilding, final List< IFE1D2DNode > pListNodes, int pIntDirectionOfEdges )
+  public static int findUpstreamNodePolyWeirPositionInNodesRing( final IFlowRelationship pBuilding, final List<IFE1D2DNode> pListNodes, final int pIntDirectionOfEdges )
   {
-    if( !( pBuilding instanceof IBuildingFlowRelation2D ) )
-      return -1; 
-      
-    int lIntSizeListElementNodes = pListNodes.size();
-    int lIntDirectionGrad = ( ( IBuildingFlowRelation2D )pBuilding ).getDirection() % 360;
-    
-    double lDoubleXVectorRight = ( pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getX() ) / 2;
-    double lDoubleYVectorRight = ( pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getY() ) / 2;
-    double lDoubleXVectorLeft = ( pListNodes.get( 0 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getX() ) / 2;
-    double lDoubleYVectorLeft = ( pListNodes.get( 0 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getY() ) / 2;
- 
-    double lDoubleXWeirDirectionVector = lDoubleXVectorRight - lDoubleXVectorLeft;
-    double lDoubleYWeirDirectionVector = lDoubleYVectorRight - lDoubleYVectorLeft;
-    
-//    double lDoubleAngleInBetweenACOS = Math.acos( lDoubleXWeir / Math.sqrt( lDoubleXWeir * lDoubleXWeir + lDoubleYWeir * lDoubleYWeir ) ) * 180 / Math.PI;
-    double lDoubleAngleInBetweenATAN = ( Math.atan2( lDoubleYWeirDirectionVector, lDoubleXWeirDirectionVector ) - Math.atan2( 0, 1 ) ) * 180 / Math.PI;
-    
-    int lIntDiff = Math.abs( ( lIntDirectionGrad - ( ( int )lDoubleAngleInBetweenATAN ) ) % 360 );
+    if( !(pBuilding instanceof IBuildingFlowRelation2D) )
+      return -1;
 
-    if( lIntDiff < 180 ){
-      return pIntDirectionOfEdges == 1? 3: 1;
+    final int lIntSizeListElementNodes = pListNodes.size();
+    final int lIntDirectionGrad = ((IBuildingFlowRelation2D) pBuilding).getDirection() % 360;
+
+    final double lDoubleXVectorRight = (pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getX()) / 2;
+    final double lDoubleYVectorRight = (pListNodes.get( lIntSizeListElementNodes / 2 - 1 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes / 2 ).getPoint().getPosition().getY()) / 2;
+    final double lDoubleXVectorLeft = (pListNodes.get( 0 ).getPoint().getPosition().getX() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getX()) / 2;
+    final double lDoubleYVectorLeft = (pListNodes.get( 0 ).getPoint().getPosition().getY() - pListNodes.get( lIntSizeListElementNodes - 2 ).getPoint().getPosition().getY()) / 2;
+
+    final double lDoubleXWeirDirectionVector = lDoubleXVectorRight - lDoubleXVectorLeft;
+    final double lDoubleYWeirDirectionVector = lDoubleYVectorRight - lDoubleYVectorLeft;
+
+    // double lDoubleAngleInBetweenACOS = Math.acos( lDoubleXWeir / Math.sqrt( lDoubleXWeir * lDoubleXWeir +
+    // lDoubleYWeir * lDoubleYWeir ) ) * 180 / Math.PI;
+    final double lDoubleAngleInBetweenATAN = (Math.atan2( lDoubleYWeirDirectionVector, lDoubleXWeirDirectionVector ) - Math.atan2( 0, 1 )) * 180 / Math.PI;
+
+    final int lIntDiff = Math.abs( (lIntDirectionGrad - ((int) lDoubleAngleInBetweenATAN)) % 360 );
+
+    if( lIntDiff < 180 )
+    {
+      return pIntDirectionOfEdges == 1 ? 3 : 1;
     }
-    else if( lIntDiff > 180 ){
-      return pIntDirectionOfEdges == 1? 1: 3;
+    else if( lIntDiff > 180 )
+    {
+      return pIntDirectionOfEdges == 1 ? 1 : 3;
     }
     return -1;
   }
-  
+
   public static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, IProfileFeature> profilesByStation ) throws Exception
   {
     return addTeschke( flowRelModel, node, qresult, profilesByStation, SEARCH_DISTANCE );
   }
-  
+
   public static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, IProfileFeature> profilesByStation, final double searchDistance ) throws Exception
   {
     final BigDecimal station = qresult.getStation();
@@ -446,4 +459,27 @@ public class FlowRelationUtilitites
     return flowRel;
   }
 
+  public static IFE1D2DElement[] findElementsForFlowRelation( final IFlowRelationship flowRel, final IFEDiscretisationModel1d2d discModel )
+  {
+    final GM_Point position = flowRel.getPosition();
+    final GM_Position pos = position.getPosition();
+
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = discModel.getElements();
+    final List<IFE1D2DElement> query = elements.query( pos );
+
+    final List<IFE1D2DElement> hits = new ArrayList<IFE1D2DElement>();
+
+    for( final IFE1D2DElement element : query )
+    {
+      final GM_Object geom = element.getFeature().getDefaultGeometryPropertyValue();
+
+      // TODO: random grab distance here....
+      if( geom.distance( geom ) < 0.001 )
+      {
+        hits.add( element );
+      }
+    }
+
+    return hits.toArray( new IFE1D2DElement[hits.size()] );
+  }
 }
