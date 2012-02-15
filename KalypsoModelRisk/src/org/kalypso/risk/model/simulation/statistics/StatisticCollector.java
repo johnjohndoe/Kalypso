@@ -108,7 +108,6 @@ public class StatisticCollector
     }
 
     m_elements = quadtree;
-    System.out.println( String.format( "Depth: %d", quadtree.depth() ) );
   }
 
   public void createResultObservation( final IRasterizationControlModel controlModel )
