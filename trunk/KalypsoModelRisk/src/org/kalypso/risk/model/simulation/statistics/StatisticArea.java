@@ -69,16 +69,16 @@ public class StatisticArea
 
   public boolean contains( final Coordinate position )
   {
-    final boolean inside = m_pointInRing.isInside( position );
-    if( !inside )
-      return false;
-
-    if( m_area.getNumInteriorRing() == 0 )
-      return true;
-
-    // TODO: slow
+    // final boolean inside = m_pointInRing.isInside( position );
+    // if( !inside )
+    // return false;
+    //
+    // if( m_area.getNumInteriorRing() == 0 )
+    // return true;
+    //
+    // // TODO: slow
     final Point point = m_area.getFactory().createPoint( position );
-    return m_area.contains( point );
+    return m_area.intersects( point );
   }
 
   public RiskStatisticItem getItem( )

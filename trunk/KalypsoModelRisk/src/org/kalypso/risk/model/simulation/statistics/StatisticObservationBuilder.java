@@ -137,7 +137,6 @@ class StatisticObservationBuilder
   {
     for( final RiskStatisticItem item : m_items )
       addRow( result, item );
-    // calculateLastRow( result );
 
     addRow( result, m_total );
   }
@@ -147,11 +146,11 @@ class StatisticObservationBuilder
     /* add the data to the observation */
     final IRecord newRecord = result.createRecord();
 
-    // name
+    /* Name */
     final StatisticItemKey key = item.getKey();
     newRecord.setValue( 0, key.getName() );
 
-    // TODO: group, optional
+    // TODO: group label
 
     final IComponent[] components = result.getComponents();
 
@@ -166,123 +165,9 @@ class StatisticObservationBuilder
       newRecord.setValue( i++, new BigDecimal( statistic.getAverageDamage() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
     }
 
-    newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
+    newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
+    // newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
 
     result.add( newRecord );
   }
-
-  // FIXME:
-  // /**
-  // * the last row of the obs table represents the following data:<br>
-  // * <ul>
-  // * <li>for each event:
-  // * <ul>
-  // * <li>the summation of all flooded areas over all landuse classes
-  // * <li>the summation of all damages of over landuse classes
-  // * <li>the average damage value derived by the summation values
-  // * </ul>
-  // * <li>the average annual damage value derived by the average damage values for each event as computed before.
-  // * </ul>
-  // */
-  // private static void calculateLastRow( final TupleResult result )
-  // {
-  // /* specific damage value for each event */
-  // final IRecord lastRecord = result.createRecord();
-  // final int columnSize = result.getComponents().length;
-  //
-  // /* name */
-  //    lastRecord.setValue( 0, "Total" ); //$NON-NLS-1$
-  //
-  // final Map<String, RiskStatisticTableValues> eventMap = new HashMap<String, RiskStatisticTableValues>();
-  //
-  // /* specific damage values per event */
-  // // At first we fill in the summation of total damage and flooded area to be sure that these values are present if
-  // we
-  // // want to calculate the averaged values
-  // for( int index = 1; index < columnSize; index++ )
-  // {
-  // final IComponent rowComp = result.getComponent( index );
-  // final String compName = rowComp.getName();
-  //      final String[] split = compName.split( "_" );//$NON-NLS-1$
-  // final String eventType = split[0];
-  // if( split.length > 1 )
-  // {
-  // final String eventName = split[1];
-  //
-  // RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
-  // if( statisticTableValues == null )
-  // {
-  // statisticTableValues = new RiskStatisticTableValues( eventName );
-  // eventMap.put( eventName, statisticTableValues );
-  // }
-  //
-  //        if( eventType.equals( "TotalDamage" ) )//$NON-NLS-1$
-  // {
-  // // calculate the sum for total damage and the flooded area
-  // final BigDecimal sum = calculateColumnSum( result, index );
-  //
-  // // set the value
-  // lastRecord.setValue( index, sum );
-  //
-  // // remember the value
-  // statisticTableValues.setTotalDamageValue( sum );
-  // }
-  //        else if( eventType.equals( "FloodedArea" ) )//$NON-NLS-1$
-  // {
-  // // calculate the sum for total damage and the flooded area
-  // final BigDecimal sum = calculateColumnSum( result, index );
-  //
-  // // set the value
-  // lastRecord.setValue( index, sum );
-  //
-  // // remember the value
-  // statisticTableValues.setFloodedAreaValue( sum );
-  // }
-  // }
-  // }
-  //
-  // // next we fill in the average damage
-  // for( int index = 1; index < columnSize; index++ )
-  // {
-  // final IComponent rowComp = result.getComponent( index );
-  // final String compName = rowComp.getName();
-  //      final String[] split = compName.split( "_" );//$NON-NLS-1$
-  // final String eventType = split[0];
-  // if( split.length > 1 )
-  // {
-  // final String eventName = split[1];
-  //
-  // final RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
-  // if( statisticTableValues == null )
-  //          System.out.println( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.18" ) ); //$NON-NLS-1$
-  //
-  //        if( eventType.equals( "AverageDamage" ) )//$NON-NLS-1$
-  // {
-  // // get the values of the summation and calculate the new average value with it
-  // final BigDecimal averageDamageValue = statisticTableValues.getAverageDamageValue();
-  // lastRecord.setValue( index, averageDamageValue );
-  // }
-  // }
-  // }
-  //
-  // // at last we calculate the average annual damage value
-  // final int index = columnSize - 1;
-  //
-  // final IComponent rowComp = result.getComponent( index );
-  // final String phenName = rowComp.getPhenomenon().getName();
-  //
-  //    if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
-  // {
-  // // get the calculated total values for all events with corresponding periods
-  // final Map<Double, RiskStatisticTableValues> periodSortedMap = getPeriods( columnSize, result, eventMap );
-  //
-  // /* calculate the average annual damage by integrating the specific average damage values */
-  // final double averageSum = calculateAverageDamageValue( periodSortedMap );
-  //
-  // // calculate the sum for average annual damage
-  // lastRecord.setValue( index, averageSum );
-  // }
-  // // and add the record
-  // result.add( lastRecord );
-  // }
 }

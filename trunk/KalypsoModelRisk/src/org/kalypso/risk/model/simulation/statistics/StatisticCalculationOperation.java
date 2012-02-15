@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -51,6 +53,8 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.IGeoGridWalker;
 import org.kalypso.grid.IGeoWalkingStrategy;
+import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
+import org.kalypso.grid.SequentialBinaryGeoGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -148,24 +152,33 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
         final ICoverage coverage = coverages.get( i );
         progress.subTask( String.format( "%s - Grid %d", specificDamageEvent.getName(), i ) );
 
-        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+        final RectifiedGridCoverageGeoGrid templateGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
 
         try
         {
+          final IGeoGrid grid = new SequentialBinaryGeoGrid( templateGrid, templateGrid.getGridURL() );
+
           final IGeoWalkingStrategy walkingStrategy = grid.getWalkingStrategy();
           // TODO: would be nice to use the sequential way of accessing the grid here; but that api is not designed
           // to be useed like that
           final IGeoGridWalker walker = new SpecificDamageWalker( m_statistics, returnPeriod );
           // FIXME: monitor
           walkingStrategy.walk( grid, walker, null, progress.newChild( 1, SubMonitor.SUPPRESS_BEGINTASK | SubMonitor.SUPPRESS_SUBTASK ) );
+
+          grid.dispose();
         }
         catch( final GeoGridException e )
         {
           e.printStackTrace();
           // TODO: error handling?
         }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+          // TODO: error handling?
+        }
 
-        grid.dispose();
+        templateGrid.dispose();
       }
     }
   }
@@ -187,21 +200,29 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
 
       final ICoverage coverage = coverages.get( i );
 
-      final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+      final RectifiedGridCoverageGeoGrid templateGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
 
       try
       {
+        final IGeoGrid grid = new SequentialBinaryGeoGrid( templateGrid, templateGrid.getGridURL() );
+
         final IGeoWalkingStrategy walkingStrategy = grid.getWalkingStrategy();
         final IGeoGridWalker walker = new AverageDamageWalker( m_statistics );
         walkingStrategy.walk( grid, walker, null, progress.newChild( 1 ) );
+
+        grid.dispose();
       }
       catch( final GeoGridException e )
       {
         e.printStackTrace();
         // TODO: error handling?
       }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
 
-      grid.dispose();
+      templateGrid.dispose();
     }
   }
 
