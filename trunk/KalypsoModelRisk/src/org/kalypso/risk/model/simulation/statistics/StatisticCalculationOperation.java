@@ -152,7 +152,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
         {
           final IGeoWalkingStrategy walkingStrategy = grid.getWalkingStrategy();
           final IGeoGridWalker walker = new SpecificDamageWalker( m_statistics, returnPeriod );
-          // FIXME: moinitor
+          // FIXME: monitor
           walkingStrategy.walk( grid, walker, null, progress.newChild( 1, SubMonitor.SUPPRESS_BEGINTASK | SubMonitor.SUPPRESS_SUBTASK ) );
         }
         catch( final GeoGridException e )
@@ -199,12 +199,6 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
 
       grid.dispose();
     }
-
-    // // FIXME:
-    // // statistics...
-    // // calculate average annual damage value for each landuse class
-    // RiskModelHelper.calcLanduseAnnualAverageDamage( controlModel );
-    // TODO: just get item.calcLanduseAnnualAverageDamage()
   }
 
   private void writeResultObservation( final IProgressMonitor monitor )

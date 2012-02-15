@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -165,5 +166,25 @@ public class RiskStatisticItem
   public SpecificDamageStatistic[] getSpecificDamages( )
   {
     return m_specificDamagestatistics.values().toArray( new SpecificDamageStatistic[m_specificDamagestatistics.size()] );
+  }
+
+  @Override
+  public String toString( )
+  {
+    final StringBuilder buffer = new StringBuilder();
+
+    buffer.append( "Name: " ).append( m_name ).append( '\n' );
+    buffer.append( "Specific Damages:\n" );
+
+    for( final Entry<Integer, SpecificDamageStatistic> entry : m_specificDamagestatistics.entrySet() )
+    {
+      buffer.append( "\tReturn Period: " ).append( entry.getKey() + "\t" );
+      buffer.append( entry.getValue() ).append( '\n' );
+    }
+
+    buffer.append( "Average Damage:\n" );
+    buffer.append( m_averageDamageStatistic.toString() );
+
+    return buffer.toString();
   }
 }
