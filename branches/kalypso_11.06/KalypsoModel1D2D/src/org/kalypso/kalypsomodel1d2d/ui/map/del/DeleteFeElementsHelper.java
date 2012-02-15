@@ -41,6 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,11 +71,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation2D;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -93,11 +95,10 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Thomas Jung
- * 
  */
+@SuppressWarnings("rawtypes")
 public class DeleteFeElementsHelper
 {
-  @SuppressWarnings("unchecked")
   public static IStatus deleteSelectedFeElements( final IMapPanel mapPanel )
   {
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
@@ -116,90 +117,49 @@ public class DeleteFeElementsHelper
       // to be allowed to delete the 1D element, that element cannot be the last one that touches some continuity line
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
-
       if( discretisationModel == null )
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.3" ) ); //$NON-NLS-1$
 
+      final IStatus contiStatus = checkContinuityLines( discretisationModel, selected );
+      if( contiStatus != null )
+        return contiStatus;
       // make a list of all the nodes contained by all the continuity lines
-      final List<IFE1D2DNode> clNodes = new ArrayList<IFE1D2DNode>();
-      final IFeatureWrapperCollection<IFELine> continuityLines = discretisationModel.getContinuityLines();
-      for( final IFELine line : continuityLines )
-        clNodes.addAll( line.getNodes() ); // usually lines are not overlapped so there is no need to check if some of
-      // the nodes are already in the list
-
-      // 2D: check if any of the selected elements have nodes that belongs to any continuity line; if so, deleting is
-      // not allowed
-      // 1D: check if any of the selected elements have nodes that belongs to any continuity line; if that element is
-      // the last one on the line, deleting is not allowed
-
-      // TODO:
-      // there must be a check if a node of a 1d element is also part to other 1d elements...
-      for( final EasyFeatureWrapper easyFeatureWrapper : selected )
-      {
-        if( easyFeatureWrapper == null )
-          throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.4" ) ); //$NON-NLS-1$
-        final IFE1D2DElement element = (IFE1D2DElement) easyFeatureWrapper.getFeature().getAdapter( IFE1D2DElement.class );
-        final List<IFE1D2DNode> nodes = element.getNodes();
-        for( final IFE1D2DNode node : nodes )
-          if( clNodes.contains( node ) )
-          {
-            if( element instanceof IPolyElement )
-            {
-              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.5" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-              return Status.OK_STATUS;
-            }
-            if( element instanceof IElement1D )
-            {
-              final IFeatureWrapperCollection containers = node.getContainers();
-              int numberOfEdgeContainers = 0;
-              for( final Object container : containers )
-                if( container instanceof IFE1D2DEdge ) // container can be also a line
-                  numberOfEdgeContainers++;
-              if( numberOfEdgeContainers < 2 )
-              {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.7" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-                return Status.OK_STATUS;
-              }
-            }
-          }
-      }
 
       final IKalypsoFeatureTheme featureTheme = UtilMap.findEditableTheme( mapPanel, IFE1D2DElement.QNAME );
-      final Set<Feature> changedFeatureList = new HashSet<Feature>();
-
-      final IDiscrModel1d2dChangeCommand deleteCmd1dElement = DeleteCmdFactory.createDeleteCmd1dElement( discretisationModel );
-      final IDiscrModel1d2dChangeCommand deleteCmdPolyElement = DeleteCmdFactory.createDeleteCmdPoly( discretisationModel );
-
       final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
+
+      /* Find all elements that should be deleted */
+      final DeleteElement1DCmd deleteCmd1dElement = (DeleteElement1DCmd) DeleteCmdFactory.createDeleteCmd1dElement( discretisationModel );
+      final DeletePolyElementCmd deleteCmdPolyElement = (DeletePolyElementCmd) DeleteCmdFactory.createDeleteCmdPoly( discretisationModel );
+
       final FeatureList lFeatureList = lFlowTheme.getFeatureList();
       final Feature lParentFeature = lFeatureList.getParentFeature();
       final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter( IFlowRelationshipModel.class );
 
+      final List<IFE1D2DElement> element1DtoRemove = new ArrayList<IFE1D2DElement>();
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         final Feature feature = easyFeatureWrapper.getFeature();
-        if( feature != null )
+        if( TypeInfo.isPolyElementFeature( feature ) )
+          deleteCmdPolyElement.addElementToRemove( feature );
+        else if( TypeInfo.isElement1DFeature( feature ) )
         {
-
-          if( TypeInfo.isPolyElementFeature( feature ) )
-          {
-            ((DeletePolyElementCmd) deleteCmdPolyElement).addElementToRemove( feature );
-            deleteParameter( mapPanel, easyFeatureWrapper, lFlowTheme, lFeatureList, lParentFeature, lFlowRelCollection );
-          }
-          else if( TypeInfo.isElement1DFeature( feature ) )
-          {
-            ((DeleteElement1DCmd) deleteCmd1dElement).addElementToRemove( feature );
-            deleteParameter( mapPanel, easyFeatureWrapper, lFlowTheme, lFeatureList, lParentFeature, lFlowRelCollection );
-          }
+          deleteCmd1dElement.addElementToRemove( feature );
+          element1DtoRemove.add( (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class ) );
         }
       }
 
+      /* Delete all parameters that should be deleted */
+      deleteParameters( mapPanel, selected, lFlowTheme, lFlowRelCollection, element1DtoRemove, discretisationModel );
+
+      /* Execute the delete commands */
       final CommandableWorkspace workspace = featureTheme.getWorkspace();
       workspace.postCommand( deleteCmdPolyElement );
       workspace.postCommand( deleteCmd1dElement );
 
-      changedFeatureList.addAll( ((DeletePolyElementCmd) deleteCmdPolyElement).getChangedFeatureList() );
-      changedFeatureList.addAll( ((DeleteElement1DCmd) deleteCmd1dElement).getChangedFeatureList() );
+      final Set<Feature> changedFeatureList = new HashSet<Feature>();
+      changedFeatureList.addAll( (deleteCmdPolyElement).getChangedFeatureList() );
+      changedFeatureList.addAll( (deleteCmd1dElement).getChangedFeatureList() );
 
       final Feature distFeature = discretisationModel.getFeature();
 
@@ -216,42 +176,129 @@ public class DeleteFeElementsHelper
     return Status.OK_STATUS;
   }
 
-  private static void deleteParameter( final IMapPanel pMapPanel, final EasyFeatureWrapper pParentToRemoveFrom, final IKalypsoFeatureTheme lFlowTheme, final FeatureList lFeatureList, final Feature lParentFeature, final IFlowRelationshipModel lFlowRelCollection ) throws Exception
+  protected static void deleteParameters( final IMapPanel mapPanel, final EasyFeatureWrapper[] selected, final IKalypsoFeatureTheme lFlowTheme, final IFlowRelationshipModel lFlowRelCollection, final List<IFE1D2DElement> element1DtoRemove, final IFEDiscretisationModel1d2d discModel ) throws Exception
   {
-    // final IKalypsoFeatureTheme lFlowTheme = UtilMap.findEditableTheme( pMapPanel, IFlowRelationship.QNAME );
-    // final FeatureList lFeatureList = lFlowTheme.getFeatureList();
-    // final Feature lParentFeature = lFeatureList.getParentFeature();
-    // final IFlowRelationshipModel lFlowRelCollection = (IFlowRelationshipModel) lParentFeature.getAdapter(
-    // IFlowRelationshipModel.class );
-    //
-    final IFE1D2DElement lElement = (IFE1D2DElement) pParentToRemoveFrom.getFeature().getAdapter( IFE1D2DElement.class );
-    List<IFeatureWrapper2> lBuildingElements = new ArrayList<IFeatureWrapper2>();
-    if( lElement instanceof IPolyElement )
-      lBuildingElements.add( FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) lElement, lFlowRelCollection ) );
-    else if( lElement instanceof IElement1D )
-      lBuildingElements.addAll( FlowRelationUtilitites.findBuildingElements1D( (IElement1D) lElement, lFlowRelCollection ) );
+    final List<IFlowRelationship> parametersToDelete = new ArrayList<IFlowRelationship>();
 
-    for( final IFeatureWrapper2 lBuildingElement : lBuildingElements )
+    for( final EasyFeatureWrapper easyFeatureWrapper : selected )
     {
-      Feature lBuildingFeature = null;
-      if( lBuildingElement != null )
+      final Feature feature = easyFeatureWrapper.getFeature();
+      if( TypeInfo.isPolyElementFeature( feature ) )
       {
-        final IFeatureSelectionManager selectionManager = pMapPanel.getSelectionManager();
+        final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+        final IBuildingFlowRelation2D toDelete = deleteParameter2D( element, lFlowRelCollection );
+        parametersToDelete.addAll( Arrays.asList( toDelete ) );
+      }
+      else if( TypeInfo.isElement1DFeature( feature ) )
+      {
+        final IFE1D2DElement element = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+        final IFlowRelationship[] toDelete = deleteParameter1D( element, lFlowRelCollection, element1DtoRemove, discModel );
+        parametersToDelete.addAll( Arrays.asList( toDelete ) );
+      }
+    }
+
+    /* Really delete the parameters */
+    for( final IFeatureWrapper2 buildingElement : parametersToDelete )
+    {
+      if( buildingElement != null )
+      {
+        final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
         selectionManager.clear();
 
         final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.14" ) ); //$NON-NLS-1$
         {
-          lBuildingFeature = lBuildingElement.getFeature();
+          final Feature lBuildingFeature = buildingElement.getFeature();
           selectionManager.changeSelection( new Feature[] { lBuildingFeature }, new EasyFeatureWrapper[] {} );
 
           final DeleteFeatureCommand command = new DeleteFeatureCommand( lBuildingFeature );
           compositeCommand.addCommand( command );
         }
         lFlowTheme.getWorkspace().postCommand( compositeCommand );
-        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), lBuildingFeature.getParent(), lBuildingFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+
+        final Feature buildingFeature = buildingElement.getFeature();
+        final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( lFlowTheme.getWorkspace(), buildingFeature.getParent(), buildingFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
         lFlowTheme.getWorkspace().fireModellEvent( event );
       }
     }
+  }
+
+  private static IStatus checkContinuityLines( final IFEDiscretisationModel1d2d discretisationModel, final EasyFeatureWrapper[] selected )
+  {
+    final List<IFE1D2DNode> clNodes = new ArrayList<IFE1D2DNode>();
+    final IFeatureWrapperCollection<IFELine> continuityLines = discretisationModel.getContinuityLines();
+    for( final IFELine line : continuityLines )
+      clNodes.addAll( line.getNodes() ); // usually lines are not overlapped so there is no need to check if some of
+    // the nodes are already in the list
+
+    // 2D: check if any of the selected elements have nodes that belongs to any continuity line; if so, deleting is
+    // not allowed
+    // 1D: check if any of the selected elements have nodes that belongs to any continuity line; if that element is
+    // the last one on the line, deleting is not allowed
+
+    // TODO:
+    // there must be a check if a node of a 1d element is also part to other 1d elements...
+    for( final EasyFeatureWrapper easyFeatureWrapper : selected )
+    {
+      if( easyFeatureWrapper == null )
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.4" ) ); //$NON-NLS-1$
+      final IFE1D2DElement element = (IFE1D2DElement) easyFeatureWrapper.getFeature().getAdapter( IFE1D2DElement.class );
+      final List<IFE1D2DNode> nodes = element.getNodes();
+      for( final IFE1D2DNode node : nodes )
+        if( clNodes.contains( node ) )
+        {
+          if( element instanceof IPolyElement )
+          {
+            SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.5" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            return Status.OK_STATUS;
+          }
+          if( element instanceof IElement1D )
+          {
+            final IFeatureWrapperCollection containers = node.getContainers();
+            int numberOfEdgeContainers = 0;
+            for( final Object container : containers )
+              if( container instanceof IFE1D2DEdge ) // container can be also a line
+                numberOfEdgeContainers++;
+            if( numberOfEdgeContainers < 2 )
+            {
+              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.7" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+              return Status.OK_STATUS;
+            }
+          }
+        }
+    }
+
+    return null;
+  }
+
+  private static IBuildingFlowRelation2D deleteParameter2D( final IFE1D2DElement element, final IFlowRelationshipModel lFlowRelCollection ) throws Exception
+  {
+    if( element instanceof IPolyElement )
+      return FlowRelationUtilitites.findBuildingElement2D( (IPolyElement) element, lFlowRelCollection );
+    else
+      return null;
+  }
+
+  private static IFlowRelationship[] deleteParameter1D( final IFE1D2DElement element, final IFlowRelationshipModel lFlowRelCollection, final List<IFE1D2DElement> element1DtoRemove, final IFEDiscretisationModel1d2d discModel ) throws Exception
+  {
+    final List<IFlowRelationship> parametersToRemove = new ArrayList<IFlowRelationship>();
+    if( element instanceof IElement1D )
+    {
+      final IElement1D element1D = (IElement1D) element;
+
+      final Set<IFlowRelationship> flowRelsOfElement = FlowRelationUtilitites.findBuildingElements1D( element1D, lFlowRelCollection );
+
+      for( final IFlowRelationship flowRel : flowRelsOfElement )
+      {
+        final IFE1D2DElement[] elementsOfFlowRelArray = FlowRelationUtilitites.findElementsForFlowRelation( flowRel, discModel );
+        final Collection<IFE1D2DElement> elementsOfFlowRel = new ArrayList<IFE1D2DElement>( Arrays.asList( elementsOfFlowRelArray ) );
+
+        elementsOfFlowRel.removeAll( element1DtoRemove );
+        if( elementsOfFlowRel.size() == 0 )
+          parametersToRemove.add( flowRel );
+      }
+    }
+
+    return parametersToRemove.toArray( new IFlowRelationship[parametersToRemove.size()] );
   }
 
   public static IStatus deleteSelectedFeContiLines( final IMapPanel mapPanel )
