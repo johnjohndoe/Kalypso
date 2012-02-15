@@ -171,7 +171,7 @@ public class LengthSectionHandler2d
           try
           {
             linestring = (LineString) JTSAdapter.export( curve );
-            final Point point = JTSUtilities.pointOnLinePercentAsDouble( linestring, percentage.doubleValue() );
+            final Point point = JTSUtilities.pointOnLinePercent( linestring, percentage.doubleValue() );
             if( point == null )
               continue;
             final GM_Point gmPoint = (GM_Point) JTSAdapter.wrap( point );
