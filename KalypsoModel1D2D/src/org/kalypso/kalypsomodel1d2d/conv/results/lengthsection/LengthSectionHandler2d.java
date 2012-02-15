@@ -149,21 +149,23 @@ public class LengthSectionHandler2d
       if( to == null )
         to = new BigDecimal( curve.getLength() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
-      for( final BigDecimal element : stationList )
+      final BigDecimal definedCurveLength = to.subtract( from );
+      
+      final double toDouble = to.doubleValue();
+      final double fromDouble = from.doubleValue();
+
+      for( final BigDecimal currentStation : stationList )
       {
+
         // calculate correction factor
-        final BigDecimal stationLength = to.subtract( from );
-
-        final int stat2 = element.intValue();
-        final int toint = to.intValue();
-        final int fromint = from.intValue();
-
+        final double currentStationDouble = currentStation.doubleValue();
+        
         // check, if the station value lies between min max of the current curve
-        if( fromint <= stat2 && stat2 < toint )
+        if( fromDouble <= currentStationDouble && currentStationDouble <= toDouble )
         {
-          final BigDecimal stationLengthPosition = from.add( element );
-          final double stat = stationLengthPosition.doubleValue() / stationLength.doubleValue() * 100;
-          final BigDecimal percentage = new BigDecimal( stat ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+          final BigDecimal lengthFromBeginning = currentStation.subtract( from);
+          final double station = lengthFromBeginning.doubleValue() / definedCurveLength.doubleValue() * 100;
+          final BigDecimal percentage = new BigDecimal( station ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
           LineString linestring;
           try
@@ -174,7 +176,7 @@ public class LengthSectionHandler2d
               continue;
             final GM_Point gmPoint = (GM_Point) JTSAdapter.wrap( point );
             if( gmPoint != null )
-              pointList.put( element, gmPoint );
+              pointList.put( currentStation, gmPoint );
           }
           catch( final GM_Exception e )
           {
