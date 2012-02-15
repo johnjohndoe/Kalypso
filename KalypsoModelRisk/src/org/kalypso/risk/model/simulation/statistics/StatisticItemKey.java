@@ -40,63 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author Gernot Belger
  */
-public class SpecificDamageStatistic
+public class StatisticItemKey
 {
-  private final int m_returnPeriod;
+  private final String m_name;
 
-  private double m_min = Double.POSITIVE_INFINITY;
+  private final String m_groupLabel;
 
-  private double m_max = Double.NEGATIVE_INFINITY;
-
-  private double m_sum = 0;
-
-  private double m_totalArea = 0;
-
-  public SpecificDamageStatistic( final int returnPeriod )
+  public StatisticItemKey( final String name, final String groupLabel )
   {
-    m_returnPeriod = returnPeriod;
+    m_name = name;
+    m_groupLabel = groupLabel;
   }
 
-  public void updateStatistic( final double value, final double cellArea )
+  public String getName( )
   {
-    m_min = Math.min( m_min, value );
-    m_max = Math.max( m_max, value );
-
-    m_sum += value * cellArea;
-    m_totalArea += cellArea;
+    return m_name;
   }
 
-  public double getTotalFloodedArea( )
+  public String getGroupLabel( )
   {
-    return m_totalArea;
-  }
-
-  public double getTotalDamageValue( )
-  {
-    return m_sum;
-
-    // TODO: old, should be the same
-    // return getAverage() * getTotalFloodedArea();
-  }
-
-  public double getAverageDamage( )
-  {
-    return m_sum / m_totalArea;
-  }
-
-  public int getReturnPeriod( )
-  {
-    return m_returnPeriod;
+    return m_groupLabel;
   }
 
   @Override
-  public String toString( )
+  public boolean equals( final Object obj )
   {
-    return ToStringBuilder.reflectionToString( this );
+    return EqualsBuilder.reflectionEquals( this, obj );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
   }
 }

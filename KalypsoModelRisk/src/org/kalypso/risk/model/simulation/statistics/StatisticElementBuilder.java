@@ -40,54 +40,122 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.tools.SHP2JTS;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.PolygonExtracter;
 
 /**
  * @author Gernot Belger
  */
 public class StatisticElementBuilder
 {
-  private final Collection<RiskStatisticItem> m_items = new ArrayList<>();
+  private final Map<StatisticItemKey, RiskStatisticItem> m_items = new LinkedHashMap<>();
+
+  private final IRasterizationControlModel m_controlModel;
 
   public StatisticElementBuilder( final IRasterizationControlModel controlModel )
   {
+    m_controlModel = controlModel;
   }
 
-  public void addElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape ) throws GM_Exception
+  public void addElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS ) throws GM_Exception, IOException, DBaseException
   {
-    // FIXME intersect shape with landuse
+    final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS );
 
     final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = landusePolygons.getLandusePolygonCollection();
     for( final ILandusePolygon landusePolygon : landusePolygonCollection )
     {
-      final GM_Surface< ? > geometry = landusePolygon.getGeometry();
-      final Polygon area = (Polygon) JTSAdapter.export( geometry );
+      final GM_Surface< ? > landuseSurface = landusePolygon.getGeometry();
+      final Polygon landuseArea = (Polygon) JTSAdapter.export( landuseSurface );
 
-      final String name = landusePolygon.getName();
-      m_items.add( new RiskStatisticItem( name, area ) );
+      final ILanduseClass landuseClass = landusePolygon.getLanduseClass( m_controlModel );
+
+      for( final StatisticGroup group : groups )
+      {
+        final StatisticItemKey key = new StatisticItemKey( landuseClass.getName(), group.getName() );
+        final RiskStatisticItem item = getItem( key );
+
+        final Polygon groupArea = group.getArea();
+
+        final Polygon[] keyAreas = intersectLanduseWithGroup( landuseArea, groupArea );
+        for( final Polygon polygon : keyAreas )
+          item.add( polygon );
+      }
+    }
+  }
+
+  private Polygon[] intersectLanduseWithGroup( final Polygon landuseArea, final Polygon groupArea )
+  {
+    if( groupArea == null )
+      return new Polygon[] { landuseArea };
+
+    final Geometry intersection = landuseArea.intersection( groupArea );
+    final List< ? > polygons = PolygonExtracter.getPolygons( intersection );
+    return polygons.toArray( new Polygon[polygons.size()] );
+  }
+
+  private StatisticGroup[] readShape( final ShapeFile shape, final String shapeNameField, final String shapeSRS ) throws IOException, DBaseException
+  {
+    final int shapeSRID = JTSAdapter.toSrid( shapeSRS );
+    final SHP2JTS shp2jts = new SHP2JTS( new GeometryFactory() );
+
+    final Collection<StatisticGroup> groups = new ArrayList<>();
+
+    if( shape != null )
+    {
+      final int numRecords = shape.getNumRecords();
+      for( int i = 0; i < numRecords; i++ )
+      {
+        final ISHPGeometry shapeArea = shape.getShape( numRecords );
+
+        final Polygon area = (Polygon) shp2jts.transform( shapeSRID, shapeArea );
+        // TODO: transform to kalypso SRS
+
+        final String name = (String) shape.getRowValue( i, shapeNameField );
+
+        final StatisticGroup group = new StatisticGroup( name, area );
+        groups.add( group );
+      }
     }
 
-    // init landuse and statistic collector
-    // TODO: add elements for all landuse classes/groups
+    /* Always add null group, serves as total for landuses */
+    groups.add( new StatisticGroup( StringUtils.EMPTY, null ) );
 
-    // TODO Auto-generated method stub
+    return groups.toArray( new StatisticGroup[groups.size()] );
+  }
 
+  private RiskStatisticItem getItem( final StatisticItemKey key )
+  {
+    if( !m_items.containsKey( key ) )
+      m_items.put( key, new RiskStatisticItem( key ) );
+
+    return m_items.get( key );
   }
 
   public RiskStatisticItem[] getItems( )
   {
-    return m_items.toArray( new RiskStatisticItem[m_items.size()] );
+    return m_items.values().toArray( new RiskStatisticItem[m_items.size()] );
   }
 }

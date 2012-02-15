@@ -45,53 +45,37 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * @author Gernot Belger
  */
-public class SpecificDamageStatistic
+public class AverageDamageStatistic
 {
-  private final int m_returnPeriod;
+  private double m_minAnnualDamage = Double.POSITIVE_INFINITY;
 
-  private double m_min = Double.POSITIVE_INFINITY;
+  private double m_maxAnnualDamage = Double.NEGATIVE_INFINITY;
 
-  private double m_max = Double.NEGATIVE_INFINITY;
+  private double m_sum = 0.0;
 
-  private double m_sum = 0;
+  private double m_totalArea;
 
-  private double m_totalArea = 0;
-
-  public SpecificDamageStatistic( final int returnPeriod )
+  /**
+   * adds a average annual damage value to the polygon
+   */
+  public void addAverageAnnualDamage( final double value, final double cellArea )
   {
-    m_returnPeriod = returnPeriod;
-  }
-
-  public void updateStatistic( final double value, final double cellArea )
-  {
-    m_min = Math.min( m_min, value );
-    m_max = Math.max( m_max, value );
+    m_minAnnualDamage = Math.min( m_minAnnualDamage, value );
+    m_maxAnnualDamage = Math.max( m_maxAnnualDamage, value );
 
     m_sum += value * cellArea;
     m_totalArea += cellArea;
   }
 
-  public double getTotalFloodedArea( )
-  {
-    return m_totalArea;
-  }
-
-  public double getTotalDamageValue( )
-  {
-    return m_sum;
-
-    // TODO: old, should be the same
-    // return getAverage() * getTotalFloodedArea();
-  }
-
-  public double getAverageDamage( )
+  /* calculate the average annual damage value (€/a) per cell */
+  public double getAverageAnnualDamage( )
   {
     return m_sum / m_totalArea;
   }
 
-  public int getReturnPeriod( )
+  public double getTotalAverageAnnualDamage( )
   {
-    return m_returnPeriod;
+    return m_sum;
   }
 
   @Override

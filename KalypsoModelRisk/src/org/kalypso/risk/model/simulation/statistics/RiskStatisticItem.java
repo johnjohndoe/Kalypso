@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.vividsolutions.jts.algorithm.PointInRing;
-import com.vividsolutions.jts.algorithm.SimplePointInRing;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -56,41 +53,18 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class RiskStatisticItem
 {
-  private final AvaeragDamageStatistic m_averageDamageStatistic;
+  private final Collection<StatisticArea> m_areas = new ArrayList<>();
 
-  private static SortedMap<Integer, SpecificDamageStatistic> m_specificDamagestatistics = new TreeMap<>();
+  private final SortedMap<Integer, SpecificDamageStatistic> m_specificDamagestatistics = new TreeMap<>();
 
-  private final Polygon m_area;
+  private final AverageDamageStatistic m_averageDamageStatistic;
 
-  private final PointInRing m_pointInRing;
+  private final StatisticItemKey m_key;
 
-  private final String m_name;
-
-  public RiskStatisticItem( final String name, final Polygon area )
+  public RiskStatisticItem( final StatisticItemKey key )
   {
-    m_name = name;
-    m_averageDamageStatistic = new AvaeragDamageStatistic();
-    m_area = area;
-    m_pointInRing = new SimplePointInRing( (LinearRing) area.getExteriorRing() );
-  }
-
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  public boolean contains( final Coordinate position )
-  {
-    final boolean inside = m_pointInRing.isInside( position );
-    if( !inside )
-      return false;
-
-    if( m_area.getNumInteriorRing() == 0 )
-      return true;
-
-    // TODO: slow
-    final Point point = m_area.getFactory().createPoint( position );
-    return m_area.contains( point );
+    m_key = key;
+    m_averageDamageStatistic = new AverageDamageStatistic();
   }
 
   public void addSpecificDamage( final int returnPeriod, final double value, final double cellArea )
@@ -115,6 +89,12 @@ public class RiskStatisticItem
     m_averageDamageStatistic.addAverageAnnualDamage( value, cellArea );
   }
 
+  public double getAnnualAverageDamage( )
+  {
+    return m_averageDamageStatistic.getAverageAnnualDamage();
+  }
+
+  // FIXME: must be the same code that calculates the risk zone values- > remove
   /**
    * calculates the average annual damage value for this item <br>
    * The value is calculated by integrating the specific damage values.<br>
@@ -158,9 +138,9 @@ public class RiskStatisticItem
     return averageSum;
   }
 
-  public Polygon getArea( )
+  public void add( final Polygon area )
   {
-    return m_area;
+    m_areas.add( new StatisticArea( this, area ) );
   }
 
   public SpecificDamageStatistic[] getSpecificDamages( )
@@ -173,7 +153,8 @@ public class RiskStatisticItem
   {
     final StringBuilder buffer = new StringBuilder();
 
-    buffer.append( "Name: " ).append( m_name ).append( '\n' );
+    buffer.append( "Key: " ).append( m_key.getName() ).append( '\n' );
+    buffer.append( "Group: " ).append( m_key.getGroupLabel() ).append( '\n' );
     buffer.append( "Specific Damages:\n" );
 
     for( final Entry<Integer, SpecificDamageStatistic> entry : m_specificDamagestatistics.entrySet() )
@@ -186,5 +167,15 @@ public class RiskStatisticItem
     buffer.append( m_averageDamageStatistic.toString() );
 
     return buffer.toString();
+  }
+
+  public StatisticArea[] getAreas( )
+  {
+    return m_areas.toArray( new StatisticArea[m_areas.size()] );
+  }
+
+  public StatisticItemKey getKey( )
+  {
+    return m_key;
   }
 }

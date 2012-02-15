@@ -40,47 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import com.vividsolutions.jts.algorithm.PointInRing;
+import com.vividsolutions.jts.algorithm.SimplePointInRing;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
+ * Represents one polygon area of an item that contains possibly many ones.
+ *
  * @author Gernot Belger
  */
-public class AvaeragDamageStatistic
+public class StatisticArea
 {
-  private double m_minAnnualDamage = Double.POSITIVE_INFINITY;
+  private final PointInRing m_pointInRing;
 
-  private double m_maxAnnualDamage = Double.NEGATIVE_INFINITY;
+  private final RiskStatisticItem m_statisticItem;
 
-  private double m_sum = 0.0;
+  private final Polygon m_area;
 
-  private double m_totalArea;
-
-  /**
-   * adds a average annual damage value to the polygon
-   */
-  public void addAverageAnnualDamage( final double value, final double cellArea )
+  public StatisticArea( final RiskStatisticItem statisticItem, final Polygon area )
   {
-    m_minAnnualDamage = Math.min( m_minAnnualDamage, value );
-    m_maxAnnualDamage = Math.max( m_maxAnnualDamage, value );
-
-    m_sum += value * cellArea;
-    m_totalArea += cellArea;
+    m_statisticItem = statisticItem;
+    m_area = area;
+    m_pointInRing = new SimplePointInRing( (LinearRing) area.getExteriorRing() );
   }
 
-  /* calculate the average annual damage value (€/a) per cell */
-  public double getAverageAnnualDamage( )
+  public boolean contains( final Coordinate position )
   {
-    return m_sum / m_totalArea;
+    final boolean inside = m_pointInRing.isInside( position );
+    if( !inside )
+      return false;
+
+    if( m_area.getNumInteriorRing() == 0 )
+      return true;
+
+    // TODO: slow
+    final Point point = m_area.getFactory().createPoint( position );
+    return m_area.contains( point );
   }
 
-  public double getTotalAverageAnnualDamage( )
+  public RiskStatisticItem getItem( )
   {
-    return m_sum;
+    return m_statisticItem;
   }
 
-  @Override
-  public String toString( )
+  public Polygon getArea( )
   {
-    return ToStringBuilder.reflectionToString( this );
+    return m_area;
   }
 }
