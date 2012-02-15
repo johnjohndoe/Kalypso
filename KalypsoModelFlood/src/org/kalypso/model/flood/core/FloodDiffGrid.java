@@ -42,19 +42,17 @@ package org.kalypso.model.flood.core;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.grid.ParallelBinaryGridProcessorBean;
-import org.kalypso.grid.SequentialBinaryGeoGridReader;
+import org.kalypso.grid.parallel.ParallelBinaryGridProcessorBean;
+import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;
 import org.kalypso.model.flood.binding.IFloodClipPolygon;
 import org.kalypso.model.flood.binding.IFloodExtrapolationPolygon;
 import org.kalypso.model.flood.binding.IFloodPolygon;
@@ -78,11 +76,12 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 {
+  // TODO: very ugly to need to overwrite this bean! We should find another way to quicken the process
   class FloodBean extends ParallelBinaryGridProcessorBean
   {
-    public FloodBean( final int blockSize )
+    public FloodBean( final int blockSize, final int scale )
     {
-      super( blockSize );
+      super( blockSize, scale );
     }
 
     public GM_Triangle m_triangle = null;
@@ -98,16 +97,12 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
 
   private BigDecimal m_max;
 
-  // private GM_Triangle m_triangle;
-
   private final IRunoffEvent m_event;
 
-  private int m_sizeX;
-
   @Override
-  protected ParallelBinaryGridProcessorBean createNewBean( )
+  protected ParallelBinaryGridProcessorBean createNewBean( final int blockSize, final int scale )
   {
-    return new FloodBean( BLOCK_SIZE );
+    return new FloodBean( blockSize, scale );
   }
 
   public FloodDiffGrid( final IGeoGrid inputGrid, final URL pUrl, final IFeatureBindingCollection<ITinReference> tins, final IFeatureBindingCollection<IFloodPolygon> polygons, final IRunoffEvent event ) throws IOException
@@ -118,26 +113,40 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     m_polygons = polygons;
     m_event = event;
 
-    try
-    {
-      m_sizeX = getDelegate().getSizeX();
-    }
-    catch( final GeoGridException e )
-    {
-      e.printStackTrace();
-    }
-
     m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
-  private double getValueInternal( final int x, final int y, final int z, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
+  @Override
+  protected double getValue( final int x, final int y, final Coordinate crd, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
-    final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
-    final double terrainValue = decimal.doubleValue();
+    // final ParallelBinaryGridProcessorBean bean;
 
-    // final double terrainValue = super.getValue( x, y );
+    final double z = crd.z;
+    if( Double.isNaN( z ) )
+      return z;
 
+    // try
+    // {
+    final double value = getValueInternal( x, y, z, (FloodBean) bean );
+    if( !Double.isNaN( value ) )
+    {
+      /* update min/max */
+      m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+      m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+    }
+    // }
+    // catch( final GeoGridException e )
+    // {
+    // e.printStackTrace();
+    // return Double.NaN;
+    // }
+
+    return value;
+  }
+
+  private double getValueInternal( final int x, final int y, final double terrainValue, final FloodBean bean ) throws GeoGridException
+  {
     if( Double.isNaN( terrainValue ) )
       return Double.NaN;
 
@@ -145,7 +154,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     final Coordinate crd = GeoGridUtilities.calcCoordinateWithoutZ( this, x, y, terrainValue, null );
 
     /* get the wsp value */
-    final double wspValue = getWspValue( crd, (FloodBean) bean );
+    final double wspValue = getWspValue( crd, bean );
 
     /* check polygon stuff */
     // get the polygons
@@ -157,8 +166,8 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     if( containsClipPolygons( polygons ) == true )
       return Double.NaN;
 
-    //    if( !Double.isNaN( wspValue ) )
-    //      return wspValue - terrainValue;
+    // if( !Double.isNaN( wspValue ) )
+    // return wspValue - terrainValue;
 
     /* - if extrapolation: getExtrapolationsvalue */
     final IFloodExtrapolationPolygon extrapolPolygon = getExtrapolPolygons( polygons );
@@ -200,8 +209,9 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
         final GM_Position transPos = transformedPoint.getPosition();
 
         // we remember the last found triangle...
+        // FIXME: please comment why? is this really faster?
 
-        if( bean.m_triangle != null && bean.m_triangle.contains( transPos ) == true )
+        if( bean.m_triangle != null && bean.m_triangle.contains( transPos ) )
         {
           final double wspValue = bean.m_triangle.getValue( transPos );
           if( !Double.isNaN( wspValue ) )
@@ -218,6 +228,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
           }
         }
       }
+
       return Double.NaN;
     }
     catch( final Exception e )
@@ -311,9 +322,6 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return m_max;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
   @Override
   public void setMax( final BigDecimal maxValue )
   {
@@ -321,48 +329,10 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
       m_max = maxValue;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
   @Override
   public void setMin( final BigDecimal minValue )
   {
     if( minValue != null )
       m_min = minValue;
   }
-
-  /**
-   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-   */
-  @Override
-  public double getValue( final int k, final ParallelBinaryGridProcessorBean bean )
-  {
-    final int x = k % m_sizeX;
-    final int y = k / m_sizeX + bean.m_startPosY;
-
-    double value;
-    try
-    {
-      // convert 4 bytes to integer
-      final int z = ByteUtils.readBEInt( bean.m_blockData, k * 4 );
-
-      if( z == Integer.MIN_VALUE /* NO_DATA */)
-        return Double.NaN;
-      value = getValueInternal( x, y, z, bean );
-    }
-    catch( final GeoGridException e )
-    {
-      e.printStackTrace();
-      return Double.NaN;
-    }
-    if( Double.isNaN( value ) )
-      return Double.NaN;
-
-    /* check min/max */
-    m_min = m_min.min( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-    m_max = m_max.max( new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-
-    return value;
-  }
-
 }

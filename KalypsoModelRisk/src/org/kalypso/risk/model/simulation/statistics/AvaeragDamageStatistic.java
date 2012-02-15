@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * @author Gernot Belger
  */
@@ -50,8 +52,6 @@ public class AvaeragDamageStatistic
   private double m_maxAnnualDamage = Double.NEGATIVE_INFINITY;
 
   private double m_sum = 0.0;
-
-  // private int m_numberOfCells = 0;
 
   private double m_totalArea;
 
@@ -65,8 +65,6 @@ public class AvaeragDamageStatistic
 
     m_sum += value * cellArea;
     m_totalArea += cellArea;
-
-    // m_numberOfCells++;
   }
 
   /* calculate the average annual damage value (€/a) per cell */
@@ -78,5 +76,11 @@ public class AvaeragDamageStatistic
   public double getTotalAverageAnnualDamage( )
   {
     return m_sum;
+  }
+
+  @Override
+  public String toString( )
+  {
+    return ToStringBuilder.reflectionToString( this );
   }
 }

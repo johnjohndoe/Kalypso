@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
-import org.kalypso.grid.SequentialBinaryGeoGridReader;
+import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.i18n.Messages;
@@ -217,10 +217,14 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           final ICoverage inputCoverage = srcAnnualCoveragesList.get( i );
           if( srcAnnualCoverageSize > 1 )
             subMonitor.subTask( String.format( "%s (%s)", taskName, inputCoverage.getName() ) ); //$NON-NLS-1$
+
+          // FIXEME: cast should not be necessary
           final RectifiedGridCoverageGeoGrid inputGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( inputCoverage );
+          // FIXME: calculate cell size inside of reader
           final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
           // create sequential grid reader
+          // TODO: make factory method for that!
           final SequentialBinaryGeoGridReader inputGridReader = new RiskSpecificDamageGrid( inputGrid, inputGrid.getGridURL(), polygonCollection, landuseClasses, cellSize, returnPeriod );
 
           // prepare the name, path and file for the output grid
