@@ -104,9 +104,12 @@ class StatisticObservationBuilder
   {
     /* add the landuse class name component */
     final String landuseHeader = "Landuse"; //$NON-NLS-1$
-
     final Component componentLanduse = new Component( "", landuseHeader, landuseHeader, "", "", XmlTypes.XS_STRING, "null", new Phenomenon( "", landuseHeader, landuseHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     result.addComponent( componentLanduse );
+
+    final String groupHeader = "Group"; //$NON-NLS-1$
+    final Component componentGroup = new Component( "", groupHeader, groupHeader, "", "", XmlTypes.XS_STRING, "null", new Phenomenon( "", groupHeader, groupHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    result.addComponent( componentGroup );
 
     for( final Integer returnPeriod : m_returnPeriods )
     {
@@ -146,18 +149,17 @@ class StatisticObservationBuilder
     /* add the data to the observation */
     final IRecord newRecord = result.createRecord();
 
-    /* Name */
+    /* Name and Group */
     final StatisticItemKey key = item.getKey();
     newRecord.setValue( 0, key.getName() );
-
-    // TODO: group label
+    newRecord.setValue( 0, key.getGroupLabel() );
 
     final IComponent[] components = result.getComponents();
 
     // specific damage values for each event
     final SpecificDamageStatistic[] specificDamamages = item.getSpecificDamages();
     // Add values in same order as components have been changed
-    int i = 1;
+    int i = 2;
     for( final SpecificDamageStatistic statistic : specificDamamages )
     {
       newRecord.setValue( i++, new BigDecimal( statistic.getTotalDamageValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
@@ -165,8 +167,8 @@ class StatisticObservationBuilder
       newRecord.setValue( i++, new BigDecimal( statistic.getAverageDamage() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
     }
 
-    newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
-    // newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
+    // newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
+    newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
 
     result.add( newRecord );
   }

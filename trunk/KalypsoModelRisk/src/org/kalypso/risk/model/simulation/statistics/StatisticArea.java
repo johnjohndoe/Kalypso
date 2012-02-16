@@ -68,9 +68,6 @@ public class StatisticArea
   public boolean contains( final Coordinate position )
   {
     return m_pointOnArea.locate( position ) == Location.INTERIOR;
-
-    // final Point point = m_area.getFactory().createPoint( position );
-    // return m_area.intersects( point );
   }
 
   public RiskStatisticItem getItem( )
