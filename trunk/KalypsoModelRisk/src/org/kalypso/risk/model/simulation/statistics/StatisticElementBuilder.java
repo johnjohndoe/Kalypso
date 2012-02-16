@@ -48,6 +48,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
@@ -80,11 +83,22 @@ public class StatisticElementBuilder
     m_controlModel = controlModel;
   }
 
-  public void addElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS ) throws GM_Exception, IOException, DBaseException
+  public void addElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException
   {
-    final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS );
+    final SubMonitor progress = SubMonitor.convert( monitor );
+    progress.beginTask( "Intersect statistic areas", 30 );
 
+    /* Load shape if given */
+    progress.subTask( "loading shape..." );
+    final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS );
+    ProgressUtilities.worked( progress, 50 );
+
+    /* Intersect groups with landuses and build all areas */
     final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = landusePolygons.getLandusePolygonCollection();
+    progress.subTask( "adding evaluation areas..." );
+    final int progressCount = landusePolygonCollection.size() * groups.length;
+    progress.setWorkRemaining( progressCount );
+
     for( final ILandusePolygon landusePolygon : landusePolygonCollection )
     {
       final GM_Surface< ? > landuseSurface = landusePolygon.getGeometry();
@@ -103,6 +117,8 @@ public class StatisticElementBuilder
         for( final Polygon polygon : keyAreas )
           item.add( polygon );
       }
+
+      ProgressUtilities.worked( monitor, groups.length );
     }
   }
 
