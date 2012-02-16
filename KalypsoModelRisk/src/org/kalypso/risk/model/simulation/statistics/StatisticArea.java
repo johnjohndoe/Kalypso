@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation.statistics;
 
-import com.vividsolutions.jts.algorithm.PointInRing;
-import com.vividsolutions.jts.algorithm.SimplePointInRing;
+import com.vividsolutions.jts.algorithm.locate.IndexedPointInAreaLocator;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Location;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -54,31 +52,25 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class StatisticArea
 {
-  private final PointInRing m_pointInRing;
-
   private final RiskStatisticItem m_statisticItem;
 
   private final Polygon m_area;
+
+  private final IndexedPointInAreaLocator m_pointOnArea;
 
   public StatisticArea( final RiskStatisticItem statisticItem, final Polygon area )
   {
     m_statisticItem = statisticItem;
     m_area = area;
-    m_pointInRing = new SimplePointInRing( (LinearRing) area.getExteriorRing() );
+    m_pointOnArea = new IndexedPointInAreaLocator( area );
   }
 
   public boolean contains( final Coordinate position )
   {
-    // final boolean inside = m_pointInRing.isInside( position );
-    // if( !inside )
-    // return false;
-    //
-    // if( m_area.getNumInteriorRing() == 0 )
-    // return true;
-    //
-    // // TODO: slow
-    final Point point = m_area.getFactory().createPoint( position );
-    return m_area.intersects( point );
+    return m_pointOnArea.locate( position ) == Location.INTERIOR;
+
+    // final Point point = m_area.getFactory().createPoint( position );
+    // return m_area.intersects( point );
   }
 
   public RiskStatisticItem getItem( )
