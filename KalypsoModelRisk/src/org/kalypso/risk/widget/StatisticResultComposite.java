@@ -45,11 +45,11 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.observation.IObservation;
@@ -78,14 +78,38 @@ public class StatisticResultComposite extends Composite
   {
     super( parent, style );
 
-    paint( model );
+    GridLayoutFactory.fillDefaults().applyTo( this );
+
+    createControl( model );
   }
 
-  private void paint( final IRasterizationControlModel model )
+  private void createControl( final IRasterizationControlModel model )
   {
-    final FormToolkit toolkit = new FormToolkit( getDisplay() );
+    final IComponentUiHandlerProvider provider = createComponentProvider();
 
-    final IComponentUiHandlerProvider provider = new IComponentUiHandlerProvider()
+    final DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
+
+    final Table table = viewer.getTable();
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+
+    final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
+    final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
+
+    viewer.setContentProvider( tupleResultContentProvider );
+    viewer.setLabelProvider( tupleResultLabelProvider );
+
+    final Feature observation = model.getStatisticObsFeature();
+    final IObservation<TupleResult> obs = observation == null ? null : ObservationFeatureFactory.toObservation( observation );
+    final TupleResult tupleResult = obs == null ? null : obs.getResult();
+
+    viewer.setInput( tupleResult );
+  }
+
+  private IComponentUiHandlerProvider createComponentProvider( )
+  {
+    return new IComponentUiHandlerProvider()
     {
       @Override
       public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
@@ -169,28 +193,6 @@ public class StatisticResultComposite extends Composite
 
         return myMap;
       }
-
     };
-
-    final DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
-
-    final Table table = viewer.getTable();
-    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    table.setHeaderVisible( true );
-    table.setLinesVisible( true );
-
-    final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
-    final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
-
-    viewer.setContentProvider( tupleResultContentProvider );
-    viewer.setLabelProvider( tupleResultLabelProvider );
-
-    final Feature observation = model.getStatisticObsFeature();
-    final IObservation<TupleResult> obs = observation == null ? null : ObservationFeatureFactory.toObservation( observation );
-    final TupleResult tupleResult = obs == null ? null : obs.getResult();
-
-    viewer.setInput( tupleResult );
-
-    toolkit.adapt( this );
   }
 }
