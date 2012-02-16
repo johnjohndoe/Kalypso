@@ -81,15 +81,10 @@ public class RiskStatisticItem
   }
 
   /**
-   * adds a average annual damage value to the polygon
+   * adds an average annual damage value to the polygon
    */
   public void addAverageAnnualDamage( final double value, final double cellArea )
   {
-    if( m_key.getName().equals( "grassland" ) )
-    {
-      System.out.println();
-    }
-
     m_averageDamageStatistic.addAverageAnnualDamage( value, cellArea );
   }
 
