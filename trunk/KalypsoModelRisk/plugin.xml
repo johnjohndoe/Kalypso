@@ -312,4 +312,11 @@
             qname="{http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel}VectorDataModel">
       </feature>
    </extension>
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.risk.views.RiskStatisticsResultView">
+        <command commandId="org.kalypso.ui.tupleResult.selectAll" style="push"/>
+        <separator name="selection" visible="true"/>
+        <command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="push"/>
+      </menuContribution>
+   </extension>
 </plugin>
