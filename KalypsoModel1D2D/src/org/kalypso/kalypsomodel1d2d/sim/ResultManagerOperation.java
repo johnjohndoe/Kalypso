@@ -72,11 +72,11 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 
   private final IGeoLog m_geoLog;
 
-  private File m_outputDir;
+  private final File m_outputDir;
 
-  private ICalcUnitResultMeta m_calcUnitMeta;
+  private final ICalcUnitResultMeta m_calcUnitMeta;
 
-  private String[] m_originalStepsToDelete;
+  private final String[] m_originalStepsToDelete;
 
   private boolean m_boolRemoveRawResult;
 
@@ -209,13 +209,9 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     {
       return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.12" ), e ); //$NON-NLS-1$
     }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
   }
 
-  public final void setBoolRemoveRawResult( boolean boolRemoveRawResult )
+  public final void setBoolRemoveRawResult( final boolean boolRemoveRawResult )
   {
     m_boolRemoveRawResult = boolRemoveRawResult;
   }
