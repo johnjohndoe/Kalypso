@@ -149,11 +149,11 @@ public class StatisticElementBuilder
         final String name = (String) shape.getRowValue( i, shapeNameField );
 
         final Geometry transformedShapeArea = shp2jts.transform( shapeSRID, shapeArea );
-        final List<Polygon> polygons = PolygonExtracter.getPolygons( transformedShapeArea );
+        final List< ? > polygons = PolygonExtracter.getPolygons( transformedShapeArea );
         // TODO: transform to kalypso SRS
-        for( final Polygon polygon : polygons )
+        for( final Object polygon : polygons )
         {
-          final StatisticGroup group = new StatisticGroup( name, polygon );
+          final StatisticGroup group = new StatisticGroup( name, (Polygon) polygon );
           groups.add( group );
         }
       }

@@ -42,7 +42,6 @@ package org.kalypso.risk.model.simulation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,6 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
-import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
@@ -78,13 +76,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
   private final Map<String, List<BinaryGeoGridReader>> m_gridMap;
 
-  private final Collection<IAnnualCoverageCollection> m_annualCoverageCollection;
+  private final IAnnualCoverageCollection[] m_annualCoverageCollections;
 
   private final IFeatureBindingCollection<ILandusePolygon> m_landusePolygonCollection;
-
-  private final List<ILanduseClass> m_landuseClassesList;
-
-  private final double m_cellSize;
 
   private BigDecimal m_min;
 
@@ -108,14 +102,12 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final IGeoTransformer m_geoTransformer;
 
-  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final ILandusePolygonCollection landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
+  public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureBindingCollection<IAnnualCoverageCollection> annualCoverageCollection, final ILandusePolygonCollection landusePolygonCollection, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
     m_riskZoneDefinitionsList = riskZoneDefinitionsList;
     m_produceZoneIdentifiers = false;
     m_resultGrid = resultGrid;
-
-    m_cellSize = Math.abs( resultGrid.getOffsetX().x - resultGrid.getOffsetY().x ) * Math.abs( resultGrid.getOffsetX().y - resultGrid.getOffsetY().y );
 
     /* we need a sorted list of the annual coverage collections */
     final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
@@ -126,10 +118,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         throw new IllegalArgumentException( org.kalypso.risk.i18n.Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.1" ) + cov.getReturnPeriod().doubleValue() ); //$NON-NLS-1$
     }
 
-    m_annualCoverageCollection = covMap.values();
+    m_annualCoverageCollections = covMap.values().toArray( new IAnnualCoverageCollection[covMap.size()] );
 
     m_landusePolygonCollection = landusePolygonCollection.getLandusePolygonCollection();
-    m_landuseClassesList = landuseClassesList;
     m_gridMap = new HashMap<String, List<BinaryGeoGridReader>>();
 
     final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
@@ -145,7 +136,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     m_offsetX = m_resultGrid.getOffsetX();
     m_offsetY = m_resultGrid.getOffsetY();
 
-    for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
+    for( final IAnnualCoverageCollection collection : m_annualCoverageCollections )
     {
       final List<BinaryGeoGridReader> gridList = new ArrayList<BinaryGeoGridReader>();
       final IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
@@ -167,12 +158,8 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         m_urbanZonesDefinitions.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
       else
         m_nonUrbanZonesDefinitions.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
-
   }
 
-  /**
-   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -198,22 +185,21 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     try
     {
       /* fill the probabilities and damages */
-      final int numCov = m_annualCoverageCollection.size();
-
-      final double[] damage = new double[numCov];
-      final double[] probability = new double[numCov];
+      final int numCov = m_annualCoverageCollections.length;
 
       final double cx = m_origin.x + x * m_offsetX.x + y * m_offsetY.x;
       final double cy = m_origin.y + x * m_offsetX.y + y * m_offsetY.y;
       final Coordinate coordinate = new Coordinate( cx, cy );
 
-      int i = 0;
-      for( final IAnnualCoverageCollection collection : m_annualCoverageCollection )
+      final double[] damage = new double[numCov];
+      final double[] probability = new double[numCov];
+      for( int i = 0; i < m_annualCoverageCollections.length; i++ )
       {
+        final IAnnualCoverageCollection collection = m_annualCoverageCollections[i];
+
         final double value = getValue( collection, coordinate );
         damage[i] = Double.isNaN( value ) ? 0.0 : value;
         probability[i] = 1.0 / collection.getReturnPeriod();
-        i++;
       }
 
       /* calculate average annual damage */
@@ -235,11 +221,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       {
         if( polygon.contains( position ) )
         {
-          final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
-
-          /* set statistic for landuse class */
-          fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
-
           final double returnValue = getReturnValue( averageAnnualDamageValue, polygon );
 
           if( Double.isInfinite( returnValue ) || Double.isNaN( returnValue ) )
@@ -272,28 +253,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
     else
       return polygon.isUrbanLanduseType() ? averageAnnualDamageValue : -averageAnnualDamageValue;
-  }
-
-  private void fillStatistics( final double averageAnnualDamageValue, final Integer landuseClassOrdinalNumber )
-  {
-    /* add the current average annual damage value to all landuse polygons that covers the current raster cell */
-    // polygon.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
-    /* find the right landuse class that holds the polygon */
-
-    // FIXME: a linear list search here?! -> this method is called for every grid cell!
-    for( final ILanduseClass landuseClass : m_landuseClassesList )
-    {
-      final double cellSize = landuseClass.getCellSize();
-      if( Double.isNaN( cellSize ) )
-      {
-        landuseClass.setCellSize( m_cellSize );
-      }
-
-      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
-      {
-        landuseClass.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
-      }
-    }
   }
 
   /**
@@ -348,5 +307,4 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   {
     return isUrbanLanduse ? m_urbanZonesDefinitions : m_nonUrbanZonesDefinitions;
   }
-
 }

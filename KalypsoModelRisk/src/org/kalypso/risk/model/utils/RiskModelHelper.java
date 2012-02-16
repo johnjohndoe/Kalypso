@@ -299,10 +299,6 @@ public class RiskModelHelper
         /* This grid should have the cs of the input grid. */
         final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
         {
-          /**
-           * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int) gets the ordinal number of the landuse
-           *      class
-           */
           @Override
           public double getValue( final int x, final int y ) throws GeoGridException
           {
@@ -565,6 +561,46 @@ public class RiskModelHelper
 
       /* set the average annual damage value for the current landuse class */
       landuseClass.setAverageAnnualDamage( averageSum );
+    }
+  }
+
+  /**
+   * calculates the average annual damage value for each landuse class<br>
+   * The value is calculated by integrating the specific damage values.<br>
+   */
+  public static void calcLanduseAnnualAverageDamage2( final IRasterizationControlModel rasterizationControlModel )
+  {
+    final List<ILanduseClass> landuseClassesList = rasterizationControlModel.getLanduseClassesList();
+    for( final ILanduseClass landuseClass : landuseClassesList )
+    {
+      /* get the statistical data for each landuse class */
+      final List<IRiskLanduseStatistic> landuseStatisticList = landuseClass.getLanduseStatisticList();
+      if( landuseStatisticList.size() == 0 )
+        landuseClass.setAverageAnnualDamage( 0.0 );
+      {
+        // generate a return period - sorted list
+        final Map<Integer, IRiskLanduseStatistic> periodSortedMap = new TreeMap<>();
+        for( int i = 0; i < landuseStatisticList.size(); i++ )
+        {
+          final IRiskLanduseStatistic riskLanduseStatistic = landuseStatisticList.get( i );
+          final int period = riskLanduseStatistic.getReturnPeriod();
+          periodSortedMap.put( period, riskLanduseStatistic );
+        }
+
+        final Set<Integer> keySet = periodSortedMap.keySet();
+
+        final Integer[] periods = keySet.toArray( new Integer[keySet.size()] );
+        final double[] probabilities = new double[periods.length];
+        for( int i = 0; i < probabilities.length; i++ )
+          probabilities[i] = 1.0 / periods[i];
+        final double[] values = new double[periods.length];
+        for( int i = 0; i < values.length; i++ )
+          values[i] = periodSortedMap.get( periods[i] ).getAverageDamage().doubleValue();
+
+        final double averageDamage = calcAverageAnnualDamageValue( values, probabilities );
+
+        landuseClass.setAverageAnnualDamage( averageDamage );
+      }
     }
   }
 

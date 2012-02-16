@@ -130,9 +130,6 @@ public class RiskLanduseStatistic extends Feature_Impl implements IRiskLanduseSt
     m_cellSize = cellSize;
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#setReturnPeriod(int)
-   */
   @Override
   public void setReturnPeriod( final int returnPeriod )
   {

@@ -1,6 +1,5 @@
 package org.kalypso.risk.model.schema.binding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.xmlbeans.impl.common.Levenshtein;
@@ -14,7 +13,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 
 public class RasterizationControlModel extends UnversionedModel implements IRasterizationControlModel
 {
-  public RasterizationControlModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RasterizationControlModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
     m_landuseClasses = new FeatureBindingCollection<ILanduseClass>( this, ILanduseClass.class, IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
@@ -113,43 +112,6 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
         maxOrdinal = ordinalNumber;
     }
     return ++maxOrdinal;
-  }
-
-  // TODO: check if needed
-  @Override
-  public List<String> getLanduseClassID( final String landuseClassName )
-  {
-    final List<String> list = new ArrayList<String>();
-    for( final ILanduseClass landuseClass : m_landuseClasses )
-      if( landuseClass.getName().equals( landuseClassName ) )
-        list.add( landuseClass.getId() );
-    return list;
-  }
-
-  @Override
-  public void resetStatistics( )
-  {
-    for( final ILanduseClass landuseClass : m_landuseClasses )
-    {
-      landuseClass.setMinAnnualDamage( Double.POSITIVE_INFINITY );
-      landuseClass.setMaxAnnualDamage( Double.NEGATIVE_INFINITY );
-      landuseClass.setAverageAnnualDamage( 0.0 );
-      landuseClass.setTotalDamage( 0.0 );
-    }
-  }
-
-  // TODO: what is that good for? when gets the damage value negative? this should never happen! Maybe it is better to
-  // check the values while processing / creating them!
-  @Override
-  public void fixStatisticsForShowingToUser( )
-  {
-    for( final ILanduseClass landuseClass : m_landuseClasses )
-    {
-      if( landuseClass.getMaxAnnualDamage() < 0.0 )
-        landuseClass.setMaxAnnualDamage( 0.0 );
-      if( landuseClass.getMinAnnualDamage() > landuseClass.getMaxAnnualDamage() )
-        landuseClass.setMinAnnualDamage( 0.0 );
-    }
   }
 
   /**
