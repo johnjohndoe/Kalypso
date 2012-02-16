@@ -276,7 +276,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       }
 
       /* statistics: calculate average annual damage value for each landuse class */
-      RiskModelHelper.calcLanduseAnnualAverageDamage2( controlModel );
+      RiskModelHelper.calcLanduseAnnualAverageDamage( controlModel );
 
       createResultObsTable( controlModel, vectorModel );
 

@@ -168,8 +168,8 @@ class StatisticObservationBuilder
       newRecord.setValue( i++, new BigDecimal( specificDamamage.getAverageDamage() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
     }
 
-    // newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
-    newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
+    newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );
+    // newRecord.setValue( components.length - 1, item.getAnnualAverageDamage() );
 
     result.add( newRecord );
   }

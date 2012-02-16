@@ -46,6 +46,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.risk.model.utils.RiskModelHelper;
+
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -56,8 +58,6 @@ public class RiskStatisticItem
   private final Collection<StatisticArea> m_areas = new ArrayList<>();
 
   private final SortedMap<Integer, SpecificDamageStatistic> m_specificDamagestatistics = new TreeMap<>();
-
-  private final AverageDamageStatistic m_averageDamageStatistic = new AverageDamageStatistic();
 
   private final StatisticItemKey m_key;
 
@@ -81,20 +81,6 @@ public class RiskStatisticItem
   }
 
   /**
-   * adds an average annual damage value to the polygon
-   */
-  public void addAverageAnnualDamage( final double value, final double cellArea )
-  {
-    m_averageDamageStatistic.addAverageAnnualDamage( value, cellArea );
-  }
-
-  public double getAnnualAverageDamage( )
-  {
-    return m_averageDamageStatistic.getAverageAnnualDamage();
-  }
-
-  // FIXME: must be the same code that calculates the risk zone values- > remove
-  /**
    * calculates the average annual damage value for this item <br>
    * The value is calculated by integrating the specific damage values.<br>
    */
@@ -105,36 +91,15 @@ public class RiskStatisticItem
 
     final Integer[] periods = m_specificDamagestatistics.keySet().toArray( new Integer[m_specificDamagestatistics.size()] );
 
-    /* calculate the average annual damage by integrating the specific damage values */
-    double averageSum = 0.0;
+    final double[] probabilities = new double[periods.length];
+    for( int i = 0; i < probabilities.length; i++ )
+      probabilities[i] = 1.0 / periods[i];
 
-    for( int i = 0; i < periods.length - 1; i++ )
-    {
-      /* get the probability for each return period */
-      final double p1 = 1 / periods[i];
-      final double p2 = 1 / periods[i + 1];
+    final double[] values = new double[periods.length];
+    for( int i = 0; i < values.length; i++ )
+      values[i] = m_specificDamagestatistics.get( periods[i] ).getAverageDamage();
 
-      /* calculate the difference */
-      final double d_pi = p1 - p2;
-
-      /*
-       * get the specific damage summation value for this and the next return period an calculate the difference
-       * (divided by 2). This means nothing else than to calculate the area for trapezoid with ha=specific value 1 and
-       * hb= specific value 2. The width of the trapezoid is the difference of the probabilities that belong to both
-       * specific damages values.
-       */
-      final SpecificDamageStatistic statEntry1 = m_specificDamagestatistics.get( periods[i] );
-      final SpecificDamageStatistic statEntry2 = m_specificDamagestatistics.get( periods[i + 1] );
-
-      // final BigDecimal sumStat = statEntry2.getDamageSum().add( statEntry1.getDamageSum() );
-      final double sumStat = statEntry2.getAverageDamage() + statEntry1.getAverageDamage();
-      final double si = sumStat / 2;
-
-      /* calculate the average damage and add it */
-      averageSum = averageSum + si * d_pi;
-    }
-
-    return averageSum;
+    return RiskModelHelper.calcAverageAnnualDamageValue( values, probabilities );
   }
 
   public void add( final Polygon area )
@@ -158,7 +123,6 @@ public class RiskStatisticItem
     }
 
     buffer.append( "Average Damage:\n" );
-    buffer.append( m_averageDamageStatistic.toString() );
 
     return buffer.toString();
   }

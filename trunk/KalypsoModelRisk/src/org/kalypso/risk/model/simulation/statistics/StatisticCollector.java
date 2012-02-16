@@ -76,22 +76,6 @@ public class StatisticCollector
     m_total.addSpecificDamage( returnPeriod, position.z, cellArea );
   }
 
-  public void addAverageDamage( final Coordinate position, final double cellArea )
-  {
-    // FIXME: probably we need to project the position to the srs of the polygons
-    // coordinateSystem = polygon.getCrs();
-    // m_geoTransformer = GeoTransformerFactory.getGeoTransformer( coordinateSystem );
-    // final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-    // final GM_Position position = m_geoTransformer.transform( positionAt, m_resultGrid.getSourceCRS() );
-
-    final AverageDamageVisitor visitor = new AverageDamageVisitor( position, cellArea );
-
-    final Envelope searchEnv = new Envelope( position );
-    m_elements.query( searchEnv, visitor );
-
-    m_total.addAverageAnnualDamage( position.z, cellArea );
-  }
-
   public void setItems( final RiskStatisticItem[] items )
   {
     m_items = items;
