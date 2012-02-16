@@ -108,7 +108,7 @@ class StatisticObservationBuilder
     result.addComponent( componentLanduse );
 
     final String groupHeader = "Group"; //$NON-NLS-1$
-    final Component componentGroup = new Component( "", groupHeader, groupHeader, "", "", XmlTypes.XS_STRING, "null", new Phenomenon( "", groupHeader, groupHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final Component componentGroup = new Component( groupHeader, groupHeader, groupHeader, "", "", XmlTypes.XS_STRING, "null", new Phenomenon( "", groupHeader, groupHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     result.addComponent( componentGroup );
 
     for( final Integer returnPeriod : m_returnPeriods )
@@ -152,19 +152,20 @@ class StatisticObservationBuilder
     /* Name and Group */
     final StatisticItemKey key = item.getKey();
     newRecord.setValue( 0, key.getName() );
-    newRecord.setValue( 0, key.getGroupLabel() );
+    newRecord.setValue( 1, key.getGroupLabel() );
 
     final IComponent[] components = result.getComponents();
 
     // specific damage values for each event
-    final SpecificDamageStatistic[] specificDamamages = item.getSpecificDamages();
     // Add values in same order as components have been changed
     int i = 2;
-    for( final SpecificDamageStatistic statistic : specificDamamages )
+    for( final Integer returnPeriod : m_returnPeriods )
     {
-      newRecord.setValue( i++, new BigDecimal( statistic.getTotalDamageValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( i++, new BigDecimal( statistic.getTotalFloodedArea() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-      newRecord.setValue( i++, new BigDecimal( statistic.getAverageDamage() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+      final SpecificDamageStatistic specificDamamage = item.getSpecificDamage( returnPeriod );
+
+      newRecord.setValue( i++, new BigDecimal( specificDamamage.getTotalDamageValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( i++, new BigDecimal( specificDamamage.getTotalFloodedArea() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
+      newRecord.setValue( i++, new BigDecimal( specificDamamage.getAverageDamage() ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
     }
 
     // newRecord.setValue( components.length - 1, item.calcAnnualAverageDamage() );

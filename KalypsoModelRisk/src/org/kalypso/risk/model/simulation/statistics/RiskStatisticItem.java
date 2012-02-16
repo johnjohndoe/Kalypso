@@ -68,11 +68,11 @@ public class RiskStatisticItem
 
   public void addSpecificDamage( final int returnPeriod, final double value, final double cellArea )
   {
-    final SpecificDamageStatistic statistic = getStatisticEntry( returnPeriod );
+    final SpecificDamageStatistic statistic = getSpecificDamage( returnPeriod );
     statistic.updateStatistic( value, cellArea );
   }
 
-  private SpecificDamageStatistic getStatisticEntry( final int returnPeriod )
+  public SpecificDamageStatistic getSpecificDamage( final int returnPeriod )
   {
     if( !m_specificDamagestatistics.containsKey( returnPeriod ) )
       m_specificDamagestatistics.put( returnPeriod, new SpecificDamageStatistic( returnPeriod ) );
@@ -145,11 +145,6 @@ public class RiskStatisticItem
   public void add( final Polygon area )
   {
     m_areas.add( new StatisticArea( this, area ) );
-  }
-
-  public SpecificDamageStatistic[] getSpecificDamages( )
-  {
-    return m_specificDamagestatistics.values().toArray( new SpecificDamageStatistic[m_specificDamagestatistics.size()] );
   }
 
   @Override
