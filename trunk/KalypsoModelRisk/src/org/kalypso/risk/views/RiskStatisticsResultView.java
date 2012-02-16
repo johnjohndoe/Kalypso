@@ -42,14 +42,18 @@ package org.kalypso.risk.views;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.widget.StatisticResultComposite;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -61,7 +65,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RiskStatisticsResultView extends ViewPart
 {
-  private StatisticResultComposite m_compResult;
+  private Control m_control;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -74,38 +78,39 @@ public class RiskStatisticsResultView extends ViewPart
       final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class.getName(), IRasterizationControlModel.class );
 
       if( model == null )
-        new Label( parent, SWT.NONE ).setText( Messages.getString("org.kalypso.risk.views.RiskStatisticsResultView.0") ); //$NON-NLS-1$
+      {
+        final Label label = new Label( parent, SWT.NONE );
+        label.setText( Messages.getString( "org.kalypso.risk.views.RiskStatisticsResultView.0" ) ); //$NON-NLS-1$
+        m_control = label;
+      }
       else
       {
-        m_compResult = new StatisticResultComposite( model, parent, SWT.BORDER );
-        final GridLayout gridLayout = new GridLayout();
-        gridLayout.marginWidth = 0;
-        gridLayout.marginHeight = 0;
-        m_compResult.setLayout( gridLayout );
+        m_control = new StatisticResultComposite( model, parent, SWT.BORDER );
       }
-    }
-    catch( final IllegalArgumentException iae )
-    {
-      iae.printStackTrace();
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
+      final StatusComposite statusComposite = new StatusComposite( parent, StatusComposite.DETAILS );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, "Failed to initialize statistic result view", e );
+      statusComposite.setStatus( status );
+      m_control = statusComposite;
+
     }
   }
 
   @Override
   public void setFocus( )
   {
-    if( m_compResult != null )
-      m_compResult.setFocus();
+    if( m_control != null )
+      m_control.setFocus();
   }
 
   @Override
   public void dispose( )
   {
-    if( m_compResult != null )
-      m_compResult.dispose();
+    if( m_control != null )
+      m_control.dispose();
     super.dispose();
   }
 }
