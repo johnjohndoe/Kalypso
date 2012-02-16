@@ -9,9 +9,10 @@ import org.kalypso.dcadapter.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
@@ -220,15 +221,12 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
-   */
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
     m_ts.setValues( DataCenterTuppleModel.toTupples( values ) );
 
-    m_evtPrv.fireChangedEvent( null );
+    m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
   }
 
   /**
@@ -258,13 +256,10 @@ public class DataCenterTimeserieItem implements IRepositoryItem, IObservation
     m_evtPrv.removeListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
-   */
   @Override
-  public void fireChangedEvent( final Object source )
+  public void fireChangedEvent( final Object source, final ObservationChangeType type )
   {
-    m_evtPrv.fireChangedEvent( source );
+    m_evtPrv.fireChangedEvent( source, type );
   }
 
   /**
