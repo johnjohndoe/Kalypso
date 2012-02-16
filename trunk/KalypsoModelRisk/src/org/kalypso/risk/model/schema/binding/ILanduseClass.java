@@ -38,17 +38,7 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   static QName PROP_DAMAGE_STATISTIC_LIST = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statisticClassMember" ); //$NON-NLS-1$
 
-  @Override
-  void setName( String name );
-
-  @Override
-  void setDescription( String description );
-
   void setOrdinalNumber( int value );
-
-  void setMinAnnualDamage( double value );
-
-  void setMaxAnnualDamage( double value );
 
   void setAverageAnnualDamage( double value );
 
@@ -58,23 +48,11 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   IAssetValueClass getAssetValue( );
 
-  double getMinAnnualDamage( );
-
-  double getMaxAnnualDamage( );
-
   double getAverageAnnualDamage( );
-
-  double getTotalDamage( );
 
   String getDamageFunctionGmlID( );
 
   void setDamageFunction( IDamageFunction damageFunction );
-
-  @Override
-  String getDescription( );
-
-  @Override
-  String getName( );
 
   void updateStatistic( int returnPeriod );
 
@@ -87,10 +65,4 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
   boolean containsStatisticEntry( int returnPeriod );
 
   List<IRiskLanduseStatistic> getLanduseStatisticList( );
-
-  void updateStatisticsAverageAnnualDamage( double value );
-
-  void setCellSize( double size );
-
-  double getCellSize( );
 }

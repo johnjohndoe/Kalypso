@@ -20,15 +20,7 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  final List<IRiskLanduseStatistic> m_statList = new ArrayList<IRiskLanduseStatistic>();
-
-  private double m_statisticsAverageAnnualDamage;
-
-  private int m_statisticsNumberOfRasterCells;
-
-  private double m_cellSize = Double.NaN;
-
-
+  private final List<IRiskLanduseStatistic> m_statList = new ArrayList<IRiskLanduseStatistic>();
 
   @Override
   public void setName( final String name )
@@ -80,43 +72,10 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
   }
 
   @Override
-  public double getMaxAnnualDamage( )
-  {
-    final Double value = (Double) getProperty( ILanduseClass.PROP_MAX_DAMAGE );
-    return value == null ? 0 : value.intValue();
-  }
-
-  @Override
-  public double getMinAnnualDamage( )
-  {
-    final Double value = (Double) getProperty( ILanduseClass.PROP_MIN_DAMAGE );
-    return value == null ? Double.MAX_VALUE : value.intValue();
-  }
-
-  @Override
-  public double getTotalDamage( )
-  {
-    final Double value = (Double) getProperty( ILanduseClass.PROP_TOTAL_DAMAGE );
-    return value == null ? 0 : value.intValue();
-  }
-
-  @Override
   public double getAverageAnnualDamage( )
   {
     final Double value = (Double) getProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE );
     return value == null ? 0 : value.doubleValue();
-  }
-
-  @Override
-  public void setMaxAnnualDamage( final double value )
-  {
-    setProperty( ILanduseClass.PROP_MAX_DAMAGE, value );
-  }
-
-  @Override
-  public void setMinAnnualDamage( final double value )
-  {
-    setProperty( ILanduseClass.PROP_MIN_DAMAGE, value );
   }
 
   @Override
@@ -215,9 +174,6 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
     return false;
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#createNewLanduseClass()
-   */
   @Override
   public IRiskLanduseStatistic createNewStatisticEntry( )
   {
@@ -232,15 +188,11 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
     }
     catch( final GMLSchemaException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return null;
     }
   }
 
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#getStatistic(int, double)
-   */
   @Override
   public IRiskLanduseStatistic getStatistic( final int returnPeriod )
   {
@@ -251,63 +203,6 @@ public class LanduseClass extends Feature_Impl implements ILanduseClass
 
   }
 
-  /**
-   * adds a average annual damage value to the polygon
-   */
-  @Override
-  public void updateStatisticsAverageAnnualDamage( final double value )
-  {
-    /* check for min / max */
-    if( value < getMinAnnualDamage() )
-      setMinAnnualDamage( value );
-    if( value > getMaxAnnualDamage() )
-      setMaxAnnualDamage( value );
-
-    /* update total damage value of the current landuse class */
-    final double totalDamage = getTotalDamage() + value * m_cellSize;
-    setTotalDamage( totalDamage );
-
-    /* get the current overall average annual damage value (€/a) */
-    final double currentValue = m_statisticsAverageAnnualDamage * m_statisticsNumberOfRasterCells;
-
-    /* add the new value */
-    final double updatedValue = currentValue + value;
-
-    /* raise number of cells */
-    m_statisticsNumberOfRasterCells++;
-
-    /* calculate the average annual damage value (€/a) per cell */
-    m_statisticsAverageAnnualDamage = updatedValue / m_statisticsNumberOfRasterCells;
-
-    setAverageAnnualDamage( m_statisticsAverageAnnualDamage );
-  }
-
-  public double getStatisticsAverageAnnualDamage( )
-  {
-    return m_statisticsAverageAnnualDamage;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#setCellSize(int)
-   */
-  @Override
-  public void setCellSize( final double cellSize )
-  {
-    m_cellSize = cellSize;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#getCellSize()
-   */
-  @Override
-  public double getCellSize( )
-  {
-    return m_cellSize;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#clearStatisticEntries()
-   */
   @Override
   public void clearStatisticEntries( )
   {
