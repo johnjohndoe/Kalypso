@@ -46,12 +46,15 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -74,6 +77,8 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StatisticResultComposite extends Composite
 {
+  private DefaultTableViewer m_viewer;
+
   public StatisticResultComposite( final IRasterizationControlModel model, final Composite parent, final int style )
   {
     super( parent, style );
@@ -87,9 +92,9 @@ public class StatisticResultComposite extends Composite
   {
     final IComponentUiHandlerProvider provider = createComponentProvider();
 
-    final DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
+    m_viewer = new DefaultTableViewer( this, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
 
-    final Table table = viewer.getTable();
+    final Table table = m_viewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
@@ -97,14 +102,18 @@ public class StatisticResultComposite extends Composite
     final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
     final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
 
-    viewer.setContentProvider( tupleResultContentProvider );
-    viewer.setLabelProvider( tupleResultLabelProvider );
+    m_viewer.setContentProvider( tupleResultContentProvider );
+    m_viewer.setLabelProvider( tupleResultLabelProvider );
 
     final Feature observation = model.getStatisticObsFeature();
     final IObservation<TupleResult> obs = observation == null ? null : ObservationFeatureFactory.toObservation( observation );
     final TupleResult tupleResult = obs == null ? null : obs.getResult();
 
-    viewer.setInput( tupleResult );
+    m_viewer.setInput( tupleResult );
+
+    final ExcelTableCursor cursor = new ExcelTableCursor( m_viewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+    cursor.setVisible( true );
+    cursor.setEnabled( true );
   }
 
   private IComponentUiHandlerProvider createComponentProvider( )
@@ -194,5 +203,10 @@ public class StatisticResultComposite extends Composite
         return myMap;
       }
     };
+  }
+
+  public TableViewer getTableViewer( )
+  {
+    return m_viewer;
   }
 }

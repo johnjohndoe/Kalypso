@@ -44,13 +44,20 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.ogc.gml.featureview.control.EmbeddedToolbarExecutionListener;
+import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
@@ -66,6 +73,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 public class RiskStatisticsResultView extends ViewPart
 {
   private Control m_control;
+
+  private EmbeddedToolbarExecutionListener m_executionListener;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -85,7 +94,17 @@ public class RiskStatisticsResultView extends ViewPart
       }
       else
       {
-        m_control = new StatisticResultComposite( model, parent, SWT.BORDER );
+        final StatisticResultComposite resultComposite = new StatisticResultComposite( model, parent, SWT.BORDER );
+        m_control = resultComposite;
+
+        final IWorkbench serviceLocator = PlatformUI.getWorkbench();
+
+        final IActionBars actionBars = getViewSite().getActionBars();
+        final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+
+        final TableViewer tableViewer = resultComposite.getTableViewer();
+        m_executionListener = new EmbeddedToolbarExecutionListener( toolBarManager, serviceLocator );
+        m_executionListener.addContextVariable( ToolbarCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME, tableViewer );
       }
     }
     catch( final CoreException e )
@@ -110,7 +129,17 @@ public class RiskStatisticsResultView extends ViewPart
   public void dispose( )
   {
     if( m_control != null )
+    {
       m_control.dispose();
+      m_control = null;
+    }
+
+    if( m_executionListener != null )
+    {
+      m_executionListener.dispose();
+      m_executionListener = null;
+    }
+
     super.dispose();
   }
 }
