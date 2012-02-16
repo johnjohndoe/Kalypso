@@ -65,7 +65,6 @@ import org.kalypso.shape.dbf.DBaseException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Gernot Belger
@@ -87,12 +86,11 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
     final SubMonitor progress = SubMonitor.convert( monitor );
     progress.beginTask( "Statistic Calculation", 100 );
 
-    buildStatisticElements( progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
+    buildStatisticElements( progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
 
-    collectSpecificDamages( progress.newChild( 70, SubMonitor.SUPPRESS_NONE ) );
-    collectAverageDamage( progress.newChild( 20, SubMonitor.SUPPRESS_NONE ) );
+    collectSpecificDamages( progress.newChild( 80, SubMonitor.SUPPRESS_NONE ) );
 
-    writeResultObservation( progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
+    writeResultObservation( progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
 
     monitor.done();
 
@@ -179,49 +177,6 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
 
         templateGrid.dispose();
       }
-    }
-  }
-
-  private void collectAverageDamage( final IProgressMonitor monitor )
-  {
-    final SubMonitor progress = SubMonitor.convert( monitor );
-
-    final IRasterDataModel rasterModel = m_data.getRasterModel();
-
-    final ICoverageCollection riskZonesCoverage = rasterModel.getRiskZonesCoverage();
-
-    final IFeatureBindingCollection<ICoverage> coverages = riskZonesCoverage.getCoverages();
-    progress.beginTask( "Collecting average damage", coverages.size() );
-
-    for( int i = 0; i < coverages.size(); i++ )
-    {
-      progress.subTask( String.format( "Grid %d", i ) );
-
-      final ICoverage coverage = coverages.get( i );
-
-      final RectifiedGridCoverageGeoGrid templateGrid = (RectifiedGridCoverageGeoGrid) GeoGridUtilities.toGrid( coverage );
-
-      try
-      {
-        final IGeoGrid grid = new SequentialBinaryGeoGrid( templateGrid, templateGrid.getGridURL() );
-
-        final IGeoWalkingStrategy walkingStrategy = grid.getWalkingStrategy();
-        final IGeoGridWalker walker = new AverageDamageWalker( m_statistics );
-        walkingStrategy.walk( grid, walker, null, progress.newChild( 1 ) );
-
-        grid.dispose();
-      }
-      catch( final GeoGridException e )
-      {
-        e.printStackTrace();
-        // TODO: error handling?
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-
-      templateGrid.dispose();
     }
   }
 

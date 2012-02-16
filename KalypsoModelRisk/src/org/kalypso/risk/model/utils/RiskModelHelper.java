@@ -245,7 +245,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   *
+   * 
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -499,76 +499,6 @@ public class RiskModelHelper
    * The value is calculated by integrating the specific damage values.<br>
    */
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
-  {
-    /* get the landuse classes */
-    final List<ILanduseClass> landuseClassesList = rasterizationControlModel.getLanduseClassesList();
-    if( landuseClassesList.size() == 0 )
-      return;
-
-    for( final ILanduseClass landuseClass : landuseClassesList )
-    {
-      /* get the statistical data for each landuse class */
-      final List<IRiskLanduseStatistic> landuseStatisticList = landuseClass.getLanduseStatisticList();
-      if( landuseStatisticList.size() == 0 )
-        landuseClass.setAverageAnnualDamage( 0.0 );
-
-      // generate a return period - sorted list
-      final Map<Double, IRiskLanduseStatistic> periodSortedMap = new TreeMap<Double, IRiskLanduseStatistic>();
-      for( int i = 0; i < landuseStatisticList.size(); i++ )
-      {
-        final IRiskLanduseStatistic riskLanduseStatistic = landuseStatisticList.get( i );
-        final double period = riskLanduseStatistic.getReturnPeriod();
-        periodSortedMap.put( period, riskLanduseStatistic );
-      }
-
-      final Set<Double> keySet = periodSortedMap.keySet();
-
-      final Double[] periods = keySet.toArray( new Double[keySet.size()] );
-
-      /* calculate the average annual damage by integrating the specific damage values */
-
-      double averageSum = 0.0;
-
-      for( int i = 0; i < periods.length - 1; i++ )
-      {
-        if( periods[i] == null || periods[i] == 0 )
-          continue;
-
-        /* get the probability for each return period */
-        final double p1 = 1 / periods[i];
-        final double p2 = 1 / periods[i + 1];
-
-        /* calculate the difference */
-        final double d_pi = p1 - p2;
-
-        /*
-         * get the specific damage summation value for this and the next return period an calculate the difference
-         * (divided by 2). This means nothing else than to calculate the area for trapezoid with ha=specific value 1 and
-         * hb= specific value 2. The width of the trapezoid is the difference of the probabilities that belong to both
-         * specific damages values.
-         */
-        final IRiskLanduseStatistic statEntry1 = periodSortedMap.get( periods[i] );
-        final IRiskLanduseStatistic statEntry2 = periodSortedMap.get( periods[i + 1] );
-
-        // final BigDecimal sumStat = statEntry2.getDamageSum().add( statEntry1.getDamageSum() );
-        final BigDecimal sumStat = statEntry2.getAverageDamage().add( statEntry1.getAverageDamage() );
-        final double value = sumStat.doubleValue() / 2;
-        final BigDecimal si = new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-
-        /* calculate the average damage and add it */
-        averageSum = averageSum + si.doubleValue() * d_pi;
-      }
-
-      /* set the average annual damage value for the current landuse class */
-      landuseClass.setAverageAnnualDamage( averageSum );
-    }
-  }
-
-  /**
-   * calculates the average annual damage value for each landuse class<br>
-   * The value is calculated by integrating the specific damage values.<br>
-   */
-  public static void calcLanduseAnnualAverageDamage2( final IRasterizationControlModel rasterizationControlModel )
   {
     final List<ILanduseClass> landuseClassesList = rasterizationControlModel.getLanduseClassesList();
     for( final ILanduseClass landuseClass : landuseClassesList )
