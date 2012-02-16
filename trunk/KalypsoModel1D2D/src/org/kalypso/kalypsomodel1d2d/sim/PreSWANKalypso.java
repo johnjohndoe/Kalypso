@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Convert from GML to SWAN-Kalypso format
- * 
+ *
  * @author ig
  */
 public class PreSWANKalypso implements ISimulation
@@ -235,14 +235,7 @@ public class PreSWANKalypso implements ISimulation
   private void writeAdditionaData( final FileObject pFileObjWorkingDir, final ResultManager pResultManager, final SubMonitor progress ) throws IOException
   {
     final SubMonitor subProgress = SubMonitor.convert( progress, 100 );
-    try
-    {
-      ProgressUtilities.worked( subProgress, 1 );
-    }
-    catch( final CoreException e1 )
-    {
-      e1.printStackTrace();
-    }
+    ProgressUtilities.worked( subProgress, 1 );
 
     /* Process all remaining .2d files. */
     final Map<Date, FileObject> lMapDatesFiles = pResultManager.getDateFileMap();
@@ -278,15 +271,7 @@ public class PreSWANKalypso implements ISimulation
         lFormatterCurrentData.format( "%s\n", lStrCurrentFileName );//$NON-NLS-1$
       }
 
-      try
-      {
-        ProgressUtilities.worked( subProgress, 100 / m_calculatedSteps.length );
-      }
-      catch( final CoreException e )
-      {
-        m_log.log( StatusUtilities.statusFromThrowable( e ) );
-        // e.printStackTrace();
-      }
+      ProgressUtilities.worked( subProgress, 100 / m_calculatedSteps.length );
     }
     lFormatterWLData.close();
     lFormatterCurrentData.close();
