@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Composite which is showing the statistic result of a flood risk calculation
- * 
+ *
  * @author Dirk Kuch
  */
 public class StatisticResultComposite extends Composite
@@ -150,6 +150,15 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
           {
             final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
+
+            final QName valueTypeName = component.getValueTypeName();
+            if( valueTypeName.equals( XmlTypes.XS_STRING ) )
+              myMap.put( count, new ComponentUiStringHandler( count, false, true, false, headerName, SWT.NONE, 120, 10, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            count++;
+          }
+          if( phenName.equals( "Group" ) )//$NON-NLS-1$
+          {
+            final String headerName = "Group";
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_STRING ) )

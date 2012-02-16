@@ -86,7 +86,11 @@ public class SpecificDamageStatistic
 
   public double getAverageDamage( )
   {
-    return m_sum / m_totalArea;
+    final double averageDamage = m_sum / m_totalArea;
+    if( Double.isNaN( averageDamage ) || Double.isInfinite( averageDamage ) )
+      return 0.0;
+
+    return averageDamage;
   }
 
   public int getReturnPeriod( )
