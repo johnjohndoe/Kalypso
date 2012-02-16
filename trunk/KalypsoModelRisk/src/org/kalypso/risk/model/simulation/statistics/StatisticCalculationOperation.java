@@ -109,7 +109,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       final String shapeSRS = m_data.getShapeSRS();
 
       final StatisticElementBuilder builder = new StatisticElementBuilder( controlModel );
-      builder.addElements( landusePolygons, shape, shapeNameAttribute, shapeSRS, monitor );
+      builder.createElements( landusePolygons, shape, shapeNameAttribute, shapeSRS, monitor );
       m_statistics.setItems( builder.getItems() );
     }
     catch( final IOException | GM_Exception | DBaseException e )

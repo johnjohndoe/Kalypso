@@ -83,19 +83,19 @@ public class StatisticElementBuilder
     m_controlModel = controlModel;
   }
 
-  public void addElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException
+  public void createElements( final ILandusePolygonCollection landusePolygons, final ShapeFile shape, final String shapeNameField, final String shapeSRS, final IProgressMonitor monitor ) throws GM_Exception, IOException, DBaseException
   {
     final SubMonitor progress = SubMonitor.convert( monitor );
     progress.beginTask( "Intersect statistic areas", 30 );
 
     /* Load shape if given */
-    progress.subTask( "loading shape..." );
+    progress.subTask( "Loading shape..." );
     final StatisticGroup[] groups = readShape( shape, shapeNameField, shapeSRS );
     ProgressUtilities.worked( progress, 50 );
 
     /* Intersect groups with landuses and build all areas */
     final IFeatureBindingCollection<ILandusePolygon> landusePolygonCollection = landusePolygons.getLandusePolygonCollection();
-    progress.subTask( "adding evaluation areas..." );
+    progress.subTask( "Adding evaluation areas..." );
     final int progressCount = landusePolygonCollection.size() * groups.length;
     progress.setWorkRemaining( progressCount );
 
@@ -106,19 +106,35 @@ public class StatisticElementBuilder
 
       final ILanduseClass landuseClass = landusePolygon.getLanduseClass( m_controlModel );
 
-      for( final StatisticGroup group : groups )
-      {
-        final StatisticItemKey key = new StatisticItemKey( landuseClass.getName(), group.getName() );
-        final RiskStatisticItem item = getItem( key );
-
-        final Polygon groupArea = group.getArea();
-
-        final Polygon[] keyAreas = intersectLanduseWithGroup( landuseArea, groupArea );
-        for( final Polygon polygon : keyAreas )
-          item.add( polygon );
-      }
+      createGroupElementsForLanduse( groups, landuseArea, landuseClass.getName() );
 
       ProgressUtilities.worked( monitor, groups.length );
+    }
+
+    /* Add groups for empty landuse -> total for each group */
+    createGroupElementsForLanduse( groups, null, StringUtils.EMPTY );
+  }
+
+  private void createGroupElementsForLanduse( final StatisticGroup[] groups, final Polygon landuseArea, final String landuseName )
+  {
+    for( final StatisticGroup group : groups )
+    {
+      final Polygon groupArea = group.getArea();
+
+      /* Special case where no groups are defined and we add the special group item */
+      if( groupArea == null && landuseArea == null )
+        continue;
+
+      final Polygon[] keyAreas = intersectLanduseWithGroup( landuseArea, groupArea );
+
+      final StatisticItemKey key = new StatisticItemKey( landuseName, group.getName() );
+      final RiskStatisticItem item = getItem( key );
+
+      for( final Polygon polygon : keyAreas )
+      {
+        if( polygon != null )
+          item.add( polygon );
+      }
     }
   }
 
@@ -126,6 +142,9 @@ public class StatisticElementBuilder
   {
     if( groupArea == null )
       return new Polygon[] { landuseArea };
+
+    if( landuseArea == null )
+      return new Polygon[] { groupArea };
 
     final Geometry intersection = landuseArea.intersection( groupArea );
     final List< ? > polygons = PolygonExtracter.getPolygons( intersection );
@@ -147,9 +166,9 @@ public class StatisticElementBuilder
         final ISHPGeometry shapeArea = shape.getShape( i );
 
         final String name = (String) shape.getRowValue( i, shapeNameField );
-
         final Geometry transformedShapeArea = shp2jts.transform( shapeSRID, shapeArea );
         final List< ? > polygons = PolygonExtracter.getPolygons( transformedShapeArea );
+
         // TODO: transform to kalypso SRS
         for( final Object polygon : polygons )
         {
