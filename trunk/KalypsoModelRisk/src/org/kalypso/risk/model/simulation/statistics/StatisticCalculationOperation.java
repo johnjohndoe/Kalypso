@@ -61,7 +61,9 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.DBaseException;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -112,7 +114,7 @@ public class StatisticCalculationOperation implements ICoreRunnableWithProgress
       builder.addElements( landusePolygons, shape, shapeNameAttribute, shapeSRS, monitor );
       m_statistics.setItems( builder.getItems() );
     }
-    catch( final Exception e )
+    catch( final IOException | GM_Exception | DBaseException e )
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoRiskPlugin.PLUGIN_ID, "Failed to load shape file", e );
       throw new CoreException( status );
