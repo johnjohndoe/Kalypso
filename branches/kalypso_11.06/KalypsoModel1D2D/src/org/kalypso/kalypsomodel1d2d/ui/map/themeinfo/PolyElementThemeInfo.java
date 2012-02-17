@@ -54,8 +54,10 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
 
       final Feature roughnessFeature = roughnessModel.getFeature().getWorkspace().getFeature( roughnessClsID );
       if( roughnessFeature == null )
+      {
         formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.4"), roughnessClsID ); //$NON-NLS-1$
-
+        return;
+      }
       final IRoughnessCls roughnessCls = (IRoughnessCls) roughnessFeature.getAdapter( IRoughnessCls.class );
 
       final double ks = roughnessCls.getKs();
