@@ -47,6 +47,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,15 +79,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.SystemOutLogger;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.model.rcm.IRainfallModelProvider;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
 import org.kalypso.model.rcm.binding.ICatchment;
@@ -110,6 +110,7 @@ import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObserva
 import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -117,6 +118,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.visitors.MonitorFeatureVisitor;
 
@@ -129,7 +131,7 @@ import com.google.common.base.Charsets;
  */
 public class UpdateSimulationWorker
 {
-  public static final QName MAPPING_MEMBER = new QName( "http://org.kalypso.updateObservationMapping", "mappingMember" );
+  public static final QName MAPPING_MEMBER = new QName( "http://org.kalypso.updateObservationMapping", "mappingMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
@@ -142,18 +144,18 @@ public class UpdateSimulationWorker
 
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Updating calc case", 120 );
+    monitor.beginTask( Messages.getString( "UpdateSimulationWorker_2" ), 120 ); //$NON-NLS-1$
 
     /* Read models */
-    monitor.subTask( "Reading control file..." );
+    monitor.subTask( Messages.getString( "UpdateSimulationWorker_3" ) ); //$NON-NLS-1$
     final NAControl control = readControlFile();
     final NaModell model = readModelFile();
     ProgressUtilities.worked( monitor, 20 );
 
     /* Copy observations for pegel and zufluss */
-    copyMappingTimeseries( control, "ObsQMapping.gml", "Pegel", new SubProgressMonitor( monitor, 20 ) );
-    copyMappingTimeseries( control, "ObsQZuMapping.gml", "Zufluss", new SubProgressMonitor( monitor, 20 ) );
-    copyMappingTimeseries( control, "ObsEMapping.gml", "Klima", new SubProgressMonitor( monitor, 20 ) );
+    copyMappingTimeseries( control, "ObsQMapping.gml", "Pegel", new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$
+    copyMappingTimeseries( control, "ObsQZuMapping.gml", "Zufluss", new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$
+    copyMappingTimeseries( control, "ObsEMapping.gml", "Klima", new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$
 
     /* Execute catchment models */
     executeCatchmentModel( control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
@@ -177,7 +179,7 @@ public class UpdateSimulationWorker
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read control file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "UpdateSimulationWorker_10" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -193,7 +195,7 @@ public class UpdateSimulationWorker
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to read model file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "UpdateSimulationWorker_11" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -216,7 +218,7 @@ public class UpdateSimulationWorker
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Failed to execute mapping: %s", outputFoldername );
+      final String message = String.format( Messages.getString( "UpdateSimulationWorker_12" ), outputFoldername ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -224,8 +226,10 @@ public class UpdateSimulationWorker
 
   private FeatureList readMapping( final String filename, final QName memberProperty ) throws Exception
   {
-    final IProject project = m_simulation.getSimulationFolder().getProject();
-    final IFolder observationConfFolder = project.getFolder( INaProjectConstants.FOLDER_OBSERVATION_CONF );
+    final RrmProject rrmProject = m_simulation.getProject();
+
+    final IFolder observationConfFolder = rrmProject.getObservationConfFolder();
+
     final IFile mappingFile = observationConfFolder.getFile( filename );
     final GMLWorkspace mappingWorkspace = GmlSerializer.createGMLWorkspace( mappingFile );
     final Feature rootFeature = mappingWorkspace.getRootFeature();
@@ -270,14 +274,14 @@ public class UpdateSimulationWorker
   {
     /* The timestep is only defined in linear sum generators for now. */
     if( !(generator instanceof ILinearSumGenerator) )
-      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." );
+      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." ); //$NON-NLS-1$
 
     /* Cast. */
     final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) generator;
 
     try
     {
-      monitor.beginTask( "Apply catchment model", 100 );
+      monitor.beginTask( Messages.getString( "UpdateSimulationWorker_14" ), 100 ); //$NON-NLS-1$
       final String name = TimeseriesUtils.getName( parameterType );
       monitor.subTask( name );
 
@@ -289,25 +293,27 @@ public class UpdateSimulationWorker
       // this is not exactly what happened before
       final DateRange range = getRange( control, timestep, time );
 
+      /* Create the rainfall generation operation. */
+      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, linearGenerator, targetLink, range );
+
       /* Initialize the generator. */
-      initGenerator( linearGenerator, range, timestep, parameterType );
+      final ILinearSumGenerator clonedGenerator = (ILinearSumGenerator) rainfallModel.getGenerators().get( 0 );
+      initGenerator( clonedGenerator, range, timestep, parameterType );
 
       /* Initialize the catchment target links. */
-      initTargetLinks( generator, targetLink, parameterType );
+      initTargetLinks( clonedGenerator, targetLink, parameterType );
 
-      /* Create the rainfall generation operation. */
-      final IRainfallCatchmentModel rainfallModel = createRainfallModel( model, generator, targetLink, range );
+      /* Execute the rainfall generation operation. */
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
-      /* Execute the rainfall generation operation. */
       operation.execute( new SubProgressMonitor( monitor, 100 ) );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to execute catchment model" );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "UpdateSimulationWorker_15" ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -352,28 +358,18 @@ public class UpdateSimulationWorker
       generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
   }
 
-  private void initTargetLinks( final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
+  private void initTargetLinks( final ILinearSumGenerator generator, final QName targetLink, final String parameterType ) throws Exception
   {
-    /* The optimization only works for linear sum generators for now. */
-    if( !(generator instanceof ILinearSumGenerator) )
-      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." );
-
-    initOptimizedTargetLinks( generator, targetLink, parameterType );
-  }
-
-  private void initOptimizedTargetLinks( final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws Exception
-  {
-    /* Cast. */
-    final ILinearSumGenerator linearSumGenerator = (ILinearSumGenerator) generator;
-
     /* Hash for the already created links. */
     final Map<String, String> linkHash = new HashMap<String, String>();
 
     /* The workspace to save. */
     GMLWorkspace workspaceToSave = null;
 
+    final Collection<ICatchment> toRemove = new ArrayList<>();
+
     /* Get the catchments. */
-    final List<ICatchment> generatorCatchments = linearSumGenerator.getCatchments();
+    final List<ICatchment> generatorCatchments = generator.getCatchments();
     for( final ICatchment generatorCatchment : generatorCatchments )
     {
       /* Get the area. */
@@ -401,22 +397,30 @@ public class UpdateSimulationWorker
 
         /* Set the property. */
         catchment.setProperty( targetLink, tsLink );
-        continue;
+
+        /* Remove the catchment from the (cloned) generator, it should only be calculated once */
+        toRemove.add(generatorCatchment);
+        // iterator.remove();
       }
+      else
+      {
+        /* Otherwise create a new link. */
+        final String link = buildLink( parameterType, catchment );
 
-      /* Otherwise create a new link. */
-      final String link = buildLink( parameterType, catchment );
+        /* Create the timeseries link type. */
+        final TimeseriesLinkType tsLink = new TimeseriesLinkType();
+        tsLink.setHref( link );
 
-      /* Create the timeseries link type. */
-      final TimeseriesLinkType tsLink = new TimeseriesLinkType();
-      tsLink.setHref( link );
+        /* Set the property. */
+        catchment.setProperty( targetLink, tsLink );
 
-      /* Set the property. */
-      catchment.setProperty( targetLink, tsLink );
-
-      /* Store the hash code. */
-      linkHash.put( hash, link );
+        /* Store the hash code. */
+        linkHash.put( hash, link );
+      }
     }
+
+    // FIXME: check if that works
+    // generatorCatchments.removeAll( toRemove );
 
     /* Save the workspace, because it is reloaded in the rainfall operation. */
     /* HINT: This is the linked workspace of the modell.gml, not the loaded one here. */
@@ -435,13 +439,11 @@ public class UpdateSimulationWorker
     {
       final BigDecimal factor = timeseries.getFactor();
       final ZmlLink link = timeseries.getTimeseriesLink();
-      values.add( String.format( Locale.PRC, "%d_%s", factor.intValue(), link.getHref() ) );
+      values.add( String.format( Locale.PRC, "%d_%s", factor.intValue(), link.getHref() ) ); //$NON-NLS-1$
     }
 
     /* Join the values. */
-    final String joinedValues = StringUtils.join( values.toArray( new String[] {} ), ";" );
-
-    return joinedValues;
+    return StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
   }
 
   private String buildLink( final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
@@ -451,7 +453,7 @@ public class UpdateSimulationWorker
     return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
   }
 
-  // FIXME: use CalcCaseAccessor for that
+  // FIXME: use CalcCaseAccessor for that?
   private String getTargetLinkFolderName( final String parameterType )
   {
     switch( parameterType )
@@ -467,23 +469,29 @@ public class UpdateSimulationWorker
     throw new IllegalArgumentException();
   }
 
-  private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws GMLSchemaException
+  private IRainfallCatchmentModel createRainfallModel( final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception
   {
     /* Rainfall model. */
     final IFolder modelsFolder = m_simulation.getModelsFolder();
     final URL context = ResourceUtilities.createQuietURL( modelsFolder );
     final GMLWorkspace modelWorkspace = FeatureFactory.createGMLWorkspace( IRainfallCatchmentModel.FEATURE_FAINFALL_CATCHMENT_MODEL, context, GmlSerializer.DEFAULT_FACTORY );
     final IRainfallCatchmentModel rainfallModel = (IRainfallCatchmentModel) modelWorkspace.getRootFeature();
-    rainfallModel.getGenerators().add( generator );
+
+    /* Add a COPY of the generator into the model, because we are going to change it later */
+    final IRelationType generatorsRelation = (IRelationType) rainfallModel.getFeatureType().getProperty( IRainfallCatchmentModel.MEMBER_GENERATOR );
+    FeatureHelper.cloneFeature( rainfallModel, generatorsRelation, generator );
 
     /* Create a target. */
-    final IRelationType parentRelation = (IRelationType) rainfallModel.getFeatureType().getProperty( IRainfallCatchmentModel.PROPERTY_TARGET_MEMBER );
+    final IRelationType parentRelation = (IRelationType) rainfallModel.getFeatureType().getProperty( IRainfallCatchmentModel.MEMBER_TARGET );
     final IFeatureType type = GMLSchemaUtilities.getFeatureTypeQuiet( ITarget.FEATURE_TARGET );
     final ITarget target = (ITarget) modelWorkspace.createFeature( rainfallModel, parentRelation, type );
     target.setCatchmentPath( "CatchmentCollectionMember/catchmentMember" ); //$NON-NLS-1$
 
     /* Set the target. */
     rainfallModel.setTarget( target );
+
+    // FIXME: we should create a model that contains only those catchments that are unique regarding the linearSum in
+    // order to improve performance
 
     /* Create the link to the catchment. */
     final String catchmentLinkRef = "modell.gml#" + model.getId(); //$NON-NLS-1$
@@ -551,33 +559,31 @@ public class UpdateSimulationWorker
       return;
 
     /* Does the source simulation exist? */
-    // FIXME: use scenarioAccessor instead
-    final IProject project = m_simulation.getSimulationFolder().getProject();
-    final IFolder basisFolder = project.getFolder( INaProjectConstants.FOLDER_BASIS );
-    final IFolder folderCalcCases = basisFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    final ScenarioAccessor scenario = m_simulation.getScenario();
+    final IFolder folderCalcCases = scenario.getSimulationsFolder();
 
     final RrmSimulation sourceCalcCase = new RrmSimulation( folderCalcCases.getFolder( new Path( calcCaseNameSource ) ) );
 
     if( !sourceCalcCase.exists() )
     {
-      m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': simulation does not exist", null, sourceCalcCase.getName() );
+      m_log.add( IStatus.WARNING, Messages.getString( "UpdateSimulationWorker_21" ), null, sourceCalcCase.getName() ); //$NON-NLS-1$
       return;
     }
 
     final IFolder currentSourceFolder = sourceCalcCase.getCurrentResultsFolder();
     if( !currentSourceFolder.exists() )
     {
-      m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': no results available", null, sourceCalcCase.getName() );
+      m_log.add( IStatus.WARNING, Messages.getString( "UpdateSimulationWorker_22" ), null, sourceCalcCase.getName() ); //$NON-NLS-1$
       return;
     }
 
     final IFolder initialValuesSourceFolder = sourceCalcCase.getCurrentLzimResultFolder();
     final Date startDate = control.getSimulationStart();
-    final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate );
+    final String initialValuesSourceFilename = new SimpleDateFormat( "yyyyMMdd'.gml'" ).format( startDate ); //$NON-NLS-1$
     final IFile initialValuesSourceFile = initialValuesSourceFolder.getFile( initialValuesSourceFilename );
     if( !initialValuesSourceFile.exists() )
     {
-      m_log.add( IStatus.WARNING, "Failed to copy initial values from simulation '%s': initial values missing (%s)", null, sourceCalcCase.getName(), initialValuesSourceFilename );
+      m_log.add( IStatus.WARNING, Messages.getString( "UpdateSimulationWorker_24" ), null, sourceCalcCase.getName(), initialValuesSourceFilename ); //$NON-NLS-1$
       return;
     }
 
@@ -593,7 +599,7 @@ public class UpdateSimulationWorker
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_log.add( IStatus.ERROR, "Failed to copy initial values from simulation '%s'", e, sourceCalcCase.getName() );
+      m_log.add( IStatus.ERROR, Messages.getString( "UpdateSimulationWorker_25" ), e, sourceCalcCase.getName() ); //$NON-NLS-1$
     }
   }
 }

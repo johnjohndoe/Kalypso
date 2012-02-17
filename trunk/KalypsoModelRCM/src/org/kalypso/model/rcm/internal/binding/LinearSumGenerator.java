@@ -121,8 +121,10 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         /* Get the catchment. */
         final ICatchment catchment = catchments.get( i );
 
-        // TODO: schöner als die Zahl währe der Name/Beschreibung des Catchments (über die catchment property)
+        // TODO: schöner als die Zahl wäre der Name/Beschreibung des Catchments (über die catchment property)
         // zusätzlich: auch die Gesamtanzahl wäre schön
+
+        // FIXME: avoid generation of timeseries with same observation/weights combination
 
         /* Generate the message 1. */
         final String message1 = String.format( "Sammle gewichtete Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
