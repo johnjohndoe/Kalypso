@@ -60,13 +60,12 @@ import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.SHP2GM_Object;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
- * Reads water bodies from a shape file.
+ * FIXME: transform WB to crs of Database! Reads water bodies from a shape file.
  * 
  * @author Gernot Belger
  */
@@ -135,13 +134,20 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     return m_waterBodies;
   }
 
-  private WaterBody toWaterBody( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws GM_Exception, CoreException
+  private WaterBody toWaterBody( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws Exception
   {
     final WaterBody waterBody = new WaterBody();
 
-    final GM_Object riverlineObject = SHP2GM_Object.transform( m_data.getSrs(), shape );
+    // TODO: replace with Shape2JTS
+    final GM_Object riverlineObject = SHP2GM_Object.transform( m_data.getShapeSrs(), shape );
     final GM_Curve riverline = toCurve( waterBody, riverlineObject );
-    waterBody.setRiverline( JTSAdapter.export( riverline ) );
+
+    /* Project to SRS of the database */
+    final int databaseSRID = m_data.getDatabaseSRID();
+    final String databaseSRS = JTSAdapter.toSrs( databaseSRID );
+    final GM_Curve databaseRiverline = (GM_Curve) riverline.transform( databaseSRS );
+
+    waterBody.setRiverline( JTSAdapter.export( databaseRiverline ) );
 
     final ImportAttributeInfo< ? >[] attributeInfos = m_data.getAttributeInfos();
     for( final ImportAttributeInfo< ? > info : attributeInfos )
@@ -181,7 +187,7 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     final Object value = data[fieldIndex];
 
     if( WaterBody.PROPERTY_DIRECTION_OF_STATIONING.equals( info.getProperty() ) )
-      return parseDirection(value);
+      return parseDirection( value );
     if( WaterBody.PROPERTY_RANK.equals( info.getProperty() ) )
       return parseRank( value );
 
