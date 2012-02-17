@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
@@ -136,6 +137,12 @@ public class ImportWaterBodiesData extends AbstractModelObject
     return m_connection;
   }
 
+  public int getDatabaseSRID( )
+  {
+    final PdbInfo info = m_connection.getInfo();
+    return info.getSRID();
+  }
+
   public void setShapeInput( final String shapeFile, final String srs )
   {
     if( shapeFile == null )
@@ -181,7 +188,7 @@ public class ImportWaterBodiesData extends AbstractModelObject
     return new ShapeFile( basePath, Charset.defaultCharset(), FileMode.READ );
   }
 
-  public String getSrs( )
+  public String getShapeSrs( )
   {
     return m_srs;
   }
