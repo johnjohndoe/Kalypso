@@ -39,7 +39,7 @@
             <element name="generatorMember" minOccurs="1" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element ref="rcm:RainfallGenerator" />
+                  <element ref="rcm:RainfallGenerator" minOccurs="0" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup" />
               </complexType>
