@@ -50,10 +50,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.internal.validation.ValidateDiscretisationOperation;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -115,7 +124,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private PointSnapper m_pointSnapper;
 
-  @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode;
 
   private boolean m_snappingActive;
@@ -180,7 +188,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#leftPressed(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void leftClicked( final Point p )
   {
@@ -235,7 +242,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     super.leftPressed( p );
   }
 
-  @SuppressWarnings("unchecked")
   private void collectFlowrelationsInformation( )
   {
     final IFE1D2DNode startNode = m_editor.getStartNode();
@@ -255,7 +261,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     }
   }
 
-  @SuppressWarnings( { "unchecked" })
   private void setNewPositionsOfFlowrelations( )
   {
 
@@ -290,10 +295,42 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   {
     if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
-    if( e.getKeyCode() == KeyEvent.VK_SHIFT )
+    else if( e.getKeyCode() == KeyEvent.VK_SHIFT )
       m_snappingActive = false;
+    else if( e.getKeyCode() == KeyEvent.VK_V )
+      validateModel();
     else
       super.keyPressed( e );
+  }
+
+  private void validateModel( )
+  {
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    final IKalypsoFeatureTheme discModelTheme = UtilMap.findEditableTheme( getMapPanel(), IFE1D2DElement.QNAME );
+    
+    final ValidateDiscretisationOperation operation = new ValidateDiscretisationOperation( m_discModel );
+    
+    display.syncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        final Shell shell = display.getActiveShell();
+        
+        final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+        
+        new StatusDialog( shell, status, "Valdiation" ).open();
+        
+        if( status.isOK() )
+          return;
+        
+        if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Validation", "Fix validation problems now?" ) )
+          return;
+        
+        ICommand command = operation.getValidationFix();
+        discModelTheme.postCommand( command, null );
+      }
+    } );
   }
 
   /**
@@ -362,7 +399,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#moved(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void moved( final Point p )
   {
