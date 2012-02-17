@@ -139,6 +139,7 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
       return type.cast( ObjectUtils.toString( value ) );
 
     /* Will throw an ClassCastException, that is intended */
+    //TODO: Give the user a hint, what property caused the exception
     return type.cast( value );
   }
 
