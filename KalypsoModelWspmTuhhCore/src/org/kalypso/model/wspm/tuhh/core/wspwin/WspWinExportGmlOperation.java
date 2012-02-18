@@ -72,7 +72,7 @@ public class WspWinExportGmlOperation implements ICoreRunnableWithProgress
     try
     {
       final WspmWaterBody[] waters = m_data.getWaterBodies();
-      monitor.beginTask( Messages.getString("WspWinExportGmlOperation_0"), waters.length ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "WspWinExportGmlOperation_0" ), waters.length ); //$NON-NLS-1$
 
       final File outputDir = m_data.getOutputDir();
 
@@ -89,8 +89,7 @@ public class WspWinExportGmlOperation implements ICoreRunnableWithProgress
 
         final TuhhReach[] reaches = m_data.getReaches( waterBody );
 
-        for( final TuhhReach reach : reaches )
-          wspWinWriter.addReach( reach );
+        wspWinWriter.addReaches( waterBody, reaches );
       }
 
       wspWinWriter.write();

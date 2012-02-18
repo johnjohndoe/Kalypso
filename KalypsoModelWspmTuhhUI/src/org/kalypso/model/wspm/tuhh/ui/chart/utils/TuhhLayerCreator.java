@@ -71,6 +71,8 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
  */
 public final class TuhhLayerCreator
 {
+  // TODO: ugly; put this add stuff into another abstraction
+
   private TuhhLayerCreator( )
   {
   }

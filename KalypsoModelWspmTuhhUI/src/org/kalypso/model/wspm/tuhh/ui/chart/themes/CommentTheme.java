@@ -38,43 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.wspwin;
+package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.wspwin.core.WspCfg.TYPE;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 /**
- * Exports a water body and some of it's reaches as a wspwin project.
- * 
  * @author Gernot Belger
  */
-public class WspWinProjectExporter
+public class CommentTheme extends AbstractPlaceholderProfileTheme
 {
-  private final TuhhReach[] m_reaches;
+  public static final String TITLE = "Comments";
 
-  private final TYPE m_projectType;
+  private static final String[] COMPONENTS = new String[] { IWspmConstants.POINT_PROPERTY_COMMENT };
 
-  private final WspmWaterBody m_waterBody;
-
-  public WspWinProjectExporter( final WspmWaterBody waterBody, final TuhhReach[] reaches, final TYPE projectType )
+  public CommentTheme( final IProfil profil )
   {
-    m_waterBody = waterBody;
-    m_reaches = reaches;
-    m_projectType = projectType;
-  }
-
-  public void export( final File outputDir, final IProgressMonitor monitor ) throws IOException
-  {
-    outputDir.mkdirs();
-
-    final WspWinProjectWriter wspWinProjectWriter = new WspWinProjectWriter( null, m_projectType, outputDir );
-    wspWinProjectWriter.addReaches( m_waterBody, m_reaches );
-
-    wspWinProjectWriter.write();
+    super( profil, IWspmConstants.LAYER_COMMENT, TITLE, new IProfilChartLayer[0], COMPONENTS );
   }
 }

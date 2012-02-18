@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.pdb.PdbUtils;
 import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
+import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
@@ -86,6 +87,9 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
 
       /* Get the existing waterbodies. */
       final WaterBody[] existingWaterbodies = GetPdbList.getArray( session, WaterBody.class );
+
+      final PdbInfo info = connection.getInfo();
+      getData().setTargetSRID( info.getSRID() );
 
       /* Close the session. */
       session.close();
