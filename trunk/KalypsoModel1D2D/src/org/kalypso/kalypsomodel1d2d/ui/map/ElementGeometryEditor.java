@@ -186,8 +186,8 @@ public class ElementGeometryEditor
   }
 
   /**
-   * REMARK: some optimization is done here, in order to enhance performance. We assume, that the same checks has been
-   * done for every newly added node, so we check only Criteria, which could go wring for the new node (i.e. the last
+   * REMARK: some optimisation is done here, in order to enhance performance. We assume, that the same checks has been
+   * done for every newly added node, so we check only Criteria, which could go wrong for the new node (i.e. the last
    * one in the array).
    */
   private IStatus checkNewElements( )

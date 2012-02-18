@@ -50,6 +50,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author Thomas Jung
@@ -122,27 +125,52 @@ public class LengthSectionParameters
       if( m_fromStationPropertyType instanceof IValuePropertyType )
       {
         IValuePropertyType vpt = (IValuePropertyType) m_fromStationPropertyType;
-        if( vpt.getValueClass() == String.class || vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
+        final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
+        if( riverName.equals( m_selectedRiverName ) )
         {
-          final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
-          if( riverName.equals( m_selectedRiverName ) )
+          if( vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
             m_fromValueSet.add( riverFeature.getProperty( m_fromStationPropertyType ) );
+          else
+            m_fromValueSet.add( 0 );
         }
       }
+
       if( m_toStationPropertyType instanceof IValuePropertyType )
       {
         IValuePropertyType vpt = (IValuePropertyType) m_toStationPropertyType;
-        if( vpt.getValueClass() == String.class || vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
+        final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
+        if( riverName.equals( m_selectedRiverName ) )
         {
-          final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
-          if( riverName.equals( m_selectedRiverName ) )
+          if( vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
             m_toValueSet.add( riverFeature.getProperty( m_toStationPropertyType ) );
+          else
+          {
+            GM_Object gm_Object = riverFeature.getDefaultGeometryPropertyValue();
+            final GM_MultiCurve multiCurve = (GM_MultiCurve) gm_Object;
+
+            if( multiCurve == null )
+              continue;
+
+            final GM_Curve[] allCurves = multiCurve.getAllCurves();
+
+            if( allCurves.length > 1 )
+              continue;
+
+            final GM_Curve curve = allCurves[0];
+            m_toValueSet.add( curve.getLength() );
+          }
+
+          
         }
       }
     }
 
     if( m_fromValueSet.size() == 0 || m_toValueSet.size() == 0 )
-      return;
+    {
+      // this means actually, that there are no valid entries in the defined field. We should try to use the geometry of
+      // the line itself in order to calculate the positions
+    return;
+    }
 
     BigDecimal min = null;
     BigDecimal max = null;
@@ -153,9 +181,12 @@ public class LengthSectionParameters
     Object last = m_toValueSet.last();
     max = getValue( last );
 
-    double mod = min.doubleValue() % m_stationWidth.doubleValue();
+    // handle null pointer
 
-    double firstStep = min.doubleValue() - mod;
+    double mod = min.doubleValue() % m_stationWidth.doubleValue();
+    
+    //strange
+    double firstStep = min.doubleValue();// - mod;
 
     BigDecimal minDecimal = new BigDecimal( firstStep ).setScale( 1, BigDecimal.ROUND_FLOOR );
 
@@ -165,10 +196,10 @@ public class LengthSectionParameters
     final BigDecimal subtract = maxDecimal.subtract( minDecimal );
     final Double divide = subtract.doubleValue() / m_stationWidth.doubleValue();
     final BigDecimal value = new BigDecimal( divide ).setScale( 5, BigDecimal.ROUND_HALF_UP );
-    final int numOfClasses = (value).intValue() + 1;
+    final int numOfClasses = (value).intValue() + 2;
 
     m_stationList = new BigDecimal[numOfClasses];
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    for( int currentClass = 0; currentClass < numOfClasses-1; currentClass++ )
     {
       final double currentValue = minDecimal.doubleValue() + currentClass * m_stationWidth.doubleValue();
 
@@ -176,6 +207,13 @@ public class LengthSectionParameters
 
       m_stationList[currentClass] = station;
     }
+    
+    //add last point of the riverline
+    final double currentValue = maxDecimal.doubleValue();
+
+    BigDecimal station = new BigDecimal( currentValue );
+
+    m_stationList[numOfClasses-1] = station;
   }
 
   private BigDecimal getValue( Object o )
