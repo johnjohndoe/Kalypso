@@ -41,10 +41,14 @@
 package org.kalypso.kalypsomodel1d2d.conv.results.lengthsection;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
@@ -121,8 +125,8 @@ public class LengthSectionHandler2d
       }
 
       // get "from" and "to" values for each segment
-      final BigDecimal from = getNumericProperty( feature, fromStationPropertyType );
-      final BigDecimal to = getNumericProperty( feature, toStationPropertyType );
+      BigDecimal from = getNumericProperty( feature, fromStationPropertyType );
+      BigDecimal to = getNumericProperty( feature, toStationPropertyType );
 
       final GM_Object defaultGeometryProperty = feature.getDefaultGeometryPropertyValue();
       final GM_MultiCurve multiCurve = (GM_MultiCurve) defaultGeometryProperty;
@@ -139,32 +143,40 @@ public class LengthSectionHandler2d
 
       // jetzt hamma d Kurv :-)
       // Anhand Stationswerten Punkte auf Liniensegmenten abgreifen / erzeugen.
-      for( final BigDecimal element : stationList )
+
+      if( from == null )
+        from = new BigDecimal( 0 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+      if( to == null )
+        to = new BigDecimal( curve.getLength() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+      final BigDecimal definedCurveLength = to.subtract( from );
+      
+      final double toDouble = to.doubleValue();
+      final double fromDouble = from.doubleValue();
+
+      for( final BigDecimal currentStation : stationList )
       {
+
         // calculate correction factor
-        final BigDecimal stationLength = to.subtract( from );
-
-        final int stat2 = element.intValue();
-        final int toint = to.intValue();
-        final int fromint = from.intValue();
-
+        final double currentStationDouble = currentStation.doubleValue();
+        
         // check, if the station value lies between min max of the current curve
-        if( fromint <= stat2 && stat2 < toint )
+        if( fromDouble <= currentStationDouble && currentStationDouble <= toDouble )
         {
-          final BigDecimal stationLengthPosition = to.subtract( element );
-          final double stat = stationLengthPosition.doubleValue() / stationLength.doubleValue() * 100;
-          final BigDecimal percentage = new BigDecimal( stat ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+          final BigDecimal lengthFromBeginning = currentStation.subtract( from);
+          final double station = lengthFromBeginning.doubleValue() / definedCurveLength.doubleValue() * 100;
+          final BigDecimal percentage = new BigDecimal( station ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
           LineString linestring;
           try
           {
             linestring = (LineString) JTSAdapter.export( curve );
-            final Point point = JTSUtilities.pointOnLinePercent( linestring, percentage.intValue() );
+            final Point point = JTSUtilities.pointOnLinePercent( linestring, percentage.doubleValue() );
             if( point == null )
               continue;
             final GM_Point gmPoint = (GM_Point) JTSAdapter.wrap( point );
             if( gmPoint != null )
-              pointList.put( element, gmPoint );
+              pointList.put( currentStation, gmPoint );
           }
           catch( final GM_Exception e )
           {
@@ -173,6 +185,7 @@ public class LengthSectionHandler2d
         }
       }
     }
+    
     return pointList;
   }
 
@@ -189,20 +202,7 @@ public class LengthSectionHandler2d
       return new BigDecimal( value );
     }
 
-    if( property instanceof String )
-    {
-      try
-      {
-        return NumberUtils.parseBigDecimal( (String) property );
-      }
-      catch( final NumberFormatException e )
-      {
-        // ignore: just just the exception below
-      }
-    }
-
-    // TODO: ugly error handling: throw CoreException and handle accoringly
-    throw new ClassCastException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d.0" ) ); //$NON-NLS-1$
+    return null;
   }
 
   private static void generateLengthSection( final Map<BigDecimal, GM_Point> pointList, final GM_TriangulatedSurface surface, final IObservation<TupleResult> lsObs, final DOCUMENTTYPE documenttype, final boolean iskmValue, final IProgressMonitor monitor )
@@ -232,6 +232,9 @@ public class LengthSectionHandler2d
     final TupleResultIndex m_tupleIndex = new TupleResultIndex( tuples, stationComp );
 
     // for each point get the values of the surfaces in the list of TrinagulatedSurface
+    Collection<GM_Point> values = pointList.values();
+    GM_Point[] pointss= (GM_Point[]) values.toArray( new GM_Point[values.size()] );
+    
     for( final Map.Entry<BigDecimal, GM_Point> entry : pointList.entrySet() )
     {
       BigDecimal station = entry.getKey();

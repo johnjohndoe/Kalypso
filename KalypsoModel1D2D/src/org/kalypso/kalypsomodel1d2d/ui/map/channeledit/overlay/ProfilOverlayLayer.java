@@ -246,9 +246,11 @@ public class ProfilOverlayLayer extends PointsLineLayer
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
       if( gmPoint == null )
         return;
-      final String srsName = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+      
+      //FIXME: check if srsname is null. This would lead in an drawing error
+      final String srsName = (String) origProfil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
-      geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
+      //geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
     }
     catch( final Exception e )
     {

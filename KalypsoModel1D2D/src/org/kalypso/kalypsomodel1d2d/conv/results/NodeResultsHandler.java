@@ -562,7 +562,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
-  private IStatus handle1dElement( final INodeResult nodeDown, final INodeResult nodeUp, final ICalculationUnit1D calcUnit ) throws GM_Exception
+  private IStatus handle1dElement( final INodeResult nodeDown, final INodeResult nodeUp, final ICalculationUnit1D calcUnit ) throws Exception
   {
     final INodeResult[] nodes = new INodeResult[2];
     nodes[0] = nodeDown;

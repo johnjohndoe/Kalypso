@@ -3,11 +3,7 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.openali.de/odysseus/chartconfig/0.2.0/ ../../../../../../../../OdysseusChartFactory/etc/binding/schema/ChartConfiguration.xsd">
 
-	
-
-
-	<Chart id="runoffChart">
-		<Title horizontalTextAnchor="CENTER">Abfluss</Title>
+	<Chart id="runoffChart" legend="false">
 		<Description>Abflusswerte der Berechnung</Description>
 		<Layers>
 
@@ -149,8 +145,7 @@
 
 
 	<Chart id="areaChart">
-		<Title>Fl㢨e</Title>
-		<Description>Fl㢨enwerte der Berechnung</Description>
+		<Description>Flächenwerte der Berechnung</Description>
 		<Layers>
 			<Layer visible="true" id="areaLayer">
 				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -165,8 +160,8 @@
 							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
 					</Parameters>
 				</Provider>
-				<Title>Fl㢨e</Title>
-				<Description>Fl㢨e abh㭧ig vom Wasserspiegel</Description>
+				<Title>Fläche</Title>
+				<Description>Fläche abhängig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis_Area" />
 					<TargetAxisRef ref="area_Axis" />
@@ -199,8 +194,8 @@
 							value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea" />
 					</Parameters>
 				</Provider>
-				<Title>Fl㢨enpolynome</Title>
-				<Description>Fl㢨enpolynome abh㭧ig vom Wasserspiegel</Description>
+				<Title>Flächenpolynome</Title>
+				<Description>Flächenpolynome abhhängig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis_Area" />
 					<TargetAxisRef ref="area_Axis" />
@@ -247,7 +242,7 @@
 		<Mappers>
 			<Axis id="area_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Fl㢨e [m²]</Label>
+				<Label>Fläche [m²]</Label>
 				
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
@@ -282,11 +277,8 @@
 	</Chart>
 	
 	
- 
-	
 	<!-- ALPHA -->
 	<Chart id="alphaChart">
-		<Title>Alpha</Title>
 		<Description>Alphawerte der Berechnung</Description>
 		<Layers>
 			<Layer visible="true" id="alphaLayer">
@@ -303,7 +295,7 @@
 					</Parameters>
 				</Provider>
 				<Title>Alpha</Title>
-				<Description>Alpha abh㭧ig vom Wasserspiegel</Description>
+				<Description>Alpha abhängig vom Wasserspiegel</Description>
 				
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis" />
@@ -338,7 +330,7 @@
 					</Parameters>
 				</Provider>
 				<Title>Alpha-Polynome</Title>
-				<Description>Alpha-Polynome abh㭧ig vom Wasserspiegel</Description>
+				<Description>Alpha-Polynome abhängig vom Wasserspiegel</Description>
 				<MapperRefs>
 					<DomainAxisRef ref="wsp_Axis" />
 					<TargetAxisRef ref="alpha_Axis" />
@@ -418,74 +410,6 @@
 		</Renderers>
 		
 	</Chart>
-	
-
-<!-- old and unused
-	
-	
-	
-	<Axis id="runoffDelta_Axis">
-	<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-	<Label>Abfluss-Delta [m³/s]</Label>
-	<Direction>POSITIVE</Direction>
-	<Position>LEFT</Position>
-	<MinVal>5.0</MinVal>
-	<MaxVal>10.0</MaxVal>
-	<RendererRef ref="NumberAxisRenderer"/>
-	</Axis>
-	
-
-	
-	
-	<Style id="alphaDeltaStyle">
-		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
-			<Parameters>
-				<Parameter name="pointWidth" value="8" />
-				<Parameter name="pointHeight" value="8" />
-				<Parameter name="borderWidth" value="1" />
-				<Parameter name="fillColor" value="#009900" />
-				<Parameter name="borderColor" value="#000000" />
-				<Parameter name="alpha" value="255" />
-			</Parameters>
-		</Provider>
-		<StyleID></StyleID>
-		<Type>POINT</Type>
-	</Style>
-
-	
-	<Style id="runoffDeltaStyle">
-		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
-			<Parameters>
-				<Parameter name="pointWidth" value="8" />
-				<Parameter name="pointHeight" value="8" />
-				<Parameter name="borderWidth" value="1" />
-				<Parameter name="fillColor" value="#00ff00" />
-				<Parameter name="borderColor" value="#000000" />
-				<Parameter name="alpha" value="255" />
-			</Parameters>
-		</Provider>
-		<StyleID></StyleID>
-		<Type>POINT</Type>
-	</Style>
-	
-
-	<Style id="areaDeltaStyle">
-		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
-			<Parameters>
-				<Parameter name="pointWidth" value="8" />
-				<Parameter name="pointHeight" value="8" />
-				<Parameter name="borderWidth" value="1" />
-				<Parameter name="fillColor" value="#00ffff" />
-				<Parameter name="borderColor" value="#000000" />
-				<Parameter name="alpha" value="255" />
-			</Parameters>
-		</Provider>
-		<StyleID></StyleID>
-		<Type>POINT</Type>
-		
-	</Style>
-	
--->
 	
 </ChartConfiguration>
 

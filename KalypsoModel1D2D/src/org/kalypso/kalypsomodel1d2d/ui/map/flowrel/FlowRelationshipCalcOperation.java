@@ -473,6 +473,11 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       }
     }
 
+    /* Copy slope from current calculation */
+    final BigDecimal slope = qresult.getSlope();
+    if( slope != null )
+      flowRel.setSlope( slope.doubleValue() );
+
     flowRelworkspace.fireModellEvent( new FeaturesChangedModellEvent( flowRelworkspace, new Feature[] { feature } ) );
   }
 
