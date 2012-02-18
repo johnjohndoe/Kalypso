@@ -169,6 +169,9 @@ public class CulvertPanel extends AbstractProfilView
 
     public void updateValue( )
     {
+      if( m_label == null || m_label.isDisposed() )
+        return;
+
       m_label.setText( getLabel( m_property ) );
       if( m_text == null || m_text.isDisposed() )
         return;

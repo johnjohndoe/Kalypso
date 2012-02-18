@@ -135,7 +135,7 @@ public class GafProfile implements IGafConstants
   public Geometry createLine( final String dbType ) throws Exception
   {
     /* Normally, the line of the cross section is the line of the profile */
-    final GafPart profilePart = m_parts.get( KZ_CATEGORY_PROFILE );
+    final GafPart profilePart = findPart( KZ_CATEGORY_PROFILE );
     if( profilePart != null )
       return profilePart.getLine( dbType );
 
@@ -145,6 +145,11 @@ public class GafProfile implements IGafConstants
 
     /* Don't known what to do now */
     return null;
+  }
+
+  public GafPart findPart( final String category )
+  {
+    return m_parts.get( category );
   }
 
   public GafPart[] getParts( )

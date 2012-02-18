@@ -48,6 +48,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Abfluss</Title>
@@ -199,6 +200,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Fläche</Title>
@@ -339,6 +341,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Alpha</Title>
@@ -481,6 +484,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" />
+            <Parameter name="legendMode" value="point" />            
           </Parameters>
         </Provider>
         <Title>Summe</Title>
@@ -522,6 +526,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffChannel" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Abfluss Flussschlauch</Title>
@@ -563,6 +568,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#RunoffFloodplain" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Abfluss Vorland</Title>
@@ -709,6 +715,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Summe</Title>
@@ -749,6 +756,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaChannel" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Fläche Flussschlauch</Title>
@@ -789,6 +797,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#AreaFloodplain" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Fläche Vorland</Title>
@@ -923,6 +932,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Width" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Summe</Title>
@@ -963,6 +973,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthChannel" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Breite Flussschlauch</Title>
@@ -1003,6 +1014,7 @@
             <Parameter name="showLines" value="false" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" />
             <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#WidthFloodplain" />
+            <Parameter name="legendMode" value="point" />
           </Parameters>
         </Provider>
         <Title>Breite Vorland</Title>

@@ -41,43 +41,30 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectRemove;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
-import org.kalypso.model.wspm.tuhh.ui.chart.layers.CulvertLayer;
-import org.kalypso.model.wspm.tuhh.ui.chart.utils.LayerStyleProviderTuhh;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypso.model.wspm.tuhh.ui.panel.buildings.CulvertPanel;
-import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
- * @author kimwerner
+ * This is just a placeholder for themes that only represents columns of the table.<br/>
+ * Used to add/remove the columns to/from the table.
+ * 
+ * @author Gernot Belger
  */
-public class BuildingTubesTheme extends AbstractProfilTheme
+public class AbstractPlaceholderProfileTheme extends AbstractProfilTheme
 {
-  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0" ); //$NON-NLS-1$
+  private final String[] m_componentIDs;
 
-  public BuildingTubesTheme( final IProfil profil, final ICoordinateMapper cm, final LayerStyleProviderTuhh styleProvider )
+  public AbstractPlaceholderProfileTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final String[] componentIDs )
   {
-    super( profil, IWspmTuhhConstants.LAYER_TUBES, TITLE, new IProfilChartLayer[] { new CulvertLayer( profil, styleProvider ) }, cm );
-  }
+    super( profil, id, title, chartLayers, null );
 
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
-  {
-    if( hint.isObjectDataChanged() || hint.isObjectChanged() )
-    {
-      getEventHandler().fireLayerContentChanged( this );
-    }
+    m_componentIDs = componentIDs;
   }
 
   @Override
@@ -87,22 +74,14 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   }
 
   @Override
-  public void removeYourself( )
+  public final void removeYourself( )
   {
     final IProfil profil = getProfil();
 
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfil(), IProfileBuilding.class );
-    if( building == null )
-      return;
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.GeoCoordinateTheme.1" ), getProfil(), true ); //$NON-NLS-1$
 
-    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1" ), profil, true ); //$NON-NLS-1$
-    operation.addChange( new ProfileObjectRemove( profil, building ) );
+    for( final String component : m_componentIDs )
+      operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( component ) ) );
     new ProfilOperationJob( operation ).schedule();
-  }
-
-  @Override
-  public IProfilView createLayerPanel( )
-  {
-    return new CulvertPanel( getProfil() );
   }
 }

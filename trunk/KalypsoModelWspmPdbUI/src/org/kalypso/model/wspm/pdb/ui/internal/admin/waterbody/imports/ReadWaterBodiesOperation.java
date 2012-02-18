@@ -62,19 +62,20 @@ import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.deegree.SHP2GM_Object;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * Reads water bodies from a shape file.
- * 
+ *
  * @author Gernot Belger
  */
 public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
 {
   private static final String STR_FAILED_TO_READ_WATER_BODIES_FROM_SHAPE = Messages.getString( "ReadWaterBodiesOperation.0" ); //$NON-NLS-1$
+
+  // private final SHP2JTS m_shape2Jts = new SHP2JTS( new GeometryFactory() );
 
   private WaterBody[] m_waterBodies;
 
@@ -139,13 +140,24 @@ public class ReadWaterBodiesOperation implements ICoreRunnableWithProgress
     return m_waterBodies;
   }
 
-  private WaterBody toWaterBody( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws GM_Exception, CoreException
+  private WaterBody toWaterBody( final ISHPGeometry shape, final Object[] data, final IDBFField[] fields ) throws Exception
   {
     final WaterBody waterBody = new WaterBody();
 
-    final GM_Object riverlineObject = SHP2GM_Object.transform( m_data.getSrs(), shape );
+    // TODO: replace with Shape2JTS
+// final String shapeSrs = m_data.getShapeSrs();
+// final int shapeSRID = JTSAdapter.toSrid( shapeSrs );
+// final Geometry riverline = m_shape2Jts.transform( shapeSRID, shape );
+
+    final GM_Object riverlineObject = SHP2GM_Object.transform( m_data.getShapeSrs(), shape );
     final GM_Curve riverline = toCurve( waterBody, riverlineObject );
-    waterBody.setRiverline( JTSAdapter.export( riverline ) );
+
+    /* Project to SRS of the database */
+    final int databaseSRID = m_data.getTargetSRID();
+    final String databaseSRS = JTSAdapter.toSrs( databaseSRID );
+    final GM_Curve databaseRiverline = (GM_Curve) riverline.transform( databaseSRS );
+
+    waterBody.setRiverline( JTSAdapter.export( databaseRiverline ) );
 
     final ImportAttributeInfo< ? >[] attributeInfos = m_data.getAttributeInfos();
     for( final ImportAttributeInfo< ? > info : attributeInfos )

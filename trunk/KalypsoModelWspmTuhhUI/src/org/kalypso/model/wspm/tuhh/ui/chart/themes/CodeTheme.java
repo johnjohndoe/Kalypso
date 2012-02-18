@@ -43,33 +43,17 @@ package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
  */
-public class CodeTheme extends AbstractProfilTheme
+public class CodeTheme extends AbstractPlaceholderProfileTheme
 {
   public static final String TITLE = "Code"; //$NON-NLS-1$
 
-  public CodeTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public CodeTheme( final IProfil profil )
   {
-    super( profil, IWspmLayers.LAYER_CODE, TITLE, chartLayers, cm );
+    super( profil, IWspmLayers.LAYER_CODE, TITLE, new IProfilChartLayer[] {}, new String[] { IWspmPointProperties.POINT_PROPERTY_CODE } );
   }
-
-  @Override
-  public void removeYourself( )
-  {
-    final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( "Removing Code layer from profile", getProfil(), true ); //$NON-NLS-1$
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_CODE ) ) );
-    new ProfilOperationJob( operation ).schedule();
-  }
-
 }

@@ -74,7 +74,6 @@ public final class Buildings
       KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.ERROR, componentID, e.getLocalizedMessage(), null ) );
       return Double.NaN;
     }
-
   }
 
   public static boolean isBridge( final IProfileObject building )

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
@@ -46,16 +46,19 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.IFill;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
@@ -68,9 +71,6 @@ public class CulvertLayer extends AbstractProfilLayer
     getLineStyle().setColor( new RGB( 255, 255, 100 ) );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -86,18 +86,12 @@ public class CulvertLayer extends AbstractProfilLayer
     return objects[0];
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
-   */
   @Override
   public String getTitle( )
   {
     return getTube() == null ? "" : getTube().getObservation().getDescription(); //$NON-NLS-1$
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -105,59 +99,40 @@ public class CulvertLayer extends AbstractProfilLayer
     if( tube == null )
       return;
 
-    final Double x = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, tube );
-    final Double y = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, tube );
-    final Double b = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, tube );
-    final Double h;
-    final IAxis targetAx = getTargetAxis();
-    final IAxis domAx = getDomainAxis();
-    final String tubeId = getTube().getId();
+    final CulvertPainter painter = new CulvertPainter( tube );
 
-    IFigure<IPointStyle> tubeFigure = null;
+    final IFigure<IAreaStyle> tubeFigure = painter.createFigure( getCoordinateMapper() );
 
-    if( getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
-    {
-      h = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, tube );
-      final Double m = Buildings.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, tube );
-      if( x.isNaN() || y.isNaN() || b.isNaN() || m.isNaN() || h.isNaN() )
-        return;
-      tubeFigure = new AbstractFigure<IPointStyle>()
-      {
-        @Override
-        protected void paintFigure( final GC grc )
-        {
-          final int leftX = domAx.numericToScreen( x - b / 2 );
-          final int upperY = targetAx.numericToScreen( y + h );
-          final int rightX = domAx.numericToScreen( x + b / 2 );
-          final int lowerY = targetAx.numericToScreen( y );
-          final int deltaX = m.intValue() > 0 ? (lowerY - upperY) / m.intValue() : 0;
-          grc.fillPolygon( new int[] { leftX, lowerY, leftX - deltaX, upperY, rightX + deltaX, upperY, rightX, lowerY } );
-        }
-      };
-    }
-
-    else if( tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) || tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
-    {
-      h = Double.NaN;
-      if( x.isNaN() || y.isNaN() || b.isNaN() )
-        return;
-      tubeFigure = new AbstractFigure<IPointStyle>()
-      {
-        @Override
-        protected void paintFigure( final GC grc )
-        {
-          final int leftX = domAx.numericToScreen( x - b / 2 );
-          final int upperY = targetAx.numericToScreen( y + (h.isNaN() ? b : h) );
-          final int rightX = domAx.numericToScreen( x + b / 2 );
-          final int lowerY = targetAx.numericToScreen( y );
-          grc.fillOval( leftX, upperY, rightX - leftX, lowerY - upperY );
-        }
-      };
-
-    }
     if( tubeFigure == null )
       return;
-    tubeFigure.setStyle( getPointStyle() );
+
+    final IAreaStyle areaStyle = translatePointStyle();
+    tubeFigure.setStyle( areaStyle );
     tubeFigure.paint( gc );
+  }
+
+  private IAreaStyle translatePointStyle( )
+  {
+    // FIXME: ugly: we paint an area with a point style here; why?! TODO: change...!
+    final IPointStyle pointStyle = getPointStyle();
+
+    final boolean isFilled = pointStyle.isFillVisible();
+    final IFill fill = isFilled ? new ColorFill( pointStyle.getInlineColor() ) : null;
+    final int alpha = pointStyle.getAlpha();
+    final ILineStyle stroke = pointStyle.getStroke();
+
+    return new AreaStyle( fill, alpha, stroke, true );
+  }
+
+  @Override
+  public IDataRange<Number> getDomainRange( )
+  {
+    return new CulvertPainter( getTube() ).getDomainRange();
+  }
+
+  @Override
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  {
+    return new CulvertPainter( getTube() ).getTargetRange();
   }
 }

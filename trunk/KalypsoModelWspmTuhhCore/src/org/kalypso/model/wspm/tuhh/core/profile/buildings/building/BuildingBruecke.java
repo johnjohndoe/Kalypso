@@ -100,7 +100,6 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
   {
     super( observation );
     addPointProperties( profil );
-
   }
 
   private void addPointProperties( final IProfil profil )
@@ -128,5 +127,4 @@ public final class BuildingBruecke extends AbstractProfileObject implements IPro
   {
     return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
   }
-
 }
