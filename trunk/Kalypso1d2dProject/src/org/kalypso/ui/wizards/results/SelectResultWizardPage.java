@@ -190,6 +190,8 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
     createToolbar( panel ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
+    //TODO: allow user to set an individually name of the difference result
+
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
