@@ -46,6 +46,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
@@ -99,7 +100,7 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
   /**
    * The minimal number of profiles that the user needs to select. <code>1</code> by default.<br/>
    * Overwrite to change.
-   * 
+   *
    * @return <code>1</code>.
    */
   protected int getMinimumSelectionCount( )
@@ -169,10 +170,11 @@ public abstract class ExportProfilesWizard extends Wizard implements IWorkbenchW
     };
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, exportJob );
-    if( !result.isOK() )
-    {
-      new StatusDialog( getShell(), result, getWindowTitle() ).open();
-    }
+
+    // REMARK: comparing with == here: if its a specific ok-status (success message), we show it!
+    if( result != Status.OK_STATUS )
+      StatusDialog.open( getShell(), result, getWindowTitle() );
+
     return !result.matches( IStatus.ERROR );
   }
 
