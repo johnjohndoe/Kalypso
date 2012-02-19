@@ -64,11 +64,15 @@ public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
 
   private final Map<WaterBody, IStatus> m_waterBodyStatus;
 
-  public WaterBodyImportStatusLabelProvider( final WaterBody[] extistingWaterBodies, final Map<WaterBody, IStatus> waterBodyStatus )
+  public WaterBodyImportStatusLabelProvider( final WaterBody[] existingWaterBodies, final Map<WaterBody, IStatus> waterBodyStatus )
   {
     m_waterBodyStatus = waterBodyStatus;
-    for( final WaterBody waterBody : extistingWaterBodies )
-      m_names.add( waterBody.getName() );
+
+    if( existingWaterBodies != null )
+    {
+      for( final WaterBody waterBody : existingWaterBodies )
+        m_names.add( waterBody.getName() );
+    }
   }
 
   @Override
@@ -106,7 +110,7 @@ public class WaterBodyImportStatusLabelProvider extends ColumnLabelProvider
       if( combinedStatus.size() == 1 )
         return combinedStatus.getAllStati()[0];
 
-      return combinedStatus.asMultiStatusOrOK( Messages.getString("WaterBodyImportStatusLabelProvider.1") ); //$NON-NLS-1$
+      return combinedStatus.asMultiStatusOrOK( Messages.getString( "WaterBodyImportStatusLabelProvider.1" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

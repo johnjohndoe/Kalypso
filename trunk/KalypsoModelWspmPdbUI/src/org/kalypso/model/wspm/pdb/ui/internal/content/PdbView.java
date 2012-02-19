@@ -48,6 +48,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -473,5 +475,16 @@ public class PdbView extends ViewPart implements IConnectionViewer
       return null;
 
     return m_pdbConnection.getInfo();
+  }
+
+  @Override
+  public IStructuredSelection getSelection( )
+  {
+    // thread safe
+    final ConnectionViewer viewer = m_connectionViewer;
+    if( viewer == null )
+      return StructuredSelection.EMPTY;
+
+    return viewer.getSelection();
   }
 }
