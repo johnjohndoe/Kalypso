@@ -40,58 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.wspm;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.operation.IRunnableContext;
-import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.pdb.connect.IPdbConnection;
-import org.kalypso.model.wspm.pdb.connect.IPdbSettings;
-import org.kalypso.model.wspm.pdb.db.OpenConnectionThreadedOperation;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 
 /**
  * @author Gernot Belger
  */
-public class ConnectionChooserData extends AbstractModelObject
+public class UpdatePdbCrossSectionsData extends ConnectionChooserData
 {
-  public static final String PROPERTY_SETTINGS = "settings"; //$NON-NLS-1$
+  public static final String PROPERTY_UPDATE_COMMENTS = "updateComments"; //$NON-NLS-1$
 
-  private IPdbSettings m_settings = null;
+  private boolean m_updateComments = true;
 
-  private IPdbConnection m_connection;
+  private IProfileFeature[] m_profiles;
 
-  public IPdbSettings getSettings( )
+  private TuhhReach m_reach;
+
+  public void setUpdateComments( final boolean updateComments )
   {
-    return m_settings;
+    final boolean oldValue = updateComments;
+
+    m_updateComments = updateComments;
+
+    firePropertyChange( PROPERTY_UPDATE_COMMENTS, oldValue, updateComments );
   }
 
-  public void setSettings( final IPdbSettings settings )
+  public boolean getUpdateComments( )
   {
-    final IPdbSettings oldValue = settings;
-
-    m_settings = settings;
-
-    firePropertyChange( PROPERTY_SETTINGS, oldValue, settings );
+    return m_updateComments;
   }
 
-  public IStatus doConnect( final IRunnableContext context )
+  public void setSelectedProfiles( final IProfileFeature[] profiles )
   {
-    final IPdbSettings settings = getSettings();
-
-    final OpenConnectionThreadedOperation operation = new OpenConnectionThreadedOperation( settings, false );
-    final IStatus result = RunnableContextHelper.execute( context, true, true, operation );
-
-    m_connection = operation.getConnection();
-
-    return result;
+    m_profiles = profiles;
   }
 
-  public IPdbConnection getConnection( )
+  public IProfileFeature[] getSelectedProfiles( )
   {
-    return m_connection;
+    return m_profiles;
   }
 
-  public void setConnection( final IPdbConnection connection )
+  public void setReach( final TuhhReach reach )
   {
-    m_connection = connection;
+    m_reach = reach;
+  }
+
+  public TuhhReach getReach( )
+  {
+    return m_reach;
   }
 }

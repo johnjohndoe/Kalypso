@@ -99,6 +99,11 @@ public final class PdbUiUtils
     return view;
   }
 
+  public static IConnectionViewer getConnectionViewer( final IWorkbenchWindow window )
+  {
+    return new FindViewRunnable<PdbView>( PdbView.ID, window, true ).execute();
+  }
+
   public static IConnectionViewer getConnectionViewerChecked( final IWorkbench workbench ) throws ExecutionException
   {
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
