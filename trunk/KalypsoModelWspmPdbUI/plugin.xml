@@ -154,6 +154,14 @@
           name="%wizard.name.0">
           <description>%wizard.description.0</description>
       </wizard>
+      <wizard
+          id="org.kalypso.model.wspm.pdb.ui.internal.wspm.UpdatePdbCrossSectionsWizard"
+          class="org.kalypso.model.wspm.pdb.ui.internal.wspm.UpdatePdbCrossSectionsWizard"
+          icon="icons/wspmLight.gif"
+          category="pdbWizardsCategory"
+          name="%UpdatePdbCrossSectionsWizard.name">
+          <description>%UpdatePdbCrossSectionsWizard.description</description>
+      </wizard>
   </extension>
   <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
         <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.LocalDataProjectExport">
@@ -383,6 +391,20 @@
                 </and>
             </with>
           </and>
+       </enablement>
+    </wizardEnablement>
+    <wizardEnablement wizardID="org.kalypso.model.wspm.pdb.ui.internal.wspm.UpdatePdbCrossSectionsWizard">
+       <enablement>
+            <with variable="selection">
+                <and>>
+                    <count value="1"/>
+                    <iterate operator="and" ifEmpty="false">
+                        <or>
+                            <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm.tuhh}ReachWspmTuhhSteadyState" />
+                        </or>
+                    </iterate>
+                </and>
+            </with>
        </enablement>
     </wizardEnablement>
   </extension>
