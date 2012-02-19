@@ -167,6 +167,7 @@ public class PdbContentPage extends WizardPage implements IConnectionViewer
     return null;
   }
 
+  @Override
   public IStructuredSelection getSelection( )
   {
     return m_contentControl.getSelection();

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.ui.internal.admin.waterbody.imports;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,6 +55,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.connect.command.GetPdbList;
 import org.kalypso.model.wspm.pdb.db.PdbInfo;
 import org.kalypso.model.wspm.pdb.db.mapping.WaterBody;
+import org.kalypso.model.wspm.pdb.ui.internal.PdbUiUtils;
 import org.kalypso.model.wspm.pdb.ui.internal.content.ElementSelector;
 import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
 
@@ -64,6 +66,8 @@ import org.kalypso.model.wspm.pdb.ui.internal.content.IConnectionViewer;
  */
 public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
 {
+  private IConnectionViewer m_viewer;
+
   @Override
   protected WaterBody[] initData( final IWorkbenchPart part, final IStructuredSelection selection )
   {
@@ -73,14 +77,9 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     try
     {
       /* Check the viewer. */
-      if( !(part instanceof IConnectionViewer) )
-        throw new IllegalStateException( "Part must be of the type IConnectionViewer..." ); //$NON-NLS-1$
+      m_viewer = PdbUiUtils.getConnectionViewerChecked( part );
 
-      /* Cast. */
-      final IConnectionViewer viewer = (IConnectionViewer) part;
-
-      /* Get the connection. */
-      final IPdbConnection connection = viewer.getConnection();
+      final IPdbConnection connection = m_viewer.getConnection();
 
       /* Open the session. */
       session = connection.openSession();
@@ -96,9 +95,9 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
 
       return existingWaterbodies;
     }
-    catch( final PdbConnectException ex )
+    catch( final PdbConnectException | ExecutionException ex )
     {
-      // TODO
+      // TODO Error handling
       ex.printStackTrace();
 
       return new WaterBody[] {};
@@ -110,9 +109,6 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     }
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -123,14 +119,8 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
     final WritableSet selectedWaterBodies = data.getSelectedWaterBodies();
     final WaterBody[] waterBodies = (WaterBody[]) selectedWaterBodies.toArray( new WaterBody[selectedWaterBodies.size()] );
 
-    /* Get the workbench part. */
-    final IWorkbenchPart part = getPart();
-    if( (part == null) || !(part instanceof IConnectionViewer) )
-      throw new IllegalStateException( "Part must be of the type IConnectionViewer..." ); //$NON-NLS-1$
-
     /* Get the connection. */
-    final IConnectionViewer viewer = (IConnectionViewer) part;
-    final IPdbConnection connection = viewer.getConnection();
+    final IPdbConnection connection = m_viewer.getConnection();
 
     /* Create the operation. */
     final ICoreRunnableWithProgress operation = new ImportWaterBodiesOperation( waterBodies, data, connection );
@@ -149,7 +139,7 @@ public class ImportWaterBodiesWizard extends AbstractImportWaterBodiesWizard
       selector.addWaterBodyName( waterBodies[0].getName() );
 
     /* Reload the data. */
-    viewer.reload( selector );
+    m_viewer.reload( selector );
 
     return !status.matches( IStatus.ERROR );
   }
