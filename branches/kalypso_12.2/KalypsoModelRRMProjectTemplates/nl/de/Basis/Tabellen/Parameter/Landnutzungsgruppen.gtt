@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+  <layer featurePath="landuseMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="../../.models/parameter.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+    <column alignment="16384" editable="true" format="" name="description" width="487" />
+    <column alignment="16384" editable="false" format="" name="name" width="100" />
+    <column alignment="16384" editable="true" format="" name="idealLandUsePeriodLink" width="131" />
+    <column alignment="16384" editable="true" format="" name="sealingLink" width="131" />
+    <sort inverse="false" propertyName="name" />
+  </layer>
+</gistableview>
+

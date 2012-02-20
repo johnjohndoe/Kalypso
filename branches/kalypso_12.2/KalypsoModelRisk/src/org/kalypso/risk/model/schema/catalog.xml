@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
+    <!-- 
+        Component Dictionaries
+    -->
+    <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:languages" uri="schemata/dict/dict_languageDef.gml"/>
+    <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:riskresultstat" uri="schemata/dict/dict_risk_result_statistic.gml"/>
+    
+    <!--  Feature Styling -->
+    
+	<catalog:system systemId="urn:style:sld:risk:damage:specific" uri="resources/styles/SpecificDamagePotential.sld" />
+    
+    <catalog:system
+        systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_rasterDataModel:AnnualCoverage:swtimage:default"
+        uri="resources/AnnualCoverage.gif" />
+    
+    <!-- Deprecated: we use the styles from the templates now, as the user should be able to edit the style.
+        Still here, as we might have older models that still use these styles
+     -->
+	<catalog:system systemId="urn:style:sld:risk:inundation:waterlevel" uri="resources/styles/WaterlevelCoverage.sld" />
+
+    <!-- Used in Planer-Client -->  
+	<catalog:system systemId="urn:style:sld:risk:inundation:differences" uri="resources/styles/WaterlevelDifferences.sld" />
+	<catalog:system systemId="urn:style:sld:risk:zones:results" uri="resources/styles/RiskZonesCoverage.sld" />
+	<catalog:system systemId="urn:style:sld:risk:result:differences" uri="resources/styles/RiskResultDifferences.sld" />
+    
+</catalog:catalog>

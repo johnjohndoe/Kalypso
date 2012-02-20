@@ -1,0 +1,29 @@
+<!-- removed DTD reference - otherwise jaxb tries to connect to the referenced oasis web site -->
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+  <!-- Some old schemas used to import older models of version 11.6 -->
+  <uri name="org.kalypso.na.control" uri="schema/gml/11.6/control.xsd" />
+  <uri name="org.kalypso.namodell.control" uri="schema/gml/11.6/nacontrol.xsd" />
+  <uri name="http://org.kalypso.ombrometer" uri="schema/gml/11.6/ombrometer.xsd" />
+
+  <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" uri="schema/gml/timeseriesManagement.xsd" />
+  <uri name="http://kalypso.sorgeforge.net/schemata/hydrology/catchmentModel" uri="schema/gml/catchmentModel.xsd" />
+
+  <uri name="org.kalypso.na.control_v2" uri="schema/gml/control.xsd" />
+  <uri name="http://www.tuhh.de/kalypsoNA" uri="schema/gml/namodell.xsd" />
+  <uri name="org.kalypso.namodell.control_v2" uri="schema/gml/nacontrol.xsd" />
+  <uri name="http://www.tuhh.de/hydrotop" uri="schema/gml/hydrotop.xsd" />
+  <uri name="http://www.tuhh.de/parameter" uri="schema/gml/parameter.xsd" />
+  <uri name="http://www.tuhh.de/synthN" uri="schema/gml/synthN.xsd" />
+  <uri name="http://www.tuhh.de/initialValues" uri="schema/gml/initialValues.xsd" />
+  <uri name="http://www.tuhh.de/NAFortranLog" uri="schema/gml/NAFortranLog.xsd" />
+  <uri name="http://kalypso.sorgeforge.net/schema/gml/hydrology/optimize" uri="schema/gml/naoptimize.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/landuse" uri="schema/gml/landuse.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/pedologie" uri="schema/gml/pedologie.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/geologie" uri="schema/gml/geologie.xsd" />
+  <uri name="http://sourceforge.kalypso.org/schema/gml/hydrology/suds" uri="schema/gml/suds.xsd" />
+
+  <public publicId="urn:ogc:gml:kalypso:model:rrm:stationClasses" uri="catalog/rrmStationClasses.gml" />
+
+</catalog>
