@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSection;
 import org.kalypso.model.wspm.pdb.db.mapping.State;
 import org.kalypso.model.wspm.pdb.ui.internal.WspmPdbUiPlugin;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 
 /**
@@ -88,7 +89,7 @@ public class UpdatePdbCrossSectionsOperation implements ICoreRunnableWithProgres
     if( connection == null )
     {
       /* Happens in WspmLight perspective, if connection was not opened in database view */
-      final String message = String.format( "Not connected to database, please open a connection first in the database view." );
+      final String message = String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_0" ) ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
     }
 
@@ -101,12 +102,12 @@ public class UpdatePdbCrossSectionsOperation implements ICoreRunnableWithProgres
       /* Fetch the right state from database */
       final TuhhReach reach = m_data.getReach();
       final String stateName = reach.getName();
-      final String queryString = String.format( "from State where name='%s'", stateName );
+      final String queryString = String.format( "from State where name='%s'", stateName ); //$NON-NLS-1$
       final Query query = session.createQuery( queryString );
       final List< ? > list = query.list();
       if( list.size() == 0 )
       {
-        final String message = String.format( "State '%s' does not exist in database.", stateName );
+        final String message = String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_2" ), stateName ); //$NON-NLS-1$
         return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, message );
       }
 
@@ -123,18 +124,18 @@ public class UpdatePdbCrossSectionsOperation implements ICoreRunnableWithProgres
       final IStatusCollector log = new StatusCollector( WspmPdbUiPlugin.PLUGIN_ID );
       final IProfileFeature[] sections = m_data.getSelectedProfiles();
       for( final IProfileFeature profileFeature : sections )
-        log.add( updateRemoteInstance( session, profileFeature ) );
+        log.add( updateRemoteInstance( profileFeature ) );
 
       transaction.commit();
 
       session.close();
 
-      return log.asMultiStatus( "Update database" );
+      return log.asMultiStatus( Messages.getString( "UpdatePdbCrossSectionsOperation_3" ) ); //$NON-NLS-1$
     }
     catch( final PdbConnectException e )
     {
       e.printStackTrace();
-      final String message = String.format( "Failed to retreive existing cross sections from database" );
+      final String message = String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_4" ) ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, message, e );
     }
     catch( final HibernateException e )
@@ -154,7 +155,7 @@ public class UpdatePdbCrossSectionsOperation implements ICoreRunnableWithProgres
         }
       }
 
-      final String message = String.format( "Failed to write changes to database" );
+      final String message = String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_5" ) ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, WspmPdbUiPlugin.PLUGIN_ID, message, e );
     }
     finally
@@ -163,15 +164,15 @@ public class UpdatePdbCrossSectionsOperation implements ICoreRunnableWithProgres
     }
   }
 
-  private IStatus updateRemoteInstance( final Session session, final IProfileFeature profileFeature ) throws HibernateException
+  private IStatus updateRemoteInstance( final IProfileFeature profileFeature ) throws HibernateException
   {
-    final String profileLabel = String.format( "%.4f", profileFeature.getBigStation() );
+    final String profileLabel = String.format( "%.4f", profileFeature.getBigStation() ); //$NON-NLS-1$
     final String name = profileFeature.getName();
 
     final CrossSection section = m_sectionHash.get( name );
     if( section == null )
     {
-      final String message = String.format( "%s: section with name '%s' not found in database", profileLabel, name );
+      final String message = String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_7" ), profileLabel, name ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, WspmPdbUiPlugin.PLUGIN_ID, message );
     }
 
@@ -186,9 +187,9 @@ public class UpdatePdbCrossSectionsOperation implements ICoreRunnableWithProgres
     // session.persist( section );
 
     if( changed )
-      return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s: data updated", profileLabel ) );
+      return new Status( IStatus.INFO, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_8" ), profileLabel ) ); //$NON-NLS-1$
     else
-      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( "%s: no changes", profileLabel ) );
+      return new Status( IStatus.OK, WspmPdbUiPlugin.PLUGIN_ID, String.format( Messages.getString( "UpdatePdbCrossSectionsOperation_9" ), profileLabel ) ); //$NON-NLS-1$
   }
 
   private void buildSectionsHash( final Collection<CrossSection> existingCrossSections )

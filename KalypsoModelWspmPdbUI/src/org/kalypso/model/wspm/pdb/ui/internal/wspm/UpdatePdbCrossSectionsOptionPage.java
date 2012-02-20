@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.model.wspm.pdb.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,8 +66,8 @@ public class UpdatePdbCrossSectionsOptionPage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Options" );
-    setDescription( "This page shows the available options for updating the cross sections in the database." );
+    setTitle( Messages.getString("UpdatePdbCrossSectionsOptionPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("UpdatePdbCrossSectionsOptionPage_1") ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -87,8 +88,8 @@ public class UpdatePdbCrossSectionsOptionPage extends WizardPage
   private void createCommentOption( final Composite parent )
   {
     final Button checkbox = new Button( parent, SWT.CHECK );
-    checkbox.setText( "Update comments" );
-    checkbox.setToolTipText( "If enabled, the comments of all selected cross sections will be updated." );
+    checkbox.setText( Messages.getString("UpdatePdbCrossSectionsOptionPage_2") ); //$NON-NLS-1$
+    checkbox.setToolTipText( Messages.getString("UpdatePdbCrossSectionsOptionPage_3") ); //$NON-NLS-1$
     checkbox.setEnabled( false );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( checkbox );
