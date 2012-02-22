@@ -473,6 +473,10 @@ public class FlowRelationUtilitites
     {
       final GM_Object geom = element.getFeature().getDefaultGeometryPropertyValue();
 
+      //sad to say, that for now we could have null geoms, so we need this check
+      if (geom == null)
+        continue;
+      
       // TODO: random grab distance here....
       if( geom.distance( geom ) < 0.001 )
       {
