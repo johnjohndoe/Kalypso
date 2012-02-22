@@ -26,19 +26,17 @@ ALTER TABLE "document"
       REFERENCES water_body (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE;
 
-
-
 ALTER TABLE Point ADD COLUMN Roughness_Factor numeric (8,5);
 COMMENT ON COLUMN Point.Roughness_Factor IS 'factor to apply to roughness value';
 ALTER TABLE pdb.point
    ALTER COLUMN roughness_k_value TYPE numeric(10,3);
-COMMENT ON COLUMN pdb.point.roughness.k_value IS '[m]'
+COMMENT ON COLUMN point.roughness_k_value IS '[m]';
 
 ALTER TABLE Roughness ADD COLUMN Color character varying(10);
 COMMENT ON COLUMN Roughness.Color IS 'color (hex)';
 ALTER TABLE pdb.roughness
    ALTER COLUMN k_value TYPE numeric(10,3);
-COMMENT ON COLUMN pdb.roughness.k_value IS '[m]'
+COMMENT ON COLUMN Roughness.k_value IS '[m]';
 
 ALTER TABLE Vegetation ADD COLUMN Color character varying(10);
 COMMENT ON COLUMN Vegetation.Color IS 'color (hex)';
