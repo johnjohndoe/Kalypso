@@ -110,7 +110,7 @@ public class CalculationResultConverter
 
     if( !calcFile.isFile() )
     {
-      m_log.add( IStatus.WARNING, "Length section missing for calculation: %s (%s)", null, bean.getName(), calcFilename );
+      m_log.add( IStatus.INFO, "Results not available for calculation: %s (%s)", null, bean.getName(), calcFilename );
       return;
     }
 

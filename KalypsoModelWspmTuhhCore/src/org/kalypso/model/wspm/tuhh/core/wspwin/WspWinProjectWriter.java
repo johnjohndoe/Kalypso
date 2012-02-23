@@ -127,7 +127,7 @@ public class WspWinProjectWriter
       final String prfName = formatPrfName( prfCount );
 
       final String waterName = waterBody.getName();
-      final ProfileBean profileBean = m_wspCfg.createProfile( waterName, "export", station.doubleValue(), prfName ); //$NON-NLS-1$
+      final ProfileBean profileBean = m_wspCfg.createProfile( waterName, "export", station, prfName ); //$NON-NLS-1$
       profileIndex.put( profileFeature, profileBean );
 
       /* Add real profile */
