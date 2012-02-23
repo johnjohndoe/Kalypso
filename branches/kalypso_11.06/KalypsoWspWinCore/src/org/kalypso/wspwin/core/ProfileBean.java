@@ -42,6 +42,7 @@ package org.kalypso.wspwin.core;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +60,11 @@ public class ProfileBean
 {
   private final String m_waterName;
   private final String m_stateName;
-  private final double m_station;
+
+  private final BigDecimal m_station;
   private final String m_fileName;
 
-  public ProfileBean( final String waterName, final String stateName, final double station, final String fileName )
+  public ProfileBean( final String waterName, final String stateName, final BigDecimal station, final String fileName )
   {
     m_waterName = waterName;
     m_stateName = stateName;
@@ -75,7 +77,7 @@ public class ProfileBean
     return m_fileName;
   }
 
-  public double getStation( )
+  public BigDecimal getStation( )
   {
     return m_station;
   }
@@ -109,7 +111,7 @@ public class ProfileBean
       try
       {
         final String waterName = tokenizer.nextToken();
-        final double station = Double.parseDouble( tokenizer.nextToken() );
+        final BigDecimal station = new BigDecimal( tokenizer.nextToken() );
         /* final String vzk = */tokenizer.nextToken(); // Verzweigungskennung
         /* final String mfb = */tokenizer.nextToken(); // Mehrfeldbrückenkennung
         final String zustandName = tokenizer.nextToken();

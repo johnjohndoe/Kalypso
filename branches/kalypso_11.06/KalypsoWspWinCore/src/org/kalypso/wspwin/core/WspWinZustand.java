@@ -46,6 +46,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -154,8 +155,8 @@ public class WspWinZustand
 
       try
       {
-        final double stationFrom = Double.parseDouble( tokenizer.nextToken() );
-        final double stationTo = Double.parseDouble( tokenizer.nextToken() );
+        final BigDecimal stationFrom = new BigDecimal( tokenizer.nextToken() );
+        final BigDecimal stationTo = new BigDecimal( tokenizer.nextToken() );
         final double distanceVL = Double.parseDouble( tokenizer.nextToken() );
         final double distanceHF = Double.parseDouble( tokenizer.nextToken() );
         final double distanceVR = Double.parseDouble( tokenizer.nextToken() );
@@ -196,17 +197,17 @@ public class WspWinZustand
       final ProfileBean fromProfile = m_profileBeans.get( i );
       final ProfileBean toProfile = m_profileBeans.get( i + 1 );
 
-      final double stationFrom = fromProfile.getStation();
-      final double stationTo = toProfile.getStation();
+      final BigDecimal stationFrom = fromProfile.getStation();
+      final BigDecimal stationTo = toProfile.getStation();
 
-      minStation = Math.min( minStation, stationFrom );
-      minStation = Math.min( minStation, stationTo );
-      maxStation = Math.max( maxStation, stationFrom );
-      maxStation = Math.max( maxStation, stationTo );
+      minStation = Math.min( minStation, stationFrom.doubleValue() );
+      minStation = Math.min( minStation, stationTo.doubleValue() );
+      maxStation = Math.max( maxStation, stationFrom.doubleValue() );
+      maxStation = Math.max( maxStation, stationTo.doubleValue() );
 
       final String fileNameFrom = fromProfile.getFileName();
       final String fileNameTo = toProfile.getFileName();
-      final double distance = Math.abs( stationTo - stationFrom );
+      final double distance = Math.abs( stationTo.doubleValue() - stationFrom.doubleValue() );
       final ZustandSegmentBean segment = new ZustandSegmentBean( stationFrom, stationTo, fileNameFrom, fileNameTo, distance, distance, distance );
       m_segmentBeans.add( segment );
     }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wspwin.core;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 /**
@@ -49,15 +50,16 @@ import java.util.Locale;
  */
 public class ZustandSegmentBean
 {
-  private final double m_stationFrom;
-  private final double m_stationTo;
+  private final BigDecimal m_stationFrom;
+
+  private final BigDecimal m_stationTo;
   private final String m_fileNameFrom;
   private final String m_fileNameTo;
   private final double m_distanceVL;
   private final double m_distanceHF;
   private final double m_distanceVR;
 
-  public ZustandSegmentBean( final double stationFrom, final double stationTo, final String fileNameFrom, final String fileNameTo, final double distanceVL, final double distanceHF, final double distanceVR )
+  public ZustandSegmentBean( final BigDecimal stationFrom, final BigDecimal stationTo, final String fileNameFrom, final String fileNameTo, final double distanceVL, final double distanceHF, final double distanceVR )
   {
     m_stationFrom = stationFrom;
     m_stationTo = stationTo;
@@ -93,12 +95,12 @@ public class ZustandSegmentBean
     return m_fileNameTo;
   }
 
-  public double getStationFrom( )
+  public BigDecimal getStationFrom( )
   {
     return m_stationFrom;
   }
 
-  public double getStationTo( )
+  public BigDecimal getStationTo( )
   {
     return m_stationTo;
   }
