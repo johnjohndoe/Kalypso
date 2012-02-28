@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -11,8 +12,10 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxisRange;
+import org.kalypso.ogc.sensor.impl.ITupleModelChangeListener;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 
@@ -253,5 +256,17 @@ public class DataCenterTuppleModel implements ITupleModel
   public boolean isEmpty( )
   {
     return size() == 0;
+  }
+
+  @Override
+  public void addChangeListener( final ITupleModelChangeListener listener )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public IStatus execute( final ITupleModelTransaction transaction )
+  {
+    throw new UnsupportedOperationException();
   }
 }
