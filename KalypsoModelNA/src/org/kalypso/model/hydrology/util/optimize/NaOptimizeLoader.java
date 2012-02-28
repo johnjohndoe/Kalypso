@@ -41,11 +41,15 @@
 package org.kalypso.model.hydrology.util.optimize;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.Iterator;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
-import org.apache.xpath.XPathAPI;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.internal.NaOptimizeData;
@@ -127,6 +131,7 @@ public class NaOptimizeLoader
       throw e;
     }
     catch( final Exception e )
+
     {
       e.printStackTrace();
       throw new SimulationException( STR_FEHLER_BEI_LESEN_DER_OPTIMIERUNGSKONFIGURATION, e );
@@ -139,7 +144,39 @@ public class NaOptimizeLoader
       return null;
 
     final Document dom = XMLHelper.getAsDOM( m_optimizeDataLocation, true );
-    return XPathAPI.selectNodeList( dom, m_optimizePath, dom );
+
+    final XPathFactory xpFactory = XPathFactory.newInstance();
+    final javax.xml.xpath.XPath xp = xpFactory.newXPath();
+    final NamespaceContext namespaceContext = new NamespaceContext()
+    {
+      @Override
+      public String getNamespaceURI( final String prefix )
+      {
+        // REALLY UGLY: xpath does not know how to handle the default namespace; so we can only use an xpath with a
+        // prefix; but this prefix is not defined in the gml, so it is never found.
+        // We assume that the used prefix is always 'gnModell', but is meant to be the default namespace
+        // TODO: we should get the prefix mapping from the input as well
+        if( "gnModell".equals( prefix ) )
+          return dom.getDocumentElement().getNamespaceURI();
+
+        return dom.lookupNamespaceURI( prefix );
+      }
+
+      @Override
+      public String getPrefix( final String namespaceURI )
+      {
+        return dom.lookupPrefix( namespaceURI );
+      }
+
+      @Override
+      public Iterator< ? > getPrefixes( final String namespaceURI )
+      {
+        return Collections.emptyList().iterator();
+      }
+    };
+
+    xp.setNamespaceContext( namespaceContext );
+    return (NodeList) xp.evaluate( m_optimizePath, dom, XPathConstants.NODESET );
   }
 
   private AutoCalibration loadCalibration( ) throws JAXBException
