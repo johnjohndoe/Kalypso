@@ -167,8 +167,8 @@ public class ProfileAltitudeValidator
   {
     if( begin < 0 )
       return new HashMap<Integer, Double>();
-    int startPos = begin < end ? begin : end;
-    int lastPos = begin < end ? end : begin;
+    final int startPos = begin < end ? begin : end;
+    final int lastPos = begin < end ? end : begin;
 
     final IRecord[] points = m_profil.getPoints();
     final HashMap<Integer, Double> result = new HashMap<Integer, Double>( lastPos - startPos + 1 );
