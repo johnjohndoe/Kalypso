@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
 	<Chart id="ls">
-		<Title  horizontalTextAnchor="CENTER" insetBottom="5">%CHART_TITLE%</Title>
+		<Title horizontalTextAnchor="CENTER" insetBottom="5">%CHART_TITLE% </Title>
 		<Description />
 		<Layers>
 			<DerivedLayer id="soil">
@@ -93,10 +93,12 @@
 			</DerivedLayer>
 			<DerivedLayer id="WspFixation" visible="true">
 				<LayerReference url="urn:kalypso:chart:configuration:LengthSectionTemplate#template_layer"></LayerReference>
-				<Parameter value="%MODELL_GML%" name="href" />
-				<Parameter value="" name="gxlpath" />
-				<Parameter value="%MODELL_OBS_ID%" name="observationId" />
-				<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
+				<Parameters>
+					<Parameter value="%MODELL_GML%" name="href" />
+					<Parameter value="" name="gxlpath" />
+					<Parameter value="%MODELL_OBS_ID%" name="observationId" />
+					<Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="targetComponentId" />
+				</Parameters>
 				<Title>Wasserspiegel-Fixierung</Title>
 				<Styles>
 					<StyleReference>urn:kalypso:chart:configuration:LengthSectionTemplate#line_WspFixation</StyleReference>
