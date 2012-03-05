@@ -304,7 +304,7 @@ public class Gml2RMA10SConv implements INativeIDProvider, I2DMeshConverter
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new IOException();
+      throw new IOException(e);
     }
     finally
     {
