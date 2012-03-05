@@ -1,5 +1,6 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -61,6 +62,18 @@ public class LengthSectionWeirLayer extends TupleResultLineLayer
       return String.format( "%-12s %.4f", new Object[] { targetOKComponentLabel, ok } );//$NON-NLS-1$
     return String.format( "%-12s %.4f%n%s", new Object[] { targetOKComponentLabel, ok, tr.get( index ).getValue( commentIndex ) } );//$NON-NLS-1$
 
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    final String title = super.getTitle();
+
+    final int index = title.indexOf( '(' ); //$NON-NLS-1$ // remove '(Oberkante)' from String
+    if( index > 0 )
+      return StringUtils.chomp( title.substring( 0, index - 1 ) );
+
+    return title;
   }
 
   @Override

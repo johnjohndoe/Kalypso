@@ -1,5 +1,6 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -104,6 +105,18 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
         return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
     }
     return null;
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    final String title = super.getTitle();
+
+    final int index = title.indexOf( '(' ); //$NON-NLS-1$ // remove '(Oberkante)' from String
+    if( index > 0 )
+      return StringUtils.chomp( title.substring( 0, index - 1 ) );
+
+    return title;
   }
 
   private Rectangle getScreenRect( final int i )

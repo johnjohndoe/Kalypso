@@ -44,10 +44,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -58,7 +61,6 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -102,7 +104,7 @@ public class LengthSectionCreator
 
   private void addProfile( final IProfil profil, final TupleResult lsResult, final Double precision )
   {
-    final IComponent compHeight = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+// final IComponent compHeight = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int indexHeight = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final IRecord station = lsResult.createRecord();
@@ -112,65 +114,74 @@ public class LengthSectionCreator
     final String desc = profil.getName();
 
     station.setValue( 10, StringUtils.isBlank( desc ) ? null : desc ); //$NON-NLS-1$
-    station.setValue( 0, valueToBigDecimal( profil.getStation() ), true );// Station
+    station.setValue( 0, valueToBigDecimal( profil.getStation() ) );// Station
     // Kennung
     // TODO: IWspmConstants.LENGTH_SECTION_PROPERTY_TYPE
     final Double minHeightValue = ProfileVisitors.findLowestPoint( profil ).getBreite();
     final BigDecimal minHeightDecimal = minHeightValue == null ? null : ProfilUtil.stationToBigDecimal( minHeightValue );
-    station.setValue( 2, minHeightDecimal, true ); // Ground
+    station.setValue( 2, minHeightDecimal ); // Ground
     final IProfilPointMarker[] mbv = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
     final IProfilPointMarker[] mtf = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
 
-    // Devider
-    if( mbv.length == 2 )
+    profil.doTransaction( new IProfileTransaction()
     {
-      final BigDecimal boLi = valueToBigDecimal( mbv[0].getPoint().getValue( indexHeight ) );
-      final BigDecimal boRe = valueToBigDecimal( mbv[1].getPoint().getValue( indexHeight ) );
-      station.setValue( 3, boLi, true ); // BOE_LI
-      station.setValue( 4, boRe, true ); // BOE_RE
-      station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ), true ); // H_BV
-    }
-    else if( mtf.length == 2 )
-    {
-      final BigDecimal boLi = valueToBigDecimal( mtf[0].getPoint().getValue( indexHeight ) );
-      final BigDecimal boRe = valueToBigDecimal( mtf[1].getPoint().getValue( indexHeight ) );
-      station.setValue( 3, boLi, true ); // BOE_LI
-      station.setValue( 4, boRe, true ); // BOE_RE
-      station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ), true ); // H_BV
-    }
+      @Override
+      public IStatus execute( final IProfil profile )
+      {
+        // Devider
+        if( mbv.length == 2 )
+        {
+          final BigDecimal boLi = valueToBigDecimal( mbv[0].getPoint().getValue( indexHeight ) );
+          final BigDecimal boRe = valueToBigDecimal( mbv[1].getPoint().getValue( indexHeight ) );
+          station.setValue( 3, boLi ); // BOE_LI
+          station.setValue( 4, boRe ); // BOE_RE
+          station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ) ); // H_BV
+        }
+        else if( mtf.length == 2 )
+        {
+          final BigDecimal boLi = valueToBigDecimal( mtf[0].getPoint().getValue( indexHeight ) );
+          final BigDecimal boRe = valueToBigDecimal( mtf[1].getPoint().getValue( indexHeight ) );
+          station.setValue( 3, boLi );// BOE_LI
+          station.setValue( 4, boRe ); // BOE_RE
+          station.setValue( 11, valueToBigDecimal( Math.min( boLi.doubleValue(), boRe.doubleValue() ) ) ); // H_BV
+        }
 
-    // Profile Objects
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
+        // Profile Objects
+        final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
 
-    // FIXME: calculation of uk/ok/ok-weir values still not satisfactory...we probably need to calculate mean values
-    if( building instanceof BuildingWehr )
-    {
-      final Double sectionMaxValue = getMaxValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, precision );
-      final BigDecimal sectionMaxDecimal = valueToBigDecimal( sectionMaxValue );
-      station.setValue( 5, sectionMaxDecimal, true ); // BridgeOK
-    }
-    else if( building instanceof BuildingBruecke )
-    {
-      // TODO: use getter for width
-      final Object buildingWidth = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-      final Double ukValue = getMaxValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, precision );
-      final Double okValue = getMinValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, precision );
+        // FIXME: calculation of uk/ok/ok-weir values still not satisfactory...we probably need to calculate mean values
+        if( building instanceof BuildingWehr )
+        {
+          final Double sectionMaxValue = getMaxValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, precision );
+          final BigDecimal sectionMaxDecimal = valueToBigDecimal( sectionMaxValue );
+          station.setValue( 5, sectionMaxDecimal ); // BridgeOK
+        }
+        else if( building instanceof BuildingBruecke )
+        {
+          // TODO: use getter for width
+          final Object buildingWidth = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+          final Double ukValue = getMaxValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, precision );
+          final Double okValue = getMinValueFor( profil, indexHeight, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, precision );
 
-      station.setValue( 7, valueToBigDecimal( ukValue ), true ); // BridgeUK
-      station.setValue( 6, valueToBigDecimal( okValue ), true ); // BridgeOK
-      station.setValue( 8, valueToBigDecimal( buildingWidth ), true ); // BridgeWidth
-    }
-    else if( building != null )
-    {
-      // TODO: introduce common interface for durchlässe and use getter for width
-      final Object buildingWidth = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
-      station.setValue( 9, valueToBigDecimal( buildingWidth ), true ); // ROHR_DN
-    }
+          station.setValue( 7, valueToBigDecimal( ukValue ) ); // BridgeUK
+          station.setValue( 6, valueToBigDecimal( okValue ) ); // BridgeOK
+          station.setValue( 8, valueToBigDecimal( buildingWidth ) ); // BridgeWidth
+        }
+        else if( building != null )
+        {
+          // TODO: introduce common interface for durchlässe and use getter for width
+          final Object buildingWidth = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
+          station.setValue( 9, valueToBigDecimal( buildingWidth ) ); // ROHR_DN
+        }
+
+        return Status.OK_STATUS;
+      }
+    } );
 
     lsResult.add( station );
   }
 
-  private static Double getMaxValueFor( final IProfil profil, final int indexHeight, final String component, final double precision )
+  protected static Double getMaxValueFor( final IProfil profil, final int indexHeight, final String component, final double precision )
   {
     final Double[] values = ProfilUtil.getInterpolatedValues( profil, component );
     final IRecord[] points = profil.getPoints();
@@ -201,7 +212,7 @@ public class LengthSectionCreator
     return maxValue;
   }
 
-  private static Double getMinValueFor( final IProfil profil, final int indexHeight, final String component, final double precision )
+  protected static Double getMinValueFor( final IProfil profil, final int indexHeight, final String component, final double precision )
   {
     final Double[] values = ProfilUtil.getInterpolatedValues( profil, component );
     final IRecord[] points = profil.getPoints();
@@ -231,7 +242,7 @@ public class LengthSectionCreator
     return minValue;
   }
 
-  private static BigDecimal valueToBigDecimal( final Object value )
+  protected static BigDecimal valueToBigDecimal( final Object value )
   {
     if( value instanceof BigDecimal )
       return (BigDecimal) value;
