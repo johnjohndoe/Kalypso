@@ -453,6 +453,9 @@ public class ResultManager implements ISimulation1D2DConstants
   private FileObject[] find2dFiles( final FileObject remoteWorking ) throws IOException
   {
     final List<FileObject> resultList = new ArrayList<FileObject>();
+    if( remoteWorking == null )
+      return null;
+    
     final FileObject[] children = remoteWorking.getChildren();
     for( final FileObject child : children )
     {
