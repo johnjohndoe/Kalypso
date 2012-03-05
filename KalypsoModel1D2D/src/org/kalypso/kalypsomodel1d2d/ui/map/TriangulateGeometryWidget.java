@@ -101,6 +101,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -574,6 +575,17 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
 
   protected void finishGeometry( ) throws GM_Exception
   {
+    if( m_breaklines != null )
+    {
+      final GM_Curve[] curves = m_breaklines.getAllCurves();
+      if( curves != null )
+      {
+        if( curves.length > 0 )
+          m_breaklineGeometryBuilder.reset();
+      }
+
+    }
+
     if( m_boundaryGeom == null )
       return;
 
