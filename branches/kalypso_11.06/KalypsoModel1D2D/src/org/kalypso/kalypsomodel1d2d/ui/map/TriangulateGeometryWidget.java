@@ -199,11 +199,11 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_featureList = theme == null ? null : theme.getFeatureList();
 
-    final String mode = m_modePolygon ? Messages.getString( "RefineFEGeometryWidget.0" ) : Messages.getString( "RefineFEGeometryWidget.1" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String modeTooltip = String.format( Messages.getString( "RefineFEGeometryWidget.2" ), mode ); //$NON-NLS-1$
+    final String mode = m_modePolygon ? Messages.getString( "TriangulateGeometryWidget.3" ) : Messages.getString( "TriangulateGeometryWidget.4" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String modeTooltip = String.format( Messages.getString( "TriangulateGeometryWidget.2" ), mode ); //$NON-NLS-1$
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     m_boundaryGeometryBuilder = new PolygonGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
@@ -399,7 +399,23 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
   public void keyPressed( final KeyEvent e )
   {
     if( e.getKeyCode() == KeyEvent.VK_SPACE )
-      m_modePolygon = !m_modePolygon;
+    {
+      final String mode = m_modePolygon ? Messages.getString( "TriangulateGeometryWidget.4" ) : Messages.getString( "TriangulateGeometryWidget.3" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String modeTooltip = String.format( Messages.getString( "TriangulateGeometryWidget.2" ), mode ); //$NON-NLS-1$
+      
+      if (m_modePolygon == true)
+      {
+        m_modePolygon = !m_modePolygon;
+        m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
+      }
+      else
+      {
+        m_modePolygon = !m_modePolygon;
+        m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.TriangulateGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
+      }
+      repaintMap();
+    }
+    
     else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
     else if( e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
@@ -561,8 +577,8 @@ public class TriangulateGeometryWidget extends AbstractWidget implements IWidget
     if( m_boundaryGeom == null )
       return;
 
-    if( m_warning )
-      return;
+//    if( m_warning )
+//      return;
 
     if( m_featureList == null )
       return;

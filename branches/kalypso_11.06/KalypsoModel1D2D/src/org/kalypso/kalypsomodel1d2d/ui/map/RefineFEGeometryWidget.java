@@ -178,8 +178,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
     m_theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
-    final String mode = m_modePolygon ? Messages.getString("RefineFEGeometryWidget.0") : Messages.getString("RefineFEGeometryWidget.1"); //$NON-NLS-1$ //$NON-NLS-2$
-    final String modeTooltip = String.format( Messages.getString("RefineFEGeometryWidget.2"), mode ); //$NON-NLS-1$
+    final String mode = m_modePolygon ? Messages.getString( "RefineFEGeometryWidget.0" ) : Messages.getString( "RefineFEGeometryWidget.1" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String modeTooltip = String.format( Messages.getString( "RefineFEGeometryWidget.2" ), mode ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2" ) + modeTooltip ); //$NON-NLS-1$
 
@@ -361,6 +361,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
     }
     else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
+    else if( e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
+      m_geometryBuilder.removeLastPoint();
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
       convertRefinementToModel();
     else
@@ -696,6 +698,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
   private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object theGeom )
   {
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
+
+    // *** Why this??
     GM_Object selectGeometry = theGeom;
     try
     {
@@ -708,6 +712,9 @@ public class RefineFEGeometryWidget extends AbstractWidget
     catch( final GM_Exception e )
     {
     }
+
+    // *****
+
     final GM_Envelope envelope = selectGeometry.getEnvelope();
     final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
     final List result = featureList.query( envelope, null );
