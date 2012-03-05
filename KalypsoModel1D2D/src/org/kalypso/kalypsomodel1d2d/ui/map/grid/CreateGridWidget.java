@@ -164,12 +164,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       panel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
-  @SuppressWarnings("unchecked")
   @Override
-  public void leftClicked( final Point p )
+  public void leftPressed( final Point p )
   {
     final Object newNode = checkNewNode( p );
     if( newNode instanceof IFE1D2DNode )
