@@ -71,7 +71,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * Manages the (de-)selection of several profiles on the map view by drwaing a rectangle
+ * Manages the (de-)selection of several profiles on the map view by drawing a rectangle
  * 
  * @author Thomas Jung
  */
