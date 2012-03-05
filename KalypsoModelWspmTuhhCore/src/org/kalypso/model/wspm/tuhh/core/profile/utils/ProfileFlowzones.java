@@ -204,7 +204,7 @@ public final class ProfileFlowzones
 
   private static void setCommonValue( final IProfil profile, final IComponent component, final int p1, final int p2, final Object value )
   {
-    final PointPropertyEdit changes = new PointPropertyEdit( profile.getPoints( p1, p2 ), component, value );
+    final PointPropertyEdit changes = new PointPropertyEdit( profile, profile.getPoints( p1, p2 ), component, value );
     final ProfilOperation operation = new ProfilOperation( "updating profile properties", profile, changes, true ); //$NON-NLS-1$
     new ProfilOperationJob( operation ).schedule();
   }

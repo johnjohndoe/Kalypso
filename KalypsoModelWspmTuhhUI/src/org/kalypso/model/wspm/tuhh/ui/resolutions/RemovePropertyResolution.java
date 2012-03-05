@@ -70,9 +70,6 @@ public class RemovePropertyResolution extends AbstractProfilMarkerResolution
     this( -1 );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public boolean resolve( final IProfil profile )
   {
@@ -87,9 +84,6 @@ public class RemovePropertyResolution extends AbstractProfilMarkerResolution
     return true; // profile.getResult().removeComponent( m_componentIndex );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
-   */
   @Override
   public String getSerializedParameter( )
   {
@@ -97,9 +91,6 @@ public class RemovePropertyResolution extends AbstractProfilMarkerResolution
     return super.getSerializedParameter() + ";" + m_componentIndex; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
-   */
   @Override
   public void setData( final String parameterStream )
   {
