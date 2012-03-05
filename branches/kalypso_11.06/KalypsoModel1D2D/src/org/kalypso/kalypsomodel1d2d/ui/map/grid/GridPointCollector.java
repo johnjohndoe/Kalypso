@@ -72,7 +72,7 @@ public class GridPointCollector
   public static final int SIDE_LEFT = 1;
 
   public static final int SIDE_RIGHT = 3;
-  
+
   private static final double DISTANCE_DEF = 0.01;
 
   private int actualSideKey;
@@ -132,7 +132,15 @@ public class GridPointCollector
 
     Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.3" ) ); //$NON-NLS-1$
 
+    final GM_Point previousAdded = (GM_Point) m_sides[actualSideKey].getLastPoint();
+    if( previousAdded != null )
+    {
+      if( previousAdded.getX() == p.getX() && previousAdded.getY() == p.getY() )
+        return previousAdded;
+    }
+    
     final GM_Point lastAdded = (GM_Point) m_sides[actualSideKey].addPoint( p );
+
     final GM_Point autocompleted = autoComplete();
     if( autocompleted != null )
       return finishSide();
