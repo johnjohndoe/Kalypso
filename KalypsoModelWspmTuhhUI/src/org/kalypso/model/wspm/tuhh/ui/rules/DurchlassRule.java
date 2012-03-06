@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
 import org.kalypso.observation.result.IComponent;
@@ -61,7 +61,7 @@ public class DurchlassRule extends AbstractValidatorRule
   @Override
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( profil, IProfileBuilding.class );
+    final IProfileBuilding building = WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class );
     if( building == null )
       return;
 

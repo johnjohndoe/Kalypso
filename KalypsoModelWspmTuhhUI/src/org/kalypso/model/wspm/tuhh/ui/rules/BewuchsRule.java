@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 import org.kalypso.observation.result.IComponent;
@@ -103,7 +103,7 @@ public class BewuchsRule extends AbstractValidatorRule
     final IProfileRecord[] rightForeland = profil.getPoints( rightIndex, points.length - 1 );
     final IProfileRecord[] riverTube = profil.getPoints( leftIndex, rightIndex - 1 );
 
-    if( !Arrays.isEmpty( riverTube ) && WspmProfileHelper.getBuilding( profil, IProfileBuilding.class ) == null )
+    if( !Arrays.isEmpty( riverTube ) && WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class ) == null )
     {
       int i = leftIndex;
       for( final IRecord point : riverTube )
@@ -128,7 +128,7 @@ public class BewuchsRule extends AbstractValidatorRule
       }
       final int lastIndex = leftIndex > 0 ? leftIndex - 1 : leftIndex;
 
-      if( WspmProfileHelper.getBuilding( profil, IProfileBuilding.class ) == null )
+      if( WspmSohlpunkte.getBuilding( profil, IProfileBuilding.class ) == null )
       {
         final boolean leftForelandHasValues = validateArea( profil, collector, leftForeland );
         final boolean rightForelandHasValues = validateArea( profil, collector, rightForeland );

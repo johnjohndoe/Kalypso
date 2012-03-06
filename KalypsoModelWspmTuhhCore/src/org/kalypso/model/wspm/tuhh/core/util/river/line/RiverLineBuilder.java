@@ -50,14 +50,17 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.referencing.FactoryException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.math.Vector2D;
 
 /**
@@ -176,6 +179,20 @@ public class RiverLineBuilder
 
   private Coordinate findLowPoint( final IProfil profil, final JTSTransformer transformer ) throws Exception
   {
+    try
+    {
+      final double width = WspmSohlpunkte.findSohlpunkt( profil );
+      final GM_Point gmp = WspmProfileHelper.getGeoPosition( width, profil );
+      final Point point = (Point) JTSAdapter.export( gmp );
+
+      return transformer.transform( point.getCoordinate() );
+    }
+    catch( final Throwable t )
+    {
+      // nothing to do
+    }
+
+    // fallback
     final IProfileRecord lowestPoint = ProfileVisitors.findLowestPoint( profil );
     if( lowestPoint == null )
       return null;

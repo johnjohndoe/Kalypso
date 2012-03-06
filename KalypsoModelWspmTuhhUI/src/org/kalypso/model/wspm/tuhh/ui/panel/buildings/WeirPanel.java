@@ -63,7 +63,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
@@ -126,7 +126,7 @@ public class WeirPanel extends AbstractProfilView
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final BuildingWehr building = WspmProfileHelper.getBuilding( getProfile(), BuildingWehr.class );
+        final BuildingWehr building = WspmSohlpunkte.getBuilding( getProfile(), BuildingWehr.class );
         if( building == null )
           return;
 
@@ -168,7 +168,7 @@ public class WeirPanel extends AbstractProfilView
       return;
 
     final IProfil profile = getProfile();
-    final BuildingWehr building = WspmProfileHelper.getBuilding( profile, BuildingWehr.class );
+    final BuildingWehr building = WspmSohlpunkte.getBuilding( profile, BuildingWehr.class );
     if( building == null )
       return;
 
