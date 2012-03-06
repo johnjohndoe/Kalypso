@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.internal.wspm;
 
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.pdb.gaf.IGafConstants;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -69,7 +69,7 @@ public class OKPartBuilder implements IPartBuilder
   }
 
   @Override
-  public String guessCode( final IRecord[] records, final int i )
+  public String guessCode( final IProfileRecord[] records, final int i )
   {
     if( i == 0 )
       return IGafConstants.CODE_OKAN;
