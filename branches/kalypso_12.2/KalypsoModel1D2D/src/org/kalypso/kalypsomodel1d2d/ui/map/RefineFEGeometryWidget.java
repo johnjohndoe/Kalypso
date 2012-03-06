@@ -360,6 +360,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     }
     else if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
       reinit();
+    else if( e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
+      m_geometryBuilder.removeLastPoint();
     else if( e.getKeyCode() == KeyEvent.VK_ENTER )
       convertRefinementToModel();
     else
@@ -695,6 +697,8 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
   private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object theGeom )
   {
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
+
+    // *** Why this??
     GM_Object selectGeometry = theGeom;
     try
     {
@@ -707,6 +711,9 @@ public class RefineFEGeometryWidget extends DeprecatedMouseWidget
     catch( final GM_Exception e )
     {
     }
+
+    // *****
+
     final GM_Envelope envelope = selectGeometry.getEnvelope();
     final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
     final List result = featureList.query( envelope, null );

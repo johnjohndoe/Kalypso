@@ -46,6 +46,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -298,7 +299,7 @@ public class WspCfg
   /**
    * Creates a profile ands it to the global definition (profproj)
    */
-  public ProfileBean createProfile( final String waterName, final String stateName, final double station, final String fileName )
+  public ProfileBean createProfile( final String waterName, final String stateName, final BigDecimal station, final String fileName )
   {
     final ProfileBean bean = new ProfileBean( waterName, stateName, station, fileName );
     m_profProj.add( bean );
