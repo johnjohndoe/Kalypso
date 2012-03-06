@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.pdb.connect.PdbConnectException;
 import org.kalypso.model.wspm.pdb.db.mapping.CrossSectionPart;
@@ -127,7 +128,7 @@ public class CheckinPartOperation
 
     final String heightComponentID = m_partBuilder.getHeightComponent();
 
-    final IRecord[] records = m_profil.getPoints();
+    final IProfileRecord[] records = m_profil.getPoints();
     final List<Coordinate> lineCrds = new ArrayList<Coordinate>( records.length );
     for( int i = 0; i < records.length; i++ )
     {
@@ -243,9 +244,9 @@ public class CheckinPartOperation
     return roughness;
   }
 
-  private String guessCode( final String code, final IRecord[] records, final int i )
+  private String guessCode( final String code, final IProfileRecord[] records, final int i )
   {
-    // TODO: not perfekt, if markers or similar have changed, we should also guess the code again
+    // TODO: not perfect, if markers or similar have changed, we should also guess the code again
     // else this information gets lost
     if( !StringUtils.isBlank( code ))
       return code;
