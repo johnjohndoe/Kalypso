@@ -42,16 +42,20 @@ package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -69,19 +73,13 @@ public class RoughnessLayer extends AbstractProfilLayer
     super( IWspmTuhhConstants.LAYER_RAUHEIT, profil, targetRangeProperty, styleProvider );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
-   */
   @Override
-  public Rectangle getHoverRect( final IRecord profilPoint )
+  public Rectangle getHoverRect( final IProfileRecord profilPoint )
   {
     // TODO get HoverInfo
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -92,8 +90,6 @@ public class RoughnessLayer extends AbstractProfilLayer
 
     if( profil == null )
       return;
-    final IRecord[] profilPoints = profil.getPoints();
-    final int len = profilPoints.length;
 
     final int baseLine = getTargetAxis().getScreenHeight();
     final FullRectangleFigure fr = new FullRectangleFigure();
@@ -103,23 +99,67 @@ public class RoughnessLayer extends AbstractProfilLayer
     fr.setStyle( as );
     final IAxis dom = getDomainAxis();
     final IAxis tar = getTargetAxis();
-    final int index = profil.indexOfProperty( getTargetComponent() );
-    final int breite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    for( int i = 0; i < len - 1; i++ )
+
+    final IProfileRecord[] points = profil.getPoints();
+
+    for( final IProfileRecord point : points )
     {
-      final Double dX1 = (Double) profilPoints[i].getValue( breite );
-      final Double dY1 = (Double) profilPoints[i].getValue( index );
-      final Double dX2 = (Double) profilPoints[i + 1].getValue( breite );
-      if( dX1 == null || dX2 == null || dY1 == null )
-      {
+
+      final Double px1 = point.getBreite();
+      final Double py1 = getValue( point );
+      final IProfileRecord next = point.getNextPoint();
+      if( Objects.isNull( next ) )
         continue;
-      }
-      final int x1 = dom.numericToScreen( dX1 );
-      final int y1 = tar.numericToScreen( dY1 );
-      final int x2 = dom.numericToScreen( dX2 );
+
+      final Double px2 = next.getBreite();
+      if( Objects.isNull( px1, py1, px2 ) )
+        continue;
+
+      final int x1 = dom.numericToScreen( px1 );
+      final int y1 = tar.numericToScreen( py1 );
+      final int x2 = dom.numericToScreen( px2 );
+
       fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
       fr.paint( gc );
     }
+
+  }
+
+  private Double getValue( final IProfileRecord point )
+  {
+    /**
+     * TODO: 3 RoughnessLayer are initiated by default: ks, kst and roughness class layers. if a profile defines both ks
+     * and kst values so we must show booth roughness class values, too. at the moment only roughness class ks values
+     * will be shown!
+     */
+
+    final Double factor = point.getRoughnessFactor();
+    final IComponent component = getTargetComponent();
+
+    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( component.getId() ) )
+    {
+      final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
+      if( Objects.isNull( clazz ) )
+        return null;
+
+      final IComponent ks = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+      final IComponent kst = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+      if( Objects.allNotNull( ks, clazz.getKsValue() ) )
+        return clazz.getKsValue().doubleValue() * factor;
+      else if( Objects.allNotNull( kst, clazz.getKstValue() ) )
+        return clazz.getKstValue().doubleValue() * factor;
+    }
+    else
+    {
+      final Object value = point.getValue( component );
+      if( value instanceof Number )
+      {
+        final Number number = (Number) value;
+        return number.doubleValue() * factor;
+      }
+    }
+
+    return null;
   }
 
   /**

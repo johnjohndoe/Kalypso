@@ -64,7 +64,6 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
@@ -93,15 +92,11 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     final IProfil profil = getProfil();
-    final IRecord point = ProfileVisitors.findNearestPoint( profil, toNumeric( newPos ).getX() );
+    final IProfileRecord point = ProfileVisitors.findNearestPoint( profil, toNumeric( newPos ).getX() );
     final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
@@ -110,11 +105,6 @@ public class PointMarkerLayer extends AbstractProfilLayer
 
     return new EditInfo( this, null, hoverFigure, dragStartData.getData(), getTooltipInfo( point ), dragStartData.getPosition() );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
 
   @Override
   public final void executeDrop( final Point point, final EditInfo dragStartData )
@@ -171,7 +161,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public Rectangle getHoverRect( final IRecord profilPoint )
+  public Rectangle getHoverRect( final IProfileRecord profilPoint )
   {
     final int bottom = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.BOTTOM.doubleValue() );
     final int top = getCoordinateMapper().getTargetAxis().numericToScreen( ALIGNMENT.TOP.doubleValue() ) + m_offset;
@@ -208,7 +198,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
   }
 
   @Override
-  public String getTooltipInfo( final IRecord point )
+  public String getTooltipInfo( final IProfileRecord point )
   {
     final Point2D p = getPoint2D( point );
     try

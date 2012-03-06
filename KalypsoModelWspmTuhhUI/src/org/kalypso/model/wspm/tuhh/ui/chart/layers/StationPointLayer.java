@@ -41,9 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -57,7 +57,7 @@ public class StationPointLayer extends PointsLineLayer
   }
 
   @Override
-  public String getTooltipInfo( final IRecord point )
+  public String getTooltipInfo( final IProfileRecord point )
   {
     final String tp = super.getTooltipInfo( point );
     final String s = getProfil().getComment();
