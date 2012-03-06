@@ -143,9 +143,7 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
   {
     final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.LAYER_RAUHEIT + POINT, PointStyle.class ); //$NON-NLS-1$
     psKS.getStroke().setColor( new RGB( 0, 0, 0 ) );
-    psKS.setInlineColor( new RGB( 0, 0, 0 ) );
-    psKS.setAlpha( 50 );
-
+    psKS.setInlineColor( new RGB( 137, 62, 16 ) );
+    psKS.setAlpha( 75 );
   }
-
 }

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
@@ -62,12 +63,15 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
  */
 public class RoughnessLayer extends AbstractProfilLayer
 {
+  private IPointStyle m_styleClazzes;
+
   public RoughnessLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_RAUHEIT, profil, targetRangeProperty, styleProvider );
@@ -87,7 +91,6 @@ public class RoughnessLayer extends AbstractProfilLayer
       return;
 
     final IProfil profil = getProfil();
-
     if( profil == null )
       return;
 
@@ -104,12 +107,12 @@ public class RoughnessLayer extends AbstractProfilLayer
 
     for( final IProfileRecord point : points )
     {
-
-      final Double px1 = point.getBreite();
-      final Double py1 = getValue( point );
       final IProfileRecord next = point.getNextPoint();
       if( Objects.isNull( next ) )
         continue;
+
+      final Double px1 = point.getBreite();
+      final Double py1 = getValue( point );
 
       final Double px2 = next.getBreite();
       if( Objects.isNull( px1, py1, px2 ) )
@@ -125,6 +128,27 @@ public class RoughnessLayer extends AbstractProfilLayer
 
   }
 
+  @Override
+  protected IPointStyle getPointStyle( )
+  {
+    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( getTargetComponent().getId() ) )
+    {
+      if( Objects.isNotNull( m_styleClazzes ) )
+        return m_styleClazzes;
+
+      m_styleClazzes = StyleUtils.getDefaultPointStyle();
+      m_styleClazzes.getStroke().setColor( new RGB( 0, 0, 0 ) );
+      m_styleClazzes.setInlineColor( new RGB( 137, 62, 16 ) );
+      m_styleClazzes.setAlpha( 40 );
+
+      return m_styleClazzes;
+
+    }
+
+    // TODO Auto-generated method stub
+    return super.getPointStyle();
+  }
+
   private Double getValue( final IProfileRecord point )
   {
     /**
@@ -133,31 +157,31 @@ public class RoughnessLayer extends AbstractProfilLayer
      * will be shown!
      */
 
+    /**
+     * TODO 2: like calculation core, displaying / handling of roughness is configruated by a flag (use roughness
+     * classes, use plain values)
+     */
+
     final Double factor = point.getRoughnessFactor();
     final IComponent component = getTargetComponent();
 
-    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( component.getId() ) )
+    final Object value = point.getValue( component );
+    if( value instanceof Number )
     {
-      final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
-      if( Objects.isNull( clazz ) )
-        return null;
+      final Number number = (Number) value;
+      return number.doubleValue() * factor;
+    }
 
-      final IComponent ks = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-      final IComponent kst = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-      if( Objects.allNotNull( ks, clazz.getKsValue() ) )
-        return clazz.getKsValue().doubleValue() * factor;
-      else if( Objects.allNotNull( kst, clazz.getKstValue() ) )
-        return clazz.getKstValue().doubleValue() * factor;
-    }
-    else
-    {
-      final Object value = point.getValue( component );
-      if( value instanceof Number )
-      {
-        final Number number = (Number) value;
-        return number.doubleValue() * factor;
-      }
-    }
+    final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
+    if( Objects.isNull( clazz ) )
+      return null;
+
+    final IComponent ks = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent kst = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+    if( Objects.allNotNull( ks, clazz.getKsValue() ) )
+      return clazz.getKsValue().doubleValue() * factor;
+    else if( Objects.allNotNull( kst, clazz.getKstValue() ) )
+      return clazz.getKstValue().doubleValue() * factor;
 
     return null;
   }

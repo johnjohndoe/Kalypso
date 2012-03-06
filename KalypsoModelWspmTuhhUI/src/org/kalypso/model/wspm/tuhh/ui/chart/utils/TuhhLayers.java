@@ -70,8 +70,11 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 /**
  * @author Dirk Kuch
  */
-public class TuhhLayers
+public final class TuhhLayers
 {
+  private TuhhLayers( )
+  {
+  }
 
   public static IProfilChartLayer createBridgetLayer( final IProfil profil, final CoordinateMapper mapper, final LayerStyleProviderTuhh styleProvider )
   {
@@ -103,9 +106,10 @@ public class TuhhLayers
   {
     final RoughnessLayer ks = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, styleProvider );
     final RoughnessLayer kst = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, styleProvider );
-    final RoughnessLayer clazz = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, styleProvider );
+// final RoughnessLayer clazz = new RoughnessLayer( profil, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS,
+// styleProvider ); //TODO see todo in RoughnessLayser.getValue()
 
-    final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { kst, ks, clazz };
+    final IProfilChartLayer[] subLayers = new IProfilChartLayer[] { kst, ks };
 
     return new RoughnessTheme( profil, subLayers, mapper );
   }
@@ -116,7 +120,6 @@ public class TuhhLayers
     final StationLineLayer stationLineLayer = new StationLineLayer( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE );
 
     return new CrossSectionTheme( profil, new IProfilChartLayer[] { stationLineLayer, stationPointLayer }, mapper );
-
   }
 
   public static IProfilChartLayer createVegetationLayer( final IProfil profil, final CoordinateMapper cmLeft, final LayerStyleProviderTuhh styleProvider )
