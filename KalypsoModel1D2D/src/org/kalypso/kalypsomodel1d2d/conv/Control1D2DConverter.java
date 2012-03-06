@@ -131,14 +131,14 @@ public class Control1D2DConverter
   private boolean m_isBCTupleResultIndexCached = false;
 
   private final IGeoLog m_log;
-  
-  private List< Date > m_listDateSteps = null;
+
+  private List<Date> m_listDateSteps = null;
 
   private final ICalculationUnit m_calculationUnit;
 
   private boolean m_boolPrintWindLineDone;
 
-  private IFeatureWrapperCollection<IWindDataModelSystem> m_windSystemsToWrite;
+  private final IFeatureWrapperCollection<IWindDataModelSystem> m_windSystemsToWrite;
 
   public Control1D2DConverter( final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log, final IFeatureWrapperCollection<IWindDataModelSystem> pWindSystemCollection )
   {
@@ -166,7 +166,7 @@ public class Control1D2DConverter
           m_unitBoundaryConditions.add( boundaryCondition );
       }
     }
-    m_listDateSteps = new ArrayList< Date >();
+    m_listDateSteps = new ArrayList<Date>();
   }
 
   public void writeR10File( final OutputStream outputStream ) throws CoreException, IOException
@@ -223,14 +223,14 @@ public class Control1D2DConverter
     formatter.format( "INCSTR  %s%n", ISimulation1D2DConstants.BUILDING_File ); //$NON-NLS-1$
 
     /* We only write a wind field, if we want to consider wind */
-    if (m_controlModel.getHasWindDrag())
+    if( m_controlModel.getHasWindDrag() )
     {
       formatter.format( "AWINDIN3%s%n", ISimulation1D2DConstants.WIND_RMA10_File ); //$NON-NLS-1$
       formatter.format( "INSRCORD%s%n", ISimulation1D2DConstants.WIND_RMA10_COORDS_File ); //$NON-NLS-1$
     }
 
     /* We always write a building file, even if it is empty. */
-//    formatter.format( "INSSTR  %s%n", ISimulation1D2DConstants.SURFACE_TRACTTION_File ); //$NON-NLS-1$
+    //    formatter.format( "INSSTR  %s%n", ISimulation1D2DConstants.SURFACE_TRACTTION_File ); //$NON-NLS-1$
 
     formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
@@ -285,7 +285,7 @@ public class Control1D2DConverter
 
     // C6
     if( m_controlModel.getIcpu() != 0 )
-      formatter.format( "C6%14d%8d%8d%8d%8.5f%8d%n", 0, 0, 0, m_controlModel.getIcpu(), m_controlModel.getHasWindDrag()? m_controlModel.getChi():0.0, m_controlModel.getMarshFrictionDistr()); //$NON-NLS-1$
+      formatter.format( "C6%14d%8d%8d%8d%8.5f%8d%n", 0, 0, 0, m_controlModel.getIcpu(), m_controlModel.getHasWindDrag() ? m_controlModel.getChi() : 0.0, m_controlModel.getMarshFrictionDistr() ); //$NON-NLS-1$
     // C7
     formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
 
@@ -316,13 +316,13 @@ public class Control1D2DConverter
       final int roughnessAsciiID = m_nativeIDProvider.getConversionID( rClass );
 
       final int iedsw = m_controlModel.getIEDSW();
-      Double[] eddy = rClass.getViscosities( iedsw ); // for empty tbmin* 1000 for all eddies 
+      Double[] eddy = rClass.getViscosities( iedsw ); // for empty tbmin* 1000 for all eddies
       eddy = checkViscosities( eddy );
       final Double ks = rClass.getKs();
       final Double axAy = rClass.getAxAy();
       final Double dp = rClass.getDp();
 
-      if( ks == null || ks.isNaN())
+      if( ks == null || ks.isNaN() )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7", rClass.getName() );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
@@ -339,19 +339,21 @@ public class Control1D2DConverter
       writeEDBlock( formatter, buildingID, 0.0, 0.0, 0.0, 0.0 );
   }
 
-  private Double[] checkViscosities( Double[] eddy )
+  private Double[] checkViscosities( final Double[] eddy )
   {
-    Double[] eddyRes = new Double[ eddy.length ]; 
-    Double lDoubleDefaultViscosity = m_controlModel.getTBMIN();
+    final Double[] eddyRes = new Double[eddy.length];
+    final Double lDoubleDefaultViscosity = m_controlModel.getTBMIN();
 
     for( int i = 0; i < eddy.length; i++ )
     {
-      Double double1 = eddy[i];
-      if( double1.equals( 0.0 ) ){
-        eddyRes[ i ] = lDoubleDefaultViscosity * 1000;
+      final Double double1 = eddy[i];
+      if( double1.equals( 0.0 ) )
+      {
+        eddyRes[i] = lDoubleDefaultViscosity * 1000;
       }
-      else{
-        eddyRes[ i ] = double1;
+      else
+      {
+        eddyRes[i] = double1;
       }
     }
     return eddyRes;
@@ -441,7 +443,7 @@ public class Control1D2DConverter
     formatter.format( "ECL%n" ); //$NON-NLS-1$
 
     if( m_controlModel.getIDNOPT() != 0 && m_controlModel.getIDNOPT() != -1 )
-      formatter.format( "MP %21.3f%8.3f%8.5f%8.2f%n", m_controlModel.getFixedMarshBottom()? 0.0:m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3(),m_controlModel.getFixedMarshBottom()?m_controlModel.getAC4():0.0); //$NON-NLS-1$
+      formatter.format( "MP %21.3f%8.3f%8.5f%8.2f%n", m_controlModel.getFixedMarshBottom() ? 0.0 : m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3(), m_controlModel.getFixedMarshBottom() ? m_controlModel.getAC4() : 0.0 ); //$NON-NLS-1$
 
     formatter.format( "ENDGEO%n" ); //$NON-NLS-1$
 
@@ -511,7 +513,7 @@ public class Control1D2DConverter
 
         final XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
-        m_listDateSteps.add( DateUtilities.toDate( cal ) );   
+        m_listDateSteps.add( DateUtilities.toDate( cal ) );
         // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
@@ -522,7 +524,7 @@ public class Control1D2DConverter
           final String uRVal = ((String) record.getValue( indexRelaxationsFaktor ));
           final XMLGregorianCalendar stepXMLGrCal = (XMLGregorianCalendar) record.getValue( indexTime );
           final Calendar stepCal = stepXMLGrCal.toGregorianCalendar();
-          m_listDateSteps.add( DateUtilities.toDate( stepXMLGrCal ) );   
+          m_listDateSteps.add( DateUtilities.toDate( stepXMLGrCal ) );
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36", stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
@@ -557,8 +559,8 @@ public class Control1D2DConverter
     final int dayOfYear;
     final double ihre;
 
-//    TimeZone displayTimeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
-    TimeZone displayTimeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+    // TimeZone displayTimeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
+    final TimeZone displayTimeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     Calendar kalypsoCalendarStep = Calendar.getInstance( displayTimeZone );
 
     // unsteady
@@ -614,7 +616,7 @@ public class Control1D2DConverter
     {
       final Integer buildingID = buildingData.getKey();
       final IFlowRelationship building = buildingData.getValue();
-      int buildingKind = 10;
+      final int buildingKind = 10;
       int lIntDirection = 0;
       if( building instanceof IBuildingFlowRelation )
       {
@@ -645,7 +647,8 @@ public class Control1D2DConverter
 
     // add other conti lines types as well (buildings)?
     // if( m_windSystemsToWrite != null && !m_windSystemsToWrite.isEmpty() && !m_boolPrintWindLineDone ){
-    if( m_controlModel.getHasWindDrag() && !m_boolPrintWindLineDone ){
+    if( m_controlModel.getHasWindDrag() && !m_boolPrintWindLineDone )
+    {
       formatter.format( "WVA          1.0     1.0       1%n" ); //$NON-NLS-1$
       m_boolPrintWindLineDone = true;
     }
@@ -714,11 +717,14 @@ public class Control1D2DConverter
             final Number result = (Number) tupleResultIndex.getValue( ordinateComponent, stepCal.getTime() );
             stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
           }
-          else{
-            try{
+          else
+          {
+            try
+            {
               stepValue = Double.parseDouble( boundaryCondition.getStationaryCondition() );
             }
-            catch (Exception e) {
+            catch( final Exception e )
+            {
               stepValue = Double.NaN;
             }
           }
@@ -734,7 +740,7 @@ public class Control1D2DConverter
               boundaryCondition.setHasDirection( true );
 
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "QC *%12d%8d%16.3e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+            formatter.format( "QC *%12d%8d%16.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
@@ -790,14 +796,16 @@ public class Control1D2DConverter
               boundaryCondition.setDirection( new BigInteger( "0" ) ); //$NON-NLS-1$
 
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
-            if( boundaryCondition.hasDirection() ){
+            if( boundaryCondition.hasDirection() )
+            {
               double infVel = 0.001;
               try
               {
                 infVel = boundaryCondition.getInflowVelocity();
               }
-              catch (Exception e) {
-                final IGeoStatus status = m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, Messages.getString("Control1D2DConverter.1"), boundaryCondition.getLocation(), e ); //$NON-NLS-1$
+              catch( final Exception e )
+              {
+                final IGeoStatus status = m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, Messages.getString( "Control1D2DConverter.1" ), boundaryCondition.getLocation(), e ); //$NON-NLS-1$
               }
               formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, infVel, Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
             }
@@ -819,7 +827,7 @@ public class Control1D2DConverter
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
-    List<Integer> lListFactors = getListParsedRelaxationFactor( uRVal, nitn );
+    final List<Integer> lListFactors = getListParsedRelaxationFactor( uRVal, nitn );
     // final int buffVal = 10 - (int) (uRVal * 10);
     for( int j = 0; j < nitn; j++ )
     {
@@ -834,10 +842,10 @@ public class Control1D2DConverter
     FormatterUtils.checkIoException( formatter );
   }
 
-  private List<Integer> getListParsedRelaxationFactor( String pStrVal, int pIntNumberIterations ) throws CoreException
+  private List<Integer> getListParsedRelaxationFactor( final String pStrVal, final int pIntNumberIterations ) throws CoreException
   {
-    List<Integer> lListFactorsRes = new ArrayList<Integer>();
-    List<Float> lListFactors = new ArrayList<Float>();
+    final List<Integer> lListFactorsRes = new ArrayList<Integer>();
+    final List<Float> lListFactors = new ArrayList<Float>();
     if( !isLoopFomatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) )
     {
       if( !isSeparatedValuesFormatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) )
@@ -860,24 +868,24 @@ public class Control1D2DConverter
    * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into
    * according to amount of steps values and put them into pListFactors as floats
    */
-  private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
+  private boolean isLoopFomatedFactor( final String pStrValue, final List<Float> pListFactors, final int pIntNumberIterations ) throws CoreException
   {
     final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
-    String lStrToCheck = pStrValue.trim().toLowerCase();
+    final String lStrToCheck = pStrValue.trim().toLowerCase();
     if( Pattern.matches( lStrRegex, lStrToCheck ) )
     {
-      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
-      float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
-      float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
+      final int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
+      final float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
+      final float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
       if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
-      float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
-      int lIntPer = (int) (pIntNumberIterations / (Math.abs( lFloatInc ) + 1));
+      final float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
+      final int lIntPer = (int) (pIntNumberIterations / (Math.abs( lFloatInc ) + 1));
       int lIntInc = 0;
-      float lFloatSignum = Math.signum( lFloatInc );
+      final float lFloatSignum = Math.signum( lFloatInc );
       for( int i = 1; i <= pIntNumberIterations; ++i )
       {
         pListFactors.add( (float) (lFloatStart + 0.1 * lIntInc * lFloatSignum) );
@@ -891,50 +899,52 @@ public class Control1D2DConverter
 
     return false;
   }
-  
-//  /**
-//   * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into according to 
-//   * amount of steps values and put them into pListFactors as floats
-//   *    
-//   * direct implementation of parsing the relaxation factor
-//   */
-//  private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
-//  {
-//    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
-//    String lStrToCheck = pStrValue.trim().toLowerCase();
-//    if( Pattern.matches( lStrRegex, lStrToCheck ) ){
-//      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
-//      float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
-//      float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
-//      if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
-//        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
-//        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
-//      }
-//      int lIntAllInc = Math.abs( ( int )( lFloatEnd * 10 ) - ( int )( lFloatStart * 10 ) );
-//      int lIntPer = ( pIntNumberIterations / ( lIntAllInc ) );
-//      int lIntIncDone = 0;
-//      float lFloatSignum = Math.signum( lFloatEnd - lFloatStart );
-//      for( int i = 1; i <= pIntNumberIterations; ++i ){
-//        float lFloatRes = (float) ( lFloatStart + 0.1 * lIntIncDone * lFloatSignum ); 
-//        pListFactors.add( lFloatRes ) ;
-//        if( (i) % lIntPer == 0 && lIntIncDone < lIntAllInc ){
-//          lIntAllInc++; 
-//          lIntIncDone++;
-//        }
-//      }
-//      return true;
-//    }
-//
-//    return false;
-//  }
+
+  // /**
+  // * checks if the given string value contains string of form "0.1 to 0.5" and if it is, parses it and expands it into
+  // according to
+  // * amount of steps values and put them into pListFactors as floats
+  // *
+  // * direct implementation of parsing the relaxation factor
+  // */
+  // private boolean isLoopFomatedFactor( String pStrValue, List<Float> pListFactors, int pIntNumberIterations ) throws
+  // CoreException
+  // {
+  //    final String lStrRegex = "[ \\t]*[0-9][.,][0-9][ \\t]*[tT][oO][ \\t]*[0-9][.,][0-9][ \\t]*"; //$NON-NLS-1$
+  // String lStrToCheck = pStrValue.trim().toLowerCase();
+  // if( Pattern.matches( lStrRegex, lStrToCheck ) ){
+  //      int lIntIndexSep = lStrToCheck.indexOf( "to" ); //$NON-NLS-1$
+  // float lFloatStart = getFloatFromSimpleFloatString( lStrToCheck.substring( 0, lIntIndexSep ).trim() );
+  // float lFloatEnd = getFloatFromSimpleFloatString( lStrToCheck.substring( lIntIndexSep + 2 ).trim() );
+  // if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 ){
+  //        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
+  // throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+  // }
+  // int lIntAllInc = Math.abs( ( int )( lFloatEnd * 10 ) - ( int )( lFloatStart * 10 ) );
+  // int lIntPer = ( pIntNumberIterations / ( lIntAllInc ) );
+  // int lIntIncDone = 0;
+  // float lFloatSignum = Math.signum( lFloatEnd - lFloatStart );
+  // for( int i = 1; i <= pIntNumberIterations; ++i ){
+  // float lFloatRes = (float) ( lFloatStart + 0.1 * lIntIncDone * lFloatSignum );
+  // pListFactors.add( lFloatRes ) ;
+  // if( (i) % lIntPer == 0 && lIntIncDone < lIntAllInc ){
+  // lIntAllInc++;
+  // lIntIncDone++;
+  // }
+  // }
+  // return true;
+  // }
+  //
+  // return false;
+  // }
 
   /**
    * checks if the given string value contains semicolon separated list of values and if it is parses it into
    * pListFactors as floats
    */
-  private boolean isSeparatedValuesFormatedFactor( final String pStrValue, final List<Float> pListFactors, int pIntNumberIterations ) throws CoreException
+  private boolean isSeparatedValuesFormatedFactor( final String pStrValue, final List<Float> pListFactors, final int pIntNumberIterations ) throws CoreException
   {
-    StringTokenizer lStringTokenizer = new StringTokenizer( pStrValue, ";" ); //$NON-NLS-1$
+    final StringTokenizer lStringTokenizer = new StringTokenizer( pStrValue, ";" ); //$NON-NLS-1$
     int lIntCounter = 0;
     float lFloatValAct = (float) 0.1;
     while( lIntCounter < pIntNumberIterations )
@@ -956,13 +966,13 @@ public class Control1D2DConverter
     {
       lFloatValue = Float.parseFloat( pStrFloat.trim() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       try
       {
         lFloatValue = Float.parseFloat( pStrFloat.trim().replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      catch( Exception e2 )
+      catch( final Exception e2 )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
@@ -987,7 +997,8 @@ public class Control1D2DConverter
    */
   private Date getFirstTimeStep( ) throws CoreException
   {
-    if( m_controlModel.isUnsteadySelected() == false ){
+    if( m_controlModel.isUnsteadySelected() == false )
+    {
       m_listDateSteps.add( new Date() );
       return m_listDateSteps.get( 0 );
     }
@@ -1009,7 +1020,7 @@ public class Control1D2DConverter
 
     final TupleResult owner = firstRecord.getOwner();
     final int indexTime = owner.indexOfComponent( compTime );
-    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );  
+    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );
   }
 
   public LinkedHashMap<Integer, IBoundaryCondition> getBoundaryConditionsIDProvider( )
@@ -1019,8 +1030,7 @@ public class Control1D2DConverter
 
   public final Date[] getListDateSteps( )
   {
-    return m_listDateSteps.toArray( new Date[ m_listDateSteps.size() ] );
+    return m_listDateSteps.toArray( new Date[m_listDateSteps.size()] );
   }
-  
-  
+
 }
