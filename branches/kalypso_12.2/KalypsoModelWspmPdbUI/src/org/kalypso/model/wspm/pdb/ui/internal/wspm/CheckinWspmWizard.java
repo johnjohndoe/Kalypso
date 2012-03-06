@@ -94,6 +94,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
 
   public CheckinWspmWizard( )
   {
+    setWindowTitle( Messages.getString( "CheckinWspmWizard.2" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -161,7 +162,8 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     final IWizardPage[] pages = wizard.getPages();
     for( final IWizardPage page : pages )
       addPage( page );
-        wizard.dispose();
+    
+    wizard.dispose();
   }
 
   @Override
@@ -221,7 +223,7 @@ public class CheckinWspmWizard extends Wizard implements IWorkbenchWizard
     final IStatus status = doPreinit( connection );
     if( !status.isOK() )
     {
-      new StatusDialog( getShell(), status, getWindowTitle() ).open();
+      StatusDialog.open( getShell(), status, getWindowTitle() );
       return false;
     }
 
