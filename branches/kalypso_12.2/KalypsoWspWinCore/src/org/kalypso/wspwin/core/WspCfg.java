@@ -63,7 +63,7 @@ import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of an wsp.cfg file
- * 
+ *
  * @author belger
  */
 public class WspCfg
@@ -218,6 +218,7 @@ public class WspCfg
       /* Read zusteande */
       for( final ZustandBean zustandBean : zustandBeans )
       {
+        // TODO: improve error handling: import completely fails if we get an error here
         final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
         m_zustaende.add( wspwinZustand );
       }

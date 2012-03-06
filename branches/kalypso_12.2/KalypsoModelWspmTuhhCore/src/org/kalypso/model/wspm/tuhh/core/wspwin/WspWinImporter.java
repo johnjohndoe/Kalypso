@@ -179,6 +179,7 @@ public final class WspWinImporter
       // /////////////////// //
       // Load WspWin Project //
       // /////////////////// //
+      // FIXME: add status of reading wspcfg to logStatus
       final WspCfg wspCfgBean = new WspCfg();
       wspCfgBean.read( wspwinDirectory );
 
