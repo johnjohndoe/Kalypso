@@ -145,7 +145,6 @@ public class RoughnessLayer extends AbstractProfilLayer
 
     }
 
-    // TODO Auto-generated method stub
     return super.getPointStyle();
   }
 
@@ -186,9 +185,6 @@ public class RoughnessLayer extends AbstractProfilLayer
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {

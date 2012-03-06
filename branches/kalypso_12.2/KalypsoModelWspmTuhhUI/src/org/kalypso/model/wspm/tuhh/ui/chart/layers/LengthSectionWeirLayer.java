@@ -23,10 +23,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 public class LengthSectionWeirLayer extends TupleResultLineLayer
 {
-  /**
-   * @see org.kalypso.chart.ext.observation.layer.TupleResultLineLayer#getTitle()
-   */
-
   public LengthSectionWeirLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
     super( provider, data, styleSet );
