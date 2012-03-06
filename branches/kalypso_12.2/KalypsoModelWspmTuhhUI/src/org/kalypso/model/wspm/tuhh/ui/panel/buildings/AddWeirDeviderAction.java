@@ -51,7 +51,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.Buildings;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 
@@ -87,7 +87,7 @@ class AddWeirDeviderAction extends Action
     {
       final Object objVal = marker.getValue();
 
-      final BuildingWehr building = WspmProfileHelper.getBuilding( m_profile, BuildingWehr.class );
+      final BuildingWehr building = WspmSohlpunkte.getBuilding( m_profile, BuildingWehr.class );
       if( building == null )
         return;
 

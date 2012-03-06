@@ -78,7 +78,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -150,7 +150,7 @@ public class CulvertPanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( m_text.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfile(), IProfileBuilding.class );
+            final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
             if( building == null )
               return;
 
@@ -176,7 +176,7 @@ public class CulvertPanel extends AbstractProfilView
       if( m_text == null || m_text.isDisposed() )
         return;
 
-      final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfile(), IProfileBuilding.class );
+      final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
       if( building == null )
         return;
 
@@ -204,7 +204,7 @@ public class CulvertPanel extends AbstractProfilView
 // TUHH Hack for tube cross section TRAPEZ,EI,MAUL,KREIS
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
       {
-        final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfile(), IProfileBuilding.class );
+        final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
         if( building != null )
         {
           final String buildingId = building.getId();
@@ -274,7 +274,7 @@ public class CulvertPanel extends AbstractProfilView
 
         final IProfileBuilding tube = (IProfileBuilding) selection.getFirstElement();
 
-        final IProfileBuilding old = WspmProfileHelper.getBuilding( getProfile(), IProfileBuilding.class );
+        final IProfileBuilding old = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
           tube.cloneValuesFrom( old );
@@ -283,7 +283,7 @@ public class CulvertPanel extends AbstractProfilView
       }
     } );
     m_toolkit.adapt( m_cmb.getCombo() );
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfile(), IProfileBuilding.class );
+    final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
     if( building != null )
     {
       m_cmb.setSelection( new StructuredSelection( m_culverts.get( building.getId() ) ) );
@@ -306,7 +306,7 @@ public class CulvertPanel extends AbstractProfilView
 
     m_lines = new ArrayList<PropertyLine>( 8 );
 
-    final IProfileBuilding building = WspmProfileHelper.getBuilding( getProfile(), IProfileBuilding.class );
+    final IProfileBuilding building = WspmSohlpunkte.getBuilding( getProfile(), IProfileBuilding.class );
     if( building == null )
       return;
 

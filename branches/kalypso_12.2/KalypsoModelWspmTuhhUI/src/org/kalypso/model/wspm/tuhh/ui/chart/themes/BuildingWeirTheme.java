@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.tuhh.core.util.river.line.WspmSohlpunkte;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.buildings.WeirPanel;
@@ -102,7 +102,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   {
     final IProfil profil = getProfil();
 
-    final BuildingWehr building = WspmProfileHelper.getBuilding( profil, BuildingWehr.class );
+    final BuildingWehr building = WspmSohlpunkte.getBuilding( profil, BuildingWehr.class );
     if( building == null )
       return;
 
