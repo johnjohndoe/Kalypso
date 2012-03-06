@@ -79,8 +79,6 @@ public class WeirPanel extends AbstractProfilView
 
   private final GridData m_deviderGroupData;
 
- // protected Label m_parameterLabel;
-
   private DeviderLine m_wehrStart;
 
   private DeviderLine m_wehrEnd;
@@ -150,7 +148,9 @@ public class WeirPanel extends AbstractProfilView
     final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
 
     m_wehrStart = new DeviderLine( m_toolkit, panel, leftTF, true, profile );
-    new ParameterLine( m_toolkit, panel, leftTF, false, profile );
+
+    if( leftTF != null )
+      new ParameterLine( m_toolkit, panel, leftTF, false, profile );
 
     // Wehrparameter Group
     m_deviderGroup = toolkit.createComposite( panel );
@@ -158,6 +158,7 @@ public class WeirPanel extends AbstractProfilView
     m_deviderGroup.setLayoutData( m_deviderGroupData );
 
     m_wehrEnd = new DeviderLine( m_toolkit, panel, rightTF, false, profile );
+
     updateControls();
     return panel;
   }
@@ -178,8 +179,13 @@ public class WeirPanel extends AbstractProfilView
     {
       m_wehrart.setSelection( new StructuredSelection( id ) );
     }
-    m_wehrStart.refresh();
-    m_wehrEnd.refresh();
+
+    if( m_wehrStart != null )
+      m_wehrStart.refresh();
+
+    if( m_wehrEnd != null )
+      m_wehrEnd.refresh();
+
     updateDeviderGroup( profile );
     m_deviderGroup.getParent().layout( true, true );
   }
