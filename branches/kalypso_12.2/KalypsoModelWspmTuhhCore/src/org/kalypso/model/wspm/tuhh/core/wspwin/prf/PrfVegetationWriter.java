@@ -47,8 +47,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.DataBlockWriter;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
@@ -97,20 +97,20 @@ public class PrfVegetationWriter
 
   void writeCoords( final IComponent component, final CoordDataBlock db, final Double nullValue )
   {
-    final IRecord[] points = m_profile.getPoints();
+    final IProfileRecord[] points = m_profile.getPoints();
 
     final List<Double> arrX = new ArrayList<Double>( points.length );
     final List<Double> arrY = new ArrayList<Double>( points.length );
 
     final int indexWidth = m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
 
-    for( final IRecord point : points )
+    for( final IProfileRecord point : points )
     {
       final Double x = (Double) point.getValue( indexWidth );
       final Double roughness = getValue( point, component );
 
       arrX.add( x );
-      arrY.add( (Double) Objects.firstNonNull( roughness, nullValue ) );
+      arrY.add( Objects.firstNonNull( roughness, nullValue ) );
     }
 
     final Double[] xArray = arrX.toArray( new Double[arrX.size()] );
@@ -118,12 +118,12 @@ public class PrfVegetationWriter
     db.setCoords( xArray, yArray );
   }
 
-  private Double getValue( final IRecord point, final IComponent component )
+  private Double getValue( final IProfileRecord point, final IComponent component )
   {
     final Double plainValue = (Double) point.getValue( component );
     if( !m_preferClasses )
       return plainValue;
 
-    return WspmClassifications.findVegetationValue( m_profile, point, component, plainValue );
+    return WspmClassifications.findVegetationValue( point, component, plainValue );
   }
 }

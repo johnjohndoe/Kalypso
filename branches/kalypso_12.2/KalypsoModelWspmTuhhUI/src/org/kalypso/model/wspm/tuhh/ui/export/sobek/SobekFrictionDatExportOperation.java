@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.FlowZone;
 import org.kalypso.model.wspm.tuhh.ui.export.sobek.flowzones.IFlowZoneType;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -175,11 +176,11 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     double totalLength = 0.0;
     double totalRoughness = 0.0;
 
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final IRecord point1 = points[i];
-      final IRecord point2 = points[i + 1];
+      final IProfileRecord point1 = points[i];
+      final IProfileRecord point2 = points[i + 1];
 
       final double width1 = getRecordValue( widthIndex, point1 );
       final double width2 = getRecordValue( widthIndex, point2 );
@@ -201,13 +202,13 @@ public class SobekFrictionDatExportOperation extends AbstractSobekFileExportOper
     return friction;
   }
 
-  private double getRoughness( final IProfil profile, final int roughnessIndex, final IRecord point )
+  private double getRoughness( final IProfil profile, final int roughnessIndex, final IProfileRecord point )
   {
     final double plainValue = getRecordValue( roughnessIndex, point );
     if( !getInfo().getPreferRoughnessClasses() )
       return plainValue;
 
-    return WspmClassifications.findRoughnessValue( profile, point, profile.hasPointProperty( getInfo().getRoughnessID() ), plainValue );
+    return WspmClassifications.findRoughnessValue( point, profile.hasPointProperty( getInfo().getRoughnessID() ), plainValue );
   }
 
   private double getRecordValue( final int componentIndex, final IRecord point )
