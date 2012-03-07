@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -165,13 +166,14 @@ public class ProfileAltitudeValidator
 
   public final Map<Integer, Double> getInterpolatedValues( final int begin, final int end, final String componentID )
   {
-    if( begin < 0 )
+    if( begin < 0 || end < 0 )
       return new HashMap<Integer, Double>();
-    final int startPos = begin < end ? begin : end;
-    final int lastPos = begin < end ? end : begin;
 
-    final IRecord[] points = m_profil.getPoints();
-    final HashMap<Integer, Double> result = new HashMap<Integer, Double>( lastPos - startPos + 1 );
+    final int startPos = Math.min( begin, end );
+    final int lastPos = Math.max( begin, end );
+
+    final IProfileRecord[] points = m_profil.getPoints();
+    final Map<Integer, Double> result = new HashMap<Integer, Double>( lastPos - startPos + 1 );
     Double m = Double.NaN;
     for( int i = startPos; i <= lastPos; i++ )
     {
@@ -182,7 +184,6 @@ public class ProfileAltitudeValidator
         final double last = result.get( i - 1 );
         if( m.isNaN() )
         {
-
           final int next = ProfilUtil.getNextNonNull( points, i, m_profil.indexOfProperty( componentID ) );
           final Double distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[next] )
               - ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
