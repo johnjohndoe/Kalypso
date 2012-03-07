@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,6 +76,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.GeometryExtracter;
 
 /**
  * @author Gernot Belger
@@ -224,11 +227,16 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     data[3] = StringUtils.abbreviate( element.getFeatureType().getQName().getLocalPart(), FIELD_LENGTH_TYPE );
     data[4] = StringUtils.abbreviate( status.getMessage(), FIELD_LENGTH_STATUS );
 
-    final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( banklineGeometry, kalypsoSrs ) );
-
-    exporter.getBanklineGeometry();
-    m_simpleShapeData.addRow( geometry, data );
+    final List< ? > geometries = GeometryExtracter.extract( banklineGeometry, Polygon.class );
+    for( final Object geom : geometries )
+      addShapeElement( (Geometry) geom, kalypsoSrs, data );
 
     monitor.done();
+  }
+
+  private void addShapeElement( final Geometry banklineGeometry, final String kalypsoSrs, final Object[] data ) throws ShapeDataException, GM_Exception
+  {
+    final ISHPGeometry geometry = m_channelShaper.convert( JTSAdapter.wrap( banklineGeometry, kalypsoSrs ) );
+    m_simpleShapeData.addRow( geometry, data );
   }
 }

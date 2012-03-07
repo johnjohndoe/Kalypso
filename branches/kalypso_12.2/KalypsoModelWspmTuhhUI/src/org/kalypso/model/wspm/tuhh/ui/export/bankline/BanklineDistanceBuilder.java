@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
@@ -60,14 +59,10 @@ import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileG
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.util.PointExtracter;
 import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
@@ -116,44 +111,18 @@ public class BanklineDistanceBuilder
       catch( final Exception e )
       {
         e.printStackTrace();
-        m_log.add( IStatus.ERROR, Messages.getString("BanklineDistanceBuilder_0"), e, profile.getBigStation() ); //$NON-NLS-1$
+        m_log.add( IStatus.ERROR, Messages.getString( "BanklineDistanceBuilder_0" ), e, profile.getBigStation() ); //$NON-NLS-1$
       }
 
     }
 
-    final String logMessage = String.format( Messages.getString("BanklineDistanceBuilder_1") ); //$NON-NLS-1$
+    final String logMessage = String.format( Messages.getString( "BanklineDistanceBuilder_1" ) ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( logMessage, logMessage );
   }
 
   private void buildDistances( final IProfileFeature profileFeature ) throws Exception
   {
     final IProfil profileCopy = TuhhProfiles.clone( profileFeature.getProfil() );
-
-    /* Cross section geometry */
-    final GM_Curve line = profileFeature.getLine();
-    final LineString crossSection = (LineString) JTSAdapter.export( line );
-    if( crossSection == null || crossSection.getNumPoints() < 2 )
-    {
-      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_2"), null, profileFeature.getBigStation() ); //$NON-NLS-1$
-      return;
-    }
-
-    /* Intersect with river */
-    final Geometry intersection = crossSection.intersection( m_riverLine );
-    final Point[] intersections = findPoints( intersection );
-    if( intersections.length == 0 )
-    {
-      final double distance = crossSection.distance( m_riverLine );
-      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_3"), null, profileFeature.getBigStation(), distance ); //$NON-NLS-1$
-      return;
-    }
-
-    if( intersections.length > 1 )
-    {
-      final double distance = crossSection.distance( m_riverLine );
-      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_4"), null, profileFeature.getBigStation(), distance ); //$NON-NLS-1$
-      return;
-    }
 
     /* Fill missing geo coordinates */
     final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( profileCopy );
@@ -163,7 +132,8 @@ public class BanklineDistanceBuilder
 
     /* calculate distances of markers */
     final Coordinate coordinate = m_markerProvider.getMarkerLocation( profileSRS, profileCopy, m_side );
-    calculateMarkerDistancePerpendicular( coordinate );
+    if( coordinate != null )
+      calculateMarkerDistancePerpendicular( coordinate );
   }
 
   /**
@@ -178,13 +148,6 @@ public class BanklineDistanceBuilder
     final double markerDistance = m_riverLine.distance( markerPoint );
 
     m_distances.put( station, markerDistance );
-  }
-
-  private static Point[] findPoints( final Geometry intersection )
-  {
-    final List<Point> points = new ArrayList<>();
-    intersection.apply( new PointExtracter( points ) );
-    return points.toArray( new Point[points.size()] );
   }
 
   public PolyLine getDistances( )

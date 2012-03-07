@@ -99,6 +99,8 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
     final int kalypsoSRID = JTSAdapter.toSrid( kalypsoSRS );
 
     final IProfileRecord point = findMarkerPoint( profile, side );
+    if( point == null )
+      return null;
 
     final JTSTransformer jtsTransformer = new JTSTransformer( profileSRID, kalypsoSRID );
     return jtsTransformer.transform( point.getCoordinate() );
