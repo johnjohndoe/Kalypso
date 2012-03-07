@@ -75,7 +75,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Spezialcode für Steiermark: Wasserspiegel ins Querprofile einfügen.
- * 
+ *
  * @author Gernot Belger
  */
 public class Waterlevel2DCreator
@@ -238,9 +238,12 @@ public class Waterlevel2DCreator
     {
       final IProfileRecord point = ProfileVisitors.findNearestPoint( profile, width );
 
-      final IProfilPointMarker marker = profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, point );
-      final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-      marker.setValue( defaultValue );
+      if( point != null )
+      {
+        final IProfilPointMarker marker = profile.createPointMarker( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, point );
+        final Object defaultValue = provider.getDefaultValue( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+        marker.setValue( defaultValue );
+      }
     }
   }
 }
