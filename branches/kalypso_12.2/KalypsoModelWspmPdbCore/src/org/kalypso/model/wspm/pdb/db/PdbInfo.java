@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.pdb.db;
 
@@ -54,6 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.URIUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -177,7 +178,15 @@ public class PdbInfo
 
     try
     {
-      return new URI( documentServer );
+      final URI documentBase = new URI( documentServer );
+
+      // BUGIFX: fixes the problem with file-uri's containing several slashes ('/') after the
+      // first colon (e.g. file:///G:/). After resolving with another uri, the slashes are
+      // always reduced to one (e.g. file:/G:/
+      // This caused the problem, that the base uri and the document uri's did not start with
+      // the same prefix, which lead to problems later.
+      // We know directly resolve the base against the empty uri, to directly reduce it.
+      return URIUtil.append( documentBase, StringUtils.EMPTY );
     }
     catch( final Exception e )
     {

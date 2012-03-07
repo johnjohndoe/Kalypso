@@ -219,8 +219,7 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
     saveSection( session, section );
 
-    // FIXME: cannot work at the moment, as filename is unique, but we do not upload new files?
-    // createDocuments( session, section, feature );
+    createDocuments( session, section, feature );
   }
 
   private void saveSection( final Session session, final CrossSection section )
@@ -394,10 +393,8 @@ public class CheckinStatePdbOperation implements IPdbOperation
 
   private String asName( final URI uri )
   {
-    // FIXME: not perfect... but probably unique enough for now
     final String unencoded = URIUtil.toUnencodedString( uri );
-    final String filename = FilenameUtils.getName( unencoded );
-    return m_state.getName() + "/" + filename; //$NON-NLS-1$
+    return FilenameUtils.getName( unencoded );
   }
 
   /**
