@@ -266,11 +266,6 @@
         </Styles>
       </Layer>
       
-
-      
-
-      
-      
       
       <Layer id="Bridge" visible="true">
         <Provider epid="org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider">

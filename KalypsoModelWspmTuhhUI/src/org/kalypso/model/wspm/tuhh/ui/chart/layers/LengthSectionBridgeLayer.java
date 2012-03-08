@@ -112,20 +112,21 @@ public class LengthSectionBridgeLayer extends TupleResultLineLayer
     final TupleResult result = m_data.getObservation().getResult();
     final IRecord record = result.get( i );
 
-    final Double uK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
-    final Double oK = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
-    final Double sT = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
-    final Double bR = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
-    if( bR.isNaN() || uK.isNaN() || sT.isNaN() || oK.isNaN() )
+    final Double unterkante = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_UK, record );
+    final Double oberkante = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_OK, record );
+    final Double station = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_STATION, record );
+    final Double bridgeWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.LENGTH_SECTION_PROPERTY_BRIDGE_WIDTH, record );
+    if( bridgeWidth.isNaN() || unterkante.isNaN() || station.isNaN() || oberkante.isNaN() )
       return null;
-
-    final double startBridge = sT + bR / 2000;
-    final double endBridge = sT - bR / 2000;
 
     final ICoordinateMapper coordinateMapper = getCoordinateMapper();
 
-    final Point bottomLeft = coordinateMapper.numericToScreen( startBridge, uK );
-    final Point topRight = coordinateMapper.numericToScreen( endBridge, oK );
-    return RectangleUtils.createNormalizedRectangle( bottomLeft, topRight );
+    /** hack: unknown fliessrichtung - but drawing is always in fliessrichtung */
+    final Point p0 = coordinateMapper.numericToScreen( station, unterkante );
+    final Point pDiff = coordinateMapper.numericToScreen( (station + bridgeWidth / 1000.0), oberkante );
+
+    final int x1 = p0.x + Math.abs( p0.x - pDiff.x );
+
+    return RectangleUtils.createNormalizedRectangle( p0, new Point( x1, pDiff.y ) );
   }
 }
