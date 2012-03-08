@@ -80,7 +80,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
   private String[] m_originalStepsToDelete;
 
-  private ProcessResultsBean m_bean;
+  private final ProcessResultsBean m_bean;
 
   public String[] getOriginalStepsToDelete( )
   {
@@ -92,7 +92,7 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     return m_outputDir;
   }
 
-  public ResultProcessingOperation( final ResultManager resultManager, ProcessResultsBean bean )
+  public ResultProcessingOperation( final ResultManager resultManager, final ProcessResultsBean bean )
   {
     m_resultManager = resultManager;
     m_geoLog = m_resultManager.getGeoLog();
@@ -170,26 +170,38 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
     final SortedSet<Date> allCalculatedDates = new TreeSet<Date>();
 
     /* Always delete all calculated steps */
-//    allCalculatedDates.addAll( Arrays.asList( processBean.userCalculatedSteps ) );
-    for( final Date dateTest: processBean.userCalculatedSteps ){
-      if( dateTest != null ){
+    for( final Date dateTest : processBean.userCalculatedSteps )
+    {
+      if( dateTest != null )
         allCalculatedDates.add( dateTest );
-      }
     }
 
-    List<String> ids = new ArrayList<String>();
+    /* Nothing to do ? */
+    if( allCalculatedDates.isEmpty() )
+      return new String[0];
 
-    if( processBean.deleteFollowers && !allCalculatedDates.isEmpty() )
+    final List<String> ids = new ArrayList<String>();
+
+    if( processBean.deleteFollowers )
     {
-      allCalculatedDates.remove( MAXI_DATE );
-      allCalculatedDates.remove( STEADY_DATE );
+      /* Remove maxi and steady, does conflict with followers search */
+      final boolean hasMaxi = allCalculatedDates.remove( MAXI_DATE );
+      final boolean hasSteady = allCalculatedDates.remove( STEADY_DATE );
 
       if( allCalculatedDates.size() > 0 )
       {
         final Date firstCalculated = allCalculatedDates.first();
         for( final String id : existingSteps.keySet() )
         {
-          Date date = existingSteps.get( id );
+          final Date date = existingSteps.get( id );
+
+          /* do not forget to delete maxi and steady */
+          if( MAXI_DATE.equals( date ) && hasMaxi )
+            ids.add( id );
+
+          if( STEADY_DATE.equals( date ) && hasSteady )
+            ids.add( id );
+
           if( date == null )
           {
             ids.add( id );
@@ -199,29 +211,22 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
             ids.add( id );
           }
         }
-      } else {
+      }
+      else
+      {
         ids.addAll( existingSteps.keySet() );
       }
-
-      // // then add them again.
-      // if( maxi == true )
-      // allDates.add( MAXI_DATE );
-      // if( steady == true )
-      // allDates.add( STEADY_DATE );
     }
-    else if( !allCalculatedDates.isEmpty() ){
-//      final Date firstCalculated = allCalculatedDates.first();
+    else
+    {
       for( final String id : existingSteps.keySet() )
       {
-        Date date = existingSteps.get( id );
-        if( date == null || date.getTime() == 0)
+        final Date date = existingSteps.get( id );
+        // TODO: why this check?
+        if( date == null || date.getTime() == 0 )
         {
           ids.add( id );
         }
-//        else if( date.equals( firstCalculated ) )
-//        {
-//          ids.add( id );
-//        }
         else if( allCalculatedDates.contains( date ) )
         {
           ids.add( id );
@@ -231,5 +236,4 @@ public class ResultProcessingOperation implements ICoreRunnableWithProgress, ISi
 
     return ids.toArray( new String[ids.size()] );
   }
-
 }
