@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,10 +55,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.base.obsprovider.MultipleSourceElement;
+import org.kalypso.zml.ui.table.view.TableComposite;
 
 /**
  * @author Dirk Kuch
@@ -66,6 +73,8 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
   private final ITimeseries m_timeseries;
 
   private static final String DIALOG_SCREEN_SIZE = "edit.time.series.dialog.screen.size"; //$NON-NLS-1$
+
+  private static final String DIALOG_SASH_FORM_WEIGHTS = "edit.time.series.dialog.weights"; //$NON-NLS-1$
 
   public EditTimeseriesDialog( final Shell shell, final ITreeNodeModel model, final ITimeseries timeseries )
   {
@@ -80,12 +89,10 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
+    final FormToolkit toolkit = KalypsoUIRRMPlugin.getDefault().getToolkit();
+
     getShell().setText( "Edit Timeseries" );
-// setDialogTitle();
-
     setMessage( "Edit Timeseries" );
-
-    final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
@@ -96,7 +103,7 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     data.widthHint = screen.x;
     data.heightHint = screen.y;
     base.setLayoutData( data );
-//
+
     base.addControlListener( new ControlAdapter()
     {
       @Override
@@ -106,98 +113,72 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
       }
     } );
 
-    final IZmlSourceElement source = (IZmlSourceElement) m_timeseries.getAdapter( IZmlSourceElement.class );
+    /* first row */
+    final SashForm form = new SashForm( base, SWT.HORIZONTAL );
+    form.setLayout( new FillLayout() );
+    form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
+    final Composite leftPane = toolkit.createComposite( form );
+    leftPane.setLayout( Layouts.createGridLayout() );
+
+    final Composite rightPane = toolkit.createComposite( form );
+    rightPane.setLayout( Layouts.createGridLayout() );
+
+    final IZmlSourceElement source = (IZmlSourceElement) m_timeseries.getAdapter( IZmlSourceElement.class );
     final MultipleSourceElement multiple = new MultipleSourceElement( m_timeseries.getParameterType() );
     multiple.add( source );
 
-    final EditTimeseriesChartComposite chart = new EditTimeseriesChartComposite( base );
+    final EditTimeseriesChartComposite chart = new EditTimeseriesChartComposite( leftPane, toolkit );
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
     chart.setSelection( multiple );
 
-//    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+    final TableComposite table = new TableComposite( rightPane, toolkit );
+    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    table.setSelection( multiple );
 
-//
-// /* first row */
-// final SashForm form = new SashForm( base, SWT.HORIZONTAL );
-// form.setLayout( new FillLayout() );
-// form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
-//
-// final Composite leftPane = toolkit.createComposite( form );
-// leftPane.setLayout( Layouts.createGridLayout() );
-//
-// final Composite middlePane = toolkit.createComposite( form );
-// middlePane.setLayout( Layouts.createGridLayout() );
-//
-// final Composite rightPane = toolkit.createComposite( form );
-// rightPane.setLayout( Layouts.createGridLayout() );
-//
-// final RepositoryLayoutPart repositoryLayoutPart = new RepositoryLayoutPart( leftPane, m_structure, m_page, m_context
-// );
-// repositoryLayoutPart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-//
-// m_chartLayoutPart = new ChartLayoutPart( middlePane, m_structure, m_context );
-// m_chartLayoutPart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-//
-// m_tableLayoutPart = new TableLayoutPart( rightPane, m_structure, m_context );
-// m_tableLayoutPart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-//
-// repositoryLayoutPart.addControlListener( new ControlAdapter()
-// {
-// @Override
-// public void controlResized( final ControlEvent e )
-// {
-// setWeights( form.getWeights() );
-// }
-// } );
-//
-// m_tableLayoutPart.addControlListener( new ControlAdapter()
-// {
-// @Override
-// public void controlResized( final ControlEvent e )
-// {
-// setWeights( form.getWeights() );
-// }
-// } );
-//
-// form.setWeights( getWeights() );
-//
-// /* second row */
-// final InfoLayoutPart infoPart = new InfoLayoutPart( leftPane, m_structure, m_context );
-// final GridData infoLayoutData = new GridData( GridData.FILL, GridData.FILL, true, false );
-// infoLayoutData.heightHint = 100;
-// infoPart.setLayoutData( infoLayoutData );
-//
-// final CalendarLayoutPart calendarLayoutPart = new CalendarLayoutPart( middlePane, m_structure, m_context );
-// final GridData calendarLayoutData = new GridData( GridData.FILL, GridData.FILL, true, false );
-// calendarLayoutData.heightHint = 100;
-// calendarLayoutPart.setLayoutData( calendarLayoutData );
-//
-// final TableControlLayoutPart tableControlLayoutPart = new TableControlLayoutPart( rightPane, m_structure,
-// m_tableLayoutPart, m_context );
-// final GridData tableControlLayoutData = new GridData( GridData.FILL, GridData.FILL, true, false );
-// tableControlLayoutData.heightHint = 100;
-// tableControlLayoutPart.setLayoutData( tableControlLayoutData );
-//
-// repositoryLayoutPart.init();
-// m_chartLayoutPart.init();
-// m_tableLayoutPart.init();
-// infoPart.init();
-// calendarLayoutPart.init();
-// tableControlLayoutPart.init();
-//
-// /* register event listeners */
-// repositoryLayoutPart.addSelectionChangedListener( m_chartLayoutPart );
-// repositoryLayoutPart.addSelectionChangedListener( m_tableLayoutPart );
-//
-// toolkit.adapt( form );
-//
-// registerObservationListener();
-//
-// setTableFilter();
+    chart.addControlListener( new ControlAdapter()
+    {
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        setWeights( form.getWeights() );
+      }
+    } );
+
+    form.setWeights( getWeights() );
+    toolkit.adapt( form );
 
     return super.createDialogArea( parent );
   }
 
+  private int[] getWeights( )
+  {
+    final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
+
+    final String weights = settings.get( DIALOG_SASH_FORM_WEIGHTS );
+    if( weights == null || weights.trim().isEmpty() )
+      return new int[] { 64, 40 };
+
+    final String[] parts = weights.split( "," ); // $NON-NLS-1$
+    final int[] w = new int[parts.length];
+
+    for( int i = 0; i < parts.length; i++ )
+    {
+      w[i] = Integer.valueOf( parts[i] );
+    }
+
+    return w;
+  }
+
+  protected void setWeights( final int[] weights )
+  {
+    final StringBuffer buffer = new StringBuffer();
+    for( final int weight : weights )
+    {
+      buffer.append( String.format( "%d,", weight ) ); // $NON-NLS-1$
+    }
+
+    final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
+    settings.put( DIALOG_SASH_FORM_WEIGHTS, StringUtils.chop( buffer.toString() ) );
+  }
 }

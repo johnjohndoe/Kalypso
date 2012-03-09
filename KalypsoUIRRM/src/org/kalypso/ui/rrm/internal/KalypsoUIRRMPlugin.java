@@ -1,5 +1,7 @@
 package org.kalypso.ui.rrm.internal;
 
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -10,6 +12,8 @@ public class KalypsoUIRRMPlugin extends AbstractUIPlugin
 {
   // The shared instance.
   private static KalypsoUIRRMPlugin plugin;
+
+  private FormToolkit m_formToolkit;
 
   /**
    * The constructor.
@@ -50,4 +54,15 @@ public class KalypsoUIRRMPlugin extends AbstractUIPlugin
   {
     return getDefault().getBundle().getSymbolicName();
   }
+
+  public FormToolkit getToolkit( )
+  {
+    if( m_formToolkit == null )
+    {
+      m_formToolkit = new FormToolkit( PlatformUI.getWorkbench().getDisplay() );
+    }
+
+    return m_formToolkit;
+  }
+
 }
