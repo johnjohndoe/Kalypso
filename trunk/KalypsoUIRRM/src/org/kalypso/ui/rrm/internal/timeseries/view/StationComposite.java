@@ -50,6 +50,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
