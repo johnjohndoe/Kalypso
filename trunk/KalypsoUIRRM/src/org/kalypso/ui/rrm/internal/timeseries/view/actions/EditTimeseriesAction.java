@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -55,15 +56,12 @@ public class EditTimeseriesAction extends Action
 {
   private final ITimeseries m_timeseries;
 
-  private final String m_deleteMessage;
-
   private final ITreeNodeModel m_model;
 
-  public EditTimeseriesAction( final ITreeNodeModel model, final String deleteMessage, final ITimeseries timeseries )
+  public EditTimeseriesAction( final ITreeNodeModel model, final ITimeseries timeseries )
   {
     m_model = model;
     m_timeseries = timeseries;
-    m_deleteMessage = deleteMessage;
 
     setText( "Edit Timeseries" ); //$NON-NLS-1$
     setToolTipText( "Edit selected Timeseries" ); //$NON-NLS-1$
@@ -76,7 +74,8 @@ public class EditTimeseriesAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    throw new UnsupportedOperationException();
+    final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_model, m_timeseries );
+    dialog.open();
 
   }
 }
