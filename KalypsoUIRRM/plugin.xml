@@ -541,5 +541,15 @@
           id="thiesenWizardFeatureControl">
     </extensionControl>
  </extension>
-   
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:org.kalypso.model.rrm.ui.chart.debug">
+       <command
+             commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
+             style="push">
+       </command>
+    </menuContribution>
+ </extension>
 </plugin>
