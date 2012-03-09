@@ -49,12 +49,17 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
+import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
+import org.kalypso.zml.ui.chart.view.DiagramCompositeSelection;
+import org.kalypso.zml.ui.chart.view.HideUnuseLayersVisitor;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -128,6 +133,18 @@ public class EditTimeseriesChartComposite extends Composite
     }
 
 // toolkit.adapt( control );
+
+  }
+
+  public void setSelection( final IMultipleZmlSourceElement source )
+  {
+    DiagramCompositeSelection.doApply( m_model, source );
+
+    final ILayerManager layerManager = m_model.getLayerManager();
+    layerManager.accept( new HideUnuseLayersVisitor() );
+    layerManager.accept( new SingleGridVisibilityVisitor() );
+
+    m_model.autoscale();
 
   }
 
