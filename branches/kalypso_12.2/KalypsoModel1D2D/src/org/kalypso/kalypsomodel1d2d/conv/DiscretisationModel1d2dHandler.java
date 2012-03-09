@@ -177,6 +177,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private boolean m_importRoughness;
 
+  private String m_crs;
+
   public DiscretisationModel1d2dHandler( final SzenarioDataProvider szenarioDataProvider, final IPositionProvider positionProvider ) throws CoreException
   {
     m_szenarioDataProvider = szenarioDataProvider;
@@ -188,6 +190,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_flowWorkspace = m_flowModel.getWorkspace();
 
     m_positionProvider = positionProvider;
+    m_crs = m_positionProvider.getCoordinateSystem();
     m_setNotInsertedNodes = new HashSet<Integer>();
 
     final IRoughnessClsCollection roughnessModel = szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
@@ -741,6 +744,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       throw new RuntimeException( String.format( "ducplicate node id: %s", id ) );
 
     final GM_Point nodeLocation = m_positionProvider.getGMPoint( xCoord, yCoord, elevation );
+    nodeLocation.setCoordinateSystem( m_crs );
     final IFE1D2DNode< ? > existingNode = m_model.findNode( nodeLocation, 0.01 );
 
     final IFE1D2DNode< ? > node;
@@ -1003,6 +1007,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatusOrOK( "2D-Import", "Import succesfully terminated." );
+//    return m_stati.asMultiStatusOrOK( "2D-Import", "Import succesfully finished." );
+    return m_stati.asMultiStatusOrOK( "2D-Import", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler.5" ) );
   }
 }
