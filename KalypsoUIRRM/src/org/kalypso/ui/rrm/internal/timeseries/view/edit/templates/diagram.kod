@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="diagram" legend="true">
+    <Layers>
+      <CascadingParameters>
+        <Parameter name="request.strategy" value="request.strategy.observation.provider" />
+      </CascadingParameters>
+
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Q" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rainfall#N" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#T" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#V" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#W" />
+
+      <!-- Selektionslayer unten drunter -->
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#selectionLayer" />
+    </Layers>
+  </Chart>
+</ChartConfiguration>
