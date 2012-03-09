@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
+import java.net.URL;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
@@ -132,7 +134,9 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     chart.setSelection( multiple );
 
-    final TableComposite table = new TableComposite( rightPane, toolkit );
+    final URL tableTemplate = getClass().getResource( "templates/table.kot" );
+
+    final TableComposite table = new TableComposite( rightPane, toolkit, tableTemplate );
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setSelection( multiple );
 
