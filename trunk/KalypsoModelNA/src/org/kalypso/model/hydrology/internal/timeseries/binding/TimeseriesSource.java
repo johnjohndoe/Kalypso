@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.timeseries.binding;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.sensor.IObservation;
@@ -83,13 +86,20 @@ public class TimeseriesSource implements IZmlSourceElement
   @Override
   public IPoolableObjectType getPoolKey( )
   {
-    throw new UnsupportedOperationException();
+    final ZmlLink link = m_timeseries.getDataLink();
+
+    return link.getPoolableObjectType();
   }
 
   @Override
   public boolean isDirty( )
   {
-    throw new UnsupportedOperationException();
+    final ZmlLink link = m_timeseries.getDataLink();
+    final IObservation observation = link.getObservationFromPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final KeyInfo info = pool.getInfo( observation );
+
+    return info.isDirty();
   }
 
   @Override

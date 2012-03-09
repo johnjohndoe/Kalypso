@@ -47,6 +47,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
@@ -73,14 +74,16 @@ public class EditTimeseriesChartComposite extends Composite
 
   private ChartImageComposite m_chartComposite;
 
-  EditTimeseriesChartComposite( final Composite parent )
+  EditTimeseriesChartComposite( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
 
     setLayout( Layouts.createGridLayout() );
 
     init();
-    draw();
+    draw( toolkit );
+
+    toolkit.adapt( this );
   }
 
   private void init( )
@@ -96,16 +99,16 @@ public class EditTimeseriesChartComposite extends Composite
     }
   }
 
-  private void draw( )
+  private void draw( final FormToolkit toolkit )
   {
-    createToolbar( this );
+    createToolbar( toolkit );
 
     m_chartComposite = new ChartImageComposite( this, SWT.BORDER, m_model, CHART_BACKGROUND );
     m_chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
   }
 
-  private void createToolbar( final Composite body )
+  private void createToolbar( final FormToolkit toolkit )
   {
 // final String[] contributions = getContributions();
 
@@ -124,15 +127,15 @@ public class EditTimeseriesChartComposite extends Composite
     if( KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
     {
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-      final ToolBar control = manager.createControl( body );
+      final ToolBar control = manager.createControl( this );
       control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
 
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, "toolbar:org.kalypso.model.rrm.ui.chart.debug" ); //$NON-NLS-1$
 
       manager.update( true );
-    }
 
-// toolkit.adapt( control );
+      toolkit.adapt( control );
+    }
 
   }
 
