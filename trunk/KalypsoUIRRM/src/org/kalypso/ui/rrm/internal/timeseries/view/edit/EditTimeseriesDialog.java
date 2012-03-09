@@ -53,6 +53,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.base.obsprovider.MultipleSourceElement;
 
 /**
  * @author Dirk Kuch
@@ -104,8 +106,15 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
       }
     } );
 
+    final IZmlSourceElement source = (IZmlSourceElement) m_timeseries.getAdapter( IZmlSourceElement.class );
+
+    final MultipleSourceElement multiple = new MultipleSourceElement( m_timeseries.getParameterType() );
+    multiple.add( source );
+
     final EditTimeseriesChartComposite chart = new EditTimeseriesChartComposite( base );
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    chart.setSelection( multiple );
 
 //    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
 
