@@ -38,39 +38,40 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
+import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.NewStationWizard;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class NewHydrologicalStationAction extends Action
+public class NewMeteorologicalStationAction extends Action
 {
   private final ITreeNodeModel m_model;
 
   private final String m_group;
 
-  public NewHydrologicalStationAction( final ITreeNodeModel model, final String group )
+  public NewMeteorologicalStationAction( final ITreeNodeModel model, final String group )
   {
     m_model = model;
     m_group = group;
 
-    setText( Messages.getString("NewHydrologicalStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("NewHydrologicalStationAction_1") ); //$NON-NLS-1$
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_HYDROLOGICAL ) );
+    setText( Messages.getString("NewMeteorologicalStationAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("NewMeteorologicalStationAction_1") ); //$NON-NLS-1$
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_METEOROLOGICAL ) );
   }
 
   @Override
@@ -80,7 +81,7 @@ public class NewHydrologicalStationAction extends Action
 
     final CommandableWorkspace workspace = m_model.getWorkspace();
 
-    final FeatureBean<IStation> bean = new FeatureBean<>( IHydrologicalStation.FEATURE_HYDROLOGICAL_STATION );
+    final FeatureBean<IStation> bean = new FeatureBean<>( IMeteorologicalStation.FEATURE_METEOROLOGICAL_STATION );
     bean.setProperty( IStation.PROPERTY_GROUP, m_group );
 
     final NewStationWizard wizard = new NewStationWizard( workspace, bean );

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,7 +47,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -55,30 +54,34 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteStationAction extends Action
+public class DeleteTimeseriesAction extends Action
 {
-  private final IStation[] m_stations;
+  private final ITimeseries[] m_timeseries;
+
+  private final String m_deleteMessage;
 
   private final ITreeNodeModel m_model;
 
-  public DeleteStationAction( final ITreeNodeModel model, final IStation... station )
+  public DeleteTimeseriesAction( final ITreeNodeModel model, final String deleteMessage, final ITimeseries... timeseries )
   {
     m_model = model;
-    m_stations = station;
+    m_timeseries = timeseries;
+    m_deleteMessage = deleteMessage;
 
-    setText( Messages.getString("DeleteStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("DeleteStationAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "DeleteTimeseriesAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "DeleteTimeseriesAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
 
-    if( station.length == 0 )
+    if( timeseries.length == 0 )
     {
       setEnabled( false );
-      setToolTipText( Messages.getString("DeleteStationAction_2") ); //$NON-NLS-1$
+      setToolTipText( Messages.getString( "DeleteTimeseriesAction_2" ) ); //$NON-NLS-1$
     }
   }
 
@@ -87,38 +90,30 @@ public class DeleteStationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final String deleteMessage = getDeleteMessage();
-
-    if( !MessageDialog.openConfirm( shell, getText(), deleteMessage ) )
+    if( !MessageDialog.openConfirm( shell, getText(), m_deleteMessage ) )
       return;
 
     try
     {
       /* Delete data files */
-      for( final IStation station : m_stations )
-      {
-        for( final ITimeseries timeseries : station.getTimeseries() )
-          timeseries.deleteDataFile();
-      }
+      for( final ITimeseries timeseries : m_timeseries )
+        timeseries.deleteDataFile();
+
+      /* Select parent node */
+      final Object parentStation = m_timeseries[0].getOwner();
+      final TreeNode parentNode = new TreeNode( m_model, null, null, parentStation );
+      m_model.setSelection( parentNode );
 
       /* Delete feature */
-      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_stations );
+      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeseries );
       m_model.postCommand( deleteCommand );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("DeleteStationAction_3"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "DeleteTimeseriesAction_3" ), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
-  }
-
-  private String getDeleteMessage( )
-  {
-    if( m_stations.length > 1 )
-      return Messages.getString("DeleteStationAction_4"); //$NON-NLS-1$
-
-    return String.format( Messages.getString("DeleteStationAction_5"), m_stations[0].getDescription() ); //$NON-NLS-1$
   }
 }

@@ -38,39 +38,44 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.EditStationWizard;
+import org.kalypso.ui.rrm.internal.timeseries.view.StationComposite;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class NewMeteorologicalStationAction extends Action
+public class EditStationAction extends Action
 {
-  private final ITreeNodeModel m_model;
+  private final IStation m_station;
 
-  private final String m_group;
+  private final StationComposite m_stationControl;
 
-  public NewMeteorologicalStationAction( final ITreeNodeModel model, final String group )
+  private final ITreeNodeModel m_context;
+
+  public EditStationAction( final ITreeNodeModel context, final IStation station, final StationComposite stationControl )
   {
-    m_model = model;
-    m_group = group;
+    m_context = context;
+    m_station = station;
+    m_stationControl = stationControl;
 
-    setText( Messages.getString("NewMeteorologicalStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("NewMeteorologicalStationAction_1") ); //$NON-NLS-1$
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_METEOROLOGICAL ) );
+    setText( Messages.getString("EditStationAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("EditStationAction_1") ); //$NON-NLS-1$
+
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }
 
   @Override
@@ -78,20 +83,19 @@ public class NewMeteorologicalStationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
+    final String oldGroup = m_station.getGroup();
 
-    final FeatureBean<IStation> bean = new FeatureBean<>( IMeteorologicalStation.FEATURE_METEOROLOGICAL_STATION );
-    bean.setProperty( IStation.PROPERTY_GROUP, m_group );
-
-    final NewStationWizard wizard = new NewStationWizard( workspace, bean );
-    wizard.setWindowTitle( getText() );
+    final Wizard wizard = new EditStationWizard( m_context, m_station );
+    wizard.setWindowTitle( Messages.getString("EditStationAction_2") ); //$NON-NLS-1$
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() != Window.OK )
       return;
 
-    /* Refresh tree */
-    final IStation newStation = wizard.getNewStation();
-    m_model.refreshTree( newStation );
+    m_stationControl.refresh();
+
+    final String newGroup = m_station.getGroup();
+    if( !ObjectUtils.equals( oldGroup, newGroup ) )
+      m_context.refreshTree( m_station );
   }
 }

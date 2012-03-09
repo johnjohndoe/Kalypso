@@ -53,6 +53,8 @@ import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.DeleteTimeseriesAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditTimeseriesAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -75,7 +77,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return Messages.getString("TimeseriesUiHandler_0"); //$NON-NLS-1$
+    return Messages.getString( "TimeseriesUiHandler_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -104,9 +106,15 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
     // TODO: utility that changes the timestep
     // TODO: copy timeseries
 
-    /* Delete timeseries */
     final String stationLabel = m_timeseries.getOwner().getDescription();
-    final String deleteMessage = String.format( Messages.getString("TimeseriesUiHandler_1"), getTreeLabel(), stationLabel ); //$NON-NLS-1$
+
+    /* Edit timeseries */
+    final String editMessage = String.format( "Edit Timeseries %s from station %s", getTreeLabel(), stationLabel ); //$NON-NLS-1$
+    final IAction editAction = new EditTimeseriesAction( m_model, editMessage, m_timeseries );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, editAction );
+
+    /* Delete timeseries */
+    final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
   }

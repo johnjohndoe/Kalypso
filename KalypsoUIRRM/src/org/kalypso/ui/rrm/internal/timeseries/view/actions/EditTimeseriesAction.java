@@ -38,40 +38,35 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class EditStationAction extends Action
+public class EditTimeseriesAction extends Action
 {
-  private final IStation m_station;
+  private final ITimeseries m_timeseries;
 
-  private final StationComposite m_stationControl;
+  private final String m_deleteMessage;
 
-  private final ITreeNodeModel m_context;
+  private final ITreeNodeModel m_model;
 
-  public EditStationAction( final ITreeNodeModel context, final IStation station, final StationComposite stationControl )
+  public EditTimeseriesAction( final ITreeNodeModel model, final String deleteMessage, final ITimeseries timeseries )
   {
-    m_context = context;
-    m_station = station;
-    m_stationControl = stationControl;
+    m_model = model;
+    m_timeseries = timeseries;
+    m_deleteMessage = deleteMessage;
 
-    setText( Messages.getString("EditStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("EditStationAction_1") ); //$NON-NLS-1$
+    setText( "Edit Timeseries" ); //$NON-NLS-1$
+    setToolTipText( "Edit selected Timeseries" ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }
@@ -81,19 +76,7 @@ public class EditStationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final String oldGroup = m_station.getGroup();
+    throw new UnsupportedOperationException();
 
-    final Wizard wizard = new EditStationWizard( m_context, m_station );
-    wizard.setWindowTitle( Messages.getString("EditStationAction_2") ); //$NON-NLS-1$
-
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() != Window.OK )
-      return;
-
-    m_stationControl.refresh();
-
-    final String newGroup = m_station.getGroup();
-    if( !ObjectUtils.equals( oldGroup, newGroup ) )
-      m_context.refreshTree( m_station );
   }
 }
