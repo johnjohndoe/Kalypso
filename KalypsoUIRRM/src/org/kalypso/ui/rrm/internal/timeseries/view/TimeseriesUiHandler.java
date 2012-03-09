@@ -109,8 +109,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
     final String stationLabel = m_timeseries.getOwner().getDescription();
 
     /* Edit timeseries */
-    final String editMessage = String.format( "Edit Timeseries %s from station %s", getTreeLabel(), stationLabel ); //$NON-NLS-1$
-    final IAction editAction = new EditTimeseriesAction( m_model, editMessage, m_timeseries );
+    final IAction editAction = new EditTimeseriesAction( m_model, m_timeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, editAction );
 
     /* Delete timeseries */
