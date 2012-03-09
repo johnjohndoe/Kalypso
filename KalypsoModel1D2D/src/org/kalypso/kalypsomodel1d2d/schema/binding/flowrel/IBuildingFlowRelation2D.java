@@ -56,6 +56,8 @@ public interface IBuildingFlowRelation2D extends IFlowRelation2D
   public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROP_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "direction" ); //$NON-NLS-1$
+  
+  public static final QName QNAME_PROP_QSYMMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "QSymmetry" ); //$NON-NLS-1$
 
   public static final QName QNAME_PROP_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" ); //$NON-NLS-1$
 
@@ -78,6 +80,10 @@ public interface IBuildingFlowRelation2D extends IFlowRelation2D
   public int getDirection( );
 
   public void setDirection( final int degrees );
+  
+  public boolean getQSymmetry( );
+  
+  public void setQSymmetry( final boolean symmetry );
 
   public BuildingParameters getBuildingParameters( );
 }

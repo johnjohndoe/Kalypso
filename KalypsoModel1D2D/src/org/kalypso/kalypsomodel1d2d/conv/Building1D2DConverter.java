@@ -101,6 +101,7 @@ public class Building1D2DConverter
     for( final Map.Entry<Integer, IFlowRelationship> buildingEntry : m_buildingProvider.getBuildingData().entrySet() )
     {
       final IFlowRelationship building = buildingEntry.getValue();
+      boolean qSymmetry = false;
       final Integer buildingID = buildingEntry.getKey();
       BuildingParameters buildingParameters = null;
       if( building instanceof IBuildingFlowRelation ){
@@ -108,10 +109,11 @@ public class Building1D2DConverter
       }
       else if( building instanceof IBuildingFlowRelation2D ){
         buildingParameters = ( ( IBuildingFlowRelation2D )building ).getBuildingParameters();
+        qSymmetry = ( ( IBuildingFlowRelation2D )building ).getQSymmetry();
       }
 
       // writeBuildingBlock( formatter, buildingID, buildingParameters );
-      writeNewBuildingBlock( formatter, buildingID, buildingParameters );
+      writeNewBuildingBlock( formatter, buildingID, buildingParameters, qSymmetry );
     }
 
     formatter.format( "ENDDATA" ); //$NON-NLS-1$
@@ -119,14 +121,15 @@ public class Building1D2DConverter
     FormatterUtils.checkIoException( formatter );
   }
 
-  private void writeNewBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
+  private void writeNewBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters, final boolean qSymmetry ) throws IOException
   {
     final TupleResult values = buildingParameters.getValues();
 
     final int qCount = buildingParameters.getDischargeCount();
     final int totalCount = values.size();
 
-    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount ); //$NON-NLS-1$
+//    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount ); //$NON-NLS-1$
+    formatter.format( "DLI      %7d% %s%n", buildingID, qSymmetry == true? "t": "f" ); //$NON-NLS-1$
 
     final int qComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_DISCHARGE );
     final int howComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_WATERLEVEL_UPSTREAM );

@@ -39,18 +39,15 @@
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
 			grabExcessHorizontalSpace="true" />
 	</gft:spinner>
-
-	<!--
-	<gft:label property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+	
+	<gft:label property="wb1d2d:QSymmetry" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:extensioncontrol style="SWT.NONE" property="wb1d2d:profileMember"
-		extension-id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ChooseProfileFeatureControlFactory">
-		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
-			grabExcessHorizontalSpace="true" />
-	</gft:extensioncontrol>
-	-->
+	<gft:checkbox enabled="true" property="wb1d2d:QSymmetry" style="SWT.NONE"> 
+		<gft:text>  </gft:text>
+	</gft:checkbox>
+
 	<gft:tabFolder style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
