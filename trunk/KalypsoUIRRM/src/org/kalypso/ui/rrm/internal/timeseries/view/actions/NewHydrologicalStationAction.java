@@ -38,48 +38,40 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
+import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.NewStationWizard;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
-import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
  * @author Gernot Belger
  */
-public class ImportTimeseriesAction extends Action
+public class NewHydrologicalStationAction extends Action
 {
-  private final IStation m_station;
-
-  private final String m_parameterType;
-
   private final ITreeNodeModel m_model;
 
-  public ImportTimeseriesAction( final ITreeNodeModel model, final IStation station, final String parameterType )
+  private final String m_group;
+
+  public NewHydrologicalStationAction( final ITreeNodeModel model, final String group )
   {
-    m_station = station;
-    m_parameterType = parameterType;
     m_model = model;
+    m_group = group;
 
-    setText( Messages.getString("ImportTimeseriesAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("ImportTimeseriesAction_1") ); //$NON-NLS-1$
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.IMPORT_TIMESERIES ) );
+    setText( Messages.getString("NewHydrologicalStationAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("NewHydrologicalStationAction_1") ); //$NON-NLS-1$
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.STATION_NEW_HYDROLOGICAL ) );
   }
 
   @Override
@@ -87,45 +79,20 @@ public class ImportTimeseriesAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    /* Prepare data */
-    final ImportObservationData data = prepareData();
-
-    final ITimeseries timeseries = showWizard( shell, data );
-
-    // select tree with pseudo node
-    final TreeNode pseudoNode = new TreeNode( m_model, null, null, timeseries );
-    m_model.setSelection( pseudoNode );
-  }
-
-  private ImportObservationData prepareData( )
-  {
-    final String[] allowedTypes = StationClassesCatalog.findAllowedParameterTypes( m_station );
-
-    return new ImportObservationData( allowedTypes );
-  }
-
-  private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
-  {
     final CommandableWorkspace workspace = m_model.getWorkspace();
 
-    final TimeseriesBean bean = new TimeseriesBean();
-    if( m_parameterType != null )
-      data.setParameterType( m_parameterType );
+    final FeatureBean<IStation> bean = new FeatureBean<>( IHydrologicalStation.FEATURE_HYDROLOGICAL_STATION );
+    bean.setProperty( IStation.PROPERTY_GROUP, m_group );
 
-    final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( workspace, m_station, data, bean );
-
-    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
-    data.init( settings );
-
-    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean );
-
-    wizard.setDialogSettings( settings );
+    final NewStationWizard wizard = new NewStationWizard( workspace, bean );
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() == Window.OK )
-      return operation.getTimeseries();
+    if( dialog.open() != Window.OK )
+      return;
 
-    return null;
+    /* Refresh tree */
+    final IStation newStation = wizard.getNewStation();
+    m_model.refreshTree( newStation );
   }
 }
