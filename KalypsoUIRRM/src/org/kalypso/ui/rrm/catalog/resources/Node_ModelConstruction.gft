@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="rrm:Node" style="SWT.NONE" xmlns="featureview.template.kalypso.org" xmlns:rrm="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+  <gridLayout numColumns="4" />
+
+  <!-- name -->
+  <label xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:name" style="SWT.BORDER">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <!-- description -->
+  <label xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.FILL" heightHint="30" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <!-- location -->
+  <label property="rrm:Ort" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+    <text editable="true" property="rrm:Ort" style="SWT.BORDER">
+      <gridData horizontalAlignment="GridData.FILL" widthHint="200" grabExcessHorizontalSpace="true" />
+    </text>
+    <button property="rrm:Ort" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:Ort" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <!-- 
+  
+  <label property="rrm:generateResult" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <checkbox property="rrm:generateResult" style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <text>
+    </text>
+  </checkbox>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel property="rrm:generateResult" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  -->
+  
+  
+  <label property="rrm:downStreamChannelMember" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+    <combo property="rrm:downStreamChannelMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+      <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+    </combo>
+    <button property="rrm:downStreamChannelMember" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:downStreamChannelMember" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <!-- 
+  
+  <label property="rrm:pegelZR" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
+    <text property="rrm:pegelZR" style="SWT.BORDER">
+      <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <button property="rrm:pegelZR" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:pegelZR" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:qberechnetZR" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
+    <text property="rrm:qberechnetZR" style="SWT.BORDER">
+      <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <button property="rrm:qberechnetZR" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:qberechnetZR" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:useResultAsInflow" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <checkbox property="rrm:useResultAsInflow" style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <text>
+    </text>
+  </checkbox>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel property="rrm:useResultAsInflow" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:resultAsInflowZR" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
+    <text property="rrm:resultAsInflowZR" style="SWT.BORDER">
+      <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <button property="rrm:resultAsInflowZR" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:resultAsInflowZR" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:zuflussZR" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
+    <text property="rrm:zuflussZR" style="SWT.BORDER">
+      <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+    </text>
+    <button property="rrm:zuflussZR" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:zuflussZR" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:syntheticZuflussZR" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <checkbox property="rrm:syntheticZuflussZR" style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <text>
+    </text>
+  </checkbox>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel property="rrm:syntheticZuflussZR" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  -->
+  
+  <label property="rrm:branchingMember" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <button property="rrm:branchingMember" style="SWT.PUSH">
+    <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+  </button>
+  <validatorlabel property="rrm:branchingMember" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  <label property="rrm:riverCode" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="rrm:riverCode" style="SWT.BORDER">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel property="rrm:riverCode" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:riverKilometer" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <text editable="true" property="rrm:riverKilometer" style="SWT.BORDER">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </text>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel property="rrm:riverKilometer" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  
+  <label property="rrm:qqRelation" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <button property="rrm:qqRelation" style="SWT.PUSH">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  </button>
+  <label style="SWT.NONE" visible="false">
+    <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <validatorlabel property="rrm:qqRelation" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+  <label property="rrm:qqRelatedNode" style="SWT.NONE" visible="true">
+    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </label>
+  <composite style="SWT.NONE">
+    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" />
+    <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+    <combo property="rrm:qqRelatedNode" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+      <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+    </combo>
+    <button property="rrm:qqRelatedNode" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.BEGINNING" />
+    </button>
+  </composite>
+  <validatorlabel property="rrm:qqRelatedNode" style="SWT.NONE" visible="true">
+    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+  </validatorlabel>
+  
+
+  <translator id="commons.msgGetString">
+    <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
+  </translator>
+</featureview>
