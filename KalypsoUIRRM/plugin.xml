@@ -461,13 +461,20 @@
    </extension>
    
    <!-- Handler for workflow -->
-   <!-- REMARK: we define the commands here ni order to avoid warning in this file -->
+   <!-- REMARK: we define the commands here in order to avoid warning in this file -->
    <extension point="org.eclipse.ui.commands">
             <command id="org.kalypso.model.rrm.timeseriesManagement" name="Timeseries Management" />
+            
+            <command id="org.kalypso.model.rrm.modelConstruction" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.modelConstruction.description" />
+            <command id="org.kalypso.model.rrm.editNetElements" name="%org.kalypso.model.rrm.editNetElements.name" description="%org.kalypso.model.rrm.editNetElements.description" />
+            <command id="org.kalypso.model.rrm.editNetRelations" name="%org.kalypso.model.rrm.editNetRelations.name" description="%org.kalypso.model.rrm.editNetRelations.description" />
+
             <command id="org.kalypso.model.rrm.catchmentModels" name="Catchment Models" />
+
             <command id="org.kalypso.model.rrm.simulationManagement" name="Simulation Management"/>
+            
+			<!-- non workflow -->
             <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="Create Simulations"/>
-            <command id="org.kalypso.model.rrm.editNetRelations" name="Edit Net Relations"/>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
@@ -477,7 +484,10 @@
    
    <extension point="org.eclipse.ui.handlers">
       <handler class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler" commandId="org.kalypso.model.rrm.timeseriesManagement"/>
-      <handler class="org.kalypso.ui.rrm.internal.cm.view.EditNetRelationsTaskHandler" commandId="org.kalypso.model.rrm.editNetRelations"/>
+      
+      <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetElementsTaskHandler" commandId="org.kalypso.model.rrm.editNetElements"/>
+      <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetRelationsTaskHandler" commandId="org.kalypso.model.rrm.editNetRelations"/>
+      
       <handler class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler" commandId="org.kalypso.model.rrm.catchmentModels"/>
       <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
       <handler class="org.kalypso.ui.rrm.internal.simulations.RefreshSimulationsTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations">
