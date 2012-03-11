@@ -39,7 +39,7 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.convert.namodel.schema;
+package org.kalypso.model.hydrology.internal.gml;
 
 import java.net.URL;
 import java.util.Map;

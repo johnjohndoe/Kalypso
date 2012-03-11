@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.customView;
+package org.kalypso.model.hydrology.internal.gml;
 
 import java.net.URL;
 
@@ -50,7 +50,7 @@ public class NAModelCatalogContribution implements ICatalogContribution
   @Override
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "catalog.xml" ); //$NON-NLS-1$
+    final URL catalogURL = getClass().getResource( "catalog/catalog.xml" ); //$NON-NLS-1$
     catalogManager.addNextCatalog( catalogURL );
   }
 }

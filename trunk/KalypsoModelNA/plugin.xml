@@ -5,7 +5,7 @@
            point="org.kalypso.simulation.core.simulation">
         <simulation
               simulationClass="org.kalypso.model.hydrology.internal.simulation.NaModelCalcJob"
-              catalogClass="org.kalypso.convert.namodel.schema.UrlCatalogNA"
+              catalogClass="org.kalypso.model.hydrology.internal.gml.UrlCatalogNA"
               typeID="KalypsoNA"/>
       <simulation
             simulationClass="org.kalypso.model.hydrology.internal.simulation.planerclient.global_preprocessing.NA_GlobalPreprocessingJob"
@@ -23,13 +23,13 @@
      <extension
            point="org.kalypso.contribs.java.urlCatalog">
         <catalog
-              class="org.kalypso.convert.namodel.schema.UrlCatalogNA"
+              class="org.kalypso.model.hydrology.internal.gml.UrlCatalogNA"
               id="org.kalypso.convert.namodel.UrlCatalogNA"/>
      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">
         <catalogContribution
-            class="org.kalypso.convert.namodel.schema.customView.NAModelCatalogContribution"
+            class="org.kalypso.model.hydrology.internal.gml.NAModelCatalogContribution"
             name="NA Model Catalog"/>
      </extension>
      <extension
@@ -167,7 +167,7 @@
      <extension
            point="org.kalypso.deegree.functionProperty">
         <function
-              class="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
+              class="org.kalypso.model.hydrology.internal.gml.FeatureAssociationFunctionProperty"
               id="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               name="FeatureAssociationFunctionProperty">
         </function>
