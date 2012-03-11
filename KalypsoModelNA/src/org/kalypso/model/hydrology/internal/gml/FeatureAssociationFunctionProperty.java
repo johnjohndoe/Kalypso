@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.convert.namodel.schema.functions;
+package org.kalypso.model.hydrology.internal.gml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * This function property creates 'arrows' from links beetween features.
  * 
- * @author Andreas von DÃ¶mming
+ * @author Andreas von Dömming
  * @author Gernot Belger
  */
 public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
@@ -72,9 +72,6 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
 
   private QName m_link2Name;
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
-   */
   @Override
   public void init( final Map<String, String> properties )
   {
@@ -85,10 +82,6 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
     m_link2Name = link2NameString == null ? null : QName.valueOf( link2NameString );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
@@ -152,10 +145,6 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
     return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
   @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
