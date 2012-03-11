@@ -179,6 +179,9 @@ public class EditRelationWidget extends DeprecatedMouseWidget implements IWidget
       return;
 
     final GeoTransform transform = mapPanel.getProjection();
+    if( transform == null )
+      return;
+
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, point, GRAB_RADIUS );
 
