@@ -40,11 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.logviewer;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.net.MalformedURLException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
@@ -57,13 +56,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author huebsch
  */
-public class LogFileReader
+class LogFileReader
 {
-  private final Vector<LogFileRow> rows = new Vector<LogFileRow>();
-
-  FileReader idMap = null;
-
-  BufferedReader br = null;
+  private final Collection<LogFileRow> rows = new ArrayList<>();
 
   public LogFileReader( final IFile file )
   {
@@ -72,6 +67,17 @@ public class LogFileReader
     try
     {
       logWorkspace = GmlSerializer.createGMLWorkspace( logFile.toURI().toURL(), null );
+
+      final QName recordName = new QName( "http://www.tuhh.de/NAFortranLog", "record" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final Feature[] recordFEs = FeatureHelper.getFeaturesWithName( logWorkspace, recordName );
+      for( final Feature feature : recordFEs )
+      {
+        final String levelString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "level" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String messageString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "message" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String nameString = feature.getName();
+        final String paramString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "param" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        rows.add( new LogFileRow( levelString, nameString, messageString, paramString ) );
+      }
     }
     catch( final MalformedURLException e )
     {
@@ -80,17 +86,6 @@ public class LogFileReader
     catch( final Exception e )
     {
       e.printStackTrace();
-    }
-
-    final QName recordName = new QName( "http://www.tuhh.de/NAFortranLog", "record" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Feature[] recordFEs = FeatureHelper.getFeaturesWithName( logWorkspace, recordName );
-    for( final Feature feature : recordFEs )
-    {
-      final String levelString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "level" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      final String messageString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "message" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      final String nameString = (String) feature.getProperty( new QName( "http://www.opengis.net/gml", "name" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      final String paramString = (String) feature.getProperty( new QName( "http://www.tuhh.de/NAFortranLog", "param" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      rows.add( new LogFileRow( levelString, nameString, messageString, paramString ) );
     }
   }
 

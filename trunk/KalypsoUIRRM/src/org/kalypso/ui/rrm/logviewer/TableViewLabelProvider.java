@@ -54,7 +54,7 @@ import org.eclipse.ui.PlatformUI;
 public class TableViewLabelProvider extends LabelProvider implements ITableLabelProvider
 {
   @Override
-  public String getColumnText( Object obj, int index )
+  public String getColumnText( final Object obj, final int index )
   {
     if( obj instanceof LogFileRow )
     {
@@ -75,7 +75,7 @@ public class TableViewLabelProvider extends LabelProvider implements ITableLabel
   }
 
   @Override
-  public Image getColumnImage( Object obj, int index )
+  public Image getColumnImage( final Object obj, final int index )
   {
     if( obj instanceof LogFileRow )
     {
@@ -95,5 +95,4 @@ public class TableViewLabelProvider extends LabelProvider implements ITableLabel
     }
     return null;
   }
-
 }
