@@ -63,7 +63,28 @@ public class ScenarioAccessor
   {
     final IFolder viewsFolder = getViewsFolder();
 
-    return viewsFolder.getFile( "Simulations.gtt" );
+    return viewsFolder.getFile( "Simulations.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getNodesNetGtt( )
+  {
+    final IFolder viewsFolder = getViewsFolder();
+
+    return viewsFolder.getFile( "ModelConstruction_Nodes.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getReachesNetGtt( )
+  {
+    final IFolder viewsFolder = getViewsFolder();
+
+    return viewsFolder.getFile( "ModelConstruction_Reaches.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getCatchmentsNetGtt( )
+  {
+    final IFolder viewsFolder = getViewsFolder();
+
+    return viewsFolder.getFile( "ModelConstruction_Catchments.gtt" ); //$NON-NLS-1$
   }
 
   public IFolder getViewsFolder( )
