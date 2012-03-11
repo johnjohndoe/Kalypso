@@ -126,9 +126,14 @@ public class EditNetElementsTaskHandler extends AbstractHandler
 
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
+
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
-//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
-//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
+
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Catchment_ModelConstruction.gft" ) ); //$NON-NLS-1$
+
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/KMChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/RHBChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/VChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
   }
 
   private void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final IFile input, final String title )
