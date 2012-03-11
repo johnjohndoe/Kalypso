@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.logviewer;
+package org.kalypso.ui.rrm.internal.logviewer;
 
 /**
  * Single object which represents single row in CF5 log file.

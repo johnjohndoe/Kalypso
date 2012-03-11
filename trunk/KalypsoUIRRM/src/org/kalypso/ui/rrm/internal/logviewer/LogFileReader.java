@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.logviewer;
+package org.kalypso.ui.rrm.internal.logviewer;
 
 import java.io.File;
 import java.net.MalformedURLException;
