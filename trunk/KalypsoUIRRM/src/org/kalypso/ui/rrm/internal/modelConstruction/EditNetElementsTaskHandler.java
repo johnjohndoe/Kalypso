@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -58,7 +59,9 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.model.hydrology.project.ScenarioAccessor;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.editor.gistableeditor.GttViewPart;
@@ -92,6 +95,8 @@ public class EditNetElementsTaskHandler extends AbstractHandler
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, "Loading map..." ) )
       return null;
 
+    configureFeatureView( activePage );
+
     /* set input to gtt tables */
     try
     {
@@ -110,6 +115,20 @@ public class EditNetElementsTaskHandler extends AbstractHandler
     }
 
     return null;
+  }
+
+  /** Configure feature view with specialized templates */
+  private void configureFeatureView( final IWorkbenchPage page )
+  {
+    final IViewPart part = page.findView( FeatureView.ID );
+    if( !(part instanceof FeatureView) )
+      return;
+
+    final FeatureView featureView = (FeatureView) part;
+    final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
+//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
+//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
   }
 
   private void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final IFile input, final String title )
