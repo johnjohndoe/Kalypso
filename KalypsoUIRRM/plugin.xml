@@ -492,11 +492,19 @@
       <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
       <handler class="org.kalypso.ui.rrm.internal.simulations.RefreshSimulationsTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations">
          <enabledWhen>
-            <with variable="activeGmlTable">
-                <!-- -refernece not null -->
-                <!-- Fixme: introduce tests -->
-                <instanceof value="java.lang.Object"/>
-            </with>
+         	<and>
+	            <with variable="activeGmlTable">
+	                <!-- -reference not null -->
+	                <instanceof value="java.lang.Object"/>
+	            </with>
+	             <with variable="selection">
+	                <iterate ifEmpty="false" operator="and">
+	                   <or>
+	                	 <test property="org.kalypso.gml.qname" value="{org.kalypso.na.control_v2}NAControl"/>
+	                   </or>
+	                </iterate>
+	             </with>
+         	</and>
          </enabledWhen>
       </handler>
    </extension>
@@ -504,7 +512,9 @@
     <!-- View menu for GML-Table -->
     <extension point="org.eclipse.ui.menus">
         <menuContribution locationURI="toolbar:org.kalypso.ui.editor.gistableeditor.GttViewPart?after=additions">
-            <command commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" style="push"/>
+            <command commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" style="push">
+            	<visibleWhen checkEnabled="true"/>
+            </command>
         </menuContribution>
      </extension>
    
