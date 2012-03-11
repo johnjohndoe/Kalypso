@@ -61,9 +61,9 @@ public final class Messages
   {
   }
 
-/*
- * java reflections needs this method-signatur
- */
+  /**
+   * java reflections needs this method-signatur
+   */
   public static String getString( final String key )
   {
     return getString( key, NO_ARGS );

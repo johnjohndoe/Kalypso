@@ -58,7 +58,7 @@ public class Messages
   {
   }
 
-  /*
+  /**
    * java reflections needs this method-signatur
    */
   public static String getString( final String key )
