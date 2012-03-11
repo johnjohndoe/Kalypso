@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="rrm:StorageChannel" style="SWT.NONE" xmlns="featureview.template.kalypso.org" xmlns:rrm="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+  <gridLayout marginWidth="0" marginHeight="0" />
+  
+  <group text="%channel.gft.commmonparameters" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+    <gridLayout numColumns="3" />
+    <label xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:name" style="SWT.BORDER">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
+      <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.FILL" heightHint="30" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <composite style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+      <combo property="rrm:downStreamNodeMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <button property="rrm:downStreamNodeMember" style="SWT.PUSH">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </button>
+    </composite>
+    <validatorlabel property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+  </group>
+  <group text="%rhbchannel.gft.rhbparameters" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+    <gridLayout numColumns="3" />
+    <label property="rrm:generateResult" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <checkbox property="rrm:generateResult" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <text>
+      </text>
+    </checkbox>
+    <validatorlabel property="rrm:generateResult" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:vmin" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:vmin" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:vmin" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:vmax" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:vmax" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:vmax" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:sv" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:sv" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:sv" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:hvvsqd" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <button property="rrm:hvvsqd" style="SWT.PUSH">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </button>
+    <validatorlabel property="rrm:hvvsqd" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label text="%rhbchannel.gft.rhbvalidatelabel" property="rrm:hvvsqd" style="SWT.NONE" tooltip="%rhbchannel.gft.rhbvalidatetooltip" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <extensioncontrol extension-id=".StorageChannelValidateFeatureControl" property="rrm:hvvsqd" style="SWT.SEARCH">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+    </extensioncontrol>
+  </group>
+  <group text="%rhbchannel.gft.rhboptionalparameters" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+    <gridLayout numColumns="3" />
+    <label property="rrm:iknotNodeMember" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <composite style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+      <combo property="rrm:iknotNodeMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <button property="rrm:iknotNodeMember" style="SWT.PUSH">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </button>
+    </composite>
+    <validatorlabel property="rrm:iknotNodeMember" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:downStreamNodeMember_2nd" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <composite style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+      <combo property="rrm:downStreamNodeMember_2nd" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <button property="rrm:downStreamNodeMember_2nd" style="SWT.PUSH">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </button>
+    </composite>
+    <validatorlabel property="rrm:downStreamNodeMember_2nd" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:downStreamNodeMember_3rd" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <composite style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+      <combo property="rrm:downStreamNodeMember_3rd" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <button property="rrm:downStreamNodeMember_3rd" style="SWT.PUSH">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </button>
+    </composite>
+    <validatorlabel property="rrm:downStreamNodeMember_3rd" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:zmlLinkSeaEvaporation" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <composite style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
+      <text property="rrm:zmlLinkSeaEvaporation" style="SWT.BORDER">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </text>
+      <button property="rrm:zmlLinkSeaEvaporation" style="SWT.PUSH">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </button>
+    </composite>
+    <validatorlabel property="rrm:zmlLinkSeaEvaporation" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:faktorSeaEvaporation" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:faktorSeaEvaporation" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:faktorSeaEvaporation" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+  </group>
+
+
+  <translator id="commons.msgGetString">
+    <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
+  </translator>
+</featureview>

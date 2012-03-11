@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featureview typename="rrm:KMChannel" style="SWT.NONE" xmlns="featureview.template.kalypso.org" xmlns:rrm="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+  <gridLayout marginWidth="0" marginHeight="0" />
+  
+  <group text="%channel.gft.commmonparameters" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+    <gridLayout numColumns="3" />
+    <label xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:name" style="SWT.BORDER">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
+      <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.FILL" heightHint="30" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <composite style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
+      <combo property="rrm:downStreamNodeMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+      </combo>
+      <button property="rrm:downStreamNodeMember" style="SWT.PUSH">
+        <gridData horizontalAlignment="SWT.BEGINNING" />
+      </button>
+    </composite>
+    <validatorlabel property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+  </group>
+  <group text="%kmchannel.gft.kmparameters" style="SWT.NONE">
+    <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+    <gridLayout numColumns="6" />
+    <label property="rrm:startkm" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:startkm" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:startkm" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:endkm" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:endkm" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:endkm" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:faktorRkf" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:faktorRkf" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:faktorRkf" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <label property="rrm:faktorRnf" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:faktorRnf" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:faktorRnf" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+    
+    <group text="%kmchannel.gft.subparams" style="SWT.NONE">
+      <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" horizontalSpan="6" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      <gridLayout marginWidth="0" marginHeight="0" />
+      <table showToolbar="true" property="rrm:KMParameterMember" style="SWT.BORDER">
+        <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" heightHint="200" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+      </table>
+      <commandHyperlink style="SWT.NONE">
+        <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.LEFT" horizontalSpan="6" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
+        <commandID>org.kalypso.rrm.kalininmiljukov.commands.updateKparameters</commandID>
+      </commandHyperlink>
+    </group>
+  </group>
+
+  <translator id="commons.msgGetString">
+    <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
+  </translator>
+</featureview>

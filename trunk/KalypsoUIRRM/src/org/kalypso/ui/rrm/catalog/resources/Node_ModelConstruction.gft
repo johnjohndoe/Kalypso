@@ -68,7 +68,7 @@
   
   -->
   
-  
+  <!-- 
   <label property="rrm:downStreamChannelMember" style="SWT.NONE" visible="true">
     <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
@@ -85,6 +85,7 @@
   <validatorlabel property="rrm:downStreamChannelMember" style="SWT.NONE" visible="true">
     <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
+  -->
   
   <!-- 
   
