@@ -17,10 +17,10 @@ import org.kalypso.module.INewProjectHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
 import org.kalypso.module.welcome.SpecialImportProjectAction;
+import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.newproject.KalypsoNAProjectWizard;
-import org.kalypso.ui.rrm.internal.welcome.KalypsoRRMOpenAction;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmNewProjectHandler;
 import org.kalypso.ui.rrm.internal.welcome.KalypsoRrmWelcomePageFrame;
 
@@ -109,7 +109,7 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   @Override
   public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
   {
-    return new KalypsoRRMOpenAction();
+    return new SzenarioProjectOpenAction( KalypsoModuleRRM.ID );
   }
 
   @Override
