@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.logviewer;
 
@@ -45,9 +45,8 @@ package org.kalypso.ui.rrm.logviewer;
  * 
  * @author Madan
  */
-public class LogFileRow
+class LogFileRow
 {
-
   private String level = null;
 
   private String message = null;
@@ -56,7 +55,7 @@ public class LogFileRow
 
   private String parameter = null;
 
-  public LogFileRow( String l, String e, String m, String p )
+  public LogFileRow( final String l, final String e, final String m, final String p )
   {
     this.level = l;
     this.element = e;

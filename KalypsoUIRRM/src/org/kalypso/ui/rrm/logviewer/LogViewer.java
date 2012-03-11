@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.logviewer;
 
@@ -52,15 +52,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class LogViewer extends ViewPart
 {
-  private LogTableViewer logTableViewer;
-
-  private IFile fileMain = null;
-
-  public LogViewer()
-  {
-    super();
-  }
-  public ISelectionListener listener = new ISelectionListener()
+  private final ISelectionListener m_listener = new ISelectionListener()
   {
     @Override
     public void selectionChanged( final IWorkbenchPart sourcepart, final ISelection selection )
@@ -72,7 +64,11 @@ public class LogViewer extends ViewPart
     }
   };
 
-  public void showSelection( final ISelection selection )
+  private LogTableViewer m_logTableViewer;
+
+  private IFile m_fileMain = null;
+
+  protected void showSelection( final ISelection selection )
   {
     final IStructuredSelection structured = (IStructuredSelection) selection;
     final Object object = structured.getFirstElement();
@@ -81,10 +77,11 @@ public class LogViewer extends ViewPart
       final IFile file = (IFile) object;
       final String extension = file.getFileExtension();
       final String name = file.getName();
-      if( extension != null && extension.equals( "log" ) ||name.equals( "error.txt" )) //$NON-NLS-1$ //$NON-NLS-2$
+      if( extension != null && extension.equals( "log" ) || name.equals( "error.txt" ) || name.equals( "error.gml" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       {
-        setOrgIFile( file );
-        fileSelectionChange();
+        m_fileMain = file;
+        // redirect into LogTableViewer
+        m_logTableViewer.fileSelectionChange( m_fileMain );
       }
     }
 
@@ -94,11 +91,10 @@ public class LogViewer extends ViewPart
   public void createPartControl( final Composite parent )
   {
     final SashForm sashForm = new SashForm( parent, SWT.HORIZONTAL );
-    logTableViewer = new LogTableViewer( this );
-    logTableViewer.createPartControl( sashForm );
+    m_logTableViewer = new LogTableViewer( this );
+    m_logTableViewer.createPartControl( sashForm );
 
-    getSite().getPage().addSelectionListener( listener );
-
+    getSite().getPage().addSelectionListener( m_listener );
   }
 
   /**
@@ -110,28 +106,11 @@ public class LogViewer extends ViewPart
     // logTableViewer.getControl().setFocus();
   }
 
-  public void setOrgIFile( final IFile f )
-  {
-    this.fileMain = f;
-  }
-
-  public IFile getOrgIFile( )
-  {
-    return this.fileMain;
-  }
-
-  public void fileSelectionChange( )
-  {
-    // redirect into LogTableViewer
-    logTableViewer.fileSelectionChange( fileMain );
-  }
-
   @Override
   public void dispose( )
   {
-    getSite().getPage().removeSelectionListener( listener );
+    getSite().getPage().removeSelectionListener( m_listener );
+
     super.dispose();
-
   }
-
 }

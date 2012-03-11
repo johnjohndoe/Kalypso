@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.logviewer;
 
@@ -53,7 +53,7 @@ import org.eclipse.ui.part.ViewPart;
  * 
  * @author Madan
  */
-public class LogTableViewer extends ViewPart
+class LogTableViewer extends ViewPart
 {
   private TableViewer m_viewer;
 
@@ -105,7 +105,7 @@ public class LogTableViewer extends ViewPart
     column = new TableColumn( table, SWT.LEFT, 2 );
     column.setText( "Message" ); //$NON-NLS-1$
     column.setWidth( 500 );
-    
+
     column = new TableColumn( table, SWT.LEFT, 3 );
     column.setText( "Parameter" ); //$NON-NLS-1$
     column.setWidth( 200 );
@@ -117,11 +117,5 @@ public class LogTableViewer extends ViewPart
     m_viewer.getTable().clearAll();
     m_viewer.setContentProvider( cp );
     m_viewer.getTable().setTopIndex( cp.getRowCount() );
-  }
-
-  @Override
-  public void dispose( )
-  {
-    super.dispose();
   }
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,9 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.logviewer;
-
-import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -54,10 +52,8 @@ import org.eclipse.jface.viewers.Viewer;
  * 
  * @author Madan
  */
-public class TableContentProvider implements IStructuredContentProvider
+class TableContentProvider implements IStructuredContentProvider
 {
-  private File m_logFile;
-
   private IFile m_logIFile;
 
   private TableViewer m_viewer;
@@ -78,43 +74,23 @@ public class TableContentProvider implements IStructuredContentProvider
     }
   }
 
-  public void setLogFile( final String file )
-  {
-    setLogFile( new File( file ) );
-  }
-
-  public void setLogFile( final File file )
-  {
-    this.m_logFile = file;
-  }
-
   @Override
   public void dispose( )
   {
   }
 
-  public File getLogFile( )
-  {
-    return this.m_logFile;
-  }
-
-  public IFile getLogIFile( )
+  private IFile getLogIFile( )
   {
     return m_logIFile;
   }
 
-  public void refresh( )
+  private void refresh( )
   {
     if( m_viewer != null )
     {
       m_viewer.getTable().clearAll();
     }
     m_logFileReader = new LogFileReader( getLogIFile() );
-  }
-
-  public LogFileReader getLogFileReader( )
-  {
-    return m_logFileReader;
   }
 
   public int getRowCount( )
@@ -142,5 +118,4 @@ public class TableContentProvider implements IStructuredContentProvider
   {
     // nothing?
   }
-
 }
