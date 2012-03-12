@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
@@ -77,8 +78,22 @@ public class EditTimeseriesAction extends Action
     final Shell shell = event.widget.getDisplay().getActiveShell();
     final IWorkbench context = PlatformUI.getWorkbench();
 
-    final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_model, m_timeseries, context );
-    dialog.open();
+    try
+    {
+      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries );
+      final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, source, context );
+      final int open = dialog.open();
+
+      if( Window.OK == open )
+        source.save();
+
+      source.dispose();
+
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
 
   }
 }
