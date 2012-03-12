@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -63,7 +64,6 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.base.obsprovider.MultipleSourceElement;
-import org.kalypso.zml.ui.table.view.TableComposite;
 
 /**
  * @author Dirk Kuch
@@ -78,11 +78,16 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
 
   private static final String DIALOG_SASH_FORM_WEIGHTS = "edit.time.series.dialog.weights"; //$NON-NLS-1$
 
-  public EditTimeseriesDialog( final Shell shell, final ITreeNodeModel model, final ITimeseries timeseries )
+  private final IServiceLocator m_context;
+
+  private RrmTableComposite m_table;
+
+  public EditTimeseriesDialog( final Shell shell, final ITreeNodeModel model, final ITimeseries timeseries, final IServiceLocator context )
   {
     super( shell );
     m_model = model;
     m_timeseries = timeseries;
+    m_context = context;
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     setHelpAvailable( false );
@@ -134,11 +139,11 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     chart.setSelection( multiple );
 
-    final URL tableTemplate = getClass().getResource( "templates/table.kot" );
+    final URL tableTemplate = getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
 
-    final TableComposite table = new TableComposite( rightPane, toolkit, tableTemplate );
-    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    table.setSelection( multiple );
+    m_table = new RrmTableComposite( rightPane, toolkit, tableTemplate, m_context );
+    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_table.setSelection( multiple );
 
     chart.addControlListener( new ControlAdapter()
     {
@@ -185,4 +190,13 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
     settings.put( DIALOG_SASH_FORM_WEIGHTS, StringUtils.chop( buffer.toString() ) );
   }
+
+  @Override
+  protected void buttonPressed( final int buttonId )
+  {
+    m_table.deactivate();
+
+    super.buttonPressed( buttonId );
+  }
+
 }
