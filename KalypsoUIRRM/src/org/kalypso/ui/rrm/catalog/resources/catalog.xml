@@ -5,6 +5,11 @@
   <system uri="Node.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:default" />
   <system uri="NodeNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" />
 
+  <system uri="KontZufluss.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KontZufluss:featureview:default" />
+  <system uri="KontEntnahme.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:KontEntnahme:featureview:default" />
+  <system uri="Ueberlauf.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Ueberlauf:featureview:default" />
+  <system uri="Verzweigung.gft" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Verzweigung:featureview:default" />
+
   <system uri="Subcatchments.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:default" />
   <system uri="SubcatchmentsNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:net" />
   <system uri="GroundwaterNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Catchment:sld:groundwaterNet" />
