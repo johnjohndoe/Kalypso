@@ -59,20 +59,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
-import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.base.obsprovider.MultipleSourceElement;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 
 /**
  * @author Dirk Kuch
  */
 public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
 {
-  private final ITreeNodeModel m_model;
-
-  private final ITimeseries m_timeseries;
 
   private static final String DIALOG_SCREEN_SIZE = "edit.time.series.dialog.screen.size"; //$NON-NLS-1$
 
@@ -84,11 +78,12 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
 
   private EditTimeseriesChartComposite m_chart;
 
-  public EditTimeseriesDialog( final Shell shell, final ITreeNodeModel model, final ITimeseries timeseries, final IServiceLocator context )
+  private final IMultipleZmlSourceElement m_source;
+
+  public EditTimeseriesDialog( final Shell shell, final IMultipleZmlSourceElement source, final IServiceLocator context )
   {
     super( shell );
-    m_model = model;
-    m_timeseries = timeseries;
+    m_source = source;
     m_context = context;
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
@@ -133,19 +128,15 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     final Composite rightPane = toolkit.createComposite( form );
     rightPane.setLayout( Layouts.createGridLayout() );
 
-    final IZmlSourceElement source = (IZmlSourceElement) m_timeseries.getAdapter( IZmlSourceElement.class );
-    final MultipleSourceElement multiple = new MultipleSourceElement( m_timeseries.getParameterType() );
-    multiple.add( source );
-
     m_chart = new EditTimeseriesChartComposite( leftPane, toolkit, m_context );
     m_chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_chart.setSelection( multiple );
+    m_chart.setSelection( m_source );
 
     final URL tableTemplate = getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
 
     m_table = new RrmTableComposite( rightPane, toolkit, tableTemplate, m_context );
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_table.setSelection( multiple );
+    m_table.setSelection( m_source );
 
     m_chart.addControlListener( new ControlAdapter()
     {
