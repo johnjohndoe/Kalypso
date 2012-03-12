@@ -79,8 +79,8 @@ public class ImportTimeseriesAction extends Action
     m_parameterType = parameterType;
     m_model = model;
 
-    setText( Messages.getString("ImportTimeseriesAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("ImportTimeseriesAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "ImportTimeseriesAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "ImportTimeseriesAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.IMPORT_TIMESERIES ) );
   }
@@ -92,7 +92,6 @@ public class ImportTimeseriesAction extends Action
 
     /* Prepare data */
     final ImportObservationData data = prepareData();
-
     final ITimeseries timeseries = showWizard( shell, data );
 
     // select tree with pseudo node
