@@ -59,6 +59,7 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
   @Override
   protected void createContents( )
   {
+
     createPropertyControl( ITimeseries.PROPERTY_QUALITY );
   }
 }
