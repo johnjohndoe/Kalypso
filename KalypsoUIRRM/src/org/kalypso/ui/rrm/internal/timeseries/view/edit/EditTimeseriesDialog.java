@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
+import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -68,9 +68,8 @@ import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 /**
  * @author Dirk Kuch
  */
-public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
+public class EditTimeseriesDialog extends EnhancedTrayDialog
 {
-
   private static final String DIALOG_SCREEN_SIZE = "edit.time.series.dialog.screen.size"; //$NON-NLS-1$
 
   private static final String DIALOG_SASH_FORM_WEIGHTS = "edit.time.series.dialog.weights"; //$NON-NLS-1$
@@ -90,6 +89,7 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
   public EditTimeseriesDialog( final Shell shell, final FeatureBean<ITimeseries> timeseries, final IMultipleZmlSourceElement source, final IDataBinding binding, final IServiceLocator context )
   {
     super( shell );
+
     m_timeseries = timeseries;
     m_source = source;
     m_binding = binding;
