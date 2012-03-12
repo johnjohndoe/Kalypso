@@ -75,7 +75,7 @@ public class RrmTableComposite extends TableComposite
       @Override
       public IZmlTable getTable( )
       {
-        return getTable();
+        return RrmTableComposite.this.getTable();
       }
 
       @Override

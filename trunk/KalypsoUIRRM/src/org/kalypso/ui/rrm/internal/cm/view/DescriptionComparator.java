@@ -74,11 +74,9 @@ public class DescriptionComparator extends ViewerComparator
 
       if( catchmentDescription1 == null && catchmentDescription2 != null )
         return -1;
-
-      if( catchmentDescription1 != null && catchmentDescription2 == null )
+      else if( catchmentDescription1 != null && catchmentDescription2 == null )
         return 1;
-
-      if( catchmentDescription1 == null && catchmentDescription2 == null )
+      else if( catchmentDescription1 == null && catchmentDescription2 == null )
         return 0;
 
       return catchmentDescription1.compareTo( catchmentDescription2 );

@@ -64,7 +64,7 @@ public class ZmlInlineFeatureDialog implements IFeatureDialog
 
   private FeatureChange m_change = null;
 
-  private static ZmlInlineGuiTypeHandler m_typeHandler;
+  private final ZmlInlineGuiTypeHandler m_typeHandler;
 
   public ZmlInlineFeatureDialog( final Feature feature, final IPropertyType ftp, final ZmlInlineGuiTypeHandler typeHandler )
   {
