@@ -43,8 +43,8 @@
     <validatorlabel property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
-    
   </group>
+  
   <group text="%rhbchannel.gft.rhbparameters" style="SWT.NONE">
     <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
     <gridLayout numColumns="3" />
@@ -107,6 +107,7 @@
       <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.FILL" horizontalSpan="2" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
     </extensioncontrol>
   </group>
+  
   <group text="%rhbchannel.gft.rhboptionalparameters" style="SWT.NONE">
     <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
     <gridLayout numColumns="3" />
