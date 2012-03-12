@@ -50,6 +50,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
+import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
+import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
@@ -63,6 +66,7 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -121,6 +125,11 @@ public class EditTimeseriesChartComposite extends Composite
     m_chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     m_chartSourceProvider = new ChartSourceProvider( m_context, m_chartComposite );
+
+    final ZoomPanMaximizeHandler handler = new ZoomPanMaximizeHandler( m_chartComposite, DIRECTION.eBoth );
+    final IChartHandlerManager plot = m_chartComposite.getPlotHandler();
+    if( Objects.isNotNull( plot ) )
+      plot.activatePlotHandler( handler );
   }
 
   private void createToolbar( final FormToolkit toolkit )
