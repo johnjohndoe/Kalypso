@@ -192,7 +192,6 @@
     
   </group>
 
-  
   <translator id="commons.msgGetString">
     <class>org.kalypso.model.rrm.ui:org.kalypso.ui.rrm.catalog.TemplateMessages</class>
   </translator>
