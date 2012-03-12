@@ -56,10 +56,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -103,10 +105,8 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
-    final FormToolkit toolkit = KalypsoUIRRMPlugin.getDefault().getToolkit();
-
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
     getShell().setText( "Edit Timeseries" );
-// setMessage( "Edit Timeseries" );
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
@@ -160,8 +160,13 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     form.setWeights( getWeights() );
     toolkit.adapt( form );
 
-    final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( base, m_timeseries, m_binding, true );
-    editQuantity.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final Section controlSection = toolkit.createSection( base, Section.TITLE_BAR | Section.EXPANDED );
+    controlSection.setText( "Properties" );
+    controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( controlSection, m_timeseries, m_binding, true );
+// editQuantity.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    controlSection.setClient( editQuantity );
 
     return super.createDialogArea( parent );
   }
