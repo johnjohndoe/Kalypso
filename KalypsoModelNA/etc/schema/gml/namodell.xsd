@@ -79,8 +79,8 @@
 					<element name="syntheticZuflussZR" type="boolean" default="false" nillable="true"/>
 					<!-- branching ab hier aktivieren-->
 					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0"/>
-					<element name="riverCode" type="string" />
-					<element name="riverKilometer" >
+					<element name="riverCode" type="string" minOccurs="0" nillable="true" />
+					<element name="riverKilometer" minOccurs="0" nillable="true">
 						<simpleType id="nonNegativeDouble">
 							<restriction base="double">
 								<minInclusive value="0.0"></minInclusive>
