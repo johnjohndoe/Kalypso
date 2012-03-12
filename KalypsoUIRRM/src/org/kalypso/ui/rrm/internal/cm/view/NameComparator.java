@@ -74,11 +74,9 @@ public class NameComparator extends ViewerComparator
 
       if( catchmentName1 == null && catchmentName2 != null )
         return -1;
-
-      if( catchmentName1 != null && catchmentName2 == null )
+      else if( catchmentName1 != null && catchmentName2 == null )
         return 1;
-
-      if( catchmentName1 == null && catchmentName2 == null )
+      else if( catchmentName1 == null && catchmentName2 == null )
         return 0;
 
       return catchmentName1.compareTo( catchmentName2 );
