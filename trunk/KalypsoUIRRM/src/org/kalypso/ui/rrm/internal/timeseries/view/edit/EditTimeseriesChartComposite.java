@@ -48,15 +48,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
+import org.kalypso.zml.ui.chart.layer.selection.ZmlChartSelectionChangedHandler;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.chart.view.DiagramCompositeSelection;
 import org.kalypso.zml.ui.chart.view.HideUnuseLayersVisitor;
@@ -66,7 +67,6 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -127,14 +127,14 @@ public class EditTimeseriesChartComposite extends Composite
     m_chartSourceProvider = new ChartSourceProvider( m_context, m_chartComposite );
 
     final ZoomPanMaximizeHandler handler = new ZoomPanMaximizeHandler( m_chartComposite, DIRECTION.eBoth );
-    final IChartHandlerManager plot = m_chartComposite.getPlotHandler();
-    if( Objects.isNotNull( plot ) )
-      plot.activatePlotHandler( handler );
+    final IEvaluationService service = (IEvaluationService) m_context.getService( IEvaluationService.class );
+    handler.addListener( new ZmlChartSelectionChangedHandler( service.getCurrentState() ) );
+
+    m_chartComposite.getPlotHandler().activatePlotHandler( handler );
   }
 
   private void createToolbar( final FormToolkit toolkit )
   {
-
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
     final ToolBar control = manager.createControl( this );
     control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
