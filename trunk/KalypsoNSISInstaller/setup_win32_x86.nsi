@@ -46,7 +46,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE German
 
 # Installer attributes
-OutFile setup_win32_x86.exe
+OutFile setup_kalypso_${VERSION}_win32_x86.exe
 InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
