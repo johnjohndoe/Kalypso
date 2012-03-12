@@ -44,6 +44,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
@@ -90,7 +91,9 @@ public class EditTimeseriesChartComposite extends Composite
 
     m_context = context;
 
-    setLayout( Layouts.createGridLayout() );
+    final GridLayout layout = Layouts.createGridLayout();
+    layout.verticalSpacing = 0;
+    setLayout( layout );
 
     init();
     draw( toolkit );

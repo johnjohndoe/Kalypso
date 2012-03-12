@@ -57,9 +57,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 
 /**
@@ -80,14 +83,21 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
 
   private final IMultipleZmlSourceElement m_source;
 
-  public EditTimeseriesDialog( final Shell shell, final IMultipleZmlSourceElement source, final IServiceLocator context )
+  private final FeatureBean<ITimeseries> m_timeseries;
+
+  private final IDataBinding m_binding;
+
+  public EditTimeseriesDialog( final Shell shell, final FeatureBean<ITimeseries> timeseries, final IMultipleZmlSourceElement source, final IDataBinding binding, final IServiceLocator context )
   {
     super( shell );
+    m_timeseries = timeseries;
     m_source = source;
+    m_binding = binding;
     m_context = context;
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     setHelpAvailable( false );
+    setDialogHelpAvailable( false );
   }
 
   @Override
@@ -149,6 +159,9 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
 
     form.setWeights( getWeights() );
     toolkit.adapt( form );
+
+    final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( base, m_timeseries, m_binding, true );
+    editQuantity.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     return super.createDialogArea( parent );
   }

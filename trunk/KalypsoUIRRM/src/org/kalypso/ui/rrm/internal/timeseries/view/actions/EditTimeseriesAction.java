@@ -46,25 +46,28 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialogSource;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  */
 public class EditTimeseriesAction extends Action
 {
-  private final ITimeseries m_timeseries;
 
-  private final ITreeNodeModel m_model;
+  private final IDataBinding m_binding;
 
-  public EditTimeseriesAction( final ITreeNodeModel model, final ITimeseries timeseries )
+  private final FeatureBean<ITimeseries> m_timeseries;
+
+  public EditTimeseriesAction( final FeatureBean<ITimeseries> timeseries, final IDataBinding binding )
   {
-    m_model = model;
     m_timeseries = timeseries;
+    m_binding = binding;
 
     setText( "Edit Timeseries" ); //$NON-NLS-1$
     setToolTipText( "Edit selected Timeseries" ); //$NON-NLS-1$
@@ -80,8 +83,8 @@ public class EditTimeseriesAction extends Action
 
     try
     {
-      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries );
-      final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, source, context );
+      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries.getFeature() );
+      final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
       final int open = dialog.open();
 
       if( Window.OK == open )

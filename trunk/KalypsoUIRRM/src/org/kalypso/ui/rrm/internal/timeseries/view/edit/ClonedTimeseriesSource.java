@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.actions;
+package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
