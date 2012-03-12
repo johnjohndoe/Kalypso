@@ -48,6 +48,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
@@ -74,9 +76,15 @@ public class EditTimeseriesChartComposite extends Composite
 
   private ChartImageComposite m_chartComposite;
 
-  EditTimeseriesChartComposite( final Composite parent, final FormToolkit toolkit )
+  private final IServiceLocator m_context;
+
+  private ChartSourceProvider m_chartSourceProvider;
+
+  EditTimeseriesChartComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context )
   {
     super( parent, SWT.NULL );
+
+    m_context = context;
 
     setLayout( Layouts.createGridLayout() );
 
@@ -92,11 +100,17 @@ public class EditTimeseriesChartComposite extends Composite
     {
       final ChartTypeHandler handler = new ChartTypeHandler( getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
       ChartFactory.doConfiguration( m_model, handler.getReferenceResolver(), handler.getChartType(), ChartExtensionLoader.getInstance(), handler.getContext() );
+
     }
     catch( final Throwable t )
     {
       t.printStackTrace();
     }
+  }
+
+  public void deactivate( )
+  {
+    m_chartSourceProvider.dispose();
   }
 
   private void draw( final FormToolkit toolkit )
@@ -106,37 +120,25 @@ public class EditTimeseriesChartComposite extends Composite
     m_chartComposite = new ChartImageComposite( this, SWT.BORDER, m_model, CHART_BACKGROUND );
     m_chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
+    m_chartSourceProvider = new ChartSourceProvider( m_context, m_chartComposite );
   }
 
   private void createToolbar( final FormToolkit toolkit )
   {
-// final String[] contributions = getContributions();
 
-// if( ArrayUtils.isEmpty( contributions ) )
-// return;
-//
+    final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+    final ToolBar control = manager.createControl( this );
+    control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
 
-//
-
-//
-// for( final String reference : contributions )
-// {
-// ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, reference );
-// }
+    ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, "toolbar:org.kalypso.model.rrm.ui.zml.chart.menu.toolbar" ); //$NON-NLS-1$
 
     if( KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
     {
-      final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-      final ToolBar control = manager.createControl( this );
-      control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
-
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, "toolbar:org.kalypso.model.rrm.ui.chart.debug" ); //$NON-NLS-1$
-
-      manager.update( true );
-
-      toolkit.adapt( control );
     }
 
+    manager.update( true );
+    toolkit.adapt( control );
   }
 
   public void setSelection( final IMultipleZmlSourceElement source )

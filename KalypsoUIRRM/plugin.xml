@@ -615,5 +615,25 @@
                style="toggle">
          </command>
       </menuContribution>
+      <menuContribution
+          locationURI="toolbar:org.kalypso.model.rrm.ui.zml.chart.menu.toolbar">
+       <command
+             commandId="org.kalypso.chart.ui.commands.maximizeView"
+             style="push">
+       </command>
+       <command
+             commandId="org.kalypso.chart.ui.commands.export"
+             style="push">
+       </command>
+       <command
+             commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+             style="push">
+       </command>
+       <separator
+             name="rrm.chart.seperator.1"
+             visible="true">
+       </separator>
+    </menuContribution>
+      
  </extension>
 </plugin>
