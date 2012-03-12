@@ -38,6 +38,8 @@
       <url>urn:org:kalypso:zml:ui:table:global#ruleDataSource</url>
     </rule>
   </RuleSet>
+  
+  <toolbar>toolbar:org.kalypso.model.rrm.ui.zml.table.menu.toolbar.instantaneous</toolbar>
 
 
   <Columns>

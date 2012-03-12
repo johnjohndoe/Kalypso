@@ -2,83 +2,92 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.actions;
+package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import java.net.URL;
+
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.context.IZmlTableSource;
+import org.kalypso.zml.ui.table.context.TableSourceProvider;
+import org.kalypso.zml.ui.table.view.TableComposite;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class EditTimeseriesAction extends Action
+public class RrmTableComposite extends TableComposite
 {
-  private final ITimeseries m_timeseries;
 
-  private final ITreeNodeModel m_model;
+  private final IServiceLocator m_context;
 
-  public EditTimeseriesAction( final ITreeNodeModel model, final ITimeseries timeseries )
+  private TableSourceProvider m_provider;
+
+  public RrmTableComposite( final Composite parent, final FormToolkit toolkit, final URL template, final IServiceLocator context )
   {
-    m_model = model;
-    m_timeseries = timeseries;
+    super( parent, toolkit, template );
+    m_context = context;
 
-    setText( "Edit Timeseries" ); //$NON-NLS-1$
-    setToolTipText( "Edit selected Timeseries" ); //$NON-NLS-1$
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
+    activate( m_context );
   }
 
-  @Override
-  public void runWithEvent( final Event event )
+  protected void activate( final IServiceLocator context )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-    final IWorkbench context = PlatformUI.getWorkbench();
+    m_provider = new TableSourceProvider( context, new IZmlTableSource()
+    {
+      @Override
+      public IZmlTable getTable( )
+      {
+        return getTable();
+      }
 
-    final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_model, m_timeseries, context );
-    dialog.open();
+      @Override
+      public org.kalypso.zml.ui.table.IZmlTableComposite getComposite( )
+      {
+        return getTableComposite();
+      }
+    } );
+  }
 
+  public void deactivate( )
+  {
+    m_provider.dispose();
   }
 }
