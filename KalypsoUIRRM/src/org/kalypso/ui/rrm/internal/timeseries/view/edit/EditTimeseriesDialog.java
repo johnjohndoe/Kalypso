@@ -96,7 +96,7 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     final FormToolkit toolkit = KalypsoUIRRMPlugin.getDefault().getToolkit();
 
     getShell().setText( "Edit Timeseries" );
-    setMessage( "Edit Timeseries" );
+// setMessage( "Edit Timeseries" );
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
