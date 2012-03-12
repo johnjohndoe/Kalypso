@@ -120,7 +120,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     final File fileSource = m_data.getSourceFileData().getFile();
 
     final IObservation observation = createObservation( fileSource );
-
     final Period timestep = findTimestep( observation );
 
     final IFile targetFile = createDataFile( m_bean, timestep );
@@ -139,7 +138,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
   private Period findTimestep( final IObservation observation ) throws CoreException
   {
-    final String message = Messages.getString("ImportTimeseriesOperation_0"); //$NON-NLS-1$
+    final String message = Messages.getString( "ImportTimeseriesOperation_0" ); //$NON-NLS-1$
 
     try
     {
@@ -181,7 +180,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
       if( timestepAmount == Integer.MAX_VALUE || timestepField == null )
       {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ImportTimeseriesOperation_1") ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "ImportTimeseriesOperation_1" ) ); //$NON-NLS-1$
         throw new CoreException( status );
       }
 
@@ -202,7 +201,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ImportTimeseriesOperation_2"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "ImportTimeseriesOperation_2" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -225,7 +224,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportTimeseriesOperation_4"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "ImportTimeseriesOperation_4" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -238,12 +237,15 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
       final INativeObservationAdapter nativaAdapter = m_data.getAdapter();
       final String parameterType = m_data.getParameterType();
 
-      return nativaAdapter.importTimeseries( fileSource, timezone, parameterType, false );
+      final IStatus status = nativaAdapter.doImport( fileSource, timezone, parameterType, false );
+      final IObservation observation = nativaAdapter.getObservation();
+
+      return observation;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( Messages.getString("ImportTimeseriesOperation_5") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "ImportTimeseriesOperation_5" ) ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
