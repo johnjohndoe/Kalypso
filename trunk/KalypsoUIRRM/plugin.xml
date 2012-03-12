@@ -563,6 +563,25 @@
  </extension>
  <extension
        point="org.eclipse.ui.menus">
+      <menuContribution
+          locationURI="toolbar:org.kalypso.model.rrm.ui.zml.chart.menu.toolbar">
+       <command
+             commandId="org.kalypso.chart.ui.commands.maximizeView"
+             style="push">
+       </command>
+       <command
+             commandId="org.kalypso.chart.ui.commands.export"
+             style="push">
+       </command>
+       <command
+             commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+             style="push">
+       </command>
+       <separator
+             name="rrm.chart.seperator.1"
+             visible="true">
+       </separator>
+    </menuContribution>
     <menuContribution
           allPopups="false"
           locationURI="toolbar:org.kalypso.model.rrm.ui.chart.debug">
@@ -616,24 +635,66 @@
          </command>
       </menuContribution>
       <menuContribution
-          locationURI="toolbar:org.kalypso.model.rrm.ui.zml.chart.menu.toolbar">
-       <command
-             commandId="org.kalypso.chart.ui.commands.maximizeView"
-             style="push">
-       </command>
-       <command
-             commandId="org.kalypso.chart.ui.commands.export"
-             style="push">
-       </command>
-       <command
-             commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
-             style="push">
-       </command>
-       <separator
-             name="rrm.chart.seperator.1"
-             visible="true">
-       </separator>
-    </menuContribution>
-      
+            allPopups="false"
+            locationURI="menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu">
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu">
+         <menu
+               label="Werte setzen">
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.all"
+                  label="Alle"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.selected"
+                  label="Selektion"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.above"
+                  label="Oberhalb"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.below"
+                  label="Unterhalb"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               label="Erweitertes Bearbeiten">
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.adjust.selection"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.interpolate"
+                  style="push">
+            </command>
+         </menu>
+         <separator
+               name="separator_1"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.zml.ui.table.commands.value.copy"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.zml.ui.table.commands.value.set.paste"
+               style="push">
+         </command>
+         <separator
+               name="separator_2"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
+               style="push">
+         </command>
+      </menuContribution>
  </extension>
 </plugin>

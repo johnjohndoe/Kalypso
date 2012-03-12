@@ -38,7 +38,7 @@
       <url>urn:org:kalypso:zml:ui:table:global#ruleDataSource</url>
     </rule>
   </RuleSet>
-  
+
   <toolbar>toolbar:org.kalypso.model.rrm.ui.zml.table.menu.toolbar.instantaneous</toolbar>
 
 
@@ -61,7 +61,8 @@
     <DataColumn editable="false" id="W" tooltip="true">
       <property name="label">Wasserstand</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#wBaseCellStyle</url>
       </defaultCellStyle>
@@ -79,7 +80,8 @@
     <DataColumn editable="true" id="Q" metadataSource="true" tooltip="true">
       <property name="label">Abfluss</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#qBaseCellStyle</url>
       </defaultCellStyle>
@@ -95,7 +97,8 @@
     <DataColumn editable="true" id="N" metadataSource="true" tooltip="true">
       <property name="label">Niederschlag</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#nBaseCellStyle</url>
       </defaultCellStyle>
@@ -111,7 +114,8 @@
     <DataColumn editable="true" id="V" metadataSource="true" tooltip="true">
       <property name="label">Volumen</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
       </defaultCellStyle>
@@ -128,7 +132,8 @@
     <DataColumn editable="true" id="W_NN" metadataSource="true" tooltip="true">
       <property name="label">Wasserstand [m_NN]</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#wNNBaseCellStyle</url>
       </defaultCellStyle>
@@ -144,7 +149,8 @@
     <DataColumn editable="true" id="WECHMANN_E" metadataSource="false">
       <property name="label">Wechmann E</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsen.zml.table.menu.header.ContextMenu</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#eBaseCellStyle</url>
       </defaultCellStyle>
@@ -160,7 +166,8 @@
     <DataColumn editable="true" id="WECHMANN_SCHALTER_V" metadataSource="false">
       <property name="label">Wechmann V</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.hwv.product.sachsen.zml.table.menu.header.ContextMenu</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#eBaseCellStyle</url>
       </defaultCellStyle>
@@ -175,7 +182,8 @@
     <DataColumn editable="true" id="T" metadataSource="true" tooltip="true">
       <property name="label">Temperatur</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
       </defaultCellStyle>
@@ -192,7 +200,8 @@
     <DataColumn editable="true" id="E" metadataSource="true" tooltip="true">
       <property name="label">Verdunstung</property>
       <property name="alignment">RIGHT</property>
-
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
       </defaultCellStyle>
