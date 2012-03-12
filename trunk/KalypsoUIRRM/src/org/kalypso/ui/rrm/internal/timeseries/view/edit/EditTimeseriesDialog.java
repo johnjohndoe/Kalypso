@@ -82,6 +82,8 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
 
   private RrmTableComposite m_table;
 
+  private EditTimeseriesChartComposite m_chart;
+
   public EditTimeseriesDialog( final Shell shell, final ITreeNodeModel model, final ITimeseries timeseries, final IServiceLocator context )
   {
     super( shell );
@@ -135,9 +137,9 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     final MultipleSourceElement multiple = new MultipleSourceElement( m_timeseries.getParameterType() );
     multiple.add( source );
 
-    final EditTimeseriesChartComposite chart = new EditTimeseriesChartComposite( leftPane, toolkit );
-    chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    chart.setSelection( multiple );
+    m_chart = new EditTimeseriesChartComposite( leftPane, toolkit, m_context );
+    m_chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_chart.setSelection( multiple );
 
     final URL tableTemplate = getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
 
@@ -145,7 +147,7 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_table.setSelection( multiple );
 
-    chart.addControlListener( new ControlAdapter()
+    m_chart.addControlListener( new ControlAdapter()
     {
       @Override
       public void controlResized( final ControlEvent e )
@@ -195,6 +197,7 @@ public class EditTimeseriesDialog extends EnhancedTitleAreaDialog
   protected void buttonPressed( final int buttonId )
   {
     m_table.deactivate();
+    m_chart.deactivate();
 
     super.buttonPressed( buttonId );
   }
