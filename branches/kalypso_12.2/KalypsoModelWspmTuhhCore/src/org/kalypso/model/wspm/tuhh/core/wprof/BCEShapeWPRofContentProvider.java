@@ -52,6 +52,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -62,7 +63,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This importer knows how to interpret the BCE-W80 Shape format.
- * 
+ *
  * @author Gernot Belger
  */
 public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConstants
@@ -130,6 +131,9 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
       // REMARK: backport from trunc; no need to merge...
       if( Number.class.isAssignableFrom( type ) )
       {
+        if( StringUtils.isBlank( (String) value ) )
+          return null;
+
         final BigDecimal decimal = new BigDecimal( (String) value );
         return toNumber( decimal, type );
       }
@@ -255,7 +259,11 @@ public class BCEShapeWPRofContentProvider implements IWProfPoint, IWspmTuhhConst
   public WProfProfileType getProfileType( )
   {
     final int type = getProperty( "PROFILTYP", Integer.class, -1 ); //$NON-NLS-1$
-    return WProfProfileType.valueOf( type );
+    final WProfProfileType profileType = WProfProfileType.valueOf( type );
+    if( profileType == null )
+      return WProfProfileType.Gewässerprofil;
+
+    return profileType;
   }
 
   @Override
