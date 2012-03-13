@@ -74,7 +74,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.visitor.ValidateRuecksprungVisitor;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
@@ -126,19 +125,29 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     final ImportObservationWorker observationWorker = new ImportObservationWorker( m_data, fileSource );
     final IStatus status = observationWorker.execute( monitor );
     stati.add( status );
+    if( IStatus.ERROR == status.getSeverity() )
+      return stati.asMultiStatus( "Import Timeseries Operation failed - Error reading input timeseries" );
 
     final IObservation observation = observationWorker.getObservation();
 
     /* rücksprung in daten ?!? */
     final IStatus ruecksprung = validateRuecksprung( observation );
     stati.add( ruecksprung );
-
-    if( !ruecksprung.isOK() )
+    if( IStatus.ERROR == status.getSeverity() )
       return stati.asMultiStatus( "Import Timeseries Operation failed - A \"Rücksprung\" was detected." );
 
-    final Period timestep = findTimestep( observation );
-    final IFile targetFile = createDataFile( m_bean, timestep );
+    /* time step */
+    final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( observation );
+    final IStatus timestepStatus = timeStepOperation.execute( monitor );
+    stati.add( timestepStatus );
+    if( IStatus.ERROR == status.getSeverity() )
+      return stati.asMultiStatus( "Import Timeseries Operation failed - Couldn't resolve time step of timeseries." );
 
+    final Period timestep = timeStepOperation.getTimestep();
+
+    // TODO validate timestep
+
+    final IFile targetFile = createDataFile( m_bean, timestep );
     m_timeseries = createTimeseries( timestep, targetFile );
     updateMetadata( observation, m_timeseries );
 
@@ -165,32 +174,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Error in Rücksprüng detection." );
-    }
-
-  }
-
-  private Period findTimestep( final IObservation observation ) throws CoreException
-  {
-    final String message = Messages.getString( "ImportTimeseriesOperation_0" ); //$NON-NLS-1$
-
-    try
-    {
-      final Period timestep = TimeseriesUtils.guessTimestep( observation.getValues( null ) );
-      if( timestep == null )
-      {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
-        throw new CoreException( status );
-      }
-
-      return timestep;
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message, e );
-      throw new CoreException( status );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Error in Rücksprüng detection.", e );
     }
   }
 
