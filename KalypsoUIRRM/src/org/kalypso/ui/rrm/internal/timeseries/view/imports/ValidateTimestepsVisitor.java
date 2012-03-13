@@ -40,64 +40,66 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.joda.time.Period;
-import org.kalypso.commons.time.PeriodUtils;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindTimeStepOperation implements ICoreRunnableWithProgress
+public class ValidateTimestepsVisitor implements IObservationVisitor
 {
+  private final IStatusCollector m_status = new StatusCollector( KalypsoCorePlugin.getID() );
 
-  private final IObservation m_observation;
+  private final Period m_timestep;
 
-  private Period m_timestep;
+  private Date m_lastDate;
 
-  public FindTimeStepOperation( final IObservation observation )
+  private final long m_duration;
+
+  public ValidateTimestepsVisitor( final Period timestep )
   {
-    m_observation = observation;
+    m_timestep = timestep;
+    m_duration = m_timestep.toStandardSeconds().getSeconds();
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public void visit( final IObservationValueContainer container ) throws SensorException
   {
-    final String message = Messages.getString( "ImportTimeseriesOperation_0" ); //$NON-NLS-1$
+    final IAxis dateAxis = AxisUtils.findDateAxis( container.getAxes() );
+    final Date date = (Date) container.get( dateAxis );
 
-    try
+    if( Objects.isNotNull( m_lastDate ) )
     {
-      m_timestep = TimeseriesUtils.guessTimestep( m_observation.getValues( null ) );
-
-      if( m_timestep == null )
+      if( date.before( m_lastDate ) )
       {
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
+        final long duration = Math.abs( m_lastDate.getTime() - date.getTime() );
+        if( m_duration != duration )
+        {
+          final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yy HH:mm" );
+          m_status.add( IStatus.ERROR, String.format( "Invalid time step detected - between %s and %s", sdf.format( m_lastDate ), sdf.format( date ) ) );
+        }
       }
-
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message, e );
-
-      return status;
     }
 
-    final String resultion = PeriodUtils.formatDefault( m_timestep );
+    m_lastDate = date;
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", resultion ) );
   }
 
-  public Period getTimestep( )
+  public IStatus getStatus( )
   {
-    return m_timestep;
+    return m_status.asMultiStatus( "Time Step Validation Status" );
   }
 
 }

@@ -74,7 +74,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.visitor.ValidateRuecksprungVisitor;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -133,19 +132,23 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     /* rücksprung in daten ?!? */
     final IStatus ruecksprung = validateRuecksprung( observation );
     stati.add( ruecksprung );
-    if( IStatus.ERROR == status.getSeverity() )
+    if( IStatus.ERROR == ruecksprung.getSeverity() )
       return stati.asMultiStatus( "Import Timeseries Operation failed - A \"Rücksprung\" was detected." );
 
     /* time step */
     final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( observation );
     final IStatus timestepStatus = timeStepOperation.execute( monitor );
     stati.add( timestepStatus );
-    if( IStatus.ERROR == status.getSeverity() )
+    if( IStatus.ERROR == timestepStatus.getSeverity() )
       return stati.asMultiStatus( "Import Timeseries Operation failed - Couldn't resolve time step of timeseries." );
 
     final Period timestep = timeStepOperation.getTimestep();
 
-    // TODO validate timestep
+    /* validate timestep */
+    final IStatus validTimestep = validateTimesteps( observation, timestep );
+    stati.add( validTimestep );
+    if( IStatus.ERROR == validTimestep.getSeverity() )
+      return stati.asMultiStatus( "Import Timeseries Operation failed - Invalid time steps detected." );
 
     final IFile targetFile = createDataFile( m_bean, timestep );
     m_timeseries = createTimeseries( timestep, targetFile );
@@ -157,6 +160,22 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     writeResult( targetFile, observationWithSource );
 
     return stati.asMultiStatus( "Import Timeseries Operation" );
+  }
+
+  private IStatus validateTimesteps( final IObservation observation, final Period timestep )
+  {
+    try
+    {
+      final ValidateTimestepsVisitor visitor = new ValidateTimestepsVisitor( timestep );
+      observation.accept( visitor, null, 1 );
+
+      return visitor.getStatus();
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Error in time step validity detection.", e );
+    }
   }
 
   private IStatus validateRuecksprung( final IObservation observation )

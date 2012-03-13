@@ -40,64 +40,46 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.joda.time.Period;
-import org.kalypso.commons.time.PeriodUtils;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.sensor.IObservation;
+import java.util.Date;
+
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindTimeStepOperation implements ICoreRunnableWithProgress
+public class ValidateRuecksprungVisitor implements IObservationVisitor
 {
 
-  private final IObservation m_observation;
+  private Date m_lastDate;
 
-  private Period m_timestep;
-
-  public FindTimeStepOperation( final IObservation observation )
-  {
-    m_observation = observation;
-  }
+  private boolean m_ruecksprung = false;
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public void visit( final IObservationValueContainer container ) throws CancelVisitorException, SensorException
   {
-    final String message = Messages.getString( "ImportTimeseriesOperation_0" ); //$NON-NLS-1$
+    final IAxis dateAxis = AxisUtils.findDateAxis( container.getAxes() );
+    final Date date = (Date) container.get( dateAxis );
 
-    try
+    if( Objects.isNotNull( m_lastDate ) )
     {
-      m_timestep = TimeseriesUtils.guessTimestep( m_observation.getValues( null ) );
-
-      if( m_timestep == null )
+      if( date.before( m_lastDate ) )
       {
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
+        m_ruecksprung = true;
+        throw new CancelVisitorException();
       }
-
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message, e );
-
-      return status;
     }
 
-    final String resultion = PeriodUtils.formatDefault( m_timestep );
-
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", resultion ) );
+    m_lastDate = date;
   }
 
-  public Period getTimestep( )
+  public boolean hasRuecksprung( )
   {
-    return m_timestep;
+    return m_ruecksprung;
   }
-
 }
