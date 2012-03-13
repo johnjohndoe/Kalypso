@@ -38,12 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
@@ -70,7 +71,6 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -78,6 +78,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.imports.ImportObservationData;
@@ -117,11 +118,17 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    final List<IStatus> stati = new ArrayList<>();
+
     final File fileSource = m_data.getSourceFileData().getFile();
 
-    final IObservation observation = createObservation( fileSource );
-    final Period timestep = findTimestep( observation );
+    final ImportObservationWorker observationWorker = new ImportObservationWorker( m_data, fileSource );
+    final IStatus status = observationWorker.execute( monitor );
+    stati.add( status );
 
+    final IObservation observation = observationWorker.getObservation();
+
+    final Period timestep = findTimestep( observation );
     final IFile targetFile = createDataFile( m_bean, timestep );
 
     m_timeseries = createTimeseries( timestep, targetFile );
@@ -225,28 +232,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "ImportTimeseriesOperation_4" ), e ); //$NON-NLS-1$
-      throw new CoreException( status );
-    }
-  }
-
-  private IObservation createObservation( final File fileSource ) throws CoreException
-  {
-    try
-    {
-      final TimeZone timezone = m_data.getTimezoneParsed();
-      final INativeObservationAdapter nativaAdapter = m_data.getAdapter();
-      final String parameterType = m_data.getParameterType();
-
-      final IStatus status = nativaAdapter.doImport( fileSource, timezone, parameterType, false );
-      final IObservation observation = nativaAdapter.getObservation();
-
-      return observation;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final String message = String.format( Messages.getString( "ImportTimeseriesOperation_5" ) ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
   }

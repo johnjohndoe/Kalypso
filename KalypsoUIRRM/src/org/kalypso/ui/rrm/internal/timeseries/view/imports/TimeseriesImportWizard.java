@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view;
+package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
@@ -47,6 +47,8 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNewComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
