@@ -140,7 +140,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
     writeResult( targetFile, observationWithSource );
 
-    return Status.OK_STATUS;
+    return status;
   }
 
   private Period findTimestep( final IObservation observation ) throws CoreException
