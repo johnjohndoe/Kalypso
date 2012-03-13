@@ -57,10 +57,6 @@ public class NameComparator extends ViewerComparator
   {
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
