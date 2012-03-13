@@ -6,6 +6,7 @@
     <column name="flaech" editable="false" width="100" alignment="SWT.RIGHT" format=""/>
     <column name="entwaesserungsStrangMember" editable="false" width="180" alignment="SWT.LEFT" format=""/>
     <column name="izkn_vers" editable="false" width="180" alignment="SWT.LEFT" format=""/>
+    <column name="izkn" editable="false" width="180" alignment="SWT.LEFT" format=""/>
     <sort propertyName="name" inverse="false"/>
   </layer>
 </gistableview>
