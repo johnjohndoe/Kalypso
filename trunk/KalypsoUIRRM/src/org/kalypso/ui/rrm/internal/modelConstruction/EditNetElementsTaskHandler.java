@@ -129,7 +129,7 @@ public class EditNetElementsTaskHandler extends AbstractHandler
 
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Catchment_ModelConstruction.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Subcatchment_ModelConstruction.gft" ) ); //$NON-NLS-1$
 
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/KMChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/RHBChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$

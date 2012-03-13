@@ -2,7 +2,7 @@
 <featureview typename="rrm:KMChannel" style="SWT.NONE" xmlns="featureview.template.kalypso.org" xmlns:rrm="http://www.tuhh.de/kalypsoNA" xmlns:xlink="http://www.w3.org/1999/xlink">
   <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
   <gridLayout marginWidth="0" marginHeight="0" />
-  
+
   <group text="%channel.gft.commmonparameters" style="SWT.NONE">
     <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
     <gridLayout numColumns="3" />
@@ -15,7 +15,7 @@
     <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true">
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
-    
+
     <label xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
       <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>
@@ -25,20 +25,18 @@
     <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
-    
+  </group>
+
+  <group style="SWT.NONE" text="%modelConstruction.gft.group.net">
+    <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+    <gridLayout numColumns="3" />
+
     <label property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
       <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>
-    <composite style="SWT.NONE">
+    <combo property="rrm:downStreamNodeMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
       <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-      <gridLayout marginWidth="1" numColumns="2" makeColumnsEqualWidth="false" />
-      <combo property="rrm:downStreamNodeMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-      </combo>
-      <button property="rrm:downStreamNodeMember" style="SWT.PUSH">
-        <gridData horizontalAlignment="SWT.BEGINNING" />
-      </button>
-    </composite>
+    </combo>
     <validatorlabel property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
