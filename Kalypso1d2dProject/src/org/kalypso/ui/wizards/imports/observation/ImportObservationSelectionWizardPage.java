@@ -91,7 +91,7 @@ import org.kalypso.zml.ui.imports.TimezoneEtcFilter;
 /**
  * FIXME: this is a stupid copy/paste from the original ImportObservationSelectionWizardPage, however it does almost the
  * same thing -> we need to combine the two pages again!
- *
+ * 
  * @author doemming
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -136,7 +136,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.Title" ) ); //$NON-NLS-1$
     setPageComplete( false );
 
-    m_adapter = KalypsoCoreExtensions.createNativeAdapters();
+    m_adapter = KalypsoCoreExtensions.getObservationImporters();
   }
 
   @Override
@@ -422,7 +422,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     // setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15" ) ); //$NON-NLS-1$
 
     if( m_timezone == null )
-      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.0"), ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ImportObservationSelectionWizardPage.0" ), ERROR ); //$NON-NLS-1$
 
     return null;
   }
@@ -451,11 +451,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private void fireSelectionChanged( )
   {
-    if( m_sourceFile == null ){
+    if( m_sourceFile == null )
+    {
       return;
     }
     for( final ISelectionChangedListener iSelectionChangedListener : m_selectionListener )
-      (iSelectionChangedListener).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
+      iSelectionChangedListener.selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }
 
   /**
@@ -476,13 +477,13 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final IStructuredSelection formatSelection = (IStructuredSelection) m_formatCombo.getSelection();
     if( !m_controlFinished )
       return new ISelection()
-    {
-      @Override
-      public boolean isEmpty( )
       {
-        return true;
-      }
-    };
+        @Override
+        public boolean isEmpty( )
+        {
+          return true;
+        }
+      };
 
     if( m_sourceFile == null )
       return StructuredSelection.EMPTY;
@@ -510,7 +511,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     if( selection instanceof ObservationImportSelection )
     {
-      final ObservationImportSelection s = ((ObservationImportSelection) selection);
+      final ObservationImportSelection s = (ObservationImportSelection) selection;
       if( m_formatCombo != null )
         m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
       m_sourceFile = s.getFileSource();
