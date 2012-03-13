@@ -428,7 +428,7 @@
   
     <element name="_Channel" type="na:AbstractChannelType" abstract="true" substitutionGroup="gml:_Feature"/>
 	<!-- Channel super type -->
-	<complexType name="AbstractChannelType">
+	<complexType name="AbstractChannelType" abstract="true">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
