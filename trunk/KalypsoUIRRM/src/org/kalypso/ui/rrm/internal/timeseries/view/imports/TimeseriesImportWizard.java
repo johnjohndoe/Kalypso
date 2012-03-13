@@ -94,7 +94,7 @@ public class TimeseriesImportWizard extends Wizard
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
 
-    return !status.matches( IStatus.ERROR );
+    return true;
   }
 
   private void saveSettings( )
