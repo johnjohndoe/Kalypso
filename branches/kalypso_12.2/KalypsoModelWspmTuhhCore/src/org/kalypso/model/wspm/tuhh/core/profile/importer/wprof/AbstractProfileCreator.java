@@ -120,7 +120,10 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
     final IProfil profile = profileFeature.getProfil();
 
     final IProfileTransaction transaction = new AddProfileTransaction( this );
-    profile.doTransaction( transaction );
+    final IStatus status = profile.doTransaction( transaction );
+
+    if( !status.isOK() )
+      throw new CoreException( status );
 
     return profile;
   }
@@ -202,8 +205,7 @@ public abstract class AbstractProfileCreator implements IProfileCreator, IWspmTu
       profile.setComment( profileComment );
     }
 
-    // FIXME:
-    profile.setStation( Double.valueOf( (Double) Objects.firstNonNull( station, -999.999 ) ) );
+    profile.setStation( Objects.firstNonNull( station, -999.999 ).doubleValue() );
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     profile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
