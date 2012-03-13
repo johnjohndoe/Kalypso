@@ -59,8 +59,10 @@ import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileG
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.linearref.LengthIndexedLine;
@@ -123,6 +125,10 @@ public class BanklineDistanceBuilder
   private void buildDistances( final IProfileFeature profileFeature ) throws Exception
   {
     final IProfil profileCopy = TuhhProfiles.clone( profileFeature.getProfil() );
+
+    final Geometry profileGeometry = JTSAdapter.export( profileFeature.getLine() );
+    if( profileGeometry == null || !m_riverLine.intersects( profileGeometry ) )
+      return;
 
     /* Fill missing geo coordinates */
     final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( profileCopy );
