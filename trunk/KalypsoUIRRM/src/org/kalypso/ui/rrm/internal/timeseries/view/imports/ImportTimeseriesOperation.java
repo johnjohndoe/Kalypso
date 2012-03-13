@@ -41,9 +41,7 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -60,9 +58,12 @@ import org.joda.time.Period;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
@@ -74,6 +75,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.visitor.ValidateRuecksprungVisitor;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -118,8 +120,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final List<IStatus> stati = new ArrayList<>();
-
+    final IStatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
     final File fileSource = m_data.getSourceFileData().getFile();
 
     final ImportObservationWorker observationWorker = new ImportObservationWorker( m_data, fileSource );
@@ -128,7 +129,12 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
     final IObservation observation = observationWorker.getObservation();
 
-    // TODO check rücksprünge
+    /* rücksprung in daten ?!? */
+    final IStatus ruecksprung = validateRuecksprung( observation );
+    stati.add( ruecksprung );
+
+    if( !ruecksprung.isOK() )
+      return stati.asMultiStatus( "Import Timeseries Operation failed - A \"Rücksprung\" was detected." );
 
     final Period timestep = findTimestep( observation );
     final IFile targetFile = createDataFile( m_bean, timestep );
@@ -141,7 +147,28 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
     writeResult( targetFile, observationWithSource );
 
-    return status;
+    return stati.asMultiStatus( "Import Timeseries Operation" );
+  }
+
+  private IStatus validateRuecksprung( final IObservation observation )
+  {
+    try
+    {
+      final ValidateRuecksprungVisitor ruecksprung = new ValidateRuecksprungVisitor();
+      observation.accept( ruecksprung, null, 1 );
+
+      if( ruecksprung.hasRuecksprung() )
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Rücksprüng detected." );
+
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "No Rücksprüng detected." );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Error in Rücksprüng detection." );
+    }
+
   }
 
   private Period findTimestep( final IObservation observation ) throws CoreException
