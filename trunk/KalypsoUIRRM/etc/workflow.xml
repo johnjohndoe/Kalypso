@@ -43,7 +43,7 @@
           </con:ExtensionContext>
         </con:ViewContext>
         <con:ViewContext id="EditNetElements_GttView_Nodes" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Nodes" parent="EditNetElementsContext" />
-        <con:ViewContext id="EditNetElements_GttView_Reaches" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Reaches" parent="EditNetElementsContext" />
+        <con:ViewContext id="EditNetElements_GttView_Channels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Channels" parent="EditNetElementsContext" />
         <con:ViewContext id="EditNetElements_GttView_Catchments" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Catchments" parent="EditNetElementsContext" />
 
         <con:ViewContext id="EditNetElements_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="EditNetElementsContext" />

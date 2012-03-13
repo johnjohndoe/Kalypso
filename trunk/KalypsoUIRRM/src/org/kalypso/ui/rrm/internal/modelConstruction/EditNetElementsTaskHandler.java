@@ -105,7 +105,7 @@ public class EditNetElementsTaskHandler extends AbstractHandler
       final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
 
       setGttInput( activePage, "Nodes", scenario.getNodesNetGtt(), "Nodes" ); //$NON-NLS-1$
-      setGttInput( activePage, "Reaches", scenario.getReachesNetGtt(), "Reaches" ); //$NON-NLS-1$
+      setGttInput( activePage, "Channels", scenario.getReachesNetGtt(), "Channels" ); //$NON-NLS-1$
       setGttInput( activePage, "Catchments", scenario.getCatchmentsNetGtt(), "Catchments" ); //$NON-NLS-1$
     }
     catch( final CoreException e )
