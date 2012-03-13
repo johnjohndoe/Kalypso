@@ -128,14 +128,15 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 
     final IObservation observation = observationWorker.getObservation();
 
+    // TODO check rücksprünge
+
     final Period timestep = findTimestep( observation );
     final IFile targetFile = createDataFile( m_bean, timestep );
 
     m_timeseries = createTimeseries( timestep, targetFile );
-
     updateMetadata( observation, m_timeseries );
 
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, fileSource.getAbsolutePath() );
+    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
     final IObservation observationWithSource = cleanupWorker.convert();
 
     writeResult( targetFile, observationWithSource );

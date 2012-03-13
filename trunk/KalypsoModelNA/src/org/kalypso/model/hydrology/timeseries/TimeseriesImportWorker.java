@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.internal.ModelNA;
-import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -61,7 +60,6 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.repository.IDataSourceItem;
@@ -69,35 +67,23 @@ import org.kalypso.repository.IDataSourceItem;
 /**
  * Helper class that should be used for every timeseries that get imported into an RRM project. Cleans the timeseries
  * from old '-999' values and add source and status axes.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesImportWorker
 {
   private final IObservation m_observation;
 
-  private final String m_sourceIdentifier;
-
-  public TimeseriesImportWorker( final IObservation observation, final String sourceIdentifier )
+  public TimeseriesImportWorker( final IObservation observation )
   {
     m_observation = observation;
-
-    m_sourceIdentifier = sourceIdentifier;
   }
 
   public IObservation convert( ) throws CoreException
   {
     try
     {
-      /* Add source and status axes */
-      final int defaultStatus = KalypsoStati.BIT_OK;
-      final DataSourceProxyObservation observationWithSource = new DataSourceProxyObservation( m_observation, m_sourceIdentifier, m_sourceIdentifier, defaultStatus );
-
-      /* Clone observation, so we can change it */
-      final SimpleObservation clonedObservation = (SimpleObservation) ObservationHelper.clone( observationWithSource );
-
-      final IObservation resultObservation = removeMissingValues( clonedObservation );
-
+      final IObservation resultObservation = removeMissingValues( m_observation );
       return resultObservation;
     }
     catch( final SensorException e )
@@ -108,7 +94,7 @@ public class TimeseriesImportWorker
     }
   }
 
-  private IObservation removeMissingValues( final SimpleObservation observation ) throws SensorException
+  private IObservation removeMissingValues( final IObservation observation ) throws SensorException
   {
     final IAxis[] axes = observation.getAxes();
     final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
@@ -137,7 +123,7 @@ public class TimeseriesImportWorker
     return observation;
   }
 
-  private IObservation setMissingTo0( final SimpleObservation observation, final IAxis valueAxis ) throws SensorException
+  private IObservation setMissingTo0( final IObservation observation, final IAxis valueAxis ) throws SensorException
   {
     final IAxis[] axes = observation.getAxes();
 
@@ -168,7 +154,7 @@ public class TimeseriesImportWorker
     return observation;
   }
 
-  private IObservation removeMissing( final SimpleObservation observation, final IAxis valueAxis ) throws SensorException
+  private IObservation removeMissing( final IObservation observation, final IAxis valueAxis ) throws SensorException
   {
     final IAxis[] axes = observation.getAxes();
 
