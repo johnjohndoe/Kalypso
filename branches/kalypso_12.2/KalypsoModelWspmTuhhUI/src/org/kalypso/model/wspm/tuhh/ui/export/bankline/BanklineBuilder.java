@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.densify.Densifier;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
@@ -92,13 +93,13 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor )
   {
     final WspmWaterBody water = getWaterBody();
-    final IProfileFeature[] profiles = getProfiles();
-
     if( water == null )
     {
       final String message = String.format( Messages.getString( "BanklineBuilder_0" ), m_waterOrReach.getName() ); //$NON-NLS-1$
       return new Status( IStatus.WARNING, KalypsoModelWspmTuhhUIPlugin.getID(), message );
     }
+
+    final IProfileFeature[] profiles = getProfiles();
 
     final GM_Curve centerLine = water.getCenterLine();
     if( centerLine == null )
@@ -117,16 +118,16 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     {
       final LineString riverLine = (LineString) JTSAdapter.export( centerLine );
 
-// final LineString denseRiverLine = riverLine;
+      // final LineString denseRiverLine = riverLine;
 
       // REMARK: very slow and produces many unnecessary points
       // TODO: maybe let user decide if the line should be densified
-// final LineString denseRiverLine = (LineString) Densifier.densify( riverLine, 0.1 );
+      final LineString denseRiverLine = (LineString) Densifier.densify( riverLine, 1 );
 
       // REMARK: our own method is buggy and produces later NaN-coordinates
       // final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
 
-      return buildBankLines( riverLine, profiles );
+      return buildBankLines( denseRiverLine, profiles, water.isDirectionUpstreams() );
     }
     catch( final GM_Exception e )
     {
@@ -135,7 +136,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     }
   }
 
-  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles )
+  private IStatus buildBankLines( final LineString riverLine, final IProfileFeature[] profiles, final boolean flowDirection )
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmTuhhUIPlugin.getID() );
 
@@ -143,12 +144,12 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     final boolean createPatches = false;
     if( createPatches )
     {
-      final Geometry leftBank = buildPatchesBuffer( riverLine, profiles, BanklineDistanceBuilder.SIDE.left, log );
-      final Geometry rightBank = buildPatchesBuffer( riverLine, profiles, BanklineDistanceBuilder.SIDE.right, log );
+      final Geometry leftBank = buildPatchesBuffer( riverLine, profiles, BanklineDistanceBuilder.SIDE.left, log, flowDirection );
+      final Geometry rightBank = buildPatchesBuffer( riverLine, profiles, BanklineDistanceBuilder.SIDE.right, log, flowDirection );
       m_mainChannel = buildMainChannel( leftBank, rightBank );
     }
     else
-      m_mainChannel = buildVariableBuffer( riverLine, profiles, log );
+      m_mainChannel = buildVariableBuffer( riverLine, profiles, log, flowDirection );
 
     final String logMessage = String.format( Messages.getString( "BanklineBuilder_4" ), m_waterOrReach.getName() ); //$NON-NLS-1$
     return log.asMultiStatusOrOK( logMessage, logMessage );
@@ -162,16 +163,17 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return leftBank.union( rightBank );
   }
 
-  private Geometry buildPatchesBuffer( final LineString riverLine, final IProfileFeature[] profiles, final SIDE side, final IStatusCollector log )
+  private Geometry buildPatchesBuffer( final LineString riverLine, final IProfileFeature[] profiles, final SIDE side, final IStatusCollector log, final boolean flowDirection )
   {
     /* Calculate bankline distances along the river line */
     final BanklineDistanceBuilder distanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, side );
     log.add( distanceBuilder.execute() );
     final PolyLine banklineDistances = distanceBuilder.getDistances();
 
-    final double distanceSignum = side == SIDE.left ? -1.0 : +1.0;
+    final double distanceSignum = side == SIDE.right ? -1.0 : +1.0;
+    final double flowSignum = flowDirection ? -1.0 : +1.0;
 
-    final BanklinePatchesBuilder builder = new BanklinePatchesBuilder( banklineDistances, riverLine, distanceSignum );
+    final BanklinePatchesBuilder builder = new BanklinePatchesBuilder( banklineDistances, riverLine, distanceSignum * flowSignum );
     return builder.buffer();
   }
 
@@ -250,14 +252,17 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return JTSUtilities.addPointsToLine( riverLine, intersectionPoints.toCoordinateArray() );
   }
 
-  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log )
+  private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log, final boolean flowDirection )
   {
+    final SIDE left = flowDirection ? SIDE.left : SIDE.right;
+    final SIDE right = flowDirection ? SIDE.right : SIDE.left;
+
     /* Calculate bankline distances along the river line */
-    final BanklineDistanceBuilder leftDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, SIDE.left );
+    final BanklineDistanceBuilder leftDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, left );
     log.add( leftDistanceBuilder.execute() );
     final PolyLine leftDistances = leftDistanceBuilder.getDistances();
 
-    final BanklineDistanceBuilder rightDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, SIDE.right );
+    final BanklineDistanceBuilder rightDistanceBuilder = new BanklineDistanceBuilder( riverLine, profiles, m_markerProvider, right );
     log.add( rightDistanceBuilder.execute() );
     final PolyLine rightDistances = rightDistanceBuilder.getDistances();
 
