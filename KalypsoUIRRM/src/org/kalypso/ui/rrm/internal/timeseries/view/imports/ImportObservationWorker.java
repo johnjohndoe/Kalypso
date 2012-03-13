@@ -59,7 +59,6 @@ import org.kalypso.zml.ui.imports.ImportObservationData;
  */
 public class ImportObservationWorker implements ICoreRunnableWithProgress
 {
-
   private final ImportObservationData m_data;
 
   private final File m_fileSource;

@@ -84,7 +84,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeserties from the old 'Zeitreihen' folder into the new timeseries management.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -98,7 +98,6 @@ public class TimeseriesImporter
   private IStationCollection m_stations;
 
   private final IStatusCollector m_log;
-
 
   public TimeseriesImporter( final File sourceDir, final File targetDir, final IStatusCollector log )
   {
@@ -119,7 +118,7 @@ public class TimeseriesImporter
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesImporter_0"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesImporter_0" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -134,14 +133,14 @@ public class TimeseriesImporter
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesImporter_1"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesImporter_1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
 
   public void copyTimeseries( final String folder, final IProgressMonitor monitor )
   {
-    final String name = String.format( Messages.getString("TimeseriesImporter_2"), folder ); //$NON-NLS-1$
+    final String name = String.format( Messages.getString( "TimeseriesImporter_2" ), folder ); //$NON-NLS-1$
     monitor.beginTask( name, IProgressMonitor.UNKNOWN );
 
     final File sourceTimeseriesDir = new File( m_sourceDir, folder );
@@ -172,7 +171,7 @@ public class TimeseriesImporter
       {
         final String relativePath = FileUtilities.getRelativePathTo( sourceTimeseriesDir, zmlFile );
 
-        final String message = String.format( Messages.getString("TimeseriesImporter_4"), relativePath ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "TimeseriesImporter_4" ), relativePath ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message, e );
         stati.add( status );
       }
@@ -181,7 +180,7 @@ public class TimeseriesImporter
     }
 
     /* Log it */
-    final String message = String.format( Messages.getString("TimeseriesImporter_5"), folder ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "TimeseriesImporter_5" ), folder ); //$NON-NLS-1$
     final IStatus status = stati.asMultiStatusOrOK( message, message );
     m_log.add( status );
 
@@ -201,7 +200,7 @@ public class TimeseriesImporter
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
     if( dateAxis == null )
     {
-      final String message = String.format( Messages.getString("TimeseriesImporter_6"), relativePath ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "TimeseriesImporter_6" ), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -210,14 +209,14 @@ public class TimeseriesImporter
 
     if( valueAxes.length == 0 )
     {
-      final String message = String.format( Messages.getString("TimeseriesImporter_7"), relativePath ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "TimeseriesImporter_7" ), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
 
     if( valueAxes.length > 1 )
     {
-      final String message = String.format( Messages.getString("TimeseriesImporter_8"), relativePath ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "TimeseriesImporter_8" ), relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -247,7 +246,7 @@ public class TimeseriesImporter
 
     // We write the file from the read observation (instead of copy) in order to compress the data and add status and
     // source axes (now required)
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, m_sourceDir.getAbsolutePath() );
+    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
     final IObservation observationWithSource = cleanupWorker.convert();
 
     dataLink.saveObservation( observationWithSource );
@@ -277,7 +276,7 @@ public class TimeseriesImporter
     final QName stationType = StationClassesCatalog.getTypeFor( parameterType );
     if( stationType == null )
     {
-      final String message = String.format( Messages.getString("TimeseriesImporter_9"), parameterType, relativePath ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "TimeseriesImporter_9" ), parameterType, relativePath ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -312,7 +311,7 @@ public class TimeseriesImporter
 
     final IStation newStation = stations.addNew( stationType );
     newStation.setDescription( description );
-    newStation.setComment( Messages.getString("TimeseriesImporter_10") ); //$NON-NLS-1$
+    newStation.setComment( Messages.getString( "TimeseriesImporter_10" ) ); //$NON-NLS-1$
     newStation.setGroup( group );
 
     return newStation;
@@ -323,7 +322,7 @@ public class TimeseriesImporter
     final ITimeseries newTimeseries = station.getTimeseries().addNew( ITimeseries.FEATURE_TIMESERIES );
     newTimeseries.setDescription( timeseriesDescription );
 
-    final String quality = Messages.getString("TimeseriesImporter_11"); //$NON-NLS-1$
+    final String quality = Messages.getString( "TimeseriesImporter_11" ); //$NON-NLS-1$
 
     newTimeseries.setParameterType( parameterType );
     newTimeseries.setQuality( quality );
