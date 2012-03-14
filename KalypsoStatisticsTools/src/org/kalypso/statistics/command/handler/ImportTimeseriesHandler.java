@@ -2,7 +2,6 @@ package org.kalypso.statistics.command.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -21,35 +20,41 @@ import org.kalypso.statistics.gui.wizards.importTimeseriesExternal.ImportObsWiza
 import org.kalypso.statistics.project.SessionDataProvider;
 import org.kalypso.statistics.utils.AppUtils;
 
-public class ImportTimeseriesHandler extends AbstractHandler implements IHandler {
+public class ImportTimeseriesHandler extends AbstractHandler implements IHandler
+{
 
-	public static final String ID = ImportTimeseriesHandler.class.getCanonicalName();
+  public static final String ID = ImportTimeseriesHandler.class.getCanonicalName();
 
-	@Override
-	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		Shell activeShell = Display.getDefault().getActiveShell();
-		if (activeShell == null) {
-			activeShell = new Shell(Display.getDefault());
-		}
-		if (SessionDataProvider.getInstance().getDataProvider().getNodes().size() == 0) {
-			MessageDialog.openInformation(Display.getDefault().getActiveShell(), AppUtils.APPLICATION_TITLE,
-					"No Nodes and/or stations are defined yet. Please define at least one node or station.");
-			return Status.OK_STATUS;
-		}
+  @Override
+  public Object execute( final ExecutionEvent event )
+  {
+    Shell activeShell = Display.getDefault().getActiveShell();
+    if( activeShell == null )
+    {
+      activeShell = new Shell( Display.getDefault() );
+    }
+    if( SessionDataProvider.getInstance().getDataProvider().getNodes().size() == 0 )
+    {
+      MessageDialog.openInformation( Display.getDefault().getActiveShell(), AppUtils.APPLICATION_TITLE, "No Nodes and/or stations are defined yet. Please define at least one node or station." );
+      return Status.OK_STATUS;
+    }
 
-		final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(ImportObsWizard.ID);
-		try {
-			final IWorkbenchWizard wizard = wizardDesc.createWizard();
-			wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(Platform.getLocation()));
-			final WizardDialog dialog = new WizardDialog(activeShell, wizard);
-			dialog.open();
-		} catch (final CoreException e1) {
-			final IStatus status = e1.getStatus();
-			ErrorDialog.openError(activeShell, AppUtils.APPLICATION_TITLE, e1.getMessage(), status);
-		}
-		// treeViewer.refresh();
+    final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard( ImportObsWizard.ID );
+    try
+    {
+      final IWorkbenchWizard wizard = wizardDesc.createWizard();
+      wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( Platform.getLocation() ) );
+      final WizardDialog dialog = new WizardDialog( activeShell, wizard );
+      dialog.open();
+    }
+    catch( final CoreException e1 )
+    {
+      final IStatus status = e1.getStatus();
+      ErrorDialog.openError( activeShell, AppUtils.APPLICATION_TITLE, e1.getMessage(), status );
+    }
+    // treeViewer.refresh();
 
-		return Status.OK_STATUS;
-	}
+    return Status.OK_STATUS;
+  }
 
 }
