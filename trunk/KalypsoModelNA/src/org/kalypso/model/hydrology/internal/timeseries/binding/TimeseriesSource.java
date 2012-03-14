@@ -48,8 +48,7 @@ import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.PlainObsProvider;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 
@@ -78,9 +77,9 @@ public class TimeseriesSource implements IZmlSourceElement
   public IObsProvider getObsProvider( )
   {
     final ZmlLink link = m_timeseries.getDataLink();
-    final IObservation observation = link.getObservationFromPool();
+    final IPoolableObjectType key = link.getPoolableObjectType();
 
-    return new PlainObsProvider( observation, new ObservationRequest() );
+    return new PooledObsProvider( key );
   }
 
   @Override
