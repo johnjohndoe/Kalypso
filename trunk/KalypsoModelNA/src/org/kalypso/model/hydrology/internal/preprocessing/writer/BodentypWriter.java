@@ -43,16 +43,17 @@ package org.kalypso.model.hydrology.internal.preprocessing.writer;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.parameter.Parameter;
+import org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter;
 import org.kalypso.model.hydrology.binding.parameter.Soiltype;
 import org.kalypso.model.hydrology.binding.suds.IAbstractSwale;
 import org.kalypso.model.hydrology.binding.suds.IGreenRoof.EUsageType;
@@ -102,8 +103,6 @@ public class BodentypWriter extends AbstractCoreFileWriter
     }
   }
 
-  private final Map<String, List<Layer>> m_soilTypes = new LinkedHashMap<String, List<Layer>>();
-
   public BodentypWriter( final GMLWorkspace parameterWorkspace, final Logger logger )
   {
     super( logger );
@@ -114,64 +113,79 @@ public class BodentypWriter extends AbstractCoreFileWriter
   @Override
   protected void writeContent( final PrintWriter buffer )
   {
+    final Map<String, List<Layer>> soilTypes = collectSoilTypes();
+
+    buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
+
+    final Set<Entry<String, List<Layer>>> entrySet = soilTypes.entrySet();
+    for( final Entry<String, List<Layer>> entry : entrySet )
+    {
+      final String soilType = entry.getKey();
+      final List<Layer> layers = entry.getValue();
+
+      buffer.append( String.format( Locale.US, "%-10s%4d\n", soilType, layers.size() ) ); //$NON-NLS-1$
+
+      for( final Layer layer : layers )
+        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", layer.getName(), layer.getThickness(), layer.interflow() ? 1.0 : 0.0 ) ); //$NON-NLS-1$
+    }
+  }
+
+  private Map<String, List<Layer>> collectSoilTypes( )
+  {
     final Parameter parameter = (Parameter) m_parameterWorkspace.getRootFeature();
     final IFeatureBindingCollection<Soiltype> soiltypes = parameter.getSoiltypes();
+
+    final Map<String, List<Layer>> soilTypes = new LinkedHashMap<>( soiltypes.size() );
+
     for( final Soiltype soiltype : soiltypes )
     {
-      final List<Feature> bodartList = (List<Feature>) soiltype.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
       final List<Layer> layers = new ArrayList<Layer>();
-      for( final Feature fe : bodartList )
+
+      final List<SoilLayerParameter> bodartList = soiltype.getParameters();
+      for( final SoilLayerParameter layerParameter : bodartList )
       {
-        final Feature bodArtLink = fe.getMember( NaModelConstants.PARA_SOIL_LAYER_LINK );
+        final Feature bodArtLink = layerParameter.getMember( SoilLayerParameter.LINK_SOIL_LAYER );
         if( bodArtLink != null )
         {
-          Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
-          if( xretProp == null )
-            xretProp = Boolean.FALSE;
-          final Layer layer = new Layer( bodArtLink.getName(), Double.parseDouble( fe.getProperty( NaModelConstants.PARA_PROP_XTIEF ).toString() ), xretProp );
+          final boolean xret = layerParameter.getXRet();
+          final double xtief = layerParameter.getXTief();
+          final Layer layer = new Layer( bodArtLink.getName(), xtief, xret );
           layers.add( layer );
         }
         else
-          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) ) ); //$NON-NLS-1$
+        {
+          final Object linkRef = layerParameter.getProperty( SoilLayerParameter.LINK_SOIL_LAYER );
+          Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString( "org.kalypso.convert.namodel.manager.BodentypManager.29", soiltype.getId(), linkRef ) ); //$NON-NLS-1$
+        }
       }
-      final String layerName = soiltype.getName();
-      if( !m_soilTypes.containsKey( layerName ) )
-        m_soilTypes.put( layerName, layers );
-    }
-    addSudsSoilLayers();
 
-    buffer.append( "/Bodentypen:\n/\n/Typ       Tiefe[dm]\n" ); //$NON-NLS-1$
-    final Iterator<String> soilTypesIterator = m_soilTypes.keySet().iterator();
-    while( soilTypesIterator.hasNext() )
-    {
-      final String soilType = soilTypesIterator.next();
-      final List<Layer> layers = m_soilTypes.get( soilType );
-      buffer.append( String.format( Locale.US, "%-10s%4d\n", soilType, layers.size() ) ); //$NON-NLS-1$
-      for( final Layer layer : layers )
-      {
-        buffer.append( String.format( Locale.US, "%-8s%.1f %.1f\n", layer.getName(), layer.getThickness(), layer.interflow() ? 1.0 : 0.0 ) ); //$NON-NLS-1$
-      }
+      final String layerName = soiltype.getName();
+      if( !soilTypes.containsKey( layerName ) )
+        soilTypes.put( layerName, layers );
     }
+    addSudsSoilLayers( soilTypes );
+
+    return soilTypes;
   }
 
   /**
    * Adds the suds soil types to the existing set. If the type with the same name was already defined, it will be
    * overwritten.
    */
-  private final void addSudsSoilLayers( )
+  private final void addSudsSoilLayers( final Map<String, List<Layer>> soilTypes )
   {
     // add Greenroof type
     final List<Layer> greenroofExternalLayers = new ArrayList<Layer>();
     greenroofExternalLayers.add( new Layer( "GR-stau", 1.35, false ) ); //$NON-NLS-1$
     greenroofExternalLayers.add( new Layer( "Substr", 0.8, false ) ); //$NON-NLS-1$
     greenroofExternalLayers.add( new Layer( "Drain", 0.5, false ) ); //$NON-NLS-1$
-    m_soilTypes.put( EUsageType.EXTENSIVE.getSoilTypeID(), greenroofExternalLayers ); //$NON-NLS-1$
+    soilTypes.put( EUsageType.EXTENSIVE.getSoilTypeID(), greenroofExternalLayers ); //$NON-NLS-1$
 
     final List<Layer> greenroofInternalLayers = new ArrayList<Layer>();
     greenroofInternalLayers.add( new Layer( "GR-stau", 1.7, false ) ); //$NON-NLS-1$
     greenroofInternalLayers.add( new Layer( "Substr", 2.0, false ) ); //$NON-NLS-1$
     greenroofInternalLayers.add( new Layer( "Drain", 1.2, false ) ); //$NON-NLS-1$
-    m_soilTypes.put( EUsageType.INTENSIVE.getSoilTypeID(), greenroofInternalLayers ); //$NON-NLS-1$
+    soilTypes.put( EUsageType.INTENSIVE.getSoilTypeID(), greenroofInternalLayers ); //$NON-NLS-1$
 
     final Map<String, Double> mrsTypes = new LinkedHashMap<String, Double>();
     // default is 4.0
@@ -195,7 +209,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
       layers.add( new Layer( "filter", 6.0, false ) ); //$NON-NLS-1$
       layers.add( new Layer( "base", 1.0, false ) ); //$NON-NLS-1$
-      m_soilTypes.put( typeName, layers );
+      soilTypes.put( typeName, layers );
     }
 
     // add Mulde types
@@ -205,7 +219,7 @@ public class BodentypWriter extends AbstractCoreFileWriter
       layers.add( new Layer( "mulde", muldeTypes.get( typeName ), false ) ); //$NON-NLS-1$
       layers.add( new Layer( "rein", 3.0, false ) ); //$NON-NLS-1$
       layers.add( new Layer( "basem", 3.0, false ) ); //$NON-NLS-1$
-      m_soilTypes.put( typeName, layers );
+      soilTypes.put( typeName, layers );
     }
   }
 

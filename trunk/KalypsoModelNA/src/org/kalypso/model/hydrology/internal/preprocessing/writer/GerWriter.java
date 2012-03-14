@@ -52,7 +52,6 @@ import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.channels.VirtualChannel;
 import org.kalypso.model.hydrology.internal.IDManager;
 import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -64,7 +63,7 @@ public class GerWriter extends AbstractCoreFileWriter
 
   private static final int KMCHANNEL = 1;
 
-  private static final int STORAGECHANNEL = 2;
+  // private static final int STORAGECHANNEL = 2;
 
   private static final int STORAGECHANNEL_HRB = 4;
 
@@ -115,14 +114,7 @@ public class GerWriter extends AbstractCoreFileWriter
         writeParameter( writer, kmParameter, faktorRnf, faktorRkf );
     }
     else if( channel instanceof StorageChannel )
-    {
-      final TimeseriesLinkType link = ((StorageChannel) channel).getSeaEvaporationTimeseriesLink();
-
-      // FIXME: this distinction is probably too soft; we want to always use HRB however, so meaybe not a problem
-// writer.println( link == null ? STORAGECHANNEL : STORAGECHANNEL_HRB );
-
       writer.println( STORAGECHANNEL_HRB );
-    }
     else
       throw new UnsupportedOperationException( "can not write Feature to ascii" + channel.toString() ); //$NON-NLS-1$
   }
