@@ -79,6 +79,21 @@ public class ScenarioAccessor
     return getViewsFile( "Parameters_SoilProfiles.gtt" ); //$NON-NLS-1$
   }
 
+  public IFile getParametersSealingGtt( )
+  {
+    return getViewsFile( "Parameters_SealingClasses.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getParametersLanduseGroupsGtt( )
+  {
+    return getViewsFile( "Parameters_LanduseGroups.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getParametersSeasonalCycleGtt( )
+  {
+    return getViewsFile( "Parameters_SeasonalCycle.gtt" ); //$NON-NLS-1$
+  }
+
   public IFile getNodesNetGtt( )
   {
     return getViewsFile( "ModelConstruction_Nodes.gtt" ); //$NON-NLS-1$
@@ -127,5 +142,4 @@ public class ScenarioAccessor
 
     return viewsFolder.getFile( filename ); //$NON-NLS-1$
   }
-
 }

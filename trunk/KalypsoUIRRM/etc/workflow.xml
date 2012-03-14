@@ -53,6 +53,11 @@
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="ParameterDefinition_Landuse" parent="ContextHydrology">
+        <con:ViewContext id="ParameterDefinition_Landuse_GttView_Sealing" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Sealing" parent="ParameterDefinition_Landuse" />
+        <con:ViewContext id="ParameterDefinition_Landuse_GttView_SeasonalCycle" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:SeasonalCycle" parent="ParameterDefinition_Landuse" />
+        <con:ViewContext id="ParameterDefinition_Landuse_GttView_LanduseGroups" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:LanduseGroups" parent="ParameterDefinition_Landuse" />
+        
+        <con:ViewContext id="ParameterDefinition_Landuse_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Landuse" />
       </con:WorkbenchSiteContext>
 
       <!--  Model construction -->
