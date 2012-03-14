@@ -123,10 +123,10 @@ public class EditTimeseriesDialogSource implements IMultipleZmlSourceElement
       if( m_element.isDirty() )
       {
         final ZmlLink link = m_timeseries.getDataLink();
-        ZmlFactory.writeToFile( m_observation, link.getJavaFile() );
+        link.saveObservation( m_observation );
       }
     }
-    catch( final SensorException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
