@@ -493,10 +493,15 @@
       </dataSet>
    </extension>
    
-   <!-- Handler for workflow -->
+   <!-- Commands/Handlers for workflow -->
    <!-- REMARK: we define the commands here in order to avoid warning in this file -->
    <extension point="org.eclipse.ui.commands">
             <command id="org.kalypso.model.rrm.timeseriesManagement" name="Timeseries Management" />
+            
+            <command id="org.kalypso.model.rrm.parameterDefinition" name="%org.kalypso.model.rrm.parameterDefinition.name" description="%org.kalypso.model.rrm.parameterDefinition.description" />
+            <command id="org.kalypso.model.rrm.snowDefinition" name="%org.kalypso.model.rrm.snowDefinition.name" description="%org.kalypso.model.rrm.snowDefinition.description" />
+            <command id="org.kalypso.model.rrm.soilDefinition" name="%org.kalypso.model.rrm.soilDefinition.name" description="%org.kalypso.model.rrm.soilDefinition.description" />
+            <command id="org.kalypso.model.rrm.landuseDefinition" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.landuseDefinition.description" />
             
             <command id="org.kalypso.model.rrm.modelConstruction" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.modelConstruction.description" />
             <command id="org.kalypso.model.rrm.editNetElements" name="%org.kalypso.model.rrm.editNetElements.name" description="%org.kalypso.model.rrm.editNetElements.description" />
@@ -511,12 +516,26 @@
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
+            
+            <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
+            <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
+            <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
+
+            <image commandId="org.kalypso.model.rrm.parameterDefinition" icon="icons/parameters/parameters.gif"/>
+            <image commandId="org.kalypso.model.rrm.snowDefinition" icon="icons/parameters/snow.png"/>
+            <image commandId="org.kalypso.model.rrm.soilDefinition" icon="icons/parameters/soil.png"/>
+            <image commandId="org.kalypso.model.rrm.landuseDefinition" icon="icons/parameters/landuse.png"/>
+            
             <image commandId="org.kalypso.model.rrm.catchmentModels" icon="icons/cm/catchmentModelsView.png"/>
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
       <handler class="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementTaskHandler" commandId="org.kalypso.model.rrm.timeseriesManagement"/>
+      
+      <handler class="org.kalypso.ui.rrm.internal.parameters.SnowTaskHandler" commandId="org.kalypso.model.rrm.snowDefinition"/>
+      <handler class="org.kalypso.ui.rrm.internal.parameters.SoilTaskHandler" commandId="org.kalypso.model.rrm.soilDefinition"/>
+      <handler class="org.kalypso.ui.rrm.internal.parameters.LanduseTaskHandler" commandId="org.kalypso.model.rrm.landuseDefinition"/>
       
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetElementsTaskHandler" commandId="org.kalypso.model.rrm.editNetElements"/>
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetRelationsTaskHandler" commandId="org.kalypso.model.rrm.editNetRelations"/>

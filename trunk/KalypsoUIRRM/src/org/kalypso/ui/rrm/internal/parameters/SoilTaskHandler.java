@@ -38,35 +38,29 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.modelConstruction;
+package org.kalypso.ui.rrm.internal.parameters;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Gernot Belger
  */
-public class EditNetElementsTaskHandler extends AbstractHandler
+public class SoilTaskHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
@@ -91,24 +85,24 @@ public class EditNetElementsTaskHandler extends AbstractHandler
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, "Loading map..." ) )
       return null;
 
-    configureFeatureView( activePage );
-
-    /* set input to gtt tables */
-    try
-    {
-      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
-      final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
-
-      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", scenario.getNodesNetGtt(), "Nodes" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Channels", scenario.getReachesNetGtt(), "Channels" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", scenario.getCatchmentsNetGtt(), "Catchments" ); //$NON-NLS-1$
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-    }
+// configureFeatureView( activePage );
+//
+// /* set input to gtt tables */
+// try
+// {
+// final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+// final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+// final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
+//
+//      setGttInput( activePage, "Nodes", scenario.getNodesNetGtt(), "Nodes" ); //$NON-NLS-1$
+//      setGttInput( activePage, "Channels", scenario.getReachesNetGtt(), "Channels" ); //$NON-NLS-1$
+//      setGttInput( activePage, "Catchments", scenario.getCatchmentsNetGtt(), "Catchments" ); //$NON-NLS-1$
+// }
+// catch( final CoreException e )
+// {
+// e.printStackTrace();
+//      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
+// }
 
     return null;
   }

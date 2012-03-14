@@ -66,6 +66,13 @@ public class ScenarioAccessor
     return viewsFolder.getFile( "Simulations.gtt" ); //$NON-NLS-1$
   }
 
+  public IFile getParametersSnowGtt( )
+  {
+    final IFolder viewsFolder = getViewsFolder();
+
+    return viewsFolder.getFile( "Parameters_Snow.gtt" ); //$NON-NLS-1$
+  }
+
   public IFile getNodesNetGtt( )
   {
     final IFolder viewsFolder = getViewsFolder();

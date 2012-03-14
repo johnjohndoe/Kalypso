@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.modelConstruction;
+package org.kalypso.ui.rrm.internal.parameters;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -46,50 +46,30 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
-import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Gernot Belger
  */
-public class EditNetElementsTaskHandler extends AbstractHandler
+public class SnowTaskHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
-
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
-    final MapView mapView = (MapView) activePage.findView( MapView.ID );
-    if( mapView == null )
-      throw new ExecutionException( "Unable to find map view" ); //$NON-NLS-1$
-
-    final IMapPanel mapPanel = mapView.getMapPanel();
-
-    /* Make sure, a theme is active */
-    /* wait for map to load */
-    final String windowTitle = HandlerUtils.getCommandName( event );
-    // FIXME: before I18N, check all other calls to waitForAndErrorDialog and remove duplicate strings
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, "Loading map..." ) )
-      return null;
 
     configureFeatureView( activePage );
 
@@ -100,9 +80,7 @@ public class EditNetElementsTaskHandler extends AbstractHandler
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
       final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", scenario.getNodesNetGtt(), "Nodes" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Channels", scenario.getReachesNetGtt(), "Channels" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", scenario.getCatchmentsNetGtt(), "Catchments" ); //$NON-NLS-1$
+      WorkflowHandlerUtils.setGttInput( activePage, null, scenario.getParametersSnowGtt(), "Snow Types" );
     }
     catch( final CoreException e )
     {
@@ -123,12 +101,6 @@ public class EditNetElementsTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
-
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Subcatchment_ModelConstruction.gft" ) ); //$NON-NLS-1$
-
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/KMChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/RHBChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/VChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
+//    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_Snow.gft" ) ); //$NON-NLS-1$
   }
 }

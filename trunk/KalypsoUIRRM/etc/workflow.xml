@@ -8,6 +8,12 @@
     <Name>%timeseriesManagement</Name>
   </Task>
 
+  <TaskGroup URI="org.kalypso.model.rrm.parameterDefinition">
+    <Task URI="org.kalypso.model.rrm.snowDefinition" context="ParameterDefinition_Snow" />
+    <Task URI="org.kalypso.model.rrm.soilDefinition" context="ParameterDefinition_Soil" />
+    <Task URI="org.kalypso.model.rrm.landuseDefinition" context="ParameterDefinition_Landuse" />
+  </TaskGroup>
+
   <TaskGroup URI="org.kalypso.model.rrm.modelConstruction">
     <Task URI="org.kalypso.model.rrm.editNetElements" context="EditNetElements_extContext1" />
     <Task URI="org.kalypso.model.rrm.editNetRelations" context="EditNetRelationsContext" />
@@ -31,6 +37,22 @@
         <con:ViewContext id="TimeseriesManagementView" partId="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" parent="TimeseriesManagementContext" />
         <con:ViewContext id="TimeseriesPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="TimeseriesManagementContext" />
         <con:ViewContext id="TimeseriesDiagramView" partId="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView" parent="TimeseriesManagementContext" />
+      </con:WorkbenchSiteContext>
+
+      <!-- Parameter Definitions -->
+      <con:WorkbenchSiteContext id="ParameterDefinition_Snow" parent="ContextHydrology">
+        <con:ViewContext id="ParameterDefinition_Snow_GttView" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart" parent="EditNetElementsContext" />
+        <con:ViewContext id="ParameterDefinition_Snow_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="EditNetElementsContext" />
+      </con:WorkbenchSiteContext>
+
+      <con:WorkbenchSiteContext id="ParameterDefinition_Soil" parent="ContextHydrology">
+        <con:ViewContext id="ParameterDefinition_Soil_GttView_Horizons" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Horizons" parent="EditNetElementsContext" />
+        <con:ViewContext id="ParameterDefinition_Soil_GttView_Profiles" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart_Profiles" parent="EditNetElementsContext" />
+        
+        <con:ViewContext id="ParameterDefinition_Soil_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="EditNetElementsContext" />
+      </con:WorkbenchSiteContext>
+
+      <con:WorkbenchSiteContext id="ParameterDefinition_Landuse" parent="ContextHydrology">
       </con:WorkbenchSiteContext>
 
       <!--  Model construction -->
@@ -60,6 +82,7 @@
           </con:ExtensionContext>
         </con:ViewContext>
       </con:WorkbenchSiteContext>
+      
 
       <!-- Catchment Model Management -->
       <con:WorkbenchSiteContext id="CatchmentModelsContext" parent="ContextHydrology">
