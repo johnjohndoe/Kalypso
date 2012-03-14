@@ -15,6 +15,9 @@
 
       <!-- Selektionslayer unten drunter -->
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#selectionLayer" />
+      
+      <!--  Missing zml values -->
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:missing#Fehlwerte" />
     </Layers>
   </Chart>
 </ChartConfiguration>
