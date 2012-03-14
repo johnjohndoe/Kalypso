@@ -55,16 +55,16 @@ import org.kalypsodeegree.model.feature.Feature;
  * A NetElement encapsulates a Channel-Element and its dependencies <br>
  * In the example below each channel represents one net-element. Here you can see the dependencies related to the one
  * channel written in capital letter in the middle.
- * 
+ *
  * <pre>
  *                                          Node-----&gt;-----Node
  *                                            |              |
  *                                            V              V
  *                                            |              |
  *                         Catchment---&gt;---CHANNEL        Channel (downstream)
- *                             |              |           
- *                             |              V           
- *                             V              |           
+ *                             |              |
+ *                             |              V
+ *                             V              |
  *                             |             Node
  *                             |              |
  *                          Catchment         V
@@ -72,8 +72,8 @@ import org.kalypsodeegree.model.feature.Feature;
  *                             V           Channel (downstream)
  *                             |
  *                          Channel (downstream)
- * 
- * 
+ *
+ *
  * </pre>
  */
 public class NetElement
@@ -98,6 +98,9 @@ public class NetElement
   {
     m_channel = channel;
     m_idManager = idManager;
+
+    // BUGFIX: generate ascii id in order of addition, see comment in RelevantNetElements
+    getAsciiID();
   }
 
   public Channel getChannel( )

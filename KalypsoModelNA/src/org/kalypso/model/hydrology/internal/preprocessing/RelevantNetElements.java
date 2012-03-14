@@ -54,7 +54,7 @@ import org.kalypso.model.hydrology.internal.preprocessing.net.NetElement;
 
 /**
  * Collects the relevant net elements, that needs to be written to ascii files.
- * 
+ *
  * @author Gernot Belger
  */
 public class RelevantNetElements
@@ -101,6 +101,12 @@ public class RelevantNetElements
   public NetElement[] getChannelsSorted( final IDManager idManager )
   {
     final NetElement[] channels = m_channels.toArray( new NetElement[m_channels.size()] );
+
+    // BUGFIX/REMARK: as the ascii id was accessed for the first time inside the sort
+    // method, the ordering of elements depended on the sort algorythm.
+    // We no (see above) initialize the ascii id when the net element is created,
+    // so the order is independend of the this sort.
+
     Arrays.sort( channels, new ChannelTypeComparator( idManager ) );
     return channels;
   }
