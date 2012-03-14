@@ -220,8 +220,6 @@ public interface NaModelConstants
 
   QName PARA_SOIL_LAYER_PARAMETER_FT = new QName( NS_NAPARAMETER, "SoilLayerParameter" ); //$NON-NLS-1$
 
-  QName PARA_SOIL_LAYER_PARAMETER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerParameterMember" ); //$NON-NLS-1$
-
   QName PARA_LANDUSE_NAME = new QName( NS_NAPARAMETER, "Landuse" ); //$NON-NLS-1$
 
   QName PARA_PROP_SEALING_MEMBER = new QName( NS_NAPARAMETER, "sealingMember" ); //$NON-NLS-1$
@@ -241,12 +239,6 @@ public interface NaModelConstants
   QName PARA_LANDUSE_PROP_LANDUSE_LINK = new QName( NS_NAPARAMETER, "idealLandUsePeriodLink" ); //$NON-NLS-1$
 
   QName PARA_SOIL_LAYER_MEMBER = new QName( NS_NAPARAMETER, "soilLayerMember" ); //$NON-NLS-1$
-
-  QName PARA_SOIL_LAYER_LINK = new QName( NS_NAPARAMETER, "soilLayerLink" ); //$NON-NLS-1$
-
-  QName PARA_PROP_XTIEF = new QName( NS_NAPARAMETER, "xtief" ); //$NON-NLS-1$
-
-  QName PARA_PROP_XRET = new QName( NS_NAPARAMETER, "xret" ); //$NON-NLS-1$
 
   // default values
   QName DEFAULT_MRS_LANDUSE_PROP = new QName( NS_NAPARAMETER, "15" ); // Nutzung Grünland //$NON-NLS-1$

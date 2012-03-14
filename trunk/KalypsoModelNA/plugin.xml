@@ -343,6 +343,10 @@
               qname="{http://www.tuhh.de/parameter}Soiltype">
         </feature>
         <feature
+              class="org.kalypso.model.hydrology.binding.parameter.SoilLayerParameter"
+              qname="{http://www.tuhh.de/parameter}SoilLayerParameter">
+        </feature>
+        <feature
               class="org.kalypso.model.hydrology.binding.parameter.Snow"
               qname="{http://www.tuhh.de/parameter}Snow">
         </feature>
