@@ -337,8 +337,26 @@
                  style="push">
            </command>
            <separator
-                 name="diagram.seperator1"
+                 name="diagram.view.seperator1"
                  visible="true">
+           </separator>
+           <command
+             commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+             icon="icons/chart/stuetzstelle.png"
+             label="Stuetzstellen einblenden"
+             style="toggle"
+             tooltip="Stützstellen einblenden">
+          <parameter
+                name="layer.parameter"
+                value="content.stuetzstelle">
+          </parameter>
+          <parameter
+                name="layer.filter"
+                value="org.kalypso.chart.layer.filter.stuetzstelle">
+          </parameter>
+       </command>
+           <separator
+                 name="diagram.view.seperator2">
            </separator>
            <command
                  commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
@@ -579,6 +597,25 @@
        </command>
        <separator
              name="rrm.chart.seperator.1"
+             visible="true">
+       </separator>
+       <command
+             commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+             icon="icons/chart/stuetzstelle.png"
+             label="Stuetzstellen einblenden"
+             style="toggle"
+             tooltip="Stützstellen einblenden">
+          <parameter
+                name="layer.parameter"
+                value="content.stuetzstelle">
+          </parameter>
+          <parameter
+                name="layer.filter"
+                value="org.kalypso.chart.layer.filter.stuetzstelle">
+          </parameter>
+       </command>
+       <separator
+             name="rrm.chart.seperator.2"
              visible="true">
        </separator>
     </menuContribution>
