@@ -61,37 +61,37 @@ public class ScenarioAccessor
 
   public IFile getSimulationsGtt( )
   {
-    final IFolder viewsFolder = getViewsFolder();
-
-    return viewsFolder.getFile( "Simulations.gtt" ); //$NON-NLS-1$
+    return getViewsFile( "Simulations.gtt" ); //$NON-NLS-1$
   }
 
   public IFile getParametersSnowGtt( )
   {
-    final IFolder viewsFolder = getViewsFolder();
+    return getViewsFile( "Parameters_Snow.gtt" ); //$NON-NLS-1$
+  }
 
-    return viewsFolder.getFile( "Parameters_Snow.gtt" ); //$NON-NLS-1$
+  public IFile getParametersSoilLayersGtt( )
+  {
+    return getViewsFile( "Parameters_SoilLayers.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getParametersSoilProfilesGtt( )
+  {
+    return getViewsFile( "Parameters_SoilProfiles.gtt" ); //$NON-NLS-1$
   }
 
   public IFile getNodesNetGtt( )
   {
-    final IFolder viewsFolder = getViewsFolder();
-
-    return viewsFolder.getFile( "ModelConstruction_Nodes.gtt" ); //$NON-NLS-1$
+    return getViewsFile( "ModelConstruction_Nodes.gtt" ); //$NON-NLS-1$
   }
 
   public IFile getReachesNetGtt( )
   {
-    final IFolder viewsFolder = getViewsFolder();
-
-    return viewsFolder.getFile( "ModelConstruction_Reaches.gtt" ); //$NON-NLS-1$
+    return getViewsFile( "ModelConstruction_Reaches.gtt" ); //$NON-NLS-1$
   }
 
   public IFile getCatchmentsNetGtt( )
   {
-    final IFolder viewsFolder = getViewsFolder();
-
-    return viewsFolder.getFile( "ModelConstruction_Catchments.gtt" ); //$NON-NLS-1$
+    return getViewsFile( "ModelConstruction_Catchments.gtt" ); //$NON-NLS-1$
   }
 
   public IFolder getViewsFolder( )
@@ -120,4 +120,12 @@ public class ScenarioAccessor
 
     return true;
   }
+
+  private IFile getViewsFile( final String filename )
+  {
+    final IFolder viewsFolder = getViewsFolder();
+
+    return viewsFolder.getFile( filename ); //$NON-NLS-1$
+  }
+
 }

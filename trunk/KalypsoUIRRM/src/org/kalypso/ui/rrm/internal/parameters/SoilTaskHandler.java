@@ -44,18 +44,18 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
+import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ui.views.map.MapView;
+import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 /**
  * @author Gernot Belger
@@ -67,42 +67,26 @@ public class SoilTaskHandler extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
-
-    /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
-    final MapView mapView = (MapView) activePage.findView( MapView.ID );
-    if( mapView == null )
-      throw new ExecutionException( "Unable to find map view" ); //$NON-NLS-1$
 
-    final IMapPanel mapPanel = mapView.getMapPanel();
+    configureFeatureView( activePage );
 
-    /* Make sure, a theme is active */
-    /* wait for map to load */
-    final String windowTitle = HandlerUtils.getCommandName( event );
-    // FIXME: before I18N, check all other calls to waitForAndErrorDialog and remove duplicate strings
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, "Loading map..." ) )
-      return null;
+    /* set input to gtt tables */
+    try
+    {
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
+      final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
 
-// configureFeatureView( activePage );
-//
-// /* set input to gtt tables */
-// try
-// {
-// final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-// final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
-// final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
-//
-//      setGttInput( activePage, "Nodes", scenario.getNodesNetGtt(), "Nodes" ); //$NON-NLS-1$
-//      setGttInput( activePage, "Channels", scenario.getReachesNetGtt(), "Channels" ); //$NON-NLS-1$
-//      setGttInput( activePage, "Catchments", scenario.getCatchmentsNetGtt(), "Catchments" ); //$NON-NLS-1$
-// }
-// catch( final CoreException e )
-// {
-// e.printStackTrace();
-//      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
-// }
+      WorkflowHandlerUtils.setGttInput( activePage, "Layers", scenario.getParametersSoilLayersGtt(), "Layers" ); //$NON-NLS-1$
+      WorkflowHandlerUtils.setGttInput( activePage, "Profiles", scenario.getParametersSoilProfilesGtt(), "Profiles" ); //$NON-NLS-1$
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
+    }
 
     return null;
   }
@@ -117,12 +101,7 @@ public class SoilTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelConstruction.gft" ) ); //$NON-NLS-1$
-
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Subcatchment_ModelConstruction.gft" ) ); //$NON-NLS-1$
-
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/KMChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/RHBChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/VChannel_ModelConstruction.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilProfile.gtt" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilLayer.gtt" ) ); //$NON-NLS-1$
   }
 }

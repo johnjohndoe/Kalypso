@@ -46,10 +46,10 @@
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="ParameterDefinition_Soil" parent="ContextHydrology">
-        <con:ViewContext id="ParameterDefinition_Soil_GttView_Horizons" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Horizons" parent="EditNetElementsContext" />
-        <con:ViewContext id="ParameterDefinition_Soil_GttView_Profiles" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart_Profiles" parent="EditNetElementsContext" />
+        <con:ViewContext id="ParameterDefinition_Soil_GttView_Layers" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Layers" parent="ParameterDefinition_Soil" />
+        <con:ViewContext id="ParameterDefinition_Soil_GttView_Profiles" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Profiles" parent="ParameterDefinition_Soil" />
         
-        <con:ViewContext id="ParameterDefinition_Soil_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="EditNetElementsContext" />
+        <con:ViewContext id="ParameterDefinition_Soil_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="ParameterDefinition_Soil" />
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="ParameterDefinition_Landuse" parent="ContextHydrology">
