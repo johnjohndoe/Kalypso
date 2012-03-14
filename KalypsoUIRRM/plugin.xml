@@ -501,7 +501,7 @@
             <command id="org.kalypso.model.rrm.parameterDefinition" name="%org.kalypso.model.rrm.parameterDefinition.name" description="%org.kalypso.model.rrm.parameterDefinition.description" />
             <command id="org.kalypso.model.rrm.snowDefinition" name="%org.kalypso.model.rrm.snowDefinition.name" description="%org.kalypso.model.rrm.snowDefinition.description" />
             <command id="org.kalypso.model.rrm.soilDefinition" name="%org.kalypso.model.rrm.soilDefinition.name" description="%org.kalypso.model.rrm.soilDefinition.description" />
-            <command id="org.kalypso.model.rrm.landuseDefinition" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.landuseDefinition.description" />
+            <command id="org.kalypso.model.rrm.landuseDefinition" name="%org.kalypso.model.rrm.landuseDefinition.name" description="%org.kalypso.model.rrm.landuseDefinition.description" />
             
             <command id="org.kalypso.model.rrm.modelConstruction" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.modelConstruction.description" />
             <command id="org.kalypso.model.rrm.editNetElements" name="%org.kalypso.model.rrm.editNetElements.name" description="%org.kalypso.model.rrm.editNetElements.description" />
