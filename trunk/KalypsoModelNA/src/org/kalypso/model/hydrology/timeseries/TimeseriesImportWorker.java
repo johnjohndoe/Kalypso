@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.timeseries;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -50,19 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
-import org.kalypso.repository.IDataSourceItem;
 
 /**
  * Helper class that should be used for every timeseries that get imported into an RRM project. Cleans the timeseries
@@ -84,6 +71,8 @@ public class TimeseriesImportWorker
     try
     {
       final IObservation resultObservation = removeMissingValues( m_observation );
+      // FIXME re-interpolate momentan werte
+
       return resultObservation;
     }
     catch( final SensorException e )
@@ -114,90 +103,13 @@ public class TimeseriesImportWorker
 
       case ITimeseriesConstants.TYPE_RAINFALL:
       case ITimeseriesConstants.TYPE_EVAPORATION:
-        return setMissingTo0( observation, valueAxis );
+        observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
 
       case ITimeseriesConstants.TYPE_TEMPERATURE:
-        return removeMissing( observation, valueAxis );
+        observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
+
     }
 
     return observation;
-  }
-
-  private IObservation setMissingTo0( final IObservation observation, final IAxis valueAxis ) throws SensorException
-  {
-    final IAxis[] axes = observation.getAxes();
-
-    final IAxis statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
-    final IAxis sourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
-
-    final DataSourceHandler dataSourceHandler = new DataSourceHandler( observation.getMetadataList() );
-    final String missingIdentifier = IDataSourceItem.SOURCE_MANUAL_CHANGED;
-    final int missingSource = dataSourceHandler.addDataSource( missingIdentifier, missingIdentifier );
-
-    final IObservationVisitor visitor = new IObservationVisitor()
-    {
-      @Override
-      public void visit( final IObservationValueContainer container ) throws SensorException
-      {
-        final Object value = container.get( valueAxis );
-        if( isMissingValue( value ) )
-        {
-          container.set( valueAxis, new Double( 0.0 ) );
-          container.set( statusAxis, KalypsoStati.BIT_CHECK );
-          container.set( sourceAxis, missingSource );
-        }
-      }
-    };
-
-    observation.accept( visitor, null, 0 );
-
-    return observation;
-  }
-
-  private IObservation removeMissing( final IObservation observation, final IAxis valueAxis ) throws SensorException
-  {
-    final IAxis[] axes = observation.getAxes();
-
-    final MetadataList clonedMetadata = MetadataHelper.clone( observation.getMetadataList() );
-
-    final ITupleModel sourceModel = observation.getValues( null );
-
-    final Collection<Object[]> targetValueCollector = new ArrayList<>( sourceModel.size() );
-
-    final IObservationVisitor visitor = new IObservationVisitor()
-    {
-      @Override
-      public void visit( final IObservationValueContainer container ) throws SensorException
-      {
-        final Object value = container.get( valueAxis );
-        if( !isMissingValue( value ) )
-        {
-          // do copy value
-          final Object[] values = new Object[axes.length];
-          for( int i = 0; i < axes.length; i++ )
-            values[i] = container.get( axes[i] );
-          targetValueCollector.add( values );
-        }
-      }
-    };
-
-    observation.accept( visitor, null, 0 );
-
-    final Object[][] targetValues = targetValueCollector.toArray( new Object[targetValueCollector.size()][] );
-
-    final String href = observation.getHref();
-    final String name = observation.getName();
-    final ITupleModel targetModel = new SimpleTupleModel( axes, targetValues );
-
-    return new SimpleObservation( href, name, clonedMetadata, targetModel );
-  }
-
-  protected boolean isMissingValue( final Object value )
-  {
-    if( !(value instanceof Number) )
-      return true;
-
-    final double dblValue = ((Number) value).doubleValue();
-    return Math.abs( -999.0 - dblValue ) < 0.1;
   }
 }

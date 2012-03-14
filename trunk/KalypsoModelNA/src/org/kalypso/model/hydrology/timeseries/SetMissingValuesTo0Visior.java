@@ -38,19 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.imports;
+package org.kalypso.model.hydrology.timeseries;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.eclipse.core.runtime.IStatus;
-import org.joda.time.Period;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
@@ -58,45 +50,21 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ValidateTimestepsVisitor implements IObservationVisitor
+public class SetMissingValuesTo0Visior extends AbstractMissingValuesVisitor implements IObservationVisitor
 {
-  private final IStatusCollector m_status = new StatusCollector( KalypsoCorePlugin.getID() );
-
-  private final Period m_timestep;
-
-  private Date m_lastDate;
-
-  private final long m_duration;
-
-  public ValidateTimestepsVisitor( final Period timestep )
-  {
-    m_timestep = timestep;
-    m_duration = m_timestep.toStandardSeconds().getSeconds();
-  }
 
   @Override
   public void visit( final IObservationValueContainer container ) throws SensorException
   {
-    final IAxis dateAxis = AxisUtils.findDateAxis( container.getAxes() );
-    final Date date = (Date) container.get( dateAxis );
-
-    if( Objects.isNotNull( m_lastDate ) )
+    if( isMissingValue( container ) )
     {
-      final long duration = Math.abs( m_lastDate.getTime() - date.getTime() ) / 1000;
-      if( m_duration != duration )
-      {
-        final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yy HH:mm" );
-        m_status.add( IStatus.ERROR, String.format( "Invalid time step detected - between %s and %s", sdf.format( m_lastDate ), sdf.format( date ) ) );
-      }
+      final IAxis valueAxis = findValueAxis( container.getAxes() );
+      final IAxis statusAxis = AxisUtils.findStatusAxis( container.getAxes(), valueAxis );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( container.getAxes(), valueAxis );
+
+      container.set( valueAxis, 0.0 );
+      container.set( statusAxis, KalypsoStati.BIT_CHECK );
+      container.set( dataSourceAxis, getDataSourceIndex( container, dataSourceAxis ) );
     }
-
-    m_lastDate = date;
-
   }
-
-  public IStatus getStatus( )
-  {
-    return m_status.asMultiStatus( "Time Step Validation Status" );
-  }
-
 }

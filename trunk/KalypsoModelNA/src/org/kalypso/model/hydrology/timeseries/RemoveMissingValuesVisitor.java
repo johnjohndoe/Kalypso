@@ -38,65 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.imports;
+package org.kalypso.model.hydrology.timeseries;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.eclipse.core.runtime.IStatus;
-import org.joda.time.Period;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ValidateTimestepsVisitor implements IObservationVisitor
+public class RemoveMissingValuesVisitor extends AbstractMissingValuesVisitor implements IObservationVisitor
 {
-  private final IStatusCollector m_status = new StatusCollector( KalypsoCorePlugin.getID() );
+  private final SimpleTupleModel m_model;
 
-  private final Period m_timestep;
+  private final IObservation m_base;
 
-  private Date m_lastDate;
-
-  private final long m_duration;
-
-  public ValidateTimestepsVisitor( final Period timestep )
+  public RemoveMissingValuesVisitor( final IObservation base )
   {
-    m_timestep = timestep;
-    m_duration = m_timestep.toStandardSeconds().getSeconds();
+    m_base = base;
+    m_model = new SimpleTupleModel( base.getAxes() );
   }
 
   @Override
   public void visit( final IObservationValueContainer container ) throws SensorException
   {
-    final IAxis dateAxis = AxisUtils.findDateAxis( container.getAxes() );
-    final Date date = (Date) container.get( dateAxis );
+    if( isMissingValue( container ) )
+      return;
 
-    if( Objects.isNotNull( m_lastDate ) )
+    final IAxis[] axes = container.getAxes();
+    final int length = ArrayUtils.getLength( axes );
+    final Object[] data = new Object[length];
+
+    for( int index = 0; index < length; index++ )
     {
-      final long duration = Math.abs( m_lastDate.getTime() - date.getTime() ) / 1000;
-      if( m_duration != duration )
-      {
-        final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yy HH:mm" );
-        m_status.add( IStatus.ERROR, String.format( "Invalid time step detected - between %s and %s", sdf.format( m_lastDate ), sdf.format( date ) ) );
-      }
+      final IAxis axis = axes[index];
+
+      final Object value = container.get( axis );
+      data[index] = value;
     }
 
-    m_lastDate = date;
-
+    m_model.addTuple( data );
   }
 
-  public IStatus getStatus( )
+  public IObservation getObservation( )
   {
-    return m_status.asMultiStatus( "Time Step Validation Status" );
+    return new SimpleObservation( m_base.getHref(), m_base.getName(), m_base.getMetadataList(), m_model );
   }
 
 }
