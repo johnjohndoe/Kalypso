@@ -43,13 +43,17 @@ package org.kalypso.model.hydrology.timeseries;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 
 /**
  * Helper class that should be used for every timeseries that get imported into an RRM project. Cleans the timeseries
@@ -70,8 +74,20 @@ public class TimeseriesImportWorker
   {
     try
     {
-      final IObservation resultObservation = removeMissingValues( m_observation );
-      // FIXME re-interpolate momentan werte
+      final IAxis[] axes = m_observation.getAxes();
+      final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
+
+      Assert.isTrue( valueAxes.length == 1 );
+
+      final IAxis valueAxis = valueAxes[0];
+      final IObservation resultObservation = removeMissingValues( m_observation, valueAxis );
+
+      final TIMESERIES_TYPE type = TimeseriesUtils.getType( valueAxis.getType() );
+      if( TIMESERIES_TYPE.eCurrentValue.equals( type ) )
+      {
+        final ZmlInterpolationWorker interpolation = new ZmlInterpolationWorker( resultObservation.getValues( null ), resultObservation.getMetadataList(), valueAxis );
+        interpolation.execute( new NullProgressMonitor() );
+      }
 
       return resultObservation;
     }
@@ -83,14 +99,8 @@ public class TimeseriesImportWorker
     }
   }
 
-  private IObservation removeMissingValues( final IObservation observation ) throws SensorException
+  private IObservation removeMissingValues( final IObservation observation, final IAxis valueAxis ) throws SensorException
   {
-    final IAxis[] axes = observation.getAxes();
-    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
-
-    Assert.isTrue( valueAxes.length == 1 );
-
-    final IAxis valueAxis = valueAxes[0];
 
     final String parameterType = valueAxis.getType();
 
