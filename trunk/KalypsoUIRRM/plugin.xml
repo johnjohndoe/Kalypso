@@ -341,11 +341,11 @@
                  visible="true">
            </separator>
            <command
-             commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
-             icon="icons/chart/stuetzstelle.png"
-             label="Stuetzstellen einblenden"
-             style="toggle"
-             tooltip="Stützstellen einblenden">
+                 commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+                 icon="icons/chart/stuetzstelle.png"
+                 label="Stuetzstellen einblenden"
+                 style="toggle"
+                 tooltip="Stützstellen einblenden">
           <parameter
                 name="layer.parameter"
                 value="content.stuetzstelle">
