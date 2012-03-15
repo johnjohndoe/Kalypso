@@ -134,6 +134,21 @@ public class ScenarioAccessor
     return getViewsFile( "Hydrotopes_Hydrotopes.gtt" ); //$NON-NLS-1$
   }
 
+  public IFile getNodesCompleteGtt( )
+  {
+    return getViewsFile( "ModelCompletion_Nodes.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getReachesCompleteGtt( )
+  {
+    return getViewsFile( "ModelCompletion_Reaches.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getCatchmentsCompleteGtt( )
+  {
+    return getViewsFile( "ModelCompletion_Catchments.gtt" ); //$NON-NLS-1$
+  }
+
   public IFolder getViewsFolder( )
   {
     return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
