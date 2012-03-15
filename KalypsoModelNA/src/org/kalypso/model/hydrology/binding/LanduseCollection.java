@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -54,14 +55,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for rrmLanduse:LanduseCollection's
  *
  * @author Gernot Belger
  */
-public class LanduseCollection extends Feature_Impl
+public class LanduseCollection extends UnversionedModel
 {
   public static final QName QNAME_PROP_LANDUSEMEMBER = new QName( NaModelConstants.NS_NALANDUSE, "landuseMember" ); //$NON-NLS-1$
 
