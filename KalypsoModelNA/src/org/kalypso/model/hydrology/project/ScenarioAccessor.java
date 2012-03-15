@@ -109,6 +109,31 @@ public class ScenarioAccessor
     return getViewsFile( "ModelConstruction_Catchments.gtt" ); //$NON-NLS-1$
   }
 
+  public IFile getHydrotopesCatchmentsGtt( )
+  {
+    return getViewsFile( "Hydrotopes_Catchments.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getHydrotopesLanduseGtt( )
+  {
+    return getViewsFile( "Hydrotopes_Landuse.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getHydrotopesGeologieGtt( )
+  {
+    return getViewsFile( "Hydrotopes_Geologie.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getHydrotopesPedologieGtt( )
+  {
+    return getViewsFile( "Hydrotopes_Pedologie.gtt" ); //$NON-NLS-1$
+  }
+
+  public IFile getHydrotopesHydrotopesGtt( )
+  {
+    return getViewsFile( "Hydrotopes_Hydrotopes.gtt" ); //$NON-NLS-1$
+  }
+
   public IFolder getViewsFolder( )
   {
     return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$

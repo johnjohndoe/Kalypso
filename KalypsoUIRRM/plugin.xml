@@ -490,27 +490,33 @@
          <scenarioDatum classKey="org.kalypso.model.hydrology.cm.binding.ICatchmentModel" id="catchmentModels" modelPath=".models/catchmentModels.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.model.NaModell" id="model" modelPath=".models/modell.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.control.SimulationCollection" id="simulations" modelPath=".models/simulations.gml"/>
+
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.LanduseCollection" id="landuse" modelPath=".models/landuse.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.GeologyCollection" id="geologie" modelPath=".models/geologie.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.SoilTypeCollection" id="pedologie" modelPath=".models/pedologie.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.NAHydrotop" id="hydrotopes" modelPath=".models/hydrotope.gml"/>
       </dataSet>
    </extension>
    
    <!-- Commands/Handlers for workflow -->
    <!-- REMARK: we define the commands here in order to avoid warning in this file -->
    <extension point="org.eclipse.ui.commands">
-            <command id="org.kalypso.model.rrm.timeseriesManagement" name="Timeseries Management" />
+            <command id="org.kalypso.model.rrm.timeseriesManagement" name="%org.kalypso.model.rrm.timeseriesManagement.name" description="%org.kalypso.model.rrm.timeseriesManagement.description" />
             
             <command id="org.kalypso.model.rrm.parameterDefinition" name="%org.kalypso.model.rrm.parameterDefinition.name" description="%org.kalypso.model.rrm.parameterDefinition.description" />
             <command id="org.kalypso.model.rrm.snowDefinition" name="%org.kalypso.model.rrm.snowDefinition.name" description="%org.kalypso.model.rrm.snowDefinition.description" />
             <command id="org.kalypso.model.rrm.soilDefinition" name="%org.kalypso.model.rrm.soilDefinition.name" description="%org.kalypso.model.rrm.soilDefinition.description" />
             <command id="org.kalypso.model.rrm.landuseDefinition" name="%org.kalypso.model.rrm.landuseDefinition.name" description="%org.kalypso.model.rrm.landuseDefinition.description" />
-            
+
             <command id="org.kalypso.model.rrm.modelConstruction" name="%org.kalypso.model.rrm.modelConstruction.name" description="%org.kalypso.model.rrm.modelConstruction.description" />
             <command id="org.kalypso.model.rrm.editNetElements" name="%org.kalypso.model.rrm.editNetElements.name" description="%org.kalypso.model.rrm.editNetElements.description" />
             <command id="org.kalypso.model.rrm.editNetRelations" name="%org.kalypso.model.rrm.editNetRelations.name" description="%org.kalypso.model.rrm.editNetRelations.description" />
+            <command id="org.kalypso.model.rrm.hydrotopes" name="%org.kalypso.model.rrm.hydrotopes.name" description="%org.kalypso.model.rrm.hydrotopes.description" />
 
-            <command id="org.kalypso.model.rrm.catchmentModels" name="Catchment Models" />
+            <command id="org.kalypso.model.rrm.catchmentModels" name="%org.kalypso.model.rrm.catchmentModels.name" description="%org.kalypso.model.rrm.catchmentModels.description" />
 
-            <command id="org.kalypso.model.rrm.simulationManagement" name="Simulation Management"/>
-            
+            <command id="org.kalypso.model.rrm.simulationManagement" name="%org.kalypso.model.rrm.simulationManagement.name" description="%org.kalypso.model.rrm.simulationManagement.description"/>
+
 			<!-- non workflow -->
             <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="Create Simulations"/>
    </extension>
@@ -526,7 +532,12 @@
             <image commandId="org.kalypso.model.rrm.soilDefinition" icon="icons/parameters/soil.png"/>
             <image commandId="org.kalypso.model.rrm.landuseDefinition" icon="icons/parameters/landuse.png"/>
             
+            <image commandId="org.kalypso.model.rrm.hydrotopes" icon="icons/hydrotope/hydrotope.png"/>
+
             <image commandId="org.kalypso.model.rrm.catchmentModels" icon="icons/cm/catchmentModelsView.png"/>
+            
+            <image commandId="org.kalypso.model.rrm.simulationManagement" icon="icons/simulations/simulation.gif"/>
+            
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
    </extension>
    
@@ -539,6 +550,7 @@
       
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetElementsTaskHandler" commandId="org.kalypso.model.rrm.editNetElements"/>
       <handler class="org.kalypso.ui.rrm.internal.modelConstruction.EditNetRelationsTaskHandler" commandId="org.kalypso.model.rrm.editNetRelations"/>
+      <handler class="org.kalypso.ui.rrm.internal.hydrotops.HydrotopesTaskHandler" commandId="org.kalypso.model.rrm.hydrotopes"/>
       
       <handler class="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsTaskHandler" commandId="org.kalypso.model.rrm.catchmentModels"/>
       <handler class="org.kalypso.ui.rrm.internal.simulations.SimulationManagementTaskHandler" commandId="org.kalypso.model.rrm.simulationManagement"/>
