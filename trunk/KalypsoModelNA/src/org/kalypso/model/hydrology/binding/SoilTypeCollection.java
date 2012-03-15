@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -54,14 +55,13 @@ import org.kalypso.model.hydrology.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for rrmSoilType:SoilTypeCollection's
- * 
+ *
  * @author Gernot Belger
  */
-public class SoilTypeCollection extends Feature_Impl
+public class SoilTypeCollection extends UnversionedModel
 {
   public static final QName QNAME_PROP_SOILTYPEMEMBER = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soiltypeMember" ); //$NON-NLS-1$
 
@@ -81,7 +81,7 @@ public class SoilTypeCollection extends Feature_Impl
 
   /**
    * Create/Import a new soilType into this collection.
-   * 
+   *
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
   public SoilType importSoilType( final String label, final GM_MultiSurface geometry, final ImportType importType, final IStatusCollector log )
