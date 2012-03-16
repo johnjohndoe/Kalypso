@@ -40,15 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
@@ -71,6 +76,7 @@ import org.kalypso.zml.core.filter.ZmlFilterWorker;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -246,5 +252,35 @@ public final class RainfallGeneratorUtilities
     }
 
     return null;
+  }
+
+  /**
+   * This function creates a hash from the catchment.<br/>
+   * <br/>
+   * A hash is generated from the catchment. It takes the factors/timeseries into account. An equal combination of
+   * factors and timeseries creates the same hash.
+   * 
+   * @param catchment
+   *          The catchment.
+   * @return The hash.
+   */
+  public static String buildHash( final ICatchment catchment )
+  {
+    /* Memory for the single values. */
+    final List<String> values = new ArrayList<String>();
+
+    /* Build the hash. */
+    final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries = catchment.getFactorizedTimeseries();
+    for( final IFactorizedTimeseries timeseries : factorizedTimeseries )
+    {
+      final BigDecimal factor = timeseries.getFactor();
+      final ZmlLink link = timeseries.getTimeseriesLink();
+      values.add( String.format( Locale.PRC, "%s_%s", factor.toPlainString(), link.getHref() ) ); //$NON-NLS-1$
+    }
+
+    /* Join the values. */
+    final String hash = StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
+
+    return hash;
   }
 }
