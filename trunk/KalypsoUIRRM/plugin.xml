@@ -371,7 +371,8 @@
           </parameter>
           </command>
            <separator
-                 name="diagram.view.seperator2">
+                 name="diagram.view.seperator2"
+                 visible="true">
            </separator>
            <command
                  commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
@@ -661,6 +662,21 @@
           <parameter
                 name="layer.filter"
                 value="org.kalypso.chart.layer.filter.stuetzstelle">
+          </parameter>
+       </command>
+       <command
+             commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+             icon="icons/chart/fehlwert.png"
+             label="Fehlwerte einblenden"
+             style="toggle"
+             tooltip="Fehlwerte einblenden">
+          <parameter
+                name="layer.parameter"
+                value="content.fehlwert">
+          </parameter>
+          <parameter
+                name="layer.filter"
+                value="org.kalypso.chart.layer.filter.fehlwerte">
           </parameter>
        </command>
        <separator
