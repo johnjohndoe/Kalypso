@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * This task generates rainfall for catchment areas.
- *
+ * 
  * @author Gernot Belger
  */
 public class RainfallGenerationOperation implements ICoreRunnableWithProgress
@@ -145,7 +145,7 @@ public class RainfallGenerationOperation implements ICoreRunnableWithProgress
 
       final IObservation[] observations = operation.getResult();
 
-      /* Find target links right now, to avoid long waiting time if anything fails here */
+      /* Find target links right now, to avoid long waiting time if anything fails here. */
       final TimeseriesLinkType[] targetLinks = findCatchmentLinks( targetDefinition, catchments );
       writeObservations( targetDefinition, observations, targetLinks, catchments );
 

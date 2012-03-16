@@ -42,16 +42,12 @@ package org.kalypso.ui.rrm.internal.calccase;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -91,19 +87,18 @@ import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.model.rcm.IRainfallModelProvider;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
 import org.kalypso.model.rcm.binding.ICatchment;
-import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallCatchmentModel;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.binding.ITarget;
 import org.kalypso.model.rcm.util.PlainRainfallModelProvider;
+import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.merged.Source;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.simulation.core.ant.copyobservation.CopyObservationFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
 import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObservationSource;
@@ -115,7 +110,6 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -126,7 +120,7 @@ import com.google.common.base.Charsets;
 
 /**
  * The worker that actually updates a simulation.
- *
+ * 
  * @author Gernot Belger
  */
 public class UpdateSimulationWorker
@@ -285,7 +279,7 @@ public class UpdateSimulationWorker
       final String name = TimeseriesUtils.getName( parameterType );
       monitor.subTask( name );
 
-      /* Calculate date range for filter */
+      /* Calculate date range for filter. */
       final int timestepMinutes = getTimestepMinutes( linearGenerator, control );
       final LocalTime time = linearGenerator.getTimeStamp();
       final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
@@ -307,6 +301,7 @@ public class UpdateSimulationWorker
       final IRainfallModelProvider modelProvider = new PlainRainfallModelProvider( rainfallModel );
       final RainfallGenerationOperation operation = new RainfallGenerationOperation( modelProvider, null );
 
+      /* Execute the operation. */
       operation.execute( new SubProgressMonitor( monitor, 100 ) );
     }
     catch( final Exception e )
@@ -366,8 +361,6 @@ public class UpdateSimulationWorker
     /* The workspace to save. */
     GMLWorkspace workspaceToSave = null;
 
-    final Collection<ICatchment> toRemove = new ArrayList<>();
-
     /* Get the catchments. */
     final List<ICatchment> generatorCatchments = generator.getCatchments();
     for( final ICatchment generatorCatchment : generatorCatchments )
@@ -381,46 +374,31 @@ public class UpdateSimulationWorker
         workspaceToSave = catchment.getWorkspace();
 
       /* Build the hash. */
-      final String hash = buildHash( generatorCatchment );
-      if( hash == null || hash.length() == 0 )
-        continue;
+      final String hash = RainfallGeneratorUtilities.buildHash( generatorCatchment );
 
       /* If the link hash contains this hash code, the corresponding link will be used. */
       if( linkHash.containsKey( hash ) )
       {
-        /* Create the link. */
+        /* Get the link. */
         final String link = linkHash.get( hash );
 
-        /* Create the timeseries link type. */
-        final TimeseriesLinkType tsLink = new TimeseriesLinkType();
-        tsLink.setHref( link );
-
-        /* Set the property. */
-        catchment.setProperty( targetLink, tsLink );
-
-        /* Remove the catchment from the (cloned) generator, it should only be calculated once */
-        toRemove.add(generatorCatchment);
-        // iterator.remove();
+        /* Set the link. */
+        setLink( catchment, targetLink, link );
       }
       else
       {
         /* Otherwise create a new link. */
         final String link = buildLink( parameterType, catchment );
 
-        /* Create the timeseries link type. */
-        final TimeseriesLinkType tsLink = new TimeseriesLinkType();
-        tsLink.setHref( link );
+        /* Set the link. */
+        setLink( catchment, targetLink, link );
 
-        /* Set the property. */
-        catchment.setProperty( targetLink, tsLink );
+        System.out.println( String.format( "Name: '%s', Hash: '%s', Link: '%s'", generatorCatchment.getName(), hash, link ) );
 
         /* Store the hash code. */
         linkHash.put( hash, link );
       }
     }
-
-    // FIXME: check if that works
-    // generatorCatchments.removeAll( toRemove );
 
     /* Save the workspace, because it is reloaded in the rainfall operation. */
     /* HINT: This is the linked workspace of the modell.gml, not the loaded one here. */
@@ -428,29 +406,21 @@ public class UpdateSimulationWorker
     GmlSerializer.saveWorkspace( workspaceToSave, modelFile );
   }
 
-  private String buildHash( final ICatchment catchment )
-  {
-    /* Memory for the single values. */
-    final List<String> values = new ArrayList<String>();
-
-    /* Build the hash. */
-    final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries = catchment.getFactorizedTimeseries();
-    for( final IFactorizedTimeseries timeseries : factorizedTimeseries )
-    {
-      final BigDecimal factor = timeseries.getFactor();
-      final ZmlLink link = timeseries.getTimeseriesLink();
-      values.add( String.format( Locale.PRC, "%d_%s", factor.intValue(), link.getHref() ) ); //$NON-NLS-1$
-    }
-
-    /* Join the values. */
-    return StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
-  }
-
   private String buildLink( final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
   {
     final String folderName = getTargetLinkFolderName( parameterType );
 
     return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+  }
+
+  private void setLink( final Catchment catchment, final QName targetLink, final String link )
+  {
+    /* Create the timeseries link type. */
+    final TimeseriesLinkType tsLink = new TimeseriesLinkType();
+    tsLink.setHref( link );
+
+    /* Set the property. */
+    catchment.setProperty( targetLink, tsLink );
   }
 
   // FIXME: use CalcCaseAccessor for that?
@@ -489,9 +459,6 @@ public class UpdateSimulationWorker
 
     /* Set the target. */
     rainfallModel.setTarget( target );
-
-    // FIXME: we should create a model that contains only those catchments that are unique regarding the linearSum in
-    // order to improve performance
 
     /* Create the link to the catchment. */
     final String catchmentLinkRef = "modell.gml#" + model.getId(); //$NON-NLS-1$
