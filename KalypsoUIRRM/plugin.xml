@@ -357,7 +357,7 @@
           </command>
           <command
              commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
-             icon="icons/chart/stuetzstelle.png"
+             icon="icons/chart/fehlwert.png"
              label="Fehlwerte einblenden"
              style="toggle"
              tooltip="Fehlwerte einblenden">
