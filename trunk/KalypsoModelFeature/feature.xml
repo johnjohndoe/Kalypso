@@ -19,7 +19,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://netcologne.dl.sourceforge.net/project/kalypso/Kalypso/update-site/stable/"/>
+      <update label="%updateSiteName" url="http://master.dl.sourceforge.net/project/kalypso/Kalypso/update-site/stable/"/>
    </url>
 
    <includes
