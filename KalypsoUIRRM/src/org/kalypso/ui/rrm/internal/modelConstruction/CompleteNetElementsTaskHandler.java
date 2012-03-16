@@ -53,7 +53,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
@@ -78,11 +77,10 @@ public class CompleteNetElementsTaskHandler extends AbstractHandler
     {
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
-      final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", scenario.getNodesCompleteGtt(), "Nodes" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Channels", scenario.getReachesCompleteGtt(), "Channels" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", scenario.getCatchmentsCompleteGtt(), "Catchments" ); //$NON-NLS-1$
+      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Nodes:gtt", "Nodes", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "Channels", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Channels:gtt", "Channels", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Catchments:gtt", "Catchments", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {

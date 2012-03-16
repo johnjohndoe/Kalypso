@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
-  <!--  Node -->
+  <!-- Node -->
   <system uri="Node.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:default" />
   <system uri="NodeNet.sld" systemId="urn:ogc:gml:featuretype:http___www.tuhh.de_kalypsoNA:Node:sld:net" />
 
@@ -43,4 +43,34 @@
 
   <system uri="ThiessenStation.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:default" />
   <system uri="ThiessenStation_selected.sld" systemId="urn:ogc:gml:featuretype:org.kalypso.model.rcm.thiessen:ThiessenStation:sld:selected" />
+
+  <!-- Workflow views -->
+  
+  <system systemId="urn:org.kalypso.model.rrm.snowDefinition:workflow:Snowtypes:gtt" uri="Parameters_Snow.gtt" />
+  
+  <system systemId="urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt" uri="Parameters_SoilLayers.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt" uri="Parameters_SoilProfiles.gtt" />
+
+  <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:Sealing:gtt" uri="Parameters_SealingClasses.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:SeasonalCycle:gtt" uri="Parameters_SeasonalCycle.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.landuseDefinition:LanduseGroups:gtt" uri="Parameters_LanduseGroups.gtt" />
+  
+  <system systemId="urn:org.kalypso.model.rrm.editNetElements:workflow:Nodes:gtt" uri="ModelConstruction_Nodes.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.editNetElements:workflow:Channels:gtt" uri="ModelConstruction_Channels.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.editNetElements:workflow:Catchments:gtt" uri="ModelConstruction_Catchments.gtt" />
+  
+  
+  <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Catchments:gtt" uri="Hydrotopes_Catchments.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt" uri="Hydrotopes_Landuse.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt" uri="Hydrotopes_Geologie.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt" uri="Hydrotopes_Pedologie.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt" uri="Hydrotopes_Hydrotopes.gtt" />
+  
+  
+  <system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:Nodes:gtt" uri="ModelCompletion_Channels.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:Channels:gtt" uri="ModelCompletion_Channels.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:Catchments:gtt" uri="ModelCompletion_Catchments.gtt" />
+
+  <system systemId="urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt" uri="Simulations.gtt" />
+
 </catalog>

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
 /**
@@ -59,100 +58,10 @@ public class ScenarioAccessor
     m_scenarioFolder = scenarioFolder;
   }
 
-  public IFile getSimulationsGtt( )
-  {
-    return getViewsFile( "Simulations.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getParametersSnowGtt( )
-  {
-    return getViewsFile( "Parameters_Snow.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getParametersSoilLayersGtt( )
-  {
-    return getViewsFile( "Parameters_SoilLayers.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getParametersSoilProfilesGtt( )
-  {
-    return getViewsFile( "Parameters_SoilProfiles.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getParametersSealingGtt( )
-  {
-    return getViewsFile( "Parameters_SealingClasses.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getParametersLanduseGroupsGtt( )
-  {
-    return getViewsFile( "Parameters_LanduseGroups.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getParametersSeasonalCycleGtt( )
-  {
-    return getViewsFile( "Parameters_SeasonalCycle.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getNodesNetGtt( )
-  {
-    return getViewsFile( "ModelConstruction_Nodes.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getReachesNetGtt( )
-  {
-    return getViewsFile( "ModelConstruction_Reaches.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getCatchmentsNetGtt( )
-  {
-    return getViewsFile( "ModelConstruction_Catchments.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getHydrotopesCatchmentsGtt( )
-  {
-    return getViewsFile( "Hydrotopes_Catchments.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getHydrotopesLanduseGtt( )
-  {
-    return getViewsFile( "Hydrotopes_Landuse.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getHydrotopesGeologieGtt( )
-  {
-    return getViewsFile( "Hydrotopes_Geologie.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getHydrotopesPedologieGtt( )
-  {
-    return getViewsFile( "Hydrotopes_Pedologie.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getHydrotopesHydrotopesGtt( )
-  {
-    return getViewsFile( "Hydrotopes_Hydrotopes.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getNodesCompleteGtt( )
-  {
-    return getViewsFile( "ModelCompletion_Nodes.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getReachesCompleteGtt( )
-  {
-    return getViewsFile( "ModelCompletion_Reaches.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFile getCatchmentsCompleteGtt( )
-  {
-    return getViewsFile( "ModelCompletion_Catchments.gtt" ); //$NON-NLS-1$
-  }
-
-  public IFolder getViewsFolder( )
-  {
-    return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
-  }
+// public IFolder getViewsFolder( )
+// {
+//    return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
+// }
 
   public IFolder getSimulationsFolder( )
   {
@@ -176,10 +85,10 @@ public class ScenarioAccessor
     return true;
   }
 
-  private IFile getViewsFile( final String filename )
-  {
-    final IFolder viewsFolder = getViewsFolder();
-
-    return viewsFolder.getFile( filename ); //$NON-NLS-1$
-  }
+// private IFile getViewsFile( final String filename )
+// {
+// final IFolder viewsFolder = getViewsFolder();
+//
+//    return viewsFolder.getFile( filename ); //$NON-NLS-1$
+// }
 }

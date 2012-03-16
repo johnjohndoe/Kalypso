@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.FileEditorInput;
+import org.kalypso.afgui.scenarios.CatalogStorage;
 import org.kalypso.ui.editor.gistableeditor.GttViewPart;
 
 /**
@@ -59,17 +62,46 @@ public final class WorkflowHandlerUtils
     throw new UnsupportedOperationException( "Do not instantiate" ); //$NON-NLS-1$
   }
 
-  public static void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final IFile input, final String title )
-  {
-    final IViewReference viewReference = activePage.findViewReference( GttViewPart.ID, secondaryId );
-    final IWorkbenchPart part = viewReference.getPart( false );
-    if( part instanceof GttViewPart )
-    {
-      final GttViewPart gttView = (GttViewPart) part;
-      gttView.setInput( new FileEditorInput( input ) );
+// public static void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final IFile input, final
+// String title )
+// {
+// final IViewReference viewReference = activePage.findViewReference( GttViewPart.ID, secondaryId );
+// final IWorkbenchPart part = viewReference.getPart( false );
+// if( part instanceof GttViewPart )
+// {
+// final GttViewPart gttView = (GttViewPart) part;
+// gttView.setInput( new FileEditorInput( input ) );
+//
+// gttView.setPartName( title );
+// gttView.setTitleToolTip( title );
+// }
+// }
 
-      gttView.setPartName( title );
-      gttView.setTitleToolTip( title );
+  public static void setGttInput( final IWorkbenchPage activePage, final String secondaryId, final String resource, final String title, final IFolder context ) throws ExecutionException
+  {
+    try
+    {
+      final IViewReference viewReference = activePage.findViewReference( GttViewPart.ID, secondaryId );
+      final IWorkbenchPart part = viewReference.getPart( false );
+      if( part instanceof GttViewPart )
+      {
+        final GttViewPart gttView = (GttViewPart) part;
+
+        final IStorageEditorInput input = CatalogStorage.createEditorInput( resource, context );
+
+        gttView.setInput( input );
+
+        if( title != null )
+        {
+          gttView.setPartName( title );
+          gttView.setTitleToolTip( title );
+        }
+      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      throw new ExecutionException( e.getMessage(), e );
     }
   }
 }
