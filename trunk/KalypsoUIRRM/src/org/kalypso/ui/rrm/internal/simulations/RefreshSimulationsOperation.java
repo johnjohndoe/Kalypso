@@ -89,7 +89,7 @@ public class RefreshSimulationsOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString("RefreshSimulationsOperation_0"), m_simulations.length ); //$NON-NLS-1$
 
