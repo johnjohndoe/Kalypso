@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.wind;
 
@@ -50,7 +50,6 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.framework.util.Pair;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -70,9 +69,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * wind data provider base on ASC file
- * 
+ *
  * @author ig
- * 
+ *
  */
 public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitable<GM_SurfacePatch>
 {
@@ -98,17 +97,17 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
   private Date m_date;
 
   /**
-   * Create an wind data provider based on the given asc file, in the specified region of interest. 
-   * 
+   * Create an wind data provider based on the given asc file, in the specified region of interest.
+   *
    * @param ascFile
    *            the asc file containing the native wind model
    * @param regionOfInterest
    *            the {@link GM_Envelope} of region of interest
    * @throws IllegalArgumentException
    *             if asc file is null or is a directory or does not exist or is not accesible (cannot be read)
-   * 
+   *
    */
-  public ASCWindDataModel( final URL ascFileURL, RectifiedGridDomain gridDescriptor ) throws IllegalArgumentException, IOException
+  public ASCWindDataModel( final URL ascFileURL, final RectifiedGridDomain gridDescriptor ) throws IllegalArgumentException, IOException
   {
     parse( ascFileURL.openStream() );
   }
@@ -140,14 +139,14 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
 
       m_arrayWinds = new Pair[N_ROWS][N_COLS];
 
-      String[] strRow;
+      // final String[] strRow;
       for( int y = N_ROWS - 1; y >= 0; y-- )
       {
-        StringTokenizer lStrTokenizer = new StringTokenizer( br.readLine().trim(), " " ); 
+        final StringTokenizer lStrTokenizer = new StringTokenizer( br.readLine().trim(), " " );
         for( int x = 0; x < N_COLS; x++ )
         {
-          String lStrPairOfValues = lStrTokenizer.nextToken();
-          int lIntSeparatorPos = lStrPairOfValues.indexOf( ';' );
+          final String lStrPairOfValues = lStrTokenizer.nextToken();
+          final int lIntSeparatorPos = lStrPairOfValues.indexOf( ';' );
           currentValueX = NumberUtils.parseDouble( lStrPairOfValues.substring( 0, lIntSeparatorPos ) );
           currentValueY = NumberUtils.parseDouble( lStrPairOfValues.substring( lIntSeparatorPos + 1 ) );
           if( currentValueX != noDataValue && currentValueY != noDataValue )
@@ -188,7 +187,8 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException, GM_Exception
+  @Override
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception
   {
     final GM_Envelope env = GMRectanglesClip.getIntersectionEnv( maxEnvelope, envToVisit );
     final double xmin = env.getMin().getX();
@@ -216,14 +216,14 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
 
           final GM_Position pos00 = GeometryFactory.createGM_Position( x, y, z.first );
           final GM_Position pos01 = GeometryFactory.createGM_Position( xPlusCellSize, y, z.first );
-          final GM_Position pos02 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z.first );
+          // final GM_Position pos02 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z.first );
           final GM_Position pos03 = GeometryFactory.createGM_Position( x, yPlusCellSize, z.first );
-          
-          final GM_Position pos10 = GeometryFactory.createGM_Position( x, y, z.second );
+
+          // final GM_Position pos10 = GeometryFactory.createGM_Position( x, y, z.second );
           final GM_Position pos11 = GeometryFactory.createGM_Position( xPlusCellSize, y, z.second );
           final GM_Position pos12 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z.second );
           final GM_Position pos13 = GeometryFactory.createGM_Position( x, yPlusCellSize, z.second );
- 
+
           final GM_Triangle patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos00, pos01, pos03 }, crs );
           final GM_Triangle patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos11, pos12, pos13 }, crs );
           surfacePatchVisitor.visit( patch1, z.first );
@@ -243,6 +243,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWindDataProvider#getBoundingBox()
    */
+  @Override
   public GM_Envelope getBoundingBox( )
   {
     return maxEnvelope;
@@ -256,6 +257,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWindDataProvider#getCoordinateSystem()
    */
+  @Override
   public String getCoordinateSystem( )
   {
     return this.crs;
@@ -264,6 +266,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IWindDataProvider#setCoordinateSystem(java.lang.String)
    */
+  @Override
   public void setCoordinateSystem( final String coordinateSystem )
   {
     crs = coordinateSystem;
@@ -273,7 +276,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IWindDataProvider#getWindAsSpeedAndDirection(org.kalypsodeegree.model.geometry.GM_Point)
    */
   @Override
-  public Pair< Double, Double > getWindAsSpeedAndDirection( GM_Point location )
+  public Pair< Double, Double > getWindAsSpeedAndDirection( final GM_Point location )
   {
     final int col = (int) Math.floor( (location.getX() - xllcorner) / cellSize );
     final int row = (int) Math.floor( (location.getY() - yllcorner) / cellSize );
@@ -287,7 +290,7 @@ public class ASCWindDataModel implements IWindDataProvider, ISurfacePatchVisitab
    * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IWindDataProvider#getWindAsVector(org.kalypsodeegree.model.geometry.GM_Point)
    */
   @Override
-  public Pair< Double, Double > getWindAsVector( GM_Point location )
+  public Pair< Double, Double > getWindAsVector( final GM_Point location )
   {
     final int col = (int) Math.floor( (location.getX() - xllcorner) / cellSize );
     final int row = (int) Math.floor( (location.getY() - yllcorner) / cellSize );
