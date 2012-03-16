@@ -78,7 +78,7 @@ public class CalcCasesConverter extends AbstractLoggingOperation
   }
 
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
+  protected void doExecute( final IProgressMonitor monitor ) throws InterruptedException
   {
     try
     {

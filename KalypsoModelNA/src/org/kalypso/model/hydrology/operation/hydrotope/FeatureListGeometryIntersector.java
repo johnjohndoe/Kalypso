@@ -48,7 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
@@ -120,11 +119,10 @@ public class FeatureListGeometryIntersector
   /**
    * Intersects features given as a list of feature lists, produces the result into the resultList<br>
    */
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public List<Polygon> intersect( final IProgressMonitor monitor ) throws CoreException
+  public List<Polygon> intersect( final IProgressMonitor monitor )
   {
     if( m_sourceLayers.isEmpty() )
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
 
     final int layerCount = m_sourceLayers.size();
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.convert.namodel.FeatureListGeometryIntersector.0" ), layerCount * (layerCount + 1) / 2 + 1 ); //$NON-NLS-1$
@@ -178,13 +176,13 @@ public class FeatureListGeometryIntersector
     final Iterator<List<Feature>> sourceListIterator = m_sourceLayers.iterator();
     final List<Feature> sourceList = sourceListIterator.next();
     final SplitSortSpatialIndex sourceIndex = m_index.get( sourceList );
-    List<Object> sourcePolygons = sourceIndex.query( sourceIndex.getBoundingBox() );
-    List resultGeometryList = null;
+    List< ? > sourcePolygons = sourceIndex.query( sourceIndex.getBoundingBox() );
+    List<Polygon> resultGeometryList = null;
     int layer = 0;
     double totalAreaDiscarded = 0;
     while( sourceListIterator.hasNext() )
     {
-      resultGeometryList = new ArrayList();
+      resultGeometryList = new ArrayList<>();
       final List<Feature> targetList = sourceListIterator.next();
       layer++;
       final int countSourceFeatures = sourcePolygons.size();
@@ -201,7 +199,7 @@ public class FeatureListGeometryIntersector
         }
         count++;
 
-        final Geometry featurePolygon = (Geometry) thisObject;
+        final Polygon featurePolygon = (Polygon) thisObject;
 
         final Object userData1 = featurePolygon.getUserData();
         final int dim1 = featurePolygon.getDimension();
@@ -287,7 +285,7 @@ public class FeatureListGeometryIntersector
                 continue;
               }
               geometryN.setUserData( userData );
-              resultGeometryList.add( geometryN );
+              resultGeometryList.add( (Polygon) geometryN );
             }
 
           }
