@@ -225,6 +225,35 @@ public class DataCenterTuppleModel implements ITupleModel
       }
 
       @Override
+      public Object getPrevious( final IAxis axis )
+      {
+        if( index > 0 )
+          if( AxisUtils.isDateAxis( axis ) )
+            return m_tupples[index - 1].getDate();
+          else if( AxisUtils.isStatusAxis( axis ) )
+            return m_tupples[index - 1].getStatus();
+          else
+            return m_tupples[index - 1].getValue();
+
+        return null;
+      }
+
+      @Override
+      public Object getNext( final IAxis axis )
+      {
+        if( index + 1 < m_tupples.length )
+          if( index > 0 )
+            if( AxisUtils.isDateAxis( axis ) )
+              return m_tupples[index - 1].getDate();
+            else if( AxisUtils.isStatusAxis( axis ) )
+              return m_tupples[index - 1].getStatus();
+            else
+              return m_tupples[index - 1].getValue();
+
+        return null;
+      }
+
+      @Override
       public boolean hasAxis( final String... types )
       {
         return true;
