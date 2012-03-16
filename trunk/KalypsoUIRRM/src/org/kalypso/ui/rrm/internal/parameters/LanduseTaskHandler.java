@@ -53,7 +53,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
@@ -77,11 +76,10 @@ public class LanduseTaskHandler extends AbstractHandler
     {
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
-      final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Sealing", scenario.getParametersSealingGtt(), "Sealing Classes" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "SeasonalCycle", scenario.getParametersSeasonalCycleGtt(), "Seasonal Cycle" ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "LanduseGroups", scenario.getParametersLanduseGroupsGtt(), "Landuse" ); //$NON-NLS-1$
+      WorkflowHandlerUtils.setGttInput( activePage, "Sealing", "urn:org.kalypso.model.rrm.landuseDefinition:Sealing:gtt", "Sealing Classes", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "SeasonalCycle", "urn:org.kalypso.model.rrm.landuseDefinition:SeasonalCycle:gtt", "Seasonal Cycle", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "LanduseGroups", "urn:org.kalypso.model.rrm.landuseDefinition:LanduseGroups:gtt", "Landuse", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {

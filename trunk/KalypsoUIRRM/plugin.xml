@@ -495,7 +495,7 @@
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.LanduseCollection" id="landuse" modelPath=".models/landuse.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.GeologyCollection" id="geologie" modelPath=".models/geologie.gml"/>
          <scenarioDatum classKey="org.kalypso.model.hydrology.binding.SoilTypeCollection" id="pedologie" modelPath=".models/pedologie.gml"/>
-         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.NAHydrotop" id="hydrotopes" modelPath=".models/hydrotope.gml"/>
+         <scenarioDatum classKey="org.kalypso.model.hydrology.binding.NAHydrotop" id="hydrotopes" modelPath=".models/hydrotop.gml"/>
       </dataSet>
    </extension>
    

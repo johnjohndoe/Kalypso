@@ -53,7 +53,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
-import org.kalypso.model.hydrology.project.ScenarioAccessor;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
@@ -78,9 +77,8 @@ public class SnowTaskHandler extends AbstractHandler
     {
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
-      final ScenarioAccessor scenario = new ScenarioAccessor( scenarioFolder );
 
-      WorkflowHandlerUtils.setGttInput( activePage, null, scenario.getParametersSnowGtt(), "Snow Types" );
+      WorkflowHandlerUtils.setGttInput( activePage, null, "urn:org.kalypso.model.rrm.snowDefinition:workflow:Snowtypes:gtt", "Snow Types", scenarioFolder ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

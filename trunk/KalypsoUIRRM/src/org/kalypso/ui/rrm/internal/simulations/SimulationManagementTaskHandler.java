@@ -44,14 +44,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.model.hydrology.project.ScenarioAccessor;
-import org.kalypso.ui.editor.gistableeditor.GttViewPart;
+import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -68,41 +65,9 @@ public class SimulationManagementTaskHandler extends AbstractHandler
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
 
-    final GttViewPart gttView = (GttViewPart) page.findView( GttViewPart.ID );
-    if( gttView == null )
-      throw new ExecutionException( "Failed to access table view" ); //$NON-NLS-1$
-
     final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-    final ScenarioAccessor accessor = new ScenarioAccessor( szenarioFolder );
-
-    final IFile gttFile = accessor.getSimulationsGtt();
-
-    final FileEditorInput input = new FileEditorInput( gttFile );
-    gttView.setInput( input );
-
-// try
-// {
-    // featureView.
-
-// final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable(
-// CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-//
-// final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace(
-// IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
-//
-// final ICatchmentModel input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS,
-// ICatchmentModel.class );
-//
-// // FIXME: check integrity of catchment model against model.gml
-//
-// managementView.setInput( workspace, input );
-// }
-// catch( final CoreException e )
-// {
-// e.printStackTrace();
-//      throw new ExecutionException( "Failed to initialize timeseries view", e ); //$NON-NLS-1$
-// }
+    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", null, szenarioFolder ); //$NON-NLS-1$
 
     return null;
   }
