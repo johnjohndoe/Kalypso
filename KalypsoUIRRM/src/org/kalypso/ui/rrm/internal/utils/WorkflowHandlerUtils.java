@@ -82,6 +82,9 @@ public final class WorkflowHandlerUtils
     try
     {
       final IViewReference viewReference = activePage.findViewReference( GttViewPart.ID, secondaryId );
+      if( viewReference == null )
+        return;
+
       final IWorkbenchPart part = viewReference.getPart( false );
       if( part instanceof GttViewPart )
       {

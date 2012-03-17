@@ -3,9 +3,6 @@
   <layer id="id" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" ns1:type="simple" ns1:href=".models/modell.gml" ns1:actuate="onRequest">
     <column name="name" editable="false" width="60" alignment="SWT.LEFT" format=""/>
     <column name="description" editable="false" width="200" alignment="SWT.LEFT" format=""/>
-    <column name="entwaesserungsStrangMember" editable="false" width="180" alignment="SWT.LEFT" format=""/>
-    <column name="izkn_vers" editable="false" width="180" alignment="SWT.LEFT" format=""/>
-    <column name="izkn" editable="false" width="180" alignment="SWT.LEFT" format=""/>
     <sort propertyName="name" inverse="false"/>
   </layer>
 </gistableview>
