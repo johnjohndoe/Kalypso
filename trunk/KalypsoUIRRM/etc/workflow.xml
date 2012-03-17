@@ -99,18 +99,18 @@
       </con:WorkbenchSiteContext>
 
       <con:WorkbenchSiteContext id="CompleteNetElements" parent="ContextHydrology">
-        <con:ViewContext id="CompleteNetElements_MapOutlineView" partId="org.kalypso.ui.views.outline" parent="EditNetElementsContext" />
-        <con:ViewContext id="CompleteNetElements_MapView" partId="org.kalypso.ui.views.mapView" parent="EditNetElementsContext">
-          <con:ExtensionContext id="CompleteNetElements_extContext1" parent="EditNetElements_MapView" handlerFactoryId="kalypsoContextHandlerFactory">
+        <con:ViewContext id="CompleteNetElements_MapOutlineView" partId="org.kalypso.ui.views.outline" parent="CompleteNetElements" />
+        <con:ViewContext id="CompleteNetElements_MapView" partId="org.kalypso.ui.views.mapView" parent="CompleteNetElements">
+          <con:ExtensionContext id="CompleteNetElements_extContext1" parent="CompleteNetElements_MapView" handlerFactoryId="kalypsoContextHandlerFactory">
             <con:Parameter name="type" value="mapViewInputContext" />
             <con:Parameter name="input" value=".views/Overview.gmt" />
           </con:ExtensionContext>
         </con:ViewContext>
-        <con:ViewContext id="CompleteNetElements_GttView_Nodes" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Nodes" parent="EditNetElementsContext" />
-        <con:ViewContext id="CompleteNetElements_GttView_Channels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Channels" parent="EditNetElementsContext" />
-        <con:ViewContext id="CompleteNetElements_GttView_Catchments" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Catchments" parent="EditNetElementsContext" />
+        <con:ViewContext id="CompleteNetElements_GttView_KMChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:KMChannels" parent="CompleteNetElements" />
+        <con:ViewContext id="CompleteNetElements_GttView_StorageChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:StorageChannels" parent="CompleteNetElements" />
+        <con:ViewContext id="CompleteNetElements_GttView_Catchments" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Catchments" parent="CompleteNetElements" />
 
-        <con:ViewContext id="CompleteNetElements_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="EditNetElementsContext" />
+        <con:ViewContext id="CompleteNetElements_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="CompleteNetElements" />
 
       </con:WorkbenchSiteContext>
 

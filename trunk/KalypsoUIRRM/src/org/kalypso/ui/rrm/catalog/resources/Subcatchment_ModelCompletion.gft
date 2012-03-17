@@ -26,98 +26,180 @@
     <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:description" style="SWT.NONE" visible="true">
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
-
-    <!-- Only for information; will not be used; in simulation always the area of the real geometry is used. -->
-    <!-- TODO: should be replaced with a function that returns the area of the geometry -->
-    <label property="rrm:flaech" style="SWT.NONE" visible="true">
-      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-    </label>
-    <text editable="false" property="rrm:flaech" style="SWT.BORDER | SWT.RIGHT">
-      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
-    </text>
-    <validatorlabel property="rrm:flaech" style="SWT.NONE" visible="true">
-      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-    </validatorlabel>
   </group>
-
-  <group style="SWT.NONE" text="%modelConstruction.gft.group.timeseries">
-    <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
-    <gridLayout numColumns="3" />
-    
-    <label property="rrm:synthZR" style="SWT.NONE" visible="true">
-      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-    </label>
-    <text editable="true" property="rrm:synthZR" style="SWT.BORDER">
-      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
-    </text>
-    <validatorlabel property="rrm:synthZR" style="SWT.NONE" visible="true">
-      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-    </validatorlabel>
-  </group>
-
-  <group style="SWT.NONE" text="%modelConstruction.gft.group.net">
+  
+  <group style="SWT.NONE" text="Schnee">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
 
-    <label property="rrm:entwaesserungsStrangMember" style="SWT.NONE" visible="true">
-      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    <label property="rrm:snowtype" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>
-    <combo property="rrm:entwaesserungsStrangMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-    </combo>
-    <validatorlabel property="rrm:entwaesserungsStrangMember" style="SWT.NONE" visible="true">
-      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    <text editable="true" property="rrm:snowtype" style="SWT.BORDER">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </text>
+    <validatorlabel property="rrm:snowtype" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+  </group>  
+
+  <group style="SWT.NONE" text="Retention - Translation">
+    <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+    <gridLayout numColumns="3" />
+
+    <label property="rrm:retvs" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:retvs" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:retvs" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
 
-    <label property="rrm:izkn_vers" style="SWT.NONE" visible="true">
-      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    <label property="rrm:retob" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>
-    <combo property="rrm:izkn_vers" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-    </combo>
-    <validatorlabel property="rrm:izkn_vers" style="SWT.NONE" visible="true">
-      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    <text editable="true" property="rrm:retob" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:retob" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>
 
-    <group style="SWT.NONE" text="%catchment.modelConstruction.gft.group.groundwaterOutflow">
-      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
-      <gridLayout numColumns="3" />
+    <label property="rrm:retint" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:retint" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:retint" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
 
-      <table showToolbar="true" property="rrm:grundwasserabflussMember" style="SWT.BORDER">
-        <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" heightHint="200" horizontalSpan="3" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
-        <gtt:gistableview xmlns:gtt="gistableview.template.kalypso.org">
-          <gtt:layer id="xxx" linktype="">
-              <gtt:column name="ngwzu" alignment="SWT.LEFT" width="100" editable="true" />
-              <gtt:column name="gwwi" alignment="SWT.RIGHT" width="150" editable="true" />
-          </gtt:layer>
-        </gtt:gistableview>
-      </table>
-    </group>
+    <label property="rrm:retbas" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:retbas" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:retbas" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
 
-    <group style="SWT.NONE" text="%catchment.modelConstruction.gft.group.tiefenGW">
-      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
-      <gridLayout numColumns="3" />
+    <label property="rrm:retgw" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:retgw" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:retgw" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
 
-      <label property="rrm:izkn" style="SWT.NONE" visible="true">
-        <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-      </label>
-      <combo property="rrm:izkn" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-        <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-      </combo>
-      <validatorlabel property="rrm:izkn" style="SWT.NONE" visible="true">
-        <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-      </validatorlabel>
+    <label property="rrm:retklu" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:retklu" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:retklu" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
 
-      <label property="rrm:klupor" style="SWT.NONE" visible="true">
-        <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-      </label>
-      <text editable="true" property="rrm:klupor" style="SWT.BORDER | SWT.RIGHT">
-        <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
-      </text>
-      <validatorlabel property="rrm:klupor" style="SWT.NONE" visible="true">
-        <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-      </validatorlabel>
-    </group>
+  </group>
+
+  <group style="SWT.NONE" text="Grundwasser">
+    <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+    <gridLayout numColumns="3" />
+
+    <!-- <label property="rrm:ftem" style="SWT.NONE" visible="true"> <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" /> </label> <text editable="true" property="rrm:ftem" style="SWT.BORDER"> <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" /> </text> <validatorlabel property="rrm:ftem" 
+      style="SWT.NONE" visible="true"> <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" /> </validatorlabel> <label property="rrm:fver" style="SWT.NONE" visible="true"> <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" /> </label> <text editable="true" property="rrm:fver" style="SWT.BORDER"> <gridData 
+      horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" /> </text> <validatorlabel property="rrm:fver" style="SWT.NONE" visible="true"> <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" /> </validatorlabel> -->
+
+
+    <label property="rrm:aigw" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:aigw" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:aigw" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
+    <label property="rrm:hgru" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:hgru" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:hgru" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
+    <label property="rrm:hgro" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:hgro" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:hgro" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
+    <label property="rrm:rtr" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:rtr" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:rtr" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
+    <label property="rrm:pors" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:pors" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.2f</format>
+    </text>
+    <validatorlabel property="rrm:pors" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
+    <label property="rrm:gwsent" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <text editable="true" property="rrm:gwsent" style="SWT.BORDER | SWT.RIGHT">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+      <format>%,.6f</format>
+    </text>
+    <validatorlabel property="rrm:gwsent" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
+    <label property="rrm:zft" style="SWT.NONE" visible="true">
+      <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </label>
+    <button property="rrm:zft" style="SWT.PUSH">
+      <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    </button>
+    <validatorlabel property="rrm:zft" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
+
   </group>
 
   <translator id="commons.msgGetString">

@@ -27,19 +27,44 @@
     </validatorlabel>
   </group>
 
-  <group style="SWT.NONE" text="%modelConstruction.gft.group.net">
+<group style="SWT.NONE" text="%kmchannel.gft.kmparameters">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
-    <gridLayout numColumns="3" />
+    <gridLayout numColumns="6" />
 
-    <label property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
-      <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    <label property="rrm:startkm" visible="true" style="SWT.NONE">
+      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
     </label>
-    <combo property="rrm:downStreamNodeMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-    </combo>
-    <validatorlabel property="rrm:downStreamNodeMember" style="SWT.NONE" visible="true">
-      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    <text editable="true" property="rrm:startkm" style="SWT.BORDER | SWT.RIGHT">
+      <gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="SWT.FILL" />
+    </text>
+    <validatorlabel property="rrm:startkm" visible="true" style="SWT.NONE">
+      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
     </validatorlabel>
+
+    <label property="rrm:endkm" visible="true" style="SWT.NONE">
+      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
+    </label>
+    <text editable="true" property="rrm:endkm" style="SWT.BORDER | SWT.RIGHT">
+      <gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="SWT.FILL" />
+    </text>
+    <validatorlabel property="rrm:endkm" visible="true" style="SWT.NONE">
+      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
+    </validatorlabel>
+
+    <group style="SWT.NONE" text="%kmchannel.gft.subparams">
+      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="6" />
+      <gridLayout marginHeight="0" marginWidth="0" />
+
+      <table showToolbar="true" property="rrm:KMParameterMember" style="SWT.BORDER">
+        <gridData grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" heightHint="200" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
+      </table>
+
+      <commandHyperlink style="SWT.NONE">
+        <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="false" horizontalAlignment="SWT.LEFT" verticalAlignment="SWT.CENTER" horizontalSpan="6" />
+        <commandID>org.kalypso.rrm.kalininmiljukov.commands.updateKparameters</commandID>
+      </commandHyperlink>
+    </group>
+
   </group>
 
   <translator id="commons.msgGetString">
