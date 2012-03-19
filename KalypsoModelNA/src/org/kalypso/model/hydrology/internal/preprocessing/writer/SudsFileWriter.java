@@ -131,7 +131,7 @@ public class SudsFileWriter extends AbstractCoreFileWriter
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( Messages.getString("SudsFileWriter_0"), hydrotop.getId() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "SudsFileWriter_0" ), hydrotop.getId() ); //$NON-NLS-1$
       throw new NAPreprocessorException( message, e );
     }
   }

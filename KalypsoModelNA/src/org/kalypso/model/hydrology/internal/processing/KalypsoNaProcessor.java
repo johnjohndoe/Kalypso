@@ -125,7 +125,7 @@ public class KalypsoNaProcessor
 
     final String[] commandString = new String[] { m_kalypsoNaExe.getAbsolutePath() };
 
-    final long timeOut = 0l; // no timeout control
+    final long timeOut = 0L; // no timeout control
 
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;

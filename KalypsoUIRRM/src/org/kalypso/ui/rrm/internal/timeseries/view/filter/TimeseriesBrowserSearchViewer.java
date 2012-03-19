@@ -70,6 +70,12 @@ public class TimeseriesBrowserSearchViewer extends Composite
     final TextSearchFilterControl textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
     textSearchControl.setViewer( viewer );
 
+    final Group groupParameter = new Group( this, SWT.NONE );
+    ToolkitUtils.adapt( toolkit, groupParameter );
+    groupParameter.setLayout( new FillLayout() );
+    groupParameter.setText( "Parametertyp-Suche" );
+    groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
 // final Group stateGroup = new Group( this, SWT.NONE );
 // ToolkitUtils.adapt( toolkit, stateGroup );
 // stateGroup.setLayout( new FillLayout() );

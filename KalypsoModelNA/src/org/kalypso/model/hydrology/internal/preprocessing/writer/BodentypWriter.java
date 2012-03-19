@@ -87,17 +87,17 @@ public class BodentypWriter extends AbstractCoreFileWriter
       m_interflow = interflow;
     }
 
-    public final String getName( )
+    public String getName( )
     {
       return m_name;
     }
 
-    public final double getThickness( )
+    public double getThickness( )
     {
       return m_thickness;
     }
 
-    public final boolean interflow( )
+    public boolean interflow( )
     {
       return m_interflow;
     }

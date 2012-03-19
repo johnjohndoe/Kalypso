@@ -52,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
-import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
@@ -65,8 +64,6 @@ import org.kalypso.zml.ui.imports.ImportObservationData;
 public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
 {
   private final ImportObservationData m_data;
-
-  private ITimeseries m_timeseries;
 
   private IObservation m_observation;
 
@@ -161,11 +158,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Error in Rücksprüng detection.", e );
     }
-  }
-
-  public ITimeseries getTimeseries( )
-  {
-    return m_timeseries;
   }
 
   public ImportObservationData getData( )

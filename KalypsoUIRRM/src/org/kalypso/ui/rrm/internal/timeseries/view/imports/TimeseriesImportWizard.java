@@ -48,6 +48,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNewComposite;
@@ -67,6 +68,8 @@ public class TimeseriesImportWizard extends Wizard
   private final IStation m_station;
 
   private final TimeseriesBean m_bean;
+
+  private ITimeseries m_timeseries;
 
   public TimeseriesImportWizard( final ImportTimeseriesOperation importOperation, final ImportObservationData data, final TimeseriesBean bean, final CommandableWorkspace workspace, final IStation station )
   {
@@ -115,11 +118,18 @@ public class TimeseriesImportWizard extends Wizard
       StatusDialog.open( getShell(), status2, getWindowTitle() );
     }
 
+    m_timeseries = storeOperation.getTimeseries();
+
     return true;
   }
 
   private void saveSettings( )
   {
     m_importOperation.getData().storeSettings( getDialogSettings() );
+  }
+
+  public ITimeseries getTimeseries( )
+  {
+    return m_timeseries;
   }
 }

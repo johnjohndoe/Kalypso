@@ -51,11 +51,11 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public interface IStationClasses extends Feature
 {
-  static String STATION_CLASSES_URN = "urn:ogc:gml:kalypso:model:rrm:stationClasses"; //$NON-NLS-1$
+  String STATION_CLASSES_URN = "urn:ogc:gml:kalypso:model:rrm:stationClasses"; //$NON-NLS-1$
 
-  static QName FEATURE_STATION_CLASSES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClasses" ); //$NON-NLS-1$
+  QName FEATURE_STATION_CLASSES = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClasses" ); //$NON-NLS-1$
 
-  static QName MEMBER_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "classMember" ); //$NON-NLS-1$
+  QName MEMBER_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "classMember" ); //$NON-NLS-1$
 
   IFeatureBindingCollection<IStationClass> getClasses( );
 }

@@ -143,7 +143,7 @@ public class TsFileWriter
       catch( final Exception e )
       {
         e.printStackTrace();
-        final String message = String.format( Messages.getString("TsFileWriter.0"), catchment.getName() ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "TsFileWriter.0" ), catchment.getName() ); //$NON-NLS-1$
         throw new NAPreprocessorException( message, e );
       }
     }

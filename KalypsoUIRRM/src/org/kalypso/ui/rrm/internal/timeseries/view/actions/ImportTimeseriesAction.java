@@ -42,7 +42,6 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -124,8 +123,8 @@ public class ImportTimeseriesAction extends Action
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() == Window.OK )
-      return operation.getTimeseries();
+    if( dialog.open() == org.eclipse.jface.window.Window.OK )
+      return wizard.getTimeseries();
 
     return null;
   }
