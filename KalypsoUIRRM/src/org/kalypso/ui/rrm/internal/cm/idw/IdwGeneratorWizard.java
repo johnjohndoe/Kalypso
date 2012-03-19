@@ -129,27 +129,27 @@ public class IdwGeneratorWizard extends Wizard
     /* Map toolbar arguments. */
     final Arguments mapToolbarArguments = new Arguments();
     mapToolbarArguments.put( "uri", URN_MAP_TOOLBAR ); //$NON-NLS-1$
-  
+
     /* Map arguments. */
     final Arguments mapArguments = new Arguments();
     mapArguments.put( "mapTemplate", URN_MAP_GMT ); //$NON-NLS-1$
     mapArguments.put( "mapToolbar", mapToolbarArguments ); //$NON-NLS-1$
-  
+
     /* List arguments. */
     final Arguments listArguments = new Arguments();
     listArguments.put( "tableTemplate", URN_TABLE_GTT ); //$NON-NLS-1$
-  
+
     /* Feature view arguments. */
     final Arguments featureviewArguments = new Arguments();
     featureviewArguments.put( "featureTemplate", URN_THIESSEN_GFT ); //$NON-NLS-1$
-  
+
     /* General arguments. */
     final Arguments arguments = new Arguments();
     arguments.put( "pageLayout", URN_PAGE_LAYOUT ); //$NON-NLS-1$
     arguments.put( "gisMap.1", mapArguments ); //$NON-NLS-1$
     arguments.put( "gisTable.1", listArguments ); //$NON-NLS-1$
     arguments.put( "featureView.1", featureviewArguments ); //$NON-NLS-1$
-  
+
     return arguments;
   }
 
