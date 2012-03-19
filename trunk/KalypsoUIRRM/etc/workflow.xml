@@ -19,6 +19,8 @@
 
   <Task URI="org.kalypso.model.rrm.catchmentModels" context="CatchmentModelsContext"/>
 
+  <Task URI="org.kalypso.model.rrm.editCalibration" context="EditCalibrationContext"/>
+
   <Task URI="org.kalypso.model.rrm.simulationManagement" context="SimulationManagementContext"/>
 
   <Perspectives>
@@ -120,6 +122,15 @@
         <con:ViewContext id="CatchmentModelsPropertiesView" partId="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" parent="CatchmentModelsContext" />
       </con:WorkbenchSiteContext>
 
+      <con:WorkbenchSiteContext id="EditCalibrationContext" parent="ContextHydrology">
+        <con:ViewContext id="EditCalibrationContext_GttView_KMChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:KMChannels" parent="EditCalibrationContext" />
+        <con:ViewContext id="EditCalibrationContext_GttView_StorageChannels" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:StorageChannels" parent="EditCalibrationContext" />
+        <con:ViewContext id="EditCalibrationContext_GttView_Catchments" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart:Catchments" parent="EditCalibrationContext" />
+
+        <con:ViewContext id="EditCalibrationContext_FeatureView" partId="org.kalypso.featureview.views.FeatureView" parent="EditCalibrationContext" />
+
+      </con:WorkbenchSiteContext>
+      
       <!-- Simulation Management -->
       <con:WorkbenchSiteContext id="SimulationManagementContext" parent="ContextHydrology">
         <con:ViewContext id="GttView" partId="org.kalypso.ui.editor.gistableeditor.GttViewPart" parent="ContextHydrology" />
