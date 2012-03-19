@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
+import java.math.BigDecimal;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -58,6 +60,8 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -87,11 +91,11 @@ public class RoughnessLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc )
   {
-    if( getTargetComponent() == null )
-      return;
-
     final IProfil profil = getProfil();
     if( profil == null )
+      return;
+
+    if( !hasRoughnessProperties() )
       return;
 
     final int baseLine = getTargetAxis().getScreenHeight();
@@ -128,10 +132,23 @@ public class RoughnessLayer extends AbstractProfilLayer
 
   }
 
+  private boolean hasRoughnessProperties( )
+  {
+    final IProfil profil = getProfil();
+    final IComponent property = profil.getPointPropertyFor( getTargetProperty() );
+    if( Objects.isNull( property ) )
+    {
+      if( Objects.isNull( profil.getProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) ) )
+        return false;
+    }
+
+    return true;
+  }
+
   @Override
   protected IPointStyle getPointStyle( )
   {
-    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( getTargetComponent().getId() ) )
+    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( getTargetProperty() ) )
     {
       if( Objects.isNotNull( m_styleClazzes ) )
         return m_styleClazzes;
@@ -155,34 +172,65 @@ public class RoughnessLayer extends AbstractProfilLayer
      * and kst values so we must show booth roughness class values, too. at the moment only roughness class ks values
      * will be shown!
      */
-
     /**
      * TODO 2: like calculation core, displaying / handling of roughness is configruated by a flag (use roughness
      * classes, use plain values)
      */
-
     final Double factor = point.getRoughnessFactor();
     final IComponent component = getTargetComponent();
-
-    final Object value = point.getValue( component );
-    if( value instanceof Number )
+    if( Objects.isNotNull( component ) )
     {
-      final Number number = (Number) value;
-      return number.doubleValue() * factor;
+      final Object value = point.getValue( component );
+      if( value instanceof Number )
+      {
+        final Number number = (Number) value;
+        return number.doubleValue() * factor;
+      }
     }
 
     final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
     if( Objects.isNull( clazz ) )
       return null;
 
-    final IComponent ks = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-    final IComponent kst = point.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-    if( Objects.allNotNull( ks, clazz.getKsValue() ) )
-      return clazz.getKsValue().doubleValue() * factor;
-    else if( Objects.allNotNull( kst, clazz.getKstValue() ) )
-      return clazz.getKstValue().doubleValue() * factor;
+    final String target = getTargetProperty();
+    switch( target )
+    {
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS:
+        final BigDecimal clazzKsValue = clazz.getKsValue();
+        if( Objects.isNotNull( clazzKsValue ) )
+          return clazzKsValue.doubleValue() * factor;
 
-    return null;
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST:
+        final BigDecimal clazzKstValue = clazz.getKstValue();
+        if( Objects.isNotNull( clazzKstValue ) )
+          return clazzKstValue.doubleValue() * factor;
+
+      default:
+        return null;
+    }
+  }
+
+  @Override
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  {
+    final IProfil profil = getProfil();
+    if( Objects.isNull( profil ) )
+      return null;
+
+    Double min = Double.MAX_VALUE;
+    Double max = -Double.MAX_VALUE;
+    final IProfileRecord[] points = profil.getPoints();
+    for( final IProfileRecord point : points )
+    {
+      final Double value = getValue( point );
+      if( Objects.isNotNull( value ) )
+      {
+        min = Math.min( min, value );
+        max = Math.max( max, value );
+      }
+    }
+
+    return new DataRange<Double>( min, max );
   }
 
   @Override
