@@ -1,69 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featureview xmlns:rrmHydrotop="http://www.tuhh.de/hydrotop" typename="rrmHydrotop:Hydrotop" style="SWT.NONE" xmlns="featureview.template.kalypso.org">
-  <gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+  <gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
   <gridLayout numColumns="3" />
 
-  <!-- <label xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true"> <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/> </label> <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:name" style="SWT.BORDER"> <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" 
-    grabExcessHorizontalSpace="true"/> </text> <label style="SWT.NONE" visible="false"> <gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/> </label> <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true"> <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/> 
+  <!-- <label xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true"> <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false"/> </label> <text xmlns:gml="http://www.opengis.net/gml" editable="true" property="gml:name" style="SWT.BORDER"> <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" 
+    grabExcessHorizontalSpace="true"/> </text> <label style="SWT.NONE" visible="false"> <gridData verticalAlignment="SWT.BEGINNING" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false"/> </label> <validatorlabel xmlns:gml="http://www.opengis.net/gml" property="gml:name" style="SWT.NONE" visible="true"> <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false"/> 
     </validatorlabel> -->
 
   <label property="rrmHydrotop:landuse" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
-  <text editable="true" property="rrmHydrotop:landuse" style="SWT.BORDER">
-    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  <text editable="false" property="rrmHydrotop:landuse" style="SWT.BORDER">
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
   </text>
   <validatorlabel property="rrmHydrotop:landuse" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
   <label property="rrmHydrotop:soiltype" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
-  <text editable="true" property="rrmHydrotop:soiltype" style="SWT.BORDER">
-    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+  <text editable="false" property="rrmHydrotop:soiltype" style="SWT.BORDER">
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
   </text>
   <validatorlabel property="rrmHydrotop:soiltype" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
   <label property="rrmHydrotop:corrSealing" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
   <text editable="true" property="rrmHydrotop:corrSealing" style="SWT.BORDER | SWT.RIGHT">
-    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <format>%.2f</format>
   </text>
   <validatorlabel property="rrmHydrotop:corrSealing" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
   <label property="rrmHydrotop:m_perkm" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
   <text editable="true" property="rrmHydrotop:m_perkm" style="SWT.BORDER | SWT.RIGHT">
-    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
   </text>
   <validatorlabel property="rrmHydrotop:m_perkm" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
   <label property="rrmHydrotop:m_f1gws" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
   <text editable="true" property="rrmHydrotop:m_f1gws" style="SWT.BORDER | SWT.RIGHT">
-    <gridData horizontalAlignment="GridData.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="true" />
+    <format>%.2f</format>
   </text>
   <validatorlabel property="rrmHydrotop:m_f1gws" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 
   <label xmlns:rrm="http://www.tuhh.de/kalypsoNA" property="rrm:catchmentLinkMember" style="SWT.NONE" visible="true">
-    <gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </label>
-  <combo xmlns:rrm="http://www.tuhh.de/kalypsoNA" property="rrm:catchmentLinkMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-    <gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+  <combo xmlns:rrm="http://www.tuhh.de/kalypsoNA" property="rrm:catchmentLinkMember" style="SWT.DROP_DOWN | SWT.READ_ONLY" enabled="false">
+    <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
   </combo>
   <validatorlabel xmlns:rrm="http://www.tuhh.de/kalypsoNA" property="rrm:catchmentLinkMember" style="SWT.NONE" visible="true">
-    <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+    <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
   </validatorlabel>
 </featureview>

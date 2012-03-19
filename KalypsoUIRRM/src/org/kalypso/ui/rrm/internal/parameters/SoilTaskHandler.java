@@ -83,7 +83,7 @@ public class SoilTaskHandler extends AbstractHandler
     catch( final CoreException e )
     {
       e.printStackTrace();
-      throw new ExecutionException( "Failed ot initialize tables", e ); //$NON-NLS-1$
+      throw new ExecutionException( "Failed to initialize tables", e ); //$NON-NLS-1$
     }
 
     return null;
@@ -99,7 +99,7 @@ public class SoilTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilProfile.gtt" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilLayer.gtt" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilProfile.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_SoilLayer.gft" ) ); //$NON-NLS-1$
   }
 }

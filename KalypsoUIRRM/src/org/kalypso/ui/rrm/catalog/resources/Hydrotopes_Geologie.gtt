@@ -3,7 +3,7 @@
   <layer id="id" featurePath="geologieMember" linktype="gml" ns1:type="simple" ns1:href=".models/geologie.gml" ns1:actuate="onRequest">
     <column name="gml:name" editable="false" width="100" alignment="SWT.LEFT"/>
     <column name="rrmHydrotop:m_perkm" editable="false" width="130" alignment="SWT.RIGHT"/>
-    <column name="rrmHydrotop:m_f1gws" editable="false" width="130" alignment="SWT.RIGHT"/>
+    <column name="rrmHydrotop:m_f1gws" editable="false" width="130" alignment="SWT.RIGHT" format="%.2f"/>
     <column name="gml:description" editable="false" width="300" alignment="SWT.LEFT"/>
     <sort propertyName="name" inverse="false"/>
   </layer>

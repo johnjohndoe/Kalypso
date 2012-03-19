@@ -78,8 +78,9 @@ public class CompleteNetElementsTaskHandler extends AbstractHandler
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Nodes:gtt", "Nodes", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Channels", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Channels:gtt", "Channels", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      //WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Nodes:gtt", "Nodes", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "KMChannels", "urn:org.kalypso.model.rrm.completeNetElements:workflow:KMChannels:gtt", "Kalinin-Miljukov Channels", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.completeNetElements:workflow:StorageChannels:gtt", "Storage Channels", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
       WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.completeNetElements:workflow:Catchments:gtt", "Catchments", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
@@ -101,12 +102,12 @@ public class CompleteNetElementsTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelCompletion.gft" ) ); //$NON-NLS-1$
+    //factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Node_ModelCompletion.gft" ) ); //$NON-NLS-1$
 
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Subcatchment_ModelCompletion.gft" ) ); //$NON-NLS-1$
 
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/KMChannel_ModelCompletion.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/RHBChannel_ModelCompletion.gft" ) ); //$NON-NLS-1$
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/VChannel_ModelCompletion.gft" ) ); //$NON-NLS-1$
+    // factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/VChannel_ModelCompletion.gft" ) ); //$NON-NLS-1$
   }
 }

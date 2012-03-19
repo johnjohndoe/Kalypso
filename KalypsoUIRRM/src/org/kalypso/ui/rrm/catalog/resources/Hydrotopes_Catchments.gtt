@@ -3,7 +3,7 @@
   <layer id="id" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" ns1:type="simple" ns1:href=".models/modell.gml" ns1:actuate="onRequest">
     <column name="gml:name" editable="false" width="100" alignment="SWT.LEFT"/>
     <column name="gml:description" editable="false" width="100" alignment="SWT.LEFT"/>
-    <column name="rrm:flaech" editable="false" width="100" alignment="SWT.RIGHT"/>
+    <column name="rrm:flaech" editable="false" width="100" alignment="SWT.RIGHT" format="%,d"/>
     <sort propertyName="name" inverse="false"/>
   </layer>
 </gistableview>
