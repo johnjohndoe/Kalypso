@@ -46,7 +46,6 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -57,6 +56,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
 
@@ -80,19 +80,15 @@ public class TextSearchFilterControl extends Composite
   {
     super( parent, SWT.NONE );
 
-    if( toolkit != null )
-      toolkit.adapt( this );
+    ControlUtils.addDisposeListener( this );
+    toolkit.adapt( this );
 
     m_yellow = new Color( parent.getDisplay(), YELLOW );
-
-    ControlUtils.addDisposeListener( this );
-
     m_filter = new TextSearchFilter( StringUtils.EMPTY );
-
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( this );
     m_binding = new DataBindingContext();
 
-    createContents( toolkit, this );
+    setLayout( Layouts.createGridLayout() );
+    createContents( this, toolkit );
   }
 
   @Override
@@ -109,12 +105,12 @@ public class TextSearchFilterControl extends Composite
     viewer.addFilter( m_filter );
   }
 
-  private void createContents( final FormToolkit toolkit, final Composite parent )
+  private void createContents( final Composite parent, final FormToolkit toolkit )
   {
-    createSearchStringField( toolkit, parent );
+    createSearchStringField( parent, toolkit );
   }
 
-  private void createSearchStringField( final FormToolkit toolkit, final Composite parent )
+  private void createSearchStringField( final Composite parent, final FormToolkit toolkit )
   {
     final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

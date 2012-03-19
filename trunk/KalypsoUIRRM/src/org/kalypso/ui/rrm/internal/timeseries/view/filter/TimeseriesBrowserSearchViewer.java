@@ -67,7 +67,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
     groupTextSearch.setText( "Freitextsuche" );
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final TextSearchFilterControl textSearchControl = new TextSearchFilterControl( parent, toolkit );
+    final TextSearchFilterControl textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
     textSearchControl.setViewer( viewer );
 
 // final Group stateGroup = new Group( this, SWT.NONE );
