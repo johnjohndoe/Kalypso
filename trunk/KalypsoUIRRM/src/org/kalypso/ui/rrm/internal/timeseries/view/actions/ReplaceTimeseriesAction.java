@@ -40,43 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.ImportTimeseriesOperation;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ReplaceTimeseriesObservation;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesImportWizard;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesUpdateWizard;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
-import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class ReplaceTimeseriesAction extends Action
+public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
 {
-
-  private final FeatureBean<ITimeseries> m_timeseries;
-
-  private String m_parameterType;
-
-  private final ITreeNodeModel m_model;
 
   public ReplaceTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
   {
-    m_model = model;
-    m_timeseries = timeseries;
+    super( model, timeseries );
 
     setText( "Replace Timeseries" );
     setToolTipText( "Replace selected Timeseries" );
@@ -85,48 +65,9 @@ public class ReplaceTimeseriesAction extends Action
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  protected IMergeTimeseriesOperation getMergeOperation( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    /* Prepare data */
-    final ImportObservationData data = prepareData();
-    final ITimeseries timeseries = showWizard( shell, data );
-
-    // select tree with pseudo node
-    final TreeNode pseudoNode = new TreeNode( m_model, null, null, timeseries );
-    m_model.setSelection( pseudoNode );
+    return new ReplaceTimeseriesObservation( getTimeseries() );
   }
 
-  private ImportObservationData prepareData( )
-  {
-    final ITimeseries timeseries = m_timeseries.getFeature();
-    m_parameterType = timeseries.getParameterType();
-
-    return new ImportObservationData( m_parameterType );
-  }
-
-  private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
-  {
-
-    final TimeseriesBean bean = new TimeseriesBean();
-    if( m_parameterType != null )
-      data.setParameterType( m_parameterType );
-
-    final ImportTimeseriesOperation importOperation = new ImportTimeseriesOperation( data );
-    final ReplaceTimeseriesObservation mergeOperation = new ReplaceTimeseriesObservation( m_timeseries );
-
-    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
-    data.init( settings );
-
-    final TimeseriesUpdateWizard wizard = new TimeseriesUpdateWizard( importOperation, mergeOperation, data, bean );
-    wizard.setDialogSettings( settings );
-    wizard.setWindowTitle( getText() );
-
-    final WizardDialog dialog = new WizardDialog( shell, wizard );
-    if( dialog.open() == Window.OK )
-      return importOperation.getTimeseries();
-
-    return null;
-  }
 }
