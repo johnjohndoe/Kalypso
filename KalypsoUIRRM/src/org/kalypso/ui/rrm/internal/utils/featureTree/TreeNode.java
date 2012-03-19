@@ -43,8 +43,10 @@ package org.kalypso.ui.rrm.internal.utils.featureTree;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @author Gernot Belger
@@ -91,6 +93,9 @@ public class TreeNode implements IAdaptable
 
   public String getLabel( )
   {
+    if( Objects.isNull( m_uiHandler ) )
+      return StringUtils.EMPTY;
+
     return m_uiHandler.getTreeLabel();
   }
 

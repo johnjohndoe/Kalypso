@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.filter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
@@ -63,7 +65,52 @@ public class TextSearchFilter extends ViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    // TODO Auto-generated method stub
+    final String searchString = getString();
+    if( StringUtils.isEmpty( searchString ) )
+      return true;
+
+    if( element instanceof TreeNode )
+    {
+      final TreeNode node = (TreeNode) element;
+
+      if( hasChildWithName( node, searchString ) )
+        return true;
+
+      final int hierarchy = getLevel( node );
+      if( hierarchy > 2 )
+        return true;
+
+      return false;
+    }
+
+    return false;
+  }
+
+  private int getLevel( final TreeNode node )
+  {
+    int count = 0;
+    TreeNode parent = node.getParent();
+    while( parent != null )
+    {
+      parent = parent.getParent();
+      count += 1;
+    }
+
+    return count;
+  }
+
+  private boolean hasChildWithName( final TreeNode node, final String searchString )
+  {
+    if( StringUtils.containsIgnoreCase( node.getLabel(), searchString ) )
+      return true;
+
+    final TreeNode[] children = node.getChildren();
+    for( final TreeNode child : children )
+    {
+      if( hasChildWithName( child, searchString ) )
+        return true;
+    }
+
     return false;
   }
 
@@ -79,7 +126,10 @@ public class TextSearchFilter extends ViewerFilter
 
   public void setString( final String string )
   {
-    m_string = string;
+    m_string = StringUtils.isBlank( string ) ? null : string.toLowerCase();
+
+    if( m_viewer != null )
+      m_viewer.refresh();
   }
 
 }
