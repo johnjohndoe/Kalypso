@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -60,7 +65,6 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -255,13 +259,68 @@ public class VegetationTheme extends AbstractProfilTheme
     }
   }
 
-  final boolean segmenthasVegetation( final IRecord point )
+  final boolean segmenthasVegetation( final IProfileRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, point );
-    return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
+    final Double ax = getAx( point );
+    final Double ay = getAy( point );
+    final Double dp = getDp( point );
 
+    if( Doubles.isNaN( ax, ax, dp ) )
+      return false;
+
+    return ax * ay * dp != 0;
+
+  }
+
+  private Double getDp( final IProfileRecord point )
+  {
+    final Double bewuchs = point.getBewuchsDp();
+    if( Objects.isNotNull( bewuchs ) )
+      return bewuchs;
+
+    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    if( Objects.isNotNull( clazz ) )
+    {
+      final BigDecimal decimal = clazz.getDp();
+      if( Objects.isNotNull( decimal ) )
+        return decimal.doubleValue();
+    }
+
+    return null;
+  }
+
+  private Double getAy( final IProfileRecord point )
+  {
+    final Double bewuchs = point.getBewuchsDp();
+    if( Objects.isNotNull( bewuchs ) )
+      return bewuchs;
+
+    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    if( Objects.isNotNull( clazz ) )
+    {
+      final BigDecimal decimal = clazz.getAy();
+      if( Objects.isNotNull( decimal ) )
+        return decimal.doubleValue();
+    }
+
+    return null;
+  }
+
+  private Double getAx( final IProfileRecord point )
+  {
+    final Double bewuchs = point.getBewuchsDp();
+    if( Objects.isNotNull( bewuchs ) )
+      return bewuchs;
+
+    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    if( Objects.isNotNull( clazz ) )
+    {
+      final BigDecimal decimal = clazz.getAx();
+      if( Objects.isNotNull( decimal ) )
+        return decimal.doubleValue();
+    }
+
+    return null;
   }
 
   @Override
