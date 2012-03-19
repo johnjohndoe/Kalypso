@@ -52,7 +52,7 @@ ALTER TABLE Vegetation ADD( Color VARCHAR2(10) NULL );
 COMMENT ON COLUMN Vegetation.Color IS 'color (hex)';
 
 -- update tables roughness and vegetation to overcome encoding problems
-delete from PDB.ROUGHNESS
+delete from PDB.ROUGHNESS;
 
 INSERT INTO roughness (name, label, description, point_kind) VALUES ('-1', 'unknown', 'unknown','GAF');
 INSERT INTO roughness (name, label, description, point_kind, k_value, kst_value) VALUES ('1', 'glatt', 'glatt', 'GAF',0.001, 80);
