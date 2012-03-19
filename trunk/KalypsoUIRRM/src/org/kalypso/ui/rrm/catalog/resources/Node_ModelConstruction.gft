@@ -156,15 +156,6 @@
       <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </validatorlabel>    
 
-    <group style="SWT.NONE" text="%node.modelConstruction.gft.group.branching">
-      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
-      <gridLayout numColumns="3"/>
-      
-      <subcomposite style="SWT.NONE" property="rrm:branchingMember">
-          <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
-      </subcomposite>
-    </group>
-    
     <group style="SWT.NONE" text="%node.modelConstruction.gft.group.qqRelation">
       <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
       <gridLayout numColumns="3"/>
@@ -188,6 +179,15 @@
       <validatorlabel property="rrm:qqRelation" style="SWT.NONE" visible="true">
         <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
       </validatorlabel>
+    </group>
+
+    <group style="SWT.NONE" text="%node.modelConstruction.gft.group.branching">
+      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
+      <gridLayout numColumns="3"/>
+      
+      <subcomposite style="SWT.NONE" property="rrm:branchingMember">
+          <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" horizontalSpan="3" />
+      </subcomposite>
     </group>
     
   </group>

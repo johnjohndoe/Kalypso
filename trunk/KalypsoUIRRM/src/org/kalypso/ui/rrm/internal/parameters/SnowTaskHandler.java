@@ -99,6 +99,6 @@ public class SnowTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_Snowtype.gtt" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Parameters_Snowtype.gft" ) ); //$NON-NLS-1$
   }
 }

@@ -215,8 +215,7 @@
 					<element name="Ort" type="gml:PolygonPropertyType"/>
 					<element name="entwaesserungsStrangMember" type="na:ChannelLinkType" minOccurs="0"/>
 					<element name="generateResult" type="boolean" default="false" nillable="true"/>
-					<!-- JH, Flaeche kann auch aus der Hydrotopdatei hierher übernommen werden (wird im Modell ohnehin aus Hydrotopdatei übernommen)-->
-					<element name="flaech" type="long"/>
+					<element name="flaech" type="long" minOccurs="0" nillable="true"/>
 					<element name="faktn" default="1.0">
 						<simpleType>
 							<restriction base="double">
