@@ -76,10 +76,13 @@
   <system systemId="urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt" uri="Hydrotopes_Hydrotopes.gtt" />
   
   
-  <!-- system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:Nodes:gtt" uri="ModelCompletion_Nodes.gtt" /-->
   <system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:KMChannels:gtt" uri="ModelCompletion_KMChannels.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:StorageChannels:gtt" uri="ModelCompletion_StorageChannels.gtt" />
   <system systemId="urn:org.kalypso.model.rrm.completeNetElements:workflow:Catchments:gtt" uri="ModelCompletion_Catchments.gtt" />
+
+  <system systemId="urn:org.kalypso.model.rrm.editCalibration:workflow:KMChannels:gtt" uri="EditCalibration_KMChannels.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.editCalibration:workflow:StorageChannels:gtt" uri="EditCalibration_StorageChannels.gtt" />
+  <system systemId="urn:org.kalypso.model.rrm.editCalibration:workflow:Catchments:gtt" uri="EditCalibration_Catchments.gtt" />
 
   <system systemId="urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt" uri="Simulations.gtt" />
 
