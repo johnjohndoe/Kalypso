@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -103,10 +104,9 @@ public class TimeseriesManagementView extends ViewPart
     section.setDescription( "Geben Sie Werte in den Suchfeldern ein, um die Ansicht einzuschränken." ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
-    final Composite searchPanel = toolkit.createComposite( section );
+    final TimeseriesBrowserSearchViewer searchPanel = new TimeseriesBrowserSearchViewer( section, toolkit, m_treeViewer );
+    toolkit.adapt( searchPanel );
 
-// final ContentSearchViewer searchPanel = new ContentSearchViewer( toolkit, section, viewer, this );
-// toolkit.adapt( searchPanel );
     section.setClient( searchPanel );
 
     return section;
