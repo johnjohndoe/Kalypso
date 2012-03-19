@@ -102,7 +102,6 @@ public class ImportTimeseriesAction extends Action
   private ImportObservationData prepareData( )
   {
     final String[] allowedTypes = StationClassesCatalog.findAllowedParameterTypes( m_station );
-
     return new ImportObservationData( allowedTypes );
   }
 
