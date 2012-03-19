@@ -72,6 +72,8 @@ public class UIRrmImages
     PARAMETER_TYPE_WIND_VELOCITY("icons/timeseries/parameterType_v.png"), //$NON-NLS-1$
 
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
+    TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
+    TIMESERIES_EXTEND_AND_OVERWRITE("icons/timeseries/extend_and_overwrite.png"), //$NON-NLS-1$
 
     IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
 

@@ -42,16 +42,20 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.DeleteTimeseriesAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditTimeseriesAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExtendAndOverwriteTimeseriesAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExtendTimeseriesAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -64,6 +68,8 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   private final ITimeseries m_timeseries;
 
   private final ITreeNodeModel m_model;
+
+  private IDataBinding m_binding;
 
   public TimeseriesUiHandler( final ITreeNodeModel model, final ITimeseries timeseries )
   {
@@ -92,12 +98,13 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
   {
+    m_binding = binding;
     final FeatureBean<ITimeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
-    final String stationLabel = m_timeseries.getOwner().getDescription();
-    final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
-
-    sectionToolbar.add( new EditTimeseriesAction( timeseriesBean, binding ) );
-    sectionToolbar.add( new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
+// final String stationLabel = m_timeseries.getOwner().getDescription();
+//    final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
+//
+// sectionToolbar.add( new EditTimeseriesAction( timeseriesBean, binding ) );
+// sectionToolbar.add( new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
 
     return new TimeseriesComposite( parent, timeseriesBean, binding, false );
   }
@@ -105,6 +112,15 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
   @Override
   protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
   {
+    final FeatureBean<ITimeseries> timeseriesBean = new TimeseriesBean( m_timeseries );
+    final String stationLabel = m_timeseries.getOwner().getDescription();
+    final String deleteMessage = String.format( Messages.getString( "TimeseriesUiHandler_1" ), getTreeLabel(), stationLabel ); //$NON-NLS-1$
+
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new EditTimeseriesAction( timeseriesBean, m_binding ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendTimeseriesAction( timeseriesBean ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendAndOverwriteTimeseriesAction( timeseriesBean ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
+
     // TODO: utility that changes the timestep
     // TODO: copy timeseries
   }

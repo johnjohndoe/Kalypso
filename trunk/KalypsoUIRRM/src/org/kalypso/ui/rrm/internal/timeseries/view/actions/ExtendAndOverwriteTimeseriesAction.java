@@ -41,62 +41,52 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
-import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
  * @author Gernot Belger
  */
-public class EditTimeseriesAction extends Action
+public class ExtendAndOverwriteTimeseriesAction extends Action
 {
-
-  private final IDataBinding m_binding;
 
   private final FeatureBean<ITimeseries> m_timeseries;
 
-  public EditTimeseriesAction( final FeatureBean<ITimeseries> timeseries, final IDataBinding binding )
+  public ExtendAndOverwriteTimeseriesAction( final FeatureBean<ITimeseries> timeseries )
   {
     m_timeseries = timeseries;
-    m_binding = binding;
 
-    setText( "Edit Timeseries" );
-    setToolTipText( "Edit selected Timeseries" );
+    setText( "Extend Timeseries and overwrite existing values" );
+    setToolTipText( "Extend selected Timeseries and overwrite existing values" );
 
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_EXTEND_AND_OVERWRITE ) );
   }
 
   @Override
   public void runWithEvent( final Event event )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-    final IWorkbench context = PlatformUI.getWorkbench();
-
-    try
-    {
-      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries.getFeature() );
-      final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
-      final int open = dialog.open();
-
-      if( Window.OK == open )
-        source.save();
-
-      source.dispose();
-
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
+// final Shell shell = event.widget.getDisplay().getActiveShell();
+// final IWorkbench context = PlatformUI.getWorkbench();
+//
+// try
+// {
+// final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries.getFeature() );
+// final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
+// final int open = dialog.open();
+//
+// if( Window.OK == open )
+// source.save();
+//
+// source.dispose();
+//
+// }
+// catch( final Throwable t )
+// {
+// t.printStackTrace();
+// }
 
   }
 }
