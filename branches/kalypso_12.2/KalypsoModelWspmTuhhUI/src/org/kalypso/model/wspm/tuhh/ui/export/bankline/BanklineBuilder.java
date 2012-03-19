@@ -72,7 +72,7 @@ import com.vividsolutions.jts.geom.LineString;
  * Builds banklines from a {@link org.kalypso.model.wspm.core.gml.WspmWaterBody} or a
  * {@link org.kalypso.model.wspm.tuhh.core.gml.TuhhReach} using the centerline of the water body and the markers of the
  * involved cross sections.
- *
+ * 
  * @author Gernot Belger
  */
 public class BanklineBuilder implements ICoreRunnableWithProgress
@@ -118,11 +118,10 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     {
       final LineString riverLine = (LineString) JTSAdapter.export( centerLine );
 
-      // final LineString denseRiverLine = riverLine;
-
       // REMARK: very slow and produces many unnecessary points
       // TODO: maybe let user decide if the line should be densified
-      final LineString denseRiverLine = (LineString) Densifier.densify( riverLine, 1 );
+// final LineString denseRiverLine = riverLine;
+      final LineString denseRiverLine = (LineString) Densifier.densify( riverLine, 5 );
 
       // REMARK: our own method is buggy and produces later NaN-coordinates
       // final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
