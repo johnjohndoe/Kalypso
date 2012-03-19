@@ -120,7 +120,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new EditTimeseriesAction( timeseriesBean, m_binding ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendTimeseriesAction( timeseriesBean ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendAndOverwriteTimeseriesAction( timeseriesBean ) );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ReplaceTimeseriesAction( timeseriesBean ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ReplaceTimeseriesAction( m_model, timeseriesBean ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
 
     // TODO: utility that changes the timestep

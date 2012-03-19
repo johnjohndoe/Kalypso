@@ -55,6 +55,8 @@ import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
@@ -113,7 +115,17 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
     m_observation = cleanupWorker.convert();
 
+    updateMetadata( m_observation );
+
     return stati.asMultiStatus( "Import Timeseries Operation" );
+
+  }
+
+  private void updateMetadata( final IObservation observation )
+  {
+    /* Timestep */
+    final MetadataList metadataList = observation.getMetadataList();
+    MetadataHelper.setTimestep( metadataList, m_timestep );
   }
 
   private IStatus validateTimesteps( final IObservation observation, final Period timestep )

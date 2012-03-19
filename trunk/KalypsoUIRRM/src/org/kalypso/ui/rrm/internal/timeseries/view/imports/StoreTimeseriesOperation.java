@@ -69,8 +69,6 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -121,18 +119,10 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
     final IFile targetFile = createDataFile( m_bean, timestep );
     m_timeseries = createTimeseries( timestep, targetFile );
-    updateMetadata( observation, m_timeseries );
 
     writeResult( targetFile, observation );
 
     return stati.asMultiStatus( "Import Timeseries Operation" );
-  }
-
-  private void updateMetadata( final IObservation observation, final ITimeseries timeseries )
-  {
-    /* Timestep */
-    final MetadataList metadataList = observation.getMetadataList();
-    MetadataHelper.setTimestep( metadataList, timeseries.getTimestep() );
   }
 
   private ITimeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
