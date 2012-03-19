@@ -38,29 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.thiessen;
+package org.kalypso.ui.rrm.internal.cm.idw;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -68,38 +59,20 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public final class ThiessenLinearSumHelper
+public final class IdwLinearSumHelper
 {
-  private ThiessenLinearSumHelper( )
+  private IdwLinearSumHelper( )
   {
     throw new UnsupportedOperationException();
-  }
-
-  public static LinearSumBean createFromCurrentScenario( final String parameterType )
-  {
-    try
-    {
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL, NaModell.class );
-
-      final LinearSumBean bean = LinearSumBean.createFromModel( model );
-      bean.setProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE, parameterType );
-      return bean;
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      // If this happens, it's an internal bug!
-      return null;
-    }
   }
 
   public static void showWizard( final Shell shell, final LinearSumBean bean, final ITreeNodeModel model, final String windowTitle )
   {
     try
     {
-      /* Init timeseries gml */
+      /* Init timeseries gml. */
       final ICoreRunnableWithProgress operation = new InitThiessenTimeseriesOperation( bean );
       final IStatus initStatus = ProgressUtilities.busyCursorWhile( operation );
       if( !initStatus.isOK() )
@@ -108,7 +81,7 @@ public final class ThiessenLinearSumHelper
         return;
       }
 
-      final Wizard wizard = new ThiessenGeneratorWizard( bean );
+      final Wizard wizard = new IdwGeneratorWizard( bean );
       wizard.setWindowTitle( windowTitle );
 
       final WizardDialog2 dialog = new WizardDialog2( shell, wizard );
@@ -134,27 +107,7 @@ public final class ThiessenLinearSumHelper
     finally
     {
       /* Delete the generated stations gml. */
-      deleteStationsGmlQuietly();
-    }
-  }
-
-  /**
-   * This function deletes the generated stations gml. It will not throw an exception on failure. The stations gml is
-   * purly temporary and will be overwritten the next time the wizard opens if it was not deleted.
-   */
-  public static void deleteStationsGmlQuietly( )
-  {
-    try
-    {
-      final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
-      final IFile thiessenFile = scenarioFolder.getFile( new Path( INaProjectConstants.GML_THIESSEN_STATION_PATH ) );
-      thiessenFile.delete( true, new NullProgressMonitor() );
-    }
-    catch( final Exception ex )
-    {
-      // Ignore
-      ex.printStackTrace();
+      ThiessenLinearSumHelper.deleteStationsGmlQuietly();
     }
   }
 }

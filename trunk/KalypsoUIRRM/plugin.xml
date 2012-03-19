@@ -614,6 +614,33 @@
         
         <separator name="additions"/>
     </menuContribution>   
+    <menuContribution locationURI="toolbar:org.kalypso.model.rrm.ui.idw.maptoolbar">
+        <command commandId="org.kalypso.ogc.gml.map.SelectSingleFeatureCommand" style="radio">
+            <visibleWhen checkEnabled="true"/>
+        </command>
+        <command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" style="radio" />
+        <command commandId="org.kalypso.ogc.gml.map.PanToCommand" style="radio"  />
+        <command commandId="org.kalypso.gml.ui.commands.OpenLegendCommand" style="push">
+           <!--
+           <visibleWhen checkEnabled="false">
+              <with variable="activeMapPanel">
+                 <test args="isCascading" property="org.kalypso.ui.test.map.themeProperty.hasProperty" value="movieTheme"/>
+              </with>
+            
+           </visibleWhen>
+           -->
+        </command>
+        <separator name="actions" visible="true"/>
+        <command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push"/>
+        <command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push"/>
+        <command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push" />
+        <command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push" />
+        <separator name="mapExport" visible="true" />
+        <command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push"  />
+        <command commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand" style="push"/>
+        
+        <separator name="additions"/>
+    </menuContribution>
    </extension>
  <extension
        point="org.kalypso.core.layout">
@@ -621,12 +648,20 @@
           class="org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenWizardLayoutPartFactory"
           id="thiessenWizardPart">
     </layoutPartFactory>
+    <layoutPartFactory
+          class="org.kalypso.ui.rrm.internal.cm.idw.IdwWizardLayoutPartFactory"
+          id="idwWizardPart">
+    </layoutPartFactory>
  </extension>
  <extension
        point="org.kalypso.ui.featureViewExtensionControl">
     <extensionControl
           class="org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenWizardFeatureControlFactory"
           id="thiesenWizardFeatureControl">
+    </extensionControl>
+    <extensionControl
+          class="org.kalypso.ui.rrm.internal.cm.idw.IdwWizardFeatureControlFactory"
+          id="idwWizardFeatureControl">
     </extensionControl>
  </extension>
  <extension

@@ -38,45 +38,37 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.idw;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public class EditLinearSumThiessenAction extends Action
+@SuppressWarnings("restriction")
+public class SelectAllAction extends Action
 {
-  private final ITreeNodeModel m_model;
+  private final IdwWizardFeatureControl m_control;
 
-  private final ILinearSumGenerator m_generator;
+  private final Boolean m_selection;
 
-  public EditLinearSumThiessenAction( final ITreeNodeModel model, final ILinearSumGenerator generator )
+  public SelectAllAction( final IdwWizardFeatureControl control, final Boolean selection )
   {
-    m_model = model;
-    m_generator = generator;
+    m_control = control;
+    m_selection = selection;
 
-    setText( Messages.getString( "EditLinearSumThiessenAction_0" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString( "EditLinearSumThiessenAction_1" ) ); //$NON-NLS-1$
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
+    if( selection )
+      setText( WorkbenchMessages.SelectionDialog_selectLabel );
+    else
+      setText( WorkbenchMessages.SelectionDialog_deselectLabel );
   }
 
   @Override
   public void runWithEvent( final Event event )
   {
-    // FIXME: check integrity of generator with modell.gml
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-    final LinearSumBean bean = new LinearSumBean( m_generator );
-    final String title = getText();
-
-    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, title );
+    m_control.changeIsUsed( m_selection );
   }
 }

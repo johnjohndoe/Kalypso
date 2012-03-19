@@ -75,6 +75,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgress
 {
