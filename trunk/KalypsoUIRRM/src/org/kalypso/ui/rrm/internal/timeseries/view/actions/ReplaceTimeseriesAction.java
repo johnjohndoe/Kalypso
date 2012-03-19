@@ -50,18 +50,19 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 /**
  * @author Gernot Belger
  */
-public class ExtendAndOverwriteTimeseriesAction extends Action
+public class ReplaceTimeseriesAction extends Action
 {
+
   private final FeatureBean<ITimeseries> m_timeseries;
 
-  public ExtendAndOverwriteTimeseriesAction( final FeatureBean<ITimeseries> timeseries )
+  public ReplaceTimeseriesAction( final FeatureBean<ITimeseries> timeseries )
   {
     m_timeseries = timeseries;
 
-    setText( "Extend Timeseries and overwrite existing values" );
-    setToolTipText( "Extend selected Timeseries and overwrite existing values" );
+    setText( "Replace Timeseries" );
+    setToolTipText( "Replace selected Timeseries" );
 
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_EXTEND_AND_OVERWRITE ) );
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_REPLACE ) );
   }
 
   @Override

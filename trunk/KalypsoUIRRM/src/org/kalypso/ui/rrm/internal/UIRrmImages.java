@@ -74,6 +74,7 @@ public class UIRrmImages
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND_AND_OVERWRITE("icons/timeseries/extend_and_overwrite.png"), //$NON-NLS-1$
+    TIMESERIES_REPLACE("icons/timeseries/overwrite.png"), //$NON-NLS-1$
 
     IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
 

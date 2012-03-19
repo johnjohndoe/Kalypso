@@ -47,6 +47,8 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNewComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
@@ -60,9 +62,18 @@ public class TimeseriesImportWizard extends Wizard
 {
   private final ImportTimeseriesOperation m_importOperation;
 
-  public TimeseriesImportWizard( final ImportTimeseriesOperation importOperation, final ImportObservationData data, final TimeseriesBean bean )
+  private final CommandableWorkspace m_workspace;
+
+  private final IStation m_station;
+
+  private final TimeseriesBean m_bean;
+
+  public TimeseriesImportWizard( final ImportTimeseriesOperation importOperation, final ImportObservationData data, final TimeseriesBean bean, final CommandableWorkspace workspace, final IStation station )
   {
     m_importOperation = importOperation;
+    m_bean = bean;
+    m_workspace = workspace;
+    m_station = station;
 
     addPage( new ImportObservationSourcePage( "sourcePage", data ) ); //$NON-NLS-1$
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
@@ -88,11 +99,21 @@ public class TimeseriesImportWizard extends Wizard
   {
     saveSettings();
 
-    m_importOperation.updateDataAfterFinish();
-
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
     if( !status.isOK() )
+    {
       StatusDialog.open( getShell(), status, getWindowTitle() );
+      return true;
+    }
+
+    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_bean, m_workspace, m_station, m_importOperation );
+    storeOperation.updateDataAfterFinish();
+
+    final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
+    if( !status2.isOK() )
+    {
+      StatusDialog.open( getShell(), status2, getWindowTitle() );
+    }
 
     return true;
   }
