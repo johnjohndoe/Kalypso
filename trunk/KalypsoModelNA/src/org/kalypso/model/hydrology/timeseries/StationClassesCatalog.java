@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class StationClassesCatalog
 {
-  private static WeakReference<Map<Class< ? extends IStation>, Set<String>>> m_hash = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( null );
+  private static WeakReference<Map<Class< ? extends IStation>, Set<String>>> HASH = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( null );
 
   public static String[] findAllowedParameterTypes( final IStation station )
   {
@@ -103,12 +103,12 @@ public class StationClassesCatalog
 
   private static synchronized Map<Class< ? extends IStation>, Set<String>> getClassCatalog( )
   {
-    final Map<Class< ? extends IStation>, Set<String>> classCatalog = m_hash.get();
+    final Map<Class< ? extends IStation>, Set<String>> classCatalog = HASH.get();
     if( classCatalog != null )
       return classCatalog;
 
     final Map<Class< ? extends IStation>, Set<String>> newClassCatalog = loadClassCatalog();
-    m_hash = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( newClassCatalog );
+    HASH = new WeakReference<Map<Class< ? extends IStation>, Set<String>>>( newClassCatalog );
     return newClassCatalog;
   }
 

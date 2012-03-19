@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class StationClasses extends Feature_Impl implements IStationClasses
 {
-  private static WeakReference<Map<Class< ? extends Station>, Set<String>>> m_hash = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( null );
+  private static WeakReference<Map<Class< ? extends Station>, Set<String>>> HASH = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( null );
 
   private static final QName MEMBER_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "classMember" ); //$NON-NLS-1$
 
@@ -100,12 +100,12 @@ public class StationClasses extends Feature_Impl implements IStationClasses
 
   private static Map<Class< ? extends Station>, Set<String>> getClassCatalog( )
   {
-    final Map<Class< ? extends Station>, Set<String>> classCatalog = m_hash.get();
+    final Map<Class< ? extends Station>, Set<String>> classCatalog = HASH.get();
     if( classCatalog != null )
       return classCatalog;
 
     final Map<Class< ? extends Station>, Set<String>> newClassCatalog = loadClassCatalog();
-    m_hash = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( newClassCatalog );
+    HASH = new WeakReference<Map<Class< ? extends Station>, Set<String>>>( newClassCatalog );
     return newClassCatalog;
   }
 

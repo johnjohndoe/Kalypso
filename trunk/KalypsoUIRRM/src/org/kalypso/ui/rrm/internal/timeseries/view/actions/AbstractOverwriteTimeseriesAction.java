@@ -137,7 +137,7 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() == Window.OK )
-      return importOperation.getTimeseries();
+      return m_timeseries.getFeature();
 
     return null;
   }

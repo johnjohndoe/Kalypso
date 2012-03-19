@@ -44,12 +44,12 @@ import org.eclipse.core.resources.IFolder;
 
 /**
  * Helper that encapsulates the constants to access data inside a rrm scenario.
- *
+ * 
  * @author Gernot Belger
  */
 public class ScenarioAccessor
 {
-  private final String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
+  private static final String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 
   private final IFolder m_scenarioFolder;
 

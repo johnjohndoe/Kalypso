@@ -55,12 +55,12 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 
 /**
  * Imports pedology into a 'pedology.gml' file from another gml-workspace (probably a shape-file).
- *
+ * 
  * @author Gernot Belger, Dejan Antanaskovic
  */
 public class PedologyImportOperation extends AbstractImportOperation<GM_MultiSurface>
 {
-  public static interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
+  public interface InputDescriptor extends AbstractImportOperation.InputDescriptor<GM_MultiSurface>
   {
     String getDescription( int index );
 

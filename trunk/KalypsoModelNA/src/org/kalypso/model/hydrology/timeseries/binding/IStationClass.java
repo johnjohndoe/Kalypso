@@ -50,11 +50,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IStationClass extends Feature
 {
-  static QName FEATURE_STATION_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClass" ); //$NON-NLS-1$
+  QName FEATURE_STATION_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "StationClass" ); //$NON-NLS-1$
 
-  static QName PROPERTY_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "class" ); //$NON-NLS-1$
+  QName PROPERTY_CLASS = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "class" ); //$NON-NLS-1$
 
-  static QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
+  QName PROPERTY_PARAMETER_TYPE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "parameterType" ); //$NON-NLS-1$
 
   String getClassName( );
 
