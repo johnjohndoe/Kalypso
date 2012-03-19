@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
@@ -65,12 +70,46 @@ public class TimeseriesManagementView extends ViewPart
   @Override
   public void createPartControl( final Composite parent )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
 
-    GridLayoutFactory.fillDefaults().applyTo( panel );
-    createTree( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final Composite body = toolkit.createComposite( parent );
+    body.setLayout( Layouts.createGridLayout() );
+
+    createTimeseriesTree( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+  }
+
+  private Composite createTimeseriesTree( final Composite parent, final FormToolkit toolkit )
+  {
+    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR );
+    section.setText( "Zeitreihen" ); //$NON-NLS-1$
+    section.setDescription( "Im Projekt abgelegte Zeitreihen." ); //$NON-NLS-1$
+    section.setLayout( new FillLayout() );
+
+    final Control client = createTree( section );
+// client.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    section.setClient( client );
 
     getSite().setSelectionProvider( m_treeViewer );
+
+    return section;
+  }
+
+  private Control createSearchControls( final Composite parent, final FormToolkit toolkit )
+  {
+    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
+    section.setText( "Suche" ); //$NON-NLS-1$
+    section.setDescription( "Geben Sie Werte in den Suchfeldern ein, um die Ansicht einzuschränken." ); //$NON-NLS-1$
+    section.setLayout( new FillLayout() );
+
+    final Composite searchPanel = toolkit.createComposite( section );
+
+// final ContentSearchViewer searchPanel = new ContentSearchViewer( toolkit, section, viewer, this );
+// toolkit.adapt( searchPanel );
+    section.setClient( searchPanel );
+
+    return section;
   }
 
   private Control createTree( final Composite panel )
