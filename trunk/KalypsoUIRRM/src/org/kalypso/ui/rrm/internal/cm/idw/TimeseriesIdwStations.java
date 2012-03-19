@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.thiessen;
+package org.kalypso.ui.rrm.internal.cm.idw;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,68 +52,60 @@ import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Point;
 
 /**
- * Helper class that represents all chosen timeseries with their corresponding thiessen polygons.
+ * Helper class that represents all chosen timeseries with their corresponding idw stations.
  * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public class TimeseriesThiessenPolygons
+public class TimeseriesIdwStations
 {
-  private final Collection<Polygon> m_thiessenPolygons = new ArrayList<>();
+  private final Collection<Point> m_idwStations = new ArrayList<>();
 
   private final Collection<String> m_timeseries = new ArrayList<>();
 
-  public Polygon[] getThiessenPolygons( )
-  {
-    return m_thiessenPolygons.toArray( new Polygon[m_thiessenPolygons.size()] );
-  }
-
-  public String[] getTimeseries( )
-  {
-    return m_timeseries.toArray( new String[m_timeseries.size()] );
-  }
-
   public void loadData( ) throws CoreException
   {
-    final IThiessenStationCollection thiessenStations = ThiessenLinearSumHelper.loadThiessenStations();
+    /* Load all idw stations. */
+    final IThiessenStationCollection idwStations = ThiessenLinearSumHelper.loadThiessenStations();
 
-    /* Fetch all active timeseries with their polygons. */
-    final IFeatureBindingCollection<IThiessenStation> stations = thiessenStations.getStations();
+    /* Fetch all active timeseries with their stations. */
+    final IFeatureBindingCollection<IThiessenStation> stations = idwStations.getStations();
     for( final IThiessenStation station : stations )
     {
       try
       {
         if( station.isActive() )
         {
-          final GM_Surface<GM_SurfacePatch> area = station.getThiessenArea();
-          final Polygon polygon = (Polygon) JTSAdapter.export( area );
+          final GM_Point idwPoint = station.getStationLocation();
+          final Point point = (Point) JTSAdapter.export( idwPoint );
           final IXLinkedFeature timeseriesLink = station.getStation();
 
           if( timeseriesLink != null )
-            addTimeseries( timeseriesLink.getFeature(), polygon );
+            addTimeseries( timeseriesLink.getFeature(), point );
         }
       }
       catch( final GM_Exception e )
       {
         e.printStackTrace();
-        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesThiessenPolygons_0" ), e ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesIdwStations_0" ), e ); //$NON-NLS-1$
         throw new CoreException( status );
       }
     }
   }
 
-  private void addTimeseries( final Feature feature, final Polygon polygon )
+  private void addTimeseries( final Feature feature, final Point point )
   {
     if( !(feature instanceof ITimeseries) )
       return;
@@ -127,7 +119,17 @@ public class TimeseriesThiessenPolygons
     if( StringUtils.isBlank( href ) )
       return;
 
-    m_thiessenPolygons.add( polygon );
+    m_idwStations.add( point );
     m_timeseries.add( href );
+  }
+
+  public Point[] getIdwStations( )
+  {
+    return m_idwStations.toArray( new Point[m_idwStations.size()] );
+  }
+
+  public String[] getTimeseries( )
+  {
+    return m_timeseries.toArray( new String[m_timeseries.size()] );
   }
 }

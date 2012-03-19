@@ -10,7 +10,10 @@
         <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
       </Part>
       <Part id="featureView.1">
-        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="false" grabExcessVerticalSpace="false" />
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+      </Part>
+      <Part id="idwOptionsPart.1">
+        <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
       </Part>
     </GridContainer>
 
@@ -18,7 +21,6 @@
     <Part id="gisMap.1" style="SWT.BORDER">
       <swt:GridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
     </Part>
-
   </SashContainer>
 
   <Controller type="selection" sourcePart="gisMap.1" targetPart="gisTable.1" />

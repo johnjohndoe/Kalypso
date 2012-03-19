@@ -652,6 +652,10 @@
           class="org.kalypso.ui.rrm.internal.cm.idw.IdwWizardLayoutPartFactory"
           id="idwWizardPart">
     </layoutPartFactory>
+    <layoutPartFactory
+          class="org.kalypso.ui.rrm.internal.cm.idw.IdwOptionsLayoutPartFactory"
+          id="idwOptionsPart">
+    </layoutPartFactory>
  </extension>
  <extension
        point="org.kalypso.ui.featureViewExtensionControl">

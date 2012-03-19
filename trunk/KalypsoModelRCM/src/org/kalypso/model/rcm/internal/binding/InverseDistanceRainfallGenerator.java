@@ -43,7 +43,6 @@ package org.kalypso.model.rcm.internal.binding;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -61,6 +60,7 @@ import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypso.model.rcm.util.InverseDistanceUtilities;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -223,7 +223,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
         final Geometry areaGeometry = JTSAdapter.export( area );
 
         /* Get the weights. */
-        final double[] weights = getWeights( areaGeometry, ombrometerPoints, numberOmbrometers.intValue() );
+        final double[] weights = InverseDistanceUtilities.getWeights( areaGeometry, ombrometerPoints, numberOmbrometers.intValue() );
 
         /* Combine the observations. */
         result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance" );
@@ -273,142 +273,5 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
       /* Monitor. */
       monitor.done();
     }
-  }
-
-  /**
-   * This function determines the weights (factors) for each ombrometer observation using the inverse distance
-   * weighting.
-   * 
-   * @param areaGeometry
-   *          The area geometry of the catchment.
-   * @param ombrometerPoints
-   *          The point geometries of the ombrometer stations (in the same order as the ombrometers).
-   * @param numberOmbrometers
-   *          The number of ombrometers which should be used in the inverse distance weighting. The nearest ones will be
-   *          used. The unused ombrometers will get a 0.0 factor.
-   * @return The weights (factors) for each ombrometer observation (in the same order as the ombrometers).
-   */
-  private double[] getWeights( final Geometry areaGeometry, final Point[] ombrometerPoints, final int numberOmbrometers )
-  {
-    /* Get the inverse distance element, containing the factor, for each omrometer observation. */
-    /* They will be still sorted by the distance to the area. */
-    final List<InverseDistanceElement> elements = getFactors( areaGeometry, ombrometerPoints, numberOmbrometers );
-
-    /* So bring the factors in the right order again. */
-    final double[] weights = new double[ombrometerPoints.length];
-    for( int i = 0; i < elements.size(); i++ )
-    {
-      /* Get the inverse distance element, containing the factor. */
-      final InverseDistanceElement element = elements.get( i );
-
-      /* Get the index. */
-      final int index = element.getIndex();
-
-      /* Get the factor. */
-      final double factor = element.getFactor();
-
-      /* Set it at the right place. */
-      weights[index] = factor;
-    }
-
-    return weights;
-  }
-
-  /**
-   * This function determines the factors for each ombrometer observation using the inverse distance weighting.
-   * 
-   * @param areaGeometry
-   *          The area geometry of the catchment.
-   * @param ombrometerPoints
-   *          The point geometries of the ombrometer stations (in the same order as the ombrometers).
-   * @param numberOmbrometers
-   *          The number of ombrometers which should be used in the inverse distance weighting. The nearest ones will be
-   *          used. The unused ombrometers will get a 0.0 factor.
-   * @return The factors for each ombrometer observation (they will be sorted by the distance to the area).
-   */
-  private List<InverseDistanceElement> getFactors( final Geometry areaGeometry, final Point[] ombrometerPoints, final int numberOmbrometers )
-  {
-    /* Create the inverse distance elements. */
-    final List<InverseDistanceElement> elements = getInverseDistanceElemets( areaGeometry, ombrometerPoints );
-
-    /* The sum of all distances. */
-    double sumDistances = 0.0;
-
-    /* Calculate the distances. */
-    final List<Double> distances = new ArrayList<Double>();
-    for( int i = 0; i < elements.size(); i++ )
-    {
-      if( numberOmbrometers > 0 && i >= numberOmbrometers )
-        break;
-
-      /* Get the inverse distance element. */
-      final InverseDistanceElement element = elements.get( i );
-
-      /* Get the distance. */
-      final double distance = 1 / element.getDistance();
-
-      /* First add it to the sum of distances. */
-      sumDistances = sumDistances + distance;
-
-      /* Then add it to the list of distances. */
-      distances.add( new Double( distance ) );
-    }
-
-    /* Calculate the factors. */
-    for( int i = 0; i < elements.size(); i++ )
-    {
-      if( numberOmbrometers > 0 && i >= numberOmbrometers )
-        break;
-
-      /* Get the inverse distance element. */
-      final InverseDistanceElement element = elements.get( i );
-
-      /* Get the distance. */
-      final Double distance = distances.get( i );
-
-      /* Calculate the factor. */
-      final double factor = distance.doubleValue() / sumDistances;
-
-      /* Add it to the corresponding element. */
-      element.setFactor( factor );
-    }
-
-    return elements;
-  }
-
-  /**
-   * This function returns a list of inverse distance elements. The first item of an element will be always the
-   * parameter area geometry and the second item of an element will be a ombrometer point of the list. The elements will
-   * be sorted by the distance of the contained items.
-   * 
-   * @param areaGeometry
-   *          The area geometry of the catchment.
-   * @param ombrometerPoints
-   *          The point geometries of the ombrometer stations (in the same order as the ombrometers).
-   * @return A list of inverse distance elements. The first item of an element will be always the parameter area
-   *         geometry and the second item of an element will be a ombrometer point of the list. The elements will be
-   *         sorted by the distance of the contained items.
-   */
-  private List<InverseDistanceElement> getInverseDistanceElemets( final Geometry areaGeometry, final Point[] ombrometerPoints )
-  {
-    /* Memory for the results. */
-    final List<InverseDistanceElement> results = new ArrayList<InverseDistanceElement>();
-
-    for( int i = 0; i < ombrometerPoints.length; i++ )
-    {
-      /* Get the ombrometer point. */
-      final Point ombrometerPoint = ombrometerPoints[i];
-
-      /* Create the inverse distance element. */
-      final InverseDistanceElement element = new InverseDistanceElement( areaGeometry, ombrometerPoint, i );
-
-      /* Add to the results. */
-      results.add( element );
-    }
-
-    /* Sort the results. */
-    Collections.sort( results, null );
-
-    return results;
   }
 }

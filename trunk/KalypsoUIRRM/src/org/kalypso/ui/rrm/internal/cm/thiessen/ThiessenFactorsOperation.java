@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
@@ -65,7 +66,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Calculates the thiessen factors from the chosen timeseries and the available catchments.
- *
+ * 
  * @author Gernot Belger
  */
 public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
@@ -87,10 +88,10 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
   {
     final CatchmentBean[] catchments = m_generator.getCatchments();
 
-    monitor.beginTask( Messages.getString("ThiessenFactorsOperation_0"), m_pages.length + catchments.length + 1 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ThiessenFactorsOperation_0" ), m_pages.length + catchments.length + 1 ); //$NON-NLS-1$
 
     /* Save pages */
-    monitor.subTask( Messages.getString("ThiessenFactorsOperation_1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "ThiessenFactorsOperation_1" ) ); //$NON-NLS-1$
     for( final IWizardPage wizardPage : m_pages )
     {
       if( wizardPage instanceof ILayoutWizardPage )
@@ -99,18 +100,21 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
         monitor.worked( 1 );
     }
 
-    /* Get thiessen polgons */
-    monitor.subTask( Messages.getString("ThiessenFactorsOperation_2") ); //$NON-NLS-1$
+    /* Get thiessen polgons. */
+    monitor.subTask( Messages.getString( "ThiessenFactorsOperation_2" ) ); //$NON-NLS-1$
     final TimeseriesThiessenPolygons thiessenPolygons = new TimeseriesThiessenPolygons();
     thiessenPolygons.loadData();
     monitor.worked( 1 );
 
-    /* calculate factors */
+    /* Calculate factors. */
     for( final CatchmentBean catchment : catchments )
     {
       calculateThiessenFactors( catchment, thiessenPolygons );
       monitor.worked( 1 );
     }
+
+    /* Set the comment. */
+    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, "Created by Thiessen Method" );
 
     return Status.OK_STATUS;
   }
@@ -124,18 +128,16 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
     {
       bean.clearAllWeights();
 
-      /* calculate weights */
+      /* Calculate weights. */
       final GM_Surface< ? > catchmentArea = bean.getCatchmentArea();
       if( catchmentArea == null )
-      {
         System.out.println( "sososo" ); //$NON-NLS-1$
-      }
 
       final Geometry catchmentPolygon = JTSAdapter.export( catchmentArea );
 
       final double[] weights = JTSUtilities.fractionAreasOf( catchmentPolygon, polygons );
 
-      /* apply weights to bean */
+      /* Apply weights to bean. */
       for( int i = 0; i < weights.length; i++ )
       {
         final double weight = weights[i];
@@ -153,7 +155,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
       final String name = bean.getCatchmentName();
       final String description = bean.getCatchmentDescription();
-      m_log.add( IStatus.ERROR, Messages.getString("ThiessenFactorsOperation_4"), e, name, description ); //$NON-NLS-1$
+      m_log.add( IStatus.ERROR, Messages.getString( "ThiessenFactorsOperation_4" ), e, name, description ); //$NON-NLS-1$
     }
   }
 }
