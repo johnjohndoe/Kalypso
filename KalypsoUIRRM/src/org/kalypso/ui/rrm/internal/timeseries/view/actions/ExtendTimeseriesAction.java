@@ -40,24 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class ExtendTimeseriesAction extends Action
+public class ExtendTimeseriesAction extends AbstractOverwriteTimeseriesAction
 {
 
-  private final FeatureBean<ITimeseries> m_timeseries;
-
-  public ExtendTimeseriesAction( final FeatureBean<ITimeseries> timeseries )
+  public ExtendTimeseriesAction( final ITreeNodeModel model, final FeatureBean<ITimeseries> timeseries )
   {
-    m_timeseries = timeseries;
+    super( model, timeseries );
 
     setText( "Extend Timeseries" );
     setToolTipText( "Extend selected Timeseries" );
@@ -66,27 +64,9 @@ public class ExtendTimeseriesAction extends Action
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  protected IMergeTimeseriesOperation getMergeOperation( )
   {
-// final Shell shell = event.widget.getDisplay().getActiveShell();
-// final IWorkbench context = PlatformUI.getWorkbench();
-//
-// try
-// {
-// final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries.getFeature() );
-// final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
-// final int open = dialog.open();
-//
-// if( Window.OK == open )
-// source.save();
-//
-// source.dispose();
-//
-// }
-// catch( final Throwable t )
-// {
-// t.printStackTrace();
-// }
-
+    return new MergeTimeseriesOperation( getTimeseries(), false );
   }
+
 }

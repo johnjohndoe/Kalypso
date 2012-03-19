@@ -105,7 +105,7 @@ public class TimeseriesUpdateWizard extends Wizard
     final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, m_mergeOperation );
     if( !status2.isOK() )
     {
-      StatusDialog.open( getShell(), status, getWindowTitle() );
+      StatusDialog.open( getShell(), status2, getWindowTitle() );
     }
 
     return true;
