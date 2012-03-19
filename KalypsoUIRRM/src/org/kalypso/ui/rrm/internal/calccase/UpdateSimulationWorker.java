@@ -393,8 +393,6 @@ public class UpdateSimulationWorker
         /* Set the link. */
         setLink( catchment, targetLink, link );
 
-        System.out.println( String.format( "Name: '%s', Hash: '%s', Link: '%s'", generatorCatchment.getName(), hash, link ) );
-
         /* Store the hash code. */
         linkHash.put( hash, link );
       }

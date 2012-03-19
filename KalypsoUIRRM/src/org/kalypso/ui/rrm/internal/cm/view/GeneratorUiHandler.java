@@ -74,7 +74,7 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return Messages.getString("GeneratorUiHandler_0"); //$NON-NLS-1$
+    return Messages.getString( "GeneratorUiHandler_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -98,7 +98,10 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
     sectionToolbar.add( new EditGeneratorAction( m_model, m_generator ) );
 
     if( m_generator instanceof ILinearSumGenerator )
+    {
       sectionToolbar.add( new EditLinearSumThiessenAction( m_model, (ILinearSumGenerator) m_generator ) );
+      sectionToolbar.add( new EditLinearSumIdwAction( m_model, (ILinearSumGenerator) m_generator ) );
+    }
 
     sectionToolbar.add( new DeleteGeneratorAction( m_model, m_generator ) );
 

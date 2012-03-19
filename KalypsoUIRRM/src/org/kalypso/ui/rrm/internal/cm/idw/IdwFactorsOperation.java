@@ -38,45 +38,44 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.idw;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 
 /**
+ * Calculates the idw factors from the chosen timeseries and the available catchments.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public class EditLinearSumThiessenAction extends Action
+public class IdwFactorsOperation implements ICoreRunnableWithProgress
 {
-  private final ITreeNodeModel m_model;
+  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-  private final ILinearSumGenerator m_generator;
+  private final IWizardPage[] m_pages;
 
-  public EditLinearSumThiessenAction( final ITreeNodeModel model, final ILinearSumGenerator generator )
+  private final LinearSumBean m_generator;
+
+  public IdwFactorsOperation( final IWizardPage[] pages, final LinearSumBean generator )
   {
-    m_model = model;
+    m_pages = pages;
     m_generator = generator;
-
-    setText( Messages.getString( "EditLinearSumThiessenAction_0" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString( "EditLinearSumThiessenAction_1" ) ); //$NON-NLS-1$
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    // FIXME: check integrity of generator with modell.gml
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-    final LinearSumBean bean = new LinearSumBean( m_generator );
-    final String title = getText();
+    // TODO
 
-    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, title );
+    return Status.OK_STATUS;
   }
 }
