@@ -56,6 +56,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.actions.DeleteTimeseriesActio
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditTimeseriesAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExtendAndOverwriteTimeseriesAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExtendTimeseriesAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.ReplaceTimeseriesAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -119,6 +120,7 @@ public class TimeseriesUiHandler extends AbstractTreeNodeUiHandler
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new EditTimeseriesAction( timeseriesBean, m_binding ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendTimeseriesAction( timeseriesBean ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ExtendAndOverwriteTimeseriesAction( timeseriesBean ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ReplaceTimeseriesAction( timeseriesBean ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteTimeseriesAction( m_model, deleteMessage, m_timeseries ) );
 
     // TODO: utility that changes the timestep

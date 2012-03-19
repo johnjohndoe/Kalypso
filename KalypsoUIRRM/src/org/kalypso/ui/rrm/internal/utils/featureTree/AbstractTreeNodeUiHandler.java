@@ -63,10 +63,10 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
     final FormToolkit toolkit = binding.getToolkit();
 
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
 
     final Section controlSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
-    controlSection.setText( Messages.getString("AbstractTreeNodeUiHandler_0") ); //$NON-NLS-1$
+    controlSection.setText( Messages.getString( "AbstractTreeNodeUiHandler_0" ) ); //$NON-NLS-1$
     controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( controlSection );
@@ -83,7 +83,7 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
 
     /* Action section */
     final Section actionSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
-    actionSection.setText( Messages.getString("AbstractTreeNodeUiHandler_1") ); //$NON-NLS-1$
+    actionSection.setText( Messages.getString( "AbstractTreeNodeUiHandler_1" ) ); //$NON-NLS-1$
     actionSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final Composite actionPanel = toolkit.createComposite( actionSection );
