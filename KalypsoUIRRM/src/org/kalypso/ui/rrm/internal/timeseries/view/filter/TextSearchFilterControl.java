@@ -76,6 +76,8 @@ public class TextSearchFilterControl extends Composite
 
   private final Color m_yellow;
 
+  private Text m_nameField;
+
   public TextSearchFilterControl( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NONE );
@@ -112,21 +114,21 @@ public class TextSearchFilterControl extends Composite
 
   private void createSearchStringField( final Composite parent, final FormToolkit toolkit )
   {
-    final Text nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
-    nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    nameField.setMessage( "Suchtext" );
-    nameField.addFocusListener( new SelectAllFocusListener() );
+    m_nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
+    m_nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_nameField.setMessage( "Suchtext" );
+    m_nameField.addFocusListener( new SelectAllFocusListener() );
 
-    addResetListener( nameField );
+    addResetListener( m_nameField );
 
-    final ISWTObservableValue target = SWTObservables.observeText( nameField, new int[] { SWT.Modify, SWT.DefaultSelection } );
+    final ISWTObservableValue target = SWTObservables.observeText( m_nameField, new int[] { SWT.Modify, SWT.DefaultSelection } );
     final IObservableValue model = PojoObservables.observeValue( m_filter, TextSearchFilter.PROPERTY_STRING );
     m_binding.bindValue( target, model );
 
     if( toolkit != null )
-      toolkit.adapt( nameField, true, true );
+      toolkit.adapt( m_nameField, true, true );
 
-    nameField.setBackground( m_yellow );
+    m_nameField.setBackground( m_yellow );
   }
 
   private void addResetListener( final Text field )
@@ -141,6 +143,11 @@ public class TextSearchFilterControl extends Composite
           field.setText( StringUtils.EMPTY );
       }
     } );
+  }
+
+  public void reset( )
+  {
+    m_nameField.setText( StringUtils.EMPTY );
   }
 
 }
