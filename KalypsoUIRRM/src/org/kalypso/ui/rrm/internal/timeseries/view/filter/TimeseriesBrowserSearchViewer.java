@@ -55,16 +55,18 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
  */
 public class TimeseriesBrowserSearchViewer extends Composite
 {
+  private final ParameterTypeFilterControl m_parameterTypeFilterControl;
+
   public TimeseriesBrowserSearchViewer( final Composite parent, final FormToolkit toolkit, final StructuredViewer viewer )
   {
     super( parent, SWT.NONE );
 
-    GridLayoutFactory.fillDefaults().extendedMargins( 0, 0, 0, 5 ).applyTo( this );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).extendedMargins( 0, 0, 0, 5 ).applyTo( this );
 
     final Group groupTextSearch = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupTextSearch );
     groupTextSearch.setLayout( new FillLayout() );
-    groupTextSearch.setText( "Freitextsuche" );
+    groupTextSearch.setText( "Station" );
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final TextSearchFilterControl textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
@@ -73,16 +75,11 @@ public class TimeseriesBrowserSearchViewer extends Composite
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
     groupParameter.setLayout( new FillLayout() );
-    groupParameter.setText( "Parametertyp-Suche" );
+    groupParameter.setText( "Parameter" );
     groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-// final Group stateGroup = new Group( this, SWT.NONE );
-// ToolkitUtils.adapt( toolkit, stateGroup );
-// stateGroup.setLayout( new FillLayout() );
-//    stateGroup.setText( Messages.getString( "ContentSearchViewer.1" ) ); //$NON-NLS-1$
-// stateGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-//
-// final StateFilterControl stateFilterControl = new StateFilterControl( toolkit, stateGroup );
-// stateFilterControl.setViewer( viewer );
+    m_parameterTypeFilterControl = new ParameterTypeFilterControl( groupParameter, toolkit );
+    m_parameterTypeFilterControl.setViewer( viewer );
   }
+
 }
