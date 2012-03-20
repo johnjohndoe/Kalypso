@@ -52,7 +52,7 @@ import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -77,19 +77,19 @@ public class TimeseriesIdwStations
 
   public void loadData( ) throws CoreException
   {
-    /* Load all idw stations. */
-    final IThiessenStationCollection idwStations = ThiessenLinearSumHelper.loadThiessenStations();
+    /* Load all stations. */
+    final IThiessenStationCollection collection = LinearSumHelper.loadStationsGml();
 
     /* Fetch all active timeseries with their stations. */
-    final IFeatureBindingCollection<IThiessenStation> stations = idwStations.getStations();
+    final IFeatureBindingCollection<IThiessenStation> stations = collection.getStations();
     for( final IThiessenStation station : stations )
     {
       try
       {
         if( station.isActive() )
         {
-          final GM_Point idwPoint = station.getStationLocation();
-          final Point point = (Point) JTSAdapter.export( idwPoint );
+          final GM_Point gmPoint = station.getStationLocation();
+          final Point point = (Point) JTSAdapter.export( gmPoint );
           final IXLinkedFeature timeseriesLink = station.getStation();
 
           if( timeseriesLink != null )

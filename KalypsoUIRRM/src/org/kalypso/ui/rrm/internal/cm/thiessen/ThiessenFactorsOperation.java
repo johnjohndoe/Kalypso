@@ -53,8 +53,8 @@ import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
-import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -119,42 +119,36 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
-  private void calculateThiessenFactors( final CatchmentBean bean, final TimeseriesThiessenPolygons thiessenPolygons )
+  private void calculateThiessenFactors( final CatchmentBean catchment, final TimeseriesThiessenPolygons thiessenPolygons )
   {
+    /* Get the polygons and the timeseries. */
     final Polygon[] polygons = thiessenPolygons.getThiessenPolygons();
     final String[] timeseries = thiessenPolygons.getTimeseries();
 
     try
     {
-      bean.clearAllWeights();
+      /* Clear all old weights. */
+      catchment.clearAllWeights();
 
-      /* Calculate weights. */
-      final GM_Surface< ? > catchmentArea = bean.getCatchmentArea();
+      /* Get the area of the catchment. */
+      final GM_Surface< ? > catchmentArea = catchment.getCatchmentArea();
       if( catchmentArea == null )
         System.out.println( "sososo" ); //$NON-NLS-1$
 
+      /* Convert to JTS geometry. */
       final Geometry catchmentPolygon = JTSAdapter.export( catchmentArea );
 
+      /* Calculate weights. */
       final double[] weights = JTSUtilities.fractionAreasOf( catchmentPolygon, polygons );
 
-      /* Apply weights to bean. */
-      for( int i = 0; i < weights.length; i++ )
-      {
-        final double weight = weights[i];
-        final int factor = (int) Math.round( weight * 100.0 );
-
-        final String href = timeseries[i];
-
-        final FactorizedTimeseriesBean factorizedTimeseries = bean.getTimeseries( href );
-        if( factorizedTimeseries != null )
-          factorizedTimeseries.setFactor( factor );
-      }
+      /* Apply the weights to the bean. */
+      LinearSumHelper.apply( catchment, timeseries, weights );
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      final String name = bean.getCatchmentName();
-      final String description = bean.getCatchmentDescription();
+      final String name = catchment.getCatchmentName();
+      final String description = catchment.getCatchmentDescription();
       m_log.add( IStatus.ERROR, Messages.getString( "ThiessenFactorsOperation_4" ), e, name, description ); //$NON-NLS-1$
     }
   }

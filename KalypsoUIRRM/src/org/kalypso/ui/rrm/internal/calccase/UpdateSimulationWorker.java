@@ -83,7 +83,7 @@ import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.model.hydrology.project.ScenarioAccessor;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.rcm.IRainfallModelProvider;
 import org.kalypso.model.rcm.RainfallGenerationOperation;
 import org.kalypso.model.rcm.binding.ICatchment;
@@ -524,7 +524,7 @@ public class UpdateSimulationWorker
       return;
 
     /* Does the source simulation exist? */
-    final ScenarioAccessor scenario = m_simulation.getScenario();
+    final RrmScenario scenario = m_simulation.getScenario();
     final IFolder folderCalcCases = scenario.getSimulationsFolder();
 
     final RrmSimulation sourceCalcCase = new RrmSimulation( folderCalcCases.getFolder( new Path( calcCaseNameSource ) ) );
