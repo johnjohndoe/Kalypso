@@ -57,6 +57,8 @@ public class TimeseriesBrowserSearchViewer extends Composite
 {
   private final ParameterTypeFilterControl m_parameterTypeFilterControl;
 
+  private final TextSearchFilterControl m_textSearchControl;
+
   public TimeseriesBrowserSearchViewer( final Composite parent, final FormToolkit toolkit, final StructuredViewer viewer )
   {
     super( parent, SWT.NONE );
@@ -69,8 +71,8 @@ public class TimeseriesBrowserSearchViewer extends Composite
     groupTextSearch.setText( "Station" );
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final TextSearchFilterControl textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
-    textSearchControl.setViewer( viewer );
+    m_textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
+    m_textSearchControl.setViewer( viewer );
 
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
@@ -80,6 +82,12 @@ public class TimeseriesBrowserSearchViewer extends Composite
 
     m_parameterTypeFilterControl = new ParameterTypeFilterControl( groupParameter, toolkit );
     m_parameterTypeFilterControl.setViewer( viewer );
+  }
+
+  public void doClean( )
+  {
+    m_textSearchControl.reset();
+    m_parameterTypeFilterControl.reset();
   }
 
 }

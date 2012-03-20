@@ -80,6 +80,8 @@ public class ParameterTypeFilterControl extends Composite
 
   Set<String> m_parameterTypes = new TreeSet<>( ParameterTypeLabelProvider.COMPARATOR );
 
+  private ComboViewer m_viewer;
+
   public ParameterTypeFilterControl( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NONE );
@@ -114,10 +116,9 @@ public class ParameterTypeFilterControl extends Composite
 
   private void createParameterTypeCombo( final Composite parent )
   {
-
-    final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.SINGLE );
-    viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    viewer.setLabelProvider( new ParameterTypeLabelProvider()
+    m_viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.SINGLE );
+    m_viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_viewer.setLabelProvider( new ParameterTypeLabelProvider()
     {
       @Override
       public String getText( final Object element )
@@ -128,14 +129,19 @@ public class ParameterTypeFilterControl extends Composite
         return super.getText( element );
       }
     } );
-    viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setInput( m_parameterTypes.toArray() );
+    m_viewer.setContentProvider( new ArrayContentProvider() );
+    m_viewer.setInput( m_parameterTypes.toArray() );
 
-    final IViewerObservableValue targetValue = ViewerProperties.singleSelection().observe( viewer );
+    final IViewerObservableValue targetValue = ViewerProperties.singleSelection().observe( m_viewer );
     final IObservableValue modelValue = PojoObservables.observeValue( m_filter, ParameterTypeFilter.PROPERTY_TYPE );
 
     m_binding.bindValue( targetValue, modelValue );
 
-    viewer.setSelection( new StructuredSelection( StringUtils.EMPTY ) );
+    m_viewer.setSelection( new StructuredSelection( StringUtils.EMPTY ) );
+  }
+
+  public void reset( )
+  {
+    m_viewer.setSelection( new StructuredSelection( StringUtils.EMPTY ) );
   }
 }
