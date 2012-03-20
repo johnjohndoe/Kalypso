@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.timeseries.binding;
 
-import java.net.URISyntaxException;
-
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
@@ -104,17 +101,12 @@ public abstract class Station extends Feature_Impl implements IStation
   @Override
   public String getTimeseriesFoldername( )
   {
-    try
-    {
-      final String dirtyFoldername = String.format( "%s_%s", getName(), getDescription() );
-      return URIUtil.fromString( dirtyFoldername ).toASCIIString();
-    }
-    catch( final URISyntaxException e )
-    {
-      // can this ever happen?
-      e.printStackTrace();
-      throw new RuntimeException( e );
-    }
+    final String dirtyFoldername = String.format( "%s_%s", getName(), getDescription() );
+
+    // don't encode string - use plain folder name!
+    // return URIUtil.fromString( dirtyFoldername ).toASCIIString();
+
+    return dirtyFoldername;
   }
 
   @Override
