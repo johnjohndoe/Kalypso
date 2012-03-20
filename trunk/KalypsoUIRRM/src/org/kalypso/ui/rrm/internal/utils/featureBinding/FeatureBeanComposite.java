@@ -44,8 +44,10 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -149,16 +151,17 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
    * 
    * @param property
    *          The qname of the property.
+   * @param validators
+   *          validation of text box entries
    * @return The text field, which is contained in the property control. Its editable state will be that of the
    *         generalEditable flag, provided int the constructor.
    */
-  protected final Text createPropertyControl( final QName property )
+  protected final Text createPropertyControl( final QName property, final IValidator... validators )
   {
     createPropertyLabel( this, property );
 
     final Text field = createPropertyTextField( this );
-
-    bindTextField( field, property );
+    bindTextField( field, property, validators );
 
     return field;
   }
@@ -236,7 +239,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return viewer;
   }
 
-  protected final void bindTextField( final Text field, final QName property )
+  protected final void bindTextField( final Text field, final QName property, final IValidator... validators )
   {
     final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
@@ -249,9 +252,11 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       binder.setTargetToModelConverter( new FeatureNameTargetToModelConverter() );
     }
 
-    // TODO: restrictions!
+    if( ArrayUtils.isNotEmpty( validators ) )
+      m_binding.bindValue( target, model, validators );
+    else
+      m_binding.bindValue( binder );
 
-    m_binding.bindValue( binder );
   }
 
   protected final void bindCombo( final ComboViewer viewer, final QName property )
