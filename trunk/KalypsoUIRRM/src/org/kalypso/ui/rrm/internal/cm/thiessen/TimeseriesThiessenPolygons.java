@@ -52,6 +52,7 @@ import org.kalypso.model.rcm.binding.IThiessenStation;
 import org.kalypso.model.rcm.binding.IThiessenStationCollection;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -74,30 +75,21 @@ public class TimeseriesThiessenPolygons
 
   private final Collection<String> m_timeseries = new ArrayList<>();
 
-  public Polygon[] getThiessenPolygons( )
-  {
-    return m_thiessenPolygons.toArray( new Polygon[m_thiessenPolygons.size()] );
-  }
-
-  public String[] getTimeseries( )
-  {
-    return m_timeseries.toArray( new String[m_timeseries.size()] );
-  }
-
   public void loadData( ) throws CoreException
   {
-    final IThiessenStationCollection thiessenStations = ThiessenLinearSumHelper.loadThiessenStations();
+    /* Load all stations. */
+    final IThiessenStationCollection collection = LinearSumHelper.loadStationsGml();
 
     /* Fetch all active timeseries with their polygons. */
-    final IFeatureBindingCollection<IThiessenStation> stations = thiessenStations.getStations();
+    final IFeatureBindingCollection<IThiessenStation> stations = collection.getStations();
     for( final IThiessenStation station : stations )
     {
       try
       {
         if( station.isActive() )
         {
-          final GM_Surface<GM_SurfacePatch> area = station.getThiessenArea();
-          final Polygon polygon = (Polygon) JTSAdapter.export( area );
+          final GM_Surface<GM_SurfacePatch> gmSurface = station.getThiessenArea();
+          final Polygon polygon = (Polygon) JTSAdapter.export( gmSurface );
           final IXLinkedFeature timeseriesLink = station.getStation();
 
           if( timeseriesLink != null )
@@ -129,5 +121,15 @@ public class TimeseriesThiessenPolygons
 
     m_thiessenPolygons.add( polygon );
     m_timeseries.add( href );
+  }
+
+  public Polygon[] getThiessenPolygons( )
+  {
+    return m_thiessenPolygons.toArray( new Polygon[m_thiessenPolygons.size()] );
+  }
+
+  public String[] getTimeseries( )
+  {
+    return m_timeseries.toArray( new String[m_timeseries.size()] );
   }
 }

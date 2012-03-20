@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.InitThiessenTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -107,7 +107,7 @@ public final class IdwLinearSumHelper
     finally
     {
       /* Delete the generated stations gml. */
-      ThiessenLinearSumHelper.deleteStationsGmlQuietly();
+      LinearSumHelper.deleteStationsGmlQuietly();
     }
   }
 }

@@ -90,13 +90,13 @@ public class RrmSimulation
     return new RrmProject( m_simulation.getProject() );
   }
 
-  public ScenarioAccessor getScenario( )
+  public RrmScenario getScenario( )
   {
     IContainer parent = m_simulation.getParent();
     while( parent instanceof IFolder )
     {
-      if( ScenarioAccessor.isScenarioFolder( (IFolder) parent ) )
-        return new ScenarioAccessor( (IFolder) parent );
+      if( RrmScenario.isScenarioFolder( (IFolder) parent ) )
+        return new RrmScenario( (IFolder) parent );
       else
         parent = parent.getParent();
     }

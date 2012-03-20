@@ -51,22 +51,22 @@ import com.vividsolutions.jts.geom.Point;
 public class InverseDistanceElement implements Comparable<InverseDistanceElement>
 {
   /**
-   * The area geometry of the catchment.
+   * The area geometry.
    */
-  private Geometry m_areaGeometry;
+  private final Geometry m_areaGeometry;
 
   /**
-   * The point geometry of the ombrometer station.
+   * The point geometry of the station.
    */
-  private Point m_ombrometerPoint;
+  private final Point m_point;
 
   /**
-   * The index of the original order of the ombrometer point list.
+   * The index of the original order of the point list.
    */
-  private int m_index;
+  private final int m_index;
 
   /**
-   * The distance between the centroid of the catchment and the ombrometer point.
+   * The distance between the centroid of the catchment and the point.
    */
   private double m_distance;
 
@@ -79,29 +79,38 @@ public class InverseDistanceElement implements Comparable<InverseDistanceElement
    * The constructor.
    * 
    * @param areaGeometry
-   *          The area geometry of the catchment.
-   * @param ombrometerPoint
-   *          The point geometry of the ombrometer station.
-   *@param index
-   *          The index of the original order of the ombrometer point list.
+   *          The area geometry.
+   * @param point
+   *          The point geometry of the station.
+   * @param index
+   *          The index of the original order of the point list.
    */
-  public InverseDistanceElement( Geometry areaGeometry, Point ombrometerPoint, int index )
+  public InverseDistanceElement( final Geometry areaGeometry, final Point point, final int index )
   {
     m_areaGeometry = areaGeometry;
-    m_ombrometerPoint = ombrometerPoint;
+    m_point = point;
     m_index = index;
 
     m_distance = Double.NaN;
-    if( areaGeometry != null && ombrometerPoint != null )
-      m_distance = areaGeometry.getCentroid().distance( ombrometerPoint );
+    if( areaGeometry != null && point != null )
+      m_distance = areaGeometry.getCentroid().distance( point );
 
     m_factor = 0.0;
   }
 
   /**
-   * This function returns the area geometry of the catchment.
+   * @see java.lang.Comparable#compareTo(java.lang.Object)
+   */
+  @Override
+  public int compareTo( final InverseDistanceElement o )
+  {
+    return Double.compare( getDistance(), o.getDistance() );
+  }
+
+  /**
+   * This function returns the area geometry.
    * 
-   * @return The area geometry of the catchment.
+   * @return The area geometry.
    */
   public Geometry getAreaGeometry( )
   {
@@ -109,19 +118,19 @@ public class InverseDistanceElement implements Comparable<InverseDistanceElement
   }
 
   /**
-   * This function returns the point geometry of the ombrometer station.
+   * This function returns the point geometry of the station.
    * 
-   * @return The point geometry of the ombrometer station.
+   * @return The point geometry of the station.
    */
-  public Point getOmbrometerPoint( )
+  public Point getPoint( )
   {
-    return m_ombrometerPoint;
+    return m_point;
   }
 
   /**
-   * This function returns the index of the original order of the ombrometer point list.
+   * This function returns the index of the original order of the point list.
    * 
-   * @return The index of the original order of the ombrometer point list.
+   * @return The index of the original order of the point list.
    */
   public int getIndex( )
   {
@@ -129,9 +138,9 @@ public class InverseDistanceElement implements Comparable<InverseDistanceElement
   }
 
   /**
-   * This function returns the distance between the centroid of the catchment and the ombrometer point.
+   * This function returns the distance between the centroid of the catchment and the point.
    * 
-   * @return The distance between the centroid of the catchment and the ombrometer point.
+   * @return The distance between the centroid of the catchment and the point.
    */
   public double getDistance( )
   {
@@ -139,9 +148,9 @@ public class InverseDistanceElement implements Comparable<InverseDistanceElement
   }
 
   /**
-   * This function returns the calculated factor for this ombrometer point. If it was not used, it will be 0.0.
+   * This function returns the calculated factor for this point. If it was not used, it will be 0.0.
    * 
-   * @return The calculated factor for this ombrometer point. If it was not used, it will be 0.0.
+   * @return The calculated factor for this point. If it was not used, it will be 0.0.
    */
   public double getFactor( )
   {
@@ -149,22 +158,13 @@ public class InverseDistanceElement implements Comparable<InverseDistanceElement
   }
 
   /**
-   * This function sets the calculated factor for this ombrometer point.
+   * This function sets the calculated factor for this point.
    * 
    * @param factor
-   *          The calculated factor for this ombrometer point.
+   *          The calculated factor for this point.
    */
-  public void setFactor( double factor )
+  public void setFactor( final double factor )
   {
     m_factor = factor;
-  }
-
-  /**
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
-  @Override
-  public int compareTo( InverseDistanceElement o )
-  {
-    return Double.compare( getDistance(), o.getDistance() );
   }
 }

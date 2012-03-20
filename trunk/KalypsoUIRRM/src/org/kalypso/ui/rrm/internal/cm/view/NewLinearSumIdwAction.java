@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.idw.IdwLinearSumHelper;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -74,7 +74,7 @@ public class NewLinearSumIdwAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final LinearSumBean bean = ThiessenLinearSumHelper.createFromCurrentScenario( m_parameterType );
+    final LinearSumBean bean = LinearSumHelper.createFromCurrentScenario( m_parameterType );
 
     final String text = getText();
 

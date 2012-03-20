@@ -38,45 +38,57 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.model.hydrology.project;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
-import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.eclipse.core.resources.IFolder;
 
 /**
+ * Helper that encapsulates the constants to access data inside a rrm scenario.
+ * 
  * @author Gernot Belger
  */
-public class NewLinearSumThiessenAction extends Action
+public class RrmScenario
 {
-  private final ITreeNodeModel m_model;
+  private static final String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 
-  private final String m_parameterType;
+  private final IFolder m_scenarioFolder;
 
-  public NewLinearSumThiessenAction( final ITreeNodeModel model, final String parameterType )
+  public RrmScenario( final IFolder scenarioFolder )
   {
-    m_model = model;
-    m_parameterType = parameterType;
-
-    setText( Messages.getString( "NewLinearSumThiessenAction_0" ) ); //$NON-NLS-1$
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
+    m_scenarioFolder = scenarioFolder;
   }
 
-  @Override
-  public void runWithEvent( final Event event )
+// public IFolder getViewsFolder( )
+// {
+//    return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
+// }
+
+  public IFolder getSimulationsFolder( )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final LinearSumBean bean = LinearSumHelper.createFromCurrentScenario( m_parameterType );
-
-    final String text = getText();
-
-    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, text );
+    return m_scenarioFolder.getFolder( FOLDER_RECHENVARIANTEN );
   }
+
+  /**
+   * Check if a folder is a scenario folder.
+   */
+  public static boolean isScenarioFolder( final IFolder parent )
+  {
+    final RrmScenario accessor = new RrmScenario( parent );
+
+    /* check for some key files */
+    final IFolder simulationsFolder = accessor.getSimulationsFolder();
+    if( !simulationsFolder.exists() )
+      return false;
+
+    // TODO: should check more...
+
+    return true;
+  }
+
+// private IFile getViewsFile( final String filename )
+// {
+// final IFolder viewsFolder = getViewsFolder();
+//
+//    return viewsFolder.getFile( filename ); //$NON-NLS-1$
+// }
 }

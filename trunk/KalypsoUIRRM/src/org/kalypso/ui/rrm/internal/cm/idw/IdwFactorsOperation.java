@@ -55,8 +55,8 @@ import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.util.InverseDistanceUtilities;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
-import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -135,15 +135,21 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
     monitor.worked( 1 );
     monitor.subTask( Messages.getString( "IdwFactorsOperation_3" ) ); //$NON-NLS-1$
 
+    /* The maximal number of stations to use. */
+    final Integer maxNumberStations = getMaxNumberStations();
+
     /* Calculate the factors. */
     for( final CatchmentBean catchment : catchments )
     {
       /* Calculate the idw factors. */
-      calculateIdwFactors( catchment, idwStations );
+      calculateIdwFactors( catchment, idwStations, maxNumberStations );
 
       /* Monitor. */
       monitor.worked( 1 );
     }
+
+    /* Set the comment. */
+    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, "Created by Inverse Distance Weighting Method (%d)", maxNumberStations ) );
 
     return Status.OK_STATUS;
   }
@@ -155,12 +161,11 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
    *          The catchment.
    * @param idwStations
    *          The idw stations.
+   * @param maxNumberStations
+   *          The maximal number of stations to use.
    */
-  private void calculateIdwFactors( final CatchmentBean catchment, final TimeseriesIdwStations idwStations ) throws CoreException
+  private void calculateIdwFactors( final CatchmentBean catchment, final TimeseriesIdwStations idwStations, final Integer maxNumberStations )
   {
-    /* The maximal number of stations to use. */
-    final Integer maxNumberStations = getMaxNumberStations();
-
     /* Get the stations and the timeseries. */
     final Point[] points = idwStations.getIdwStations();
     final String[] timeseries = idwStations.getTimeseries();
@@ -170,7 +175,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
       /* Clear all old weights. */
       catchment.clearAllWeights();
 
-      /* calculate weights */
+      /* Get the area of the catchment. */
       final GM_Surface< ? > catchmentArea = catchment.getCatchmentArea();
       if( catchmentArea == null )
         System.out.println( "sososo" ); //$NON-NLS-1$
@@ -182,23 +187,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
       final double[] weights = InverseDistanceUtilities.getWeights( catchmentPolygon, points, maxNumberStations );
 
       /* Apply the weights to the bean. */
-      for( int i = 0; i < weights.length; i++ )
-      {
-        /* Get the factor. */
-        final double weight = weights[i];
-        final int factor = (int) Math.round( weight * 100.0 );
-
-        /* Determine the href. */
-        final String href = timeseries[i];
-
-        /* Set the factor. */
-        final FactorizedTimeseriesBean factorizedTimeseries = catchment.getTimeseries( href );
-        if( factorizedTimeseries != null )
-          factorizedTimeseries.setFactor( factor );
-      }
-
-      /* Set the comment. */
-      m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, "Created by Inverse Distance Weighting Method (%d)", maxNumberStations ) );
+      LinearSumHelper.apply( catchment, timeseries, weights );
     }
     catch( final GM_Exception e )
     {
