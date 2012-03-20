@@ -111,24 +111,23 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     GridLayoutFactory.fillDefaults().applyTo( panel );
 
     final Section propertiesSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    propertiesSection.setText( Messages.getString("ThiessenWizardLayoutPart_0") ); //$NON-NLS-1$
-    propertiesSection.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, true) );
+    propertiesSection.setText( Messages.getString( "ThiessenWizardLayoutPart_0" ) ); //$NON-NLS-1$
+    propertiesSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Composite body = toolkit.createComposite( propertiesSection );
     propertiesSection.setClient( body );
     GridLayoutFactory.fillDefaults().applyTo( body );
 
     // Linear sum control
-    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding );
+    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding, false );
     sumComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     toolkit.createLabel( body, StringUtils.EMPTY, SWT.NONE );
 
     /* header for gis table below */
     final Section tableSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    tableSection.setText( Messages.getString("ThiessenWizardLayoutPart_1") ); //$NON-NLS-1$
-    tableSection.setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, false ) );
-
+    tableSection.setText( Messages.getString( "ThiessenWizardLayoutPart_1" ) ); //$NON-NLS-1$
+    tableSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Observe change of parameter type */
     m_generator.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_propertyListener );
@@ -155,7 +154,7 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
     final IWizard wizard = context.getPage().getWizard();
     final String windowTitle = wizard.getWindowTitle();
 
-    final String message = Messages.getString("ThiessenWizardLayoutPart_2"); //$NON-NLS-1$
+    final String message = Messages.getString( "ThiessenWizardLayoutPart_2" ); //$NON-NLS-1$
 
     if( !MessageDialog.openConfirm( shell, windowTitle, message ) )
     {

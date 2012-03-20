@@ -178,7 +178,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
       /* Convert to JTS geometry. */
       final Geometry catchmentPolygon = JTSAdapter.export( catchmentArea );
 
-      // * Calculate weights. */
+      /* Calculate weights. */
       final double[] weights = InverseDistanceUtilities.getWeights( catchmentPolygon, points, maxNumberStations );
 
       /* Apply the weights to the bean. */
