@@ -75,9 +75,23 @@ public class StationClassesCatalog
     Assert.isNotNull( station );
 
     final Map<Class< ? extends IStation>, Set<String>> classCatalog = getClassCatalog();
+
     final Set<String> allowedTypes = classCatalog.get( station.getClass() );
     if( allowedTypes == null )
       throw new IllegalArgumentException( String.format( "Unknown station class: %s", station.getClass() ) );
+
+    return allowedTypes.toArray( new String[allowedTypes.size()] );
+  }
+
+  public static String[] findAllowedParameterTypes( final Class clazz )
+  {
+    Assert.isNotNull( clazz );
+
+    final Map<Class< ? extends IStation>, Set<String>> classCatalog = getClassCatalog();
+
+    final Set<String> allowedTypes = classCatalog.get( clazz );
+    if( allowedTypes == null )
+      throw new IllegalArgumentException( String.format( "Unknown station class: %s", clazz ) );
 
     return allowedTypes.toArray( new String[allowedTypes.size()] );
   }

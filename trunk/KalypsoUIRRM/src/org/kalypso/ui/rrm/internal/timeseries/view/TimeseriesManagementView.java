@@ -132,7 +132,6 @@ public class TimeseriesManagementView extends ViewPart
     final StationsByStationsStrategy strategy = new StationsByStationsStrategy( stations );
 
     final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
-
     m_treeViewer.setInput( input );
   }
 }
