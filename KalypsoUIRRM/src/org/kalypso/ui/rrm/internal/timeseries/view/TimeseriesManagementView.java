@@ -79,24 +79,23 @@ public class TimeseriesManagementView extends ViewPart
     final Composite body = toolkit.createComposite( parent );
     body.setLayout( Layouts.createGridLayout() );
 
-    createTimeseriesTree( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createTimeseriesTree( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
   }
 
-  private Composite createTimeseriesTree( final Composite parent )
+  private Composite createTimeseriesTree( final Composite parent, final FormToolkit toolkit )
   {
-    final Composite control = createTree( parent );
+    final Composite tree = createTree( parent );
     getSite().setSelectionProvider( m_treeViewer );
 
-    return control;
+    return tree;
   }
 
   private Control createSearchControls( final Composite parent, final FormToolkit toolkit )
   {
-    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
+    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
     section.setText( "Suche" );
-    section.setDescription( "Geben Sie Werte in den Suchfeldern ein, um die Ansicht einzuschränken." );
     section.setLayout( new FillLayout() );
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );

@@ -41,13 +41,16 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.filter;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 
 /**
@@ -59,7 +62,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
 
   private final TextSearchFilterControl m_textSearchControl;
 
-  public TimeseriesBrowserSearchViewer( final Composite parent, final FormToolkit toolkit, final StructuredViewer viewer )
+  public TimeseriesBrowserSearchViewer( final Composite parent, final FormToolkit toolkit, final TreeViewer viewer )
   {
     super( parent, SWT.NONE );
 
@@ -82,6 +85,34 @@ public class TimeseriesBrowserSearchViewer extends Composite
 
     m_parameterTypeFilterControl = new ParameterTypeFilterControl( groupParameter, toolkit );
     m_parameterTypeFilterControl.setViewer( viewer );
+
+    final Composite control = toolkit.createComposite( this );
+    control.setLayout( Layouts.createGridLayout( 2 ) );
+    control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+
+    final Hyperlink expand = toolkit.createHyperlink( control, "Baumelemente öffnen", SWT.NULL );
+    expand.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+
+    expand.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
+      {
+        viewer.expandAll();
+      }
+    } );
+
+    final Hyperlink collapse = toolkit.createHyperlink( control, "Baumelemente schließen", SWT.NULL );
+    collapse.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+
+    collapse.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      @Override
+      public void linkActivated( final org.eclipse.ui.forms.events.HyperlinkEvent e )
+      {
+        viewer.collapseAll();
+      }
+    } );
   }
 
   public void doClean( )
