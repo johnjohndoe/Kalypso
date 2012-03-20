@@ -253,6 +253,7 @@ public class LzsimWriter
       for( int i = 0; i < iniHyds.length; i++ )
       {
         final IniHyd iniHyd = iniHyds[i];
+
         final Double bi = iniHyd.getBi();
 
         writer.format( Locale.US, "%4d%7.2f", i + 1, bi ); //$NON-NLS-1$
@@ -276,7 +277,7 @@ public class LzsimWriter
     }
   }
 
-  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment )
+  private IniHyd[] getIniHyds( final org.kalypso.model.hydrology.binding.model.Catchment naCatchment, final Catchment iniCatchment ) throws SimulationException
   {
     /*
      * Special case: if the hydro hash does not know this catchment, it was actually never written. This happens e.g.
@@ -307,12 +308,12 @@ public class LzsimWriter
       final IniHyd iniHyd = iniHydHash.get( naHydrotopID );
       if( iniHyd == null )
       {
-        System.out.println( "oups" ); //$NON-NLS-1$
+        final String msg = Messages.getString( "LzsimWriter.4", naHydrotopID, naCatchment.getName() ); //$NON-NLS-1$
+        throw new SimulationException( msg );
       }
       iniHydMap.put( localID, iniHyd );
     }
 
     return iniHydMap.values().toArray( new IniHyd[iniHydMap.size()] );
   }
-
 }
