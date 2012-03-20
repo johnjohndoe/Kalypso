@@ -76,32 +76,24 @@ public class TimeseriesManagementView extends ViewPart
     final Composite body = toolkit.createComposite( parent );
     body.setLayout( Layouts.createGridLayout() );
 
-    createTimeseriesTree( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    createTimeseriesTree( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
   }
 
-  private Composite createTimeseriesTree( final Composite parent, final FormToolkit toolkit )
+  private Composite createTimeseriesTree( final Composite parent )
   {
-    final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR );
-    section.setText( "Zeitreihen" ); //$NON-NLS-1$
-    section.setDescription( "Im Projekt abgelegte Zeitreihen." ); //$NON-NLS-1$
-    section.setLayout( new FillLayout() );
-
-    final Control client = createTree( section );
-// client.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    section.setClient( client );
-
+    final Composite control = createTree( parent );
     getSite().setSelectionProvider( m_treeViewer );
 
-    return section;
+    return control;
   }
 
   private Control createSearchControls( final Composite parent, final FormToolkit toolkit )
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    section.setText( "Suche" ); //$NON-NLS-1$
-    section.setDescription( "Geben Sie Werte in den Suchfeldern ein, um die Ansicht einzuschränken." ); //$NON-NLS-1$
+    section.setText( "Suche" );
+    section.setDescription( "Geben Sie Werte in den Suchfeldern ein, um die Ansicht einzuschränken." );
     section.setLayout( new FillLayout() );
 
     final TimeseriesBrowserSearchViewer searchPanel = new TimeseriesBrowserSearchViewer( section, toolkit, m_treeViewer );
@@ -112,9 +104,9 @@ public class TimeseriesManagementView extends ViewPart
     return section;
   }
 
-  private Control createTree( final Composite panel )
+  private Composite createTree( final Composite panel )
   {
-    m_treeViewer = new TreeViewer( panel );
+    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.SINGLE );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
 

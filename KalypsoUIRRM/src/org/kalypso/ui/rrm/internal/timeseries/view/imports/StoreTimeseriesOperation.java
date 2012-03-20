@@ -64,6 +64,7 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.hydrology.internal.timeseries.binding.TimeseriesDataLinkFunctionProperty;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -194,7 +195,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final String quality = (String) timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
 
     final String stationFoldername = m_station.getTimeseriesFoldername();
-    final String timeseriesFilename = TimeseriesBean.formatTimeseriesFilename( parameterType, quality, timestep );
+    final String timeseriesFilename = TimeseriesDataLinkFunctionProperty.formatTimeseriesFilename( parameterType, quality, timestep );
 
     final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
     final IProject project = scenarioDataProvider.getScenarioFolder().getProject();

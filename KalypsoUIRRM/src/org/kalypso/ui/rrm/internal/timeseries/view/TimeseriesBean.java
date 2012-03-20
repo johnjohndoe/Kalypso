@@ -55,9 +55,9 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class TimeseriesBean extends FeatureBean<ITimeseries>
 {
-  private static final Status STATUS_DATA_FILE_MISSING = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesBean_0") ); //$NON-NLS-1$
+  private static final Status STATUS_DATA_FILE_MISSING = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesBean_0" ) ); //$NON-NLS-1$
 
-  private static final Status STATUS_LINK_NOT_SET = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString("TimeseriesBean_1") ); //$NON-NLS-1$
+  private static final Status STATUS_LINK_NOT_SET = new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), Messages.getString( "TimeseriesBean_1" ) ); //$NON-NLS-1$
 
   static final String PROPERTY_DATA_STATUS = "dataStatus"; //$NON-NLS-1$
 
@@ -143,9 +143,4 @@ public class TimeseriesBean extends FeatureBean<ITimeseries>
 // }
   }
 
-  public static String formatTimeseriesFilename( final String parameterType, final String quality, final Period timestep )
-  {
-    final String periodText = PeriodUtils.formatDefault( timestep );
-    return String.format( "%s_%s_%s.zml", parameterType, periodText, quality ); //$NON-NLS-1$
-  }
 }

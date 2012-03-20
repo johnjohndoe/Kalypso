@@ -62,8 +62,8 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * REMARK: extends {@link AbstractModelObject}, so implementors can add additonal properties to a bean.
- *
+ * REMARK: extends {@link AbstractModelObject}, so implementors can add additional properties to a bean.
+ * 
  * @author Gernot Belger
  */
 public class FeatureBean<F extends Feature>
@@ -186,7 +186,7 @@ public class FeatureBean<F extends Feature>
 
   public ICommand applyChanges( )
   {
-    final CompositeCommand composite = new CompositeCommand( Messages.getString("FeatureBean_0") ); //$NON-NLS-1$
+    final CompositeCommand composite = new CompositeCommand( Messages.getString( "FeatureBean_0" ) ); //$NON-NLS-1$
 
     for( final QName property : m_dirtyProperties )
     {
