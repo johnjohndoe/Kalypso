@@ -171,6 +171,11 @@
               id="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               name="FeatureAssociationFunctionProperty">
         </function>
+        <function
+              class="org.kalypso.model.hydrology.internal.timeseries.binding.TimeseriesDataLinkFunctionProperty"
+              id="org.kalypso.model.hydrology.timeseries.functionProperty.data.link"
+              name="Timeseries Data Link">
+        </function>
      </extension>
      <extension
            point="org.kalypso.deegree.featureBinding">

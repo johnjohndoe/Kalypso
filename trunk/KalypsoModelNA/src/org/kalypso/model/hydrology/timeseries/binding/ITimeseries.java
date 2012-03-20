@@ -79,7 +79,7 @@ public interface ITimeseries extends Feature
 
   ZmlLink getDataLink( );
 
-  void setDataLink( String href );
+// void setDataLink( String href );
 
   IStation getStation( );
 

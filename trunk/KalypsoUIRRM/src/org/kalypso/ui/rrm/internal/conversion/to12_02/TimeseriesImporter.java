@@ -58,7 +58,6 @@ import org.joda.time.Period;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
@@ -76,7 +75,6 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -328,23 +326,7 @@ public class TimeseriesImporter
     newTimeseries.setQuality( quality );
     newTimeseries.setTimestep( timestep );
 
-    final String stationFoldername = station.getTimeseriesFoldername();
-    final String timeseriesFilename = TimeseriesBean.formatTimeseriesFilename( parameterType, quality, timestep );
-
-    final String timeseriesPath = stationFoldername + IPath.SEPARATOR + timeseriesFilename;
-
-    final String projectPath = getProjectPath( timeseriesPath );
-
-    newTimeseries.setDataLink( projectPath );
-
     return newTimeseries;
-  }
-
-  private String getProjectPath( final String timeseriesPath )
-  {
-    final String projectRelativePath = INaProjectConstants.PATH_TIMESERIES + "/" + timeseriesPath; //$NON-NLS-1$
-    final String projectPath = UrlResolver.PROJECT_PROTOCOLL + "//" + projectRelativePath; //$NON-NLS-1$
-    return projectPath;
   }
 
   public TimeseriesIndex getIndex( )

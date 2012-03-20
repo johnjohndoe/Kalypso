@@ -150,13 +150,13 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     return new ZmlLink( this, PROPERTY_DATA );
   }
 
-  @Override
-  public void setDataLink( final String href )
-  {
-    final TimeseriesLinkType link = new TimeseriesLinkType();
-    link.setHref( href );
-    setProperty( PROPERTY_DATA, link );
-  }
+// @Override
+// public void setDataLink( final String href )
+// {
+// final TimeseriesLinkType link = new TimeseriesLinkType();
+// link.setHref( href );
+// setProperty( PROPERTY_DATA, link );
+// }
 
   @Override
   public IStation getStation( )
