@@ -40,12 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import java.net.URL;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
@@ -60,10 +68,20 @@ public class EditStationWizard extends Wizard
 
   private final ITreeNodeModel m_model;
 
+  private String m_oldFolder;
+
   public EditStationWizard( final ITreeNodeModel model, final IStation station )
   {
     m_model = model;
     m_stationBean = new FeatureBean<>( station );
+
+    init( station );
+  }
+
+  private void init( final IStation station )
+  {
+    m_oldFolder = station.getTimeseriesFoldername();
+
   }
 
   @Override
@@ -96,6 +114,34 @@ public class EditStationWizard extends Wizard
       e.printStackTrace();
     }
 
+    final IStation station = m_stationBean.getFeature();
+    final String folder = station.getTimeseriesFoldername();
+    if( !StringUtils.equals( m_oldFolder, folder ) )
+      doMoveStationFolder( station, folder );
+
     return true;
+  }
+
+  private void doMoveStationFolder( final IStation station, final String folder )
+  {
+    try
+    {
+      final URL context = station.getWorkspace().getContext();
+
+      final URL urlSource = UrlResolverSingleton.resolveUrl( context, m_oldFolder );
+      final URL urlTarget = UrlResolverSingleton.resolveUrl( context, folder );
+
+      final IFolder source = ResourceUtilities.findFolderFromURL( urlSource );
+      final IFolder target = ResourceUtilities.findFolderFromURL( urlTarget );
+
+      if( source.exists() )
+        source.move( target.getFullPath(), true, new NullProgressMonitor() );
+
+      target.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

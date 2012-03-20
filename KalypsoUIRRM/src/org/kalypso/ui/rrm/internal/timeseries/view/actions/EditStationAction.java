@@ -72,8 +72,8 @@ public class EditStationAction extends Action
     m_station = station;
     m_stationControl = stationControl;
 
-    setText( Messages.getString("EditStationAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("EditStationAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "EditStationAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "EditStationAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }
@@ -86,7 +86,7 @@ public class EditStationAction extends Action
     final String oldGroup = m_station.getGroup();
 
     final Wizard wizard = new EditStationWizard( m_context, m_station );
-    wizard.setWindowTitle( Messages.getString("EditStationAction_2") ); //$NON-NLS-1$
+    wizard.setWindowTitle( Messages.getString( "EditStationAction_2" ) ); //$NON-NLS-1$
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     if( dialog.open() != Window.OK )
@@ -98,4 +98,5 @@ public class EditStationAction extends Action
     if( !ObjectUtils.equals( oldGroup, newGroup ) )
       m_context.refreshTree( m_station );
   }
+
 }

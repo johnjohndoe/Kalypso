@@ -41,6 +41,8 @@
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -48,6 +50,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.validation.FileNameIsUniqueValidator;
+import org.kalypso.commons.databinding.validation.MultiValidator;
+import org.kalypso.commons.databinding.validation.StringFilenameValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
@@ -67,7 +72,18 @@ public class StationComposite extends FeatureBeanComposite<IStation>
   @Override
   protected void createContents( )
   {
-    createPropertyControl( IStation.QN_DESCRIPTION );
+
+    final FeatureBean<IStation> bean = getBean();
+
+    final StationTimeseriesFolderCollector collector = new StationTimeseriesFolderCollector( bean.getFeature() );
+    collector.execute( new NullProgressMonitor() );
+
+    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, "Stationsname enthält ungültige Zeichen" );
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), IStatus.ERROR, "Stationsname bereits vorhanden" );
+
+    final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
+
+    createPropertyControl( IStation.QN_DESCRIPTION, validator ); // -> folder name
     createPropertyControl( IStation.QN_NAME );
     createPropertyControl( IStation.PROPERTY_GROUP );
     createPropertyControl( IStation.PROPERTY_COMMENT );
