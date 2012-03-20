@@ -69,11 +69,17 @@ public class StationTimeseriesFolderCollector implements ICoreRunnableWithProgre
 
   public StationTimeseriesFolderCollector( final IStation station )
   {
-    final Feature owner = station.getOwner();
-    if( owner instanceof StationCollection )
-      m_stations = (StationCollection) owner;
-    else
+    if( Objects.isNull( station ) )
       m_stations = null;
+    else
+    {
+      final Feature owner = station.getOwner();
+      if( owner instanceof StationCollection )
+        m_stations = (StationCollection) owner;
+      else
+        m_stations = null;
+    }
+
   }
 
   @Override
