@@ -73,19 +73,40 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 {
+  /**
+   * The feature bean.
+   */
   private final FeatureBean<F> m_featureBean;
 
+  /**
+   * The data binding.
+   */
   private final IDataBinding m_binding;
 
-  private final boolean m_editable;
+  /**
+   * True, if the contents of the composite should be generally editable. False otherwise.
+   */
+  private final boolean m_generalEditable;
 
-  public FeatureBeanComposite( final Composite parent, final FeatureBean<F> featureBean, final IDataBinding binding, final boolean editable )
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @param featureBean
+   *          The feature bean.
+   * @param binding
+   *          The data binding.
+   * @param generalEditable
+   *          True, if the contents of the composite should be generally editable. False otherwise.
+   */
+  public FeatureBeanComposite( final Composite parent, final FeatureBean<F> featureBean, final IDataBinding binding, final boolean generalEditable )
   {
     super( parent, SWT.NONE );
 
     m_featureBean = featureBean;
     m_binding = binding;
-    m_editable = editable;
+    m_generalEditable = generalEditable;
 
     final FormToolkit toolkit = m_binding.getToolkit();
     if( toolkit != null )
@@ -103,7 +124,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected final boolean isEditable( )
   {
-    return m_editable;
+    return m_generalEditable;
   }
 
   protected final FeatureBean<F> getBean( )
@@ -123,13 +144,23 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected abstract void createContents( );
 
-  protected final void createPropertyControl( final QName property )
+  /**
+   * This function creates a control, which allows the editing of the property specified by the qname.
+   * 
+   * @param property
+   *          The qname of the property.
+   * @return The text field, which is contained in the property control. Its editable state will be that of the
+   *         generalEditable flag, provided int the constructor.
+   */
+  protected final Text createPropertyControl( final QName property )
   {
     createPropertyLabel( this, property );
 
     final Text field = createPropertyTextField( this );
 
     bindTextField( field, property );
+
+    return field;
   }
 
   /**
@@ -158,7 +189,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
   protected final Text createPropertyTextField( final Composite parent )
   {
     int style = SWT.BORDER | SWT.SINGLE;
-    if( !m_editable )
+    if( !m_generalEditable )
       style &= SWT.READ_ONLY;
 
     final FormToolkit toolkit = m_binding.getToolkit();
@@ -169,8 +200,8 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       field = new Text( parent, style );
 
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    field.setEditable( m_editable );
-    field.setEnabled( m_editable );
+    field.setEditable( m_generalEditable );
+    field.setEnabled( m_generalEditable );
 
     return field;
   }
@@ -179,7 +210,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
   {
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    viewer.getCombo().setEnabled( m_editable );
+    viewer.getCombo().setEnabled( m_generalEditable );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
     {

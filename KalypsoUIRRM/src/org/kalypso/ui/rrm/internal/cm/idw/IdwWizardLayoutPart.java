@@ -120,7 +120,7 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
     GridLayoutFactory.fillDefaults().applyTo( body );
 
     /* Linear sum control. */
-    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding );
+    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding, false );
     sumComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     toolkit.createLabel( body, StringUtils.EMPTY, SWT.NONE );

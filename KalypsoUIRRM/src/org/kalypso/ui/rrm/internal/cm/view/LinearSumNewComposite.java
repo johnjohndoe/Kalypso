@@ -44,6 +44,7 @@ import java.util.LinkedHashMap;
 
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -58,16 +59,27 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
 {
   private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE, ITimeseriesConstants.TYPE_EVAPORATION };
 
-  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> bean, final IDataBinding binding )
+  private final boolean m_commentEditable;
+
+  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> bean, final IDataBinding binding, final boolean commentEditable )
   {
     super( parent, bean, binding, true );
+
+    m_commentEditable = commentEditable;
   }
 
   @Override
   protected void createContents( )
   {
     createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
-    createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
+
+    /* Create a property control for the comment. */
+    final Text commentText = createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
+
+    /* Override the general editable state. */
+    commentText.setEditable( m_commentEditable );
+    commentText.setEnabled( m_commentEditable );
+
     createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
     createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
     createParameterTypeControl();

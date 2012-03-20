@@ -77,7 +77,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return Messages.getString("ParameterGeneratorUiHandler_0"); //$NON-NLS-1$
+    return Messages.getString( "ParameterGeneratorUiHandler_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -104,6 +104,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
   {
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, m_parameterType ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumThiessenAction( m_model, m_parameterType ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumIdwAction( m_model, m_parameterType ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteGeneratorAction( m_model, m_generators ) );
   }
 }

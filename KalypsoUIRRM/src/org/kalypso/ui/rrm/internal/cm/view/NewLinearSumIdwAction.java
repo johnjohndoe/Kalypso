@@ -40,59 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ui.rrm.internal.UIRrmImages;
+import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.cm.idw.IdwLinearSumHelper;
+import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
-class EmptyNodeUiHandler extends AbstractTreeNodeUiHandler
+public class NewLinearSumIdwAction extends Action
 {
   private final ITreeNodeModel m_model;
 
-  public EmptyNodeUiHandler( final ITreeNodeModel model )
+  private final String m_parameterType;
+
+  public NewLinearSumIdwAction( final ITreeNodeModel model, final String parameterType )
   {
     m_model = model;
+    m_parameterType = parameterType;
+
+    setText( Messages.getString( "NewLinearSumIdwAction_0" ) ); //$NON-NLS-1$
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_NEW_LINEAR_SUM ) );
   }
 
   @Override
-  public String getTypeLabel( )
+  public void runWithEvent( final Event event )
   {
-    return Messages.getString( "EmptyNodeUiHandler_0" ); //$NON-NLS-1$
-  }
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-  @Override
-  public String getTreeLabel( )
-  {
-    return Messages.getString( "EmptyNodeUiHandler_1" ); //$NON-NLS-1$
-  }
+    final LinearSumBean bean = ThiessenLinearSumHelper.createFromCurrentScenario( m_parameterType );
 
-  @Override
-  public ImageDescriptor getTreeImage( )
-  {
-    return null;
-  }
+    final String text = getText();
 
-  @Override
-  protected Control createPropertiesControl( final Composite parent, final IDataBinding binding, final ToolBarManager sectionToolbar )
-  {
-    return null;
-  }
-
-  @Override
-  protected void createHyperlinks( final FormToolkit toolkit, final Composite actionPanel )
-  {
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, null ) );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumThiessenAction( m_model, null ) );
-    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumIdwAction( m_model, null ) );
+    IdwLinearSumHelper.showWizard( shell, bean, m_model, text );
   }
 }
