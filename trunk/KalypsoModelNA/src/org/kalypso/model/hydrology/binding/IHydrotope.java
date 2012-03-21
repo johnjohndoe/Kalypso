@@ -58,6 +58,22 @@ public interface IHydrotope extends Feature
 
   QName QNAME = new QName( NS_NAHYDROTOP, "Hydrotop" ); //$NON-NLS-1$
 
+  QName PROPERTY_GEOMETRY = new QName( NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
+
+  QName PROPERTY_LANDUSE = new QName( NS_NAHYDROTOP, "landuse" ); //$NON-NLS-1$
+
+  QName PROPERTY_SOILTYPE = new QName( NS_NAHYDROTOP, "soiltype" ); //$NON-NLS-1$
+
+  QName PROPERTY_CORR_SEALING = new QName( NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
+
+  QName PROPERTY_M_PERKM = new QName( NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
+
+  QName PROPERTY_M_F1GWS = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
+
+  QName LINK_SUD = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
+
+  QName LINK_CATCHMENT = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
+
   IFeatureBindingCollection<ISuds> getSudCollection( );
 
   Feature[] getSuds( );

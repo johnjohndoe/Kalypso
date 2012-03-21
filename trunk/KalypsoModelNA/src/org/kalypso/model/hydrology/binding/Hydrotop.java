@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.binding;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.hydrology.binding.suds.ISuds;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -60,22 +57,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Hydrotop extends Feature_Impl implements IHydrotope
 {
-  private static final QName QNAME_PROP_GEOMETRY = new QName( NS_NAHYDROTOP, "position" ); //$NON-NLS-1$
-
-  private static final QName QNAME_PROP_LANDUSE = new QName( NS_NAHYDROTOP, "landuse" ); //$NON-NLS-1$
-
-  private static final QName QNAME_PROP_SOILTYPE = new QName( NS_NAHYDROTOP, "soiltype" ); //$NON-NLS-1$
-
-  private static final QName QNAME_PROP_CORR_SEALING = new QName( NS_NAHYDROTOP, "corrSealing" ); //$NON-NLS-1$
-
-  private static final QName QNAME_PROP_M_PERKM = new QName( NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
-
-  private static final QName QNAME_PROP_M_F1GWS = new QName( NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_SUD_MEMBERS = new QName( NaModelConstants.NS_NASUDS, "sudLinkMember" ); //$NON-NLS-1$
-
-  public static final QName QNAME_PROP_CATCHMENT_MEMBER = new QName( NaModelConstants.NS_NAMODELL, "catchmentLinkMember" ); //$NON-NLS-1$
-
   private IFeatureBindingCollection<ISuds> m_suds = null;
 
   public Hydrotop( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
@@ -87,7 +68,7 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   public synchronized IFeatureBindingCollection<ISuds> getSudCollection( )
   {
     if( m_suds == null )
-      m_suds = new FeatureBindingCollection<ISuds>( this, ISuds.class, QNAME_PROP_SUD_MEMBERS, true );
+      m_suds = new FeatureBindingCollection<ISuds>( this, ISuds.class, LINK_SUD, true );
 
     return m_suds;
   }
@@ -104,85 +85,85 @@ public class Hydrotop extends Feature_Impl implements IHydrotope
   @Override
   public GM_MultiSurface getGeometry( )
   {
-    return getProperty( QNAME_PROP_GEOMETRY, GM_MultiSurface.class );
+    return getProperty( PROPERTY_GEOMETRY, GM_MultiSurface.class );
   }
 
   @Override
   public void setGeometry( final GM_MultiSurface geometry )
   {
-    setProperty( QNAME_PROP_GEOMETRY, geometry );
+    setProperty( PROPERTY_GEOMETRY, geometry );
   }
 
   @Override
   public String getLanduse( )
   {
-    return getProperty( QNAME_PROP_LANDUSE, String.class );
+    return getProperty( PROPERTY_LANDUSE, String.class );
   }
 
   @Override
   public void setLanduse( final String value )
   {
-    setProperty( QNAME_PROP_LANDUSE, value );
+    setProperty( PROPERTY_LANDUSE, value );
   }
 
   @Override
   public String getSoilType( )
   {
-    return getProperty( QNAME_PROP_SOILTYPE, String.class );
+    return getProperty( PROPERTY_SOILTYPE, String.class );
   }
 
   @Override
   public void setSoilType( final String value )
   {
-    setProperty( QNAME_PROP_SOILTYPE, value );
+    setProperty( PROPERTY_SOILTYPE, value );
   }
 
   @Override
   public double getCorrSealing( )
   {
-    return getProperty( QNAME_PROP_CORR_SEALING, Double.class );
+    return getProperty( PROPERTY_CORR_SEALING, Double.class );
   }
 
   @Override
   public void setCorrSealing( final double value )
   {
-    setProperty( QNAME_PROP_CORR_SEALING, value );
+    setProperty( PROPERTY_CORR_SEALING, value );
   }
 
   @Override
   public double getMaxPerkolationRate( )
   {
-    return getProperty( QNAME_PROP_M_PERKM, Double.class );
+    return getProperty( PROPERTY_M_PERKM, Double.class );
   }
 
   @Override
   public void setMaxPerkolationRate( final double value )
   {
-    setProperty( QNAME_PROP_M_PERKM, value );
+    setProperty( PROPERTY_M_PERKM, value );
   }
 
   @Override
   public double getGWFactor( )
   {
-    return getProperty( QNAME_PROP_M_F1GWS, Double.class );
+    return getProperty( PROPERTY_M_F1GWS, Double.class );
   }
 
   @Override
   public void setGWFactor( final double value )
   {
-    setProperty( QNAME_PROP_M_F1GWS, value );
+    setProperty( PROPERTY_M_F1GWS, value );
   }
 
   @Override
   public IXLinkedFeature getCatchmentMember( )
   {
-    return getProperty( QNAME_PROP_CATCHMENT_MEMBER, IXLinkedFeature.class );
+    return getProperty( LINK_CATCHMENT, IXLinkedFeature.class );
   }
 
   @Override
   public void setCatchmentMember( final String href )
   {
-    setLink( QNAME_PROP_CATCHMENT_MEMBER, href );
+    setLink( LINK_CATCHMENT, href );
   }
 
   @Override
