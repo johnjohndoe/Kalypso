@@ -54,10 +54,6 @@ import org.deegree.framework.util.Pair;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -126,17 +122,12 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
 
   private void checkWindTheme( final ICommandTarget pCommandPoster )
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = window.getActivePage();
-//    final MapOutline outlineView = (MapOutline) page.findView( MapOutline.ID );
-    
-    IMapPanel mapPanel = getMapPanel();//outlineView.getMapPanel();
-    IKalypsoTheme lTheme = findTheme( mapPanel, WIND_THEME_NAME );
+    final IMapPanel mapPanel = getMapPanel();//outlineView.getMapPanel();
+    final IKalypsoTheme lTheme = findTheme( mapPanel, WIND_THEME_NAME );
     if( lTheme != null ){
       return;
     }
-    final IKalypsoLayerModell mapModell = (IKalypsoLayerModell) mapPanel.getMapModell();
+    final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
     
     final AddThemeCommand command = new AddThemeCommand( mapModell, WIND_THEME_NAME, GML_TYPE_STR, FEATURE_PATH_WIND_DATA_MODEL, WIND_GML_SOURCE_FILE ); //$NON-NLS-1$
     pCommandPoster.postCommand( command, null );
@@ -147,13 +138,13 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
   {
     try
     {
-      String lThemeName = pThemeName.toLowerCase();
-      List<IKalypsoTheme> themesAct = Arrays.asList( mapPanel.getMapModell().getAllThemes() );
+      final String lThemeName = pThemeName.toLowerCase();
+      final List<IKalypsoTheme> themesAct = Arrays.asList( mapPanel.getMapModell().getAllThemes() );
       if( themesAct != null )
       {
         for( final IKalypsoTheme lTheme : themesAct )
         {
-          String lThemeContext = lTheme.getContext().toExternalForm().toLowerCase();
+          final String lThemeContext = lTheme.getContext().toExternalForm().toLowerCase();
           if( !lThemeContext.contains( FENET_CONTEXT ) ){
             continue;
           }
@@ -184,7 +175,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
 
     }
@@ -230,7 +221,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     }
 
     // find and set wind model system
-    IKalypsoFeatureTheme lWindDataTheme = UtilMap.findEditableTheme( mapPanel, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS );
+    final IKalypsoFeatureTheme lWindDataTheme = UtilMap.findEditableTheme( mapPanel, IWindDataModelSystem.SIM_BASE_F_WIND_ELE_SYS );
     // IKalypsoFeatureTheme lWindDataTheme = UtilMap.findEditableTheme( mapPanel,
     // KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_WIND_ELE_MODEL );
     if( lWindDataTheme != null )
@@ -290,7 +281,7 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
     {
       super.moved( p );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return;
     }
@@ -330,9 +321,9 @@ public class ShowEditWindDataWidget extends AbstractDelegateWidget implements IW
       final IWindDataProvider windProvider = m_dataModel.getWindDataModel();
       if( windProvider != null && nodePoint != null )
       {
-        Pair<Double, Double> wind1 = windProvider.getWindAsVector( nodePoint );
+        final Pair<Double, Double> wind1 = windProvider.getWindAsVector( nodePoint );
 
-        Pair<Double, Double> wind = NativeWindDataModelHelper.convertVectorWindToSpeedAndDirection( wind1 );
+        final Pair<Double, Double> wind = NativeWindDataModelHelper.convertVectorWindToSpeedAndDirection( wind1 );
         if( wind != null && !Double.isNaN( wind.first ) && !Double.isNaN( wind.second ) )
         {
           tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ShowEditWindDataWidget.3" ) ); //$NON-NLS-1$ 

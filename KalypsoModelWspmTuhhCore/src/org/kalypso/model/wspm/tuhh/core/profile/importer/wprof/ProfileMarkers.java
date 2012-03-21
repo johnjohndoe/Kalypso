@@ -73,7 +73,7 @@ class ProfileMarkers
   private void addWProfPoint( final String markerID, final IWProfPoint wprofPoint )
   {
     final IWProfPoint[] points = getPoints( markerID );
-    final IWProfPoint[] newPoints = (IWProfPoint[]) ArrayUtils.add( points, wprofPoint );
+    final IWProfPoint[] newPoints = ArrayUtils.add( points, wprofPoint );
     m_pointMapping.put( markerID, newPoints );
   }
 

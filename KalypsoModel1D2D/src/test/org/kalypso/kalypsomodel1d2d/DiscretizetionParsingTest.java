@@ -62,16 +62,15 @@ public class DiscretizetionParsingTest extends GmlParsingTester
   private static final GM_Point point1 = GeometryFactory.createGM_Point( 0.0, 0.0, 0.0, "EPSG:31467" ); //$NON-NLS-1$
   private static final GM_Point point2 = GeometryFactory.createGM_Point( 0.0, 1.0, 1.0, "EPSG:31467" ); //$NON-NLS-1$
   
-  @SuppressWarnings("unchecked")
   public void testTinyDiscretization() throws Exception 
   {
-    GMLWorkspace workspace = readGml( "data/tinyDiscretization.gml" );     //$NON-NLS-1$
+    final GMLWorkspace workspace = readGml( "data/tinyDiscretization.gml" );     //$NON-NLS-1$
     assertNotNull( workspace );
     
-    Feature rootFeature = workspace.getRootFeature();
+    final Feature rootFeature = workspace.getRootFeature();
     assertNotNull( rootFeature );
     
-    IFEDiscretisationModel1d2d discrModel = (IFEDiscretisationModel1d2d) rootFeature.getAdapter( IFEDiscretisationModel1d2d.class ); 
+    final IFEDiscretisationModel1d2d discrModel = (IFEDiscretisationModel1d2d) rootFeature.getAdapter( IFEDiscretisationModel1d2d.class ); 
     assertNotNull( discrModel );
     
     assertEquals( 6, discrModel.getNodes().size() );
@@ -80,28 +79,28 @@ public class DiscretizetionParsingTest extends GmlParsingTester
     assertEquals( 1, discrModel.getComplexElements().size() );
     
     //assert one node
-    IFE1D2DNode node = discrModel.getNodes().get( 0 );
+    final IFE1D2DNode node = discrModel.getNodes().get( 0 );
     assertNotNull( node );
     assertTrue( node.getPoint().distance( point1 ) < DELTA );
     
     //getAdjacentNode
-    IFE1D2DNode adjacentNode = (IFE1D2DNode) node.getNeighbours().get( 0 );
+    final IFE1D2DNode adjacentNode = (IFE1D2DNode) node.getNeighbours().get( 0 );
     assertNotNull( adjacentNode );
     assertTrue( adjacentNode.getPoint().distance( point2 ) < DELTA );
     
-    IFE1D2DEdge edge1 = discrModel.getEdges().get( 0 );
+    final IFE1D2DEdge edge1 = discrModel.getEdges().get( 0 );
     assertNotNull( edge1 );
-    IFE1D2DEdge edge2 = discrModel.getEdges().get( 1 );
+    final IFE1D2DEdge edge2 = discrModel.getEdges().get( 1 );
     assertNotNull( edge2 );
     
     //assert the edges of a polyElement
-    PolyElement polyEl1 = (PolyElement) discrModel.getElements().get( 0 );
+    final PolyElement polyEl1 = (PolyElement) discrModel.getElements().get( 0 );
     assertNotNull( polyEl1 );
     assertTrue( polyEl1.getEdges().contains( edge1 ) );
     assertTrue( polyEl1.getEdges().contains( edge2 ) );
         
     //assert complex Element
-    IFE1D2DComplexElement complexEl1 = discrModel.getComplexElements().get( 0 );
+    final IFE1D2DComplexElement complexEl1 = discrModel.getComplexElements().get( 0 );
     assertNotNull( complexEl1 );
     assertTrue( complexEl1.getElements().get(0).equals( polyEl1 ) );
   }

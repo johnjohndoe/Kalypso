@@ -110,7 +110,7 @@ public class PrfVegetationWriter
       final Double roughness = getValue( point, component );
 
       arrX.add( x );
-      arrY.add( (Double) Objects.firstNonNull( roughness, nullValue ) );
+      arrY.add( Objects.firstNonNull( roughness, nullValue ) );
     }
 
     final Double[] xArray = arrX.toArray( new Double[arrX.size()] );

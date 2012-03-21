@@ -54,10 +54,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked")
 public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
 {
-
   /**
    * The model on which this command is working
    */
@@ -133,18 +131,18 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
         done = true;
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;
     }
   }
 
-  private void unlinkComplexElement( IFELine line )
+  private void unlinkComplexElement( final IFELine line )
   {
-    IFeatureBindingCollection<IFE1D2DComplexElement> containers2 = line.getContainers();
-    IFE1D2DComplexElement[] containers = containers2.toArray( new IFE1D2DComplexElement[] {} );
-    for( IFE1D2DComplexElement ce : containers )
+    final IFeatureBindingCollection<IFE1D2DComplexElement> containers2 = line.getContainers();
+    final IFE1D2DComplexElement[] containers = containers2.toArray( new IFE1D2DComplexElement[] {} );
+    for( final IFE1D2DComplexElement ce : containers )
     {
       LinksOps.delRelationshipElementAndComplexElement( line, ce );
     }

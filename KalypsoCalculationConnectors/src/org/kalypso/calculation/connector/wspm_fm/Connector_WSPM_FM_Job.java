@@ -91,7 +91,6 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
         }
         floodModelEvents.clear();
       }
-      final String dataPath = String.format( "HQ%d", returnPeriod ); //$NON-NLS-1$
       final IRunoffEvent newRunoffEvent = floodModelEvents.addNew( IRunoffEvent.QNAME );
       newRunoffEvent.setName( newRunoffEvent.getId() );
       newRunoffEvent.setDataPath( new Path( newRunoffEvent.getId() ) );

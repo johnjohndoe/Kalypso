@@ -51,7 +51,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private QName m_actPropQname;
 
-  private double m_grabDistance = 50; 
+  private final double m_grabDistance = 50; 
 
   private String m_propertyNameFromTheme;
 
@@ -97,16 +97,16 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       {
         m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         return;
       }
     }
   }
 
-  private String getPropertyNameFromTheme( IKalypsoTheme theme )
+  private String getPropertyNameFromTheme( final IKalypsoTheme theme )
   {
-    StringTokenizer lTokenizer = new StringTokenizer( theme.getLabel(), ResultMeta1d2dHelper.STR_THEME_NAME_SEPARATOR.trim() );
+    final StringTokenizer lTokenizer = new StringTokenizer( theme.getLabel(), ResultMeta1d2dHelper.STR_THEME_NAME_SEPARATOR.trim() );
     if( lTokenizer.countTokens() > 2 )
     {
       lTokenizer.nextToken();
@@ -156,7 +156,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       /* Search for the first feature which provides a value */
 //      final Feature feature = FeatureHelper.getFeature( workspace, nodeObject );
 
-      Object value = getInterpolatedValue(nodeObject, pos);
+      final Object value = getInterpolatedValue(nodeObject, pos);
 //      Object value = feature.getProperty( m_actPropQname );
       
       if( value instanceof Double && !Double.isNaN( (Double) value ) )
@@ -168,7 +168,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       {
         if( value != null && value instanceof List< ? > )
         {
-          List<Double> vector = (List<Double>) value;
+          final List<Double> vector = (List<Double>) value;
           if( vector == null || vector.size() != 2 )
             return;
 
@@ -181,23 +181,22 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     }
   }
 
-  @SuppressWarnings("unchecked")
   private Object getInterpolatedValue( final Object nodeObject, final GM_Position pos )
   {
     if( nodeObject instanceof IPolyElement ){
-      IPolyElement lPolyEl = (IPolyElement) nodeObject;
+      final IPolyElement lPolyEl = (IPolyElement) nodeObject;
       
-      List nodes = lPolyEl.getNodes();
+      final List nodes = lPolyEl.getNodes();
       if( nodes.size() > 5 ){
         return getNodePropertyAtPos( pos );
       }
-      String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      List< GM_Position > lListPositionWithValues = new ArrayList<GM_Position>();
-      List< GM_Position > lListPositionWithValues2 = new ArrayList<GM_Position>();
-      for( Iterator<IFE1D2DNode> iterator = nodes.iterator(); iterator.hasNext(); )
+      final String coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      final List< GM_Position > lListPositionWithValues = new ArrayList<GM_Position>();
+      final List< GM_Position > lListPositionWithValues2 = new ArrayList<GM_Position>();
+      for( final Iterator<IFE1D2DNode> iterator = nodes.iterator(); iterator.hasNext(); )
       {
-        IFE1D2DNode actNode = iterator.next();
-        Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
+        final IFE1D2DNode actNode = iterator.next();
+        final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
         if(nodeRes == null)
           continue;
         
@@ -206,18 +205,18 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
           continue;
         if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
         {
-          List<Double> vector = new ArrayList<Double>();
+          final List<Double> vector = new ArrayList<Double>();
           vector.add( Math.cos( (Double) value * ( 2 * Math.PI ) / 360 ) );
           vector.add( Math.sin( (Double) value * ( 2 * Math.PI ) / 360 ) );
           value = vector;
         }
         
-        INodeResult nodeResAdapter = (INodeResult) nodeRes.getAdapter( INodeResult.class );
+        final INodeResult nodeResAdapter = (INodeResult) nodeRes.getAdapter( INodeResult.class );
         if( value instanceof Double ){
           lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double)value ) );
         }
         else if( value instanceof List< ? > ){
-          List<Double> vector = (List<Double>) value;
+          final List<Double> vector = (List<Double>) value;
           if( vector == null || vector.size() != 2 )
             continue;
 
@@ -236,11 +235,11 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         if( lListPositionWithValues2.size() > 2 )
           lTri2 = GeometryFactory.createGM_Triangle( lListPositionWithValues2.get( 0 ), lListPositionWithValues2.get( 1 ), lListPositionWithValues2.get( 2 ), coordinateSystem );
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
       }
-      Object lRes = getValueFromTrianglesAtPosition( pos, lTri, lTri2 );
+      final Object lRes = getValueFromTrianglesAtPosition( pos, lTri, lTri2 );
       if( lRes != null ){
         return lRes;
       }
@@ -251,7 +250,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
           if( lListPositionWithValues2.size() > 2 )
             lTri2 = GeometryFactory.createGM_Triangle( lListPositionWithValues2.get( 0 ), lListPositionWithValues2.get( 2 ), lListPositionWithValues2.get( 3 ), coordinateSystem );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           return null;
         }
@@ -276,14 +275,13 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     GM_Triangle lTriSecond = null;
     try
     {
-      List<GM_Point> lListAllPoints = new ArrayList<GM_Point>();
-      List<Double> lListAllFirsts = new ArrayList<Double>();
-      List<Double> lListAllSeconds = new ArrayList<Double>();
+      final List<GM_Point> lListAllPoints = new ArrayList<GM_Point>();
+      final List<Double> lListAllFirsts = new ArrayList<Double>();
+      final List<Double> lListAllSeconds = new ArrayList<Double>();
 
-      Set<GM_Point> lSetPoints = pMapPointsValues.keySet();
-      for( Iterator<GM_Point> iterator = lSetPoints.iterator(); iterator.hasNext(); )
+      final Set<GM_Point> lSetPoints = pMapPointsValues.keySet();
+      for( final GM_Point gmPoint : lSetPoints )
       {
-        GM_Point gmPoint = iterator.next();
         lListAllPoints.add( gmPoint );
         lListAllFirsts.add( pMapPointsValues.get( gmPoint ).first );
         lListAllSeconds.add( pMapPointsValues.get( gmPoint ).second );
@@ -292,7 +290,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
       if( lTriFirst.contains( pPointToInterpolateAt ) )
       {
-        Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ), lListAllFirsts.subList( 0, 3 ) );
+        final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ), lListAllFirsts.subList( 0, 3 ) );
         lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
         return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
       }
@@ -303,12 +301,12 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         lListAllSeconds.remove( 1 );
         lMapFirst = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
         lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
-        Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
+        final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
         lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
         return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }
@@ -318,7 +316,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
   {
     if( lTri != null && lTri.contains( pos )){
       if( lTri2 != null ){
-        List< Double > lListRes = new ArrayList<Double>();
+        final List< Double > lListRes = new ArrayList<Double>();
         lListRes.add( lTri.getValue( pos ) );
         lListRes.add( lTri2.getValue( pos ) );
         if( NodeResultHelper.WAVE_DIRECTION_TYPE.equals( m_propertyNameFromTheme ) )
@@ -334,7 +332,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private Object getNodePropertyAtPos( final GM_Position pos )
   {
-    Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
+    final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( pos, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
     final Feature feature = FeatureHelper.getFeature( m_workspace, nodeRes );
     return feature == null? null: feature.getProperty( m_actPropQname );
   }

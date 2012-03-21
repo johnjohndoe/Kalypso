@@ -101,7 +101,7 @@ public class PrfRoughnessWriter
     else if( Objects.allNotNull( ks, kst ) )
       return new IComponent[] { ks, kst };
 
-    return new IComponent[] { (IComponent) Objects.firstNonNull( ks, kst ) };
+    return new IComponent[] { Objects.firstNonNull( ks, kst ) };
   }
 
   private Double getRoughnessFromBuilding( )
@@ -150,7 +150,7 @@ public class PrfRoughnessWriter
 
         final DataBlockHeader dbhr = PrfHeaders.createHeader( component.getId() ); //$NON-NLS-1$
         final CoordDataBlock dbr = new CoordDataBlock( dbhr );
-        writeCoords( component, dbr, (Double) Objects.firstNonNull( building, 0.0 ) );
+        writeCoords( component, dbr, Objects.firstNonNull( building, 0.0 ) );
         if( Objects.isNotNull( building ) )
         {
           dbr.getY()[0] = building;
@@ -177,7 +177,7 @@ public class PrfRoughnessWriter
       final Double roughness = applyFactor( point, getValue( point, component ) );
 
       arrX.add( x );
-      arrY.add( (Double) Objects.firstNonNull( roughness, nullValue ) );
+      arrY.add( Objects.firstNonNull( roughness, nullValue ) );
     }
 
     final Double[] xArray = arrX.toArray( new Double[arrX.size()] );
@@ -216,7 +216,7 @@ public class PrfRoughnessWriter
 
     final DataBlockHeader dbhr = PrfHeaders.createHeader( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ); //$NON-NLS-1$
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
-    m_prfWriter.writeCoords( null, dbr, (Double) Objects.firstNonNull( building, 0.0 ) );
+    m_prfWriter.writeCoords( null, dbr, Objects.firstNonNull( building, 0.0 ) );
     if( Objects.isNotNull( building ) )
     {
       dbr.getY()[0] = building;

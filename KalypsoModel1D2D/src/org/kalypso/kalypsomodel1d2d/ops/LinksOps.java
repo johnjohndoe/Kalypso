@@ -52,12 +52,9 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * 
  * @author Madanagopal
  * @author Patrice Congo
- * 
  */
-@SuppressWarnings("unchecked")
 public class LinksOps
 {
-
   /**
    * Delete the geo/structural relationship between the given element and complex element
    * 
@@ -67,7 +64,7 @@ public class LinksOps
    *            the complex element to unlink
    * 
    */
-  public static final void delRelationshipElementAndComplexElement( IFENetItem element, IFE1D2DComplexElement complexElement )
+  public static final void delRelationshipElementAndComplexElement( final IFENetItem element, final IFE1D2DComplexElement complexElement )
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( complexElement, "complexElement" ); //$NON-NLS-1$

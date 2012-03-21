@@ -55,7 +55,7 @@ class PunktattributMapping
   public void addAttributeMapping( final String markerID, final int pointAttribute )
   {
     final String[] markerIDs = getMarkerIDs( pointAttribute );
-    final String[] newMarkerIDs = (String[]) ArrayUtils.add( markerIDs, markerID );
+    final String[] newMarkerIDs = ArrayUtils.add( markerIDs, markerID );
     m_pointAttributeMapping.put( pointAttribute, newMarkerIDs );
   }
 

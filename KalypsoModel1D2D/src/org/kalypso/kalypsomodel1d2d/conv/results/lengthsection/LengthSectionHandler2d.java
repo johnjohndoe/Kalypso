@@ -41,18 +41,12 @@
 package org.kalypso.kalypsomodel1d2d.conv.results.lengthsection;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.observation.IObservation;
@@ -232,8 +226,6 @@ public class LengthSectionHandler2d
     final TupleResultIndex m_tupleIndex = new TupleResultIndex( tuples, stationComp );
 
     // for each point get the values of the surfaces in the list of TrinagulatedSurface
-    Collection<GM_Point> values = pointList.values();
-    GM_Point[] pointss= (GM_Point[]) values.toArray( new GM_Point[values.size()] );
     
     for( final Map.Entry<BigDecimal, GM_Point> entry : pointList.entrySet() )
     {

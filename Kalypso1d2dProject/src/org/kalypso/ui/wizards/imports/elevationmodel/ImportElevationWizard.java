@@ -75,7 +75,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author Madanagopal
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked")
 public class ImportElevationWizard extends Wizard implements INewWizard/* INewWizardKalypsoImport */
 {
   private IStructuredSelection m_initialSelection;
@@ -120,7 +119,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;
-    final Iterator selIterator = selection.iterator();
+    final Iterator< ? > selIterator = selection.iterator();
     m_terrainModel = (ITerrainModel) selIterator.next();
     m_modelFolder = (IFolder) selIterator.next();
     m_tempFolder = (IFolder) selIterator.next();

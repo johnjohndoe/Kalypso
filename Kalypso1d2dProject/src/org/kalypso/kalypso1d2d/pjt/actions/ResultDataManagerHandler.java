@@ -89,7 +89,7 @@ public class ResultDataManagerHandler extends AbstractHandler
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.0" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final IKalypsoLayerModell mapModel = (IKalypsoLayerModell) mapPanel.getMapModell();
+    final IKalypsoLayerModell mapModel = mapPanel.getMapModell();
 
     final ICaseDataProvider<IModel> modelProvider = (ICaseDataProvider<IModel>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
