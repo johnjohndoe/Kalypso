@@ -96,7 +96,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.wizards.i18n.Messages;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Thomas Jung
@@ -111,7 +111,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 
   protected ICommandTarget m_commandTarget;
 
-  protected ICaseDataProvider m_modelProvider;
+  protected IScenarioDataProvider m_modelProvider;
 
   protected Button m_reevaluateButton;
 
@@ -392,7 +392,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
     m_commandTarget = commandTarget;
   }
 
-  public void setCaseDataProvidet( final ICaseDataProvider modelProvider )
+  public void setCaseDataProvidet( final IScenarioDataProvider modelProvider )
   {
     m_modelProvider = modelProvider;
   }

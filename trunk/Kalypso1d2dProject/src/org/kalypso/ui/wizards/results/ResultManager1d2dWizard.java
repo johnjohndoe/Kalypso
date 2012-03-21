@@ -41,7 +41,6 @@
 package org.kalypso.ui.wizards.results;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -53,11 +52,11 @@ import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Wizard to manage result data for Kalypso 1D/2D.
- * 
+ *
  * allows to delete or reinterpret the existing results
  *
  * @author Thomas Jung
@@ -72,11 +71,11 @@ public class ResultManager1d2dWizard extends Wizard
 
   private final ICommandTarget m_commandTarget;
 
-  private final ICaseDataProvider<IModel> m_modelProvider;
+  private final IScenarioDataProvider m_modelProvider;
 
   private IGeoLog m_geoLog;
 
-  public ResultManager1d2dWizard( final IKalypsoLayerModell mapModel, final JobExclusiveCommandTarget commandTarget, final IScenarioResultMeta resultModel, final ICaseDataProvider<IModel> modelProvider )
+  public ResultManager1d2dWizard( final IKalypsoLayerModell mapModel, final JobExclusiveCommandTarget commandTarget, final IScenarioResultMeta resultModel, final IScenarioDataProvider modelProvider )
   {
     m_modell = mapModel;
     m_commandTarget = commandTarget;

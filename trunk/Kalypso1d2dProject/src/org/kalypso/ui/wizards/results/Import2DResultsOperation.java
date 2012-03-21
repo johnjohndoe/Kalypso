@@ -62,7 +62,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -83,7 +82,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -94,9 +93,9 @@ public class Import2DResultsOperation implements ICoreRunnableWithProgress
 
   private final File[] m_files;
 
-  private final ICaseDataProvider<IModel> m_modelProvider;
+  private final IScenarioDataProvider m_modelProvider;
 
-  public Import2DResultsOperation( final File[] files, final ICaseDataProvider<IModel> modelProvider )
+  public Import2DResultsOperation( final File[] files, final IScenarioDataProvider modelProvider )
   {
     m_files = files;
     m_modelProvider = modelProvider;

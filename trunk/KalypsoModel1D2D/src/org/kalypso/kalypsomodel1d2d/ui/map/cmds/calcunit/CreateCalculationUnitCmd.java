@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -251,7 +251,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> szenarioDataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider szenarioDataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     IControlModelGroup modelGroup = null;
     try
     {
@@ -269,9 +269,6 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     final IFeatureType controlModelFeatureType = schema.getFeatureType( ControlModel1D2D.WB1D2DCONTROL_F_MODEL );
     final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, controlModelFeatureType, parentFeature, relationType, pos, null, null, -1 )
     {
-      /**
-       * @see org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand#process()
-       */
       @Override
       public void process( ) throws Exception
       {

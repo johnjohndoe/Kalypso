@@ -82,7 +82,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.afgui.model.ICommandPoster;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -93,7 +92,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
@@ -113,7 +112,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   private IStatus m_resultStatus;
 
-  private final ICaseDataProvider<IModel> m_caseDataProvider;
+  private final IScenarioDataProvider m_caseDataProvider;
 
   private StatusComposite m_statusComp;
 
@@ -129,7 +128,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   protected boolean m_evaluateFullResults;
 
-  protected RMA10ResultPage( final String pageName, final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
+  protected RMA10ResultPage( final String pageName, final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IGeoLog geoLog, final IContainer unitFolder, final IScenarioDataProvider caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
   {
     super( pageName );
     final ResultManager resultManager = new ResultManager( fileObjectRMA, fileObjectSWAN, caseDataProvider, geoLog );
@@ -345,7 +344,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
    * button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   * 
+   *
    * @param parent
    *          the parent composite
    * @param id
@@ -537,7 +536,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
         // set the dirty flag of the results model
         ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class.getName(), new EmptyCommand( "", false ) ); //$NON-NLS-1$
       }
-      catch( InvocationTargetException e )
+      catch( final InvocationTargetException e )
       {
         e.printStackTrace();
       }

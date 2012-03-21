@@ -42,10 +42,11 @@ package org.kalypso.model.flood.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * @author Thomas Jung

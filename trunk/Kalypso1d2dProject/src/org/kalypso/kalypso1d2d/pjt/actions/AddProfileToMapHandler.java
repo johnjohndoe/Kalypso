@@ -68,22 +68,18 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Gernot Belger
  */
 public class AddProfileToMapHandler extends AbstractHandler
 {
-  /**
-   * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -91,7 +87,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-      final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
       /* Get network collection */
       final ITerrainModel terrainModel;

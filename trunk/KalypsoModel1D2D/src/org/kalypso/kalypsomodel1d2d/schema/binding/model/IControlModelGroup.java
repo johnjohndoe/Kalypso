@@ -42,8 +42,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Interface for classes representing a feature of type c1d2d:ControlModelGroup

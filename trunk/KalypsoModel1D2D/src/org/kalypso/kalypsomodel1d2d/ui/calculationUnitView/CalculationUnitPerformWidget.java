@@ -68,10 +68,9 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Madanagopal
@@ -121,7 +120,6 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     m_dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
@@ -130,7 +128,7 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       m_dataModel.setData( ICommonKeys.KEY_DATA_PROVIDER, modelProvider );

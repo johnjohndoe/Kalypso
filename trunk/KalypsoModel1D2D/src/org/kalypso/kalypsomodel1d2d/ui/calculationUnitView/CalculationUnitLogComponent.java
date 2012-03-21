@@ -81,7 +81,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This component shows the geo-log of the selected calculation unit in a table view.
@@ -227,7 +227,7 @@ public class CalculationUnitLogComponent
   {
     try
     {
-      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_dataModel.getData( ICaseDataProvider.class, ICommonKeys.KEY_DATA_PROVIDER );
+      final SzenarioDataProvider dataProvider = (SzenarioDataProvider) m_dataModel.getData( IScenarioDataProvider.class, ICommonKeys.KEY_DATA_PROVIDER );
       final IContainer scenarioFolder = dataProvider.getScenarioFolder();
       final IScenarioResultMeta scenarioMeta = dataProvider.getModel( IScenarioResultMeta.class.getName() );
       final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getId() );

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
@@ -53,7 +53,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -69,11 +68,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartWizard;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Imports some external restart data into this model.
- * 
+ *
  * @author Gernot Belger
  */
 public class ImportRestartAction extends Action
@@ -82,9 +81,9 @@ public class ImportRestartAction extends Action
 
   private final IFolder m_scenarioFolder;
 
-  private final ICaseDataProvider<IModel> m_modelProvider;
+  private final IScenarioDataProvider m_modelProvider;
 
-  public ImportRestartAction( final RestartSelectWizardPage1 page, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
+  public ImportRestartAction( final RestartSelectWizardPage1 page, final IFolder scenarioFolder, final IScenarioDataProvider modelProvider )
   {
     m_page = page;
     m_scenarioFolder = scenarioFolder;
@@ -116,7 +115,7 @@ public class ImportRestartAction extends Action
 
     final TreeViewer treeViewer = m_page.getTreeViewer();
     final IFolder scenarioFolder = m_scenarioFolder;
-    final ICaseDataProvider<IModel> modelProvider = m_modelProvider;
+    final IScenarioDataProvider modelProvider = m_modelProvider;
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override

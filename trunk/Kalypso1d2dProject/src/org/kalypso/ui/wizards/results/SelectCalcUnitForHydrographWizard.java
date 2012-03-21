@@ -75,7 +75,7 @@ import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -92,7 +92,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
 
   private IKalypsoLayerModell m_mapModell;
 
-  private ICaseDataProvider<Feature> m_dataProvider;
+  private IScenarioDataProvider m_dataProvider;
 
   public SelectCalcUnitForHydrographWizard( )
   {
@@ -200,18 +200,13 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     m_mapModell = modell;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     try
     {

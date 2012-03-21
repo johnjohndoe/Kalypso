@@ -44,19 +44,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.ui.wizards.results.IThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dejan Antanaskovic
  */
 public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
-  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
+  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final IScenarioDataProvider modelProvider )
   {
     super( pageName, title, titleImage, filter, comparator, factory, null );
 

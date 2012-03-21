@@ -42,10 +42,11 @@ package org.kalypso.model.hydrology.timeseries.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * @author Gernot Belger

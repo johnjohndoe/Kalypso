@@ -4,11 +4,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
+
+import de.renew.workflow.connector.cases.IModel;
 
 public interface IRasterizationControlModel extends IModel
 {

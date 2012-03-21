@@ -47,7 +47,6 @@ import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBa
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -58,6 +57,8 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.wind.IWindModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * {@link Feature_Impl} based, default implementation for {@link IStaticModel1D2D}

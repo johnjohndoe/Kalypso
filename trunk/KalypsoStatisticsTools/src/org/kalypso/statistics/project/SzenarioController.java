@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.statistics.db.datasource.DataSourceManager;
 import org.kalypso.statistics.db.datasource.DataSourceManager.DataSourceType;
@@ -56,6 +55,7 @@ import org.kalypso.statistics.gui.PartManager;
 import org.kalypso.statistics.logger.ISysLogger;
 import org.kalypso.statistics.utils.AppUtils;
 
+import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
 
 /**

@@ -4,9 +4,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Interface to be implemented by classes representing a wbr:RoughnessCollection elemenent

@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -88,18 +88,17 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   private final boolean m_ignoreMapSelection = false;
 
-  private final ICaseDataProvider<Feature> m_dataProvider;
+  private final IScenarioDataProvider m_dataProvider;
 
   private List<IFE1D2DNode> m_selectedNodeList;
 
-  @SuppressWarnings("unchecked")
   public ApplyElevationWidgetDataModel( )
   {
     super( KEYS, null );
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
   public void setMapModell( final IMapModell mapModell )

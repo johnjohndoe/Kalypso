@@ -42,10 +42,11 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Interface for classes representing a simBase:FlowRelationshipModel
