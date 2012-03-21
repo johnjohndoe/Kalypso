@@ -40,16 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.project;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
 /**
  * Helper that encapsulates the constants to access data inside a rrm scenario.
- * 
+ *
  * @author Gernot Belger
  */
 public class RrmScenario
 {
   private static final String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
+
+  private static final String FOLDER_MODELS = ".models"; //$NON-NLS-1$
+
+  private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
+
+  private static final String FILE_HYDROTOP_GML = "hydrotop.gml";//$NON-NLS-1$
 
   private final IFolder m_scenarioFolder;
 
@@ -62,6 +69,11 @@ public class RrmScenario
 // {
 //    return m_scenarioFolder.getFolder( ".views" ); //$NON-NLS-1$
 // }
+
+  public IFolder getModelsFolder( )
+  {
+    return m_scenarioFolder.getFolder( FOLDER_MODELS );
+  }
 
   public IFolder getSimulationsFolder( )
   {
@@ -83,6 +95,16 @@ public class RrmScenario
     // TODO: should check more...
 
     return true;
+  }
+
+  public IFile getModelFile( )
+  {
+    return getModelsFolder().getFile( FILE_MODELL_GML );
+  }
+
+  public IFile getHydrotopeFile( )
+  {
+    return getModelsFolder().getFile( FILE_HYDROTOP_GML );
   }
 
 // private IFile getViewsFile( final String filename )
