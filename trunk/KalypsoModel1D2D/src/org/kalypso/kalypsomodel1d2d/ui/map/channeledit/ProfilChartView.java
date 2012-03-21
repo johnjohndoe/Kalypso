@@ -75,7 +75,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 /**
  * @author belger
  * @author kimwerner
- * 
+ *
  * @deprecated use ProfilChartViewPart or ProfilChartComposite instead
  */
 @Deprecated
@@ -376,7 +376,7 @@ public class ProfilChartView implements IChartPart, IProfilListener, IProfilChar
     if( existingAxis == null || existingAxis.length == 0 )
     {
       // /* Register default axis and axis renderer. */
-      final IAxis[] axis = m_layerProvider.registerAxis( mr );
+      /* final IAxis[] axis = */m_layerProvider.registerAxis( mr );
       // if( axis.length > 0 )
       // m_layerProvider.registerAxisRenderer( mr );
       // else

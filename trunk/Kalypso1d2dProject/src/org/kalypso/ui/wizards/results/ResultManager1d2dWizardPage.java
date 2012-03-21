@@ -80,6 +80,7 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
@@ -100,10 +101,9 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 
-@SuppressWarnings("unchecked")
 public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 {
 
@@ -237,7 +237,8 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
               }
               catch( final Exception e )
               {
-                lLog.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ) ); //$NON-NLS-1$
+                final IStatus status = new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.8" ) ); //$NON-NLS-1$
+                lLog.log( status );
               }
 
               try

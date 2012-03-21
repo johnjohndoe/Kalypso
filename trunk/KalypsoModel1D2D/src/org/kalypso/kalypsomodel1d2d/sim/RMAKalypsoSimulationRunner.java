@@ -225,11 +225,13 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     // null );
   }
 
+  @Override
   public IIterationInfo getIterationInfo( )
   {
     return m_iterationInfo;
   }
 
+  @Override
   public IStatus getSimulationStatus( )
   {
     return m_simulationStatus;
@@ -331,7 +333,7 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
 
   public IStatus cancelJob( )
   {
-    MultiStatus lResStatus = StatusUtilities.createMultiStatusFromMessage( IStatus.OK, KalypsoModel1D2DPlugin.getDefault().toString(), CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), " ", null ); //$NON-NLS-1$; //$NON-NLS-2$;
+    final MultiStatus lResStatus = StatusUtilities.createMultiStatusFromMessage( IStatus.OK, KalypsoModel1D2DPlugin.getDefault().toString(), CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), " ", null ); //$NON-NLS-1$; //$NON-NLS-2$;
     if( m_wpsRequest != null && !m_boolFirstDone )
     {
       lResStatus.add( m_wpsRequest.cancelJob() );

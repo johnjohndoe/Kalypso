@@ -48,7 +48,6 @@ import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -107,9 +106,9 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private Map<GM_Position, Integer> m_mapNodesActPositions;
 
-  private Map<GM_Position, Integer> m_mapPositionsToConditions = new HashMap<GM_Position, Integer>();
+  private final Map<GM_Position, Integer> m_mapPositionsToConditions = new HashMap<GM_Position, Integer>();
 
-  private Map<IFELine, Integer> m_mapContiLineToConditions = new HashMap<IFELine, Integer>();
+  private final Map<IFELine, Integer> m_mapContiLineToConditions = new HashMap<IFELine, Integer>();
 
   private final List<IPolyElement> m_listAllElements;
 
@@ -119,7 +118,7 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private int m_intCounterNodes = 1;
 
-  private List<IBoundaryCondition> m_unitBoundaryConditions;
+  private final List<IBoundaryCondition> m_unitBoundaryConditions;
 
   private int m_intGlobalContiId = 1;
 
@@ -131,7 +130,7 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private String m_strCRS;
 
-  private Map<IFELine, Integer> m_mapContiLineWithSWANBoundaryToCondition = new HashMap<IFELine, Integer>();
+  private final Map<IFELine, Integer> m_mapContiLineWithSWANBoundaryToCondition = new HashMap<IFELine, Integer>();
 
   /**
    *
@@ -171,6 +170,7 @@ public class Gml2SWANConv implements INativeIDProvider
     }
   }
 
+  @Override
   public int getConversionID( final Feature feature )
   {
     return getConversionID( feature, null );
@@ -186,9 +186,7 @@ public class Gml2SWANConv implements INativeIDProvider
     return 0;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
-   */
+  @Override
   public int getConversionID( final String featureGmlID )
   {
     return 0;
@@ -216,7 +214,7 @@ public class Gml2SWANConv implements INativeIDProvider
       FormatterUtils.checkIoException( m_formatterPos );
       return m_mapNodesActPositions;
     }
-    catch( Throwable t )
+    catch( final Throwable t )
     {
       m_log.log( StatusUtilities.statusFromThrowable( t ) );
       return null;
@@ -254,7 +252,7 @@ public class Gml2SWANConv implements INativeIDProvider
       if( object instanceof IPolyElement )
       {
         final IPolyElement lPolyElement = (IPolyElement) object;
-        for( Object lNodeAct : lPolyElement.getNodes() )
+        for( final Object lNodeAct : lPolyElement.getNodes() )
         {
 
           if( m_boolDoShift )
@@ -273,7 +271,7 @@ public class Gml2SWANConv implements INativeIDProvider
           {
             lIntConditionTmp = m_mapPositionsToConditions.get( ((IFE1D2DNode) lNodeAct).getPoint().getPosition() );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             // m_log.log( StatusUtilities.statusFromThrowable( e ) );
           }
@@ -306,7 +304,7 @@ public class Gml2SWANConv implements INativeIDProvider
   /**
    *
    */
-  private boolean isNodeOnContiLine( IFE1D2DNode pNodeAct )
+  private boolean isNodeOnContiLine( final IFE1D2DNode pNodeAct )
   {
     return isNodeOnContiLine( pNodeAct, m_intGlobalContiId );
   }
@@ -314,14 +312,14 @@ public class Gml2SWANConv implements INativeIDProvider
   /**
    *
    */
-  private boolean isNodeOnContiLine( IFE1D2DNode pNodeAct, final int pIntContiLineId )
+  private boolean isNodeOnContiLine( final IFE1D2DNode pNodeAct, final int pIntContiLineId )
   {
     IFELine lContiLineAct = null;
     try
     {
       lContiLineAct = m_discretisationModel1d2d.findContinuityLine( pNodeAct.getPoint(), 0.01 );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return false;
@@ -353,7 +351,7 @@ public class Gml2SWANConv implements INativeIDProvider
   /**
    *
    */
-  private boolean isSWANBoundaryCondOnContiLine( IFELine contiLineAct )
+  private boolean isSWANBoundaryCondOnContiLine( final IFELine contiLineAct )
   {
     for( final IBoundaryCondition boundaryCondition : m_unitBoundaryConditions )
     {
@@ -374,7 +372,7 @@ public class Gml2SWANConv implements INativeIDProvider
   private void writeSWANNodesModel( )
   {
     m_strCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    List<GM_Triangle> lListResults = new ArrayList<GM_Triangle>();
+    final List<GM_Triangle> lListResults = new ArrayList<GM_Triangle>();
     for( final Object object : m_listAllElements )
     {
       if( object instanceof IPolyElement )
@@ -387,7 +385,7 @@ public class Gml2SWANConv implements INativeIDProvider
           final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( lGM_Surface, m_strCRS, "-YY" );
           lListResults.addAll( Arrays.asList( triangles ) );
         }
-        catch( Throwable e )
+        catch( final Throwable e )
         {
           m_log.log( StatusUtilities.statusFromThrowable( e ) );
         }
@@ -409,12 +407,12 @@ public class Gml2SWANConv implements INativeIDProvider
     {
       try
       {
-        List<Integer> lListNodesAct = new ArrayList<Integer>();
+        final List<Integer> lListNodesAct = new ArrayList<Integer>();
         lListNodesAct.clear();
-        GM_Position[] lAllPositionsOfTri = lTriangle.getExteriorRing();
+        final GM_Position[] lAllPositionsOfTri = lTriangle.getExteriorRing();
         for( final GM_Position lGM_Position : lAllPositionsOfTri )
         {
-          GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
+          final GM_Position lGM_PositionRounded = GeometryFactory.createGM_Position( NumberUtils.getRoundedToSignificant( lGM_Position.getX(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getY(), SWANResultsReader.INT_ROUND_SIGNIFICANT ), NumberUtils.getRoundedToSignificant( lGM_Position.getZ(), SWANResultsReader.INT_ROUND_SIGNIFICANT ) );
 
           // if( m_mapNodesActPositions.get( lGM_Position ) == null )
           if( m_mapNodesActPositions.get( lGM_PositionRounded ) == null )
@@ -425,7 +423,7 @@ public class Gml2SWANConv implements INativeIDProvider
             {
               lIntCondition = pMapPositionsToConditions.get( lGM_Position );
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
 
             }
@@ -462,7 +460,7 @@ public class Gml2SWANConv implements INativeIDProvider
         }
         writeElement( lListNodesAct );
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         m_log.log( StatusUtilities.statusFromThrowable( e ) );
       }
@@ -472,10 +470,10 @@ public class Gml2SWANConv implements INativeIDProvider
 
     if( m_listAdditionalOuputCoord != null )
     {
-      Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
-      for( Iterator iterator = m_listAdditionalOuputCoord.iterator(); iterator.hasNext(); )
+      final Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
+      for( final Object element : m_listAdditionalOuputCoord )
       {
-        GM_Position lPosition = getPositionRoundedForSWANAdditional( (GM_Position) iterator.next() );
+        final GM_Position lPosition = getPositionRoundedForSWANAdditional( (GM_Position) element );
         if( !lSetPositions.contains( lPosition ) )
         {
           lSetPositions.add( lPosition );
@@ -483,7 +481,7 @@ public class Gml2SWANConv implements INativeIDProvider
           {
             writePos( lPosition );
           }
-          catch( IOException e )
+          catch( final IOException e )
           {
             KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
           }
@@ -504,9 +502,9 @@ public class Gml2SWANConv implements INativeIDProvider
   /**
    *
    */
-  private int countNodes( List<GM_Triangle> triangles )
+  private int countNodes( final List<GM_Triangle> triangles )
   {
-    Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
+    final Set<GM_Position> lSetPositions = new HashSet<GM_Position>();
     for( final GM_Triangle lTri : triangles )
     {
       lSetPositions.addAll( Arrays.asList( lTri.getExteriorRing() ) );
@@ -514,14 +512,14 @@ public class Gml2SWANConv implements INativeIDProvider
     return lSetPositions.size();
   }
 
-  private int getConditionForPosition( GM_Position position )
+  private int getConditionForPosition( final GM_Position position )
   {
     IFELine lContiLineAct = null;
     try
     {
       lContiLineAct = m_discretisationModel1d2d.findContinuityLine( GeometryFactory.createGM_Point( position, m_strCRS ), 0.01 );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_log.log( StatusUtilities.statusFromThrowable( e ) );
       return 0;
@@ -533,7 +531,7 @@ public class Gml2SWANConv implements INativeIDProvider
     return 0;
   }
 
-  private boolean checkPositionsOnBound( Map<GM_Position, Integer> mapPositionsToConditions, GM_Position[] allPositionsOfTri )
+  private boolean checkPositionsOnBound( final Map<GM_Position, Integer> mapPositionsToConditions, final GM_Position[] allPositionsOfTri )
   {
     for( final GM_Position lGM_Position : allPositionsOfTri )
     {
@@ -554,14 +552,14 @@ public class Gml2SWANConv implements INativeIDProvider
     {
       return lBoolResult;
     }
-    IFeatureBindingCollection lContainers = pNode.getContainers();
+    final IFeatureBindingCollection lContainers = pNode.getContainers();
     for( final Object lContainerObject : lContainers )
     {
       if( lContainerObject instanceof IFE1D2DEdge )
       {
-        IFE1D2DEdge lEdge = (IFE1D2DEdge) lContainerObject;
+        final IFE1D2DEdge lEdge = (IFE1D2DEdge) lContainerObject;
 
-        IFeatureBindingCollection<IFE1D2DElement> adjacentElements = lEdge.getAdjacentElements();
+        final IFeatureBindingCollection<IFE1D2DElement> adjacentElements = lEdge.getAdjacentElements();
         if( adjacentElements.size() < 2 || (!m_calculationUnit.contains( adjacentElements.get( 0 ) ) && m_calculationUnit.contains( adjacentElements.get( 1 ) ))
             || (!m_calculationUnit.contains( adjacentElements.get( 1 ) ) && m_calculationUnit.contains( adjacentElements.get( 0 ) )) )
         {
@@ -587,7 +585,7 @@ public class Gml2SWANConv implements INativeIDProvider
     return lBoolResult;
   }
 
-  private boolean isNodeInCalcUnit( IFE1D2DNode pNode )
+  private boolean isNodeInCalcUnit( final IFE1D2DNode pNode )
   {
     for( final IFE1D2DElement lElement : pNode.getElements() )
     {
@@ -638,7 +636,7 @@ public class Gml2SWANConv implements INativeIDProvider
 
   private int writeNode( final GM_Position pNodeAct, final int pIntBoundary ) throws IOException
   {
-    String lStrPositionLine = "" + m_intCounterNodes + ""; //$NON-NLS-1$ //$NON-NLS-2$
+    final String lStrPositionLine = "" + m_intCounterNodes + ""; //$NON-NLS-1$ //$NON-NLS-2$
     m_formatterNodes.format( lStrPositionLine + " %.3f %.3f %d%n", pNodeAct.getX() - m_doubleGlobalMinX, pNodeAct.getY() - m_doubleGlobalMinY, pIntBoundary ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( m_formatterNodes );

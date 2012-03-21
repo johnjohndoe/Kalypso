@@ -54,6 +54,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -68,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a line.
- * 
+ *
  * @author Patrice Congo
  */
 public class LinePointCollector
@@ -90,7 +91,7 @@ public class LinePointCollector
 
   /**
    * The constructor.
-   * 
+   *
    * @param cnt_points
    *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
    *          count of the points will apply.
@@ -307,7 +308,7 @@ public class LinePointCollector
 
   /**
    * Conevniance methode to get a new builder with the same required number of point and coordinate reference system
-   * 
+   *
    * @param return a new builder
    */
   public LinePointCollector getNewBuilder( )
@@ -317,7 +318,7 @@ public class LinePointCollector
 
   /**
    * Returns the last point in this {@link LineGeometryBuilder}
-   * 
+   *
    * @return the last point included in this {@link LineGeometryBuilder}
    */
   public GM_Point getLastPoint( )
@@ -335,7 +336,7 @@ public class LinePointCollector
 
   /**
    * To get the first point included in this geometry builder
-   * 
+   *
    * @return the first point in this geometry builder
    */
   public GM_Point getFirstPoint( )
@@ -354,7 +355,7 @@ public class LinePointCollector
 
   /**
    * To set the number of points the this line geometry is required to have to be considered finished
-   * 
+   *
    * @param cntPoints
    *          the new required number of points
    */
@@ -383,7 +384,7 @@ public class LinePointCollector
 
   /**
    * Return the number of points already in this {@link LineGeometryBuilder}
-   * 
+   *
    * @return the number of points allready included in the line geometry
    */
   public int getCurrentPointCnt( )
@@ -394,7 +395,7 @@ public class LinePointCollector
   /**
    * Return the remaining number of point to add to this {@link LineGeometryBuilder} to reach the expected number of
    * points
-   * 
+   *
    * @return the actual of number of point remaining for completion or {@link Integer#MAX_VALUE} if the required number
    *         of point was set to a zero or negativ integer
    */
@@ -512,7 +513,7 @@ public class LinePointCollector
 
   /**
    * Mark the {@link LineGeometryBuilder} as selected
-   * 
+   *
    * @param isSelected
    *          -- a boolean expressing the selection state of the {@link LineGeometryBuilder}
    */
@@ -544,7 +545,6 @@ public class LinePointCollector
     return m_isSelected;
   }
 
-  @SuppressWarnings("unchecked")
   public void paintLine( final Graphics g, final GeoTransform projection, final double width, final Color color )
   {
     final GM_Position[] positions = new GM_Position[m_points.size()];
@@ -561,9 +561,9 @@ public class LinePointCollector
         return;
 
       final LineSymbolizer symb = new LineSymbolizer_Impl();
-      final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+      final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
 
-      Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+      Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
       defaultstroke = symb.getStroke();
 
       stroke.setWidth( width );

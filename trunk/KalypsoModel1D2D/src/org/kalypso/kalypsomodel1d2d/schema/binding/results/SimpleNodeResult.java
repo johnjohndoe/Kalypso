@@ -46,7 +46,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.model.spatialschema.GeometryException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -785,7 +784,8 @@ public class SimpleNodeResult implements INodeResult
   }
 
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes")
+  final Class adapter )
   {
     return null;
   }
@@ -851,19 +851,13 @@ public class SimpleNodeResult implements INodeResult
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
-   */
   @Override
-  public GM_Envelope getBoundedBy( ) throws GeometryException
+  public GM_Envelope getBoundedBy( )
   {
     // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
-   */
   @Override
   public Feature getOwner( )
   {

@@ -196,9 +196,6 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
     return new BuildingParameters( getBuildingObservation() );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
-   */
   @Override
   public IProfileFeature getProfile( )
   {
@@ -206,20 +203,12 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
     return profileFeature;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
-   */
   @Override
   public void setProfileLink( final String profileRef )
   {
-    final Feature feature = this;
-
     setLink( QNAME_PROP_PROFILE, profileRef );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#getStation()
-   */
   @Override
   public BigDecimal getStation( )
   {

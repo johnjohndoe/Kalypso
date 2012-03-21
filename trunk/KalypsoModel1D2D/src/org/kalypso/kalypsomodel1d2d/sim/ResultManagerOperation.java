@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -139,10 +138,6 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 
       return moveResults( m_outputDir, progress.newChild( 5 ) );
     }
-    catch( final CoreException ce )
-    {
-      return ce.getStatus();
-    }
     catch( final Throwable t )
     {
       return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.6" ) + t.toString(), t ); //$NON-NLS-1$
@@ -152,7 +147,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
   /**
    * Delete all existing results inside the current result database.
    */
-  private IStatus deleteExistingResults( final IProgressMonitor monitor ) throws CoreException
+  private IStatus deleteExistingResults( final IProgressMonitor monitor )
   // private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit,
   // final IProgressMonitor monitor ) throws CoreException
   {

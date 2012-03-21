@@ -53,11 +53,12 @@ public class NodeResultCollection extends Feature_Impl implements INodeResultCol
 {
   private final IFeatureBindingCollection<INodeResult> m_nodeResults = new FeatureBindingCollection<INodeResult>( this, INodeResult.class, QNAME_PROP_NODERESULT_MEMBER );
 
-  public NodeResultCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public NodeResultCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  @Override
   public IFeatureBindingCollection<INodeResult> getNodeResults( )
   {
     return m_nodeResults;

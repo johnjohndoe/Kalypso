@@ -64,46 +64,36 @@ import de.renew.workflow.connector.cases.IModel;
  * {@link Feature_Impl} based, default implementation for {@link IStaticModel1D2D}
  *
  * @author Patrice Congo
- *
  */
 public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
 {
 
-  public StaticModel1D2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public StaticModel1D2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   public final static QName WB1D2D_F_STATIC_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" ); //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getDiscretisationModel()
-   */
   @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel( )
   {
     return getSubModel( SIM_BASE_P_DICRRETISATION_MODEL, IFEDiscretisationModel1d2d.class );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getFlowRelationshipModel()
-   */
+  @Override
   public IFlowRelationshipModel getFlowRelationshipModel( )
   {
     return getSubModel( SIM_BASE_P_FLOW_RELATIONSHIP_MODEL, IFlowRelationshipModel.class );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getTerrainModel()
-   */
+  @Override
   public ITerrainModel getTerrainModel( )
   {
     return getSubModel( SIM_BASE_P_TERRAIN_MODEL, ITerrainModel.class );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getTerrainModel()
-   */
+  @Override
   public IWindModel getWindModel( )
   {
     return getSubModel( SIM_BASE_P_WIND_MODEL, IWindModel.class );

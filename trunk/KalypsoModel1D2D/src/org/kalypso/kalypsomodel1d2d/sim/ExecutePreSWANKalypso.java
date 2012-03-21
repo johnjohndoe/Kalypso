@@ -66,7 +66,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
@@ -114,25 +113,17 @@ public class ExecutePreSWANKalypso
   }
 
   /**
-   * Create execute request to PreRMAKalypso WPS with given restart infos and default calcUnit defined in control model
-   */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos ) throws CoreException
-  {
-    this( serviceEndpoint, restartInfos, null );
-  }
-
-  /**
    * Create execute request to PreSWANKalypso WPS with no restart infos and default calcUnit defined in control model
    */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID ) throws CoreException
+  public ExecutePreSWANKalypso( final String serviceEndpoint, final String calcUnitID ) throws CoreException
   {
-    this( serviceEndpoint, restartInfos, calcUnitID, null );
+    this( serviceEndpoint, calcUnitID, null );
   }
 
   /**
    * Create execute request to PreRMAKalypso WPS with given restart infos and calcUnit
    */
-  public ExecutePreSWANKalypso( final String serviceEndpoint, final List<IRestartInfo> restartInfos, final String calcUnitID, final URI rmaCalcPath ) throws CoreException
+  public ExecutePreSWANKalypso( final String serviceEndpoint, final String calcUnitID, final URI rmaCalcPath ) throws CoreException
   {
     final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
     m_scenarioFolder = caseDataProvider.getScenarioFolder();
@@ -153,7 +144,7 @@ public class ExecutePreSWANKalypso
     m_serviceEndpoint = serviceEndpoint;
     m_rmaOutputPath = rmaCalcPath;
     m_calcUnitID = calcUnitID;
-    m_modelInput = createInputs( restartInfos );
+    m_modelInput = createInputs();
     // currently 60 minutes timeout
     m_wpsRequest = new WPSRequest( PreSWANKalypso.ID, m_serviceEndpoint, 60 * 60 * 1000 );
 
@@ -210,7 +201,7 @@ public class ExecutePreSWANKalypso
     }
   }
 
-  private final Modeldata createInputs( final List<IRestartInfo> restartInfos )
+  private final Modeldata createInputs( )
   {
     final Map<String, String> inputs = new HashMap<String, String>();
     inputs.put( PreRMAKalypso.INPUT_CONTROL, "models/control.gml" ); //$NON-NLS-1$

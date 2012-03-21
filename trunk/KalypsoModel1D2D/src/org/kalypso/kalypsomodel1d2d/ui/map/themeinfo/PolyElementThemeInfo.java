@@ -97,7 +97,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
   {
     private final double m_maxLength;
 
-    private final double m_minLength;
+    // private final double m_minLength;
 
     private final double m_lengthRatio;
 
@@ -125,7 +125,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       }
 
       m_maxLength = maxLength;
-      m_minLength = minLength;
+      // m_minLength = minLength;
       m_lengthRatio = maxLength / minLength;
       m_area = surface.getArea();
     }

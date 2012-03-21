@@ -328,11 +328,11 @@ public class ResultMeta1d2dHelper
   public static IStatus removeResult( final IResultMeta resultMeta, final boolean removeOriginalRawRes )
   {
     if( !removeResultMetaFile( resultMeta, removeOriginalRawRes ).isOK() )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.1" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.1" ) ); //$NON-NLS-1$
 
     final IResultMeta parent = resultMeta.getOwner();
     if( parent == null )
-      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.2" ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.2" ) ); //$NON-NLS-1$
 
     parent.getChildren().remove( resultMeta );
 
@@ -417,12 +417,12 @@ public class ResultMeta1d2dHelper
     return document;
   }
 
-  public static IStatus deleteAllByID( final ICalcUnitResultMeta calcUnitMeta, final String[] idsToDelete, final IProgressMonitor monitor ) throws CoreException
+  public static IStatus deleteAllByID( final ICalcUnitResultMeta calcUnitMeta, final String[] idsToDelete, final IProgressMonitor monitor )
   {
     return deleteAllByID( calcUnitMeta, idsToDelete, monitor, true );
   }
 
-  public static IStatus deleteAllByID( final ICalcUnitResultMeta calcUnitMeta, final String[] idsToDelete, final IProgressMonitor monitor, final boolean includeOriginal ) throws CoreException
+  public static IStatus deleteAllByID( final ICalcUnitResultMeta calcUnitMeta, final String[] idsToDelete, final IProgressMonitor monitor, final boolean includeOriginal )
   {
     final Set<String> toDelete = new HashSet<String>( Arrays.asList( idsToDelete ) );
 
@@ -447,7 +447,7 @@ public class ResultMeta1d2dHelper
     return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, stati.toArray( new IStatus[stati.size()] ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.5" ), null ); //$NON-NLS-1$
   }
 
-  public static IStatus deleteResults( final ICalcUnitResultMeta calcUnitMeta, final Date[] stepsToDelete, final IProgressMonitor monitor ) throws CoreException
+  public static IStatus deleteResults( final ICalcUnitResultMeta calcUnitMeta, final Date[] stepsToDelete, final IProgressMonitor monitor )
   {
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 
@@ -481,7 +481,7 @@ public class ResultMeta1d2dHelper
     return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, stati.toArray( new IStatus[stati.size()] ), Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.5" ), null ); //$NON-NLS-1$
   }
 
-  public static IStatus deleteLogAndTins( final ICalcUnitResultMeta calcUnitMeta, final Date[] stepsToDelete, final IProgressMonitor monitor ) throws CoreException
+  public static IStatus deleteLogAndTins( final ICalcUnitResultMeta calcUnitMeta, final Date[] stepsToDelete, final IProgressMonitor monitor )
   {
     final Set<Date> toDelete = new HashSet<Date>( Arrays.asList( stepsToDelete ) );
 

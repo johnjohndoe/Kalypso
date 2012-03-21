@@ -14,7 +14,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
@@ -117,11 +116,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     m_crossPointFigure.setStyle( m_styleSet.getStyle( "crossPoint", IPointStyle.class ) ); //$NON-NLS-1$
 
     updatePaintData();
-  }
-
-  public void drawIcon( final Image img )
-  {
-    // we do not have an legend item (yet?)
   }
 
   @Override

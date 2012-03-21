@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Wrapped a {@link GM_Point} and mimes the possibility to changes it
- * 
+ *
  * @author Patrice Congo
  */
 class MutableGMPoint implements GM_Point
@@ -304,11 +304,9 @@ class MutableGMPoint implements GM_Point
     throw new CloneNotSupportedException();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes")
+  final Class adapter )
   {
     return null;
   }
@@ -317,7 +315,7 @@ class MutableGMPoint implements GM_Point
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
    */
   @Override
-  public GM_Object transform( String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws Exception
   {
     return new MutableGMPoint( (GM_Point) this.point.transform( targetCRS ) );
   }

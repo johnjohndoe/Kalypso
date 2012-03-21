@@ -59,9 +59,9 @@ import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
  * Helper class to write the building file of a RMA·Kalypso calculation.
- * 
+ *
  * @author Gernot Belger
- * 
+ *
  */
 public class Building1D2DConverter
 {
@@ -110,8 +110,7 @@ public class Building1D2DConverter
         buildingParameters = ( ( IBuildingFlowRelation2D )building ).getBuildingParameters();
       }
 
-      // writeBuildingBlock( formatter, buildingID, buildingParameters );
-      writeNewBuildingBlock( formatter, buildingID, buildingParameters );
+      writeBuildingBlock( formatter, buildingID, buildingParameters );
     }
 
     formatter.format( "ENDDATA" ); //$NON-NLS-1$
@@ -119,7 +118,7 @@ public class Building1D2DConverter
     FormatterUtils.checkIoException( formatter );
   }
 
-  private void writeNewBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
+  private void writeBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
   {
     final TupleResult values = buildingParameters.getValues();
 
@@ -144,20 +143,6 @@ public class Building1D2DConverter
     formatter.format( "ENDBLOC  %8d%n", buildingID ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
-  }
-
-  // TODO: remove, and rename writeNewBuildingBlock to writeBuildingBlock
-  private void writeBuildingBlock( final Formatter formatter, final Integer buildingID, final BuildingParameters buildingParameters ) throws IOException
-  {
-    final BigDecimal[] upstreamWaterlevels = buildingParameters.getUpstreamWaterlevels();
-    final BigDecimal[] downstreamWaterlevels = buildingParameters.getDownstreamWaterlevels();
-
-    formatter.format( "IDC     %8d%8d%8d%n", buildingID, upstreamWaterlevels.length, downstreamWaterlevels.length ); //$NON-NLS-1$
-
-    formatBlock( formatter, "HRW", upstreamWaterlevels ); //$NON-NLS-1$
-    formatBlock( formatter, "HCL", downstreamWaterlevels ); //$NON-NLS-1$
-
-    formatDischarges( formatter, upstreamWaterlevels, downstreamWaterlevels, buildingParameters );
   }
 
   private void formatBlock( final Formatter formatter, final String name, final BigDecimal[] values ) throws IOException

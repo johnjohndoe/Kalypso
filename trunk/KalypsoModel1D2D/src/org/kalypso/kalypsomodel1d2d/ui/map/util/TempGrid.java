@@ -100,7 +100,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * This class provide the mechanism to calculate the grid finit element model node and to display them. The point are
  * supposed to be in the same coordinate reference system so that no no reference system convertion is done
- * 
+ *
  * @author Patrice Congo
  * @author Thomas Jung
  */
@@ -133,7 +133,7 @@ public class TempGrid
   /**
    * Set the target {@link CS_CoordinateSystem}. All points this grid is coping with are required to reside in that
    * system and no reference system conversion made in by the {@link TempGrid}
-   * 
+   *
    * @param targetCrs
    *          the target {@link CS_CoordinateSystem}
    * @throws IllegalArgumentException
@@ -147,7 +147,7 @@ public class TempGrid
 
   /**
    * Class this to display the {@link TempGrid} on the screen.
-   * 
+   *
    * @param g
    *          the display graphic context
    * @param projection
@@ -219,7 +219,7 @@ public class TempGrid
 
   /**
    * Reset this {@link TempGrid}. It is empty, i.e. contains no points after reset
-   * 
+   *
    * @param crs
    *          the target coordinate reference system for the grid
    * @see #setCoodinateSystem(CS_CoordinateSystem)
@@ -234,7 +234,7 @@ public class TempGrid
 
   /**
    * config the with its side points.
-   * 
+   *
    * @param topSidePoints
    *          the collector containing the top side points
    * @param bottomSidePoints
@@ -352,7 +352,7 @@ public class TempGrid
     final List<Feature> lListAdded = new ArrayList<Feature>();
     for( final GM_Ring ring : elements )
     {
-      lListAdded.addAll( createElementsFromRing( workspace, discModel, ring ) );
+      lListAdded.addAll( createElementsFromRing( discModel, ring ) );
       // ElementGeometryHelper.createFE1D2DfromRing( workspace, discModel, ring );
     }
     Logger.getLogger( TempGrid.class.getName() ).log( Level.INFO, "new elements created: " + lListAdded ); //$NON-NLS-1$
@@ -365,7 +365,7 @@ public class TempGrid
     }
   }
 
-  private List<Feature> createElementsFromRing( final CommandableWorkspace workspace, final IFEDiscretisationModel1d2d discModel, final GM_Ring ring )
+  private List<Feature> createElementsFromRing( final IFEDiscretisationModel1d2d discModel, final GM_Ring ring )
   {
     final List<Feature> lListRes = new ArrayList<Feature>();
     final List<IFE1D2DEdge< ? , ? >> lListEdges = new ArrayList<IFE1D2DEdge< ? , ? >>();

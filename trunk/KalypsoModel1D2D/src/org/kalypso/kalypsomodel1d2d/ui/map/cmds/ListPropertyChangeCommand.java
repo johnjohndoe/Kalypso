@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
- * 
+ *
  * @author Patrice Congo
  */
 @SuppressWarnings("unchecked")
@@ -72,9 +72,9 @@ public class ListPropertyChangeCommand implements ICommand
     m_newChanges = changes;
     m_oldChanges = new FeatureChange[changes.length];
     // check changes
-    for( int i = 0; i < changes.length; i++ )
+    for( final FeatureChange change2 : changes )
     {
-      final FeatureChange change = changes[i];
+      final FeatureChange change = change2;
       if( !change.getProperty().isList() )
       {
         throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand.0") ); //$NON-NLS-1$
@@ -135,7 +135,7 @@ public class ListPropertyChangeCommand implements ICommand
     final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     Feature featureToChange;
     IPropertyType propType;
-    List /* nextPropList, */propList;
+    List propList;
     Object newProp;
 
     for( int i = 0; i < changes.length; i++ )
@@ -154,15 +154,15 @@ public class ListPropertyChangeCommand implements ICommand
       }
       else
       {
-        propList = (List) featureToChange.getProperty( propType );
+        propList = (List< ? >) featureToChange.getProperty( propType );
       }
       newProp = change.getNewValue();
-      m_oldChanges[i] = new FeatureChange( featureToChange, propType, new ArrayList( propList ) );
+      m_oldChanges[i] = new FeatureChange( featureToChange, propType, new ArrayList<>( propList ) );
       // nextPropList= new ArrayList(propList);
       if( newProp instanceof List )
       {
         // nextPropList.addAll( (List)newProp );
-        propList.addAll( (List) newProp );
+        propList.addAll( (List< ? >) newProp );
       }
       else
       {
@@ -187,14 +187,14 @@ public class ListPropertyChangeCommand implements ICommand
   private final void undoChanges( )
   {
     // IPropertyType proType;
-    List propToRetain;
-    List curProp;
-    for( FeatureChange change : m_oldChanges )
+    List< ? > propToRetain;
+    List< ? > curProp;
+    for( final FeatureChange change : m_oldChanges )
     {
       if( change != null )
       {
-        propToRetain = (List) change.getNewValue();
-        curProp = (List) change.getFeature().getProperty( change.getProperty() );
+        propToRetain = (List< ? >) change.getNewValue();
+        curProp = (List< ? >) change.getFeature().getProperty( change.getProperty() );
         curProp.retainAll( propToRetain );
       }
     }

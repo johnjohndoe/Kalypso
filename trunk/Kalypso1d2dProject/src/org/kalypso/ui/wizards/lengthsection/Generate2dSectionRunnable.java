@@ -17,6 +17,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionParameters;
@@ -106,9 +107,9 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.11" ) ); //$NON-NLS-1$
               surface = getSurface( docResult );
               if( surface != null )
-                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
+                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues );
               else
-                return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.12" ) ); //$NON-NLS-1$
+                return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.12" ) ); //$NON-NLS-1$
               monitor.worked( 4 );
             }
             else if( documentType == DOCUMENTTYPE.tinVelo )
@@ -116,9 +117,9 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
               monitor.subTask( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.13" ) ); //$NON-NLS-1$
               surface = getSurface( docResult );
               if( surface != null )
-                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
+                LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues );
               else
-                return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.14" ) ); //$NON-NLS-1$
+                return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.14" ) ); //$NON-NLS-1$
               monitor.worked( 4 );
             }
           }
@@ -145,10 +146,10 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
                 surface = getSurface( docResult );
                 if( surface != null )
                 {
-                  LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues, monitor );
+                  LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, m_lengthSectionParameters, stationList, documentType, m_isKmValues );
                 }
                 else
-                  return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.16" ) ); //$NON-NLS-1$
+                  return new Status( IStatus.ERROR, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.16" ) ); //$NON-NLS-1$
               }
             }
           }
@@ -206,7 +207,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
         }
         else
         {
-          return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.23" ) ); //$NON-NLS-1$
+          return new Status( IStatus.WARNING, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.23" ) ); //$NON-NLS-1$
         }
         monitor.worked( 1 );
       }
@@ -224,7 +225,7 @@ final class Generate2dSectionRunnable implements ICoreRunnableWithProgress
     {
       monitor.done();
     }
-    return StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.25" ) ); //$NON-NLS-1$
+    return new Status( IStatus.OK, Kalypso1d2dProjectPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.25" ) ); //$NON-NLS-1$
 
   }
 

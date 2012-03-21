@@ -66,9 +66,6 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FELine#createFullNodesList(java.util.List)
-   */
   @Override
   public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
@@ -92,15 +89,12 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     return m_nodes;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem#recalculateElementGeometry()
-   */
   @Override
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     try
     {
-      final ArrayList<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+      final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
       list.addAll( getNodes() );
       recalculateGeometry( list );
     }
@@ -128,7 +122,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   {
     final Iterator<IFE1D2DNode> iterator = nodes.iterator();
     final IFE1D2DNode startNode = iterator.next();
-    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) startNode.getWorkspace().getRootFeature();
+    // final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) startNode.getWorkspace().getRootFeature();
     final List<IFE1D2DNode> curveNodes = new ArrayList<IFE1D2DNode>();
     curveNodes.add( startNode );
     IFE1D2DNode currentNode = startNode;

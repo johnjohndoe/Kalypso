@@ -60,7 +60,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.i18n.Messages;
@@ -172,36 +171,36 @@ public class ResultMetaInfoViewer extends Viewer
     final StringBuffer buf = new StringBuffer();
 
     /* possible entries */
-    final String scenarioName;
-    final String scenarioDescription;
+    // final String scenarioName;
+    // final String scenarioDescription;
     String calcUnitName = null;
-    String calcUnitDescription = null;
+    // String calcUnitDescription = null;
     String calcStart = null;
     String calcEnd = null;
 
-    String stepName = null;
-    String stepDescription = null;
+    // String stepName = null;
+    // String stepDescription = null;
     String stepType = null;
     String stepTime = null;
 
-    String docName;
-    String docDescription;
+    // String docName;
+    // String docDescription;
     String docType = null;
     String docMin = null;
     String docMax = null;
 
     // TODO: uäargh! Lots of copy/paste code....!
-    final IScenarioResultMeta scenarioResult = getScenarioResultMeta( result );
-    if( scenarioResult != null )
-    {
-      scenarioName = scenarioResult.getName();
-      scenarioDescription = scenarioResult.getDescription();
-    }
-    else
-    {
-      scenarioName = null;
-      scenarioDescription = null;
-    }
+    // final IScenarioResultMeta scenarioResult = getScenarioResultMeta( result );
+    // if( scenarioResult != null )
+    // {
+    // scenarioName = scenarioResult.getName();
+    // scenarioDescription = scenarioResult.getDescription();
+    // }
+    // else
+    // {
+    // scenarioName = null;
+    // scenarioDescription = null;
+    // }
 
     final DateFormat dateFormat = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
     // dateFormat.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
@@ -211,7 +210,7 @@ public class ResultMetaInfoViewer extends Viewer
     if( calcUnitResult != null )
     {
       calcUnitName = calcUnitResult.getName();
-      calcUnitDescription = calcUnitResult.getDescription();
+      // calcUnitDescription = calcUnitResult.getDescription();
 
       final Date calcStartTime = calcUnitResult.getCalcStartTime();
       final Date calcEndTime = calcUnitResult.getCalcEndTime();
@@ -222,8 +221,8 @@ public class ResultMetaInfoViewer extends Viewer
     final IStepResultMeta stepResult = getStepResultMeta( result );
     if( stepResult != null )
     {
-      stepName = stepResult.getName();
-      stepDescription = stepResult.getDescription();
+      // stepName = stepResult.getName();
+      // stepDescription = stepResult.getDescription();
       stepType = stepResult.getStepType().toString();
       final Date stepResultTime = stepResult.getStepTime();
       stepTime = stepResultTime == null ? "-" : dateFormat.format( stepResultTime ); //$NON-NLS-1$
@@ -235,8 +234,8 @@ public class ResultMetaInfoViewer extends Viewer
       docResult = (IDocumentResultMeta) result;
 
       // get infos of the selected document
-      docName = docResult.getName();
-      docDescription = docResult.getDescription();
+      // docName = docResult.getName();
+      // docDescription = docResult.getDescription();
       docType = docResult.getDocumentType().toString();
       // if( docResult.getMinValue() != null )
       // {
@@ -372,23 +371,23 @@ public class ResultMetaInfoViewer extends Viewer
     return buf.toString();
   }
 
-  /**
-   * gets the ScenarioResultMeta as the papa of all results
-   */
-  private static IScenarioResultMeta getScenarioResultMeta( final IResultMeta result )
-  {
-    if( result instanceof IScenarioResultMeta )
-      return (IScenarioResultMeta) result;
-    else
-    {
-      final IResultMeta parent = result.getOwner();
-      if( parent != null )
-      {
-        return getScenarioResultMeta( parent );
-      }
-    }
-    return null;
-  }
+  // /**
+  // * gets the ScenarioResultMeta as the papa of all results
+  // */
+  // private static IScenarioResultMeta getScenarioResultMeta( final IResultMeta result )
+  // {
+  // if( result instanceof IScenarioResultMeta )
+  // return (IScenarioResultMeta) result;
+  // else
+  // {
+  // final IResultMeta parent = result.getOwner();
+  // if( parent != null )
+  // {
+  // return getScenarioResultMeta( parent );
+  // }
+  // }
+  // return null;
+  // }
 
   /**
    * gets the StepResultMeta as the papa of all documents (except tin_terrain)

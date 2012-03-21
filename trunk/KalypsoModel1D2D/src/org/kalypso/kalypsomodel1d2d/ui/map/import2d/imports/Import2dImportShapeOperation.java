@@ -49,7 +49,6 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -97,7 +96,7 @@ public class Import2dImportShapeOperation extends AbstractImport2DImportOperatio
   }
 
   @Override
-  protected Pair<IStatus, IPolygonWithName[]> readFileData( final File importFile, final int sourceSrid, final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+  protected Pair<IStatus, IPolygonWithName[]> readFileData( final File importFile, final int sourceSrid, final IProgressMonitor monitor ) throws InvocationTargetException
   {
     final String filePath = importFile.getAbsolutePath();
 

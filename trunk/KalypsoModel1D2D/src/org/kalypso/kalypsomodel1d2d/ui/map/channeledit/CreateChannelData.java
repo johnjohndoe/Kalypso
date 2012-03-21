@@ -70,6 +70,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.LineStringUtilities;
 import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
@@ -84,12 +85,12 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -391,13 +392,13 @@ public class CreateChannelData
     tempGrid.importMesh( importingGridPoints );
     tempGrid.setCoodinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     final double searchDistance = 0.1;
-    final IStatus status = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, searchDistance );
+    tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, searchDistance );
 
     try
     {
       workspace.postCommand( new EmptyCommand( "set dirty command ", false ) ); //$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -515,7 +516,7 @@ public class CreateChannelData
       {
         final Coordinate[][] coordinates = m_coordList.get( i );
         if( numX != coordinates.length )
-          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.3" ) ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.3" ) ); //$NON-NLS-1$
         // coordSegmentPointer = coordYPosPointer;
         // loop over all profile intersections -> coords [x][]
         for( int j = 0; j < coordinates.length; j++ )
@@ -533,7 +534,7 @@ public class CreateChannelData
       if( coordYPosPointer != overallYCoordNum - 1 )
       {
         System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.4" ) ); //$NON-NLS-1$
-        return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.5" ) ); //$NON-NLS-1$
+        return new Status( IStatus.WARNING, KalypsoModel1D2DPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.5" ) ); //$NON-NLS-1$
       }
 
       m_meshCoords = newCoords;
@@ -780,7 +781,7 @@ public class CreateChannelData
 
     for( final GM_Curve curve : curves )
     {
-      final GM_LineString asLineString = null;
+      // final GM_LineString asLineString = null;
       final GM_Curve lCurve = curve;
 //      if( !lCurve.intersects( profile.getLine() ) && lCurve.intersection( profile.getLine() ) == null )
 //      {
@@ -860,11 +861,10 @@ public class CreateChannelData
     return globNumBankIntersections;
   }
 
-  @SuppressWarnings("unchecked")
   private void paintEdges( final Coordinate[][] coords, final Graphics g, final IMapPanel mapPanel ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
 
     final Color grey = new Color( 100, 100, 100 );
 
@@ -958,7 +958,7 @@ public class CreateChannelData
       else if( segment != null & edit == true )
       {
         // commits the done edits
-        final int i = 1;
+        // final int i = 1;
         // segment.updateBank();
         // segment.updateProfile();
       }

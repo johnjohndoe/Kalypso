@@ -31,7 +31,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Wizard main page for wind data import wizard.
- * 
+ *
  * selection of source file, filtered by extensions, selection of coordinate system.
  */
 public class WindDataWizardMainPage extends WizardPage
@@ -62,10 +62,11 @@ public class WindDataWizardMainPage extends WizardPage
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   * 
+   *
    * @param parent
    *          the parent composite
    */
+  @Override
   public void createControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.NULL );
@@ -81,6 +82,7 @@ public class WindDataWizardMainPage extends WizardPage
     m_filename = new Text( container, SWT.BORDER );
     m_filename.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
@@ -133,6 +135,7 @@ public class WindDataWizardMainPage extends WizardPage
     m_tileTitle = new Text( container, SWT.BORDER );
     m_tileTitle.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
@@ -148,6 +151,7 @@ public class WindDataWizardMainPage extends WizardPage
     m_height = new Text( container, SWT.BORDER );
     m_height.addModifyListener( new ModifyListener()
     {
+      @Override
       public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
@@ -172,7 +176,7 @@ public class WindDataWizardMainPage extends WizardPage
 
   /**
    * Called by the wizard to initialize the receiver's cached selection.
-   * 
+   *
    * @param selection
    *          the selection or <code>null</code> if none
    */
@@ -184,9 +188,9 @@ public class WindDataWizardMainPage extends WizardPage
     m_fileExtensions = EWindFileTypes.getExtentionsList();
     //    m_fileExtensions.add( "dat" ); //$NON-NLS-1$
     //    m_fileExtensions.add( "gz" ); //$NON-NLS-1$
-    //    m_fileExtensions.add( "asc" ); //$NON-NLS-1$  
+    //    m_fileExtensions.add( "asc" ); //$NON-NLS-1$
     // Find the first plugin.xml file.
-    final Iterator iter = ((IStructuredSelection) selection).iterator();
+    final Iterator< ? > iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
       Object item = iter.next();
@@ -252,7 +256,7 @@ public class WindDataWizardMainPage extends WizardPage
       {
         Double.parseDouble( m_height.getText().trim() );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         setMessage( null );
         setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.windModel.Wind.5" ) ); //$NON-NLS-1$

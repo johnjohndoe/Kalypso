@@ -176,7 +176,7 @@ public class InundationDifferenceSimulation implements ISimulation
         final IFeatureBindingCollection<ICoverage> coverages2_HQ100 = collection2_HQ100.getResultCoverages().getCoverages();
         for( final ICoverage coverage : coverages2_HQ100 )
         {
-          if( coverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
+          if( coverage.getBoundedBy().equals( inputCoverage1.getBoundedBy() ) )
           {
             inputCoverage2 = coverage;
             break;

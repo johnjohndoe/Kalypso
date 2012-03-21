@@ -29,7 +29,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Adapter from version 1.0 1d2d discretization model to version 2.0
- * 
+ *
  * @author kurzbach
  */
 public class DiscretizationModelAdaptorV2 implements IModelAdaptor
@@ -68,14 +68,16 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
     final Feature model = workspace.getRootFeature();
     final IFeatureType modelFeatureType = model.getFeatureType();
 
-    final IRelationType complexElementsProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
+    // final IRelationType complexElementsProperty = (IRelationType) modelFeatureType.getProperty(
+    // IFEDiscretisationModel1d2d.WB1D2D_PROP_COMPLEX_ELEMENTS );
     final IRelationType elementsProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
     final IRelationType edgesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
-    final IRelationType continuityLinesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
+    // final IRelationType continuityLinesProperty = (IRelationType) modelFeatureType.getProperty(
+    // IFEDiscretisationModel1d2d.WB1D2D_PROP_CONTINUITY_LINES );
     final IRelationType nodesProperty = (IRelationType) modelFeatureType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
 
-    final FeatureList complexElements = (FeatureList) model.getProperty( complexElementsProperty );
-    final FeatureList continuityLines = (FeatureList) model.getProperty( continuityLinesProperty );
+    // final FeatureList complexElements = (FeatureList) model.getProperty( complexElementsProperty );
+    // final FeatureList continuityLines = (FeatureList) model.getProperty( continuityLinesProperty );
 
     final FeatureList elements = (FeatureList) model.getProperty( elementsProperty );
     final FeatureList edges = (FeatureList) model.getProperty( edgesProperty );
@@ -89,7 +91,7 @@ public class DiscretizationModelAdaptorV2 implements IModelAdaptor
 
       final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) model.getAdapter( IFEDiscretisationModel1d2d.class );
       final IFeatureBindingCollection<IFE1D2DElement> elements2 = discModel.getElements();
-      for( IFE1D2DElement element : elements2 )
+      for( final IFE1D2DElement element : elements2 )
       {
         if( element instanceof PolyElement )
         {

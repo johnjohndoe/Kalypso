@@ -78,12 +78,12 @@ public class WindModelDisplayElementFactory
       return null;
     }
     
-    IWindDataModelSystem lSelectedWindSystem = WindDataWidgetDataModel.getSelectedWindSystem();
+    final IWindDataModelSystem lSelectedWindSystem = WindDataWidgetDataModel.getSelectedWindSystem();
     if( lSelectedWindSystem == null )
     {
       return null;
     }
-    IWindDataModel lActWindDataModel = WindDataWidgetDataModel.getActualWindDataModel( lWindDataModelSystem.getId() );
+    final IWindDataModel lActWindDataModel = WindDataWidgetDataModel.getActualWindDataModel( lWindDataModelSystem.getId() );
     if( lActWindDataModel == null || !lWindDataModelSystem.equals( lSelectedWindSystem ) )
     {
       return null;
@@ -94,10 +94,11 @@ public class WindModelDisplayElementFactory
       final IWindDataProvider lWindDataProvider = ((NativeWindDataModelWrapper) lActWindDataModel).getWindDataProvider();
       if( lWindDataProvider instanceof BinaryWindDataModel )
       {
-        BinaryWindDataModel lBinWind = (BinaryWindDataModel) lWindDataProvider;
+        final BinaryWindDataModel lBinWind = (BinaryWindDataModel) lWindDataProvider;
 
         final IGridVisitorFactory<GM_Curve> visitorFactory = new GridVisitableDisplayElement.IGridVisitorFactory<GM_Curve>()
         {
+          @Override
           public IPlainGridVisitor<GM_Curve> createVisitor( final Graphics g, final GeoTransform projection )
           {
             return new VectorPainterPlainGridVisitor<GM_Curve>( g, projection, feature );

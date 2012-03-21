@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author jung
- * 
+ *
  */
 public abstract class NodeStyleEditorComposite extends Composite
 {
@@ -120,7 +120,8 @@ public abstract class NodeStyleEditorComposite extends Composite
     m_minValue = new BigDecimal( m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_maxValue = new BigDecimal( m_toEntry.getTo( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
-//    m_stepWidthBD = new BigDecimal( m_fromEntry.getTo( null ) - m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    // m_stepWidthBD = new BigDecimal( m_fromEntry.getTo( null ) - m_fromEntry.getFrom( null ) ).setScale( 2,
+    // BigDecimal.ROUND_HALF_UP );
 
     m_amontOfInterpolationsClasses = amountClasses;
 
@@ -147,17 +148,19 @@ public abstract class NodeStyleEditorComposite extends Composite
     m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
-      public void onFillChanged( Object source, Fill fill )
+      @Override
+      public void onFillChanged( final Object source, final Fill fill )
       {
         contentChanged();
       }
     } );
-    
+
     m_fillEditor = new FillEditorComposite( this, SWT.NONE, m_toEntry.getFill(), true );
     m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
-      public void onFillChanged( Object source, Fill fill )
+      @Override
+      public void onFillChanged( final Object source, final Fill fill )
       {
         contentChanged();
       }
@@ -204,7 +207,7 @@ public abstract class NodeStyleEditorComposite extends Composite
     maxValueText.setText( String.valueOf( m_maxValue ) );
     maxValueText.setEditable( false );
     maxValueText.setEnabled( false );
-    
+
     final Text stepWidthText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataStepWidthText = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridDataStepWidthText.widthHint = 100;
@@ -229,6 +232,7 @@ public abstract class NodeStyleEditorComposite extends Composite
 
     minValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
@@ -237,6 +241,7 @@ public abstract class NodeStyleEditorComposite extends Composite
           m_minValue = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
@@ -251,6 +256,7 @@ public abstract class NodeStyleEditorComposite extends Composite
 
     minValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
@@ -288,6 +294,7 @@ public abstract class NodeStyleEditorComposite extends Composite
 
     maxValueText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
@@ -296,6 +303,7 @@ public abstract class NodeStyleEditorComposite extends Composite
           m_maxValue = value;
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
@@ -310,6 +318,7 @@ public abstract class NodeStyleEditorComposite extends Composite
 
     maxValueText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
@@ -347,6 +356,7 @@ public abstract class NodeStyleEditorComposite extends Composite
 
     stepWidthText.addFocusListener( new FocusListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
@@ -355,6 +365,7 @@ public abstract class NodeStyleEditorComposite extends Composite
           m_amontOfInterpolationsClasses = value.intValue();
       }
 
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
@@ -369,6 +380,7 @@ public abstract class NodeStyleEditorComposite extends Composite
 
     stepWidthText.addModifyListener( new ModifyListener()
     {
+      @Override
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
@@ -389,7 +401,7 @@ public abstract class NodeStyleEditorComposite extends Composite
     } );
 
   }
-  
+
   public final int getAmountOfClassesForInterpolation( )
   {
     return m_amontOfInterpolationsClasses;

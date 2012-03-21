@@ -60,6 +60,7 @@ import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -425,13 +426,13 @@ public class DragBankLineWidget extends DeprecatedMouseWidget
 
     // paint the current dragged line
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
 
     final GM_Curve curve;
     try
     {
       curve = GeometryFactory.createGM_Curve( positions, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+      Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
       defaultstroke = symb.getStroke();
 
       stroke.setWidth( 2 );
