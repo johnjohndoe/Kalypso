@@ -40,16 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.rules;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -57,56 +56,62 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelRoughnessResolution;
-import org.kalypso.observation.result.IComponent;
 
 /**
  * @author kimwerner
+ * @author Dirk Kuch
  */
 public class RauheitRule extends AbstractValidatorRule
 {
   @Override
-  public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
+  public void validate( final IProfil profile, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( profil == null || isDurchlass( profil.getProfileObjects( IProfileBuilding.class ) ) )
+    if( profile == null || isDurchlass( profile.getProfileObjects( IProfileBuilding.class ) ) )
       return;
 
-    final String stationId = String.format( "km %.4f", profil.getStation() );//$NON-NLS-1$
-    final IComponent pointPropKS = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
-    final IComponent pointPropKST = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
-    final IComponent propertyClazz = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    if( Objects.allNull( pointPropKS, pointPropKST, propertyClazz ) )
+    final String stationId = String.format( "km %.4f", profile.getStation() );//$NON-NLS-1$
+
+    if( !WspmClassifications.hasRoughnessProperties( profile ) && !WspmClassifications.hasRoughnessClass( profile ) )
     {
       collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.3" ), stationId, 0, "", new DelRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST }, null ) ); //$NON-NLS-1$//$NON-NLS-2$
       return;
     }
 
-    final IProfilPointMarker[] durchS = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    final IProfilPointMarker[] durchS = profile.getPointMarkerFor( profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     if( durchS.length < 2 )
       return;
 
     final int leftD = durchS[0].getPoint().getIndex();
     final int rightD = durchS[durchS.length - 1].getPoint().getIndex();
-    final IProfileRecord[] points = profil.getPoints( leftD, rightD );
+    final IProfileRecord[] points = profile.getPoints( leftD, rightD );
     if( points.length == 0 )
       return;
 
-    final boolean showLabel = pointPropKS != null && pointPropKST != null;
-
-    checkRoughnessValues( collector, stationId, points, pointPropKS, showLabel );
-    checkRoughnessValues( collector, stationId, points, pointPropKST, showLabel );
+    checkRoughnessValues( collector, stationId, points );
   }
 
-  private void checkRoughnessValues( final IValidatorMarkerCollector collector, final String stationId, final IProfileRecord[] points, final IComponent pointProp, final boolean showLabel ) throws CoreException
+  private void checkRoughnessValues( final IValidatorMarkerCollector collector, final String stationId, final IProfileRecord[] points ) throws CoreException
   {
-    if( pointProp == null )
-      return;
-
     for( final IProfileRecord point : points )
     {
-      final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
+      final Object[] result = getValue( point );
+      if( result == null )
+      {
+
+        final String msg = String.format( "Fehlende Profilpunkt-Rauheit ab Profilpunkt: %.2f m", point.getBreite() );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, msg, stationId, 0, "", new DelRoughnessResolution( new String[] { IWspmConstants.POINT_PROPERTY_RAUHEIT_KS,
+            IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS }, null ) );
+
+        return;
+      }
+
+      final String id = (String) result[0];
+      final Double value = (Double) result[1];
+
       if( value.isNaN() || value <= 0.0 )
       {
-        final String prefix = showLabel ? pointProp.getName() + ": " : StringUtils.EMPTY; //$NON-NLS-1$
+        final String prefix = id + ": "; //$NON-NLS-1$
+
         final String message;
         if( value.isNaN() )
         {
@@ -117,10 +122,23 @@ public class RauheitRule extends AbstractValidatorRule
           message = prefix + Messages.getString( "org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.1" ); //$NON-NLS-1$
         }
 
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, point.getIndex(), pointProp.getId() ); //$NON-NLS-1$ //$NON-NLS-2$
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, message, stationId, point.getIndex(), id ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
     }
+  }
+
+  private Object[] getValue( final IProfileRecord point )
+  {
+    final Double ksValue = WspmClassifications.getRoughnessValue( point, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+    if( Objects.isNotNull( ksValue ) )
+      return new Object[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, ksValue };
+
+    final Double kstValue = WspmClassifications.getRoughnessValue( point, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
+    if( Objects.isNotNull( kstValue ) )
+      return new Object[] { IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, kstValue };
+
+    return null;
   }
 
   private boolean isDurchlass( final IProfileObject[] objects )
