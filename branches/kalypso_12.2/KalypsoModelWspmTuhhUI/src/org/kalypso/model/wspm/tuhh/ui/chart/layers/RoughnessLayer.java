@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.layers;
 
-import java.math.BigDecimal;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
@@ -176,38 +173,9 @@ public class RoughnessLayer extends AbstractProfilLayer
      * TODO 2: like calculation core, displaying / handling of roughness is configruated by a flag (use roughness
      * classes, use plain values)
      */
-    final Double factor = point.getRoughnessFactor();
-    final IComponent component = getTargetComponent();
-    if( Objects.isNotNull( component ) )
-    {
-      final Object value = point.getValue( component );
-      if( value instanceof Number )
-      {
-        final Number number = (Number) value;
-        return number.doubleValue() * factor;
-      }
-    }
 
-    final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
-    if( Objects.isNull( clazz ) )
-      return null;
+    return WspmClassifications.getRoughnessValue( point, getTargetProperty() );
 
-    final String target = getTargetProperty();
-    switch( target )
-    {
-      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS:
-        final BigDecimal clazzKsValue = clazz.getKsValue();
-        if( Objects.isNotNull( clazzKsValue ) )
-          return clazzKsValue.doubleValue() * factor;
-
-      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST:
-        final BigDecimal clazzKstValue = clazz.getKstValue();
-        if( Objects.isNotNull( clazzKstValue ) )
-          return clazzKstValue.doubleValue() * factor;
-
-      default:
-        return null;
-    }
   }
 
   @Override
