@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.util.FindTimeStepOperation;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
