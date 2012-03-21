@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart.themes;
 
-import java.math.BigDecimal;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -49,14 +47,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
@@ -101,20 +97,17 @@ public class VegetationTheme extends AbstractProfilTheme
 
   private ILegendEntry[] createLegendEntries( )
   {
-
+    final LegendEntry le = new LegendEntry( this, toString() )
     {
-      final LegendEntry le = new LegendEntry( this, toString() )
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
       {
-        @Override
-        public void paintSymbol( final GC gc, final Point size )
-        {
-          final Rectangle clipping = gc.getClipping();
-          drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height, clipping.width, clipping.height ) );
-        }
-      };
+        final Rectangle clipping = gc.getClipping();
+        drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height, clipping.width, clipping.height ) );
+      }
+    };
 
-      return new ILegendEntry[] { le };
-    }
+    return new ILegendEntry[] { le };
   }
 
   private Rectangle getHoverRectInternal( final IProfileRecord point1, final IProfileRecord point2 )
@@ -166,11 +159,11 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();
     }
+
     return m_legendEntries;
   }
 
@@ -180,22 +173,13 @@ public class VegetationTheme extends AbstractProfilTheme
     return new IChartLayer[] {};
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public String getTooltipInfo( final IProfileRecord point )
   {
-    final Double ax = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX, point );
-    final Double ay = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY, point );
-    final Double dp = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, point );
 
-    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } ); //$NON-NLS-1$
+    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", WspmClassifications.getAx( point ), WspmClassifications.getAy( point ), WspmClassifications.getDp( point ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {
@@ -207,9 +191,6 @@ public class VegetationTheme extends AbstractProfilTheme
     new ProfilOperationJob( operation ).schedule();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
@@ -261,66 +242,15 @@ public class VegetationTheme extends AbstractProfilTheme
 
   final boolean segmenthasVegetation( final IProfileRecord point )
   {
-    final Double ax = getAx( point );
-    final Double ay = getAy( point );
-    final Double dp = getDp( point );
+    final Double ax = WspmClassifications.getAx( point );
+    final Double ay = WspmClassifications.getAy( point );
+    final Double dp = WspmClassifications.getDp( point );
 
     if( Doubles.isNaN( ax, ax, dp ) )
       return false;
 
     return ax * ay * dp != 0;
 
-  }
-
-  private Double getDp( final IProfileRecord point )
-  {
-    final Double bewuchs = point.getBewuchsDp();
-    if( Objects.isNotNull( bewuchs ) )
-      return bewuchs;
-
-    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
-    if( Objects.isNotNull( clazz ) )
-    {
-      final BigDecimal decimal = clazz.getDp();
-      if( Objects.isNotNull( decimal ) )
-        return decimal.doubleValue();
-    }
-
-    return null;
-  }
-
-  private Double getAy( final IProfileRecord point )
-  {
-    final Double bewuchs = point.getBewuchsDp();
-    if( Objects.isNotNull( bewuchs ) )
-      return bewuchs;
-
-    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
-    if( Objects.isNotNull( clazz ) )
-    {
-      final BigDecimal decimal = clazz.getAy();
-      if( Objects.isNotNull( decimal ) )
-        return decimal.doubleValue();
-    }
-
-    return null;
-  }
-
-  private Double getAx( final IProfileRecord point )
-  {
-    final Double bewuchs = point.getBewuchsDp();
-    if( Objects.isNotNull( bewuchs ) )
-      return bewuchs;
-
-    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
-    if( Objects.isNotNull( clazz ) )
-    {
-      final BigDecimal decimal = clazz.getAx();
-      if( Objects.isNotNull( decimal ) )
-        return decimal.doubleValue();
-    }
-
-    return null;
   }
 
   @Override
