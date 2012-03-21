@@ -46,12 +46,9 @@
 package org.kalypso.ui.rrm.internal.newproject;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.io.FilenameUtils;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -69,42 +66,37 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kuepfer
  */
 public class KalypsoNAProjectWizardPage extends WizardPage
 {
+  private final KalypsoNAMappingData m_data;
+
   private Group m_fileGroup;
 
   private SourceMappingComposite m_sourceGroup;
 
   private Group m_mappingGroup;
 
-  private String m_crs;
+  private IDataBinding m_binding;
 
-  private File m_shapeFile;
-
-  private final IValuePropertyType[] m_targetProperties;
-
-  private boolean m_skip = true;
-
-  public KalypsoNAProjectWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IValuePropertyType[] targetProperties )
+  public KalypsoNAProjectWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final KalypsoNAMappingData data )
   {
     super( pageName, title, titleImage );
 
-    m_targetProperties = targetProperties;
+    m_data = data;
+
     setDescription( Messages.getString( "KalypsoNAProjectWizardPage.PageDescription" ) ); //$NON-NLS-1$
   }
 
@@ -116,17 +108,18 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     topComposite.setFont( parent.getFont() );
     setControl( topComposite );
 
+    m_binding = new DatabindingWizardPage( this, null );
+
     initializeDialogUnits( parent );
+
+    final boolean isSkipEnabled = m_data.getSkip();
 
     // build wizard page
     final Button skipRadioButton = new Button( topComposite, SWT.CHECK );
     skipRadioButton.setText( getTitle() );
-    skipRadioButton.setSelection( !m_skip );
+    skipRadioButton.setSelection( !isSkipEnabled );
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -139,17 +132,17 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
     createMappingGroup( topComposite );
 
-    m_mappingGroup.setVisible( !m_skip );
-    m_fileGroup.setVisible( !m_skip );
+    m_mappingGroup.setVisible( !isSkipEnabled );
+    m_fileGroup.setVisible( !isSkipEnabled );
   }
 
   protected void handleSkipCheckboxSelected( final boolean selection )
   {
-    m_skip = !selection;
-    
+    m_data.setSkip( !selection );
+
     m_mappingGroup.setVisible( selection );
     m_fileGroup.setVisible( selection );
-    
+
     validate();
   }
 
@@ -160,8 +153,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     m_fileGroup.setText( Messages.getString( "KalypsoNAProjectWizardPage.FileGroupText" ) ); //$NON-NLS-1$
 
     final FileChooserDelegateOpen openFileDelegate = new FileChooserDelegateOpen();
-    openFileDelegate.addFilter( Messages.getString("KalypsoNAProjectWizardPage_0"), ".shp" ); //$NON-NLS-1$ //$NON-NLS-2$
-    openFileDelegate.addFilter( Messages.getString("KalypsoNAProjectWizardPage_2"), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
+    openFileDelegate.addFilter( Messages.getString( "KalypsoNAProjectWizardPage_0" ), ".shp" ); //$NON-NLS-1$ //$NON-NLS-2$
+    openFileDelegate.addFilter( Messages.getString( "KalypsoNAProjectWizardPage_2" ), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final FileChooserGroup fileChooserGroup = new FileChooserGroup( openFileDelegate );
     fileChooserGroup.createControlsInGrid( m_fileGroup );
@@ -179,12 +172,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     crsLabel.setText( Messages.getString( "KalypsoNAProjectWizardPage.CRSLabelText" ) ); //$NON-NLS-1$
 
     /* Coordinate system */
-    m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
     final CRSSelectionPanel crsSelectionPanel = new CRSSelectionPanel( m_fileGroup, CRSSelectionPanel.NO_GROUP );
     crsSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
 
-    crsSelectionPanel.setSelectedCRS( m_crs );
+    crsSelectionPanel.setSelectedCRS( m_data.getSrs() );
     crsSelectionPanel.setToolTipText( Messages.getString( "KalypsoNAProjectWizardPage.CRSTooltip" ) ); //$NON-NLS-1$
 
     crsSelectionPanel.addSelectionChangedListener( new ISelectionChangedListener()
@@ -201,7 +192,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   protected void handleFileChanged( final File file )
   {
-    m_shapeFile = file;
+    m_data.setShapeFile( file );
 
     if( validate() )
       updateShape();
@@ -211,11 +202,19 @@ public class KalypsoNAProjectWizardPage extends WizardPage
   {
     m_mappingGroup = new Group( parent, SWT.NONE );
     m_mappingGroup.setText( Messages.getString( "KalypsoNAProjectWizardPage.MappingGroupText" ) ); //$NON-NLS-1$
-    final GridLayout topGroupLayout = new GridLayout();
-    m_mappingGroup.setLayout( topGroupLayout );
+    m_mappingGroup.setLayout( new GridLayout() );
 
-    final GridData topGroupGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    m_mappingGroup.setLayoutData( topGroupGridData );
+    m_mappingGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* A status composite for geometry type check */
+    final StatusComposite shapeTypeStatus = new StatusComposite( m_mappingGroup, SWT.NONE );
+    shapeTypeStatus.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final StatusCompositeValue targetStatus = new StatusCompositeValue( shapeTypeStatus );
+    final IObservableValue modelStatus = BeansObservables.observeValue( m_data, KalypsoNAMappingData.PROPERTY_SHAPE_TYPE_STATUS );
+    m_binding.bindValue( targetStatus, modelStatus );
+
+    // Xxx
 
     final ScrolledForm scrolledForm = new ScrolledForm( m_mappingGroup, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL );
     final GridData scrolledFormData = new GridData( SWT.FILL, SWT.FILL, true, true );
@@ -228,16 +227,13 @@ public class KalypsoNAProjectWizardPage extends WizardPage
     final Composite body = scrolledForm.getBody();
     body.setLayout( new FillLayout() );
 
-    m_sourceGroup = new SourceMappingComposite( body, SWT.NONE, m_targetProperties );
+    m_sourceGroup = new SourceMappingComposite( body, SWT.NONE, m_data );
 
     // Reset buttons group
     final Button resetButton = new Button( m_mappingGroup, SWT.PUSH );
     resetButton.setText( Messages.getString( "KalypsoNAProjectWizardPage.ResetButtonText" ) ); //$NON-NLS-1$
     resetButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -248,7 +244,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   protected void handleCrsChanged( final String selectedCRS )
   {
-    m_crs = selectedCRS;
+    m_data.setSrs( selectedCRS );
 
     if( validate() )
       updateShape();
@@ -257,23 +253,6 @@ public class KalypsoNAProjectWizardPage extends WizardPage
   protected void handleResetSelection( )
   {
     m_sourceGroup.resetSelection();
-  }
-
-  /**
-   * This method returns a HashMap with the user defined mapping of the source to the target. key = (String) target
-   * property value = (String) source property
-   * 
-   * @return map HashMap with the custom mapping
-   */
-  public Map<IValuePropertyType, IValuePropertyType> getMapping( )
-  {
-    if( m_skip )
-      return null;
-    
-    if( m_sourceGroup == null )
-      return null;
-
-    return m_sourceGroup.getMapping();
   }
 
   boolean validate( )
@@ -287,28 +266,29 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   private boolean doValidate( )
   {
-    if( m_skip )
+    if( m_data.getSkip() )
       return true;
-    
-    if( m_crs == null )
+
+    if( m_data.getSrs() == null )
     {
       setMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageNotSupportedCS" ), IMessageProvider.ERROR ); //$NON-NLS-1$
       return false;
     }
 
-    if( m_shapeFile == null )
+    final File shapeFile = m_data.getShapeFile();
+    if( shapeFile == null )
     {
       setMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageChooseFile" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
       return false;
     }
 
-    if( !m_shapeFile.exists() )
+    if( !shapeFile.exists() )
     {
       setMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageNotValidFile" ), IMessageProvider.ERROR ); //$NON-NLS-1$
       return true;
     }
 
-    if( !m_shapeFile.getName().toLowerCase().endsWith( ".shp" ) ) //$NON-NLS-1$
+    if( !shapeFile.getName().toLowerCase().endsWith( ".shp" ) ) //$NON-NLS-1$
     {
       setMessage( Messages.getString( "KalypsoNAProjectWizardPage.ErrorMessageWrongSuffix" ), IMessageProvider.WARNING ); //$NON-NLS-1$
       return true;
@@ -319,31 +299,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage
 
   protected void updateShape( )
   {
-    if( m_shapeFile == null )
-      return;
+    m_data.readShapeFile( this );
 
-    final String shapePath = m_shapeFile.getAbsolutePath();
-    final String fileBase = FilenameUtils.removeExtension( shapePath );
-
-    try
-    {
-      final GMLWorkspace shapeWorkspace = ShapeSerializer.deserialize( fileBase, m_crs );
-      m_sourceGroup.setSourceWorkspace( shapeWorkspace );
-    }
-    catch( final GmlSerializeException e )
-    {
-      e.printStackTrace();
-      final String msg = String.format( Messages.getString("KalypsoNAProjectWizardPage_1"), e.getLocalizedMessage() ); //$NON-NLS-1$
-      setMessage( msg, IMessageProvider.ERROR );
-      setPageComplete( false );
-
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), e );
-      ErrorDialog.openError( getShell(), Messages.getString( "KalypsoNAProjectWizardPage.TextMessageReadError" ), Messages.getString( "KalypsoNAProjectWizardPage.MessageReadError", shapePath ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-  }
-
-  public List< ? > getFeatureList( )
-  {
-    return m_sourceGroup.getSourceData();
+    m_sourceGroup.updateSourceList();
   }
 }

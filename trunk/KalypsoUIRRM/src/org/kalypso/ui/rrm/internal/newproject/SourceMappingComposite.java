@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.newproject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -64,14 +62,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
 /**
@@ -81,9 +73,6 @@ public class SourceMappingComposite extends Composite
 {
   public class VPTLabelProvider extends LabelProvider
   {
-    /**
-     * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-     */
     @Override
     public String getText( final Object element )
     {
@@ -106,10 +95,6 @@ public class SourceMappingComposite extends Composite
       m_targetPT = targetPT;
     }
 
-    /**
-     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-     *      java.lang.Object)
-     */
     @Override
     public boolean select( final Viewer viewer, final Object parentElement, final Object element )
     {
@@ -123,22 +108,23 @@ public class SourceMappingComposite extends Composite
     }
   }
 
-  private static final String EMPTY_KEY = Messages.getString("SourceMappingComposite_0"); //$NON-NLS-1$
+  private static final String EMPTY_KEY = Messages.getString( "SourceMappingComposite_0" ); //$NON-NLS-1$
 
   private static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
 
   private final Map<ComboViewer, IValuePropertyType> m_combos = new HashMap<ComboViewer, IValuePropertyType>();
 
-  private final Map<IValuePropertyType, IValuePropertyType> m_mapping = new HashMap<IValuePropertyType, IValuePropertyType>();
+  private final KalypsoNAMappingData m_data;
 
-  private FeatureList m_sourceData;
-
-  public SourceMappingComposite( final Composite parent, final int style, final IValuePropertyType[] targetProperties )
+  public SourceMappingComposite( final Composite parent, final int style, final KalypsoNAMappingData data )
   {
     super( parent, style );
 
     setLayout( new GridLayout( 2, false ) );
 
+    m_data = data;
+
+    final IValuePropertyType[] targetProperties = data.getTargetProperties();
     for( final IValuePropertyType targetPT : targetProperties )
       addTargetProperty( targetPT );
 
@@ -176,14 +162,14 @@ public class SourceMappingComposite extends Composite
   protected void handleComboSelectionChanged( final IValuePropertyType targetPT, final IStructuredSelection selection )
   {
     if( selection.isEmpty() )
-      m_mapping.remove( targetPT );
+      m_data.removeMapping( targetPT );
     else
     {
       final Object firstElement = selection.getFirstElement();
       if( firstElement instanceof IValuePropertyType )
-        m_mapping.put( targetPT, (IValuePropertyType) firstElement );
+        m_data.setMapping( targetPT, (IValuePropertyType) firstElement );
       else
-        m_mapping.remove( firstElement );
+        m_data.removeMapping( firstElement );
     }
   }
 
@@ -214,9 +200,9 @@ public class SourceMappingComposite extends Composite
   /**
    * This method clears the mapping
    */
-  private void updateSourceList( )
+  void updateSourceList( )
   {
-    final IValuePropertyType[] ftp = getSourceProperties();
+    final IValuePropertyType[] ftp = m_data.getSourceProperties();
 
     final Object[] input;
     if( ftp == null )
@@ -244,45 +230,4 @@ public class SourceMappingComposite extends Composite
       resetSelection( comboViewer );
     }
   }
-
-  private IValuePropertyType[] getSourceProperties( )
-  {
-    if( m_sourceData == null )
-      return null;
-
-    final List<IValuePropertyType> result = new ArrayList<IValuePropertyType>();
-
-    final IFeatureType srcFT = m_sourceData.getPropertyType().getTargetFeatureType();
-    final IPropertyType[] ftp = srcFT.getProperties();
-
-    for( final IPropertyType element : ftp )
-    {
-      if( element instanceof IValuePropertyType )
-      {
-        final IValuePropertyType fromPT = (IValuePropertyType) element;
-        result.add( fromPT );
-      }
-    }
-
-    return result.toArray( new IValuePropertyType[result.size()] );
-  }
-
-  public Map<IValuePropertyType, IValuePropertyType> getMapping( )
-  {
-    return m_mapping;
-  }
-
-  public void setSourceWorkspace( final GMLWorkspace shapeWorkspace )
-  {
-    final Feature rootFeature = shapeWorkspace.getRootFeature();
-    m_sourceData = (FeatureList) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-
-    updateSourceList();
-  }
-
-  public List< ? > getSourceData( )
-  {
-    return m_sourceData;
-  }
-
 }
