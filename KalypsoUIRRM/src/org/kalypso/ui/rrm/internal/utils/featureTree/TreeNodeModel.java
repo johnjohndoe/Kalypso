@@ -44,7 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -59,11 +59,11 @@ public class TreeNodeModel implements ITreeNodeModel
 
   private final CommandableWorkspace m_workspace;
 
-  private final StructuredViewer m_viewer;
+  private final TreeViewer m_viewer;
 
   private final ITreeNodeStrategy m_strategy;
 
-  public TreeNodeModel( final ITreeNodeStrategy strategy, final CommandableWorkspace workspace, final StructuredViewer viewer )
+  public TreeNodeModel( final ITreeNodeStrategy strategy, final CommandableWorkspace workspace, final TreeViewer viewer )
   {
     m_strategy = strategy;
     m_workspace = workspace;
@@ -83,7 +83,7 @@ public class TreeNodeModel implements ITreeNodeModel
   }
 
   @Override
-  public void clear( )
+  public synchronized void clear( )
   {
     m_nodes = null;
   }
@@ -126,16 +126,14 @@ public class TreeNodeModel implements ITreeNodeModel
     clear();
     m_viewer.refresh();
 
-    // TODO: does not work properly: instead, find node with same tree data after clear and select it.
+    /** set selection */
     final TreeNode node = findNode( treeDataToSelect );
-
     setSelection( node );
   }
 
   private TreeNode[] convert( final TreeNode[] others )
   {
     final Set<TreeNode> own = new LinkedHashSet<>();
-
     for( final TreeNode other : others )
     {
       final TreeNode found = findNode( other );
