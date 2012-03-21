@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureTree;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -91,9 +95,11 @@ public class TreeNodeModel implements ITreeNodeModel
   }
 
   @Override
-  public void setSelection( final TreeNode... selection )
+  public void setSelection( final TreeNode... incoming )
   {
-    m_viewer.setSelection( new StructuredSelection( selection ) );
+    final TreeNode[] selection = convert( incoming );
+
+    m_viewer.setSelection( new StructuredSelection( selection ), true );
   }
 
   @Override
@@ -118,11 +124,61 @@ public class TreeNodeModel implements ITreeNodeModel
   public void refreshTree( final Object treeDataToSelect )
   {
     clear();
-
     m_viewer.refresh();
 
     // TODO: does not work properly: instead, find node with same tree data after clear and select it.
-    final TreeNode nodeToSelect = new TreeNode( this, null, null, treeDataToSelect );
-    setSelection( nodeToSelect );
+    final TreeNode node = findNode( treeDataToSelect );
+
+    setSelection( node );
+  }
+
+  private TreeNode[] convert( final TreeNode[] others )
+  {
+    final Set<TreeNode> own = new LinkedHashSet<>();
+
+    for( final TreeNode other : others )
+    {
+      final TreeNode found = findNode( other );
+      if( Objects.isNotNull( found ) )
+        own.add( found );
+    }
+
+    return own.toArray( new TreeNode[] {} );
+  }
+
+  private TreeNode findNode( final Object treeDataToSelect )
+  {
+    TreeNode select = null;
+    if( treeDataToSelect instanceof TreeNode )
+      select = (TreeNode) treeDataToSelect;
+    else
+      select = new TreeNode( this, null, null, treeDataToSelect );
+
+    TreeNode ptr = null;
+    final TreeNode[] nodes = getRootElements();
+    for( final TreeNode node : nodes )
+    {
+      ptr = findNode( node, select );
+      if( ptr != null )
+        return ptr;
+    }
+
+    return null;
+  }
+
+  private TreeNode findNode( final TreeNode node, final TreeNode nodeToSelect )
+  {
+    if( node.equals( nodeToSelect ) )
+      return node;
+
+    final TreeNode[] children = node.getChildren();
+    for( final TreeNode child : children )
+    {
+      final TreeNode found = findNode( child, nodeToSelect );
+      if( Objects.isNotNull( found ) )
+        return found;
+    }
+
+    return null;
   }
 }

@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.java.lang.Objects;
@@ -106,6 +107,8 @@ public class TreeNode implements IAdaptable
 
   public void addChild( final TreeNode child )
   {
+    Assert.isTrue( child.getParent() == this );
+
     m_children.add( child );
   }
 
