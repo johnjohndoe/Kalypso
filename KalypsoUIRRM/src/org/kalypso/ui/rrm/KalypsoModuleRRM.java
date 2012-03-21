@@ -5,11 +5,10 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.afgui.wizards.ProjectConversionWizard;
-import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmProject;
+import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.module.AbstractKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
@@ -115,11 +114,12 @@ public class KalypsoModuleRRM extends AbstractKalypsoModule
   @Override
   public boolean acceptProject( final IProject project )
   {
-    final IPath basisScenarioPath = new Path( INaProjectConstants.FOLDER_BASIS );
+    final RrmProject rrmProject = new RrmProject( project );
+    final RrmScenario baseScenario = rrmProject.getBaseScenario();
 
-    final IFile hydrotopFile = project.getFile( basisScenarioPath.append( INaProjectConstants.GML_HYDROTOP_PATH ) ); //$NON-NLS-1$
+    final IFile hydrotopeFile = baseScenario.getHydrotopeFile();
 
-    return hydrotopFile.exists();
+    return hydrotopeFile.exists();
   }
 
   @Override
