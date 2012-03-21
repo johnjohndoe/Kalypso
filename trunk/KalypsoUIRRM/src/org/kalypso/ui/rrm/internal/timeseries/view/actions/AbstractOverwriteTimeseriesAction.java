@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -60,7 +56,6 @@ import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesImportWizar
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesUpdateWizard;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
@@ -95,19 +90,7 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     final ImportObservationData data = prepareData();
     final ITimeseries timeseries = showWizard( shell, data );
 
-    // select tree with pseudo node
-    new UIJob( "" )
-    {
-
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        final TreeNode pseudoNode = new TreeNode( m_model, null, null, timeseries );
-        m_model.setSelection( pseudoNode );
-
-        return Status.OK_STATUS;
-      }
-    }.schedule( 250 );
+    m_model.refreshTree( timeseries );
 
   }
 
@@ -121,7 +104,6 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
 
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
   {
-
     final TimeseriesBean bean = new TimeseriesBean();
     if( m_parameterType != null )
       data.setParameterType( m_parameterType );

@@ -54,7 +54,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
@@ -99,14 +99,15 @@ public class DeleteTimeseriesAction extends Action
       for( final ITimeseries timeseries : m_timeseries )
         timeseries.deleteDataFile();
 
-      /* Select parent node */
-      final Object parentStation = m_timeseries[0].getOwner();
-      final TreeNode parentNode = new TreeNode( m_model, null, null, parentStation );
-      m_model.setSelection( parentNode );
+      final Feature owner = m_timeseries[0].getOwner();
 
       /* Delete feature */
       final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeseries );
       m_model.postCommand( deleteCommand );
+
+      /* Select parent node */
+      m_model.refreshTree( owner );
+
     }
     catch( final Exception e )
     {
