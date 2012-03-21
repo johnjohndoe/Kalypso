@@ -92,7 +92,7 @@ public class ImportProfileHandler extends AbstractHandler
     ITerrainModel terrainModel;
     try
     {
-      terrainModel = modelProvider.getModel( ITerrainModel.class );
+      terrainModel = modelProvider.getModel( ITerrainModel.class.getName() );
     }
     catch( final CoreException e )
     {

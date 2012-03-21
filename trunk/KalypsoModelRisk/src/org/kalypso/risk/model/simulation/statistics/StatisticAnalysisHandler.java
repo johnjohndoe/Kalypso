@@ -109,9 +109,9 @@ public class StatisticAnalysisHandler extends AbstractHandler
   {
     try
     {
-      final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.class.getName(), IRasterDataModel.class );
-      final IVectorDataModel vectorModel = scenarioDataProvider.getModel( IVectorDataModel.class.getName(), IVectorDataModel.class );
-      final IRasterizationControlModel controlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class.getName(), IRasterizationControlModel.class );
+      final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.class.getName() );
+      final IVectorDataModel vectorModel = scenarioDataProvider.getModel( IVectorDataModel.class.getName() );
+      final IRasterizationControlModel controlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class.getName() );
       final IContainer scenarioFolder = scenarioDataProvider.getScenarioFolder();
 
       final StatisticCalculationData data = new StatisticCalculationData( rasterModel, controlModel, vectorModel, scenarioFolder );

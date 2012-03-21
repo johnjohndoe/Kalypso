@@ -186,8 +186,8 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
 
     try
     {
-      final IFEDiscretisationModel1d2d discModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
-      final IFlowRelationshipModel flowModel = dataProvider.getModel( IFlowRelationshipModel.class );
+      final IFEDiscretisationModel1d2d discModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
+      final IFlowRelationshipModel flowModel = dataProvider.getModel( IFlowRelationshipModel.class.getName() );
 
       final FlowRelCalcWizard wizard = new FlowRelCalcWizard( flowRels, flowModel, discModel );
       wizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "flowRelCalcWizard" ) ); //$NON-NLS-1$

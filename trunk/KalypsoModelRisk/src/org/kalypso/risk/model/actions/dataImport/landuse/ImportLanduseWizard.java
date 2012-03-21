@@ -210,8 +210,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
     try
     {
-      final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class.getName(), IVectorDataModel.class );
-      final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class.getName(), IRasterizationControlModel.class );
+      final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class.getName() );
+      final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class.getName() );
 
       final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 

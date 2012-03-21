@@ -75,7 +75,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 
 /**
  * A wizard showing the progress of a RMA·Kalypso calculation.
- * 
+ *
  * @author Gernot Belger
  */
 public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulation1D2DConstants
@@ -104,7 +104,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   public RMA10CalculationWizard( final SzenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     m_caseDataProvider = caseDataProvider;
-    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class );
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName() );
     final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
 
     final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();

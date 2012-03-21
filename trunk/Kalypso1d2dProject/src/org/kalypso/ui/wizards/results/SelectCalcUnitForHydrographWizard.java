@@ -216,7 +216,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IWorkbe
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = m_dataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
+      m_resultModel = m_dataProvider.getModel( IScenarioResultMeta.class.getName() );
     }
     catch( final CoreException e )
     {

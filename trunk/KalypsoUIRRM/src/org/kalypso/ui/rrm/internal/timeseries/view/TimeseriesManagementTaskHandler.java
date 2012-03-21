@@ -95,7 +95,7 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
     {
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
-      final IStationCollection input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, IStationCollection.class );
+      final IStationCollection input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       managementView.setInput( workspace, input );
     }

@@ -104,7 +104,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
 
     try
     {
-      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
 
       final IMapPanel panel = mapView.getMapPanel();
 
@@ -124,7 +124,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     {
       e.printStackTrace();
     }
-    catch( InvocationTargetException e )
+    catch( final InvocationTargetException e )
     {
       e.printStackTrace();
     }

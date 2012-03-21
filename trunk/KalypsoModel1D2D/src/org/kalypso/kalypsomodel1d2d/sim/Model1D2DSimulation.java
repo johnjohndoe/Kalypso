@@ -72,7 +72,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * Starting point for running 1d2d simulations.
- * 
+ *
  * @author Gernot Belger
  */
 public class Model1D2DSimulation implements ISimulation1D2DConstants
@@ -110,7 +110,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
       initResultMeta( calculationUnit, startTime, caseDataProvider );
 
       /* Set correct activeControlModel according to selected calcUnit and save */
-      final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
+      final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName() );
       setActiveControlModel( controlModelGroup, calcUnitId );
       // Saves ALL models, this is not really necessary but not really a problem, as only
       // dirty models get saved (and probably here only the control model is dirty).
@@ -139,7 +139,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
   private void initResultMeta( final ICalculationUnit calculationUnit, final Date startTime, final SzenarioDataProvider caseDataProvider ) throws CoreException
   {
-    final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
+    final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class.getName() );
     final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getId() );
     final ICalcUnitResultMeta calcUnitMeta;
     if( existingCalcUnitMeta == null )
@@ -182,7 +182,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
   /**
    * Sets the unit to calculate into the Control-Model as active unit.<br>
-   * 
+   *
    * TODO: this is a bit fishy... Better would be to couple calc-units and its corresponding control-models more
    * closely. Then no search for and/or setting of active unit should be necessary any more.
    */

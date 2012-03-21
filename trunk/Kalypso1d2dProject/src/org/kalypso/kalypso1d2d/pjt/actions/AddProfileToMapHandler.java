@@ -97,7 +97,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       final ITerrainModel terrainModel;
       try
       {
-        terrainModel = modelProvider.getModel( ITerrainModel.class.getName(), ITerrainModel.class );
+        terrainModel = modelProvider.getModel( ITerrainModel.class.getName() );
       }
       catch( final CoreException e )
       {
@@ -110,23 +110,23 @@ public class AddProfileToMapHandler extends AbstractHandler
       final Object[] result = showNetworksDialog( shell, riverProfileNetworkCollection );
       if( result == null )
         return Status.CANCEL_STATUS;
-      
+
       final IRiverProfileNetwork network = (IRiverProfileNetwork) result[ 0 ];
 
       /* Add new layer to profile-collection-map and remove existing one with same path and source*/
       final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
       if( mapView != null )
-      { 
+      {
           final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
 
           final FeaturePath networkPath = new FeaturePath( network );
           final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
           final String source = terrainModel.getWorkspace().getContext().toString();
-         
+
           final IKalypsoThemePredicate predicate = new SoureAndPathThemePredicate( source, profilesPath.toString() );
           final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
           mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-          IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
+          final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
           if( foundThemes.length > 0 ){
             for( final IKalypsoTheme themeToRemove: foundThemes ){
               final RemoveThemeCommand commandRemove = new RemoveThemeCommand( mapModell, themeToRemove, true ); //$NON-NLS-1$
@@ -143,10 +143,10 @@ public class AddProfileToMapHandler extends AbstractHandler
       }
       else
         throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.3" ) ); //$NON-NLS-1$
-      
+
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e );

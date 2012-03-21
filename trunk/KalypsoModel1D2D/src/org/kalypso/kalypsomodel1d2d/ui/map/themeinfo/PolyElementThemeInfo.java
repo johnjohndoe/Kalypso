@@ -42,7 +42,7 @@ public class PolyElementThemeInfo extends FeatureThemeInfo
       formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.1"), polyChecker.getMaxLength() ); //$NON-NLS-1$
       formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.2"), polyChecker.getLengthRatio() ); //$NON-NLS-1$
 
-      final IRoughnessClsCollection roughnessModel = dataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
+      final IRoughnessClsCollection roughnessModel = dataProvider.getModel( IRoughnessClsCollection.class.getName() );
 
       final String roughnessStyle = polyElement.getRoughnessStyle();
       formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.themeinfo.PolyElementThemeInfo.3"), roughnessStyle ); //$NON-NLS-1$

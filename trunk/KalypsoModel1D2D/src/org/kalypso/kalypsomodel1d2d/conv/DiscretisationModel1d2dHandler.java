@@ -181,16 +181,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   {
     m_szenarioDataProvider = szenarioDataProvider;
 
-    m_model = szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+    m_model = szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
     m_workspace = m_model.getWorkspace();
 
-    m_flowModel = szenarioDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
+    m_flowModel = szenarioDataProvider.getModel( IFlowRelationshipModel.class.getName() );
     m_flowWorkspace = m_flowModel.getWorkspace();
 
     m_positionProvider = positionProvider;
     m_setNotInsertedNodes = new HashSet<Integer>();
 
-    final IRoughnessClsCollection roughnessModel = szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
+    final IRoughnessClsCollection roughnessModel = szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName() );
     m_roughnessHandler = new RoughnessHandler( roughnessModel );
 
     try

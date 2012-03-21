@@ -70,7 +70,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" ); //$NON-NLS-1$
 
       // get the flood model
-      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
+      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
 
       // get all events
       final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();

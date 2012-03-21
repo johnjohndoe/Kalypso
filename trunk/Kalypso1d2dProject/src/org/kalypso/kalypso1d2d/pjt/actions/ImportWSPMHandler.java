@@ -90,9 +90,9 @@ public class ImportWSPMHandler extends AbstractHandler
     ITerrainModel terrainModel;
     try
     {
-      terrainModel = modelProvider.getModel( ITerrainModel.class );
-      final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
-      final IFlowRelationshipModel flowRelationModel = modelProvider.getModel( IFlowRelationshipModel.class );
+      terrainModel = modelProvider.getModel( ITerrainModel.class.getName() );
+      final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
+      final IFlowRelationshipModel flowRelationModel = modelProvider.getModel( IFlowRelationshipModel.class.getName() );
 
       if( discModel == null )
         return Status.CANCEL_STATUS;

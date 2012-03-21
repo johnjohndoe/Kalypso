@@ -122,7 +122,7 @@ public class ElementGeometryEditor
    */
   public void finish( ) throws Exception
   {
-    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class.getName() );
     final GM_Point newPosition = ChangeNodePositionCommand.createPoint( m_startNode.getPoint().getZ(), m_endPoint );
     final ICommand changeCommand = new ChangeNodePositionCommand( discModel, m_startNode, newPosition, true );
     Util.postCommand( IFEDiscretisationModel1d2d.class, changeCommand );

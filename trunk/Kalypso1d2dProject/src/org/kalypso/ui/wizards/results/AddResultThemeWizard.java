@@ -137,7 +137,7 @@ public class AddResultThemeWizard extends Wizard implements IWorkbenchWizard
       m_scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
 
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
+      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
     }
     catch( final CoreException e )
     {

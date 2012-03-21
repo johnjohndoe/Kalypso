@@ -95,7 +95,7 @@ public class ResultDataManagerHandler extends AbstractHandler
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
 
       final ResultManager1d2dWizard managerWizard = new ResultManager1d2dWizard( mapModel, commandTarget, resultModel, modelProvider );
 

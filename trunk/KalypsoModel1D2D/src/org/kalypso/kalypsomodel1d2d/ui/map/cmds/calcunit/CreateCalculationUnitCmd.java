@@ -78,9 +78,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to create new calculation unit
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
@@ -111,7 +111,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   /**
    * Creates a Calculation unit of the given q-name
-   * 
+   *
    * @param cuFeatureQName
    *          the q-name of the calculation unit to create
    * @param model1d2d
@@ -197,7 +197,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   * 
+   *
    * @param calculationUnit
    *          the added or removed calculation unit
    * @param added
@@ -255,7 +255,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     IControlModelGroup modelGroup = null;
     try
     {
-      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
+      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class.getName() );
     }
     catch( final CoreException e )
     {
@@ -304,9 +304,9 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           * 
-           * 
-           * 
+           *
+           *
+           *
            * IPhenomenon phenomenon = new DictionaryPhenomenon(
            * "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", "", "");
            * obs.setPhenomenon( phenomenon );

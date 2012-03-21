@@ -92,7 +92,7 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
     try
     {
       final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IStationCollection modelStations = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, IStationCollection.class );
+      final IStationCollection modelStations = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
 
       /* Create workspace */
       final GMLWorkspace stationsWorkspace = FeatureFactory.createGMLWorkspace( IThiessenStationCollection.FEATURE_THIESSEN_COLLECTION, null, GmlSerializer.DEFAULT_FACTORY );

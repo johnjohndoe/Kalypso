@@ -134,7 +134,7 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
     try
     {
       m_dataModel.setData( ICommonKeys.KEY_DATA_PROVIDER, modelProvider );
-      final IFEDiscretisationModel1d2d model = modelProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+      final IFEDiscretisationModel1d2d model = modelProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       m_dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, model );
       m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model ) );
       m_dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
@@ -168,7 +168,7 @@ public class CalculationUnitPerformWidget extends AbstractDelegateWidget impleme
       final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapPanel, IBoundaryCondition.QNAME );
       m_dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );
 
-      final IFlowRelationshipModel bcModel = Util.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
+      final IFlowRelationshipModel bcModel = Util.getModel( IFlowRelationshipModel.class.getName() );
 
       calcUnitTheme.setModelBoundaryConditions( bcModel );
     }

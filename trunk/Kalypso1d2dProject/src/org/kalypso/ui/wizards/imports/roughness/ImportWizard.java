@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.ui.wizards.imports.roughness;
 
@@ -88,7 +88,7 @@ public class ImportWizard extends Wizard implements INewWizard
     ITerrainModel model;
     try
     {
-      model = szenarioDataProvider.getModel( ITerrainModel.class );
+      model = szenarioDataProvider.getModel( ITerrainModel.class.getName() );
       m_data.setModel( model );
     }
     catch( final CoreException e )
@@ -101,7 +101,7 @@ public class ImportWizard extends Wizard implements INewWizard
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" ); //$NON-NLS-1$
     try
     {
-      m_data.setRoughnessDatabaseLocation( RoughnessPolygon.DATA_LOCATION, szenarioDataProvider.getModel( IRoughnessClsCollection.class ) ); //$NON-NLS-1$
+      m_data.setRoughnessDatabaseLocation( RoughnessPolygon.DATA_LOCATION, (IRoughnessClsCollection) szenarioDataProvider.getModel( IRoughnessClsCollection.class.getName() ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

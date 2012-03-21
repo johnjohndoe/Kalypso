@@ -140,7 +140,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
-    this( fileObjectRMA, fileObjectSWAN, caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class ), caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel(), caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class ), caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class ), geoLog );
+    this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
   }
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IFEDiscretisationModel1d2d discretisationModel1d2d, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowRelModel, final IScenarioResultMeta scenarioMetaData, final IGeoLog geoLog )
@@ -171,7 +171,8 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog, final ICalcUnitResultMeta calcUnitResultMeta ) throws CoreException
   {
-    this( fileObjectRMA, fileObjectSWAN, caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class ), caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class ).getModel1D2DCollection().getActiveControlModel(), caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class ), caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class ), geoLog );
+    this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
+
     m_calcUnitMeta = calcUnitResultMeta;
   }
 

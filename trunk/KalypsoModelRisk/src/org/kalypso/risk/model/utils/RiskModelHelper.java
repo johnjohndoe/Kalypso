@@ -245,7 +245,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   * 
+   *
    * @param damages
    *          damage values for all annualities
    * @param probabilities
@@ -613,7 +613,7 @@ public class RiskModelHelper
     if( !riskDataProvider.waitForModelToLoad( IRasterDataModel.class.getName(), 5 * 1000 ) )
       throw new CoreException( failedToLoadRiskStatus );
 
-    final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class.getName(), IRasterDataModel.class );
+    final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class.getName() );
     if( rasterDataModel == null )
       throw new CoreException( failedToLoadRiskStatus );
 

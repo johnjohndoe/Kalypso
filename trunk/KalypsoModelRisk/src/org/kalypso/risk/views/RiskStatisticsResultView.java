@@ -84,7 +84,7 @@ public class RiskStatisticsResultView extends ViewPart
       final IHandlerService handlerService = (IHandlerService) getSite().getService( IHandlerService.class );
       final IEvaluationContext context = handlerService.getCurrentState();
       final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class.getName(), IRasterizationControlModel.class );
+      final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class.getName() );
 
       if( model == null )
       {

@@ -167,7 +167,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- * 
+ *
  * @author Thomas Jung
  */
 public class EventManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
@@ -213,7 +213,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
     final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
-      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
+      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
       if( model != null )
       {
         m_dataProvider = dataProvider;
@@ -1002,7 +1002,7 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
   /**
    * TODO: replace by getCurrentEvent, should do the same...<br>
-   * 
+   *
    * Searches for the first occurrence of {@link IRunoffEvent} in the current selection.<br>
    * If a tin is selected its parent will be returned.
    */
@@ -1235,24 +1235,24 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
 
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.61" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.62", event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.62", event.getName() ) ) ); //$NON-NLS-1$
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() //$NON-NLS-1$
                     + ") %.2f NN+m" ); //$NON-NLS-1$
               }
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.66" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.67", event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.67", event.getName() ) ) ); //$NON-NLS-1$
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.71" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.72", event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.72", event.getName() ) ) ); //$NON-NLS-1$
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
               }
 
               if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.76" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.77", event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.77", event.getName() ) ) ); //$NON-NLS-1$
               }
 
             }
@@ -1279,12 +1279,12 @@ public class EventManagementWidget extends DeprecatedMouseWidget implements IWid
                   // HACK!
                   if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.79" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.80", event.getName() ) ) ); //$NON-NLS-1$ 
+                    kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.80", event.getName() ) ) ); //$NON-NLS-1$
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                   if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.84" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85", event.getName() ) ) ); //$NON-NLS-1$ 
+                    kalypsoTheme.setName( new I10nString( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85", event.getName() ) ) ); //$NON-NLS-1$
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                 }

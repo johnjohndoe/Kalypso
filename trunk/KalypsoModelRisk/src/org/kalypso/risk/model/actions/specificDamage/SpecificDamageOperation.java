@@ -79,7 +79,7 @@ public class SpecificDamageOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IRasterizationControlModel rasterizationControlModel = m_scenarioDataProvider.getModel( IRasterizationControlModel.MODEL_ID, IRasterizationControlModel.class );
+    final IRasterizationControlModel rasterizationControlModel = m_scenarioDataProvider.getModel( IRasterizationControlModel.MODEL_ID );
 
     if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
       return new Status( IStatus.WARNING, KalypsoRiskPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$
