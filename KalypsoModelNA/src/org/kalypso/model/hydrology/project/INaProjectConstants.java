@@ -62,7 +62,7 @@ public interface INaProjectConstants
 
   String FOLDER_RECHENVARIANTEN = "Rechenvarianten";//$NON-NLS-1$
 
-  String PATH_RECHENVARIANTEN = FOLDER_BASIS + "/" + FOLDER_RECHENVARIANTEN; //$NON-NLS-1$
+  String PATH_RECHENVARIANTEN = RrmProject.FOLDER_BASIS + "/" + FOLDER_RECHENVARIANTEN; //$NON-NLS-1$
 
   String FOLDER_TIMESERIES = "timeseries"; //$NON-NLS-1$
 
