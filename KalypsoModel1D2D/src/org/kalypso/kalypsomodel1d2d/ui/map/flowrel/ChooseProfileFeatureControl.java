@@ -192,7 +192,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
 
       // find network
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-      final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class );
+      final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class.getName() );
 
       final GMLWorkspace root = terrainModel.getWorkspace();
       final GMLContentProvider cp = new GMLContentProvider( false, false );

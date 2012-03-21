@@ -129,7 +129,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     try
     {
       final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class.getName() );
-      final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class.getName(), IRasterDataModel.class );
+      final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class.getName() );
 
       final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, scenarioFolder );
 

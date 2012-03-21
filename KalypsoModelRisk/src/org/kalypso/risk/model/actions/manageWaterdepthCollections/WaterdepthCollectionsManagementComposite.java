@@ -236,7 +236,7 @@ public class WaterdepthCollectionsManagementComposite extends Composite
     final IEvaluationContext context = service.getCurrentState();
     final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
-    m_model = dataProvider.getModel( IRasterDataModel.class.getName(), IRasterDataModel.class );
+    m_model = dataProvider.getModel( IRasterDataModel.class.getName() );
     m_dataProvider = dataProvider;
   }
 

@@ -147,7 +147,7 @@ public class PreSWANKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+        m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       }
       catch( final Exception e )
       {
@@ -163,7 +163,7 @@ public class PreSWANKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        m_flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
+        m_flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName() );
       }
       catch( final Exception e )
       {
@@ -179,7 +179,7 @@ public class PreSWANKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        m_scenarioMetaData = caseDataProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
+        m_scenarioMetaData = caseDataProvider.getModel( IScenarioResultMeta.class.getName() );
       }
       catch( final Exception e )
       {
@@ -194,7 +194,7 @@ public class PreSWANKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
+        m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName() );
       }
       catch( final Exception e )
       {

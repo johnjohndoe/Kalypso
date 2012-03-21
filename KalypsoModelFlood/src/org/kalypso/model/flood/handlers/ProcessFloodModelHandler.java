@@ -100,7 +100,7 @@ public class ProcessFloodModelHandler extends AbstractHandler
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
+      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName() );
       final IFeatureBindingCollection<IRunoffEvent> events = model.getEvents();
 
       /* Get the map */

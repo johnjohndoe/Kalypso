@@ -51,16 +51,16 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   private QName m_actPropQname;
 
-  private final double m_grabDistance = 50; 
+  private final double m_grabDistance = 50;
 
   private String m_propertyNameFromTheme;
 
   private boolean m_boolResolveNodesFromDiscrModel;
 
   private IFEDiscretisationModel1d2d m_discretisationModel = null;
-  
+
   private CommandableWorkspace m_workspace = null;
-  
+
   private FeatureList m_featureList = null;
 
 //  private static List<String> m_listSWANProps = new ArrayList< String >( Arrays.asList( new String[]{ ResultSldHelper.WAVE_HSIG_TYPE, ResultSldHelper.WAVE_DIRECTION_TYPE, ResultSldHelper.WAVE_PERIOD_TYPE } ) );
@@ -74,11 +74,11 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
 
     m_theme = (IKalypsoFeatureTheme) theme;
-    
+
     m_workspace = m_theme.getWorkspace();
 
     m_featureList = m_theme.getFeatureList();
-    
+
     m_propertyNameFromTheme = getPropertyNameFromTheme( theme );
     if( NodeResultHelper.VELO_TYPE.equals( m_propertyNameFromTheme ) )
     {
@@ -88,14 +88,14 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
     {
       m_actPropQname = "".equals( m_propertyNameFromTheme ) ? null : new QName( PROP_NS_PREFIX, m_propertyNameFromTheme.toLowerCase() ); //$NON-NLS-1$
     }
-//    if( m_listSWANProps.contains( m_propertyNameFromTheme ) ) 
+//    if( m_listSWANProps.contains( m_propertyNameFromTheme ) )
     {
       m_boolResolveNodesFromDiscrModel = true;
       final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-      
+
       try
       {
-        m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+        m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       }
       catch( final CoreException e )
       {
@@ -158,7 +158,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
       final Object value = getInterpolatedValue(nodeObject, pos);
 //      Object value = feature.getProperty( m_actPropQname );
-      
+
       if( value instanceof Double && !Double.isNaN( (Double) value ) )
       {
         formatter.format( "%s: %.3f", m_propertyNameFromTheme, value ); //$NON-NLS-1$
@@ -185,7 +185,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
   {
     if( nodeObject instanceof IPolyElement ){
       final IPolyElement lPolyEl = (IPolyElement) nodeObject;
-      
+
       final List nodes = lPolyEl.getNodes();
       if( nodes.size() > 5 ){
         return getNodePropertyAtPos( pos );
@@ -199,7 +199,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
         final Feature nodeRes = GeometryUtilities.findNearestFeature( GeometryFactory.createGM_Point( actNode.getPoint().getPosition(), coordinateSystem ), m_grabDistance, m_featureList, GMLNodeResult.QNAME_PROP_LOCATION );
         if(nodeRes == null)
           continue;
-        
+
         Object value = nodeRes.getProperty( m_actPropQname );
         if( value == null )
           continue;
@@ -210,7 +210,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
           vector.add( Math.sin( (Double) value * ( 2 * Math.PI ) / 360 ) );
           value = vector;
         }
-        
+
         final INodeResult nodeResAdapter = (INodeResult) nodeRes.getAdapter( INodeResult.class );
         if( value instanceof Double ){
           lListPositionWithValues.add( GeometryFactory.createGM_Position( nodeResAdapter.getPoint().getX(), nodeResAdapter.getPoint().getY(), (Double)value ) );
@@ -260,15 +260,15 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
       {
         return getNodePropertyAtPos( pos );
       }
-      
+
     }
     else
     {
       return getNodePropertyAtPos( pos );
     }
   }
-  
-  //TODO: switch to this implementation 
+
+  //TODO: switch to this implementation
   private Pair<Double, Double> getInterpolatedPair( final GM_Point pPointToInterpolateAt, final Map<GM_Point, Pair<Double, Double>> pMapPointsValues )
   {
     GM_Triangle lTriFirst = null;

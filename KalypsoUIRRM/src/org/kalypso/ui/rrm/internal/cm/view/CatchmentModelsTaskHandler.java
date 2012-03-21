@@ -88,7 +88,7 @@ public class CatchmentModelsTaskHandler extends AbstractHandler
 
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
-      final ICatchmentModel input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS, ICatchmentModel.class );
+      final ICatchmentModel input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_CATCHMENT_MODELS );
 
       // FIXME: check integrity of catchment model against model.gml
 

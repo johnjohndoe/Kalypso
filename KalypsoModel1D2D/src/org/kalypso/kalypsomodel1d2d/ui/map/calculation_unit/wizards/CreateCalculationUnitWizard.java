@@ -81,7 +81,7 @@ public class CreateCalculationUnitWizard extends Wizard
     final QName calcUnitType = m_page.getCalculationUnitType();
     final String calcUnitDescription = m_page.getCalculationUnitDescription();
 
-    final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName() );
     final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( calcUnitType, model, calcUnitName, calcUnitDescription )
     {
       @Override

@@ -265,7 +265,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     IControlModelGroup modelGroup = null;
     try
     {
-      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
+      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class.getName() );
     }
     catch( final CoreException e )
     {

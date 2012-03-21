@@ -307,7 +307,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     {
       /* Get the stations. */
       final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IStationCollection stationCollection = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS, IStationCollection.class );
+      final IStationCollection stationCollection = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       final IFeatureBindingCollection<IStation> stations = stationCollection.getStations();
       for( final IStation station : stations )
       {

@@ -119,7 +119,7 @@ public class DeleteFeElementsHelper
       // to be allowed to delete the 2D element, no continuity line cannot be positioned on that element
       // to be allowed to delete the 1D element, that element cannot be the last one that touches some continuity line
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-      final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+      final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       if( discretisationModel == null )
         throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.3" ) ); //$NON-NLS-1$
 
@@ -318,8 +318,8 @@ public class DeleteFeElementsHelper
       // to allow continuity line to be deleted, no boundary conditions cannot be positioned on that line
       // also, this line cannot be a part of any transition or junction element
       final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-      final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
-      final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
+      final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
+      final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class.getName() );
 
       final IFeatureBindingCollection<IFE1D2DComplexElement> complexElements = discretisationModel.getComplexElements();
       for( final IFE1D2DComplexElement complexElement : complexElements )

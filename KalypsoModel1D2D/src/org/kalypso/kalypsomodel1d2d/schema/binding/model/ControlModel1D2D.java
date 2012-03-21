@@ -586,7 +586,7 @@ public class ControlModel1D2D extends Feature_Impl implements IControlModel1D2D
         throw e;
       }
       final String featureId = ((IXLinkedFeature) resolveLink).getFeatureId();
-      final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+      final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class.getName() );
       if( model == null )
       {
         throw e;

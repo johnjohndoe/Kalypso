@@ -89,7 +89,7 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
 
     try
     {
-      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class.getName() );
 
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
 
@@ -107,7 +107,7 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
         final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.1") ) //$NON-NLS-1$
         {
           @Override
-          public IStatus runInUIThread( IProgressMonitor monitor )
+          public IStatus runInUIThread( final IProgressMonitor monitor )
           {
             try
             {
@@ -115,15 +115,15 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
               // load template from resource:
               final URL url = getClass().getResource( "resources/lengthsection.gft" ); //$NON-NLS-1$
 
-              Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
+              final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
 
-              URL urlContext = ResourceUtilities.createURL( scenarioFolder );
+              final URL urlContext = ResourceUtilities.createURL( scenarioFolder );
 
               // root feature
-              String featurePath = ""; //$NON-NLS-1$
+              final String featurePath = ""; //$NON-NLS-1$
 
               // path to gml, relative to context
-              String href = gmlResultPath;
+              final String href = gmlResultPath;
 
               final String linkType = "gml"; //$NON-NLS-1$
 
@@ -132,7 +132,7 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
 
               return Status.OK_STATUS;
             }
-            catch( Throwable e )
+            catch( final Throwable e )
             {
               return StatusUtilities.statusFromThrowable( e );
             }

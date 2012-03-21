@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -81,7 +81,7 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
 /**
  * @author kurzbach
  * @author ig
- * 
+ *
  */
 public class ExecutePreSWANKalypso
 {
@@ -89,21 +89,21 @@ public class ExecutePreSWANKalypso
 
   private final String m_calcUnitID;
 
-  private Modeldata m_modelInput;
+  private final Modeldata m_modelInput;
 
   private String m_modelDataSimulationPath;
 
   private final WPSRequest m_wpsRequest;
 
-  private URI m_rmaOutputPath;
+  private final URI m_rmaOutputPath;
 
   private boolean m_boolDoHotStart = false;
 
   private URL m_urlAdditionalCoordFile;
 
-  private IContainer m_scenarioFolder;
+  private final IContainer m_scenarioFolder;
 
-  private IWindModel m_windRelationshipModel;
+  private final IWindModel m_windRelationshipModel;
 
   /**
    * Create execute request to PreSWANKalypso WPS with no restart infos and default calcUnit defined in control model
@@ -136,20 +136,20 @@ public class ExecutePreSWANKalypso
   {
     final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
     m_scenarioFolder = caseDataProvider.getScenarioFolder();
-    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName(), IControlModelGroup.class );
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class.getName() );
     final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
-    
+
     m_boolDoHotStart = controlModel.getINITialValuesSWAN() == 3;
     try{
       m_urlAdditionalCoordFile = new URL( controlModel.getInputFileAdditionalCoordSWAN() );
     }
-    catch (Exception e) {
+    catch (final Exception e) {
       m_urlAdditionalCoordFile = null;
     }
-    
-    m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
-    
-//    m_boolCopyWindBinaries = !controlModel.isConstantWindSWAN() &&  
+
+    m_windRelationshipModel = caseDataProvider.getModel( IWindModel.class.getName() );
+
+//    m_boolCopyWindBinaries = !controlModel.isConstantWindSWAN() &&
     m_serviceEndpoint = serviceEndpoint;
     m_rmaOutputPath = rmaCalcPath;
     m_calcUnitID = calcUnitID;
@@ -222,11 +222,11 @@ public class ExecutePreSWANKalypso
       inputs.put( PreSWANKalypso.OUTPUT_PATH_RMA, m_rmaOutputPath.toURL().toExternalForm() );
       inputs.put( PreSWANKalypso.INPUT_PATH_RESULT_META, "models/scenarioResultMeta.gml" ); //$NON-NLS-1$
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-    
+
     if( m_serviceEndpoint.equals( WPSRequest.SERVICE_LOCAL ) ){
       if( m_urlAdditionalCoordFile != null ){
         inputs.put( PreSWANKalypso.ADDITIONAL_DATA_FILE, m_urlAdditionalCoordFile.toExternalForm() );
@@ -234,9 +234,9 @@ public class ExecutePreSWANKalypso
     }
     else
     {
-      List<File> lListFilesToZip = new ArrayList<File>();
-      String additionalDataFileName = "models/native_tem/" + PreSWANKalypso.ADDITIONAL_DATA_FILE + ".zip"; //$NON-NLS-1$ //$NON-NLS-2$
-      File zipOutput = new File( additionalDataFileName );
+      final List<File> lListFilesToZip = new ArrayList<File>();
+      final String additionalDataFileName = "models/native_tem/" + PreSWANKalypso.ADDITIONAL_DATA_FILE + ".zip"; //$NON-NLS-1$ //$NON-NLS-2$
+      final File zipOutput = new File( additionalDataFileName );
       if( zipOutput.exists() )
       {
         zipOutput.delete();
@@ -248,7 +248,7 @@ public class ExecutePreSWANKalypso
           lListFilesToZip.add( new File( m_urlAdditionalCoordFile.toURI() ) );
           inputs.put( PreSWANKalypso.ADDITIONAL_DATA_FILE, additionalDataFileName );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -263,15 +263,15 @@ public class ExecutePreSWANKalypso
         {
           ZipUtilities.zip( zipOutput, lListFilesToZip.toArray( new File[lListFilesToZip.size()] ), new File( "models/native_tem/" ) ); //$NON-NLS-1$
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
     }
-    
-    
+
+
     // TODO: implement selection if it will be needed for restart files... write now it is just taken from last run of
     // this calc unit
     if( m_boolDoHotStart )
@@ -299,18 +299,18 @@ public class ExecutePreSWANKalypso
 
   private void getWindBinaryFilesAsList( final List<File> listFilesToPutIn, final IWindModel windRelationshipModel )
   {
-    List<IWindDataModelSystem> lListSystems = windRelationshipModel.getWindDataModelSystems();
-    
+    final List<IWindDataModelSystem> lListSystems = windRelationshipModel.getWindDataModelSystems();
+
     for( final IWindDataModelSystem lWindSystem : lListSystems )
     {
       for( final Object lWindDataObject : lWindSystem.getWindDataModels() )
       {
-        IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
+        final IWindDataProvider lWindData = (IWindDataProvider) lWindDataObject;
         try
         {
           listFilesToPutIn.add( new File( lWindData.getDataFileURL().toURI() ) );
         }
-        catch( URISyntaxException e )
+        catch( final URISyntaxException e )
         {
           e.printStackTrace();
         }

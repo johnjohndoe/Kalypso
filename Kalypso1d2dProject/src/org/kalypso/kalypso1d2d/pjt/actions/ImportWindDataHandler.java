@@ -94,7 +94,7 @@ public class ImportWindDataHandler extends AbstractHandler
 //      handler.execute( exc );
 
       /* Open import elevation model wizard */
-      final IWindModel lWindModel = szenarioDataProvider.getModel( IWindModel.class );
+      final IWindModel lWindModel = szenarioDataProvider.getModel( IWindModel.class.getName() );
       final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFolder temFolder = modelFolder.getFolder( "models/native_tem" ); //$NON-NLS-1$

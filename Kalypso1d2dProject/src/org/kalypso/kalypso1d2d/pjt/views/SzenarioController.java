@@ -118,9 +118,6 @@ public class SzenarioController implements IScenarioDataListener
     // maybe get status info from status-model
   }
 
-  /**
-   * @see org.kalypso.afgui.scenarios.IScenarioDataListener#scenarioChanged(org.eclipse.core.resources.IFolder)
-   */
   @Override
   public synchronized void scenarioChanged( final IScenario scenario )
   {
@@ -146,7 +143,4 @@ public class SzenarioController implements IScenarioDataListener
 
     // maybe save status into dstatus model
   }
-  
-  
-
 }

@@ -105,7 +105,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class.getName(), IScenarioResultMeta.class );
+      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class.getName() );
     }
     catch( final CoreException e )
     {

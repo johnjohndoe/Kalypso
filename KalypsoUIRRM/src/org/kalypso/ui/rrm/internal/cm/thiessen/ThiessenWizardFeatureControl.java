@@ -139,7 +139,7 @@ public class ThiessenWizardFeatureControl extends AbstractFeatureControl
 
       final Collection<Geometry> patches = new ArrayList<>();
 
-      final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL, NaModell.class );
+      final NaModell model = scenarioDataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
       final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
       for( final Catchment catchment : catchments )
       {

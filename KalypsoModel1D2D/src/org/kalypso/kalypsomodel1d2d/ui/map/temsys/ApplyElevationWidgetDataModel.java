@@ -118,7 +118,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   {
     try
     {
-      return m_dataProvider.getModel( IFEDiscretisationModel1d2d.class );
+      return m_dataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
     }
     catch( final CoreException e )
     {

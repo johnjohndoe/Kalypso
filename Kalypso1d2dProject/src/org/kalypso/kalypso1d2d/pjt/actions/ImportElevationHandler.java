@@ -94,7 +94,7 @@ public class ImportElevationHandler extends AbstractHandler
 //      handler.execute( exc );
 
       /* Open import elevation model wizard */
-      final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class );
+      final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class.getName() );
       final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFolder temFolder = modelFolder.getFolder( "models/native_tem" ); //$NON-NLS-1$

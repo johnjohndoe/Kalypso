@@ -127,7 +127,7 @@ public class PreRMAKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName(), IFEDiscretisationModel1d2d.class );
+        discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() );
       }
       catch( final Exception e )
       {
@@ -167,7 +167,7 @@ public class PreRMAKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName(), IFlowRelationshipModel.class );
+        flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class.getName() );
       }
       catch( final Exception e )
       {
@@ -183,7 +183,7 @@ public class PreRMAKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName(), IRoughnessClsCollection.class );
+        roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class.getName() );
       }
       catch( final Exception e )
       {
@@ -200,7 +200,7 @@ public class PreRMAKalypso implements ISimulation
       try
       {
         final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
-        windModel = caseDataProvider.getModel( IWindModel.class.getName(), IWindModel.class );
+        windModel = caseDataProvider.getModel( IWindModel.class.getName() );
       }
       catch( final Exception e )
       {
