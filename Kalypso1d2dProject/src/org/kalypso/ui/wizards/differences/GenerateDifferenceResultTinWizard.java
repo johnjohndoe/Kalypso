@@ -65,10 +65,9 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypso.ui.wizards.results.filters.NonTinDocumentResultViewerFilter;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Wizard to show length sections to the chart view.
@@ -89,9 +88,9 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
   private final IFolder m_scenarioFolder;
 
-  private final ICaseDataProvider<Feature> m_modelProvider;
+  private final IScenarioDataProvider m_modelProvider;
 
-  public GenerateDifferenceResultTinWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel, final ICaseDataProvider<Feature> modelProvider )
+  public GenerateDifferenceResultTinWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel, final IScenarioDataProvider modelProvider )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;

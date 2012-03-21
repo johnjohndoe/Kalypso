@@ -71,7 +71,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -100,7 +99,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
@@ -138,7 +137,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private ICalcUnitResultMeta m_calcUnitMeta = null;
 
-  public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
+  public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
   }
@@ -169,7 +168,7 @@ public class ResultManager implements ISimulation1D2DConstants
     }
   }
 
-  public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog, final ICalcUnitResultMeta calcUnitResultMeta ) throws CoreException
+  public ResultManager( final FileObject fileObjectRMA, final FileObject fileObjectSWAN, final IScenarioDataProvider caseDataProvider, final IGeoLog geoLog, final ICalcUnitResultMeta calcUnitResultMeta ) throws CoreException
   {
     this( fileObjectRMA, fileObjectSWAN, (IFEDiscretisationModel1d2d) caseDataProvider.getModel( IFEDiscretisationModel1d2d.class.getName() ), ((IControlModelGroup) caseDataProvider.getModel( IControlModelGroup.class.getName() )).getModel1D2DCollection().getActiveControlModel(), (IFlowRelationshipModel) caseDataProvider.getModel( IFlowRelationshipModel.class.getName() ), (IScenarioResultMeta) caseDataProvider.getModel( IScenarioResultMeta.class.getName() ), geoLog );
 

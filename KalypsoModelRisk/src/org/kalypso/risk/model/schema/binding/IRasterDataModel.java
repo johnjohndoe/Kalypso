@@ -2,10 +2,11 @@ package org.kalypso.risk.model.schema.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 public interface IRasterDataModel extends IModel 
 {

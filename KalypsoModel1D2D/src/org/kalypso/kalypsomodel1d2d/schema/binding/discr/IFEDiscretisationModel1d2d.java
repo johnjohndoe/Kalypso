@@ -42,11 +42,12 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Interface for classes representing a feature of the type wb1d2d:FEDiscretisationModel1d2d

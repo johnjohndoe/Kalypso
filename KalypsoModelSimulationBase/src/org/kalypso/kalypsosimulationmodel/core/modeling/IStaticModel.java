@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.modeling;
 
-import org.kalypso.afgui.model.IModel;
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * Interface for classes representing simBase:StaticModel

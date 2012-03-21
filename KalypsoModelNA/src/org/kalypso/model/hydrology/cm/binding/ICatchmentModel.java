@@ -42,10 +42,11 @@ package org.kalypso.model.hydrology.cm.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.model.hydrology.NaModelConstants;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * The catchment model contains generators for timeseries generation for catchments.

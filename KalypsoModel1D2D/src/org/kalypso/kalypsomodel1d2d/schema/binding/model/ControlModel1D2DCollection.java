@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * Default implementation of {@link IControlModel1D2DCollection} based on {@link FeatureWrapperCollection}
@@ -87,16 +87,13 @@ public class ControlModel1D2DCollection extends Feature_Impl implements IControl
     return m_controlModels;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#setActiveControlModel(org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D)
-   */
   @Override
   public void setActiveControlModel( final IControlModel1D2D newControlModel )
   {
     setProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getId() );
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<Feature> modelProvider = (ICaseDataProvider<Feature>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IScenarioDataProvider modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       /* post empty command in order to make pool dirty. */

@@ -56,7 +56,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.model.ICommandPoster;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
@@ -74,7 +73,7 @@ import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * @author Dejan Antanaskovic
@@ -87,13 +86,12 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   private IScenarioResultMeta m_resultModel;
 
-  private final ICaseDataProvider<IModel> m_modelProvider;
+  private final IScenarioDataProvider m_modelProvider;
 
   private final IControlModel1D2D m_controlModel;
 
   private final IFolder m_scenarioFolder;
 
-  @SuppressWarnings("unchecked")
   public RestartSelectWizard( final IControlModel1D2D controlModel )
   {
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
@@ -101,7 +99,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     m_scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_controlModel = controlModel;
-    m_modelProvider = (ICaseDataProvider<IModel>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_modelProvider = (IScenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?

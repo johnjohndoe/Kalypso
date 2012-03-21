@@ -58,11 +58,10 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -78,16 +77,15 @@ public class WindDataWidgetDataModel extends KeyBasedDataModel
   private static final String[] KEYS = { IWindModel.class.toString(), IWindDataModelSystem.class.toString(), IWindDataModel.class.toString(), IMapModell.class.toString(), IMapPanel.class.toString(),
     WIND_THEME };
 
-  private final ICaseDataProvider<Feature> m_dataProvider;
+  private final IScenarioDataProvider m_dataProvider;
 
-  @SuppressWarnings("unchecked")
   public WindDataWidgetDataModel( )
   {
     super( KEYS, null );
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_dataProvider = (ICaseDataProvider<Feature>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_dataProvider = (IScenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
   public void setMapModell( final IMapModell mapModell )
