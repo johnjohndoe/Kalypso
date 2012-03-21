@@ -58,7 +58,6 @@ import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.TimeseriesImportWizard;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
-import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
@@ -93,9 +92,7 @@ public class ImportTimeseriesAction extends Action
     final ImportObservationData data = prepareData();
     final ITimeseries timeseries = showWizard( shell, data );
 
-    // select tree with pseudo node
-    final TreeNode pseudoNode = new TreeNode( m_model, null, null, timeseries );
-    m_model.setSelection( pseudoNode );
+    m_model.refreshTree( timeseries );
   }
 
   private ImportObservationData prepareData( )

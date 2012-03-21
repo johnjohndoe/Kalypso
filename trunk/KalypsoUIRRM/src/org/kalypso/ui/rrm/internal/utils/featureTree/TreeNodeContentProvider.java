@@ -98,7 +98,6 @@ public class TreeNodeContentProvider implements ITreeContentProvider
     return ((TreeNode) element).getParent();
   }
 
-
   @Override
   public boolean hasChildren( final Object element )
   {
