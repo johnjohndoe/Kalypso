@@ -157,7 +157,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to create, edit and delete hydrographs for 1d2d result files.<BR>
  * The user can add / remove hydrograph locations for each calculation unit.
- * 
+ *
  * @author Thomas Jung
  */
 public class HydrographManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
@@ -796,12 +796,10 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     final IWizard exportProfileWizard = new ExportHydrographWizard( m_hydrographs, m_selectedHydrograph );
 
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    ;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, exportProfileWizard );
     dialog.setRememberSize( true );
     dialog.open();
-
   }
 
   protected void handleHydrographImport( @SuppressWarnings("unused") final Event event )
@@ -813,7 +811,6 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
     final ImportHydrographWizard importHydrographWizard = new ImportHydrographWizard( m_hydrographs, m_theme, discModel );
 
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    ;
 
     final WizardDialog2 dialog = new WizardDialog2( shell, importHydrographWizard );
     dialog.setRememberSize( true );
@@ -827,9 +824,9 @@ public class HydrographManagementWidget extends DeprecatedMouseWidget implements
         @Override
         public void run( )
         {
-          final Shell shell = display.getActiveShell();
+          final Shell shell2 = display.getActiveShell();
           final IStatus lStatus = Status.CANCEL_STATUS;
-          ErrorDialog.openError( shell, "Import Hydrographs Warnings", errMsg, lStatus ); //$NON-NLS-1$
+          ErrorDialog.openError( shell2, "Import Hydrographs Warnings", errMsg, lStatus ); //$NON-NLS-1$
         }
       } );
     }

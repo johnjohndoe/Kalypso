@@ -262,7 +262,7 @@ public class ModelDtmWizard extends Wizard
     final IKalypsoTheme dtmTheme = findDtmTheme();
     if( dtmTheme == null )
     {
-      final IKalypsoLayerModell mapModell = (IKalypsoLayerModell) m_mapPart.getMapPanel().getMapModell();
+      final IKalypsoLayerModell mapModell = m_mapPart.getMapPanel().getMapModell();
 
       final URL context = mapModell.getContext();
       final IFile mapFile = ResourceUtilities.findFileFromURL( context );

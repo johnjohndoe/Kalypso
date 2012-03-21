@@ -383,8 +383,6 @@ public class Control1D2DConverter
   /**
    * writes the Continuity Lines Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
-
-  @SuppressWarnings("unchecked")
   private void writeR10ContinuityLineDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
     final List<IFELine> continuityLines = m_calculationUnit.getContinuityLines();

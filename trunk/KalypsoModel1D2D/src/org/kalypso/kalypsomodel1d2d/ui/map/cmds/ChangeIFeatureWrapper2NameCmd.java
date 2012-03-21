@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author Patrice Congo
  *
  */
-@SuppressWarnings("unchecked")
 public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeCommand
 {
 
@@ -107,9 +106,6 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getDiscretisationModel1d2d()
-   */
   @Override
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {

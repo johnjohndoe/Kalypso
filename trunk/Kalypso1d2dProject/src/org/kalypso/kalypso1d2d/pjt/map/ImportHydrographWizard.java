@@ -441,7 +441,6 @@ public class ImportHydrographWizard extends Wizard implements IWorkbenchWizard
     final Feature parentFeature = m_hydrographCollection;
     final IRelationType parentRelation = m_hydrographCollection.getHydrographs().getFeatureList().getPropertyType();
 
-    final Display display = PlatformUI.getWorkbench().getDisplay();
     for( final Feature lf : newHydroFeatures )
     {
       final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, lf, selectionManager, true, true );

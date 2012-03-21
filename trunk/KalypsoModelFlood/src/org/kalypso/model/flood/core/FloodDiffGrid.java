@@ -193,7 +193,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     return wspValue - terrainValue;
   }
 
-  private double getWspValue( final Coordinate crd, final FloodBean bean ) throws GeoGridException
+  private double getWspValue( final Coordinate crd, final FloodBean bean )
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
@@ -238,7 +238,7 @@ public class FloodDiffGrid extends SequentialBinaryGeoGridReader
     }
   }
 
-  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon, final ParallelBinaryGridProcessorBean bean )
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )

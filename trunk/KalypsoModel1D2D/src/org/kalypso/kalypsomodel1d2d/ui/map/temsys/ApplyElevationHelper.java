@@ -60,7 +60,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class ApplyElevationHelper
 {
-  @SuppressWarnings("unchecked")
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
     final IFeatureBindingCollection<ITerrainElevationModel> elevationModels = dataModel.getTerrainElevationModels();

@@ -82,7 +82,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   @SuppressWarnings("unchecked")
-  public void writeElements( IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException
+  public void writeElements( final IFeatureBindingCollection<IFE1D2DElement> elements ) throws CoreException
   {
     final List<IFE1D2DElement> elementsInBBox = elements;
     final List<List<IFE1D2DNode>> triangularElements = new ArrayList<List<IFE1D2DNode>>();
@@ -112,17 +112,16 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
   }
 
   /* splits quadrangular element in 2 triangular elements */
-  @SuppressWarnings("unchecked")
-  private void tranformToTriangularElement( final List<IFE1D2DNode> nodes, List<List<IFE1D2DNode>> triangularElements )
+  private void tranformToTriangularElement( final List<IFE1D2DNode> nodes, final List<List<IFE1D2DNode>> triangularElements )
   {
-    List<IFE1D2DNode> newTriangle = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> newTriangle = new ArrayList<IFE1D2DNode>();
     newTriangle.add( nodes.get( 0 ) );
     newTriangle.add( nodes.get( 1 ) );
     newTriangle.add( nodes.get( 2 ) );
 
     triangularElements.add( newTriangle );
 
-    List<IFE1D2DNode> anotherNewTriangle = new ArrayList<IFE1D2DNode>();
+    final List<IFE1D2DNode> anotherNewTriangle = new ArrayList<IFE1D2DNode>();
 
     anotherNewTriangle.add( nodes.get( 0 ) );
     anotherNewTriangle.add( nodes.get( 2 ) );
@@ -131,7 +130,6 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     triangularElements.add( anotherNewTriangle );
   }
 
-  @SuppressWarnings("unchecked")
   private void writeTriangles( final List<List<IFE1D2DNode>> triangularElements )
   {
     int count = 1;
@@ -145,7 +143,6 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
 
   }
 
-  @SuppressWarnings("unchecked")
   private void writeNodes( final List<IFE1D2DNode> nodes )
   {
     for( final IFE1D2DNode node : nodes )
@@ -160,11 +157,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.serialize.Gml2HmoConverter#writeHmo(java.io.File)
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public void writeHmo( final File file ) throws Exception
   {
     hmoSerializer = new HMOSerializer( file );
@@ -182,12 +175,8 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
     writeHmo( file );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(org.kalypsodeegree.model.feature.binding.Feature)
-   */
   @Override
-  @SuppressWarnings("unchecked")
-  public int getConversionID( Feature feature )
+  public int getConversionID( final Feature feature )
   {
     if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
@@ -203,7 +192,7 @@ public class GmlMesh2HmoConverter extends Gml2HmoConverter implements I2DMeshCon
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
   @Override
-  public int getConversionID( String featureGmlID )
+  public int getConversionID( final String featureGmlID )
   {
     if( m_nodesIDProvider.contains( featureGmlID ) )
       return m_nodesIDProvider.getOrAdd( featureGmlID );

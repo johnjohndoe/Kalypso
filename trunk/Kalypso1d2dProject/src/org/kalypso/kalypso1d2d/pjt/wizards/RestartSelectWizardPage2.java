@@ -92,7 +92,6 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       }
 
       @Override
-      @SuppressWarnings("synthetic-access")
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
         m_btnUp.setEnabled( m_selectedInput != null );
