@@ -63,10 +63,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit.TYPE;
@@ -87,7 +88,6 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.kalypsosimulationmodel.core.wind.IWindDataModelSystem;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -139,9 +139,9 @@ public class Control1D2DConverter
 
   private boolean m_boolPrintWindLineDone;
 
-  private final IFeatureBindingCollection<IWindDataModelSystem> m_windSystemsToWrite;
+  // private final IFeatureBindingCollection<IWindDataModelSystem> m_windSystemsToWrite;
 
-  public Control1D2DConverter( final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log, final IFeatureBindingCollection<IWindDataModelSystem> pWindSystemCollection )
+  public Control1D2DConverter( final IControlModel1D2D controlModel, final ICalculationUnit calculationUnit, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log )
   {
     m_controlModel = controlModel;
     m_calculationUnit = calculationUnit;
@@ -150,7 +150,7 @@ public class Control1D2DConverter
     m_buildingProvider = buildingProvider;
     m_log = log;
     m_boolPrintWindLineDone = false;
-    m_windSystemsToWrite = pWindSystemCollection;
+    // m_windSystemsToWrite = pWindSystemCollection;
 
     // only instantiate this provider once, we require global ids over several runs
     if( m_staticInnerLinesIDProvider == null )
@@ -326,7 +326,7 @@ public class Control1D2DConverter
       if( ks == null || ks.isNaN() )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7", rClass.getName() );//$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
       }
 
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
@@ -475,7 +475,7 @@ public class Control1D2DConverter
       if( m_controlModel.isSteadySelected() )
       {
         final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.34" );//$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, errMsg ) );
       }
       else
         // Not used anyway (1.0 should be default value)
@@ -492,7 +492,7 @@ public class Control1D2DConverter
       if( !iterator.hasNext() )
       {
         final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.35" );//$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, errMsg ) );
       }
 
       final IRecord firstRecord = iterator.next();
@@ -533,7 +533,7 @@ public class Control1D2DConverter
         if( m_controlModel.getIaccyc() > stepCount )
         {
           final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.12", stepCount, m_controlModel.getIaccyc() ); //$NON-NLS-1$
-          throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, errMsg ) );
         }
       }
     }
@@ -622,7 +622,7 @@ public class Control1D2DConverter
         if( ((IBuildingFlowRelation) building).getKind() != KIND.TABULAR )
         {
           final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43", ((IBuildingFlowRelation) building).getKind() );//$NON-NLS-1$
-          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
         }
         lIntDirection = ((IBuildingFlowRelation) building).getDirection();
       }
@@ -631,7 +631,7 @@ public class Control1D2DConverter
         if( ((IBuildingFlowRelation2D) building).getKind() != KIND2D.TABULAR )
         {
           final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43", ((IBuildingFlowRelation) building).getKind() );//$NON-NLS-1$
-          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
         }
         lIntDirection = ((IBuildingFlowRelation2D) building).getDirection();
       }
@@ -804,7 +804,7 @@ public class Control1D2DConverter
               }
               catch( final Exception e )
               {
-                final IGeoStatus status = m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, Messages.getString( "Control1D2DConverter.1" ), boundaryCondition.getLocation(), e ); //$NON-NLS-1$
+                m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, Messages.getString( "Control1D2DConverter.1" ), boundaryCondition.getLocation(), e ); //$NON-NLS-1$
               }
               formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, infVel, Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
             }
@@ -824,7 +824,7 @@ public class Control1D2DConverter
   {
     if( uRVal == null || uRVal == "" ) { //$NON-NLS-1$
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
     }
     final List<Integer> lListFactors = getListParsedRelaxationFactor( uRVal, nitn );
     // final int buffVal = 10 - (int) (uRVal * 10);
@@ -850,7 +850,7 @@ public class Control1D2DConverter
       if( !isSeparatedValuesFormatedFactor( pStrVal.trim(), lListFactors, pIntNumberIterations ) )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
       }
     }
 
@@ -879,7 +879,7 @@ public class Control1D2DConverter
       if( lFloatStart < 0.0 || lFloatStart > 1.0 || lFloatEnd < 0.0 || lFloatEnd > 1.0 )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
       }
       final float lFloatInc = (float) ((lFloatEnd - lFloatStart) / 0.1);
       final int lIntPer = (int) (pIntNumberIterations / (Math.abs( lFloatInc ) + 1));
@@ -974,7 +974,7 @@ public class Control1D2DConverter
       catch( final Exception e2 )
       {
         final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
       }
     }
     return lFloatValue;
@@ -1012,7 +1012,7 @@ public class Control1D2DConverter
     if( !iterator.hasNext() )
     {
       final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.52" );//$NON-NLS-1$
-      throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModel1D2DPlugin.PLUGIN_ID, msg ) );
     }
 
     final IRecord firstRecord = iterator.next();

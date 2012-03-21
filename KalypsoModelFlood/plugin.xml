@@ -249,7 +249,6 @@
       <category
             id="org.kalypso.model.flood.newwizard"
             name="%org.kalypso.model.flood.newwizard"
-            description= "%org.kalypso.model.flood.newwizard.description"
             parentCategory="org.kalypso.ui.newwizards.kalypso">
       </category>
       <wizard

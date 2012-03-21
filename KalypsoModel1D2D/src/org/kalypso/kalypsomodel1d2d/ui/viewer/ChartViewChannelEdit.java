@@ -45,6 +45,7 @@ package org.kalypso.kalypsomodel1d2d.ui.viewer;
  * @author jung
  * @deprecated
  */
+@Deprecated
 public class ChartViewChannelEdit //extends ChartView
 {
 //  private static List<ChartAction> m_chartActions = createChartActions();

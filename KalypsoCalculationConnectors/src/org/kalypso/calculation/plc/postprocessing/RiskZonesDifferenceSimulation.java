@@ -177,7 +177,7 @@ public class RiskZonesDifferenceSimulation implements ISimulationSpecKalypsoRisk
         ICoverage inputCoverage2 = null;
         for( final ICoverage coverage : inputCoverages2List )
         {
-          if( coverage.getEnvelope().equals( inputCoverage1.getEnvelope() ) )
+          if( coverage.getBoundedBy().equals( inputCoverage1.getBoundedBy() ) )
           {
             inputCoverage2 = coverage;
             break;

@@ -46,7 +46,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -54,15 +53,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public abstract class AbstractFlowRelation2D extends FlowRelationship implements IFlowRelation2D
 {
-
   public AbstractFlowRelation2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#getCalculation()
-   */
   @Override
   public TuhhCalculation getCalculation( )
   {
@@ -73,14 +68,11 @@ public abstract class AbstractFlowRelation2D extends FlowRelationship implements
     return null;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D#setCalculation(org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation)
-   */
   @Override
   public void setCalculation( final TuhhCalculation calculation )
   {
     final Feature flowRelFeature = this;
-    final GMLWorkspace flowRelworkspace = flowRelFeature.getWorkspace();
+    // final GMLWorkspace flowRelworkspace = flowRelFeature.getWorkspace();
     final IFeatureType flowRelFT = GMLSchemaUtilities.getFeatureTypeQuiet( IFlowRelation2D.QNAME );
     final IRelationType calcRT = (IRelationType) flowRelFT.getProperty( IFlowRelation2D.QNAME_PROP_TUHH_CALCULATION );
     try

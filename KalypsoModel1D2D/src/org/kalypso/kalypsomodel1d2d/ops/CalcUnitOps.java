@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Provide utility methods around calculation units
- * 
+ *
  * @author Patrice Congo
  */
 
@@ -119,7 +119,7 @@ public class CalcUnitOps
   public static final IFE1D2DElement[] toAddableElements( final ICalculationUnit calculationUnit, final Feature[] elementsToAdd )
   {
     final ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
-    final Class adapterCls;
+    final Class< ? > adapterCls;
     if( calculationUnit instanceof ICalculationUnit1D )
     {
       adapterCls = IElement1D.class;
@@ -148,7 +148,7 @@ public class CalcUnitOps
 
   /**
    * To get the parent units of the given unit inside the specified model
-   * 
+   *
    * @param calculationUnit
    *          the calculation unit which parents are to be search
    * @param model1d2d
@@ -179,7 +179,7 @@ public class CalcUnitOps
 
   /**
    * To get the all calculation units of the given discretisation model
-   * 
+   *
    * @param model1d2d
    *          the discretisation model
    * @return a collection containing the calculation unit of the dicretisation model
@@ -203,7 +203,7 @@ public class CalcUnitOps
 
   /**
    * Tests whether a given boundary is a boundary line of the specified calculation unit.
-   * 
+   *
    * @param boundaryLine
    *          the boundary line to assert
    * @param calUnit
@@ -217,11 +217,11 @@ public class CalcUnitOps
 
   /**
    * To get the bounding box of the given calculation unit.
-   * 
+   *
    * @param calUnit
    *          the calculation which bounding box is to be get
    * @return an {@link GM_Envelope} representing the bounding box of the calculation unit.
-   * 
+   *
    */
   public static final GM_Envelope getBoundingBox( final ICalculationUnit calUnit )
   {
@@ -272,7 +272,7 @@ public class CalcUnitOps
 
   /**
    * Answer whether an element is part of the calculation unit.
-   * 
+   *
    * @param unit
    *          the calculation unit
    * @param element
@@ -302,7 +302,7 @@ public class CalcUnitOps
 
   /**
    * Answer whether a boundary condition is assign to the given calculation unit
-   * 
+   *
    * @param unit
    *          the possible target calculation unit
    * @param bCondition
@@ -310,7 +310,7 @@ public class CalcUnitOps
    * @return true if the boundary condition is assign to the calculation unit otherwise false.
    * @throws IllegalArgumentException
    *           if unit or bCondition is null or unit does not have a model 1d 2d as parent feature
-   * 
+   *
    */
   public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
@@ -320,7 +320,7 @@ public class CalcUnitOps
 
   /**
    * Returns all boundary condition assign to the specified unit found in the passed list of boundary conditions
-   * 
+   *
    * @param conditions
    *          the list of boundary condition
    * @param unit
@@ -340,7 +340,7 @@ public class CalcUnitOps
 
   /**
    * Counts the number of boundary conditions assigned to the calculation unit.
-   * 
+   *
    * @param conditions
    *          the collection condition to test
    * @param unit
@@ -351,7 +351,7 @@ public class CalcUnitOps
    *         calculation unit
    * @throws IllegalArgumentException
    *           if condition or unit is null or grabDistance is less than 0
-   * 
+   *
    */
   public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit unit, final IBoundaryCondition.BOUNDARY_TYPE typeToCount )
   {
@@ -370,15 +370,15 @@ public class CalcUnitOps
     return countAssignedBoundaryConditions( conditions, unit, IBoundaryCondition.BOUNDARY_TYPE.HydroBoundary );
   }
 
-  public static ICalculationUnit findSubUnit( final ICalculationUnit calcUnit, IFE1D2DElement element )
+  public static ICalculationUnit findSubUnit( final ICalculationUnit calcUnit, final IFE1D2DElement element )
   {
     if( calcUnit instanceof ICalculationUnit1D2D )
     {
       final ICalculationUnit1D2D calcUnit1d2d = (ICalculationUnit1D2D) calcUnit;
-      IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
+      final IFeatureBindingCollection<ICalculationUnit> subUnits = calcUnit1d2d.getChangedSubUnits();
       for( final ICalculationUnit subUnit : subUnits )
       {
-        ICalculationUnit unit = findSubUnit( subUnit, element );
+        final ICalculationUnit unit = findSubUnit( subUnit, element );
         if( unit != null )
           return unit;
       }

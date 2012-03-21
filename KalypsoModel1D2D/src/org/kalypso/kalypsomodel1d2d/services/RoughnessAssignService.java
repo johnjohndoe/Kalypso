@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -106,7 +105,7 @@ public class RoughnessAssignService extends Job
       m_changesDiscretisationModel.clear();
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
-        assignRoughness( monitor, element );
+        assignRoughness( element );
         // if( monitor.isCanceled() )
         // return Status.CANCEL_STATUS;
         // TODO: do not cancel, does not work well with work area...
@@ -129,7 +128,7 @@ public class RoughnessAssignService extends Job
     return Status.OK_STATUS;
   }
 
-  private void assignRoughness( final IProgressMonitor monitor, final IFE1D2DElement element ) throws CoreException
+  private void assignRoughness( final IFE1D2DElement element )
   {
     if( !(element instanceof IPolyElement) )
       return;

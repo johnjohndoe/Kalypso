@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.kalypsomodel1d2d.ui.map.import2d.imports.Import2dImportAction;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -62,7 +61,7 @@ public class Import2dElementsWidget extends AbstractDelegateWidget implements IW
 {
   private final Import2dElementsData m_data = new Import2dElementsData();
 
-  private DatabindingForm m_binding;
+  // private DatabindingForm m_binding;
 
   public Import2dElementsWidget( )
   {
@@ -88,7 +87,7 @@ public class Import2dElementsWidget extends AbstractDelegateWidget implements IW
     final Composite body = form.getBody();
     GridLayoutFactory.fillDefaults().applyTo( body );
 
-    m_binding = new DatabindingForm( form, toolkit );
+    // m_binding = new DatabindingForm( form, toolkit );
 
     createDatasetPanel( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 

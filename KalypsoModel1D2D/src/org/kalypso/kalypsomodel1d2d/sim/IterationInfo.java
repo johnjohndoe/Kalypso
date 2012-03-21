@@ -156,11 +156,13 @@ public class IterationInfo implements IIterationInfo
       m_components.put( component.getId(), component );
   }
 
+  @Override
   public int getStepNr( )
   {
     return m_stepNr;
   }
 
+  @Override
   public void readIterFile( ) throws IOException
   {
     m_itrFile.refresh();
@@ -217,7 +219,7 @@ public class IterationInfo implements IIterationInfo
     final BigDecimal[] values = new BigDecimal[strings.length];
     for( int i = 0; i < strings.length; i++ )
     {
-      String lStrActSub = strings[i].trim();
+      final String lStrActSub = strings[i].trim();
 
       if( "nan".equalsIgnoreCase( lStrActSub ) ) //$NON-NLS-1$
       {
@@ -233,7 +235,7 @@ public class IterationInfo implements IIterationInfo
     {
       stepNr = values[1].intValueExact();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
     }
     addLine( stepNr, values );
@@ -294,6 +296,7 @@ public class IterationInfo implements IIterationInfo
   /**
    * To be called when calculation has finished to finish-off the last observation.
    */
+  @Override
   public void finish( )
   {
     finishCurrent();
@@ -378,6 +381,7 @@ public class IterationInfo implements IIterationInfo
     m_obs.getResult().clear();
   }
 
+  @Override
   public IObservation<TupleResult> getCurrentIteration( )
   {
     if( m_stepNr == -1 )
@@ -386,6 +390,7 @@ public class IterationInfo implements IIterationInfo
     return m_obs;
   }
 
+  @Override
   public IterationBean[] getIterations( )
   {
     return m_iterations.toArray( new IterationBean[m_iterations.size()] );

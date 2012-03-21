@@ -108,11 +108,8 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     return m_nodes;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem#recalculateElementGeometry()
-   */
   @Override
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  public GM_Object recalculateElementGeometry( )
   {
     try
     {

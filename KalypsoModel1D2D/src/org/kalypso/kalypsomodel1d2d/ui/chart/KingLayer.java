@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 import java.math.BigDecimal;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
@@ -69,18 +68,6 @@ public class KingLayer extends AbstractChartLayer
     m_data = data;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
-  public void drawIcon( final Image img )
-  {
-    // TODO Auto-generated method stub
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
-   *      org.eclipse.swt.graphics.Device)
-   */
   @Override
   public void paint( final GC gc )
   {

@@ -6,7 +6,6 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
@@ -84,8 +83,8 @@ public class PostRMAKalypso implements ISimulation
       throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
-    OutputStream logOS = null;
-    OutputStream errorOS = null;
+    final OutputStream logOS = null;
+    final OutputStream errorOS = null;
     FileSystemManagerWrapper manager = null;
     try
     {

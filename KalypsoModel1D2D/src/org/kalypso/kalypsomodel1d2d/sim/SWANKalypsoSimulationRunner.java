@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 import net.opengeospatial.ows.ExceptionReport;
@@ -55,7 +54,6 @@ import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.StatusType;
 
 import org.apache.commons.vfs2.FileObject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -64,7 +62,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
@@ -131,16 +128,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
   {
     m_log.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.0" ) ); //$NON-NLS-1$
 
-    IStatus simulationStatus = null;
-    try
-    {
-      simulationStatus = doRunCalculation( monitor );
-    }
-    catch( CoreException e )
-    {
-      m_log.log( StatusUtilities.statusFromThrowable( e ) );
-      // e.printStackTrace();
-    }
+    final IStatus simulationStatus = doRunCalculation( monitor );
     m_simulationStatus = evaluateSimulationResult( simulationStatus );
 
     // check if status is already in collection
@@ -151,21 +139,21 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
     return m_simulationStatus;
   }
 
-  private IStatus doRunCalculation( final IProgressMonitor progressMonitor ) throws CoreException
+  private IStatus doRunCalculation( final IProgressMonitor progressMonitor )
   {
     final SubMonitor progress = SubMonitor.convert( progressMonitor, 1000 );
     progress.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SWANCalculation.0" ), 1000 ); //$NON-NLS-1$
     ProgressUtilities.worked( progress, 1 );
     try
     {
-      final List<IRestartInfo> restartInfos;
-      if( m_controlModel.getRestart() )
-        restartInfos = m_controlModel.getRestartInfos();
-      else
-        restartInfos = Collections.emptyList();
+      // final List<IRestartInfo> restartInfos;
+      // if( m_controlModel.getRestart() )
+      // restartInfos = m_controlModel.getRestartInfos();
+      // else
+      // restartInfos = Collections.emptyList();
 
       // generate input files
-      final ExecutePreSWANKalypso executePreSWANKalypso = new ExecutePreSWANKalypso( m_serviceEndpoint, restartInfos, m_controlModel.getCalculationUnit().getId(), m_uriRMACalcPath );
+      final ExecutePreSWANKalypso executePreSWANKalypso = new ExecutePreSWANKalypso( m_serviceEndpoint, m_controlModel.getCalculationUnit().getId(), m_uriRMACalcPath );
 
       m_wpsRequest = executePreSWANKalypso.getWpsRequest();
       final IStatus preStatus = executePreSWANKalypso.run( progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
@@ -234,11 +222,13 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
 
   }
 
+  @Override
   public IIterationInfo getIterationInfo( )
   {
     return m_iterationInfo;
   }
 
+  @Override
   public IStatus getSimulationStatus( )
   {
     return m_simulationStatus;
@@ -339,7 +329,7 @@ public class SWANKalypsoSimulationRunner extends DefaultWpsObserver implements I
 
   public IStatus cancelJob( )
   {
-    MultiStatus lResStatus = StatusUtilities.createMultiStatusFromMessage( IStatus.OK, KalypsoModel1D2DPlugin.getDefault().toString(), CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), " ", null ); //$NON-NLS-1$; //$NON-NLS-2$;
+    final MultiStatus lResStatus = StatusUtilities.createMultiStatusFromMessage( IStatus.OK, KalypsoModel1D2DPlugin.getDefault().toString(), CODE_NONE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1" ), " ", null ); //$NON-NLS-1$; //$NON-NLS-2$;
     if( m_wpsRequest != null && !m_boolFirstDone )
     {
       lResStatus.add( m_wpsRequest.cancelJob() );

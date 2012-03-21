@@ -153,7 +153,6 @@ public class VeloDiff2DTest extends TestCase
     final IFolder folder = project.getFolder( "ergs" ); //$NON-NLS-1$
     final IFile resultFile1 = folder.getFile( "erg1.2d" ); //$NON-NLS-1$
     final IFile resultFile2 = folder.getFile( "erg2.2d" ); //$NON-NLS-1$
-    final IFile templateFile = folder.getFile( "template.2d" ); //$NON-NLS-1$
 
     final File outputDir1 = FileUtilities.createNewTempDir( "output1" ); //$NON-NLS-1$
     final File outputDir2 = FileUtilities.createNewTempDir( "output2" ); //$NON-NLS-1$

@@ -74,11 +74,12 @@ public class HydrographCollection extends Feature_Impl implements IHydrographCol
 {
   private final IFeatureBindingCollection<IHydrograph> m_hydrographs = new FeatureBindingCollection<IHydrograph>( this, IHydrograph.class, QNAME_PROP_HYDROGRAPH_MEMBER );
 
-  public HydrographCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public HydrographCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
   
+  @Override
   public IFeatureBindingCollection<IHydrograph> getHydrographs( )
   {
     return m_hydrographs;
@@ -97,10 +98,10 @@ public class HydrographCollection extends Feature_Impl implements IHydrographCol
     {
       final IHydrograph curHydro = (IHydrograph) feature.getAdapter( IHydrograph.class );
 
-      GM_Object location = curHydro.getLocation();
+      final GM_Object location = curHydro.getLocation();
       if( location instanceof GM_Point )
       {
-        GM_Point point = (GM_Point) location;
+        final GM_Point point = (GM_Point) location;
         final double curDist = position.getDistance( point.getPosition() );
         if( min > curDist )
         {
@@ -113,7 +114,7 @@ public class HydrographCollection extends Feature_Impl implements IHydrographCol
   }
 
   @SuppressWarnings("unchecked")
-  private List<Feature> findFeatures( GM_Position position, double searchRectWidth )
+  private List<Feature> findFeatures( final GM_Position position, final double searchRectWidth )
   {
     final FeatureList nodeList = m_hydrographs.getFeatureList();
     final double posX = position.getX();
@@ -132,7 +133,7 @@ public class HydrographCollection extends Feature_Impl implements IHydrographCol
   public Map<IPath, Date> getResults( )
   {
     final Feature feature = this;
-    FeatureList resultFeatures = (FeatureList) feature.getProperty( QNAME_PROP_RESULT_MEMBER );
+    final FeatureList resultFeatures = (FeatureList) feature.getProperty( QNAME_PROP_RESULT_MEMBER );
 
     if( resultFeatures == null )
       return null;
@@ -141,12 +142,12 @@ public class HydrographCollection extends Feature_Impl implements IHydrographCol
 
     for( final Object object : resultFeatures )
     {
-      Feature resultFeature = (Feature) object;
+      final Feature resultFeature = (Feature) object;
       if( resultFeature == null )
         return null;
-      String pathString = (String) resultFeature.getProperty( QNAME_PROP_RESULT_MEMBER_PATH );
-      IPath path = Path.fromPortableString( pathString );
-      Date date = DateUtilities.toDate( (XMLGregorianCalendar) resultFeature.getProperty( QNAME_PROP_RESULT_MEMBER_DATE ) );
+      final String pathString = (String) resultFeature.getProperty( QNAME_PROP_RESULT_MEMBER_PATH );
+      final IPath path = Path.fromPortableString( pathString );
+      final Date date = DateUtilities.toDate( (XMLGregorianCalendar) resultFeature.getProperty( QNAME_PROP_RESULT_MEMBER_DATE ) );
       resultList.put( path, date );
     }
 
@@ -164,7 +165,7 @@ public class HydrographCollection extends Feature_Impl implements IHydrographCol
 
     final Set<Entry<IPath, Date>> entrySet = resultMap.entrySet();
 
-    for( Entry<IPath, Date> entry : entrySet )
+    for( final Entry<IPath, Date> entry : entrySet )
     {
       final IPath path = entry.getKey();
       final String pathString = path.toPortableString();

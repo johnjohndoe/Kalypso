@@ -9,7 +9,6 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -25,7 +24,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   /** Edges that contains this node */
   private final IFeatureBindingCollection<IFENetItem> m_containers = new FeatureBindingCollection<IFENetItem>( this, IFENetItem.class, WB1D2D_PROP_NODE_CONTAINERS );
 
-  public FE1D2DNode( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public FE1D2DNode( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -41,7 +40,7 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
   {
     if( point.getCoordinateSystem() == null )
       throw new IllegalStateException();
-    
+
     setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
   }
 
@@ -145,11 +144,8 @@ public class FE1D2DNode extends Feature_Impl implements IFE1D2DNode
     return buf.toString();
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem#recalculateElementGeometry()
-   */
   @Override
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  public GM_Object recalculateElementGeometry( )
   {
     // TODO Auto-generated method stub
     return null;

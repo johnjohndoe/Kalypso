@@ -75,6 +75,7 @@ import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -311,7 +312,7 @@ public class SegmentData
   /**
    * changes the node elevations of the inner points of an IProfil so that its crosssection area (currentArea) is the
    * same as the area of the cropped original IProfil (targetArea)
-   * 
+   *
    * @param profile
    *          intersected profile for which the area adjustment shall be done
    * @param targetArea
@@ -464,7 +465,7 @@ public class SegmentData
    * - if there are more profile points than the wished number of intersection points, the intersection is done by
    * Douglas-Peucker<br>
    * - if there are not enough profile points, the intersection is done with an equidistant approach.
-   * 
+   *
    * @param profile
    *          input profile to be intersected.
    */
@@ -592,7 +593,7 @@ public class SegmentData
    * intersects a specific linestring by a given number of intersections.<br>
    * the intersection is done by an equidistant approach. <BR>
    * this method is used for intersecting the banklines (Linestrings)
-   * 
+   *
    * @param linestring
    *          input linestring to be intersected
    * @param numIntersects
@@ -652,7 +653,7 @@ public class SegmentData
    * (a) by Douglas-Peucker <br>
    * (b) equidistant. <br>
    * the geographical data is interpolated from the original profile data.
-   * 
+   *
    * @param wspmprofile
    *          original profile (WSPMProfile) to be intersected
    * @param prof
@@ -698,7 +699,8 @@ public class SegmentData
     final IRecord[] profilPointList = wspmprofile.getProfil().getPoints();
 
     /* get / create components */
-    final IComponent breiteComponentOrig = ProfilObsHelper.getPropertyFromId( orgIProfil, IWspmConstants.POINT_PROPERTY_BREITE );
+    // final IComponent breiteComponentOrig = ProfilObsHelper.getPropertyFromId( orgIProfil,
+    // IWspmConstants.POINT_PROPERTY_BREITE );
 
     final GM_Curve line = wspmprofile.getLine();
 
@@ -770,7 +772,7 @@ public class SegmentData
 
   /**
    * gets the profile width coordinate of a specific intersection point corresponding to that profile
-   * 
+   *
    * @param profile
    *          input profile
    * @param prof
@@ -801,7 +803,7 @@ public class SegmentData
 
   /**
    * crops the WSPM profile at the intersection points and converts it to a LineString
-   * 
+   *
    * @param profile
    *          input profile to be cropped
    * @param prof
@@ -1019,7 +1021,7 @@ public class SegmentData
 
   /**
    * converts a WSPM profile into an linestring
-   * 
+   *
    * @param profile
    *          Input profile to be converted.
    */
@@ -1442,10 +1444,10 @@ public class SegmentData
       return;
 
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
 
     final GM_Curve Curve = (GM_Curve) JTSAdapter.wrap( line );
-    Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+    Stroke defaultstroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
     defaultstroke = symb.getStroke();
     stroke.setWidth( 2 );
     stroke.setStroke( color );

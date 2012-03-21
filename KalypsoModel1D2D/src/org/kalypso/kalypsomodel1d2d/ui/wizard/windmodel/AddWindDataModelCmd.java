@@ -44,47 +44,35 @@ import org.kalypso.commons.command.ICommand;
 
 /**
  * Currently just a dummy command use to get the pool dirty.
- * 
  */
 public class AddWindDataModelCmd implements ICommand
 {
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
+  @Override
   public String getDescription( )
   {
     return "Adding Wind Data Model"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
+  @Override
   public boolean isUndoable( )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
+  @Override
   public void process( ) throws Exception
   {
 
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
+  @Override
   public void redo( ) throws Exception
   {
     // TODO Auto-generated method stub
 
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
+  @Override
   public void undo( ) throws Exception
   {
     // TODO Auto-generated method stub

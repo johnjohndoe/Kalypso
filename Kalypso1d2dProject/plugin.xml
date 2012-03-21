@@ -36,7 +36,6 @@
 		<category 
             id="org.kalypso.wizard.Create1d2dpjt"
             name="%org.kalypso.wizard.Create1d2dpjt.name"
-			description="%org.kalypso.wizard.Create1d2dpjt.description"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
 		<wizard
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
@@ -121,9 +120,33 @@
              class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
              icon="icons/obj16/repository.gif"
              id="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
-			 description="%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.description"
              name="%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.name">
+             <description>%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.description</description>
        </view>
+   </extension>
+   
+   <extension point="org.eclipse.ui.commands">
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WindDataLoad" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_showWinds" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultProcessHydropgrahs" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef" name=""/>
+        <command id="workflow1d2d_ResultDataManager" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView" name=""/>
+        <command id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph" name=""/>
+        
    </extension>
 
      <extension point="org.eclipse.ui.handlers">
@@ -392,11 +415,11 @@
       <decorator
             icon="icons/kalypso1d2d_small.png"
             id="org.kalypso.kalypso1d2d.pjt.natureDecorator"
-			description="%org.kalypso.kalypso1d2d.pjt.natureDecorator.description"
             label="%org.kalypso.kalypso1d2d.pjt.natureDecorator.label"
             lightweight="true"
             location="BOTTOM_RIGHT"
             state="true">
+         <description>%org.kalypso.kalypso1d2d.pjt.natureDecorator.description</description>
          <enablement>
             <and>
                <objectClass

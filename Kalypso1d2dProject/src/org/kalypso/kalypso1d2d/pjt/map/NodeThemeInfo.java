@@ -4,19 +4,15 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.framework.util.Pair;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.contribs.java.util.CollectionsHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -32,7 +28,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -269,48 +264,53 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
   }
 
   //TODO: switch to this implementation
-  private Pair<Double, Double> getInterpolatedPair( final GM_Point pPointToInterpolateAt, final Map<GM_Point, Pair<Double, Double>> pMapPointsValues )
-  {
-    GM_Triangle lTriFirst = null;
-    GM_Triangle lTriSecond = null;
-    try
-    {
-      final List<GM_Point> lListAllPoints = new ArrayList<GM_Point>();
-      final List<Double> lListAllFirsts = new ArrayList<Double>();
-      final List<Double> lListAllSeconds = new ArrayList<Double>();
-
-      final Set<GM_Point> lSetPoints = pMapPointsValues.keySet();
-      for( final GM_Point gmPoint : lSetPoints )
-      {
-        lListAllPoints.add( gmPoint );
-        lListAllFirsts.add( pMapPointsValues.get( gmPoint ).first );
-        lListAllSeconds.add( pMapPointsValues.get( gmPoint ).second );
-      }
-      Map<GM_Point, Double> lMapFirst = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ), lListAllFirsts.subList( 0, 3 ) );
-      lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
-      if( lTriFirst.contains( pPointToInterpolateAt ) )
-      {
-        final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ), lListAllFirsts.subList( 0, 3 ) );
-        lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
-        return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
-      }
-      else
-      {
-        lListAllPoints.remove( 1 );
-        lListAllFirsts.remove( 1 );
-        lListAllSeconds.remove( 1 );
-        lMapFirst = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
-        lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
-        final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
-        lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
-        return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue( pPointToInterpolateAt.getPosition() ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      return null;
-    }
-  }
+  // private Pair<Double, Double> getInterpolatedPair( final GM_Point pPointToInterpolateAt, final Map<GM_Point,
+  // Pair<Double, Double>> pMapPointsValues )
+  // {
+  // GM_Triangle lTriFirst = null;
+  // GM_Triangle lTriSecond = null;
+  // try
+  // {
+  // final List<GM_Point> lListAllPoints = new ArrayList<GM_Point>();
+  // final List<Double> lListAllFirsts = new ArrayList<Double>();
+  // final List<Double> lListAllSeconds = new ArrayList<Double>();
+  //
+  // final Set<GM_Point> lSetPoints = pMapPointsValues.keySet();
+  // for( final GM_Point gmPoint : lSetPoints )
+  // {
+  // lListAllPoints.add( gmPoint );
+  // lListAllFirsts.add( pMapPointsValues.get( gmPoint ).first );
+  // lListAllSeconds.add( pMapPointsValues.get( gmPoint ).second );
+  // }
+  // Map<GM_Point, Double> lMapFirst = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ),
+  // lListAllFirsts.subList( 0, 3 ) );
+  // lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
+  // if( lTriFirst.contains( pPointToInterpolateAt ) )
+  // {
+  // final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints.subList( 0, 3 ),
+  // lListAllFirsts.subList( 0, 3 ) );
+  // lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
+  // return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue(
+  // pPointToInterpolateAt.getPosition() ) );
+  // }
+  // else
+  // {
+  // lListAllPoints.remove( 1 );
+  // lListAllFirsts.remove( 1 );
+  // lListAllSeconds.remove( 1 );
+  // lMapFirst = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
+  // lTriFirst = GeometryUtilities.createTriangleForBilinearInterpolation( lMapFirst );
+  // final Map<GM_Point, Double> lMapSecond = CollectionsHelper.joinListsToMap( lListAllPoints, lListAllFirsts );
+  // lTriSecond = GeometryUtilities.createTriangleForBilinearInterpolation( lMapSecond );
+  // return new Pair<Double, Double>( lTriFirst.getValue( pPointToInterpolateAt.getPosition() ), lTriSecond.getValue(
+  // pPointToInterpolateAt.getPosition() ) );
+  // }
+  // }
+  // catch( final Exception e )
+  // {
+  // return null;
+  // }
+  // }
 
   private Object getValueFromTrianglesAtPosition( final GM_Position pos, final GM_Triangle lTri, final GM_Triangle lTri2 )
   {

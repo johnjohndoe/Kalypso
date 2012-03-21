@@ -242,7 +242,7 @@ public class FlowRelationUtilitites
   {
     final List<IFlowRelationship> lListRes = new ArrayList<IFlowRelationship>();
 
-    final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
+    // final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IFlowRelationship.class };
 
     final IFlowRelationship[] flowRels = model.findFlowrelationships( pPosition, 0.01 );
     for( final IFlowRelationship flowRel : flowRels )

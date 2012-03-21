@@ -93,7 +93,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.21" ), m_channels.length + 10 ); //$NON-NLS-1$
 
@@ -117,7 +117,7 @@ public class KMUpdateOperation implements ICoreRunnableWithProgress
     return calculationStatus;
   }
 
-  private IStatus calculateKM( final IProgressMonitor monitor ) throws CoreException
+  private IStatus calculateKM( final IProgressMonitor monitor )
   {
     final StatusCollector problems = new StatusCollector( KMPlugin.getID() );
 

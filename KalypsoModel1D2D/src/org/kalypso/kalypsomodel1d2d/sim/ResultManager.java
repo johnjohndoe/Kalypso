@@ -305,7 +305,7 @@ public class ResultManager implements ISimulation1D2DConstants
       final FileObject swanResOutTabFileBackUp = swanResOutTabFile.getParent().resolveFile( swanResOutTabFile.getName().getBaseName() + ".bck" ); //$NON-NLS-1$
       swanResOutTabFile.moveTo( swanResOutTabFileBackUp );
 
-      int lIntLinesCounter = 0;
+      // int lIntLinesCounter = 0;
       final OutputStream lOutStream = swanResOutTabFile.getContent().getOutputStream();
       final DataInputStream lInDataStream = new DataInputStream( swanResOutTabFileBackUp.getContent().getInputStream() );
 
@@ -313,7 +313,7 @@ public class ResultManager implements ISimulation1D2DConstants
       while( lInDataStream.available() != 0 )
       {
         final String lStrTmpLine = lInDataStream.readLine().trim();
-        ++lIntLinesCounter;
+        // ++lIntLinesCounter;
         if( lStrTmpLine.startsWith( "%" ) ) { //$NON-NLS-1$
           lFormatter.format( "%s\n", lStrTmpLine ); //$NON-NLS-1$
           continue;

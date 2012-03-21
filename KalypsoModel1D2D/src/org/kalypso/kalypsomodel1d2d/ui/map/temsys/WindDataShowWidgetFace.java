@@ -176,7 +176,7 @@ class WindDataShowWidgetFace
     return isAnimating;
   }
 
-  public final void setAnimating( boolean pAnimating )
+  public final void setAnimating( final boolean pAnimating )
   {
     this.isAnimating = pAnimating;
   }
@@ -221,11 +221,12 @@ class WindDataShowWidgetFace
         {
           Thread.sleep( m_intPauseTime );
         }
-        catch( InterruptedException e )
+        catch( final InterruptedException e )
         {
         }
         m_display.asyncExec( new Runnable()
         {
+          @Override
           public void run( )
           {
             m_progressBar.worked( m_intDone++ );
@@ -245,6 +246,7 @@ class WindDataShowWidgetFace
     {
       m_display.asyncExec( new Runnable()
       {
+        @Override
         public void run( )
         {
           m_progressBar.done();
@@ -261,7 +263,7 @@ class WindDataShowWidgetFace
       return m_isRunnig;
     }
 
-    public final void setRunnig( boolean pRunnig )
+    public final void setRunnig( final boolean pRunnig )
     {
       this.m_isRunnig = pRunnig;
     }

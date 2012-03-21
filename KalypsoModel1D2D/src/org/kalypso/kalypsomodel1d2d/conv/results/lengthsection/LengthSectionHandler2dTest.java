@@ -46,7 +46,6 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -125,7 +124,7 @@ public class LengthSectionHandler2dTest extends TestCase
       {
         surface = (GM_TriangulatedSurface) geometryProperty;
       }
-      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false, new NullProgressMonitor() );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false );
 
       final URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
       w = GmlSerializer.createGMLWorkspace( resource2, null );
@@ -140,7 +139,7 @@ public class LengthSectionHandler2dTest extends TestCase
 
       }
 
-      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, false, new NullProgressMonitor() );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, false );
 
       if( lsObs.getResult().size() > 0 )
       {

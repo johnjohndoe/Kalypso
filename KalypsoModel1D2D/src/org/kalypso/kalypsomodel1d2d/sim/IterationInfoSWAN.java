@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -110,7 +110,7 @@ public class IterationInfoSWAN implements IIterationInfo
   private final File m_outputDir;
 
   /** The observations of time steps */
-  private final IObservation<TupleResult> m_timeSteps;
+  // private final IObservation<TupleResult> m_timeSteps;
 
   private final Map<String, IComponent> m_components = new HashMap<String, IComponent>();
 
@@ -140,10 +140,10 @@ public class IterationInfoSWAN implements IIterationInfo
   {
     m_itrFile = iterObsFile;
     m_outputDir = outputDir;
-    m_timeSteps = timeSteps;
+    // m_timeSteps = timeSteps;
 
     /* Create observation from template */
-    URL obsTemplate = getClass().getResource( "resource/template/iterObsTemplateSwan.gml" ); //$NON-NLS-1$
+    final URL obsTemplate = getClass().getResource( "resource/template/iterObsTemplateSwan.gml" ); //$NON-NLS-1$
     try
     {
       m_workspace = GmlSerializer.createGMLWorkspace( obsTemplate, null );
@@ -161,11 +161,13 @@ public class IterationInfoSWAN implements IIterationInfo
 
   }
 
+  @Override
   public int getStepNr( )
   {
     return m_stepNr;
   }
 
+  @Override
   public void readIterFile( ) throws IOException
   {
     m_itrFile.refresh();
@@ -214,7 +216,7 @@ public class IterationInfoSWAN implements IIterationInfo
 
     if( line != null && line.trim().startsWith( "Time of computation" ) ) //$NON-NLS-1$
     {
-      String lStrDate = line.substring( line.indexOf( "->" ) + 3 ); //$NON-NLS-1$
+      final String lStrDate = line.substring( line.indexOf( "->" ) + 3 ); //$NON-NLS-1$
 
       if( !lStrDate.equals( m_strActDate ) )
       {
@@ -243,7 +245,7 @@ public class IterationInfoSWAN implements IIterationInfo
           addLine( line );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
@@ -287,7 +289,7 @@ public class IterationInfoSWAN implements IIterationInfo
   {
     if( stepNrObj instanceof String )
     {
-      String strActDateSWAN = (String) stepNrObj;
+      final String strActDateSWAN = (String) stepNrObj;
       return SWANDataConverterHelper.getDateForStepFromString( strActDateSWAN.trim() );
     }
     else if( stepNrObj == null && m_strActDate != null )
@@ -303,6 +305,7 @@ public class IterationInfoSWAN implements IIterationInfo
   /**
    * To be called when calculation has finished to finish-off the last observation.
    */
+  @Override
   public void finish( )
   {
     finishCurrent();
@@ -361,6 +364,7 @@ public class IterationInfoSWAN implements IIterationInfo
     m_iterations.add( new IterationBean( obsName, obsFile, status ) );
   }
 
+  @Override
   public IObservation<TupleResult> getCurrentIteration( )
   {
     if( m_stepNr == -1 )
@@ -369,6 +373,7 @@ public class IterationInfoSWAN implements IIterationInfo
     return m_obs;
   }
 
+  @Override
   public IterationBean[] getIterations( )
   {
     return m_iterations.toArray( new IterationBean[m_iterations.size()] );

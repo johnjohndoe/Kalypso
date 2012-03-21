@@ -73,7 +73,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
 
   public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" ); //$NON-NLS-1$
 
-  public BoundaryCondition( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public BoundaryCondition( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -183,7 +183,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     }
     else if( property instanceof String )
     {
-      double parseQuietDouble = NumberUtils.parseQuietDouble( (String) property );
+      final double parseQuietDouble = NumberUtils.parseQuietDouble( (String) property );
       if( !Double.isNaN( parseQuietDouble ) )
       {
         return "" + parseQuietDouble; //$NON-NLS-1$
@@ -226,9 +226,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     return (BigInteger) getProperty( QNAME_P_DIRECTION );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setParentElement(org.kalypsodeegree.model.feature.binding.Feature)
-   */
+  @Override
   public void setParentElement( final Feature parentElement )
   {
     if( parentElement == null )
@@ -361,7 +359,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setInflowVelocity(double)
    */
   @Override
-  public void setInflowVelocity( double value )
+  public void setInflowVelocity( final double value )
   {
     setProperty( QNAME_P_INFLOWVELOCITY, value );
   }

@@ -138,7 +138,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
- * 
+ *
  * @author Gernot Belger
  */
 public class ImportWspmWizard extends Wizard implements IWizard
@@ -320,7 +320,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
   /**
    * Searches an already imported profile-network for the given reach.<br>
    * REMARK: at the moment, we just search for a network with the same name as the reach... is there another criterion?
-   * 
+   *
    * @return <code>null</code>, if none was found.
    */
   private IRiverProfileNetwork findExistingNetwork( final IRiverProfileNetworkCollection profNetworkColl, final TuhhReach reach )
@@ -338,7 +338,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   /**
    * Reads a REIB_CONST result and creates polynomial and building parameters (aka 'flow-relations') from it.
-   * 
+   *
    * @param elements
    *          by station Must be sorted in the order of the flow direction
    */
@@ -544,7 +544,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
     /* Get some common variables */
-    final IFeatureBindingCollection<IFE1D2DElement> discElements = discretisationModel.getElements();
+    // final IFeatureBindingCollection<IFE1D2DElement> discElements = discretisationModel.getElements();
     final IFeatureBindingCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
 
     /* add complex-element to model: Automatically create a calculation unit 1d */

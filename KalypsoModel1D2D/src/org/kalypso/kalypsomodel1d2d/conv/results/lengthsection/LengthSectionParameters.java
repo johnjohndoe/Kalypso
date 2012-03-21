@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class LengthSectionParameters
 {
@@ -80,7 +80,7 @@ public class LengthSectionParameters
 
   private final String m_selectedRiverName;
 
-  public LengthSectionParameters( FeatureList riverFeatures, IPropertyType riverNamePropertyType, IPropertyType fromStationPropertyType, IPropertyType toStationPropertyType, final String selectedRiverName, final BigDecimal stationWidth )
+  public LengthSectionParameters( final FeatureList riverFeatures, final IPropertyType riverNamePropertyType, final IPropertyType fromStationPropertyType, final IPropertyType toStationPropertyType, final String selectedRiverName, final BigDecimal stationWidth )
   {
     m_riverFeatures = riverFeatures;
     m_riverNamePropertyType = riverNamePropertyType;
@@ -118,13 +118,13 @@ public class LengthSectionParameters
     m_fromValueSet.clear();
     m_toValueSet.clear();
 
-    for( Object o : m_riverFeatures )
+    for( final Object o : m_riverFeatures )
     {
-      Feature riverFeature = (Feature) o;
+      final Feature riverFeature = (Feature) o;
 
       if( m_fromStationPropertyType instanceof IValuePropertyType )
       {
-        IValuePropertyType vpt = (IValuePropertyType) m_fromStationPropertyType;
+        final IValuePropertyType vpt = (IValuePropertyType) m_fromStationPropertyType;
         final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
         if( riverName.equals( m_selectedRiverName ) )
         {
@@ -137,7 +137,7 @@ public class LengthSectionParameters
 
       if( m_toStationPropertyType instanceof IValuePropertyType )
       {
-        IValuePropertyType vpt = (IValuePropertyType) m_toStationPropertyType;
+        final IValuePropertyType vpt = (IValuePropertyType) m_toStationPropertyType;
         final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
         if( riverName.equals( m_selectedRiverName ) )
         {
@@ -145,7 +145,7 @@ public class LengthSectionParameters
             m_toValueSet.add( riverFeature.getProperty( m_toStationPropertyType ) );
           else
           {
-            GM_Object gm_Object = riverFeature.getDefaultGeometryPropertyValue();
+            final GM_Object gm_Object = riverFeature.getDefaultGeometryPropertyValue();
             final GM_MultiCurve multiCurve = (GM_MultiCurve) gm_Object;
 
             if( multiCurve == null )
@@ -160,7 +160,7 @@ public class LengthSectionParameters
             m_toValueSet.add( curve.getLength() );
           }
 
-          
+
         }
       }
     }
@@ -175,20 +175,20 @@ public class LengthSectionParameters
     BigDecimal min = null;
     BigDecimal max = null;
 
-    Object first = m_fromValueSet.first();
+    final Object first = m_fromValueSet.first();
     min = getValue( first );
 
-    Object last = m_toValueSet.last();
+    final Object last = m_toValueSet.last();
     max = getValue( last );
 
     // handle null pointer
 
-    double mod = min.doubleValue() % m_stationWidth.doubleValue();
-    
-    //strange
-    double firstStep = min.doubleValue();// - mod;
+    // double mod = min.doubleValue() % m_stationWidth.doubleValue();
 
-    BigDecimal minDecimal = new BigDecimal( firstStep ).setScale( 1, BigDecimal.ROUND_FLOOR );
+    //strange
+    final double firstStep = min.doubleValue();// - mod;
+
+    final BigDecimal minDecimal = new BigDecimal( firstStep ).setScale( 1, BigDecimal.ROUND_FLOOR );
 
     // final BigDecimal minDecimal = min.setScale( 1, BigDecimal.ROUND_FLOOR );
     final BigDecimal maxDecimal = max.setScale( 1, BigDecimal.ROUND_CEILING );
@@ -203,20 +203,20 @@ public class LengthSectionParameters
     {
       final double currentValue = minDecimal.doubleValue() + currentClass * m_stationWidth.doubleValue();
 
-      BigDecimal station = new BigDecimal( currentValue );
+      final BigDecimal station = new BigDecimal( currentValue );
 
       m_stationList[currentClass] = station;
     }
-    
+
     //add last point of the riverline
     final double currentValue = maxDecimal.doubleValue();
 
-    BigDecimal station = new BigDecimal( currentValue );
+    final BigDecimal station = new BigDecimal( currentValue );
 
     m_stationList[numOfClasses-1] = station;
   }
 
-  private BigDecimal getValue( Object o )
+  private BigDecimal getValue( final Object o )
   {
     if( o instanceof String )
     {
@@ -227,17 +227,17 @@ public class LengthSectionParameters
     }
     else if( o instanceof Double )
     {
-      Double doubleValue = (Double) o;
+      final Double doubleValue = (Double) o;
       return new BigDecimal( doubleValue );
     }
     else if( o instanceof Integer )
     {
-      Integer intValue = (Integer) o;
+      final Integer intValue = (Integer) o;
       return new BigDecimal( intValue );
     }
     else if( o instanceof Long )
     {
-      Long longValue = (Long) o;
+      final Long longValue = (Long) o;
       return new BigDecimal( longValue );
     }
     return null;
@@ -256,7 +256,7 @@ public class LengthSectionParameters
     {
       tempText = tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      BigDecimal db = new BigDecimal( tempText );
+      final BigDecimal db = new BigDecimal( tempText );
       if( db.doubleValue() > 0 )
         return db;
 
