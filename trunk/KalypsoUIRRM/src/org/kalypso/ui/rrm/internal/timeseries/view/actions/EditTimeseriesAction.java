@@ -92,6 +92,7 @@ public class EditTimeseriesAction extends Action
 
     try
     {
+
       final ITimeseries timeseries = m_timeseries.getFeature();
       final ZmlLink link = timeseries.getDataLink();
       final IFile oldFile = link.getFile();

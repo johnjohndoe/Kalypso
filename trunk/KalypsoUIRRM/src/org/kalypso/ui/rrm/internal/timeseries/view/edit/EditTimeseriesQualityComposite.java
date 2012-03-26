@@ -40,14 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.validation.FileNameIsUniqueValidator;
+import org.kalypso.commons.databinding.validation.MultiValidator;
+import org.kalypso.commons.databinding.validation.StringFilenameValidator;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimeseries>
 {
@@ -60,6 +70,34 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
   protected void createContents( )
   {
 
-    createPropertyControl( ITimeseries.PROPERTY_QUALITY );
+    final FeatureBean<ITimeseries> bean = getBean();
+    final ITimeseries timeseries = bean.getFeature();
+
+    final String[] qualities = getQualities( timeseries.getStation(), timeseries.getParameterType() );
+
+    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, "Stationsname enthält ungültige Zeichen" );
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( qualities, timeseries.getQuality(), IStatus.ERROR, "Quality bereits vorhanden." );
+
+    final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
+
+    createPropertyControl( ITimeseries.PROPERTY_QUALITY, validator );
+  }
+
+  private String[] getQualities( final IStation station, final String parameterType )
+  {
+    final Set<String> qualities = new LinkedHashSet<>();
+
+    final IFeatureBindingCollection<ITimeseries> timeserieses = station.getTimeseries();
+    for( final ITimeseries ts : timeserieses )
+    {
+      if( !StringUtils.equals( parameterType, ts.getParameterType() ) )
+        continue;
+
+      final String quality = ts.getQuality();
+      if( StringUtils.isNotEmpty( quality ) )
+        qualities.add( quality );
+    }
+
+    return qualities.toArray( new String[] {} );
   }
 }
