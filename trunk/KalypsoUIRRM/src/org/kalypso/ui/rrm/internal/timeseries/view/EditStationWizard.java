@@ -81,7 +81,6 @@ public class EditStationWizard extends Wizard
   private void init( final IStation station )
   {
     m_oldFolder = station.getTimeseriesFoldername();
-
   }
 
   @Override
@@ -94,6 +93,7 @@ public class EditStationWizard extends Wizard
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
+
         return new StationComposite( parent, stationBean, binding, true );
       }
     };

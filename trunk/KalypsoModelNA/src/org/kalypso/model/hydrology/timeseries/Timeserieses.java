@@ -87,6 +87,8 @@ public final class Timeserieses
       final URL urlFolder = UrlResolverSingleton.resolveUrl( context, station.getTimeseriesFoldername() );
 
       final IFolder source = ResourceUtilities.findFolderFromURL( urlFolder );
+      if( !source.exists() )
+        return new String[] {};
 
       source.accept( new IResourceVisitor()
       {
@@ -97,7 +99,7 @@ public final class Timeserieses
           {
             final IFile file = (IFile) resource;
 
-            if( StringUtils.equalsIgnoreCase( "zml", file.getFileExtension() ) )
+            if( StringUtils.equalsIgnoreCase( "zml", file.getFileExtension() ) ) //$NON-NLS-1$
             {
               fileNames.add( file.getName() );
             }
