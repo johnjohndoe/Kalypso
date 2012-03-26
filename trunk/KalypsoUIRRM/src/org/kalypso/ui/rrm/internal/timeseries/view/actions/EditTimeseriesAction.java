@@ -40,14 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
@@ -59,13 +66,15 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
  */
 public class EditTimeseriesAction extends Action
 {
-
   private final IDataBinding m_binding;
 
   private final FeatureBean<ITimeseries> m_timeseries;
 
-  public EditTimeseriesAction( final FeatureBean<ITimeseries> timeseries, final IDataBinding binding )
+  private final CommandableWorkspace m_workspace;
+
+  public EditTimeseriesAction( final CommandableWorkspace workspace, final FeatureBean<ITimeseries> timeseries, final IDataBinding binding )
   {
+    m_workspace = workspace;
     m_timeseries = timeseries;
     m_binding = binding;
 
@@ -83,12 +92,29 @@ public class EditTimeseriesAction extends Action
 
     try
     {
-      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( m_timeseries.getFeature() );
+      final ITimeseries timeseries = m_timeseries.getFeature();
+      final ZmlLink link = timeseries.getDataLink();
+      final IFile oldFile = link.getFile();
+      final String oldQuality = timeseries.getQuality();
+
+      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( timeseries );
       final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
       final int open = dialog.open();
-
       if( Window.OK == open )
+      {
         source.save();
+
+        final ICommand command = m_timeseries.applyChanges();
+        if( Objects.isNotNull( command ) )
+          m_workspace.postCommand( command );
+      }
+
+      // quality changed? so rename zml file!
+      if( !StringUtils.equals( oldQuality, m_timeseries.getFeature().getQuality() ) )
+      {
+        final IFile target = link.getFile();
+        oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
+      }
 
       source.dispose();
 
