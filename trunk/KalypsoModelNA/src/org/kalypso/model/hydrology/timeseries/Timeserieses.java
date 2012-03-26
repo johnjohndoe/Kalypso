@@ -40,9 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.timeseries;
 
+import java.net.URL;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 
 /**
@@ -65,5 +76,44 @@ public final class Timeserieses
       return periodName;
 
     return String.format( "%s (%s)", periodName, quality );
+  }
+
+  public static String[] findTimeseriereses( final IStation station )
+  {
+    final Set<String> fileNames = new LinkedHashSet<>();
+    try
+    {
+      final URL context = station.getWorkspace().getContext();
+      final URL urlFolder = UrlResolverSingleton.resolveUrl( context, station.getTimeseriesFoldername() );
+
+      final IFolder source = ResourceUtilities.findFolderFromURL( urlFolder );
+
+      source.accept( new IResourceVisitor()
+      {
+        @Override
+        public boolean visit( final IResource resource )
+        {
+          if( resource instanceof IFile )
+          {
+            final IFile file = (IFile) resource;
+
+            if( StringUtils.equalsIgnoreCase( "zml", file.getFileExtension() ) )
+            {
+              fileNames.add( file.getName() );
+            }
+          }
+
+          return true;
+        }
+      } );
+
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    return fileNames.toArray( new String[] {} );
+
   }
 }

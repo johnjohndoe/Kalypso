@@ -72,14 +72,17 @@ public class StationComposite extends FeatureBeanComposite<IStation>
   @Override
   protected void createContents( )
   {
-
     final FeatureBean<IStation> bean = getBean();
 
-    final StationTimeseriesFolderCollector collector = new StationTimeseriesFolderCollector( bean.getFeature() );
+    final IStation station = bean.getFeature();
+
+    final StationTimeseriesFolderCollector collector = new StationTimeseriesFolderCollector( station );
     collector.execute( new NullProgressMonitor() );
 
+    final String stationName = station != null ? station.getDescription() : StringUtils.EMPTY;
+
     final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, "Stationsname enthält ungültige Zeichen" );
-    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), IStatus.ERROR, "Stationsname bereits vorhanden" );
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), stationName, IStatus.ERROR, "Stationsname bereits vorhanden" );
 
     final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
 

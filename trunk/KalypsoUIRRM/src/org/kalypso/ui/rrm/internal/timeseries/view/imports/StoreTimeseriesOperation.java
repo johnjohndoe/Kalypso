@@ -45,6 +45,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.IOCase;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -77,6 +78,7 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
  * @author Gernot Belger
@@ -197,12 +199,28 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final String stationFoldername = m_station.getTimeseriesFoldername();
     final String timeseriesFilename = TimeseriesDataLinkFunctionProperty.formatTimeseriesFilename( parameterType, quality, timestep );
 
+    if( fileNameExists( timeseriesFilename ) )
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Import timeseries operation failed. Timeseries of the same type (parameter, timestep, quality) already exists." ) );
+
     final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
     final IProject project = scenarioDataProvider.getScenarioFolder().getProject();
     final IFolder timeseriesFolder = project.getFolder( INaProjectConstants.PATH_TIMESERIES );
     final IFolder stationFolder = timeseriesFolder.getFolder( stationFoldername );
 
     return stationFolder.getFile( timeseriesFilename );
+  }
+
+  private boolean fileNameExists( final String file )
+  {
+    final ImportObservationData data = m_operation.getData();
+    final String[] existing = data.getExistingTimeserieses();
+    for( final String exists : existing )
+    {
+      if( IOCase.SYSTEM.checkEquals( exists, file ) )
+        return true;
+    }
+
+    return false;
   }
 
   public ITimeseries getTimeseries( )

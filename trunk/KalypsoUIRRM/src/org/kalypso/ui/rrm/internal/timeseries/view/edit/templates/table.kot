@@ -77,7 +77,7 @@
 
 
     <!-- Abfluss -->
-    <DataColumn editable="true" id="Q" metadataSource="true" tooltip="true" wrapText="true" wrap="30" >
+    <DataColumn editable="true" id="Q" metadataSource="true" tooltip="true" wrapText="true" >
       <property name="label">Abfluss</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
