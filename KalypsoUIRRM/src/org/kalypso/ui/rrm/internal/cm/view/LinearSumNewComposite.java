@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.cm.view;
 import java.util.LinkedHashMap;
 
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.IDataBinding;
@@ -96,7 +97,23 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
       allowedValues.put( allowedParameterType, allowedParameterLabel );
     }
 
-    final ComboViewer comboViewer = createPropertyCombo( this, allowedValues );
+    final ComboViewer comboViewer = createPropertyCombo( this, new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        if( element instanceof String )
+        {
+          return allowedValues.get( element );
+        }
+
+        return super.getText( element );
+      }
+    }, false );
+
     bindCombo( comboViewer, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
+
+    comboViewer.setInput( allowedValues.keySet().toArray() );
+
   }
 }

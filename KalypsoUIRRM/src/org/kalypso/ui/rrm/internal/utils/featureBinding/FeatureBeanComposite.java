@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -56,6 +54,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -65,6 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -167,6 +167,32 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
   }
 
   /**
+   * This function creates a control, which allows the editing of the property specified by the qname.
+   * 
+   * @param property
+   *          The qname of the property.
+   * @param validators
+   *          validation of text box entries
+   * @return The text field, which is contained in the property control. Its editable state will be that of the
+   *         generalEditable flag, provided int the constructor.
+   */
+  protected final ComboViewer createPropertyComboControl( final QName property, final String[] choices, final IValidator... validators )
+  {
+    createPropertyLabel( this, property );
+
+    final ComboViewer viewer = createPropertyCombo( this, new LabelProvider(), true );
+    bindCombo( viewer, property );
+
+    viewer.setInput( choices );
+
+    final Object value = m_featureBean.getProperty( property );
+    if( Objects.isNotNull( value ) )
+      viewer.setSelection( new StructuredSelection( value ) );
+
+    return viewer;
+  }
+
+  /**
    * Refresh the control from the state of the underlying feature.
    */
   public final void refresh( )
@@ -209,28 +235,18 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final ComboViewer createPropertyCombo( final Composite parent, final Map<String, String> allowedValues )
+  protected final ComboViewer createPropertyCombo( final Composite parent, final LabelProvider provider, final Boolean writeable )
   {
-    final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY );
+    int style = SWT.BORDER | SWT.SINGLE;
+    if( !m_generalEditable && !writeable )
+      style &= SWT.READ_ONLY;
+
+    final ComboViewer viewer = new ComboViewer( parent, style );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.getCombo().setEnabled( m_generalEditable );
+
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof String )
-          return allowedValues.get( element );
-
-        return super.getText( element );
-      }
-    } );
-
-    viewer.setInput( allowedValues.keySet().toArray( new String[] {} ) );
+    viewer.setLabelProvider( provider );
 
     final FormToolkit toolkit = m_binding.getToolkit();
     if( toolkit != null )
