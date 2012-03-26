@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -53,12 +56,16 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.validation.FileNameIsUniqueValidator;
 import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.databinding.validation.StringFilenameValidator;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.internal.timeseries.binding.StationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Gernot Belger
@@ -89,7 +96,7 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     createPropertyControl( IStation.QN_DESCRIPTION, validator ); // -> folder name
     createPropertyControl( IStation.QN_NAME );
-    createPropertyControl( IStation.PROPERTY_GROUP );
+    createPropertyComboControl( IStation.PROPERTY_GROUP, findGroups( station ) );
     createPropertyControl( IStation.PROPERTY_COMMENT );
 
     createLocationControl();
@@ -100,6 +107,29 @@ public class StationComposite extends FeatureBeanComposite<IStation>
     // TODO
     // gauge zero
     // altitude
+  }
+
+  private String[] findGroups( final IStation base )
+  {
+    if( Objects.isNull( base ) )
+      return new String[] {};
+
+    final Feature parent = base.getOwner();
+    if( !(parent instanceof StationCollection) )
+      return new String[] {};
+
+    final Set<String> groups = new TreeSet<>();
+
+    final StationCollection collection = (StationCollection) parent;
+    final IFeatureBindingCollection<IStation> stations = collection.getStations();
+    for( final IStation station : stations )
+    {
+      final String group = station.getGroup();
+      if( StringUtils.isNotEmpty( group ) )
+        groups.add( group );
+    }
+
+    return groups.toArray( new String[] {} );
   }
 
   private void createLocationControl( )

@@ -69,7 +69,6 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
   @Override
   protected void createContents( )
   {
-
     final FeatureBean<ITimeseries> bean = getBean();
     final ITimeseries timeseries = bean.getFeature();
 
