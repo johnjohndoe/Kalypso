@@ -59,6 +59,8 @@ import org.kalypso.commons.databinding.validation.StringFilenameValidator;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.model.hydrology.internal.timeseries.binding.StationCollection;
+import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
+import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -100,6 +102,15 @@ public class StationComposite extends FeatureBeanComposite<IStation>
     createPropertyControl( IStation.PROPERTY_COMMENT );
 
     createLocationControl();
+
+    if( station instanceof IHydrologicalStation )
+    {
+      createPropertyControl( IHydrologicalStation.PROPERTY_GAUGE_ZERO );
+    }
+    else if( station instanceof IMeteorologicalStation )
+    {
+      createPropertyControl( IMeteorologicalStation.PROPERTY_ALTITUDE );
+    }
 
     createMeasurementControl();
     createTimeseriesControl();

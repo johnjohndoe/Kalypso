@@ -53,4 +53,10 @@ public class HydrologicalStation extends Station implements IHydrologicalStation
   {
     super( parent, parentRelation, ft, id, propValues );
   }
+
+  @Override
+  public Double getGaugeZero( )
+  {
+    return getProperty( PROPERTY_GAUGE_ZERO, Double.class );
+  }
 }
