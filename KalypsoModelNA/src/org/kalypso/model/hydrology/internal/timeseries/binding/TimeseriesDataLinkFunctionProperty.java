@@ -42,6 +42,7 @@ package org.kalypso.model.hydrology.internal.timeseries.binding;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
@@ -98,7 +99,22 @@ public class TimeseriesDataLinkFunctionProperty extends FeaturePropertyFunction
   public static String formatTimeseriesFilename( final String parameterType, final String quality, final Period timestep )
   {
     final String periodText = PeriodUtils.formatDefault( timestep );
-    return String.format( "%s_%s_%s.zml", parameterType, periodText, quality ); //$NON-NLS-1$
+
+    final StringBuffer buffer = new StringBuffer();
+    buffer.append( format( parameterType ) );
+    buffer.append( format( periodText ) );
+    buffer.append( format( quality ) );
+    buffer.append( ".zml" ); //$NON-NLS-1$
+
+    return buffer.toString().substring( 1 ); // remove first '_' character
+  }
+
+  private static String format( final String part )
+  {
+    if( StringUtils.isEmpty( part ) )
+      return StringUtils.EMPTY;
+
+    return StringUtils.trim( String.format( "_%s", part ) );
   }
 
   @Override

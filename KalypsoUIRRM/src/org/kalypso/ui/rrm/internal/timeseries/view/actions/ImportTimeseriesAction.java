@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -98,7 +99,12 @@ public class ImportTimeseriesAction extends Action
   private ImportObservationData prepareData( )
   {
     final String[] allowedTypes = StationClassesCatalog.findAllowedParameterTypes( m_station );
-    return new ImportObservationData( allowedTypes );
+    final ImportObservationData data = new ImportObservationData( allowedTypes );
+
+    final String[] timeserieses = Timeserieses.findTimeseriereses( m_station );
+    data.setExistingTimeserieses( timeserieses );
+
+    return data;
   }
 
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
