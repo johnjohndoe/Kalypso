@@ -50,4 +50,8 @@ import org.kalypso.model.hydrology.NaModelConstants;
 public interface IMeteorologicalStation extends IStation
 {
   QName FEATURE_METEOROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "MeteorologicalStation" ); //$NON-NLS-1$
+
+  QName PROPERTY_ALTITUDE = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "altitude" ); //$NON-NLS-1$
+
+  Double getAltitude( );
 }

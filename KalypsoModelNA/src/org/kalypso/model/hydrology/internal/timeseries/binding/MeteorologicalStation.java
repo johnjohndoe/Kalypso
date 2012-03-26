@@ -53,4 +53,10 @@ public class MeteorologicalStation extends Station implements IMeteorologicalSta
   {
     super( parent, parentRelation, ft, id, propValues );
   }
+
+  @Override
+  public Double getAltitude( )
+  {
+    return getProperty( PROPERTY_ALTITUDE, Double.class );
+  }
 }

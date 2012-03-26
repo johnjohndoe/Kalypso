@@ -50,4 +50,9 @@ import org.kalypso.model.hydrology.NaModelConstants;
 public interface IHydrologicalStation extends IStation
 {
   QName FEATURE_HYDROLOGICAL_STATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "HydrologicalStation" ); //$NON-NLS-1$
+
+  QName PROPERTY_GAUGE_ZERO = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "gaugeZero" ); //$NON-NLS-1$
+
+  Double getGaugeZero( );
+
 }
