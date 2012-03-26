@@ -58,6 +58,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPages;
 
 /**
  * @author Gernot Belger
@@ -108,7 +109,7 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     createPropertyLabel( this, IStation.PROPERTY_LOCATION );
 
-    final Composite panel = toolkit.createComposite( this );
+    final Composite panel = FeatureBeanWizardPages.createComposite( this, toolkit );
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
     panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
@@ -120,7 +121,8 @@ public class StationComposite extends FeatureBeanComposite<IStation>
     if( isEditable() )
       ActionHyperlink.createHyperlink( toolkit, panel, SWT.PUSH, new EditStationLocationAction( bean ) );
     else
-      toolkit.createLabel( panel, StringUtils.EMPTY );
+      FeatureBeanWizardPages.createLabel( panel, toolkit, StringUtils.EMPTY );
+
   }
 
   private void createMeasurementControl( )

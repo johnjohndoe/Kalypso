@@ -120,7 +120,7 @@ public class TimeseriesImportWizard extends Wizard
 
     m_timeseries = storeOperation.getTimeseries();
 
-    return true;
+    return status.isOK() && status2.isOK();
   }
 
   private void saveSettings( )
