@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for {org.kalypso.na.control_v2}NAControl.
- *
+ * 
  * @author Gernot Belger
  */
 public class NAControl extends Feature_Impl
@@ -88,11 +88,11 @@ public class NAControl extends Feature_Impl
 
   private static final QName PROP_CREATION_TIME = new QName( NS_CONTROL, "creationTime" ); //$NON-NLS-1$
 
-  private static final QName PROP_GENERATOR_N = new QName( NS_CONTROL, "generatorN" ); //$NON-NLS-1$
+  public static final QName PROP_GENERATOR_N = new QName( NS_CONTROL, "generatorN" ); //$NON-NLS-1$
 
-  private static final QName PROP_GENERATOR_T = new QName( NS_CONTROL, "generatorT" ); //$NON-NLS-1$
+  public static final QName PROP_GENERATOR_T = new QName( NS_CONTROL, "generatorT" ); //$NON-NLS-1$
 
-  private static final QName PROP_GENERATOR_E = new QName( NS_CONTROL, "generatorE" ); //$NON-NLS-1$
+  public static final QName PROP_GENERATOR_E = new QName( NS_CONTROL, "generatorE" ); //$NON-NLS-1$
 
   private static final QName PROP_INITIAL_VALUE_SOURCE = new QName( NS_CONTROL, "initialValueSource" ); //$NON-NLS-1$
 

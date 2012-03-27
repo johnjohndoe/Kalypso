@@ -78,7 +78,6 @@ public abstract class AbstractMissingValuesVisitor
   {
     final IAxis valueAxis = findValueAxis( container.getAxes() );
     final String dataSource = getDataSource( container, valueAxis );
-
     if( dataSource.contains( AbstractObservationImporter.MISSING_VALUE_POSTFIX ) )
       return true;
 
@@ -99,6 +98,9 @@ public abstract class AbstractMissingValuesVisitor
   private String getDataSource( final IObservationValueContainer container, final IAxis valueAxis ) throws SensorException
   {
     final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( container.getAxes(), valueAxis );
+    if( Objects.isNull( dataSourceAxis ) )
+      return IDataSourceItem.SOURCE_UNKNOWN;
+
     final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
     final Number sourceIndex = (Number) container.get( dataSourceAxis );
 

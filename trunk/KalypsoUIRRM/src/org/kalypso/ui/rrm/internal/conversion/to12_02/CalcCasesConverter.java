@@ -127,7 +127,13 @@ public class CalcCasesConverter extends AbstractLoggingOperation
         }
       }
 
+      /* Save the global models. */
       m_globalData.saveGlobalModels( m_targetDir, getLog() );
+
+      /* Check for identical catchment models. */
+      final CatchmentModelsDuplicateEliminator eliminator = new CatchmentModelsDuplicateEliminator( m_globalData );
+      final IStatus eliminatorStatus = eliminator.execute();
+      getLog().add( eliminatorStatus );
     }
     catch( final IOException e )
     {
