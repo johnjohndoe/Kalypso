@@ -98,7 +98,7 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     createPropertyControl( IStation.QN_DESCRIPTION, validator ); // -> folder name
     createPropertyControl( IStation.QN_NAME );
-    createPropertyComboControl( IStation.PROPERTY_GROUP, findGroups( station ) );
+    createPropertyComboTextControl( IStation.PROPERTY_GROUP, findGroups( station ) );
     createPropertyControl( IStation.PROPERTY_COMMENT );
 
     createLocationControl();

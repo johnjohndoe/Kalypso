@@ -56,7 +56,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -199,18 +198,21 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
    * @return The text field, which is contained in the property control. Its editable state will be that of the
    *         generalEditable flag, provided int the constructor.
    */
-  protected final ComboViewer createPropertyComboControl( final QName property, final String[] choices, final IValidator... validators )
+  protected final ComboViewer createPropertyComboTextControl( final QName property, final String[] choices, final IValidator... validators )
   {
     createPropertyLabel( this, property );
 
-    final ComboViewer viewer = createPropertyCombo( this, new LabelProvider(), true );
+    final ComboViewer viewer = createComboTextField( this, new LabelProvider(), true );
     bindCombo( viewer, property );
 
     viewer.setInput( choices );
 
     final Object value = m_featureBean.getProperty( property );
     if( Objects.isNotNull( value ) )
-      viewer.setSelection( new StructuredSelection( value ) );
+    {
+// viewer.setSelection( new StructuredSelection( value ) );
+      viewer.getCombo().setText( value.toString() );
+    }
 
     return viewer;
   }
@@ -258,7 +260,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final ComboViewer createPropertyCombo( final Composite parent, final LabelProvider provider, final Boolean writeable )
+  protected final ComboViewer createComboTextField( final Composite parent, final LabelProvider provider, final Boolean writeable )
   {
     int style = SWT.BORDER | SWT.SINGLE;
     if( !m_generalEditable && !writeable )

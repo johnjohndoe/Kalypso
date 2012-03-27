@@ -97,7 +97,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
       allowedValues.put( allowedParameterType, allowedParameterLabel );
     }
 
-    final ComboViewer comboViewer = createPropertyCombo( this, new LabelProvider()
+    final ComboViewer comboViewer = createComboTextField( this, new LabelProvider()
     {
       @Override
       public String getText( final Object element )
