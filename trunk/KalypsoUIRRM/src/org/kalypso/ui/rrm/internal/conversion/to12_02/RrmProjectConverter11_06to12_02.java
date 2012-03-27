@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.module.conversion.AbstractProjectConverter;
 import org.kalypso.ui.rrm.internal.conversion.ChooseExeConverter;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.utils.log.GeoStatusLog;
 import org.osgi.framework.Version;
 
 /**
@@ -105,10 +106,29 @@ public class RrmProjectConverter11_06to12_02 extends AbstractProjectConverter
       final CalcCasesConverter casesConverter = new CalcCasesConverter( m_sourceDir, m_targetDir, globalData );
       final IStatus calcCaseStatus = casesConverter.execute( new SubProgressMonitor( monitor, 67 ) );
       getLog().add( calcCaseStatus );
+
+      /* Save the log as text file. */
+      saveLogQuietly( projectName );
     }
     finally
     {
       monitor.done();
+    }
+  }
+
+  private void saveLogQuietly( final String projectName )
+  {
+    try
+    {
+      /* Save the log as text file. */
+      final GeoStatusLog log = new GeoStatusLog( new File( m_targetDir, "conversionLog.gml" ) );
+      log.log( getLog().asMultiStatus( String.format( Messages.getString( "RrmProjectConverter103to230_1" ), projectName ) ) );
+      log.serialize();
+    }
+    catch( final Exception ex )
+    {
+      /* Ignore exception. */
+      ex.printStackTrace();
     }
   }
 }
