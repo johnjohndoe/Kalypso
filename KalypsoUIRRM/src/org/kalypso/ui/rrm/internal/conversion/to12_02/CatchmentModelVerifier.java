@@ -45,6 +45,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -53,8 +54,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
@@ -63,7 +67,9 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.UpdateSimulationWorker;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 import com.google.common.base.Charsets;
 
@@ -122,30 +128,38 @@ public class CatchmentModelVerifier
 
     try
     {
+      /* Check the generators. */
+      final IStatus status = checkGenerators();
+      collector.add( status );
+      if( !status.isOK() )
+      {
+        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Cannot calculate the catchment models to compare the timeseries..." ) );
+        return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...", m_simulation.getDescription() ) );
+      }
+
+      /* Create the file handle to the directory of the simulation. */
+      final File simulationDir = new File( m_baseFolder, m_simulation.getDescription() );
+
+      /* Create the file handle to the directory of the temporary simulation. */
+      simulationTmpDir = new File( m_baseFolder, String.format( "tmp_%s", m_simulation.getDescription() ) );
+
       /* Create the temporary simulation. */
-      simulationTmpDir = createTemporarySimulation();
+      createTemporarySimulation( simulationDir, simulationTmpDir );
+
+      /* Create the IFolder. */
+      final IContainer[] simulationContainer = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI( simulationDir.toURI() );
+      final IFolder simulationFolder = (IFolder) simulationContainer[0];
 
       /* Create the IFolder. */
       final IContainer[] simulationTmpContainer = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocationURI( simulationTmpDir.toURI() );
       final IFolder simulationTmpFolder = (IFolder) simulationTmpContainer[0];
-
-      /* Check the generators. */
-// final IStatus status = checkGenerators();
-// collector.add( status );
-// if( !status.isOK() )
-// {
-// collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(),
-// "Cannot calculate the catchment models to compare the timeseries..." ) );
-// return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...",
-// m_simulation.getDescription() ) );
-// }
 
       /* Calculate the catchment models. */
       final IStatus calculateStatus = calculateCatchmentModels( simulationTmpFolder );
       collector.add( calculateStatus );
 
       /* Compare the resulting timeseries with the existing ones. */
-      compareResultingTimeseries();
+      compareResultingTimeseries( simulationFolder, simulationTmpFolder );
 
       return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...", m_simulation.getDescription() ) );
     }
@@ -159,8 +173,8 @@ public class CatchmentModelVerifier
     finally
     {
       /* Delete the temporary simulation. */
-      if( simulationTmpDir != null )
-        FileUtils.deleteQuietly( simulationTmpDir );
+      // if( simulationTmpDir != null )
+      // FileUtils.deleteQuietly( simulationTmpDir );
     }
   }
 
@@ -168,16 +182,11 @@ public class CatchmentModelVerifier
    * This function copies the simulation to a temporary one and saves the data to it, which is needed to calculate the
    * catchment models.
    * 
-   * @return The directory of the temporary simulation.
+   * @param simulationDir
+   *          The directory of the simulation.
    */
-  private File createTemporarySimulation( ) throws IOException, GmlSerializeException
+  private void createTemporarySimulation( final File simulationDir, final File simulationTmpDir ) throws IOException, GmlSerializeException
   {
-    /* Create the file handle to the directory of the simulation. */
-    final File simulationDir = new File( m_baseFolder, m_simulation.getDescription() );
-
-    /* Create the file handle to the directory of the temporary simulation. */
-    final File simulationTmpDir = new File( m_baseFolder, String.format( "tmp_%s", m_simulation.getDescription() ) );
-
     /* Copy the existing simulation. */
     FileUtils.copyDirectory( simulationDir, simulationTmpDir );
 
@@ -187,8 +196,6 @@ public class CatchmentModelVerifier
     final File catchmentModelsTmpFile = new File( simulationTmpDir, INaProjectConstants.GML_CATCHMENT_MODEL_PATH );
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     GmlSerializer.serializeWorkspace( catchmentModelsTmpFile, catchmentModel.getWorkspace(), Charsets.UTF_8.name() );
-
-    return simulationTmpDir;
   }
 
   /**
@@ -199,13 +206,20 @@ public class CatchmentModelVerifier
    */
   private IStatus checkGenerators( )
   {
-    if( !checkGenerator( m_simulation.getGeneratorN() ) )
+    final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
+    final IFeatureBindingCollection<IRainfallGenerator> generators = catchmentModel.getGenerators();
+
+    final String generatorIdN = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_N )).getFeatureId();
+    final String generatorIdE = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_E )).getFeatureId();
+    final String generatorIdT = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_T )).getFeatureId();
+
+    if( !checkGenerator( generators, generatorIdN ) )
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The N generator was null or had no factors..." );
 
-    if( !checkGenerator( m_simulation.getGeneratorE() ) )
+    if( !checkGenerator( generators, generatorIdE ) )
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The E generator was null or had no factors..." );
 
-    if( !checkGenerator( m_simulation.getGeneratorT() ) )
+    if( !checkGenerator( generators, generatorIdT ) )
       return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The T generator was null or had no factors..." );
 
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The N/E/T generators were ok." );
@@ -214,14 +228,17 @@ public class CatchmentModelVerifier
   /**
    * This function verifies a generator.
    * 
-   * @param generator
-   *          The generator.
+   * @param generators
+   *          The generators.
+   * @param generatorId
+   *          The id of the generator.
    * @return A WARNING status if the generator is missing or if it has no factorized timeseries (hence no factors). Then
    *         no comparison makes sense. Otherwise a OK Status is returned.
    */
-  private boolean checkGenerator( final IRainfallGenerator generator )
+  private boolean checkGenerator( final IFeatureBindingCollection<IRainfallGenerator> generators, final String generatorId )
   {
-    /* If the generator is null, return false. */
+    /* Find the generator. */
+    final IRainfallGenerator generator = findGenerator( generators, generatorId );
     if( generator == null )
       return false;
 
@@ -249,6 +266,27 @@ public class CatchmentModelVerifier
   }
 
   /**
+   * This function returns the generator with the given generator id.
+   * 
+   * @param generators
+   *          All generators.
+   * @param generatorId
+   *          The id of the generator.
+   * @return The generator with the given generator id or null, if it was not found.
+   */
+  private IRainfallGenerator findGenerator( final IFeatureBindingCollection<IRainfallGenerator> generators, final String generatorId )
+  {
+    for( final IRainfallGenerator generator : generators )
+    {
+      final String id = generator.getId();
+      if( id.equals( generatorId ) )
+        return generator;
+    }
+
+    return null;
+  }
+
+  /**
    * This function calculates the catchment models.
    * 
    * @param simulationTmpFolder
@@ -262,8 +300,60 @@ public class CatchmentModelVerifier
     return updateWorker.execute( new NullProgressMonitor() );
   }
 
-  private void compareResultingTimeseries( )
+  private IStatus compareResultingTimeseries( final IFolder simulationFolder, final IFolder simulationTmpFolder ) throws Exception
+  {
+    /* The catchments. */
+    IFeatureBindingCollection<Catchment> catchments = null;
+    IFeatureBindingCollection<Catchment> tmpCatchments = null;
+
+    try
+    {
+      /* The status collector. */
+      final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+      /* Load both modells. */
+      catchments = loadModell( simulationFolder );
+      tmpCatchments = loadModell( simulationTmpFolder );
+
+      /* Compare each catchments. */
+      // TODO Can I assume they have the same order?
+      for( int i = 0; i < catchments.size(); i++ )
+      {
+        final Catchment catchment = catchments.get( i );
+        final Catchment tmpCatchment = tmpCatchments.get( i );
+
+        final IStatus status = compareCatchments( catchment, tmpCatchment );
+        collector.add( status );
+      }
+
+      return collector.asMultiStatus( "Verifying of the timeseries finished." );
+    }
+    finally
+    {
+      /* Dispose the catchments. */
+      if( catchments != null )
+        catchments.getParentFeature().getWorkspace().dispose();
+
+      /* Dispose the temporary catchments. */
+      if( tmpCatchments != null )
+        tmpCatchments.getParentFeature().getWorkspace().dispose();
+    }
+  }
+
+  private IStatus compareCatchments( final Catchment catchment, final Catchment tmpCatchment )
   {
     // TODO
+
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "The timeseries of the catchment '%s' will be equal if newly calculated.", catchment.getDescription() ) );
+  }
+
+  private IFeatureBindingCollection<Catchment> loadModell( final IFolder simulationFolder ) throws Exception
+  {
+    final RrmSimulation simulation = new RrmSimulation( simulationFolder );
+    final IFile modelGml = simulation.getModelGml();
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( modelGml );
+    final NaModell root = (NaModell) workspace.getRootFeature();
+
+    return root.getCatchments();
   }
 }
