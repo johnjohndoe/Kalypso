@@ -112,12 +112,17 @@ public class StationComposite extends FeatureBeanComposite<IStation>
       createPropertyControl( IMeteorologicalStation.PROPERTY_ALTITUDE );
     }
 
+    createDateControl();
+
     createMeasurementControl();
     createTimeseriesControl();
 
-    // TODO
-    // gauge zero
-    // altitude
+  }
+
+  private void createDateControl( )
+  {
+    createDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
+    createDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
   }
 
   private String[] findGroups( final IStation base )
@@ -163,7 +168,6 @@ public class StationComposite extends FeatureBeanComposite<IStation>
       ActionHyperlink.createHyperlink( toolkit, panel, SWT.PUSH, new EditStationLocationAction( bean ) );
     else
       FeatureBeanWizardPages.createLabel( panel, toolkit, StringUtils.EMPTY );
-
   }
 
   private void createMeasurementControl( )
