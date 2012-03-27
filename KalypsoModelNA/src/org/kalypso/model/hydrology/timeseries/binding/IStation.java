@@ -62,6 +62,10 @@ public interface IStation extends Feature
 
   QName PROPERTY_LOCATION = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "location" ); //$NON-NLS-1$
 
+  QName PROPERTY_MEASUREMENT_START = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "measurementStart" ); //$NON-NLS-1$
+
+  QName PROPERTY_MEASUREMENT_END = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "measurementEnd" ); //$NON-NLS-1$
+
   IFeatureBindingCollection<ITimeseries> getTimeseries( );
 
   String getComment( );

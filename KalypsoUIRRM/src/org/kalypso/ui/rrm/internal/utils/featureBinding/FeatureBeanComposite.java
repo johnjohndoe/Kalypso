@@ -64,7 +64,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.jface.DateControlModelToTargetConverter;
+import org.kalypso.commons.databinding.jface.DateControlTargetToModelConverter;
+import org.kalypso.commons.databinding.jface.DateTimeControl;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -166,6 +170,17 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
+  protected final void createDateControl( final QName property, final IValidator... validators )
+  {
+    createPropertyLabel( this, property );
+
+    final DateTimeControl control = new DateTimeControl( this, m_generalEditable );
+    control.setDisplayTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    control.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    bindDateControl( control, property );
+  }
+
   /**
    * This function creates a control, which allows the editing of the property specified by the qname.
    * 
@@ -260,19 +275,19 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
 
-    final DataBinder binder = new DataBinder( target, model );
-
-    if( Feature.QN_NAME.equals( property ) )
-    {
-      binder.setModelToTargetConverter( new FeatureNameModelToTargetConverter() );
-      binder.setTargetToModelConverter( new FeatureNameTargetToModelConverter() );
-    }
-
     if( ArrayUtils.isNotEmpty( validators ) )
       m_binding.bindValue( target, model, validators );
     else
-      m_binding.bindValue( binder );
+    {
+      final DataBinder binder = new DataBinder( target, model );
+      if( Feature.QN_NAME.equals( property ) )
+      {
+        binder.setModelToTargetConverter( new FeatureNameModelToTargetConverter() );
+        binder.setTargetToModelConverter( new FeatureNameTargetToModelConverter() );
+      }
 
+      m_binding.bindValue( binder );
+    }
   }
 
   protected final void bindCombo( final ComboViewer viewer, final QName property )
@@ -282,5 +297,24 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
     final DataBinder binder = new DataBinder( target, model );
     m_binding.bindValue( binder );
+  }
+
+  protected final void bindDateControl( final DateTimeControl control, final QName property )
+  {
+
+    final ISWTObservableValue target = SWTObservables.observeText( control.getText(), SWT.Modify );
+    final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
+
+    final DataBinder binder = new DataBinder( target, model );
+    binder.setModelToTargetConverter( new DateControlModelToTargetConverter( KalypsoCorePlugin.getDefault().getTimeZone() ) );
+    binder.setTargetToModelConverter( new DateControlTargetToModelConverter( control ) );
+
+    m_binding.bindValue( binder );
+
+// final IObservableValue target = ViewersObservables.observeSingleSelection( provider );
+// final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
+//
+// final DataBinder binder = new DataBinder( target, model );
+// m_binding.bindValue( binder );
   }
 }
