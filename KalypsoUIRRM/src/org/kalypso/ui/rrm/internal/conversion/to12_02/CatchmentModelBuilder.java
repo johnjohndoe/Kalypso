@@ -70,7 +70,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper that guesses a CatchmentModel for each existing calculation case.
- *
+ * 
  * @author Gernot Belger
  */
 public class CatchmentModelBuilder
@@ -86,7 +86,6 @@ public class CatchmentModelBuilder
   private final NaModell m_naModel;
 
   private final TimeseriesIndex m_timeseriesIndex;
-
 
   public CatchmentModelBuilder( final NaModell naModel, final ICatchmentModel catchmentModel, final File simulationDir, final TimeseriesIndex timeseriesIndex )
   {
@@ -106,11 +105,10 @@ public class CatchmentModelBuilder
 
     generator.setParameterType( parameterType );
     generator.setDescription( m_simulationDir.getName() );
-    generator.setComment( Messages.getString("CatchmentModelBuilder_0") ); //$NON-NLS-1$
+    generator.setComment( Messages.getString( "CatchmentModelBuilder_0" ) ); //$NON-NLS-1$
     generator.setAreaPath( new GMLXPath( NaModell.PROPERTY_LOCATION ) );
     generator.setAreaNamePath( new GMLXPath( NaModell.QN_NAME ) );
     generator.setAreaDescriptionPath( new GMLXPath( NaModell.QN_DESCRIPTION ) );
-
 
     /* Add catchments */
     // very big period, so everything is smaller
@@ -119,7 +117,7 @@ public class CatchmentModelBuilder
     for( final Catchment catchment : catchments )
     {
       final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod );
-        m_log.add( status );
+      m_log.add( status );
     }
 
     /* Use the smallest period of all involved timeseries as timestep for the generator */
@@ -128,7 +126,7 @@ public class CatchmentModelBuilder
       generator.setTimestep( timestepMinutes );
 
     final String parameterName = TimeseriesUtils.getName( parameterType );
-    final String message = String.format( Messages.getString("CatchmentModelBuilder_1"), parameterName ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "CatchmentModelBuilder_1" ), parameterName ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( message, message );
   }
 
@@ -136,11 +134,11 @@ public class CatchmentModelBuilder
   {
     final ZmlLink modelTargetLink = new ZmlLink( modelCatchment, modelTimeseriesLink );
 
-    /* Create new catchment */
+    /* Create new catchment. */
     final IFeatureBindingCollection<ICatchment> catchments = generator.getCatchments();
     final ICatchment newCatchment = catchments.addNew( ICatchment.FEATURE_CATCHMENT );
 
-    /* link to model's catchment */
+    /* Link to model's catchment. */
     final String href = String.format( "%s#%s", INaProjectConstants.GML_MODELL_FILE, modelCatchment.getId() ); //$NON-NLS-1$
     newCatchment.setAreaLink( href );
 
@@ -152,7 +150,7 @@ public class CatchmentModelBuilder
 
     if( !StringUtils.isBlank( timeseriesPath ) )
     {
-      /* ...and set to catchment */
+      /* ...and set to the catchment. */
       final IFeatureBindingCollection<IFactorizedTimeseries> timeseriesList = newCatchment.getFactorizedTimeseries();
       final IFactorizedTimeseries timeseries = timeseriesList.addNew( IFactorizedTimeseries.FEATURE_FACTORIZED_TIMESERIES );
       timeseries.setFactor( new BigDecimal( 100 ) );

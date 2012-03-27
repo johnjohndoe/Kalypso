@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts one calc case.
- *
+ * 
  * @author Gernot Belger
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
@@ -93,19 +93,19 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private final String CALC_PARAMETER = "calcParameter.gml"; //$NON-NLS-1$
 
+  private final File m_sourceCalcCaseDir;
+
   private final File m_targetCalcCaseDir;
-
-  private final File m_sourceDir;
-
-  private final ConverterData m_data;
 
   private final GlobalConversionData m_globalData;
 
-  public CalcCaseConverter( final File sourceDir, final File targetCalcCaseDir, final GlobalConversionData globalData )
-  {
-    super( sourceDir.getName() );
+  private final ConverterData m_data;
 
-    m_sourceDir = sourceDir;
+  public CalcCaseConverter( final File sourceCalcCaseDir, final File targetCalcCaseDir, final GlobalConversionData globalData )
+  {
+    super( sourceCalcCaseDir.getName() );
+
+    m_sourceCalcCaseDir = sourceCalcCaseDir;
     m_targetCalcCaseDir = targetCalcCaseDir;
     m_globalData = globalData;
 
@@ -139,14 +139,23 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final NaModell naModel = m_data.loadNaModel();
 
     fixTimeseriesLinks( naModel, getLog() );
-    getLog().add( IStatus.INFO, Messages.getString("CalcCaseConverter.4") ); //$NON-NLS-1$
+    getLog().add( IStatus.INFO, Messages.getString( "CalcCaseConverter.4" ) ); //$NON-NLS-1$
 
     final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
 
-    addSimulation( newControl, catchmentModelBuilder );
+    /* Add the simulation. */
+    final NAControl simulation = addSimulation( newControl, catchmentModelBuilder );
+
+    /* Save the calculation.gml. */
+    m_data.saveModel( newControl, INaCalcCaseConstants.CALCULATION_GML_PATH );
+
+    /* Verify timeseries of the catchment models. */
+    final CatchmentModelVerifier verifier = new CatchmentModelVerifier( m_globalData, simulation, m_targetCalcCaseDir.getParentFile() );
+    final IStatus verifierStatus = verifier.execute();
+    getLog().add( verifierStatus );
   }
 
   private void copyBasicData( ) throws IOException
@@ -186,20 +195,20 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void copyPegel( ) throws IOException
   {
-    final File modelSourceDir = new File( m_sourceDir, INaCalcCaseConstants.PEGEL_DIR ); //$NON-NLS-1$
+    final File modelSourceDir = new File( m_sourceCalcCaseDir, INaCalcCaseConstants.PEGEL_DIR ); //$NON-NLS-1$
     final File modelTargetDir = new File( m_targetCalcCaseDir, INaCalcCaseConstants.PEGEL_DIR ); //$NON-NLS-1$
     if( modelSourceDir.isDirectory() )
       FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
     else
     {
-      getLog().add( IStatus.INFO, Messages.getString("CalcCaseConverter.5") ); //$NON-NLS-1$
+      getLog().add( IStatus.INFO, Messages.getString( "CalcCaseConverter.5" ) ); //$NON-NLS-1$
       modelTargetDir.mkdirs();
     }
   }
 
   private void copyZufluss( ) throws IOException
   {
-    final File modelSourceDir = new File( m_sourceDir, "Zufluss" ); //$NON-NLS-1$
+    final File modelSourceDir = new File( m_sourceCalcCaseDir, "Zufluss" ); //$NON-NLS-1$
     final File modelTargetDir = new File( m_targetCalcCaseDir, "Zufluss" ); //$NON-NLS-1$
     if( modelSourceDir.isDirectory() )
       FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
@@ -209,7 +218,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void copyFile( final String sourcePath, final String targetPath ) throws IOException
   {
-    final File modelSourceFile = new File( m_sourceDir, sourcePath );
+    final File modelSourceFile = new File( m_sourceCalcCaseDir, sourcePath );
     final File modelTargetFile = new File( m_targetCalcCaseDir, targetPath );
 
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
@@ -222,7 +231,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
 
   private void copyDir( final String sourcePath, final String targetPath ) throws IOException
   {
-    final File modelSourceDir = new File( m_sourceDir, sourcePath );
+    final File modelSourceDir = new File( m_sourceCalcCaseDir, sourcePath );
     final File modelTargetDir = new File( m_targetCalcCaseDir, targetPath );
 
     FileUtils.copyDirectory( modelSourceDir, modelTargetDir, true );
@@ -270,7 +279,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     newControl.setUsePrecipitationForm( oldControl.isUsePrecipitationForm() );
     newControl.setPrecipitationForm( oldControl.getPrecipitationForm() );
 
-    getLog().add( IStatus.OK, Messages.getString("CalcCaseConverter.8") ); //$NON-NLS-1$
+    getLog().add( IStatus.OK, Messages.getString( "CalcCaseConverter.8" ) ); //$NON-NLS-1$
 
     return newControl;
   }
@@ -312,7 +321,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       newInitialValue.setActive( isActive );
     }
 
-    getLog().add( IStatus.OK, Messages.getString("CalcCaseConverter.9") ); //$NON-NLS-1$
+    getLog().add( IStatus.OK, Messages.getString( "CalcCaseConverter.9" ) ); //$NON-NLS-1$
 
     return newControl;
   }
@@ -373,33 +382,34 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     getLog().add( status );
   }
 
-  private void addSimulation( final NAControl newControl, final CatchmentModelBuilder catchmentModelBuilder )
+  private NAControl addSimulation( final NAControl newControl, final CatchmentModelBuilder catchmentModelBuilder )
   {
     try
     {
-      final SimulationCollection simulations = m_globalData.getSimulations();
-      final NAControl simulation = simulations.getSimulations().addNew( NAControl.FEATURE_NACONTROL );
-
-      FeatureHelper.copyData( newControl, simulation );
-
       if( catchmentModelBuilder != null )
       {
         final String cmRefN = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_RAINFALL );
-        simulation.setGeneratorReferenceN( cmRefN );
+        newControl.setGeneratorReferenceN( cmRefN );
 
         final String cmRefE = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_EVAPORATION );
-        simulation.setGeneratorReferenceE( cmRefE );
+        newControl.setGeneratorReferenceE( cmRefE );
 
         final String cmRefT = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_TEMPERATURE );
-        simulation.setGeneratorReferenceT( cmRefT );
+        newControl.setGeneratorReferenceT( cmRefT );
       }
 
+      final SimulationCollection simulations = m_globalData.getSimulations();
+      final NAControl simulation = simulations.getSimulations().addNew( NAControl.FEATURE_NACONTROL );
+      FeatureHelper.copyData( newControl, simulation );
       simulation.setDescription( m_targetCalcCaseDir.getName() );
+
+      return simulation;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      getLog().add( IStatus.WARNING, Messages.getString("CalcCaseConverter.10"), e ); //$NON-NLS-1$
+      getLog().add( IStatus.WARNING, Messages.getString( "CalcCaseConverter.10" ), e ); //$NON-NLS-1$
+      return null;
     }
   }
 }

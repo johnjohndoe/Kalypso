@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.timeseries;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -48,11 +47,17 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
+import org.kalypso.ogc.sensor.util.DataSetTupleModelBuilder;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 
 /**
@@ -75,12 +80,20 @@ public class TimeseriesImportWorker
     try
     {
       final IAxis[] axes = m_observation.getAxes();
-      final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
+      final IAxis valueAxis = AxisUtils.findValueAxis( axes, true );
 
-      Assert.isTrue( valueAxes.length == 1 );
+      final MetadataList metadata = MetadataHelper.clone( m_observation.getMetadataList() );
+      final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( metadata );
+      m_observation.getValues( null ).accept( visitor, 1 );
 
-      final IAxis valueAxis = valueAxes[0];
-      final IObservation resultObservation = removeMissingValues( m_observation, valueAxis );
+      final DataSetTupleModelBuilder builder = new DataSetTupleModelBuilder( metadata, visitor.getValueMap() );
+      builder.execute( new NullProgressMonitor() );
+
+      final ITupleModel model = builder.getModel();
+
+      final SimpleObservation observation = new SimpleObservation( m_observation.getHref(), m_observation.getName(), metadata, model );
+
+      final IObservation resultObservation = removeMissingValues( observation, valueAxis );
 
       final TIMESERIES_TYPE type = TimeseriesUtils.getType( valueAxis.getType() );
       if( TIMESERIES_TYPE.eCurrentValue.equals( type ) )
@@ -91,7 +104,7 @@ public class TimeseriesImportWorker
 
       return resultObservation;
     }
-    catch( final SensorException e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
       final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to clean timeseries" );
@@ -101,7 +114,6 @@ public class TimeseriesImportWorker
 
   private IObservation removeMissingValues( final IObservation observation, final IAxis valueAxis ) throws SensorException
   {
-
     final String parameterType = valueAxis.getType();
 
     switch( parameterType )
@@ -117,7 +129,6 @@ public class TimeseriesImportWorker
 
       case ITimeseriesConstants.TYPE_TEMPERATURE:
         observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
-
     }
 
     return observation;
