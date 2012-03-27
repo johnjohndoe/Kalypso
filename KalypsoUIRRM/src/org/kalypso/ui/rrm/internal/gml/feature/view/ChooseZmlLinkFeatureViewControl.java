@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml.feature.view;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
@@ -52,16 +55,24 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IEvaluationService;
+import org.joda.time.Period;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.gml.feature.view.dialogs.ChooseTimeseriesDialog;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -70,8 +81,9 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
 {
+  protected final String m_parameterType;
 
-  private final String m_parameterType;
+  private Text m_text;
 
   /**
    * @param parameterType
@@ -89,8 +101,8 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
     final Composite body = new Composite( parent, SWT.NULL );
     body.setLayout( Layouts.createGridLayout( 2 ) );
 
-    final Text text = new Text( body, SWT.BORDER | SWT.READ_ONLY );
-    text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_text = new Text( body, SWT.BORDER | SWT.READ_ONLY );
+    m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final Button button = new Button( body, SWT.PUSH );
     button.setText( "..." ); //$NON-NLS-1$
@@ -102,6 +114,7 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
       {
         final CommandableWorkspace workspace = getStationsWorkspace();
         final IStationCollection collection = getStationCollection();
+
         if( Objects.isNull( workspace, collection ) )
         {
           MessageDialog.openError( button.getShell(), "Error", "Can't resolve stations.gml" );
@@ -109,13 +122,33 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
         }
 
         final ChooseTimeseriesDialog dialog = new ChooseTimeseriesDialog( button.getShell(), workspace, collection, m_parameterType );
-        dialog.open();
+        dialog.setSelection( getTimeseries() );
 
+        if( dialog.open() == Window.OK )
+        {
+          final ITimeseries selection = dialog.getSelection();
+          doSelectionChanged( selection );
+        }
       }
 
     } );
 
+    updateControl();
+
     return body;
+  }
+
+  protected void doSelectionChanged( final ITimeseries selection )
+  {
+    final ZmlLink link = selection.getDataLink();
+
+    final Feature feature = getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    final FeatureChange change = new FeatureChange( feature, getFeatureTypeProperty(), link.getTimeseriesLink() );
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+
+    fireFeatureChange( command );
   }
 
   protected CommandableWorkspace getStationsWorkspace( )
@@ -161,8 +194,63 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
   @Override
   public void updateControl( )
   {
-// final IStatus status = validateStorageChannel();
-// m_statusComposite.setStatus( status );
+    final ITimeseries timeseries = getTimeseries();
+
+    if( Objects.isNull( timeseries ) )
+    {
+      m_text.setText( "<empty>" );
+      return;
+    }
+
+    m_text.setText( toLabel( timeseries ) );
+  }
+
+  private ITimeseries getTimeseries( )
+  {
+    final Object objLink = getFeature().getProperty( getFeatureTypeProperty() );
+    if( !(objLink instanceof TimeseriesLinkType) )
+      return null;
+
+    final TimeseriesLinkType link = (TimeseriesLinkType) objLink;
+    final IStationCollection collection = getStationCollection();
+
+    final FindTimeseriesLinkRunnable runnable = new FindTimeseriesLinkRunnable( collection, link );
+    runnable.execute( new NullProgressMonitor() );
+
+    return runnable.getTimeseries();
+  }
+
+  private String toLabel( final ITimeseries timeseries )
+  {
+    final String station = timeseries.getDescription();
+    final String type = timeseries.getParameterType();
+    final Period timestep = timeseries.getTimestep();
+    final String quality = timeseries.getQuality();
+
+    final StringBuffer buffer = new StringBuffer();
+
+    if( StringUtils.isNotEmpty( station ) )
+    {
+      buffer.append( String.format( "Station: %s, ", station ) );
+    }
+
+    if( StringUtils.isNotEmpty( type ) )
+    {
+      buffer.append( String.format( "Type: %s, ", type ) );
+    }
+
+    if( Objects.isNotNull( timestep ) )
+    {
+      final String dateString = PeriodUtils.formatDefault( timestep );
+      buffer.append( String.format( "Timestep: %s, ", dateString ) );
+    }
+
+    if( StringUtils.isNotEmpty( quality ) )
+    {
+      buffer.append( String.format( "Quality: %s", quality ) );
+    }
+
+    return buffer.toString().trim();
   }
 
   @Override
