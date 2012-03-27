@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.filter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -61,6 +62,8 @@ public class TimeseriesBrowserSearchViewer extends Composite
   private final ParameterTypeFilterControl m_parameterTypeFilterControl;
 
   private final TextSearchFilterControl m_textSearchControl;
+
+  private String m_parameterType;
 
   public TimeseriesBrowserSearchViewer( final Composite parent, final FormToolkit toolkit, final TreeViewer viewer )
   {
@@ -118,7 +121,14 @@ public class TimeseriesBrowserSearchViewer extends Composite
   public void doClean( )
   {
     m_textSearchControl.reset();
-    m_parameterTypeFilterControl.reset();
+
+    if( StringUtils.isEmpty( m_parameterType ) )
+      m_parameterTypeFilterControl.reset();
   }
 
+  public void setParameterType( final String parameterType )
+  {
+    m_parameterType = parameterType;
+    m_parameterTypeFilterControl.setParameterType( parameterType );
+  }
 }
