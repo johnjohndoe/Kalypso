@@ -427,6 +427,10 @@
             class="org.kalypso.ui.rrm.internal.gml.StorageChannelValidateControlFactory"
             id=".StorageChannelValidateFeatureControl">
       </extensionControl>
+      <extensionControl
+            class="org.kalypso.ui.rrm.internal.gml.feature.view.ChooseZmlLinkControlFactory"
+            id="ChooseZmlLinkControlFactory">
+      </extensionControl>
    </extension>
    <extension
          point="de.renew.workflow.model.workflowSystem">

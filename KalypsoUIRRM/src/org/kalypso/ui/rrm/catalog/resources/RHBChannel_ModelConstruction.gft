@@ -31,23 +31,31 @@
   <group style="SWT.NONE" text="%modelConstruction.gft.group.timeseries">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
-
+ 
     <label property="rrm:zmlLinkSeaEvaporation" style="SWT.NONE" visible="true">
       <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>
-    <composite style="SWT.NONE">
-      <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-      <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
-      <text property="rrm:zmlLinkSeaEvaporation" style="SWT.BORDER">
+    
+    <extensioncontrol style="SWT.SEARCH" property="rrm:zmlLinkSeaEvaporation" extension-id="ChooseZmlLinkControlFactory">
+      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="1" />
+      <param name="parameterType" value="E" />
+    </extensioncontrol>
+    
+    <!--  
+      <composite style="SWT.NONE">
         <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
-      </text>
-      <button property="rrm:zmlLinkSeaEvaporation" style="SWT.PUSH">
-        <gridData horizontalAlignment="SWT.BEGINNING" />
-      </button>
-    </composite>
-    <validatorlabel property="rrm:zmlLinkSeaEvaporation" style="SWT.NONE" visible="true">
-      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
-    </validatorlabel>
+        <gridLayout marginWidth="0" numColumns="2" makeColumnsEqualWidth="false" />
+        <text property="rrm:zmlLinkSeaEvaporation" style="SWT.BORDER">
+          <gridData horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" />
+        </text>
+        <button property="rrm:zmlLinkSeaEvaporation" style="SWT.PUSH">
+          <gridData horizontalAlignment="SWT.BEGINNING" />
+        </button>
+      </composite>
+      <validatorlabel property="rrm:zmlLinkSeaEvaporation" style="SWT.NONE" visible="true">
+        <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+      </validatorlabel>
+    -->
   </group>
 
   <group style="SWT.NONE" text="%modelConstruction.gft.group.net">

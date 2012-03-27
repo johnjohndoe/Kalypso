@@ -144,4 +144,10 @@ public class ParameterTypeFilterControl extends Composite
   {
     m_viewer.setSelection( new StructuredSelection( StringUtils.EMPTY ) );
   }
+
+  public void setParameterType( final String type )
+  {
+    m_viewer.setSelection( new StructuredSelection( type ) );
+    m_viewer.getCombo().setEnabled( false );
+  }
 }

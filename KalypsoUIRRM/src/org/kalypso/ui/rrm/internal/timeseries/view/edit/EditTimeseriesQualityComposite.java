@@ -111,7 +111,6 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
         if( notExists( stationQualities, quality ) )
           found.add( quality );
       }
-
     }
 
     return found.toArray( new String[] {} );

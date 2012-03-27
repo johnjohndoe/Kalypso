@@ -173,12 +173,10 @@ public class StationComposite extends FeatureBeanComposite<IStation>
   private void createMeasurementControl( )
   {
     // TODO Auto-generated method stub
-
   }
 
   private void createTimeseriesControl( )
   {
     // TODO Auto-generated method stub
-
   }
 }
