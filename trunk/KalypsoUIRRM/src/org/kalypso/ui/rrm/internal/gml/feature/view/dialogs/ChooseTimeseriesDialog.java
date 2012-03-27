@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml.feature.view.dialogs;
 
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -48,18 +53,24 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
+import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -78,6 +89,8 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   private TreeViewer m_treeViewer;
 
   private final CommandableWorkspace m_workspace;
+
+  private ITimeseries m_selection;
 
   public ChooseTimeseriesDialog( final Shell shell, final CommandableWorkspace workspace, final IStationCollection collection, final String parameterType )
   {
@@ -134,7 +147,47 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     final TreeNodeModel input = new TreeNodeModel( strategy, m_workspace, m_treeViewer );
     m_treeViewer.setInput( input );
 
+    if( Objects.isNotNull( m_selection ) )
+      input.refreshTree( m_selection );
+
+    m_treeViewer.expandToLevel( 2 );
+
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        doSelectionChangedEvent( resolve( event.getSelection() ) );
+      }
+
+      private ITimeseries resolve( final ISelection selection )
+      {
+        if( !(selection instanceof IStructuredSelection) )
+          return null;
+
+        final IStructuredSelection structured = (IStructuredSelection) selection;
+        final Object element = structured.getFirstElement();
+        if( !(element instanceof TreeNode) )
+          return null;
+
+        final TreeNode node = (TreeNode) element;
+        final Object adapter = node.getAdapter( ITimeseries.class );
+        if( adapter instanceof ITimeseries )
+          return (ITimeseries) adapter;
+
+        return null;
+      }
+    } );
+
     return m_treeViewer.getTree();
+  }
+
+  protected void doSelectionChangedEvent( final ITimeseries timeseries )
+  {
+    final Button button = getButton( OK );
+    button.setEnabled( Objects.isNotNull( timeseries ) );
+
+    setSelection( timeseries );
   }
 
   private Control createSearchPanel( final Composite parent, final FormToolkit toolkit )
@@ -143,14 +196,28 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     section.setText( "Suche" );
     section.setLayout( new FillLayout() );
 
+    final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
+
     final TimeseriesBrowserSearchViewer searchPanel = new TimeseriesBrowserSearchViewer( section, toolkit, m_treeViewer );
     searchPanel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
     searchPanel.setParameterType( m_parameterType );
+
+    toolbar.add( new CleanSearchPanelAction( searchPanel ) );
+    toolbar.update( true );
 
     section.setClient( searchPanel );
     toolkit.adapt( searchPanel );
 
     return section;
+  }
+
+  public ITimeseries getSelection( )
+  {
+    return m_selection;
+  }
+
+  public void setSelection( final ITimeseries timeseries )
+  {
+    m_selection = timeseries;
   }
 }
