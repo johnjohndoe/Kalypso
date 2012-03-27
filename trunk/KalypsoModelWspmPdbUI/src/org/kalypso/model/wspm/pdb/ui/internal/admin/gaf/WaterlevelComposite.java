@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.databinding.property.value.DateTimeSelectionProperty;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.pdb.db.mapping.Event;
@@ -202,8 +203,8 @@ public class WaterlevelComposite extends Composite
     final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( cal );
 
     final IObservableValue model = BeansObservables.observeValue( m_event, Event.PROPERTY_MEASUREMENTDATE );
-
     final IObservableValue dateTarget = selectionProperty.observe( m_measurementField );
+
     m_binding.bindValue( dateTarget, model );
   }
 

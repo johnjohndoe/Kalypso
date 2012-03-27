@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.utils.featureBinding;
 
+import java.util.Calendar;
+
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -58,15 +60,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.databinding.jface.DateControlModelToTargetConverter;
-import org.kalypso.commons.databinding.jface.DateControlTargetToModelConverter;
-import org.kalypso.commons.databinding.jface.DateTimeControl;
+import org.kalypso.commons.databinding.property.value.DateTimeModelToTargetConverter;
+import org.kalypso.commons.databinding.property.value.DateTimeSelectionProperty;
+import org.kalypso.commons.databinding.property.value.DateTimeTargetToModelConverter;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
@@ -172,13 +175,18 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
   protected final void createDateControl( final QName property, final IValidator... validators )
   {
+    int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
+
+    if( !m_generalEditable )
+      style &= SWT.READ_ONLY;
+
     createPropertyLabel( this, property );
 
-    final DateTimeControl control = new DateTimeControl( this, m_generalEditable );
-    control.setDisplayTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-    control.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final DateTime dateTime = new DateTime( this, style );
+    dateTime.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    dateTime.setEnabled( m_generalEditable );
 
-    bindDateControl( control, property );
+    bindDateControl( dateTime, property );
   }
 
   /**
@@ -299,22 +307,19 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     m_binding.bindValue( binder );
   }
 
-  protected final void bindDateControl( final DateTimeControl control, final QName property )
+  protected final void bindDateControl( final DateTime control, final QName property )
   {
-
-    final ISWTObservableValue target = SWTObservables.observeText( control.getText(), SWT.Modify );
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
 
+    final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final DateTimeSelectionProperty selectionProperty = new DateTimeSelectionProperty( calendar );
+    final IObservableValue target = selectionProperty.observe( control );
+
     final DataBinder binder = new DataBinder( target, model );
-    binder.setModelToTargetConverter( new DateControlModelToTargetConverter( KalypsoCorePlugin.getDefault().getTimeZone() ) );
-    binder.setTargetToModelConverter( new DateControlTargetToModelConverter( control ) );
+
+    binder.setModelToTargetConverter( new DateTimeModelToTargetConverter() );
+    binder.setTargetToModelConverter( new DateTimeTargetToModelConverter() );
 
     m_binding.bindValue( binder );
-
-// final IObservableValue target = ViewersObservables.observeSingleSelection( provider );
-// final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
-//
-// final DataBinder binder = new DataBinder( target, model );
-// m_binding.bindValue( binder );
   }
 }
