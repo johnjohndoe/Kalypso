@@ -55,6 +55,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.map.editRelation.EditRelationWidget;
 import org.kalypso.ui.views.map.MapView;
 
@@ -85,7 +86,7 @@ public class EditNetRelationsTaskHandler extends AbstractHandler
     /* wait for map to load */
     final String windowTitle = HandlerUtils.getCommandName( event );
     // FIXME: before I18N, check all other calls to waitForAndErrorDialog and remove duplicate strings
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, "Loading map..." ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, Messages.getString("EditNetRelationsTaskHandler_0") ) ) //$NON-NLS-1$
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();

@@ -77,7 +77,7 @@ public class LogViewer extends ViewPart
       final IFile file = (IFile) object;
       final String extension = file.getFileExtension();
       final String name = file.getName();
-      if( extension != null && extension.equals( "log" ) || name.equals( "error.txt" ) || name.equals( "error.gml" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( extension != null && extension.equals( "log" ) || name.equals( "error.txt" ) || name.equals( "error.gml" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       {
         m_fileMain = file;
         // redirect into LogTableViewer

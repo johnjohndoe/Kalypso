@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ReplaceTimeseriesObservation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -58,8 +59,8 @@ public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
   {
     super( model, timeseries );
 
-    setText( "Replace Timeseries" );
-    setToolTipText( "Replace selected Timeseries" );
+    setText( Messages.getString("ReplaceTimeseriesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("ReplaceTimeseriesAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_REPLACE ) );
   }

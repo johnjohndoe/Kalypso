@@ -149,7 +149,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
     }
 
     /* Set the comment. */
-    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, "Created by Inverse Distance Weighting Method (%d)", maxNumberStations ) );
+    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, Messages.getString("IdwFactorsOperation.0"), maxNumberStations ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -201,10 +201,10 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
   private Integer getMaxNumberStations( ) throws CoreException
   {
     final ILayoutWizardPage wizardPage = (ILayoutWizardPage) m_pages[0];
-    final IdwOptionsLayoutPart optionsPart = (IdwOptionsLayoutPart) wizardPage.findLayoutPart( "idwOptionsPart.1" );
+    final IdwOptionsLayoutPart optionsPart = (IdwOptionsLayoutPart) wizardPage.findLayoutPart( "idwOptionsPart.1" ); //$NON-NLS-1$
     final Integer maxStations = optionsPart.getMaxStations();
     if( maxStations == null || maxStations.intValue() == 0 )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_5" ) ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_5" ) ) ); //$NON-NLS-1$
 
     return maxStations;
   }

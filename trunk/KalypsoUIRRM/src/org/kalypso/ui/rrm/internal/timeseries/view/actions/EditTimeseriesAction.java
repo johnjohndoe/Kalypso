@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -78,8 +79,8 @@ public class EditTimeseriesAction extends Action
     m_timeseries = timeseries;
     m_binding = binding;
 
-    setText( "Edit Timeseries" );
-    setToolTipText( "Edit selected Timeseries" );
+    setText( Messages.getString("EditTimeseriesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("EditTimeseriesAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }

@@ -59,6 +59,7 @@ import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 import org.kalypso.ui.views.map.MapView;
 
@@ -87,7 +88,7 @@ public class EditNetElementsTaskHandler extends AbstractHandler
     /* wait for map to load */
     final String windowTitle = HandlerUtils.getCommandName( event );
     // FIXME: before I18N, check all other calls to waitForAndErrorDialog and remove duplicate strings
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, "Loading map..." ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, windowTitle, Messages.getString("EditNetElementsTaskHandler_0") ) ) //$NON-NLS-1$
       return null;
 
     configureFeatureView( activePage );
@@ -98,9 +99,9 @@ public class EditNetElementsTaskHandler extends AbstractHandler
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.editNetElements:workflow:Nodes:gtt", "Nodes", scenarioFolder ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Channels", "urn:org.kalypso.model.rrm.editNetElements:workflow:Channels:gtt", "Channels", scenarioFolder ); //$NON-NLS-1$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editNetElements:workflow:Catchments:gtt", "Catchments", scenarioFolder ); //$NON-NLS-1$
+      WorkflowHandlerUtils.setGttInput( activePage, "Nodes", "urn:org.kalypso.model.rrm.editNetElements:workflow:Nodes:gtt", Messages.getString("EditNetElementsTaskHandler_2"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Channels", "urn:org.kalypso.model.rrm.editNetElements:workflow:Channels:gtt", Messages.getString("EditNetElementsTaskHandler_4"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editNetElements:workflow:Catchments:gtt", Messages.getString("EditNetElementsTaskHandler_6"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     catch( final CoreException e )
     {

@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 
@@ -106,7 +107,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
   protected final Control createDialogArea( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
-    getShell().setText( "Edit Timeseries" );
+    getShell().setText( Messages.getString("EditTimeseriesDialog_0") ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
@@ -161,7 +162,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     toolkit.adapt( form );
 
     final Section controlSection = toolkit.createSection( base, Section.TITLE_BAR | Section.EXPANDED );
-    controlSection.setText( "Properties" );
+    controlSection.setText( Messages.getString("EditTimeseriesDialog_1") ); //$NON-NLS-1$
     controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( controlSection, m_timeseries, m_binding, true );
@@ -179,7 +180,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     if( weights == null || weights.trim().isEmpty() )
       return new int[] { 64, 40 };
 
-    final String[] parts = weights.split( "," ); // $NON-NLS-1$
+    final String[] parts = weights.split( "," ); // $NON-NLS-1$ //$NON-NLS-1$
     final int[] w = new int[parts.length];
 
     for( int i = 0; i < parts.length; i++ )
@@ -195,7 +196,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     final StringBuffer buffer = new StringBuffer();
     for( final int weight : weights )
     {
-      buffer.append( String.format( "%d,", weight ) ); // $NON-NLS-1$
+      buffer.append( String.format( Messages.getString("EditTimeseriesDialog_3"), weight ) ); // $NON-NLS-1$ //$NON-NLS-1$
     }
 
     final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();

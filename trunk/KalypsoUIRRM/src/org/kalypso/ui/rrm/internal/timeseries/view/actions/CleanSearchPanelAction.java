@@ -44,6 +44,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
 
 /**
@@ -58,8 +59,8 @@ public class CleanSearchPanelAction extends Action
   {
     m_searchPanel = searchPanel;
 
-    setText( "Sucheingabe zurücksetzen" );
-    setToolTipText( "Sucheingaben zurücksetzen" );
+    setText( Messages.getString("CleanSearchPanelAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("CleanSearchPanelAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_SEARCH_CONTROL_CLEAN ) );
 

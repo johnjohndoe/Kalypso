@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.util.DataSetTupleModelBuilder;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
@@ -113,10 +114,10 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
     }
     catch( final SensorException e )
     {
-      stati.add( IStatus.ERROR, "Merging of observations failed.", e );
+      stati.add( IStatus.ERROR, Messages.getString("MergeTimeseriesOperation_0"), e ); //$NON-NLS-1$
     }
 
-    return stati.asMultiStatus( "Merge Timeseries Operation" );
+    return stati.asMultiStatus( Messages.getString("MergeTimeseriesOperation_1") ); //$NON-NLS-1$
   }
 
   private void doStoreObservation( final IStatusCollector stati, final ZmlLink link, final IObservation base, final Map<Date, TupleModelDataSet[]> values )
@@ -139,7 +140,7 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
     {
       e.printStackTrace();
 
-      stati.add( IStatus.ERROR, "Saving observation failed.", e );
+      stati.add( IStatus.ERROR, Messages.getString("MergeTimeseriesOperation_2"), e ); //$NON-NLS-1$
     }
   }
 
@@ -158,7 +159,7 @@ public class MergeTimeseriesOperation implements IMergeTimeseriesOperation
       }
     }
 
-    stati.add( IStatus.OK, "Merged observations" );
+    stati.add( IStatus.OK, Messages.getString("MergeTimeseriesOperation_3") ); //$NON-NLS-1$
   }
 
   @Override

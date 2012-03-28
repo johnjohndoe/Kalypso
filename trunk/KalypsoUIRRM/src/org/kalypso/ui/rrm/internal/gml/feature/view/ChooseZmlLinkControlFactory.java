@@ -58,7 +58,7 @@ public class ChooseZmlLinkControlFactory implements IExtensionsFeatureControlFac
   @Override
   public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String type = arguments.getProperty( "parameterType" );
+    final String type = arguments.getProperty( "parameterType" ); //$NON-NLS-1$
 
     return new ChooseZmlLinkFeatureViewControl( feature, pt, type );
   }
