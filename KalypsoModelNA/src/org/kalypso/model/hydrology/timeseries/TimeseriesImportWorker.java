@@ -44,6 +44,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.Period;
+import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -75,7 +78,7 @@ public class TimeseriesImportWorker
     m_observation = observation;
   }
 
-  public IObservation convert( ) throws CoreException
+  public IObservation convert( final Period period ) throws CoreException
   {
     try
     {
@@ -100,6 +103,14 @@ public class TimeseriesImportWorker
       {
         final ZmlInterpolationWorker interpolation = new ZmlInterpolationWorker( resultObservation.getValues( null ), resultObservation.getMetadataList(), valueAxis );
         interpolation.execute( new NullProgressMonitor() );
+      }
+
+      /* Set timestep. */
+      if( period != null )
+      {
+        final int amount = PeriodUtils.findCalendarAmount( period );
+        final FIELD field = PeriodUtils.findCalendarField( period );
+        MetadataHelper.setTimestep( resultObservation.getMetadataList(), field.getField(), amount );
       }
 
       return resultObservation;

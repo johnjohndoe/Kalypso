@@ -231,8 +231,6 @@ public class TimeseriesImporter
     final String timeseriesDescription = baseName;
     final String groupName = findGroupName( relativePath );
 
-    /* Copy zml file */
-
     /* Add to timeseries management */
     final IStation station = findOrCreateStation( stationDescription, groupName, parameterType, relativePath );
 
@@ -245,7 +243,7 @@ public class TimeseriesImporter
     // We write the file from the read observation (instead of copy) in order to compress the data and add status and
     // source axes (now required)
     final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
-    final IObservation observationWithSource = cleanupWorker.convert();
+    final IObservation observationWithSource = cleanupWorker.convert( newTimeseries.getTimestep() );
 
     dataLink.saveObservation( observationWithSource );
 

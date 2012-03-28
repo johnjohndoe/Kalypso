@@ -86,7 +86,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     final IStatus status = observationWorker.execute( monitor );
     stati.add( status );
     if( IStatus.ERROR == status.getSeverity() )
-      return stati.asMultiStatus( Messages.getString("ImportTimeseriesOperation_0") ); //$NON-NLS-1$
+      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_0" ) ); //$NON-NLS-1$
 
     final IObservation observation = observationWorker.getObservation();
 
@@ -94,14 +94,14 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     final IStatus ruecksprung = validateRuecksprung( observation );
     stati.add( ruecksprung );
     if( IStatus.ERROR == ruecksprung.getSeverity() )
-      return stati.asMultiStatus( Messages.getString("ImportTimeseriesOperation_1") ); //$NON-NLS-1$
+      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_1" ) ); //$NON-NLS-1$
 
     /* time step */
     final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( observation );
     final IStatus timestepStatus = timeStepOperation.execute( monitor );
     stati.add( timestepStatus );
     if( IStatus.ERROR == timestepStatus.getSeverity() )
-      return stati.asMultiStatus( Messages.getString("ImportTimeseriesOperation_2") ); //$NON-NLS-1$
+      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_2" ) ); //$NON-NLS-1$
 
     m_timestep = timeStepOperation.getTimestep();
 
@@ -109,14 +109,14 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     final IStatus validTimestep = validateTimesteps( observation, m_timestep );
     stati.add( validTimestep );
     if( IStatus.ERROR == validTimestep.getSeverity() )
-      return stati.asMultiStatus( Messages.getString("ImportTimeseriesOperation_3") ); //$NON-NLS-1$
+      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_3" ) ); //$NON-NLS-1$
 
     final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
-    m_observation = cleanupWorker.convert();
+    m_observation = cleanupWorker.convert( m_timestep );
 
     updateMetadata( m_observation );
 
-    return stati.asMultiStatus( Messages.getString("ImportTimeseriesOperation_4") ); //$NON-NLS-1$
+    return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_4" ) ); //$NON-NLS-1$
 
   }
 
@@ -139,7 +139,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("ImportTimeseriesOperation_5"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_5" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -151,14 +151,14 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
       observation.accept( ruecksprung, null, 1 );
 
       if( ruecksprung.hasRuecksprung() )
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("ImportTimeseriesOperation_6") ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_6" ) ); //$NON-NLS-1$
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString("ImportTimeseriesOperation_7") ); //$NON-NLS-1$
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_7" ) ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("ImportTimeseriesOperation_8"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_8" ), e ); //$NON-NLS-1$
     }
   }
 

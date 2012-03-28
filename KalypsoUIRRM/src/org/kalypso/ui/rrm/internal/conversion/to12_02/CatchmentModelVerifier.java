@@ -42,6 +42,8 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
@@ -53,6 +55,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -65,8 +68,13 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.UpdateSimulationWorker;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -159,7 +167,8 @@ public class CatchmentModelVerifier
       collector.add( calculateStatus );
 
       /* Compare the resulting timeseries with the existing ones. */
-      compareResultingTimeseries( simulationFolder, simulationTmpFolder );
+      final IStatus compareStatus = compareResultingTimeseries( simulationFolder, simulationTmpFolder );
+      collector.add( compareStatus );
 
       return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...", m_simulation.getDescription() ) );
     }
@@ -232,8 +241,8 @@ public class CatchmentModelVerifier
    *          The generators.
    * @param generatorId
    *          The id of the generator.
-   * @return A WARNING status if the generator is missing or if it has no factorized timeseries (hence no factors). Then
-   *         no comparison makes sense. Otherwise a OK Status is returned.
+   * @return False if the generator is missing or if it has no factorized timeseries (hence no factors). Then no
+   *         comparison makes sense. Otherwise true is returned.
    */
   private boolean checkGenerator( final IFeatureBindingCollection<IRainfallGenerator> generators, final String generatorId )
   {
@@ -297,7 +306,11 @@ public class CatchmentModelVerifier
   {
     final UpdateSimulationWorker updateWorker = new UpdateSimulationWorker( simulationTmpFolder );
 
-    return updateWorker.execute( new NullProgressMonitor() );
+    final IStatus status = updateWorker.execute( new NullProgressMonitor() );
+    if( !status.isOK() )
+      return status;
+
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Catchment model generation successfully tested." );
   }
 
   private IStatus compareResultingTimeseries( final IFolder simulationFolder, final IFolder simulationTmpFolder ) throws Exception
@@ -316,7 +329,6 @@ public class CatchmentModelVerifier
       tmpCatchments = loadModell( simulationTmpFolder );
 
       /* Compare each catchments. */
-      // TODO Can I assume they have the same order?
       for( int i = 0; i < catchments.size(); i++ )
       {
         final Catchment catchment = catchments.get( i );
@@ -340,13 +352,6 @@ public class CatchmentModelVerifier
     }
   }
 
-  private IStatus compareCatchments( final Catchment catchment, final Catchment tmpCatchment )
-  {
-    // TODO
-
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "The timeseries of the catchment '%s' will be equal if newly calculated.", catchment.getDescription() ) );
-  }
-
   private IFeatureBindingCollection<Catchment> loadModell( final IFolder simulationFolder ) throws Exception
   {
     final RrmSimulation simulation = new RrmSimulation( simulationFolder );
@@ -355,5 +360,64 @@ public class CatchmentModelVerifier
     final NaModell root = (NaModell) workspace.getRootFeature();
 
     return root.getCatchments();
+  }
+
+  private IStatus compareCatchments( final Catchment catchment, final Catchment tmpCatchment ) throws MalformedURLException, SensorException
+  {
+    /* The status collector. */
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    /* Get the timeseries links of the catchment. */
+    final URL context = catchment.getWorkspace().getContext();
+    final TimeseriesLinkType precipitationLink = catchment.getPrecipitationLink();
+    final TimeseriesLinkType evaporationLink = catchment.getEvaporationLink();
+    final TimeseriesLinkType temperatureLink = catchment.getTemperatureLink();
+
+    /* Get the timeseries links of the temporary catchment. */
+    final URL tmpContext = tmpCatchment.getWorkspace().getContext();
+    final TimeseriesLinkType tmpPrecipitationLink = tmpCatchment.getPrecipitationLink();
+    final TimeseriesLinkType tmpEvaporationLink = tmpCatchment.getEvaporationLink();
+    final TimeseriesLinkType tmpTemperatureLink = tmpCatchment.getTemperatureLink();
+
+    /* Compare the precipitation timeseries. */
+    final IStatus precipitationStatus = compareTimeseries( context, precipitationLink, tmpContext, tmpPrecipitationLink, "Precipitation" );
+    collector.add( precipitationStatus );
+
+    /* Compare the evaporation timeseries. */
+    final IStatus evaporationStatus = compareTimeseries( context, evaporationLink, tmpContext, tmpEvaporationLink, "Evaporation" );
+    collector.add( evaporationStatus );
+
+    /* Compare the temperature timeseries. */
+    final IStatus temperatureStatus = compareTimeseries( context, temperatureLink, tmpContext, tmpTemperatureLink, "Temperature" );
+    collector.add( temperatureStatus );
+
+    return collector.asMultiStatus( String.format( "Verifying the imported timeseries of the catchment '%s'.", catchment.getDescription() ) );
+  }
+
+  private IStatus compareTimeseries( final URL context, final TimeseriesLinkType link, final URL tmpContext, final TimeseriesLinkType tmpLink, final String timeseriesType ) throws MalformedURLException, SensorException
+  {
+    /* The status collector. */
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    /* Load the timeseries. */
+    final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+    final IObservation observation = ZmlFactory.parseXML( location );
+
+    /* Load the temporary timeseries. */
+    final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
+    final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
+
+    /* Get the values of both timeseries. */
+    final ITupleModel values = observation.getValues( null );
+    final ITupleModel tmpValues = tmpObservation.getValues( null );
+    if( values.size() != tmpValues.size() )
+    {
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The size of the values will change." ) );
+      return collector.asMultiStatus( timeseriesType );
+    }
+
+    // TODO
+
+    return collector.asMultiStatus( timeseriesType );
   }
 }
