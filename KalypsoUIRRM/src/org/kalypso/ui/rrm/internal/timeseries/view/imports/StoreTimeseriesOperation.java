@@ -125,7 +125,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
     writeResult( targetFile, observation );
 
-    return stati.asMultiStatus( "Import Timeseries Operation" );
+    return stati.asMultiStatus( Messages.getString("StoreTimeseriesOperation.0") ); //$NON-NLS-1$
   }
 
   private ITimeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
@@ -200,7 +200,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final String timeseriesFilename = TimeseriesDataLinkFunctionProperty.formatTimeseriesFilename( parameterType, quality, timestep );
 
     if( fileNameExists( timeseriesFilename ) )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Import timeseries operation failed. Timeseries of the same type (parameter, timestep, quality) already exists." ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("StoreTimeseriesOperation.1") ) ); //$NON-NLS-1$
 
     final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
     final IProject project = scenarioDataProvider.getScenarioFolder().getProject();

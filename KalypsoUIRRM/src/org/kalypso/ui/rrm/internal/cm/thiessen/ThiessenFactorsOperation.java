@@ -114,7 +114,7 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
     }
 
     /* Set the comment. */
-    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, "Created by Thiessen Method" );
+    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, Messages.getString("ThiessenFactorsOperation.0") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }

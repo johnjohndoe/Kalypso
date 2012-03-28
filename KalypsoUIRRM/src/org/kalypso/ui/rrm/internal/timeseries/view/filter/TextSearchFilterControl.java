@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SelectAllFocusListener;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * Helper that allow to search for specific string.
@@ -116,7 +117,7 @@ public class TextSearchFilterControl extends Composite
   {
     m_nameField = new Text( parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL );
     m_nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_nameField.setMessage( "Suchtext" );
+    m_nameField.setMessage( Messages.getString("TextSearchFilterControl_0") ); //$NON-NLS-1$
     m_nameField.addFocusListener( new SelectAllFocusListener() );
 
     addResetListener( m_nameField );

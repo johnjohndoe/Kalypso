@@ -80,9 +80,9 @@ public class KalypsoNAMappingData extends AbstractModelObject
 {
   public static final String PROPERTY_SHAPE_TYPE_STATUS = "shapeTypeStatus"; //$NON-NLS-1$
 
-  private static final IStatus SHAPE_TYPE_STATUS_NONE = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "No shape file loaded" );
+  private static final IStatus SHAPE_TYPE_STATUS_NONE = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAMappingData.0") ); //$NON-NLS-1$
 
-  private static final IStatus SHAPE_TYPE_STATUS_LOADING = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Loading shape file..." );
+  private static final IStatus SHAPE_TYPE_STATUS_LOADING = new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString("KalypsoNAMappingData.1") ); //$NON-NLS-1$
 
   private String m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -212,7 +212,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
     if( m_allowedShapeTypes.contains( actualType ) )
     {
-      final String message = String.format( "Geometry valid: %s", typeName );
+      final String message = String.format( Messages.getString("KalypsoNAMappingData.2"), typeName ); //$NON-NLS-1$
       return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), message );
     }
 
@@ -222,7 +222,7 @@ public class KalypsoNAMappingData extends AbstractModelObject
 
     final String allAllowedTypes = StringUtils.join( allowedNames, ',' );
 
-    final String message = String.format( "Invalid geometry type (%s). Allowed types are: %s", typeName, allAllowedTypes );
+    final String message = String.format( Messages.getString("KalypsoNAMappingData.3"), typeName, allAllowedTypes ); //$NON-NLS-1$
     return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), message );
   }
 

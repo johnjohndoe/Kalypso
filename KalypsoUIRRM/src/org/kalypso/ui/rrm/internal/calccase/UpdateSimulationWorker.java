@@ -147,9 +147,9 @@ public class UpdateSimulationWorker
     ProgressUtilities.worked( monitor, 20 );
 
     /* Copy observations for pegel and zufluss */
-    copyMappingTimeseries( control, "ObsQMapping.gml", "Pegel", new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$
-    copyMappingTimeseries( control, "ObsQZuMapping.gml", "Zufluss", new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$
-    copyMappingTimeseries( control, "ObsEMapping.gml", "Klima", new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$
+    copyMappingTimeseries( control, "ObsQMapping.gml", Messages.getString("UpdateSimulationWorker.0"), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    copyMappingTimeseries( control, "ObsQZuMapping.gml", Messages.getString("UpdateSimulationWorker.1"), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    copyMappingTimeseries( control, "ObsEMapping.gml", Messages.getString("UpdateSimulationWorker.2"), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Execute catchment models */
     executeCatchmentModel( control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
@@ -427,11 +427,11 @@ public class UpdateSimulationWorker
     switch( parameterType )
     {
       case ITimeseriesConstants.TYPE_RAINFALL:
-        return "Niederschlag"; // TODO i18n; en = 'Precipitation'
+        return Messages.getString("UpdateSimulationWorker.3"); // TODO i18n; en = 'Precipitation' //$NON-NLS-1$
 
       case ITimeseriesConstants.TYPE_TEMPERATURE:
       case ITimeseriesConstants.TYPE_EVAPORATION:
-        return "Klima"; // TODO i18n; en = 'Climate'
+        return Messages.getString("UpdateSimulationWorker.4"); // TODO i18n; en = 'Climate' //$NON-NLS-1$
     }
 
     throw new IllegalArgumentException();

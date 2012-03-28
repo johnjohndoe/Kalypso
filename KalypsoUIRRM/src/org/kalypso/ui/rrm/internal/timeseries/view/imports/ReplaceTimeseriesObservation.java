@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
@@ -82,10 +83,10 @@ public class ReplaceTimeseriesObservation implements IMergeTimeseriesOperation
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Replacing Timeseries failed", e );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ReplaceTimeseriesObservation_0"), e ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Replaced Timeseries" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ReplaceTimeseriesObservation_1") ); //$NON-NLS-1$
   }
 
   @Override

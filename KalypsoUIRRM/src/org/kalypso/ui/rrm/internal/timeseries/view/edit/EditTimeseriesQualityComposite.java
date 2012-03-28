@@ -55,6 +55,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 import org.kalypsodeegree.model.feature.Feature;
@@ -79,8 +80,8 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
     final String[] stationQualities = getQualities( timeseries.getStation(), timeseries.getParameterType() );
     final String[] textCompletionQualities = findQualities( timeseries.getStation(), timeseries.getParameterType(), stationQualities );
 
-    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, "Stationsname enthält ungültige Zeichen" );
-    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( stationQualities, timeseries.getQuality(), IStatus.ERROR, "Quality bereits vorhanden." );
+    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString("EditTimeseriesQualityComposite_0") ); //$NON-NLS-1$
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( stationQualities, timeseries.getQuality(), IStatus.ERROR, Messages.getString("EditTimeseriesQualityComposite_1") ); //$NON-NLS-1$
 
     final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
 

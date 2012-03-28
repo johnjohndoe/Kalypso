@@ -54,6 +54,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -85,8 +86,8 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
       final long duration = Math.abs( m_lastDate.getTime() - date.getTime() ) / 1000;
       if( m_duration != duration )
       {
-        final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yy HH:mm" );
-        m_status.add( IStatus.ERROR, String.format( "Invalid time step detected - between %s and %s", sdf.format( m_lastDate ), sdf.format( date ) ) );
+        final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString("ValidateTimestepsVisitor_0") ); //$NON-NLS-1$
+        m_status.add( IStatus.ERROR, String.format( Messages.getString("ValidateTimestepsVisitor_1"), sdf.format( m_lastDate ), sdf.format( date ) ) ); //$NON-NLS-1$
       }
     }
 
@@ -96,7 +97,7 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
 
   public IStatus getStatus( )
   {
-    return m_status.asMultiStatus( "Time Step Validation Status" );
+    return m_status.asMultiStatus( Messages.getString("ValidateTimestepsVisitor_2") ); //$NON-NLS-1$
   }
 
 }

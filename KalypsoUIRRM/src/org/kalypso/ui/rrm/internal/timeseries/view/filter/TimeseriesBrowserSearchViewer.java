@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -74,7 +75,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
     final Group groupTextSearch = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupTextSearch );
     groupTextSearch.setLayout( new FillLayout() );
-    groupTextSearch.setText( "Station" );
+    groupTextSearch.setText( Messages.getString("TimeseriesBrowserSearchViewer_0") ); //$NON-NLS-1$
     groupTextSearch.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_textSearchControl = new TextSearchFilterControl( groupTextSearch, toolkit );
@@ -83,7 +84,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
     final Group groupParameter = new Group( this, SWT.NONE );
     ToolkitUtils.adapt( toolkit, groupParameter );
     groupParameter.setLayout( new FillLayout() );
-    groupParameter.setText( "Parameter" );
+    groupParameter.setText( Messages.getString("TimeseriesBrowserSearchViewer_1") ); //$NON-NLS-1$
     groupParameter.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_parameterTypeFilterControl = new ParameterTypeFilterControl( groupParameter, toolkit );
@@ -93,7 +94,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
     control.setLayout( Layouts.createGridLayout( 2 ) );
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
-    final Hyperlink expand = toolkit.createHyperlink( control, "Baumelemente öffnen", SWT.NULL );
+    final Hyperlink expand = toolkit.createHyperlink( control, Messages.getString("TimeseriesBrowserSearchViewer_2"), SWT.NULL ); //$NON-NLS-1$
     expand.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     expand.addHyperlinkListener( new HyperlinkAdapter()
@@ -105,7 +106,7 @@ public class TimeseriesBrowserSearchViewer extends Composite
       }
     } );
 
-    final Hyperlink collapse = toolkit.createHyperlink( control, "Baumelemente schließen", SWT.NULL );
+    final Hyperlink collapse = toolkit.createHyperlink( control, Messages.getString("TimeseriesBrowserSearchViewer_3"), SWT.NULL ); //$NON-NLS-1$
     collapse.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     collapse.addHyperlinkListener( new HyperlinkAdapter()

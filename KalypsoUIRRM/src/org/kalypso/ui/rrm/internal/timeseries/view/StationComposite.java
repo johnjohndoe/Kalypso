@@ -62,6 +62,7 @@ import org.kalypso.model.hydrology.internal.timeseries.binding.StationCollection
 import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationLocationAction;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
@@ -91,8 +92,8 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     final String stationName = station != null ? station.getDescription() : StringUtils.EMPTY;
 
-    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, "Stationsname enthält ungültige Zeichen" );
-    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), stationName, IStatus.ERROR, "Stationsname bereits vorhanden" );
+    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString("StationComposite_0") ); //$NON-NLS-1$
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), stationName, IStatus.ERROR, Messages.getString("StationComposite_1") ); //$NON-NLS-1$
 
     final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
 

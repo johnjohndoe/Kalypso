@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IMergeTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -57,8 +58,8 @@ public class ExtendTimeseriesAction extends AbstractOverwriteTimeseriesAction
   {
     super( model, timeseries );
 
-    setText( "Extend Timeseries" );
-    setToolTipText( "Extend selected Timeseries" );
+    setText( Messages.getString("ExtendTimeseriesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("ExtendTimeseriesAction_1") ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_EXTEND ) );
   }

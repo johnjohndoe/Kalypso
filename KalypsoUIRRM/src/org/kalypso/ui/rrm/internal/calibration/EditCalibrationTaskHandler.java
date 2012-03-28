@@ -54,6 +54,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 /**
@@ -78,9 +79,9 @@ public class EditCalibrationTaskHandler extends AbstractHandler
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "KMChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:KMChannels:gtt", "Kalinin-Miljukov Channels", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:StorageChannels:gtt", "Storage Channels", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editCalibration:workflow:Catchments:gtt", "Catchments", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "KMChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:KMChannels:gtt", Messages.getString("EditCalibrationTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "StorageChannels", "urn:org.kalypso.model.rrm.editCalibration:workflow:StorageChannels:gtt", Messages.getString("EditCalibrationTaskHandler_1"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.editCalibration:workflow:Catchments:gtt", Messages.getString("EditCalibrationTaskHandler_2"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     catch( final CoreException e )
     {

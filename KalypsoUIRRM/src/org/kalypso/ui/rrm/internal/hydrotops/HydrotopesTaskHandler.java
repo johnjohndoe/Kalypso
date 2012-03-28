@@ -54,6 +54,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 /**
@@ -78,11 +79,11 @@ public class HydrotopesTaskHandler extends AbstractHandler
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Catchments:gtt", "Catchments", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Landuse", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt", "Landuse", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Geologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt", "Geologie", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Pedologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt", "Pedologie", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Hydrotopes", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt", "Hydrotopes", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "Catchments", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Catchments:gtt", Messages.getString("HydrotopesTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Landuse", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Landuse:gtt", Messages.getString("HydrotopesTaskHandler_1"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Geologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Geologie:gtt", Messages.getString("HydrotopesTaskHandler_2"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Pedologie", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Pedologie:gtt", Messages.getString("HydrotopesTaskHandler_3"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Hydrotopes", "urn:org.kalypso.model.rrm.hydrotopes:workflow:Hydrotopes:gtt", Messages.getString("HydrotopesTaskHandler_4"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     catch( final CoreException e )
     {

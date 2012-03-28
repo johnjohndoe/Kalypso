@@ -54,6 +54,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 /**
@@ -77,8 +78,8 @@ public class SoilTaskHandler extends AbstractHandler
       final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
       final IFolder scenarioFolder = (IFolder) dataProvider.getScenarioFolder();
 
-      WorkflowHandlerUtils.setGttInput( activePage, "Layers", "urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt", "Layers", scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$
-      WorkflowHandlerUtils.setGttInput( activePage, "Profiles", "urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt", "Profiles", scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$
+      WorkflowHandlerUtils.setGttInput( activePage, "Layers", "urn:org.kalypso.model.rrm.soilDefinition:Layers:gtt", Messages.getString("SoilTaskHandler_0"), scenarioFolder ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      WorkflowHandlerUtils.setGttInput( activePage, "Profiles", "urn:org.kalypso.model.rrm.soilDefinition:Profiles:gtt", Messages.getString("SoilTaskHandler_1"), scenarioFolder ); //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
     }
     catch( final CoreException e )
     {

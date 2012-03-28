@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.hydrology.internal.timeseries.binding.HydrologicalStation;
 import org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.ui.imports.ParameterTypeLabelProvider;
 
 /**
@@ -124,7 +125,7 @@ public class ParameterTypeFilterControl extends Composite
       public String getText( final Object element )
       {
         if( Objects.isNull( element ) || StringUtils.isEmpty( element.toString() ) )
-          return "<Keine Auswahl>";
+          return Messages.getString("ParameterTypeFilterControl_0"); //$NON-NLS-1$
 
         return super.getText( element );
       }

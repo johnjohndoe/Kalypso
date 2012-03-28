@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
@@ -109,7 +110,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   protected final Control createDialogArea( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
-    getShell().setText( "Choose Timeseries" );
+    getShell().setText( Messages.getString("ChooseTimeseriesDialog_0") ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
@@ -193,7 +194,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   private Control createSearchPanel( final Composite parent, final FormToolkit toolkit )
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    section.setText( "Suche" );
+    section.setText( Messages.getString("ChooseTimeseriesDialog_1") ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
