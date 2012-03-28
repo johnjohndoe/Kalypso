@@ -277,7 +277,8 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     try
     {
       m_selection = timeseries;
-      m_chart.setSelection( new TimeseriesDialogSource( timeseries ) );
+      if( m_selection != null )
+        m_chart.setSelection( new TimeseriesDialogSource( timeseries ) );
     }
     catch( final Exception e )
     {
