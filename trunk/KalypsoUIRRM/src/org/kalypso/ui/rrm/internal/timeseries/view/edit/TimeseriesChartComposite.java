@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.edit;
 
+import java.net.URL;
+
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
@@ -73,7 +75,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 /**
  * @author Dirk Kuch
  */
-public class EditTimeseriesChartComposite extends Composite
+public class TimeseriesChartComposite extends Composite
 {
   private static final RGB CHART_BACKGROUND = new RGB( 255, 255, 255 );
 
@@ -85,7 +87,7 @@ public class EditTimeseriesChartComposite extends Composite
 
   private ChartSourceProvider m_chartSourceProvider;
 
-  EditTimeseriesChartComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context )
+  public TimeseriesChartComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context, final URL template )
   {
     super( parent, SWT.NULL );
 
@@ -95,17 +97,17 @@ public class EditTimeseriesChartComposite extends Composite
     layout.verticalSpacing = 0;
     setLayout( layout );
 
-    init();
+    init( template );
     draw( toolkit );
 
     toolkit.adapt( this );
   }
 
-  private void init( )
+  private void init( final URL template )
   {
     try
     {
-      final ChartTypeHandler handler = new ChartTypeHandler( getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+      final ChartTypeHandler handler = new ChartTypeHandler( template );
       ChartFactory.doConfiguration( m_model, handler.getReferenceResolver(), handler.getChartType(), ChartExtensionLoader.getInstance(), handler.getContext() );
 
     }

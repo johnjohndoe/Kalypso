@@ -81,7 +81,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
 
   private RrmTableComposite m_table;
 
-  private EditTimeseriesChartComposite m_chart;
+  private TimeseriesChartComposite m_chart;
 
   private final IMultipleZmlSourceElement m_source;
 
@@ -107,7 +107,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
   protected final Control createDialogArea( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
-    getShell().setText( Messages.getString("EditTimeseriesDialog_0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "EditTimeseriesDialog_0" ) ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
@@ -139,7 +139,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     final Composite rightPane = toolkit.createComposite( form );
     rightPane.setLayout( Layouts.createGridLayout() );
 
-    m_chart = new EditTimeseriesChartComposite( leftPane, toolkit, m_context );
+    m_chart = new TimeseriesChartComposite( leftPane, toolkit, m_context, getClass().getResource( "templates/diagram_edit.kod" ) ); //$NON-NLS-1$
     m_chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_chart.setSelection( m_source );
 
@@ -162,7 +162,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     toolkit.adapt( form );
 
     final Section controlSection = toolkit.createSection( base, Section.TITLE_BAR | Section.EXPANDED );
-    controlSection.setText( Messages.getString("EditTimeseriesDialog_1") ); //$NON-NLS-1$
+    controlSection.setText( Messages.getString( "EditTimeseriesDialog_1" ) ); //$NON-NLS-1$
     controlSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( controlSection, m_timeseries, m_binding, true );
@@ -196,7 +196,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     final StringBuffer buffer = new StringBuffer();
     for( final int weight : weights )
     {
-      buffer.append( String.format( Messages.getString("EditTimeseriesDialog_3"), weight ) ); // $NON-NLS-1$ //$NON-NLS-1$
+      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); // $NON-NLS-1$ //$NON-NLS-1$
     }
 
     final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();

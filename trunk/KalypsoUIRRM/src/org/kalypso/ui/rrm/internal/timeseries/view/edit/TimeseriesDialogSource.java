@@ -56,7 +56,7 @@ import org.kalypso.zml.core.base.IZmlSourceElement;
 /**
  * @author Dirk Kuch
  */
-public class EditTimeseriesDialogSource implements IMultipleZmlSourceElement
+public class TimeseriesDialogSource implements IMultipleZmlSourceElement
 {
   private final ITimeseries m_timeseries;
 
@@ -68,7 +68,7 @@ public class EditTimeseriesDialogSource implements IMultipleZmlSourceElement
 
   private ClonedTimeseriesSource m_element;
 
-  public EditTimeseriesDialogSource( final ITimeseries timeseries ) throws Exception
+  public TimeseriesDialogSource( final ITimeseries timeseries ) throws Exception
   {
     m_timeseries = timeseries;
 

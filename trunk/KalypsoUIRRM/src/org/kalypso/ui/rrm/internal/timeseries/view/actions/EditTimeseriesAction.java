@@ -59,7 +59,7 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialog;
-import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesDialogSource;
+import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 
 /**
@@ -99,7 +99,7 @@ public class EditTimeseriesAction extends Action
       final IFile oldFile = link.getFile();
       final String oldQuality = timeseries.getQuality();
 
-      final EditTimeseriesDialogSource source = new EditTimeseriesDialogSource( timeseries );
+      final TimeseriesDialogSource source = new TimeseriesDialogSource( timeseries );
       final EditTimeseriesDialog dialog = new EditTimeseriesDialog( shell, m_timeseries, source, m_binding, context );
       final int open = dialog.open();
       if( Window.OK == open )

@@ -40,13 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.gml.feature.view.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
@@ -57,19 +60,25 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesChartComposite;
+import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
@@ -83,6 +92,8 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 {
   private static final String DIALOG_SCREEN_SIZE = "choose.time.series.dialog.screen.size"; //$NON-NLS-1$
 
+  private static final String DIALOG_SASH_FORM_WEIGHTS = "choose.time.series.dialog.weights"; //$NON-NLS-1$
+
   private final IStationCollection m_collection;
 
   private final String m_parameterType;
@@ -92,6 +103,10 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   private final CommandableWorkspace m_workspace;
 
   private ITimeseries m_selection;
+
+  private TimeseriesChartComposite m_chart;
+
+  private TreeNodeModel m_model;
 
   public ChooseTimeseriesDialog( final Shell shell, final CommandableWorkspace workspace, final IStationCollection collection, final String parameterType )
   {
@@ -103,14 +118,13 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     setHelpAvailable( false );
     setDialogHelpAvailable( false );
-
   }
 
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
-    getShell().setText( Messages.getString("ChooseTimeseriesDialog_0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "ChooseTimeseriesDialog_0" ) ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
@@ -131,27 +145,67 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
       }
     } );
 
-    createTreeViewer( base ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    createSearchPanel( base, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final SashForm form = new SashForm( base, SWT.HORIZONTAL );
+    form.setLayout( new FillLayout() );
+    form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
+
+    final Composite leftPane = toolkit.createComposite( form );
+    leftPane.setLayout( Layouts.createGridLayout() );
+
+    final Composite rightPane = toolkit.createComposite( form );
+    rightPane.setLayout( Layouts.createGridLayout() );
+
+    createTreeViewer( leftPane ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    createSearchPanel( leftPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    createDiagramView( rightPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    form.setWeights( getWeights() );
+
+    leftPane.addControlListener( new ControlAdapter()
+    {
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        setWeights( form.getWeights() );
+      }
+    } );
 
     return base;
   }
 
-  private Composite createTreeViewer( final Composite base )
+  private Control createDiagramView( final Composite body, final FormToolkit toolkit )
   {
-    m_treeViewer = new TreeViewer( base, SWT.FLAT | SWT.SINGLE );
+    final IWorkbench context = PlatformUI.getWorkbench();
+    m_chart = new TimeseriesChartComposite( body, toolkit, context, TimeseriesChartComposite.class.getResource( "templates/diagram_view.kod" ) ); //$NON-NLS-1$
+
+    if( Objects.isNotNull( m_selection ) )
+      try
+      {
+        m_chart.setSelection( new TimeseriesDialogSource( m_selection ) );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
+    return m_chart;
+  }
+
+  private Composite createTreeViewer( final Composite body )
+  {
+    m_treeViewer = new TreeViewer( body, SWT.FLAT | SWT.SINGLE );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
 
     final StationsByStationsStrategy strategy = new StationsByStationsStrategy( m_collection );
 
-    final TreeNodeModel input = new TreeNodeModel( strategy, m_workspace, m_treeViewer );
-    m_treeViewer.setInput( input );
+    m_model = new TreeNodeModel( strategy, m_workspace, m_treeViewer );
+    m_treeViewer.setInput( m_model );
+    m_treeViewer.expandToLevel( 2 );
 
     if( Objects.isNotNull( m_selection ) )
-      input.refreshTree( m_selection );
-
-    m_treeViewer.expandToLevel( 2 );
+      m_model.refreshTree( m_selection );
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -185,16 +239,17 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   protected void doSelectionChangedEvent( final ITimeseries timeseries )
   {
+
     final Button button = getButton( OK );
     button.setEnabled( Objects.isNotNull( timeseries ) );
 
     setSelection( timeseries );
   }
 
-  private Control createSearchPanel( final Composite parent, final FormToolkit toolkit )
+  private Control createSearchPanel( final Composite body, final FormToolkit toolkit )
   {
-    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    section.setText( Messages.getString("ChooseTimeseriesDialog_1") ); //$NON-NLS-1$
+    final Section section = toolkit.createSection( body, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
+    section.setText( Messages.getString( "ChooseTimeseriesDialog_1" ) ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
@@ -219,6 +274,45 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   public void setSelection( final ITimeseries timeseries )
   {
-    m_selection = timeseries;
+    try
+    {
+      m_selection = timeseries;
+      m_chart.setSelection( new TimeseriesDialogSource( timeseries ) );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private int[] getWeights( )
+  {
+    final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
+
+    final String weights = settings.get( DIALOG_SASH_FORM_WEIGHTS );
+    if( weights == null || weights.trim().isEmpty() )
+      return new int[] { 35, 65 };
+
+    final String[] parts = weights.split( "," ); // $NON-NLS-1$ //$NON-NLS-1$
+    final int[] w = new int[parts.length];
+
+    for( int i = 0; i < parts.length; i++ )
+    {
+      w[i] = Integer.valueOf( parts[i] );
+    }
+
+    return w;
+  }
+
+  protected void setWeights( final int[] weights )
+  {
+    final StringBuffer buffer = new StringBuffer();
+    for( final int weight : weights )
+    {
+      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); // $NON-NLS-1$ //$NON-NLS-1$
+    }
+
+    final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
+    settings.put( DIALOG_SASH_FORM_WEIGHTS, StringUtils.chop( buffer.toString() ) );
   }
 }
