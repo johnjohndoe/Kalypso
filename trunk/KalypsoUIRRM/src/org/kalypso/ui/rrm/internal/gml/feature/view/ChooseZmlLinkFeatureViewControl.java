@@ -72,6 +72,7 @@ import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.gml.feature.view.dialogs.ChooseTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypso.zml.ui.imports.ParameterTypeLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -118,7 +119,7 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
 
         if( Objects.isNull( workspace, collection ) )
         {
-          MessageDialog.openError( button.getShell(), Messages.getString("ChooseZmlLinkFeatureViewControl_0"), Messages.getString("ChooseZmlLinkFeatureViewControl_1") ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( button.getShell(), Messages.getString( "ChooseZmlLinkFeatureViewControl_0" ), Messages.getString( "ChooseZmlLinkFeatureViewControl_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
 
@@ -199,7 +200,7 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
 
     if( Objects.isNull( timeseries ) )
     {
-      m_text.setText( Messages.getString("ChooseZmlLinkFeatureViewControl_2") ); //$NON-NLS-1$
+      m_text.setText( Messages.getString( "ChooseZmlLinkFeatureViewControl_2" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -232,23 +233,24 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
 
     if( StringUtils.isNotEmpty( station ) )
     {
-      buffer.append( String.format( Messages.getString("ChooseZmlLinkFeatureViewControl_3"), station ) ); //$NON-NLS-1$
-    }
-
-    if( StringUtils.isNotEmpty( type ) )
-    {
-      buffer.append( String.format( Messages.getString("ChooseZmlLinkFeatureViewControl_4"), type ) ); //$NON-NLS-1$
+      buffer.append( String.format( Messages.getString( "ChooseZmlLinkFeatureViewControl_3" ), station ) ); //$NON-NLS-1$
     }
 
     if( Objects.isNotNull( timestep ) )
     {
       final String dateString = PeriodUtils.formatDefault( timestep );
-      buffer.append( String.format( Messages.getString("ChooseZmlLinkFeatureViewControl_5"), dateString ) ); //$NON-NLS-1$
+      buffer.append( String.format( Messages.getString( "ChooseZmlLinkFeatureViewControl_5" ), dateString ) ); //$NON-NLS-1$
     }
 
     if( StringUtils.isNotEmpty( quality ) )
     {
-      buffer.append( String.format( Messages.getString("ChooseZmlLinkFeatureViewControl_6"), quality ) ); //$NON-NLS-1$
+      buffer.append( String.format( Messages.getString( "ChooseZmlLinkFeatureViewControl_6" ), quality ) ); //$NON-NLS-1$
+    }
+
+    if( StringUtils.isNotEmpty( type ) )
+    {
+      final ParameterTypeLabelProvider provider = new ParameterTypeLabelProvider();
+      buffer.append( String.format( " (%s)", provider.getText( type ) ) );
     }
 
     return buffer.toString().trim();
