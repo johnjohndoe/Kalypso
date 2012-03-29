@@ -10,8 +10,10 @@
       <tm:parameterType>U</tm:parameterType>
       <tm:parameterType>v</tm:parameterType>
       <tm:parameterType>H</tm:parameterType>
-      <tm:parameterType>WIND_VELOCITY</tm:parameterType>
-      <tm:parameterType>SUNSHINE</tm:parameterType>
+      <tm:parameterType>MEAN_WIND_VELOCITY</tm:parameterType>
+      <tm:parameterType>MEAN_SUNSHINE</tm:parameterType>
+      <tm:parameterType>MEAN_TEMPERATURE</tm:parameterType>
+      <tm:parameterType>MEAN_HUMIDITY</tm:parameterType>
     </tm:StationClass>
   </tm:classMember>
   <tm:classMember>
