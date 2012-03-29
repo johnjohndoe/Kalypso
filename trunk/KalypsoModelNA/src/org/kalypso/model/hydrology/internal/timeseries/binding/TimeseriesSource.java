@@ -109,7 +109,7 @@ public class TimeseriesSource implements IZmlSourceElement
 
     final String timeseriesLabel = Timeserieses.getTreeLabel( m_timeseries );
 
-    return String.format( "%s - %s", stationName, timeseriesLabel );
+    return String.format( "%s\r\n%s", stationName, timeseriesLabel );
   }
 
   @Override
