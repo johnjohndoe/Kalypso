@@ -328,7 +328,8 @@ public class CatchmentModelVerifier
       catchments = loadModell( simulationFolder );
       tmpCatchments = loadModell( simulationTmpFolder );
 
-      /* Compare each catchments. */
+      /* Compare the catchments. */
+      /* Both lists must be in the same order, because the temporary one is a copy. */
       for( int i = 0; i < catchments.size(); i++ )
       {
         final Catchment catchment = catchments.get( i );
