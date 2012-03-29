@@ -66,10 +66,12 @@ public class UIRrmImages
     PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$
     PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
     PARAMETER_TYPE_TEMPERATURE("icons/timeseries/parameterType_T.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_SUNSHINE("icons/timeseries/parameterType_H.png"), //$NON-NLS-1$
     PARAMETER_TYPE_EVAPORATION("icons/timeseries/parameterType_E.png"), //$NON-NLS-1$
     PARAMETER_TYPE_HUMIDITY("icons/timeseries/parameterType_U.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_WIND_VELOCITY("icons/timeseries/parameterType_v.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_WIND_VELOCITY("icons/timeseries/parameterType_WIND_VELOCITY.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_WIND_VELOCITY2("icons/timeseries/parameterType_v.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_SUNSHINE("icons/timeseries/parameterType_SUNSHINE.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_SUNSHINE2("icons/timeseries/parameterType_H.png"), //$NON-NLS-1$
 
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
