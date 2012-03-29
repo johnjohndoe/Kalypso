@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -273,7 +274,11 @@ public class CatchmentModelsDuplicateEliminator
   private boolean compareGenerator( final ILinearSumGenerator usedGenerator, final ILinearSumGenerator generator )
   {
     /* Check the parameter type. */
-    if( !usedGenerator.getParameterType().equals( generator.getParameterType() ) )
+    if( !ObjectUtils.equals( usedGenerator.getParameterType(), generator.getParameterType() ) )
+      return false;
+
+    /* Check the timestep. */
+    if( !ObjectUtils.equals( usedGenerator.getTimestep(), generator.getTimestep() ) )
       return false;
 
     /* Get the catchments. */
