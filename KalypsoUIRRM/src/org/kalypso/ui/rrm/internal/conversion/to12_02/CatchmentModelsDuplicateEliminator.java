@@ -63,6 +63,7 @@ import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -169,9 +170,14 @@ public class CatchmentModelsDuplicateEliminator
       /* Adjust the logs. */
       collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The description of the generator '%s (%s)' was adjusted.", usedDescription, usedGenerator.getParameterType() ) ) );
 
-      /* The description of the one, which is used must be altered to reflect all CCs which use it now. */
-      final String newDescription = String.format( "%s, %s", usedDescription, description );
-      usedGenerator.setDescription( newDescription );
+      /* The comment of the one, which is used must be altered to reflect all CCs which use it now. */
+      final String usedComment = usedGenerator.getComment();
+      String newComment = null;
+      if( usedComment == null || usedComment.length() == 0 || usedComment.equals( Messages.getString( "CatchmentModelBuilder_0" ) ) )
+        newComment = String.format( "Used by simulations: %s", description );
+      else
+        newComment = String.format( "%s, %s", usedComment, description );
+      usedGenerator.setComment( newComment );
 
       return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, generator.getParameterType() ) );
     }
