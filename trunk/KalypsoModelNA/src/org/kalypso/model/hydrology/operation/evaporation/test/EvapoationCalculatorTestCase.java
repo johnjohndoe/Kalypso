@@ -43,18 +43,26 @@ package org.kalypso.model.hydrology.operation.evaporation.test;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.kalypso.model.hydrology.operation.evaporation.EvaporationCalculator;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
+import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * @author Dirk Kuch
  */
 public class EvapoationCalculatorTestCase
 {
-
   @Test
-  public void testEvaporationCalculator( )
+  public void testEvaporationCalculator( ) throws SensorException
   {
-    final EvaporationCalculator calculator = new EvaporationCalculator();
-    calculator.equals( new NullProgressMonitor() );
+    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_humidity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_sunshine.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_temperature.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
 
+    final EvaporationCalculator calculator = new EvaporationCalculator( humidity, sunshine, temperature, windVelocity );
+    calculator.equals( new NullProgressMonitor() );
   }
+
 }

@@ -40,22 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.evaporation;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
  * @author Dirk Kuch
  */
 public class EvaporationCalculator implements ICoreRunnableWithProgress
 {
+  private final ITimeseriesCache m_humidity;
+
+  private final ITimeseriesCache m_sunshine;
+
+  private final ITimeseriesCache m_temperature;
+
+  private final ITimeseriesCache m_windVelocity;
+
+  public EvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity )
+  {
+    m_humidity = humidity;
+    m_sunshine = sunshine;
+    m_temperature = temperature;
+    m_windVelocity = windVelocity;
+  }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor )
   {
+    new StatusCollector( ModelNA.PLUGIN_ID );
     System.out.println( "blub" );
     // TODO Auto-generated method stub
     return null;
