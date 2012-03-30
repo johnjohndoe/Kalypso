@@ -49,18 +49,37 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
+ * This composite shows the contents of the linear sum generator.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator>
 {
-  public LinearSumComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> bean, final IDataBinding binding, final boolean editable )
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @param featureBean
+   *          The feature bean.
+   * @param binding
+   *          The data binding.
+   * @param generalEditable
+   *          True, if the contents of the composite should be generally editable. False otherwise.
+   */
+  public LinearSumComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> featureBean, final IDataBinding binding, final boolean generalEditable )
   {
-    super( parent, bean, binding, editable );
+    super( parent, featureBean, binding, generalEditable );
   }
 
+  /**
+   * @see org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite#createContents()
+   */
   @Override
   protected void createContents( )
   {
+    /* Create the contents. */
     createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
     createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
     createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
@@ -68,15 +87,20 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
     createParameterTypeControl();
   }
 
+  /**
+   * This function creates the parameter type control.
+   */
   private void createParameterTypeControl( )
   {
+    /* Create the property label. */
     createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
 
-    final Text field = createPropertyTextField( this );
-
+    /* Get the parameter label. */
     final String parameterType = (String) getBean().getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
     final String parameterLabel = ParameterTypeUtils.formatParameterType( parameterType );
 
+    /* Create the property text field. */
+    final Text field = createPropertyTextField( this );
     field.setText( parameterLabel );
   }
 }

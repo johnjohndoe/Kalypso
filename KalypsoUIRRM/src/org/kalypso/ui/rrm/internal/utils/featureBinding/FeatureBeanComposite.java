@@ -125,31 +125,69 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     createContents();
   }
 
+  /**
+   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
+   */
   @Override
   public final void setLayout( final Layout layout )
   {
   }
 
-  protected final boolean isEditable( )
-  {
-    return m_generalEditable;
-  }
-
+  /**
+   * This function returns the feature bean.
+   * 
+   * @return The feature bean.
+   */
   protected final FeatureBean<F> getBean( )
   {
     return m_featureBean;
   }
 
+  /**
+   * This function returns the data binding.
+   * 
+   * @return The data binding.
+   */
   protected final IDataBinding getBinding( )
   {
     return m_binding;
   }
 
+  /**
+   * This function returns true, if the contents of the composite should be generally editable. False otherwise.
+   * 
+   * @return True, if the contents of the composite should be generally editable. False otherwise.
+   */
+  protected final boolean isEditable( )
+  {
+    return m_generalEditable;
+  }
+
+  /**
+   * This function returns the toolkit.
+   * 
+   * @return The toolkit.
+   */
   protected final FormToolkit getToolkit( )
   {
     return m_binding.getToolkit();
   }
 
+  /**
+   * Refresh the control from the state of the underlying feature.
+   */
+  public final void refresh( )
+  {
+    m_featureBean.revert();
+  }
+
+  /**
+   * This function creates the contents. <br/>
+   * <br/>
+   * <strong>HINT:</strong><br/>
+   * This function is called in the constructor of {@link FeatureBeanComposite}. So members in the child implementation
+   * will not be initialized.
+   */
   protected abstract void createContents( );
 
   /**
@@ -158,9 +196,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
    * @param property
    *          The qname of the property.
    * @param validators
-   *          validation of text box entries
-   * @return The text field, which is contained in the property control. Its editable state will be that of the
-   *         generalEditable flag, provided int the constructor.
+   *          The validators of text box entries.
+   * @return The text field, which is contained in the created property control. Its editable state will be that of the
+   *         generalEditable flag, provided in the constructor.
    */
   protected final Text createPropertyControl( final QName property, final IValidator... validators )
   {
@@ -172,7 +210,23 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final void createDateControl( final QName property, final IValidator... validators )
+  protected final ComboViewer createPropertyComboTextControl( final QName property, final String[] choices )
+  {
+    createPropertyLabel( this, property );
+
+    final ComboViewer viewer = createPropertyCombo( this, new LabelProvider(), true );
+    bindCombo( viewer, property );
+
+    viewer.setInput( choices );
+
+    final Object value = m_featureBean.getProperty( property );
+    if( Objects.isNotNull( value ) )
+      viewer.getCombo().setText( value.toString() );
+
+    return viewer;
+  }
+
+  protected final void createPropertyDateControl( final QName property )
   {
     int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
 
@@ -186,43 +240,6 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     dateTime.setEnabled( m_generalEditable );
 
     bindDateControl( dateTime, property );
-  }
-
-  /**
-   * This function creates a control, which allows the editing of the property specified by the qname.
-   * 
-   * @param property
-   *          The qname of the property.
-   * @param validators
-   *          validation of text box entries
-   * @return The text field, which is contained in the property control. Its editable state will be that of the
-   *         generalEditable flag, provided int the constructor.
-   */
-  protected final ComboViewer createPropertyComboTextControl( final QName property, final String[] choices, final IValidator... validators )
-  {
-    createPropertyLabel( this, property );
-
-    final ComboViewer viewer = createComboTextField( this, new LabelProvider(), true );
-    bindCombo( viewer, property );
-
-    viewer.setInput( choices );
-
-    final Object value = m_featureBean.getProperty( property );
-    if( Objects.isNotNull( value ) )
-    {
-// viewer.setSelection( new StructuredSelection( value ) );
-      viewer.getCombo().setText( value.toString() );
-    }
-
-    return viewer;
-  }
-
-  /**
-   * Refresh the control from the state of the underlying feature.
-   */
-  public final void refresh( )
-  {
-    m_featureBean.revert();
   }
 
   protected final void createPropertyLabel( final Composite parent, final QName property )
@@ -260,16 +277,15 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final ComboViewer createComboTextField( final Composite parent, final LabelProvider provider, final Boolean writeable )
+  protected final ComboViewer createPropertyCombo( final Composite parent, final LabelProvider provider, final Boolean writeable )
   {
     int style = SWT.BORDER | SWT.SINGLE;
-    if( !m_generalEditable && !writeable )
-      style &= SWT.READ_ONLY;
+    if( !m_generalEditable || !writeable )
+      style = style | SWT.READ_ONLY;
 
     final ComboViewer viewer = new ComboViewer( parent, style );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     viewer.getCombo().setEnabled( m_generalEditable );
-
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( provider );
 
