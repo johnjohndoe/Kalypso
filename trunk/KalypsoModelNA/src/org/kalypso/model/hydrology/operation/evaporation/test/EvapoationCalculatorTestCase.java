@@ -38,27 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.hydrology.operation.evaporation;
+package org.kalypso.model.hydrology.operation.evaporation.test;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Test;
+import org.kalypso.model.hydrology.operation.evaporation.EvaporationCalculator;
 
 /**
  * @author Dirk Kuch
  */
-public class EvaporationCalculator implements ICoreRunnableWithProgress
+public class EvapoationCalculatorTestCase
 {
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  @Test
+  public void testEvaporationCalculator( )
   {
-    System.out.println( "blub" );
-    // TODO Auto-generated method stub
-    return null;
-  }
+    final EvaporationCalculator calculator = new EvaporationCalculator();
+    calculator.equals( new NullProgressMonitor() );
 
+  }
 }
