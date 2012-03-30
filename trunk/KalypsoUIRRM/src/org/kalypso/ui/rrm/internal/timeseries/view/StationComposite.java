@@ -122,8 +122,8 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
   private void createDateControl( )
   {
-    createDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
-    createDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
+    createPropertyDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
+    createPropertyDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
   }
 
   private String[] findGroups( final IStation base )

@@ -54,66 +54,96 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
+ * This composite shows the contents of the linear sum generator.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenerator>
 {
+  /**
+   * All allowed parameter types.
+   */
   private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE, ITimeseriesConstants.TYPE_EVAPORATION };
 
-  private final boolean m_commentEditable;
+  /**
+   * The text field of the comments.
+   */
+  private Text m_commentText;
 
-  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> bean, final IDataBinding binding, final boolean commentEditable )
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @param featureBean
+   *          The feature bean.
+   * @param binding
+   *          The data binding.
+   * @param commentEditable
+   *          True, if the comment should be editable. False otherwise.
+   */
+  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> featureBean, final IDataBinding binding, final boolean commentEditable )
   {
-    super( parent, bean, binding, true );
+    super( parent, featureBean, binding, true );
 
-    m_commentEditable = commentEditable;
+    /* The function createContents() was called by the super constructor. */
+    /* So all GUI was already created, if the execution reaches here. */
+    /* Override the general editable state. */
+    m_commentText.setEditable( commentEditable );
+    m_commentText.setEnabled( commentEditable );
   }
 
+  /**
+   * @see org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite#createContents()
+   */
   @Override
   protected void createContents( )
   {
+    /* Create the contents. */
     createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
-
-    /* Create a property control for the comment. */
-    final Text commentText = createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
-
-    /* Override the general editable state. */
-    commentText.setEditable( m_commentEditable );
-    commentText.setEnabled( m_commentEditable );
-
+    m_commentText = createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
     createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
     createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
     createParameterTypeControl();
   }
 
+  /**
+   * This function creates the parameter type control.
+   */
   private void createParameterTypeControl( )
   {
+    /* Create the property label. */
     createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
 
-    final LinkedHashMap<String, String> allowedValues = new LinkedHashMap<String, String>();
+    /* Get the parameter labels. */
+    final LinkedHashMap<String, String> allowedParameterLabels = new LinkedHashMap<String, String>();
     for( final String allowedParameterType : ALLOWED_PARAMETER_TYPES )
     {
       final String allowedParameterLabel = ParameterTypeUtils.formatParameterType( allowedParameterType );
-      allowedValues.put( allowedParameterType, allowedParameterLabel );
+      allowedParameterLabels.put( allowedParameterType, allowedParameterLabel );
     }
 
-    final ComboViewer comboViewer = createComboTextField( this, new LabelProvider()
+    /* Create the property combo viewer. */
+    final ComboViewer comboViewer = createPropertyCombo( this, new LabelProvider()
     {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
       @Override
       public String getText( final Object element )
       {
         if( element instanceof String )
-        {
-          return allowedValues.get( element );
-        }
+          return allowedParameterLabels.get( element );
 
         return super.getText( element );
       }
     }, false );
 
+    /* Set the input. */
+    comboViewer.setInput( allowedParameterLabels.keySet().toArray() );
+
+    /* Bind the combo viewer. */
     bindCombo( comboViewer, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
-
-    comboViewer.setInput( allowedValues.keySet().toArray() );
-
   }
 }
