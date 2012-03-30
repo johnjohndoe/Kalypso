@@ -2,7 +2,7 @@
   <Help>NONE</Help>
   <Name>KalypsoHydrology-Workflow</Name>
 
-  <Task URI="org.kalypso.model.rrm.timeseriesManagement" context="TimeseriesManagementContext" />
+  <Task URI="org.kalypso.model.rrm.timeseriesManagement" context="TimeseriesManagementContext_extContext1" />
 
   <TaskGroup URI="org.kalypso.model.rrm.parameterDefinition">
     <Task URI="org.kalypso.model.rrm.snowDefinition" context="ParameterDefinition_Snow" />

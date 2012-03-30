@@ -216,7 +216,7 @@
 
     <!-- mean humidity -->
     <DataColumn editable="true" id="MEAN_HUMIDITY" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Tages-Luftfeuchte</property>
+      <property name="label">Mittlere Luftfeuchte</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
@@ -230,11 +230,11 @@
       <indexAxis>date</indexAxis>
       <valueAxis>MEAN_HUMIDITY</valueAxis>
     </DataColumn>
-    
-    
+
+
     <!-- mean sunshine hours -->
     <DataColumn editable="true" id="MEAN_SUNSHINE" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Tages-Sonnenscheindauer</property>
+      <property name="label">Mittlere Sonnenscheindauer</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
@@ -248,10 +248,10 @@
       <indexAxis>date</indexAxis>
       <valueAxis>MEAN_SUNSHINE</valueAxis>
     </DataColumn>
-    
+
     <!-- mean temperature -->
     <DataColumn editable="true" id="MEAN_TEMPERATURE" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Tages-Temperatur</property>
+      <property name="label">Mittlere Temperatur</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
@@ -265,10 +265,10 @@
       <indexAxis>date</indexAxis>
       <valueAxis>MEAN_TEMPERATURE</valueAxis>
     </DataColumn>
-    
+
     <!-- mean wind velocity -->
     <DataColumn editable="true" id="MEAN_WIND_VELOCITY" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Tages-Windgeschwindigkeit</property>
+      <property name="label">Mittlere Windgeschwindigkeit</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
@@ -283,6 +283,40 @@
       <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
     </DataColumn>
 
+
+    <!-- mean rainfall -->
+    <DataColumn editable="true" id="MEAN_RAINFALL" metadataSource="true" tooltip="true" wrapText="true">
+      <property name="label">Mittlerer Niederschlag</property>
+      <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
+    </DataColumn>
+
+    <!-- mean evaporation -->
+    <DataColumn editable="true" id="MEAN_EVAPORATION" metadataSource="true" tooltip="true" wrapText="true">
+      <property name="label">Mittlere Verdunstung</property>
+      <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
+    </DataColumn>
 
   </Columns>
 </ZmlTable>
