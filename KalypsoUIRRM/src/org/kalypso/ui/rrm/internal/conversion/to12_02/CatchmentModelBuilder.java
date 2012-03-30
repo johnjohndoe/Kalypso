@@ -44,11 +44,14 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.LocalTime;
 import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -110,27 +113,36 @@ public class CatchmentModelBuilder
     generator.setAreaNamePath( new GMLXPath( NaModell.QN_NAME ) );
     generator.setAreaDescriptionPath( new GMLXPath( NaModell.QN_DESCRIPTION ) );
 
-    /* Add catchments */
-    // very big period, so everything is smaller
+    /* Very big period, so everything is smaller. */
     final MutablePeriod smallestPeriod = Period.days( 10000 ).toMutablePeriod();
+
+    /* Memory for the timestamps. */
+    final Map<LocalTime, Integer> timestamps = new HashMap<LocalTime, Integer>();
+
+    /* Add catchments */
     final IFeatureBindingCollection<Catchment> catchments = m_naModel.getCatchments();
     for( final Catchment catchment : catchments )
     {
-      final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod );
+      final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod, timestamps );
       m_log.add( status );
     }
 
-    /* Use the smallest period of all involved timeseries as timestep for the generator */
+    /* Use the smallest period of all involved timeseries as timestep for the generator. */
     final int timestepMinutes = smallestPeriod.toPeriod().toStandardMinutes().getMinutes();
     if( timestepMinutes > 0 )
       generator.setTimestep( timestepMinutes );
+
+    /* Set the timestamp. */
+    final LocalTime timestamp = findMostUsedTimestamp( timestamps );
+    if( timestamp != null )
+      generator.setTimeStamp( timestamp );
 
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String message = String.format( Messages.getString( "CatchmentModelBuilder_1" ), parameterName ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( message, message );
   }
 
-  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep )
+  private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep, final Map<LocalTime, Integer> timestamps )
   {
     final ZmlLink modelTargetLink = new ZmlLink( modelCatchment, modelTimeseriesLink );
 
@@ -147,6 +159,7 @@ public class CatchmentModelBuilder
     final IStatus guessStatus = timeseriesGuesser.execute();
     final String timeseriesPath = timeseriesGuesser.getResult();
     final Period timestep = timeseriesGuesser.getResultTimestep();
+    final LocalTime timestamp = timeseriesGuesser.getResultTimestamp();
 
     if( !StringUtils.isBlank( timeseriesPath ) )
     {
@@ -163,7 +176,37 @@ public class CatchmentModelBuilder
         smallestTimestep.setPeriod( timestep );
     }
 
+    if( timestamp != null )
+    {
+      final Integer number = timestamps.get( timestamp );
+      if( number != null )
+        timestamps.put( timestamp, new Integer( number.intValue() + 1 ) );
+      else
+        timestamps.put( timestamp, new Integer( 1 ) );
+    }
+
     return guessStatus;
+  }
+
+  private LocalTime findMostUsedTimestamp( final Map<LocalTime, Integer> timestamps )
+  {
+    LocalTime timestamp = null;
+    int number = 0;
+
+    final Set<Entry<LocalTime, Integer>> entrySet = timestamps.entrySet();
+    for( final Entry<LocalTime, Integer> entry : entrySet )
+    {
+      final LocalTime key = entry.getKey();
+      final Integer value = entry.getValue();
+
+      if( value.intValue() > number )
+      {
+        timestamp = key;
+        number = value.intValue();
+      }
+    }
+
+    return timestamp;
   }
 
   public String getGeneratorPath( final String parameterType )

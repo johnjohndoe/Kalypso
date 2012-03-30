@@ -41,11 +41,12 @@
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import org.eclipse.core.runtime.IPath;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
 
 /**
  * Entry of the {@link TimeseriesIndex}.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesIndexEntry
@@ -58,12 +59,15 @@ public class TimeseriesIndexEntry
 
   private final IPath m_relativeSourcePath;
 
-  public TimeseriesIndexEntry( final IPath relativeSourcePath, final String href, final String parameterType, final Period timestep )
+  private final LocalTime m_timestamp;
+
+  public TimeseriesIndexEntry( final IPath relativeSourcePath, final String href, final String parameterType, final Period timestep, final LocalTime timestamp )
   {
     m_relativeSourcePath = relativeSourcePath;
     m_href = href;
     m_parameterType = parameterType;
     m_timestep = timestep;
+    m_timestamp = timestamp;
   }
 
   public String getSourceFilename( )
@@ -84,6 +88,11 @@ public class TimeseriesIndexEntry
   public Period getTimestep( )
   {
     return m_timestep;
+  }
+
+  public LocalTime getTimestamp( )
+  {
+    return m_timestamp;
   }
 
   public String getOldProjectRelativePath( )
