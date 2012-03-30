@@ -62,9 +62,9 @@ public class UIRrmImages
     STATION_HYDROLOGICAL("icons/timeseries/station_hydrological.png"), //$NON-NLS-1$
 
     PARAMETER_TYPE_BASE("icons/timeseries/parameterType"), //$NON-NLS-1$
-    PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_WATERLEVEL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
     PARAMETER_TYPE_DISCHARGE("icons/timeseries/parameterType_Q.png"), //$NON-NLS-1$
-    PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_W.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_RAINFALL("icons/timeseries/parameterType_N.png"), //$NON-NLS-1$
     PARAMETER_TYPE_TEMPERATURE("icons/timeseries/parameterType_T.png"), //$NON-NLS-1$
     PARAMETER_TYPE_EVAPORATION("icons/timeseries/parameterType_E.png"), //$NON-NLS-1$
     PARAMETER_TYPE_HUMIDITY("icons/timeseries/parameterType_U.png"), //$NON-NLS-1$
@@ -74,6 +74,8 @@ public class UIRrmImages
     PARAMETER_TYPE_MEAN_SUNSHINE("icons/timeseries/parameterType_MEAN_SUNSHINE.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_WIND_VELOCITY("icons/timeseries/parameterType_MEAN_WIND_VELOCITY.png"), //$NON-NLS-1$
     PARAMETER_TYPE_MEAN_HUMIDITY("icons/timeseries/parameterType_MEAN_HUMIDITY.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_MEAN_EVAPORATION("icons/timeseries/parameterType_MEAN_EVAPORATION.png"), //$NON-NLS-1$
+    PARAMETER_TYPE_MEAN_RAINFALL("icons/timeseries/parameterType_MEAN_RAINFALL.png"), //$NON-NLS-1$
 
     TIMESERIES("icons/timeseries/timeseries.png"), //$NON-NLS-1$
     TIMESERIES_EXTEND("icons/timeseries/extend.png"), //$NON-NLS-1$
