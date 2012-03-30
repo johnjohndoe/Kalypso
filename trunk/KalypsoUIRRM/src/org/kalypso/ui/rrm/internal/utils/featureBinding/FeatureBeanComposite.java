@@ -210,7 +210,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final ComboViewer createPropertyComboTextControl( final QName property, final String[] choices )
+  protected final ComboViewer createPropertyComboTextControl( final QName property, final String[] choices, final IValidator... validators )
   {
     createPropertyLabel( this, property );
 
@@ -226,7 +226,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return viewer;
   }
 
-  protected final void createPropertyDateControl( final QName property )
+  protected final void createPropertyDateControl( final QName property, final IValidator... validators )
   {
     int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
 
