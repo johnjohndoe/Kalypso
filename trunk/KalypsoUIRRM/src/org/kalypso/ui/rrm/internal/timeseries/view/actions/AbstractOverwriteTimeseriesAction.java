@@ -89,8 +89,8 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     /* Prepare data */
     final ImportObservationData data = prepareData();
     final ITimeseries timeseries = showWizard( shell, data );
-
-    m_model.refreshTree( timeseries );
+    if( timeseries != null )
+      m_model.refreshTree( timeseries );
 
   }
 
