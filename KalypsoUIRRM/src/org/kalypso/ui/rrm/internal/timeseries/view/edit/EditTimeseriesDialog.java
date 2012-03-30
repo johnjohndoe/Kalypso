@@ -180,7 +180,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     if( weights == null || weights.trim().isEmpty() )
       return new int[] { 64, 40 };
 
-    final String[] parts = weights.split( "," ); // $NON-NLS-1$ //$NON-NLS-1$
+    final String[] parts = weights.split( "," ); //$NON-NLS-1$ //$NON-NLS-1$
     final int[] w = new int[parts.length];
 
     for( int i = 0; i < parts.length; i++ )
@@ -196,7 +196,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     final StringBuffer buffer = new StringBuffer();
     for( final int weight : weights )
     {
-      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); // $NON-NLS-1$ //$NON-NLS-1$
+      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); //$NON-NLS-1$ //$NON-NLS-1$
     }
 
     final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();

@@ -62,6 +62,8 @@ public class EvaporationCalculator implements ICoreRunnableWithProgress
 
   public EvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity )
   {
+    // TODO daterange from /to
+
     m_humidity = humidity;
     m_sunshine = sunshine;
     m_temperature = temperature;
