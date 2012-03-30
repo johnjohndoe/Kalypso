@@ -50,8 +50,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -215,13 +213,14 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     createPropertyLabel( this, property );
 
     final ComboViewer viewer = createPropertyCombo( this, new LabelProvider(), true );
-    bindCombo( viewer, property );
-
-    viewer.setInput( choices );
 
     final Object value = m_featureBean.getProperty( property );
     if( Objects.isNotNull( value ) )
       viewer.getCombo().setText( value.toString() );
+
+    viewer.setInput( choices );
+
+    bindCombo( viewer, property, validators );
 
     return viewer;
   }
@@ -316,13 +315,15 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     }
   }
 
-  protected final void bindCombo( final ComboViewer viewer, final QName property )
+  protected final void bindCombo( final ComboViewer viewer, final QName property, final IValidator... validators )
   {
-    final IViewerObservableValue target = ViewersObservables.observeSingleSelection( viewer );
+    final ISWTObservableValue target = SWTObservables.observeText( viewer.getControl() );
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
 
-    final DataBinder binder = new DataBinder( target, model );
-    m_binding.bindValue( binder );
+    if( ArrayUtils.isNotEmpty( validators ) )
+      m_binding.bindValue( target, model, validators );
+    else
+      m_binding.bindValue( new DataBinder( target, model ) );
   }
 
   protected final void bindDateControl( final DateTime control, final QName property )
