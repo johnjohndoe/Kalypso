@@ -45,6 +45,7 @@ import java.io.File;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -54,7 +55,7 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * Helper the guesses the catchment timeserties from the former referenced timeseries.
- *
+ * 
  * @author Gernot Belger
  */
 public class CatchmentTimeseriesGuesser
@@ -92,6 +93,14 @@ public class CatchmentTimeseriesGuesser
     return m_result.getTimestep();
   }
 
+  public LocalTime getResultTimestamp( )
+  {
+    if( m_result == null )
+      return null;
+
+    return m_result.getTimestamp();
+  }
+
   public IStatus execute( )
   {
     if( validateTargetLink() )
@@ -100,12 +109,12 @@ public class CatchmentTimeseriesGuesser
     if( m_result != null )
     {
       final String href = m_result.getHref();
-      m_log.add( IStatus.OK, Messages.getString("CatchmentTimeseriesGuesser_0"), null, href ); //$NON-NLS-1$
+      m_log.add( IStatus.OK, Messages.getString( "CatchmentTimeseriesGuesser_0" ), null, href ); //$NON-NLS-1$
     }
 
     // TODO: validate: check if values of existing timeseries correspond to guessed timeseries
 
-    final String message = String.format( Messages.getString("CatchmentTimeseriesGuesser_1"), m_modelTargetLink.getFeature().getName() ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "CatchmentTimeseriesGuesser_1" ), m_modelTargetLink.getFeature().getName() ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( message, message );
   }
 
@@ -113,14 +122,14 @@ public class CatchmentTimeseriesGuesser
   {
     if( !m_modelTargetLink.isLinkSet() )
     {
-      final String message = String.format( Messages.getString("CatchmentTimeseriesGuesser_2") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CatchmentTimeseriesGuesser_2" ) ); //$NON-NLS-1$
       m_log.add( IStatus.WARNING, message );
       return false;
     }
 
     if( !m_modelTargetLink.isLinkExisting() )
     {
-      final String message = String.format( Messages.getString("CatchmentTimeseriesGuesser_3") ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CatchmentTimeseriesGuesser_3" ) ); //$NON-NLS-1$
       m_log.add( IStatus.WARNING, message );
     }
 
@@ -154,13 +163,13 @@ public class CatchmentTimeseriesGuesser
 
   private TimeseriesIndexEntry guessByFilename( )
   {
-    m_log.add( IStatus.INFO, Messages.getString("CatchmentTimeseriesGuesser_4") ); //$NON-NLS-1$
+    m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_4" ) ); //$NON-NLS-1$
 
     final String existingTimeseriesFilename = findExistingFilename();
 
     if( StringUtils.isBlank( existingTimeseriesFilename ) )
     {
-      m_log.add( IStatus.WARNING, Messages.getString("CatchmentTimeseriesGuesser_5") ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_5" ) ); //$NON-NLS-1$
       return null;
     }
 
@@ -173,7 +182,7 @@ public class CatchmentTimeseriesGuesser
   {
     if( ArrayUtils.isEmpty( infos ) )
     {
-      m_log.add( IStatus.WARNING, Messages.getString("CatchmentTimeseriesGuesser_6") ); //$NON-NLS-1$
+      m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_6" ) ); //$NON-NLS-1$
       return null;
     }
 
@@ -186,12 +195,12 @@ public class CatchmentTimeseriesGuesser
       if( parameterType.equals( m_parameterType ) )
       {
         // TODO: also use timestep to determine best guess; find all infos with same type
-        m_log.add( IStatus.INFO, Messages.getString("CatchmentTimeseriesGuesser_7") ); //$NON-NLS-1$
+        m_log.add( IStatus.INFO, Messages.getString( "CatchmentTimeseriesGuesser_7" ) ); //$NON-NLS-1$
         return info;
       }
     }
 
-    m_log.add( IStatus.WARNING, Messages.getString("CatchmentTimeseriesGuesser_8"), null, m_parameterType ); //$NON-NLS-1$
+    m_log.add( IStatus.WARNING, Messages.getString( "CatchmentTimeseriesGuesser_8" ), null, m_parameterType ); //$NON-NLS-1$
 
     return null;
   }

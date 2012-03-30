@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -224,7 +225,16 @@ public class TimeseriesImporter
 
     final ITupleModel values = observation.getValues( null );
 
+    /* Guess the timestep. */
     final Period timestep = TimeseriesUtils.guessTimestep( values );
+
+    /* The timestamp is only relevant for day values. */
+    LocalTime timestamp = null;
+    if( timestep.toStandardMinutes().getMinutes() == 1440 )
+    {
+      final TimestampGuesser guesser = new TimestampGuesser( values, -1 );
+      timestamp = guesser.execute();
+    }
 
     /* Assign station and timeseries parameters */
     final String stationDescription = baseName;
@@ -252,7 +262,7 @@ public class TimeseriesImporter
     final IPath sourcePath = new Path( zmlFile.getAbsolutePath() );
     final IPath relativeSourcePath = sourcePath.makeRelativeTo( sourceDirPath );
 
-    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep );
+    final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
   }
 
