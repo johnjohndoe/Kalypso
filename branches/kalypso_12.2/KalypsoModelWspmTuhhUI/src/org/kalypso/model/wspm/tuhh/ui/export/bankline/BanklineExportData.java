@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -73,6 +74,12 @@ public class BanklineExportData extends AbstractModelObject
 
   public static final String PROPERTY_MARKER_CHOOSER = "markerChooser"; //$NON-NLS-1$
 
+  public static final String PROPERTY_DENSIFY_ENABLED = "densifyEnabled"; //$NON-NLS-1$
+
+  public static final String PROPERTY_DENSIFY_DISTANCE = "densifyDistance"; //$NON-NLS-1$
+
+  private static double DENSIFY_DISTANCE_DEFAULT = 10.0;
+
   private final Collection<Feature> m_exportableElements = new ArrayList<>();
 
   private final IBanklineMarkerProvider[] m_availableMarkerChoosers = m_banklineMarkerProviderFactory.getAvailableProviders();
@@ -89,6 +96,10 @@ public class BanklineExportData extends AbstractModelObject
 
   private IBanklineMarkerProvider m_markerChooser = m_availableMarkerChoosers[0];
 
+  private boolean m_densifyEnabled = false;
+
+  private double m_densifyDistance = DENSIFY_DISTANCE_DEFAULT;
+
   public void init( final IDialogSettings settings, final IStructuredSelection selection )
   {
     if( settings == null )
@@ -101,8 +112,10 @@ public class BanklineExportData extends AbstractModelObject
     final String chooserId = settings.get( PROPERTY_MARKER_CHOOSER );
     if( !StringUtils.isBlank( chooserId ) )
       m_markerChooser = m_banklineMarkerProviderFactory.getProvider( chooserId );
-  }
 
+    m_densifyEnabled = settings.getBoolean( PROPERTY_DENSIFY_ENABLED );
+    m_densifyDistance = NumberUtils.toDouble( settings.get( PROPERTY_DENSIFY_DISTANCE ), DENSIFY_DISTANCE_DEFAULT );
+  }
 
   public void storeSettings( final IDialogSettings settings )
   {
@@ -110,6 +123,8 @@ public class BanklineExportData extends AbstractModelObject
       return;
 
     settings.put( PROPERTY_MARKER_CHOOSER, m_markerChooser.getId() );
+    settings.put( PROPERTY_DENSIFY_ENABLED, m_densifyEnabled );
+    settings.put( PROPERTY_DENSIFY_DISTANCE, m_densifyDistance );
   }
 
   private void findExportableElements( final IStructuredSelection selection )
@@ -238,5 +253,33 @@ public class BanklineExportData extends AbstractModelObject
     m_markerChooser = markerChooser;
 
     firePropertyChange( PROPERTY_MARKER_CHOOSER, oldValue, markerChooser );
+  }
+
+  public boolean getDensifyEnabled( )
+  {
+    return m_densifyEnabled;
+  }
+
+  public void setDensifyEnabled( final boolean densifyEnabled )
+  {
+    final boolean oldValue = m_densifyEnabled;
+
+    m_densifyEnabled = densifyEnabled;
+
+    firePropertyChange( PROPERTY_DENSIFY_ENABLED, oldValue, densifyEnabled );
+  }
+
+  public double getDensifyDistance( )
+  {
+    return m_densifyDistance;
+  }
+
+  public void setDensifyDistance( final double densifyDistance )
+  {
+    final double oldVal = m_densifyDistance;
+
+    m_densifyDistance = densifyDistance;
+
+    firePropertyChange( PROPERTY_DENSIFY_DISTANCE, oldVal, densifyDistance );
   }
 }

@@ -100,6 +100,8 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
   private final IBanklineMarkerProvider m_markerProvider;
 
+  private final double m_densifyDistance;
+
   public BanklineExportShapeWorker( final BanklineExportData data )
   {
     final Charset charset = data.getExportCharset();
@@ -111,6 +113,11 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
     m_simpleShapeData = new SimpleShapeData( charset, srs, ShapeType.POLYGON, fields );
     m_exportableElements = data.getExportableElements();
     m_markerProvider = data.getMarkerChooser();
+
+    if( data.getDensifyEnabled() )
+      m_densifyDistance = data.getDensifyDistance();
+    else
+      m_densifyDistance = Double.NaN;
   }
 
   private static IDBFField[] createFields( )
@@ -120,11 +127,11 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
       final Collection<IDBFField> fields = new ArrayList<>();
 
       // TODO: get length from available data
-      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_0"), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
-      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_1"), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
-      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_2"), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
-      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_3"), FieldType.C, FIELD_LENGTH_TYPE, (short) 0 ) ); //$NON-NLS-1$
-      fields.add( new DBFField( Messages.getString("BanklineExportShapeWorker_4"), FieldType.C, FIELD_LENGTH_STATUS, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString( "BanklineExportShapeWorker_0" ), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString( "BanklineExportShapeWorker_1" ), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString( "BanklineExportShapeWorker_2" ), FieldType.C, FIELD_LENGTH_NAME, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString( "BanklineExportShapeWorker_3" ), FieldType.C, FIELD_LENGTH_TYPE, (short) 0 ) ); //$NON-NLS-1$
+      fields.add( new DBFField( Messages.getString( "BanklineExportShapeWorker_4" ), FieldType.C, FIELD_LENGTH_STATUS, (short) 0 ) ); //$NON-NLS-1$
 
       return fields.toArray( new IDBFField[fields.size()] );
     }
@@ -145,7 +152,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
   {
     final Feature[] flatElements = flattenExportableElements();
 
-    monitor.beginTask( Messages.getString("BanklineExportShapeWorker_5"), flatElements.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "BanklineExportShapeWorker_5" ), flatElements.length ); //$NON-NLS-1$
 
     for( int i = 0; i < flatElements.length; i++ )
     {
@@ -167,7 +174,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
         throw new OperationCanceledException();
     }
 
-    final String message = Messages.getString("BanklineExportShapeWorker_9"); //$NON-NLS-1$
+    final String message = Messages.getString( "BanklineExportShapeWorker_9" ); //$NON-NLS-1$
     return m_log.asMultiStatus( message );
   }
 
@@ -190,7 +197,7 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
         flatElements.add( feature );
       else
       {
-        final String message = String.format( Messages.getString("BanklineExportShapeWorker_10"), feature.getFeatureType().getQName() ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "BanklineExportShapeWorker_10" ), feature.getFeatureType().getQName() ); //$NON-NLS-1$
         m_log.add( IStatus.ERROR, message );
       }
     }
@@ -200,12 +207,12 @@ public class BanklineExportShapeWorker implements ICoreRunnableWithProgress
 
   private void addData( final Feature element, final IProgressMonitor monitor ) throws ShapeDataException, GM_Exception
   {
-    monitor.beginTask( Messages.getString("BanklineExportShapeWorker_11"), 1 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "BanklineExportShapeWorker_11" ), 1 ); //$NON-NLS-1$
 
     // The built geometries are in Kalypso-SRS, because the geometries are derived from the wspm-workspace
     final String kalypsoSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final BanklineBuilder exporter = new BanklineBuilder( element, m_markerProvider );
+    final BanklineBuilder exporter = new BanklineBuilder( element, m_markerProvider, m_densifyDistance );
 
     final IStatus status = exporter.execute( monitor );
     if( !status.isOK() )

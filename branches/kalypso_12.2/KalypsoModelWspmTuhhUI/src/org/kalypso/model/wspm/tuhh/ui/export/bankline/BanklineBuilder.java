@@ -47,7 +47,6 @@ import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -62,8 +61,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.densify.Densifier;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;
@@ -72,7 +69,7 @@ import com.vividsolutions.jts.geom.LineString;
  * Builds banklines from a {@link org.kalypso.model.wspm.core.gml.WspmWaterBody} or a
  * {@link org.kalypso.model.wspm.tuhh.core.gml.TuhhReach} using the centerline of the water body and the markers of the
  * involved cross sections.
- * 
+ *
  * @author Gernot Belger
  */
 public class BanklineBuilder implements ICoreRunnableWithProgress
@@ -83,10 +80,17 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
   private final IBanklineMarkerProvider m_markerProvider;
 
-  public BanklineBuilder( final Feature waterOrReach, final IBanklineMarkerProvider markerProvider )
+  private final double m_densifyDistance;
+
+  /**
+   * @param If
+   *          set to non {@link Double#NaN}, the river line will be densified with this distance.
+   */
+  public BanklineBuilder( final Feature waterOrReach, final IBanklineMarkerProvider markerProvider, final double densifyDistance )
   {
     m_waterOrReach = waterOrReach;
     m_markerProvider = markerProvider;
+    m_densifyDistance = densifyDistance;
   }
 
   @Override
@@ -118,13 +122,7 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     {
       final LineString riverLine = (LineString) JTSAdapter.export( centerLine );
 
-      // REMARK: very slow and produces many unnecessary points
-      // TODO: maybe let user decide if the line should be densified
-// final LineString denseRiverLine = riverLine;
-      final LineString denseRiverLine = (LineString) Densifier.densify( riverLine, 5 );
-
-      // REMARK: our own method is buggy and produces later NaN-coordinates
-      // final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
+      final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
 
       return buildBankLines( denseRiverLine, profiles, water.isDirectionUpstreams() );
     }
@@ -222,33 +220,41 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
     return m_mainChannel;
   }
 
-  private LineString densifyRiverLine( final LineString riverLine, final IProfileFeature[] profiles ) throws GM_Exception
+  private LineString densifyRiverLine( final LineString riverLine, @SuppressWarnings("unused") final IProfileFeature[] profiles )
   {
+    if( Double.isNaN( m_densifyDistance ) )
+      return riverLine;
+
+    return (LineString) Densifier.densify( riverLine, m_densifyDistance );
+
+    // FIXME: we should also / alternatively add the intersewction points between river line and profile
+    // but our own method is buggy and produces later NaN-coordinates
+
     // FIXME looking for an effective way to insert the intersection points...
 
-    final CoordinateList intersectionPoints = new CoordinateList();
-    for( final IProfileFeature profileFeature : profiles )
-    {
-      final GM_Curve line = profileFeature.getLine();
-      final Geometry crossSection = JTSAdapter.export( line );
-      if( crossSection != null )
-      {
-        final Geometry intersection = riverLine.intersection( crossSection );
-        final Coordinate[] coordinates = intersection.getCoordinates();
-
-        for( final Coordinate coordinate : coordinates )
-        {
-          if( Double.isNaN( coordinate.x ) )
-          {
-            System.out.println( "soso" ); //$NON-NLS-1$
-          }
-        }
-
-        intersectionPoints.add( coordinates, false );
-      }
-    }
-
-    return JTSUtilities.addPointsToLine( riverLine, intersectionPoints.toCoordinateArray() );
+// final CoordinateList intersectionPoints = new CoordinateList();
+// for( final IProfileFeature profileFeature : profiles )
+// {
+// final GM_Curve line = profileFeature.getLine();
+// final Geometry crossSection = JTSAdapter.export( line );
+// if( crossSection != null )
+// {
+// final Geometry intersection = riverLine.intersection( crossSection );
+// final Coordinate[] coordinates = intersection.getCoordinates();
+//
+// for( final Coordinate coordinate : coordinates )
+// {
+// if( Double.isNaN( coordinate.x ) )
+// {
+//            System.out.println( "soso" ); //$NON-NLS-1$
+// }
+// }
+//
+// intersectionPoints.add( coordinates, false );
+// }
+// }
+//
+// return JTSUtilities.addPointsToLine( riverLine, intersectionPoints.toCoordinateArray() );
   }
 
   private Geometry buildVariableBuffer( final LineString riverLine, final IProfileFeature[] profiles, final IStatusCollector log, final boolean flowDirection )
