@@ -76,7 +76,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
     // createPropertyControl( Timeseries.QN_DESCRIPTION );
     // createPropertyControl( Timeseries.QN_NAME );
     createParameterTypeControl();
-    createPropertyControl( ITimeseries.PROPERTY_QUALITY );
+    createPropertyTextFieldControl( ITimeseries.PROPERTY_QUALITY );
 
     createTimestepControl();
 

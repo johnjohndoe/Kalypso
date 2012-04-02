@@ -64,7 +64,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
   /**
    * All allowed parameter types.
    */
-  private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE, ITimeseriesConstants.TYPE_EVAPORATION };
+  private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, ITimeseriesConstants.TYPE_MEAN_EVAPORATION };
 
   /**
    * The text field of the comments.
@@ -101,10 +101,10 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
   protected void createContents( )
   {
     /* Create the contents. */
-    createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
-    m_commentText = createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
-    createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
-    createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
+    createPropertyTextFieldControl( ILinearSumGenerator.QN_DESCRIPTION );
+    m_commentText = createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_COMMENT );
+    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
+    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
     createParameterTypeControl();
   }
 

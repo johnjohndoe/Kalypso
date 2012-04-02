@@ -147,14 +147,14 @@ public class UpdateSimulationWorker
     ProgressUtilities.worked( monitor, 20 );
 
     /* Copy observations for pegel and zufluss */
-    copyMappingTimeseries( control, "ObsQMapping.gml", Messages.getString("UpdateSimulationWorker.0"), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    copyMappingTimeseries( control, "ObsQZuMapping.gml", Messages.getString("UpdateSimulationWorker.1"), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    copyMappingTimeseries( control, "ObsEMapping.gml", Messages.getString("UpdateSimulationWorker.2"), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    copyMappingTimeseries( control, "ObsQMapping.gml", Messages.getString( "UpdateSimulationWorker.0" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    copyMappingTimeseries( control, "ObsQZuMapping.gml", Messages.getString( "UpdateSimulationWorker.1" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    copyMappingTimeseries( control, "ObsEMapping.gml", Messages.getString( "UpdateSimulationWorker.2" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Execute catchment models */
     executeCatchmentModel( control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
-    executeCatchmentModel( control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
-    executeCatchmentModel( control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
+    executeCatchmentModel( control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
 
     /* Copy initial condition from long term simulation */
     copyInitialCondition( control );
@@ -347,7 +347,7 @@ public class UpdateSimulationWorker
     final int amount = PeriodUtils.findCalendarAmount( timestep );
 
     /* Add a source filter. */
-    if( ITimeseriesConstants.TYPE_TEMPERATURE.equals( parameterType ) )
+    if( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE.equals( parameterType ) )
       generator.addInterpolationFilter( calendarField, amount, true, "0.0", 0 ); //$NON-NLS-1$
     else
       generator.addIntervalFilter( calendarField, amount, 0.0, 0 );
@@ -427,11 +427,11 @@ public class UpdateSimulationWorker
     switch( parameterType )
     {
       case ITimeseriesConstants.TYPE_RAINFALL:
-        return Messages.getString("UpdateSimulationWorker.3"); // TODO i18n; en = 'Precipitation' //$NON-NLS-1$
+        return Messages.getString( "UpdateSimulationWorker.3" ); // TODO i18n; en = 'Precipitation' //$NON-NLS-1$
 
-      case ITimeseriesConstants.TYPE_TEMPERATURE:
-      case ITimeseriesConstants.TYPE_EVAPORATION:
-        return Messages.getString("UpdateSimulationWorker.4"); // TODO i18n; en = 'Climate' //$NON-NLS-1$
+      case ITimeseriesConstants.TYPE_MEAN_TEMPERATURE:
+      case ITimeseriesConstants.TYPE_MEAN_EVAPORATION:
+        return Messages.getString( "UpdateSimulationWorker.4" ); // TODO i18n; en = 'Climate' //$NON-NLS-1$
     }
 
     throw new IllegalArgumentException();

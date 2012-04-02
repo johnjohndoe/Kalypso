@@ -80,10 +80,10 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
   protected void createContents( )
   {
     /* Create the contents. */
-    createPropertyControl( ILinearSumGenerator.QN_DESCRIPTION );
-    createPropertyControl( ILinearSumGenerator.PROPERTY_COMMENT );
-    createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
-    createPropertyControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
+    createPropertyTextFieldControl( ILinearSumGenerator.QN_DESCRIPTION );
+    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_COMMENT );
+    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
+    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
     createParameterTypeControl();
   }
 

@@ -44,6 +44,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
@@ -68,9 +74,12 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.UpdateSimulationWorker;
@@ -401,24 +410,76 @@ public class CatchmentModelVerifier
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     /* Load the timeseries. */
+    /* The time zone may be different to that of the newly generated timeseries. */
     final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
     final IObservation observation = ZmlFactory.parseXML( location );
+    final TimeZone timeZone = MetadataHelper.getTimeZone( observation.getMetadataList(), "UTC" ); //$NON-NLS-1$
 
     /* Load the temporary timeseries. */
+    /* The time zone may be different to that of the original timeseries. */
     final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
     final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
+    final TimeZone tmpTimeZone = MetadataHelper.getTimeZone( tmpObservation.getMetadataList(), "UTC" ); //$NON-NLS-1$
 
     /* Get the values of both timeseries. */
     final ITupleModel values = observation.getValues( null );
     final ITupleModel tmpValues = tmpObservation.getValues( null );
-    if( values.size() != tmpValues.size() )
+
+    /* Build a hash date->value for the old timeseries. */
+    final Map<Long, Double> hash = buildHash( values, timeZone );
+
+    /* Build a hash date->value for the new timeseries. */
+    final Map<Long, Double> tmpHash = buildHash( tmpValues, tmpTimeZone );
+
+    /* Loop through the new hash. */
+    int differences = 0;
+    for( final Entry<Long, Double> tmpEntry : tmpHash.entrySet() )
     {
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The size of the values will change." ) );
-      return collector.asMultiStatus( timeseriesType );
+      /* Get the key and the value of the new timeseries. */
+      final Long tmpKey = tmpEntry.getKey();
+      final Double tmpValue = tmpEntry.getValue();
+
+      /* Get the value of the old timeseries. */
+      final Double value = hash.get( tmpKey );
+
+      /* Compare the values of the new timeseries with the ones in the old timeseries. */
+      if( value == null || Math.abs( tmpValue.doubleValue() - value.doubleValue() ) > 0.01 )
+        differences++;
     }
 
-    // TODO
+    /* Calculate the procentual difference. */
+    if( differences > 0 )
+    {
+      final int percent = (differences * 100) / tmpHash.size();
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( "The new timeseries' values differ by %d%% (%d differences).", percent, differences ) ) );
+    }
 
     return collector.asMultiStatus( timeseriesType );
+  }
+
+  private Map<Long, Double> buildHash( final ITupleModel values, final TimeZone timeZone ) throws SensorException
+  {
+    /* Memory for the hash. */
+    final Map<Long, Double> hash = new LinkedHashMap<Long, Double>();
+
+    /* Find the needed axes. */
+    final IAxis[] axes = values.getAxes();
+    final IAxis dateAxis = AxisUtils.findDateAxis( axes );
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, false );
+    final IAxis valueAxis = valueAxes[0];
+
+    /* Store each date->value pair. */
+    for( int i = 0; i < values.size(); i++ )
+    {
+      final Date date = (Date) values.get( i, dateAxis );
+      final Double value = (Double) values.get( i, valueAxis );
+
+      final Calendar calendar = Calendar.getInstance( timeZone );
+      calendar.setTime( date );
+
+      hash.put( new Long( calendar.getTimeInMillis() ), value );
+    }
+
+    return hash;
   }
 }

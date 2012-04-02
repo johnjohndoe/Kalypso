@@ -97,20 +97,20 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
 
-    createPropertyControl( IStation.QN_DESCRIPTION, validator ); // -> folder name
-    createPropertyControl( IStation.QN_NAME );
+    createPropertyTextFieldControl( IStation.QN_DESCRIPTION, validator ); // -> folder name
+    createPropertyTextFieldControl( IStation.QN_NAME );
     createPropertyComboTextControl( IStation.PROPERTY_GROUP, findGroups( station ) );
-    createPropertyControl( IStation.PROPERTY_COMMENT );
+    createPropertyTextFieldControl( IStation.PROPERTY_COMMENT );
 
     createLocationControl();
 
     if( station instanceof IHydrologicalStation )
     {
-      createPropertyControl( IHydrologicalStation.PROPERTY_GAUGE_ZERO );
+      createPropertyTextFieldControl( IHydrologicalStation.PROPERTY_GAUGE_ZERO );
     }
     else if( station instanceof IMeteorologicalStation )
     {
-      createPropertyControl( IMeteorologicalStation.PROPERTY_ALTITUDE );
+      createPropertyTextFieldControl( IMeteorologicalStation.PROPERTY_ALTITUDE );
     }
 
     createDateControl();
@@ -122,8 +122,8 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
   private void createDateControl( )
   {
-    createPropertyDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
-    createPropertyDateControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
+    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
+    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
   }
 
   private String[] findGroups( final IStation base )
