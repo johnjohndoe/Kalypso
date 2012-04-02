@@ -168,13 +168,13 @@ public class CatchmentModelsDuplicateEliminator
       adjustDataFiles( usedGenerator, description );
 
       /* Adjust the logs. */
-      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The description of the generator '%s (%s)' was adjusted.", usedDescription, usedGenerator.getParameterType() ) ) );
+      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The comment of the generator '%s (%s)' was adjusted.", usedDescription, usedGenerator.getParameterType() ) ) );
 
       /* The comment of the one, which is used must be altered to reflect all CCs which use it now. */
       final String usedComment = usedGenerator.getComment();
       String newComment = null;
       if( usedComment == null || usedComment.length() == 0 || usedComment.equals( Messages.getString( "CatchmentModelBuilder_0" ) ) )
-        newComment = String.format( "Used by simulations: %s", description );
+        newComment = String.format( "Used by simulations: %s, %s", usedDescription, description );
       else
         newComment = String.format( "%s, %s", usedComment, description );
       usedGenerator.setComment( newComment );

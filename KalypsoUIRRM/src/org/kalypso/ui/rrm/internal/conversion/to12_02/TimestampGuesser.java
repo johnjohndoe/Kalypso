@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.joda.time.LocalTime;
 import org.kalypso.ogc.sensor.IAxis;
@@ -70,6 +71,11 @@ public class TimestampGuesser
   private final ITupleModel m_timeseries;
 
   /**
+   * The timezone of the timeseries.
+   */
+  private final TimeZone m_timeZone;
+
+  /**
    * The number of test steps. -1, if the entire timeseries should be tested.
    */
   private final int m_testSteps;
@@ -79,12 +85,15 @@ public class TimestampGuesser
    * 
    * @param timeseries
    *          The tuple model of a timeseries.
+   * @param timezone
+   *          The timezone of the timeseries.
    * @param testSteps
    *          The number of test steps. -1, if the entire timeseries should be tested.
    */
-  public TimestampGuesser( final ITupleModel timeseries, final int testSteps )
+  public TimestampGuesser( final ITupleModel timeseries, final TimeZone timeZone, final int testSteps )
   {
     m_timeseries = timeseries;
+    m_timeZone = timeZone;
     m_testSteps = testSteps;
   }
 
@@ -102,7 +111,7 @@ public class TimestampGuesser
     for( int i = 0; i < testSteps; i++ )
     {
       final Date date = (Date) m_timeseries.get( i, dateAxis );
-      final Calendar calendar = Calendar.getInstance();
+      final Calendar calendar = Calendar.getInstance( m_timeZone );
       calendar.setTime( date );
 
       final LocalTime timestamp = new LocalTime( calendar.get( Calendar.HOUR_OF_DAY ), calendar.get( Calendar.MINUTE ) );

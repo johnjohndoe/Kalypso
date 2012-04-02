@@ -50,6 +50,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -198,7 +200,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
    * @return The text field, which is contained in the created property control. Its editable state will be that of the
    *         generalEditable flag, provided in the constructor.
    */
-  protected final Text createPropertyControl( final QName property, final IValidator... validators )
+  protected final Text createPropertyTextFieldControl( final QName property, final IValidator... validators )
   {
     createPropertyLabel( this, property );
 
@@ -206,6 +208,16 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     bindTextField( field, property, validators );
 
     return field;
+  }
+
+  protected final DateTime createPropertyDateTimeControl( final QName property, final IValidator... validators )
+  {
+    createPropertyLabel( this, property );
+
+    final DateTime dateTime = createPropertyDateTime( this );
+    bindDateTime( dateTime, property );
+
+    return dateTime;
   }
 
   protected final ComboViewer createPropertyComboTextControl( final QName property, final String[] choices, final IValidator... validators )
@@ -220,25 +232,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
 
     viewer.setInput( choices );
 
-    bindCombo( viewer, property, validators );
+    bindComboText( viewer, property, validators );
 
     return viewer;
-  }
-
-  protected final void createPropertyDateControl( final QName property, final IValidator... validators )
-  {
-    int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
-
-    if( !m_generalEditable )
-      style &= SWT.READ_ONLY;
-
-    createPropertyLabel( this, property );
-
-    final DateTime dateTime = new DateTime( this, style );
-    dateTime.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    dateTime.setEnabled( m_generalEditable );
-
-    bindDateControl( dateTime, property );
   }
 
   protected final void createPropertyLabel( final Composite parent, final QName property )
@@ -274,6 +270,19 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     field.setEnabled( m_generalEditable );
 
     return field;
+  }
+
+  protected final DateTime createPropertyDateTime( final Composite parent )
+  {
+    int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
+    if( !m_generalEditable )
+      style &= SWT.READ_ONLY;
+
+    final DateTime dateTime = new DateTime( parent, style );
+    dateTime.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    dateTime.setEnabled( m_generalEditable );
+
+    return dateTime;
   }
 
   protected final ComboViewer createPropertyCombo( final Composite parent, final LabelProvider provider, final Boolean writeable )
@@ -315,18 +324,7 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     }
   }
 
-  protected final void bindCombo( final ComboViewer viewer, final QName property, final IValidator... validators )
-  {
-    final ISWTObservableValue target = SWTObservables.observeText( viewer.getControl() );
-    final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
-
-    if( ArrayUtils.isNotEmpty( validators ) )
-      m_binding.bindValue( target, model, validators );
-    else
-      m_binding.bindValue( new DataBinder( target, model ) );
-  }
-
-  protected final void bindDateControl( final DateTime control, final QName property )
+  protected final void bindDateTime( final DateTime control, final QName property )
   {
     final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
 
@@ -340,5 +338,25 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     binder.setTargetToModelConverter( new DateTimeTargetToModelConverter() );
 
     m_binding.bindValue( binder );
+  }
+
+  protected final void bindCombo( final ComboViewer viewer, final QName property )
+  {
+    final IViewerObservableValue target = ViewersObservables.observeSingleSelection( viewer );
+    final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
+
+    final DataBinder binder = new DataBinder( target, model );
+    m_binding.bindValue( binder );
+  }
+
+  protected final void bindComboText( final ComboViewer viewer, final QName property, final IValidator... validators )
+  {
+    final ISWTObservableValue target = SWTObservables.observeText( viewer.getControl() );
+    final IObservableValue model = new FeatureBeanObservableValue( m_featureBean, property );
+
+    if( ArrayUtils.isNotEmpty( validators ) )
+      m_binding.bindValue( target, model, validators );
+    else
+      m_binding.bindValue( new DataBinder( target, model ) );
   }
 }

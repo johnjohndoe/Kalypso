@@ -59,6 +59,6 @@ public class TimeseriesNewComposite extends FeatureBeanComposite<ITimeseries>
   @Override
   protected void createContents( )
   {
-    createPropertyControl( ITimeseries.PROPERTY_QUALITY );
+    createPropertyTextFieldControl( ITimeseries.PROPERTY_QUALITY );
   }
 }
