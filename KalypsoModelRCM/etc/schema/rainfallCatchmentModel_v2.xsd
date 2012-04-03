@@ -241,4 +241,24 @@
   <simpleType name="dateOrPattern">
     <union memberTypes="dateTime string" />
   </simpleType>
+
+  <!-- MultiGenerator Element & Type -->
+  <element name="MultiGenerator" substitutionGroup="rcm:RainfallGenerator">
+    <complexType>
+      <complexContent>
+        <extension base="rcm:RainfallGeneratorType">
+          <sequence>
+            <element name="subGeneratorMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="rcm:RainfallGenerator" minOccurs="0" maxOccurs="0" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
 </schema>
