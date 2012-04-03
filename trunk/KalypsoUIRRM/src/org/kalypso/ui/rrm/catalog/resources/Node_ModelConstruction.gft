@@ -113,12 +113,18 @@
     <label property="rrm:zuflussZR" style="SWT.NONE" visible="true">
         <gridData verticalAlignment="SWT.CENTER" horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
     </label>
-  
     <extensioncontrol style="SWT.SEARCH" property="rrm:zuflussZR" extension-id="ChooseZmlLinkControlFactory">
-      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="1" />
+      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="2" />
       <param name="parameterType" value="Q" />
     </extensioncontrol>
-    
+
+    <checkbox property="rrm:syntheticZuflussZR" style="SWT.NONE">
+      <gridData horizontalAlignment="SWT.FILL" horizontalSpan="1" grabExcessHorizontalSpace="false" />
+    </checkbox>
+    <label style="SWT.NONE"/>
+    <validatorlabel property="rrm:syntheticZuflussZR" style="SWT.NONE" visible="true">
+      <gridData horizontalAlignment="SWT.BEGINNING" grabExcessHorizontalSpace="false" />
+    </validatorlabel>
   </group>
 
   <group style="SWT.NONE" text="%modelConstruction.gft.group.net">
