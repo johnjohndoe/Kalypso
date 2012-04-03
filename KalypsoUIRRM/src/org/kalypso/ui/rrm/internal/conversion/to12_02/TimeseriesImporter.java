@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
@@ -71,8 +70,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -226,24 +223,12 @@ public class TimeseriesImporter
     final String parameterType = valueAxis.getType();
 
     final ITupleModel values = observation.getValues( null );
-    final MetadataList metadata = observation.getMetadataList();
 
     /* Guess the timestep. */
     final Period timestep = TimeseriesUtils.guessTimestep( values );
 
     /* The timestamp is only relevant for day values. */
-    LocalTime timestamp = null;
-    if( timestep.toStandardMinutes().getMinutes() == 1440 )
-    {
-      /* Determine the time zone of the original timeseries. */
-      /* The ZML parser does it the same way. */
-      final TimeZone timeZone = MetadataHelper.getTimeZone( metadata, "UTC" ); //$NON-NLS-1$
-
-      /* Guess the timestamp of the original timeseries. */
-      /* It will be in the same time zone. */
-      final TimestampGuesser guesser = new TimestampGuesser( values, timeZone, -1 );
-      timestamp = guesser.execute();
-    }
+    final LocalTime timestamp = TimeseriesUtils.guessTimestamp( values, timestep );
 
     /* Assign station and timeseries parameters. */
     final String stationDescription = baseName;
@@ -262,7 +247,7 @@ public class TimeseriesImporter
     /* We write the file from the read observation (instead of copy) */
     /* in order to compress the data and add status and source axes (now required). */
     final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
-    final IObservation observationWithSource = cleanupWorker.convert( newTimeseries.getTimestep() );
+    final IObservation observationWithSource = cleanupWorker.convert( newTimeseries.getTimestep(), timestamp );
 
     /* Save the observation. */
     dataLink.saveObservation( observationWithSource );

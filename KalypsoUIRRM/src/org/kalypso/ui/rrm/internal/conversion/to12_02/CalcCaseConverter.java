@@ -141,7 +141,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     fixTimeseriesLinks( naModel, getLog() );
     getLog().add( IStatus.INFO, Messages.getString( "CalcCaseConverter.4" ) ); //$NON-NLS-1$
 
-    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
+    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, newControl );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
@@ -359,7 +359,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     log.add( status );
   }
 
-  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel )
+  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel, final NAControl newControl )
   {
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     if( catchmentModel == null )

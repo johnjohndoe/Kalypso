@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.binding;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.tokenreplace.IStringResolver;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -55,6 +59,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
+ * The base implementation of the rainfall generator.
+ * 
  * @author Gernot Belger
  */
 public abstract class AbstractRainfallGenerator extends Feature_Impl implements IRainfallGenerator
@@ -62,11 +68,27 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   /**
    * Filters, which will be applied to the source timeseries.
    */
-  private final FeatureBindingCollection<IZmlFilter> m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
+  private final FeatureBindingCollection<IZmlFilter> m_filters;
 
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent.
+   * @param parentRelation
+   *          The parent relation.
+   * @param ft
+   *          The feature type.
+   * @param id
+   *          The id.
+   * @param propValues
+   *          The property values.
+   */
   protected AbstractRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    m_filters = new FeatureBindingCollection<IZmlFilter>( this, IZmlFilter.class, MEMBER_FILTER, true );
   }
 
   @Override
@@ -106,6 +128,36 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
       return new String[] {};
 
     return StringUtils.split( property, ";" );
+  }
+
+  @Override
+  public Date getValidFrom( )
+  {
+    /* Get the property. */
+    final XMLGregorianCalendar validFrom = getProperty( PROPERTY_VALID_FROM, XMLGregorianCalendar.class );
+
+    return DateUtilities.toDate( validFrom );
+  }
+
+  @Override
+  public void setValidFrom( final Date validFrom )
+  {
+    setProperty( PROPERTY_VALID_FROM, DateUtilities.toXMLGregorianCalendar( validFrom ) );
+  }
+
+  @Override
+  public Date getValidTo( )
+  {
+    /* Get the property. */
+    final XMLGregorianCalendar validTo = getProperty( PROPERTY_VALID_TO, XMLGregorianCalendar.class );
+
+    return DateUtilities.toDate( validTo );
+  }
+
+  @Override
+  public void setValidTo( final Date validTo )
+  {
+    setProperty( PROPERTY_VALID_TO, DateUtilities.toXMLGregorianCalendar( validTo ) );
   }
 
   @Override

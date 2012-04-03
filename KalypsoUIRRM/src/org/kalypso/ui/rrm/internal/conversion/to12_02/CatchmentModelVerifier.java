@@ -44,12 +44,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
@@ -78,7 +76,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -413,23 +410,21 @@ public class CatchmentModelVerifier
     /* The time zone may be different to that of the newly generated timeseries. */
     final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
     final IObservation observation = ZmlFactory.parseXML( location );
-    final TimeZone timeZone = MetadataHelper.getTimeZone( observation.getMetadataList(), "UTC" ); //$NON-NLS-1$
 
     /* Load the temporary timeseries. */
     /* The time zone may be different to that of the original timeseries. */
     final URL tmpLocation = UrlResolverSingleton.resolveUrl( tmpContext, tmpLink.getHref() );
     final IObservation tmpObservation = ZmlFactory.parseXML( tmpLocation );
-    final TimeZone tmpTimeZone = MetadataHelper.getTimeZone( tmpObservation.getMetadataList(), "UTC" ); //$NON-NLS-1$
 
     /* Get the values of both timeseries. */
     final ITupleModel values = observation.getValues( null );
     final ITupleModel tmpValues = tmpObservation.getValues( null );
 
     /* Build a hash date->value for the old timeseries. */
-    final Map<Long, Double> hash = buildHash( values, timeZone );
+    final Map<Long, Double> hash = buildHash( values );
 
     /* Build a hash date->value for the new timeseries. */
-    final Map<Long, Double> tmpHash = buildHash( tmpValues, tmpTimeZone );
+    final Map<Long, Double> tmpHash = buildHash( tmpValues );
 
     /* Loop through the new hash. */
     int differences = 0;
@@ -443,6 +438,7 @@ public class CatchmentModelVerifier
       final Double value = hash.get( tmpKey );
 
       /* Compare the values of the new timeseries with the ones in the old timeseries. */
+      // TODO 0.01 different with other datatypes?
       if( value == null || Math.abs( tmpValue.doubleValue() - value.doubleValue() ) > 0.01 )
         differences++;
     }
@@ -457,7 +453,7 @@ public class CatchmentModelVerifier
     return collector.asMultiStatus( timeseriesType );
   }
 
-  private Map<Long, Double> buildHash( final ITupleModel values, final TimeZone timeZone ) throws SensorException
+  private Map<Long, Double> buildHash( final ITupleModel values ) throws SensorException
   {
     /* Memory for the hash. */
     final Map<Long, Double> hash = new LinkedHashMap<Long, Double>();
@@ -474,10 +470,7 @@ public class CatchmentModelVerifier
       final Date date = (Date) values.get( i, dateAxis );
       final Double value = (Double) values.get( i, valueAxis );
 
-      final Calendar calendar = Calendar.getInstance( timeZone );
-      calendar.setTime( date );
-
-      hash.put( new Long( calendar.getTimeInMillis() ), value );
+      hash.put( new Long( date.getTime() ), value );
     }
 
     return hash;
