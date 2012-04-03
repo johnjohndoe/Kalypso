@@ -210,6 +210,9 @@ public class ResultTimeseriesLoader
    */
   private MetadataList getMetadata( final Feature resultFeature ) throws SensorException
   {
+    // TODO: this is mainly needed for hwv; we could use the naoptimize-schema instead and copy the data during creation
+// of the official result timeseries.
+
     // TODO: read every input timeseries (again) to get the metadata. Better: keep metadata from pre-processing instead.
     if( resultFeature instanceof Node )
     {
