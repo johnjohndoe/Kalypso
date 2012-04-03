@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
@@ -78,7 +79,7 @@ public class TimeseriesImportWorker
     m_observation = observation;
   }
 
-  public IObservation convert( final Period period ) throws CoreException
+  public IObservation convert( final Period period, final LocalTime timestamp ) throws CoreException
   {
     try
     {
@@ -112,6 +113,10 @@ public class TimeseriesImportWorker
         final FIELD field = PeriodUtils.findCalendarField( period );
         MetadataHelper.setTimestep( resultObservation.getMetadataList(), field.getField(), amount );
       }
+
+      /* Set timestamp. */
+      if( timestamp != null )
+        MetadataHelper.setTimestamp( resultObservation.getMetadataList(), timestamp );
 
       return resultObservation;
     }

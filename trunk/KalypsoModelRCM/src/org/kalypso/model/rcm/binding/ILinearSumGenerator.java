@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * The linear sum generator.
- *
+ * 
  * @author Holger Albert
  */
 public interface ILinearSumGenerator extends IRainfallGenerator
@@ -62,60 +62,80 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   /**
    * The qname of the comment.
    */
-  QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" );//$NON-NLS-1$
+  QName PROPERTY_COMMENT = new QName( RcmConstants.NS_CM, "comment" ); // $NON-NLS-1$
 
   /**
    * The qname of the timestep.
    */
-  QName PROPERTY_TIMESTEP = new QName( RcmConstants.NS_CM, "timestep" );//$NON-NLS-1$
+  QName PROPERTY_TIMESTEP = new QName( RcmConstants.NS_CM, "timestep" ); // $NON-NLS-1$
 
-  QName PROPERTY_TIMESTAMP = new QName( RcmConstants.NS_CM, "timestamp" );//$NON-NLS-1$
+  /**
+   * The qname of the timestamp.
+   */
+  QName PROPERTY_TIMESTAMP = new QName( RcmConstants.NS_CM, "timestamp" ); // $NON-NLS-1$
 
   /**
    * The qname of the area name property.
    */
-  QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" );//$NON-NLS-1$
+  QName PROPERTY_AREA_NAME = new QName( RcmConstants.NS_CM, "areaNameProperty" ); // $NON-NLS-1$
 
   /**
    * The qname of the area description property.
    */
-  QName PROPERTY_AREA_DESCRIPTION = new QName( RcmConstants.NS_CM, "areaDescriptionProperty" );//$NON-NLS-1$
+  QName PROPERTY_AREA_DESCRIPTION = new QName( RcmConstants.NS_CM, "areaDescriptionProperty" ); // $NON-NLS-1$
 
   /**
    * The qname of the area property.
    */
-  QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" );//$NON-NLS-1$
+  QName PROPERTY_AREA = new QName( RcmConstants.NS_CM, "areaProperty" ); // $NON-NLS-1$
 
   /**
    * The qname of the catchment member.
    */
-  QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" );//$NON-NLS-1$
+  QName MEMBER_CATCHMENT = new QName( RcmConstants.NS_CM, "catchmentMember" ); // $NON-NLS-1$
 
   /**
    * This function returns the comment.
-   *
+   * 
    * @return The comment.
    */
   String getComment( );
 
+  /**
+   * This function sets the comment.
+   * 
+   * @param comment
+   *          The comment.
+   */
   void setComment( String comment );
 
   /**
    * This function returns the timestep.
-   *
+   * 
    * @return The timestep.
    */
   Integer getTimestep( );
 
+  /**
+   * This function sets the timestep.
+   * 
+   * @param timestep
+   *          The timestep.
+   */
   void setTimestep( Integer timestep );
 
   /**
-   * Timestamp for daily values.
+   * This function returns the timestamp for daily values.
+   * 
+   * @return The timestamp for daily values.
    */
   LocalTime getTimeStamp( );
 
   /**
-   * Set the timestamp for daily values.
+   * This function sets the timestamp for daily values.
+   * 
+   * @param timestamp
+   *          The timestamp.
    */
   void setTimeStamp( LocalTime timestamp );
 
@@ -126,29 +146,47 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    */
   GMLXPath getAreaNamePath( );
 
+  /**
+   * This function sets the area name property.
+   * 
+   * @param path
+   *          The area name property.
+   */
   void setAreaNamePath( GMLXPath path );
 
   /**
    * This function returns the area description property.
-   *
+   * 
    * @return The area description property.
    */
   GMLXPath getAreaDescriptionPath( );
 
+  /**
+   * This function sets the area description property.
+   * 
+   * @param path
+   *          The area description property.
+   */
   void setAreaDescriptionPath( GMLXPath path );
 
   /**
    * This function returns the area property.
-   *
+   * 
    * @return The area property.
    */
   GMLXPath getAreaPath( );
 
+  /**
+   * This function sets the area property.
+   * 
+   * @param path
+   *          The area property.
+   */
   void setAreaPath( GMLXPath path );
 
   /**
    * This function returns all catchments.
-   *
+   * 
    * @return All catchments.
    */
   IFeatureBindingCollection<ICatchment> getCatchments( );

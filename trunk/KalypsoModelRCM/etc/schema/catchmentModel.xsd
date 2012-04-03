@@ -13,11 +13,9 @@
       <extension base="rcm:RainfallGeneratorType">
         <sequence>
           <element name="comment" type="string" minOccurs="1" maxOccurs="1" />
-          
           <element name="timestep" type="int" minOccurs="0" maxOccurs="1" />
           <!-- Experimental: timestamp for daily values (string of form hh:mm) -->
           <element name="timestamp" type="string" minOccurs="0" maxOccurs="1" />
-          
           <element name="areaNameProperty" type="string" minOccurs="1" maxOccurs="1" />
           <element name="areaDescriptionProperty" type="string" minOccurs="0" maxOccurs="1" />
           <element name="areaProperty" type="string" minOccurs="1" maxOccurs="1" />

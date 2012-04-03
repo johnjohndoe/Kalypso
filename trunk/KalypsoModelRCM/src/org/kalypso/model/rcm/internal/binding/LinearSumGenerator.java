@@ -54,12 +54,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.joda.time.DateTimeZone;
+import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalTime;
-import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.joda.time.format.DateTimeFormatterBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
@@ -83,8 +81,25 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class LinearSumGenerator extends AbstractRainfallGenerator implements ILinearSumGenerator
 {
+  /**
+   * The catchments.
+   */
   private final IFeatureBindingCollection<ICatchment> m_catchments;
 
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent.
+   * @param parentRelation
+   *          The parent relation.
+   * @param ft
+   *          The feature type.
+   * @param id
+   *          The id.
+   * @param propValues
+   *          The property values.
+   */
   public LinearSumGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -93,9 +108,17 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   /**
+   * This function calculates the catchment model.
+   * 
    * @param catchmentFeatures
    *          The catchment features will be taken from the generator itself, so they are not needed here. Leave them
    *          <code>null</code>.
+   * @param range
+   *          The date range.
+   * @param log
+   *          The log.
+   * @param monitor
+   *          A progress monitor.
    */
   @Override
   public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
@@ -104,14 +127,14 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
-    /* Get the catchments. */
-    final List<ICatchment> catchments = getCatchments();
-
-    /* HINT: Keep in mind, that the results must match the order of the catchments array. */
-    final IObservation[] results = new IObservation[catchments.size()];
-
     try
     {
+      /* Get the catchments. */
+      final List<ICatchment> catchments = getCatchments();
+
+      /* HINT: Keep in mind, that the results must match the order of the catchments array. */
+      final IObservation[] results = new IObservation[catchments.size()];
+
       /* Monitor. */
       monitor.beginTask( String.format( "Generiere Zeitreihen für %d Gebiete...", catchments.size() ), catchments.size() * 200 );
       monitor.subTask( "Generiere Zeitreihen..." );
@@ -126,12 +149,10 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       {
         /* Get the catchment. */
         final ICatchment catchment = catchments.get( i );
-
-        // TODO Schöner als die Zahl wäre der Name/Beschreibung des Catchments (über die catchment property).
-        // TODO Zusätzlich: Auch die Gesamtanzahl wäre schön.
+        final String description = catchment.getDescription();
 
         /* Generate the message 1. */
-        final String message1 = String.format( "Sammle gewichtete Zeitreihen zur Erzeugung von Zeitreihe %d...", i + 1 );
+        final String message1 = String.format( "Sammle gewichtete Zeitreihen zur Erzeugung von Zeitreihe %d zu Gebiet '%s'...", i + 1, description );
 
         /* Monitor. */
         monitor.subTask( message1 );
@@ -179,7 +200,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
         }
 
         /* Generate the message 2. */
-        final String message2 = String.format( "Erzeuge Zeitreihe %d mit %d gewichteten Zeitreihen...", i + 1, factors.size() );
+        final String message2 = String.format( "Erzeuge Zeitreihe %d zu Gebiet '%s' mit %d gewichteten Zeitreihen...", i + 1, description, factors.size() );
 
         /* Monitor. */
         monitor.worked( 100 );
@@ -242,6 +263,42 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   @Override
+  public LocalTime getTimeStamp( )
+  {
+    final String timestampText = getProperty( PROPERTY_TIMESTAMP, String.class );
+    if( StringUtils.isBlank( timestampText ) )
+      return null;
+
+    try
+    {
+      final DateTimeFormatterBuilder bt = new DateTimeFormatterBuilder();
+      bt.appendFixedDecimal( DateTimeFieldType.hourOfDay(), 2 );
+      bt.appendLiteral( ':' ); // $NON-NLS-1$
+      bt.appendFixedDecimal( DateTimeFieldType.minuteOfHour(), 2 );
+      bt.appendLiteral( '.' ); // $NON-NLS-1$
+      bt.appendTimeZoneOffset( "Z", false, 2, 2 ); // $NON-NLS-1$
+
+      final DateTimeFormatter formatter = bt.toFormatter();
+      return formatter.parseLocalTime( timestampText );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Override
+  public void setTimeStamp( final LocalTime timestamp )
+  {
+    // TODO Check: Is zone correctly considered?
+    if( timestamp == null )
+      setProperty( PROPERTY_TIMESTAMP, null );
+    else
+      setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm.Z" ) ); //$NON-NLS-1$
+  }
+
+  @Override
   public GMLXPath getAreaNamePath( )
   {
     return getPath( PROPERTY_AREA_NAME );
@@ -298,41 +355,5 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   public IFeatureBindingCollection<ICatchment> getCatchments( )
   {
     return m_catchments;
-  }
-
-  @Override
-  public LocalTime getTimeStamp( )
-  {
-    final String timestampText = getProperty( PROPERTY_TIMESTAMP, String.class );
-    if( StringUtils.isBlank( timestampText ) )
-      return null;
-
-    try
-    {
-      final DateTimeZone zone = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-      final DateTimeFormatter parser = ISODateTimeFormat.localTimeParser().withZone( zone );
-      final LocalTime utcTime = parser.parseLocalTime( timestampText );
-
-      final int offset = zone.getOffset( utcTime.toDateTimeToday().getMillis() );
-
-      final Period offsetPeriod = Period.millis( offset ).normalizedStandard();
-
-      return utcTime.plus( offsetPeriod );
-    }
-    catch( final IllegalArgumentException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  @Override
-  public void setTimeStamp( final LocalTime timestamp )
-  {
-    // TODO Check: Is zone correctly considered?
-    if( timestamp == null )
-      setProperty( PROPERTY_TIMESTAMP, null );
-    else
-      setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm" ) ); //$NON-NLS-1$
   }
 }

@@ -114,6 +114,8 @@
               </sequence>
             </complexType>
           </element>
+          <element name="validFrom" type="dateTime" minOccurs="0" maxOccurs="1" />
+          <element name="validTo" type="dateTime" minOccurs="0" maxOccurs="1" />
           <element name="parameterType" type="string" minOccurs="0" maxOccurs="1">
             <annotation>
               <documentation xml:lang="en"><![CDATA[The type of timeseries (i.e. rainfall, temperature, ...) this generator is producing.]]></documentation>

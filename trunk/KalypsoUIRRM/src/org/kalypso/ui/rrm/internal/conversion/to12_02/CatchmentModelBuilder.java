@@ -82,11 +82,11 @@ public class CatchmentModelBuilder
 
   private final Map<String, String> m_generatorIds = new HashMap<>();
 
+  private final NaModell m_naModel;
+
   private final ICatchmentModel m_catchmentModel;
 
   private final File m_simulationDir;
-
-  private final NaModell m_naModel;
 
   private final TimeseriesIndex m_timeseriesIndex;
 
