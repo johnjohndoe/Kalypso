@@ -68,9 +68,10 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
 
   public static final String PREFIX_RASTER_DATA_MODEL = "krrdm"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
+  public static final String NS_RASTER_COMMONS = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"; //$NON-NLS-1$
+
+  public static final String PREFIX_RASTER_COMMONS = "kr_common"; //$NON-NLS-1$
+
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
@@ -82,6 +83,8 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
     prefixes.put( NS_VECTOR_DATA_MODEL, PREFIX_VECTOR_DATA_MODEL );
     catalog.put( NS_RASTER_DATA_MODEL, myClass.getResource( "schemata/RasterDataModel.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_RASTER_DATA_MODEL, PREFIX_RASTER_DATA_MODEL );
+    catalog.put( NS_RASTER_COMMONS, myClass.getResource( "schemata/Common.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_RASTER_COMMONS, PREFIX_RASTER_DATA_MODEL );
   }
 
 }
