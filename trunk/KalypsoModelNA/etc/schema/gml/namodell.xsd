@@ -386,7 +386,7 @@
 					<!--               Optimierung              -->
 					<element name="faktorAigw" type="double" minOccurs="1"/>
 					<element name="faktorRetobRetint" type="double" minOccurs="1"/>
-					<element name="synthZR" type="string"/>
+					<element name="synthZR" type="string" minOccurs="0" nillable="true"/>
 					<!-- Korrekturfaktoren (zur Kalibrierung) der Retentionskonstanten       -->
 					<element name="faktorRetvs" type="double" minOccurs="0"/>
 					<element name="faktorRetob" type="double" minOccurs="0"/>
