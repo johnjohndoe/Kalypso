@@ -14,6 +14,7 @@
 					<element name="CatchmentCollectionMember" type="na:CatchmentCollectionAssociationType"/>
 					<element name="ChannelCollectionMember" type="na:ChannelCollectionAssociationType"/>
 					<element name="NodeCollectionMember" type="na:NodeCollectionAssociationType"/>
+                    <!-- TODO: if still used -->
 					<element name="SwaleAndTrenchCollectionMember" type="na:SwaleAndTrenchCollectionAssociationType"/>
 				</sequence>
 			</extension>
@@ -60,9 +61,20 @@
 					<element name="Ort" type="gml:PointPropertyType"/>
 					<element name="generateResult" type="boolean" default="false" nillable="true"/>
 					<element name="downStreamChannelMember" type="na:ChannelLinkType" minOccurs="0"/>
-					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<!-- ZR berechnet, hier wird das Ergebnis gespeichert -->
-					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="pegelZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                        <annotation>
+                          <documentation>If this link is set, the result timeseries will copy all metadata from this timeseries into the result timeseries.
+                          This is mainly used for hwv.</documentation>
+                        </annotation>
+                    </element>
+					<element name="qberechnetZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                        <annotation>
+                          <documentation>If this link is set, the result will be saved into the folder 'Pegel' with the filename from this link.
+                          TODO: we should mark a node as 'gauge' and generate the filename ourselfs or find out why this is needed at all...
+                           </documentation>
+                        </annotation>
+                    </element>
+          
 					<element name="useResultAsInflow" type="boolean" minOccurs="0">
                         <annotation>
                           <documentation>If this flag is set to true, and the link 'resultAsZuflussZR' points to an existing timeseries,
@@ -74,9 +86,20 @@
                           <documentation>See 'useResultAsZufluss'.</documentation>
                         </annotation>
                     </element>
-					<!-- ZR Zufluss falls Zufluss vorhanden -->
-					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="syntheticZuflussZR" type="boolean" default="false" nillable="true"/>
+					<element name="zuflussZR" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                        <annotation>
+                          <documentation>Defines an external discharge into the model at this node.</documentation>
+                        </annotation>
+                    </element>
+					<element name="syntheticZuflussZR" type="boolean" default="false" nillable="true">
+                        <annotation>
+                          <documentation>1) If false, the zuflussZR is written as is
+                          2) if true and the simulation (pns in control model) is NOT set to true, the zuflussZR is interpolated onto the simulation range and the simulation timestep
+                          3) if true and the simulation (pns in control model) IS set to true, the zuflussZR is interpolated onto the range 1.1.1900 - (1.1.1900 + length of simulation) and the simulation timestep
+                          </documentation>
+                        </annotation>
+                    </element>
+                    
 					<!-- branching ab hier aktivieren-->
 					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0"/>
 					<element name="riverCode" type="string" minOccurs="0" nillable="true" />
