@@ -76,6 +76,10 @@
             class="org.kalypso.model.rcm.internal.binding.FactorizedTimeseries"
             qname="{org.kalypso.model.cm}FactorizedTimeseries">
       </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.MultiGenerator"
+            qname="{org.kalypso.model.rcm.v2}MultiGenerator">
+      </feature>
    </extension>
 
 </plugin>

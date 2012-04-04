@@ -55,12 +55,12 @@ public interface IMultiGenerator extends IRainfallGenerator
   /**
    * The qname of the multi generator.
    */
-  QName FEATURE_MULTI_GENERATOR = new QName( RcmConstants.NS_RCM, "MultiGenerator" ); //$NON-NLS-1$
+  QName FEATURE_MULTI_GENERATOR = new QName( RcmConstants.NS_CM, "MultiGenerator" ); //$NON-NLS-1$
 
   /**
    * The qname of the sub generator member.
    */
-  QName MEMBER_SUB_GENERATOR = new QName( RcmConstants.NS_RCM, "subGeneratorMember" ); // $NON-NLS-1$
+  QName MEMBER_SUB_GENERATOR = new QName( RcmConstants.NS_CM, "subGeneratorMember" ); // $NON-NLS-1$
 
   /**
    * This function returns all sub generators.

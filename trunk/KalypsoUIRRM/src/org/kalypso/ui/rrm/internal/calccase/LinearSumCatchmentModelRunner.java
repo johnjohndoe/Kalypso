@@ -52,11 +52,9 @@ import javax.xml.namespace.QName;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.joda.time.LocalTime;
@@ -94,51 +92,40 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import com.google.common.base.Charsets;
 
 /**
- * This class execute a catchment model.
+ * This class executes a catchment model with a linear sum generator.
  * 
  * @author Holger Albert
  */
-public class CatchmentModelRunner
+public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 {
   /**
    * The constructor.
    */
-  public CatchmentModelRunner( )
+  public LinearSumCatchmentModelRunner( )
   {
   }
 
   /**
-   * This function executes the catchment model.
-   * 
-   * @param simulation
-   *          The simulation.
-   * @param control
-   *          The na control.
-   * @param model
-   *          The na model.
-   * @param generator
-   *          The rainfall generator.
-   * @param targetLink
-   *          The target link.
-   * @param parameterType
-   *          The parameter type.
-   * @param monitor
-   *          A progress monitor.
+   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.model.hydrology.project.RrmSimulation,
+   *      org.kalypso.model.hydrology.binding.control.NAControl, org.kalypso.model.hydrology.binding.model.NaModell,
+   *      org.kalypso.model.rcm.binding.IRainfallGenerator, javax.xml.namespace.QName, java.lang.String,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
+  @Override
   public void executeCatchmentModel( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
   {
-    /* The timestep is only defined in linear sum generators for now. */
+    /* Only ILinearSumGenerator's are supported. */
     if( !(generator instanceof ILinearSumGenerator) )
-      throw new NotImplementedException( "Only ILinearSumGenerator's are supported at the moment..." ); //$NON-NLS-1$
+      throw new NotImplementedException( "Only ILinearSumGenerator's are supported..." ); //$NON-NLS-1$
 
     /* Cast. */
     final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) generator;
 
     try
     {
+      /* Monitor. */
       monitor.beginTask( Messages.getString( "UpdateSimulationWorker_14" ), 100 ); //$NON-NLS-1$
-      final String name = TimeseriesUtils.getName( parameterType );
-      monitor.subTask( name );
+      monitor.subTask( TimeseriesUtils.getName( parameterType ) );
 
       /* Calculate date range for filter. */
       final int timestepMinutes = getTimestepMinutes( linearGenerator, control );
@@ -175,16 +162,8 @@ public class CatchmentModelRunner
       /* Monitor. */
       monitor.done();
 
-      try
-      {
-        /* Refresh the simulation folder. */
-        simulation.getSimulationFolder().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-      }
-      catch( final CoreException e )
-      {
-        /* REMARK: give priority to other exception, so we just system out it. */
-        e.printStackTrace();
-      }
+      /* Refresh the simulation folder. */
+      refresh( simulation );
     }
   }
 
