@@ -265,19 +265,20 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   @Override
   public LocalTime getTimeStamp( )
   {
+    /* Get the property. */
     final String timestampText = getProperty( PROPERTY_TIMESTAMP, String.class );
     if( StringUtils.isBlank( timestampText ) )
       return null;
 
     try
     {
+      /* Create the date time formatter builder. */
       final DateTimeFormatterBuilder bt = new DateTimeFormatterBuilder();
       bt.appendFixedDecimal( DateTimeFieldType.hourOfDay(), 2 );
       bt.appendLiteral( ':' ); // $NON-NLS-1$
       bt.appendFixedDecimal( DateTimeFieldType.minuteOfHour(), 2 );
-      bt.appendLiteral( '.' ); // $NON-NLS-1$
-      bt.appendTimeZoneOffset( "Z", false, 2, 2 ); // $NON-NLS-1$
 
+      /* REMARK: This will use the UTC timezone. */
       final DateTimeFormatter formatter = bt.toFormatter();
       return formatter.parseLocalTime( timestampText );
     }
@@ -291,11 +292,11 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   @Override
   public void setTimeStamp( final LocalTime timestamp )
   {
-    // TODO Check: Is zone correctly considered?
+    /* REMARK: We assume the values are in UTC. */
     if( timestamp == null )
       setProperty( PROPERTY_TIMESTAMP, null );
     else
-      setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm.Z" ) ); //$NON-NLS-1$
+      setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm" ) ); //$NON-NLS-1$
   }
 
   @Override
