@@ -129,7 +129,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Calculate date range for filter. */
       final int timestepMinutes = getTimestepMinutes( linearGenerator, control );
-      final LocalTime time = linearGenerator.getTimeStamp();
+      final LocalTime time = linearGenerator.getTimestamp();
       final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
 
       // TODO

@@ -263,7 +263,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   @Override
-  public LocalTime getTimeStamp( )
+  public LocalTime getTimestamp( )
   {
     /* Get the property. */
     final String timestampText = getProperty( PROPERTY_TIMESTAMP, String.class );
@@ -290,7 +290,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   }
 
   @Override
-  public void setTimeStamp( final LocalTime timestamp )
+  public void setTimestamp( final LocalTime timestamp )
   {
     /* REMARK: We assume the values are in UTC. */
     if( timestamp == null )

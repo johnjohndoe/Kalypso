@@ -129,7 +129,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * 
    * @return The timestamp for daily values.
    */
-  LocalTime getTimeStamp( );
+  LocalTime getTimestamp( );
 
   /**
    * This function sets the timestamp for daily values.
@@ -137,7 +137,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * @param timestamp
    *          The timestamp.
    */
-  void setTimeStamp( LocalTime timestamp );
+  void setTimestamp( LocalTime timestamp );
 
   /**
    * This function returns the area name property.

@@ -135,7 +135,7 @@ public class CatchmentModelBuilder
     /* Set the timestamp. */
     final LocalTime timestamp = findMostUsedTimestamp( timestamps );
     if( timestamp != null )
-      generator.setTimeStamp( timestamp );
+      generator.setTimestamp( timestamp );
 
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String message = String.format( Messages.getString( "CatchmentModelBuilder_1" ), parameterName ); //$NON-NLS-1$
