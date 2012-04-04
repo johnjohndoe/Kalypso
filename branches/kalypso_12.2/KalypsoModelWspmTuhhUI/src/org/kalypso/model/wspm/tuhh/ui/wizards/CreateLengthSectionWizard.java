@@ -117,19 +117,17 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
     addPage( m_profileChooserPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
 
-    final URL context = m_profileSelection.getWorkspace().getContext();
-    final IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
-    final IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" ); //$NON-NLS-1$
     try
     {
+      final URL context = m_profileSelection.getWorkspace().getContext();
+      final IProject wspmProjekt = ResourceUtilities.findProjectFromURL( context );
+      final IFolder parentFolder = wspmProjekt.getFolder( "Längsschnitte" ); //$NON-NLS-1$
+
       final IFile kodFile = doExport( profilFeatures, context, parentFolder );
       openKod( kodFile );
     }
@@ -145,7 +143,6 @@ public class CreateLengthSectionWizard extends Wizard implements IWorkbenchWizar
 
   private final String getAxisDirection( final Object[] profilFeatures )
   {
-
     if( profilFeatures.length > 0 && profilFeatures[0] instanceof IProfileFeature )
     {
       final WspmWaterBody waterBody = ((IProfileFeature) profilFeatures[0]).getWater();
