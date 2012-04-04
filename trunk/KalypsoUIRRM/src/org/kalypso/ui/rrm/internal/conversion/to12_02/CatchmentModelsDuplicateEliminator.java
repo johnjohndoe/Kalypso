@@ -56,17 +56,15 @@ import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
 import org.kalypso.model.hydrology.project.INaCalcCaseConstants;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
-import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * This class checks all catchment models and eliminates the ones, that are duplicates. It also corrects the links in
@@ -277,7 +275,7 @@ public class CatchmentModelsDuplicateEliminator
       control.setGeneratorReferenceT( usedHref );
   }
 
-  private boolean compareGenerator( final ILinearSumGenerator usedGenerator, final ILinearSumGenerator generator )
+  public static boolean compareGenerator( final ILinearSumGenerator usedGenerator, final ILinearSumGenerator generator )
   {
     /* Check the parameter type. */
     if( !ObjectUtils.equals( usedGenerator.getParameterType(), generator.getParameterType() ) )
@@ -287,32 +285,6 @@ public class CatchmentModelsDuplicateEliminator
     if( !ObjectUtils.equals( usedGenerator.getTimestep(), generator.getTimestep() ) )
       return false;
 
-    /* Get the catchments. */
-    final IFeatureBindingCollection<ICatchment> usedCatchments = usedGenerator.getCatchments();
-    final IFeatureBindingCollection<ICatchment> catchments = generator.getCatchments();
-    if( usedCatchments.size() != catchments.size() )
-      return false;
-
-    /* Compare the catchments. */
-    for( int i = 0; i < usedCatchments.size(); i++ )
-    {
-      /* Get the catchments. */
-      final ICatchment usedCatchment = usedCatchments.get( i );
-      final ICatchment catchment = catchments.get( i );
-
-      /* If the linked areas do not match, this are completely different lists or not in the same order. */
-      final String usedAreaHref = ((IXLinkedFeature) usedCatchment.getProperty( ICatchment.PROPERTY_AREA_LINK )).getHref();
-      final String areaHref = ((IXLinkedFeature) catchment.getProperty( ICatchment.PROPERTY_AREA_LINK )).getHref();
-      if( !usedAreaHref.equals( areaHref ) )
-        return false;
-
-      /* Build the hash. */
-      final String usedHash = RainfallGeneratorUtilities.buildHash( usedCatchment );
-      final String hash = RainfallGeneratorUtilities.buildHash( catchment );
-      if( !usedHash.equals( hash ) )
-        return false;
-    }
-
-    return true;
+    return CatchmentModelHelper.compareGeneratorCatchments( usedGenerator, generator );
   }
 }

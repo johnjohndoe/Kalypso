@@ -88,14 +88,19 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Apply catchment model", 100 );
+      monitor.beginTask( "Apply multi catchment model", 100 );
       monitor.subTask( TimeseriesUtils.getName( parameterType ) );
+
+      /* Validate the multi generator. */
+      final IStatus validateStatus = CatchmentModelHelper.validateMultiGenerator( multiGenerator );
+      if( !validateStatus.isOK() )
+        throw new CoreException( validateStatus );
 
       // TODO
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute catchment model", ex ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to execute multi catchment model", ex ) );
     }
     finally
     {
