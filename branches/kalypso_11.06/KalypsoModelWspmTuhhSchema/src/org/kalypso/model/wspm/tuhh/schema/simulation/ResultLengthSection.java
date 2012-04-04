@@ -60,12 +60,14 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.results.processing.IResultLSFile;
 import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSChartFile;
 import org.kalypso.model.wspm.tuhh.core.results.processing.ResultLSTableFile;
 import org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin;
 import org.kalypso.model.wspm.tuhh.schema.i18n.Messages;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -227,9 +229,15 @@ public class ResultLengthSection
     lengthSectionObs.setName( title );
     lengthSectionObs.setDescription( description );
 
-    /* Add additional columns that are not returned by the calculation core */
     final TupleResult result = lengthSectionObs.getResult();
 
+    /* Invert station (* -1) if the station direction is downwards */
+    fixLengthSectionStation( result );
+
+    // XXX
+    // FIXME: invert station if it was inverted before...
+
+    /* Add additional columns that are not returned by the calculation core */
     final ILengthSectionColumn[] columns = new ILengthSectionColumn[] { //
         new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_F, IWspmConstants.LENGTH_SECTION_PROPERTY_F_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_F_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_F_RE ), //
         new LengthSectionColumnAdd( IWspmConstants.LENGTH_SECTION_PROPERTY_BR, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_LI, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_FL, IWspmConstants.LENGTH_SECTION_PROPERTY_BR_RE ), //
@@ -244,6 +252,30 @@ public class ResultLengthSection
     ObservationFeatureFactory.toFeature( lengthSectionObs, rootFeature );
 
     return obsWks;
+  }
+
+  private void fixLengthSectionStation( final TupleResult result )
+  {
+    final TuhhStationRange stationRange = new TuhhStationRange( m_calculation );
+    final int exportSign = stationRange.getExportSign();
+    if( exportSign == 1 )
+    {
+      /* Nothing to do, station was not inverted for calculation */
+      return;
+    }
+
+    final BigDecimal sign = new BigDecimal( exportSign );
+
+    final int stationComponent = result.indexOfComponent( IWspmTuhhConstants.LENGTH_SECTION_PROPERTY_STATION );
+    for( final IRecord record : result )
+    {
+      final BigDecimal station = (BigDecimal) record.getValue( stationComponent );
+      if( station != null )
+      {
+        final BigDecimal invertedStation = station.multiply( sign );
+        record.setValue( stationComponent, invertedStation );
+      }
+    }
   }
 
   public IStatus getResult( )
