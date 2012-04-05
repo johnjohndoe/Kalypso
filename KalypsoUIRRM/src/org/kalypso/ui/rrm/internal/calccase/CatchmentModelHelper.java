@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
@@ -52,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
+import org.joda.time.Minutes;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -201,7 +203,7 @@ public class CatchmentModelHelper
     }
 
     /* (6) There are no gaps allowed between the validity ranges of adjacent generators. */
-    if( !compareGeneratorValidityGaps( generators ) )
+    if( !compareGeneratorValidityGaps( generators, firstGenerator.getTimestep() ) )
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "There are gaps in the validity ranges of the generators of the multi generator '%s'", multiGenerator.getDescription() ) ) );
 
     return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", multiGenerator.getDescription() ) );
@@ -254,8 +256,23 @@ public class CatchmentModelHelper
     return true;
   }
 
+  /**
+   * This function compares the validity ranges of the generators.
+   * 
+   * @param compareGenerator
+   *          The compare generator.
+   * @param generators
+   *          All generators the compare generator will be compared against. If the compare generator is contained, it
+   *          will be ignored.
+   * @return True, if the validity range of the compare generator does not overlap the validity ranges of the other
+   *         generators, or overlaps only one. False, if it overlaps two or more.
+   */
   public static boolean compareGeneratorValidityOverlap( final IRainfallGenerator compareGenerator, final IFeatureBindingCollection<IRainfallGenerator> generators )
   {
+    /* No generators available, to compare to. */
+    if( generators.size() == 0 )
+      return true;
+
     /* The interval of the compare generator. */
     final Interval compareInterval = new Interval( new DateTime( compareGenerator.getValidFrom() ), new DateTime( compareGenerator.getValidTo() ) );
 
@@ -283,10 +300,53 @@ public class CatchmentModelHelper
     return true;
   }
 
-  public static boolean compareGeneratorValidityGaps( final IFeatureBindingCollection<IRainfallGenerator> generators )
+  public static boolean compareGeneratorValidityGaps( final IFeatureBindingCollection<IRainfallGenerator> generators, final Integer timestep )
   {
-    // TODO
-    return false;
+    /* No generators available. */
+    /* Only one generator available. */
+    if( generators.size() <= 1 )
+      return true;
+
+    /* The generators. */
+    final IRainfallGenerator[] generatorArray = generators.toArray( new IRainfallGenerator[] {} );
+
+    /* Sort them by their validity ranges. */
+    // TODO Implement a comparator...
+    Arrays.sort( generatorArray, null );
+
+    /* Check each neighbouring generators. */
+    for( int i = 0; i < generatorArray.length - 1; i++ )
+    {
+      /* Get the neighbouring generators. */
+      final IRainfallGenerator generator1 = generatorArray[i];
+      final IRainfallGenerator generator2 = generatorArray[i + 1];
+
+      /* Compare the validity ranges. */
+      final Date validTo1 = generator1.getValidTo();
+      final Date validFrom2 = generator2.getValidFrom();
+
+      /* HINT: If validTo1 is equal validFrom2 this is okay. */
+      /* HINT: If validTo1 is after validFrom2 this is an overlap and okay. */
+      /* HINT: If validTo1 is before validFrom2 (but only one timestep), this is okay. */
+      /* HINT: If validTo1 is before validFrom2 this is an gap and not okay. */
+      if( validTo1.before( validFrom2 ) )
+      {
+        /* HINT: If the timestep is missing, no gap is allowed. */
+        if( timestep == null )
+          return false;
+
+        /* One timestep gap is allowed. */
+        final Period period = new Period( new DateTime( validTo1 ), new DateTime( validFrom2 ) );
+        final Minutes standardMinutes = period.toStandardMinutes();
+        final int minutes = standardMinutes.getMinutes();
+        if( minutes <= timestep.intValue() )
+          return true;
+
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
