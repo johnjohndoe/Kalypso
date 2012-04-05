@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
-import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
@@ -53,10 +54,11 @@ import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
-import org.joda.time.Minutes;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.java.math.IntervalUtilities;
 import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.ICatchment;
@@ -65,9 +67,14 @@ import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
+
+import com.google.common.base.Charsets;
 
 /**
  * This class contains functions for dealing with catchment models.
@@ -106,7 +113,7 @@ public class CatchmentModelHelper
     /* Find the responsible catchment model runner. */
     AbstractCatchmentModelRunner modelRunner = null;
     if( generator instanceof ILinearSumGenerator )
-      modelRunner = new LinearSumCatchmentModelRunner();
+      modelRunner = new LinearSumCatchmentModelRunner( null );
     else if( generator instanceof IMultiGenerator )
       modelRunner = new MultiCatchmentModelRunner();
     else
@@ -114,6 +121,61 @@ public class CatchmentModelHelper
 
     /* Execute the catchment model. */
     modelRunner.executeCatchmentModel( simulation, control, model, generator, targetLink, parameterType, monitor );
+  }
+
+  /**
+   * This function bulds a link for the timeseries of the given catchment.
+   * 
+   * @param prefix
+   *          This prefix will be used, if set. May be null.
+   * @param parameterType
+   *          The parameter type of the timeseries.
+   * @param catchment
+   *          The catchment, the timeseries is for.
+   */
+  public static String buildLink( final String prefix, final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
+  {
+    final String folderName = getTargetLinkFolderName( parameterType );
+
+    if( prefix == null || prefix.length() == 0 )
+      return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+
+    return String.format( "../%s/%s_%s_%s.zml", folderName, prefix, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
+  }
+
+  // FIXME: use CalcCaseAccessor for that?
+  private static String getTargetLinkFolderName( final String parameterType )
+  {
+    switch( parameterType )
+    {
+      case ITimeseriesConstants.TYPE_RAINFALL:
+        return Messages.getString( "UpdateSimulationWorker.3" ); // $NON-NLS-1$
+      case ITimeseriesConstants.TYPE_MEAN_TEMPERATURE:
+      case ITimeseriesConstants.TYPE_MEAN_EVAPORATION:
+        return Messages.getString( "UpdateSimulationWorker.4" ); // $NON-NLS-1$
+    }
+
+    throw new IllegalArgumentException();
+  }
+
+  /**
+   * This function sets a link to the catchment.
+   * 
+   * @param catchment
+   *          This catchment will get the link set.
+   * @param targetLink
+   *          The qname of the property for setting the link.
+   * @param link
+   *          The link to set.
+   */
+  public static void setLink( final Catchment catchment, final QName targetLink, final String link )
+  {
+    /* Create the timeseries link type. */
+    final TimeseriesLinkType tsLink = new TimeseriesLinkType();
+    tsLink.setHref( link );
+
+    /* Set the property. */
+    catchment.setProperty( targetLink, tsLink );
   }
 
   /**
@@ -131,9 +193,11 @@ public class CatchmentModelHelper
    * 
    * @param multiGenerator
    *          The multi generator.
+   * @param control
+   *          The na control.
    * @return A status. If the severity is ERROR, the validation has failed.
    */
-  public static IStatus validateMultiGenerator( final IMultiGenerator multiGenerator )
+  public static IStatus validateMultiGenerator( final IMultiGenerator multiGenerator, final NAControl control )
   {
     /* The status collector. */
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
@@ -203,7 +267,7 @@ public class CatchmentModelHelper
     }
 
     /* (6) There are no gaps allowed between the validity ranges of adjacent generators. */
-    if( !compareGeneratorValidityGaps( generators, firstGenerator.getTimestep() ) )
+    if( !compareGeneratorValidityGaps( generators, control, firstGenerator.getTimestep() ) )
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "There are gaps in the validity ranges of the generators of the multi generator '%s'", multiGenerator.getDescription() ) ) );
 
     return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", multiGenerator.getDescription() ) );
@@ -267,7 +331,7 @@ public class CatchmentModelHelper
    * @return True, if the validity range of the compare generator does not overlap the validity ranges of the other
    *         generators, or overlaps only one. False, if it overlaps two or more.
    */
-  public static boolean compareGeneratorValidityOverlap( final IRainfallGenerator compareGenerator, final IFeatureBindingCollection<IRainfallGenerator> generators )
+  private static boolean compareGeneratorValidityOverlap( final IRainfallGenerator compareGenerator, final IFeatureBindingCollection<IRainfallGenerator> generators )
   {
     /* No generators available, to compare to. */
     if( generators.size() == 0 )
@@ -300,7 +364,19 @@ public class CatchmentModelHelper
     return true;
   }
 
-  public static boolean compareGeneratorValidityGaps( final IFeatureBindingCollection<IRainfallGenerator> generators, final Integer timestep )
+  /**
+   * This function checks the validity ranges of the generators for gaps.
+   * 
+   * @param generators
+   *          The generators to be checked.
+   * @param control
+   *          The na control.
+   * @param timestep
+   *          The timestep.
+   * @return True, if the validity ranges of the generators do not have gaps or only timestep sized gaps. False
+   *         otherwise.
+   */
+  private static boolean compareGeneratorValidityGaps( final IFeatureBindingCollection<IRainfallGenerator> generators, final NAControl control, final Integer timestep )
   {
     /* No generators available. */
     /* Only one generator available. */
@@ -310,40 +386,38 @@ public class CatchmentModelHelper
     /* The generators. */
     final IRainfallGenerator[] generatorArray = generators.toArray( new IRainfallGenerator[] {} );
 
-    /* Sort them by their validity ranges. */
-    // TODO Implement a comparator...
-    Arrays.sort( generatorArray, null );
+    /* Build the simulation interval. */
+    final Date simulationStartDate = control.getSimulationStart();
+    final Date simulationEndDate = control.getSimulationEnd();
+    final long simulationStartTime = simulationStartDate.getTime();
+    final long simulationEndTime = simulationEndDate.getTime();
+    final org.kalypso.contribs.java.math.Interval simulationInterval = new org.kalypso.contribs.java.math.Interval( simulationStartTime, simulationEndTime );
+    org.kalypso.contribs.java.math.Interval[] simulationRest = new org.kalypso.contribs.java.math.Interval[] { simulationInterval };
 
-    /* Check each neighbouring generators. */
-    for( int i = 0; i < generatorArray.length - 1; i++ )
+    /* Check each generator. */
+    for( final IRainfallGenerator generator : generatorArray )
     {
-      /* Get the neighbouring generators. */
-      final IRainfallGenerator generator1 = generatorArray[i];
-      final IRainfallGenerator generator2 = generatorArray[i + 1];
+      /* Build the generator interval. */
+      final Date generatorStartDate = generator.getValidFrom();
+      final Date generatorEndDate = generator.getValidTo();
+      final long generatorStartTime = generatorStartDate.getTime();
+      final long generatorEndTime = generatorEndDate.getTime();
+      final org.kalypso.contribs.java.math.Interval generatorInterval = new org.kalypso.contribs.java.math.Interval( generatorStartTime, generatorEndTime );
 
-      /* Compare the validity ranges. */
-      final Date validTo1 = generator1.getValidTo();
-      final Date validFrom2 = generator2.getValidFrom();
+      /* Substract the generator interval from all rest intervals. */
+      simulationRest = IntervalUtilities.difference( simulationRest, generatorInterval );
+    }
 
-      /* HINT: If validTo1 is equal validFrom2 this is okay. */
-      /* HINT: If validTo1 is after validFrom2 this is an overlap and okay. */
-      /* HINT: If validTo1 is before validFrom2 (but only one timestep), this is okay. */
-      /* HINT: If validTo1 is before validFrom2 this is an gap and not okay. */
-      if( validTo1.before( validFrom2 ) )
-      {
-        /* HINT: If the timestep is missing, no gap is allowed. */
-        if( timestep == null )
-          return false;
+    /* No gaps. */
+    if( simulationRest.length == 0 )
+      return true;
 
-        /* One timestep gap is allowed. */
-        final Period period = new Period( new DateTime( validTo1 ), new DateTime( validFrom2 ) );
-        final Minutes standardMinutes = period.toStandardMinutes();
-        final int minutes = standardMinutes.getMinutes();
-        if( minutes <= timestep.intValue() )
-          return true;
-
+    for( final org.kalypso.contribs.java.math.Interval restInterval : simulationRest )
+    {
+      /* The gaps are only allowed to be of the size of the timestep. */
+      /* HINT: The timestep is in minutes -> convert to milliseconds. */
+      if( restInterval.getWidth() > timestep.intValue() * 60 * 1000 )
         return false;
-      }
     }
 
     return true;

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -101,7 +100,7 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
    *          A progress monitor.
    */
   @Override
-  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor ) throws CoreException
+  public IObservation[] createRainfall( final Feature[] catchmentFeatures, final DateRange range, final ILog log, IProgressMonitor monitor )
   {
     /* Monitor. */
     if( monitor == null )
@@ -109,12 +108,13 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
 
     try
     {
-      /* HINT: Keep in mind, that the results must match the order of the catchments array. */
-      final IObservation[] results = new IObservation[catchmentFeatures.length];
+      /* Monitor. */
+      monitor.beginTask( String.format( "Generiere Zeitreihen mit %d Gebietsmodellen...", m_subGenerators.size() ), m_subGenerators.size() * 200 );
+      monitor.subTask( "Generiere Zeitreihen..." );
 
       // TODO
 
-      return results;
+      return null;
     }
     finally
     {
