@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,13 +81,10 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
-import com.google.common.base.Charsets;
 
 /**
  * This class executes a catchment model with a linear sum generator.
@@ -99,10 +94,19 @@ import com.google.common.base.Charsets;
 public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
 {
   /**
-   * The constructor.
+   * This prefix is used when writing the timeseries.
    */
-  public LinearSumCatchmentModelRunner( )
+  private final String m_prefix;
+
+  /**
+   * The constructor.
+   * 
+   * @param prefix
+   *          This prefix is used when writing the timeseries.
+   */
+  public LinearSumCatchmentModelRunner( final String prefix )
   {
+    m_prefix = prefix;
   }
 
   /**
@@ -132,8 +136,8 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       final LocalTime time = linearGenerator.getTimestamp();
       final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
 
-      // TODO
-      // Check: We use the timestep of each generator to adjust the range, this is not exactly what happened before.
+      // TODO We use the timestep of each generator to adjust the range, this is not exactly what happened before.
+      // TODO Handle the range issues (validity, simulation)...
       final DateRange range = CatchmentModelHelper.getRange( control, timestep, time );
 
       /* Create the rainfall generation operation. */
@@ -223,15 +227,15 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
         final String link = linkHash.get( hash );
 
         /* Set the link. */
-        setLink( catchment, targetLink, link );
+        CatchmentModelHelper.setLink( catchment, targetLink, link );
       }
       else
       {
         /* Otherwise create a new link. */
-        final String link = buildLink( parameterType, catchment );
+        final String link = CatchmentModelHelper.buildLink( m_prefix, parameterType, catchment );
 
         /* Set the link. */
-        setLink( catchment, targetLink, link );
+        CatchmentModelHelper.setLink( catchment, targetLink, link );
 
         /* Store the hash code. */
         linkHash.put( hash, link );
@@ -242,39 +246,6 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     /* HINT: This is the linked workspace of the modell.gml, not the loaded one here. */
     final IFile modelFile = simulation.getModelGml();
     GmlSerializer.saveWorkspace( workspaceToSave, modelFile );
-  }
-
-  private String buildLink( final String parameterType, final Catchment catchment ) throws UnsupportedEncodingException
-  {
-    final String folderName = getTargetLinkFolderName( parameterType );
-
-    return String.format( "../%s/%s_%s.zml", folderName, parameterType, URLEncoder.encode( catchment.getName(), Charsets.UTF_8.name() ) ); //$NON-NLS-1$
-  }
-
-  private void setLink( final Catchment catchment, final QName targetLink, final String link )
-  {
-    /* Create the timeseries link type. */
-    final TimeseriesLinkType tsLink = new TimeseriesLinkType();
-    tsLink.setHref( link );
-
-    /* Set the property. */
-    catchment.setProperty( targetLink, tsLink );
-  }
-
-  // FIXME: use CalcCaseAccessor for that?
-  private String getTargetLinkFolderName( final String parameterType )
-  {
-    switch( parameterType )
-    {
-      case ITimeseriesConstants.TYPE_RAINFALL:
-        return Messages.getString( "UpdateSimulationWorker.3" ); // TODO i18n; en = 'Precipitation' //$NON-NLS-1$
-
-      case ITimeseriesConstants.TYPE_MEAN_TEMPERATURE:
-      case ITimeseriesConstants.TYPE_MEAN_EVAPORATION:
-        return Messages.getString( "UpdateSimulationWorker.4" ); // TODO i18n; en = 'Climate' //$NON-NLS-1$
-    }
-
-    throw new IllegalArgumentException();
   }
 
   private IRainfallCatchmentModel createRainfallModel( final RrmSimulation simulation, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception

@@ -212,7 +212,7 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
         /* Set the resulting observation for this catchment. */
         final double[] factorDoubles = ArrayUtils.toPrimitive( factors.toArray( new Double[] {} ) );
-        results[i] = RainfallGeneratorUtilities.combineObses( observations.toArray( new IObservation[] {} ), factorDoubles, "catchmentGenerator://thiessen" );
+        results[i] = RainfallGeneratorUtilities.combineObses( observations.toArray( new IObservation[] {} ), factorDoubles, "catchmentGenerator://linearSum" );
 
         /* Monitor. */
         monitor.worked( 100 );
