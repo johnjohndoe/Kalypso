@@ -57,6 +57,9 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class BanklineMarkerProvider implements IBanklineMarkerProvider
 {
+  /** Constant for 'marker' of model boundary */
+  public static final String PROFILE_START_END = "startAndEndPointOfProfile"; //$NON-NLS-1$
+
   private final String m_markerTyp;
 
   private final String m_markerTypeFallback;
@@ -140,6 +143,9 @@ public class BanklineMarkerProvider implements IBanklineMarkerProvider
   private IProfileRecord[] findMarkersOfType( final IProfil profile, final String markerType )
   {
     if( markerType == null )
+      return new IProfileRecord[0];
+
+    if( markerType == PROFILE_START_END )
       return profile.getPoints();
 
     final IProfilPointMarker[] pointMarkers = profile.getPointMarkerFor( markerType );
