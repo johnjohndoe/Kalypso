@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -235,8 +236,25 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
     }
   }
 
+  /**
+   * This function saves the observations and adjusts the model.gml. For each catchment in the simulation.gml there must
+   * be an observation in the observation hash. If for several catchments an equal observation exists, it will only be
+   * saved for the first catchment and the created link will be set in all other catchments.
+   * 
+   * @param simulation
+   *          The simulation.
+   * @param targetLink
+   *          The target link.
+   * @param parameterType
+   *          The parameter type.
+   * @param observations
+   *          The catchment->observation hash.
+   */
   private void adjustSimulationModelGml( final RrmSimulation simulation, final QName targetLink, final String parameterType, final Map<String, IObservation> observations ) throws Exception
   {
+    /* Memory for the already used hash codes and their filenames. */
+    final Map<String, String> usedHashCodes = new HashMap<String, String>();
+
     /* Load the model.gml of the simulation. */
     final NaModell simulationModel = loadSimulationModelGml( simulation );
 
@@ -250,8 +268,21 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       /* Get the observation for that catchment id. */
       final IObservation observation = observations.get( id );
 
-      /* Get the target link. */
-      // TODO Optimize, so that equal observations are only saved once...
+      /* Get the hash code. */
+      final String hashCode = observation.getMetadataList().getProperty( CatchmentTimeseriesHash.MD_HASH_CODE );
+      if( hashCode != null && hashCode.length() > 0 && usedHashCodes.containsKey( hashCode ) )
+      {
+        /* HINT: If the hash code is an existing one, use the existing link for the catchment. */
+        final String link = usedHashCodes.get( hashCode );
+
+        /* Set the link. */
+        CatchmentModelHelper.setLink( catchment, targetLink, link );
+
+        continue;
+      }
+
+      /* HINT: If the hash code is null, create a new link for the catchment. */
+      /* HINT: If the hash code is a new one, create a new link for the catchment. */
       final String link = CatchmentModelHelper.buildLink( null, parameterType, catchment );
 
       /* Set the link. */
@@ -261,6 +292,10 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       final IFolder simulationFolder = simulation.getSimulationFolder();
       final IFile observationFile = simulationFolder.getFile( new Path( link ) );
       ZmlFactory.writeToFile( observation, observationFile );
+
+      /* HINT: If the hash code is a new one, save it along with its link. */
+      if( hashCode != null && hashCode.length() > 0 )
+        usedHashCodes.put( hashCode, link );
     }
 
     /* Save the model.gml of the simulation. */
