@@ -47,8 +47,6 @@ import java.util.Date;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
@@ -86,32 +84,6 @@ public class CatchmentModelHelper
    */
   private CatchmentModelHelper( )
   {
-  }
-
-  /**
-   * This function executes the catchment model.
-   * 
-   * @param info
-   *          The catchment model info.
-   * @param monitor
-   *          A progress monitor.
-   */
-  public static void executeCatchmentModel( final CatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
-  {
-    /* Get the generator. */
-    final IRainfallGenerator generator = info.getGenerator();
-
-    /* Find the responsible catchment model runner. */
-    AbstractCatchmentModelRunner modelRunner = null;
-    if( generator instanceof ILinearSumGenerator )
-      modelRunner = new LinearSumCatchmentModelRunner( null );
-    else if( generator instanceof IMultiGenerator )
-      modelRunner = new MultiCatchmentModelRunner();
-    else
-      throw new IllegalArgumentException( "The type of the generator must be that of ILinearSumGenerator or IMultiGenerator..." ); // $NON-NLS-1$
-
-    /* Execute the catchment model. */
-    modelRunner.executeCatchmentModel( info, monitor );
   }
 
   /**

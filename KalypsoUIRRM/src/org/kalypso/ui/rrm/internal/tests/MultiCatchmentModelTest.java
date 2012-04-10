@@ -38,56 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.calccase;
+package org.kalypso.ui.rrm.internal.tests;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.model.hydrology.project.RrmSimulation;
+import static org.junit.Assert.fail;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * This class executes a catchment model.
- * 
  * @author Holger Albert
  */
-public abstract class AbstractCatchmentModelRunner
+public class MultiCatchmentModelTest
 {
-  /**
-   * The constructor.
-   */
-  public AbstractCatchmentModelRunner( )
+  @Before
+  public void setUp( ) throws Exception
   {
-    super();
   }
 
-  /**
-   * This function executes the catchment model.
-   * 
-   * @param info
-   *          The catchment model info.
-   * @param monitor
-   *          A progress monitor.
-   */
-  public abstract void executeCatchmentModel( ICatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * This function refreshs the simulation folder. It does not throw an exception.
-   * 
-   * @param simulation
-   *          The simulation.
-   */
-  protected void refresh( final RrmSimulation simulation )
+  @After
+  public void tearDown( ) throws Exception
   {
-    try
-    {
-      /* Refresh the simulation folder. */
-      simulation.getSimulationFolder().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-    }
-    catch( final Exception e )
-    {
-      /* REMARK: give priority to other exception, so we just system out it. */
-      e.printStackTrace();
-    }
+  }
+
+  @Test
+  public void test( )
+  {
+    fail( "Not yet implemented" );
   }
 }
