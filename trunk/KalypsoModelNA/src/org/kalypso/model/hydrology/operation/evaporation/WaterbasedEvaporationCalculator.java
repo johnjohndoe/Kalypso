@@ -42,41 +42,38 @@ package org.kalypso.model.hydrology.operation.evaporation;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
  * @author Dirk Kuch
  */
-public class WaterbasedEvaporationCalculator implements ICoreRunnableWithProgress
+public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculator
 {
-  private final ITimeseriesCache m_humidity;
 
-  private final ITimeseriesCache m_sunshine;
+  private static final double LATITUDE_DEGREE = 53.64;
 
-  private final ITimeseriesCache m_temperature;
+  /* Faktor zur Umrechnung von j/cm² in W/m² */
+  private static final double FACTOR_CONVERSION_JW = 24.0 * 60.0 * 60.0 / 10000.0;
 
-  private final ITimeseriesCache m_windVelocity;
+  private static final double COEFFICIENT_EMISSION = 0.97;
 
-  private final DateRange m_daterange;
+  /* Stefan Boltzmann Konstante für Wasser (DVWK - Formel 5.27) */
+  private static final double BOLTZMANN_WATER_CONSTANT = 5.67 * Math.pow( 10.0, -8.0 );
+
+  /* Albedo der Wasserfläche */
+  private static final double ALBEDO = 0.05;
 
   /**
    * @param daterange
@@ -84,12 +81,7 @@ public class WaterbasedEvaporationCalculator implements ICoreRunnableWithProgres
    */
   public WaterbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity, final DateRange daterange )
   {
-    m_humidity = humidity;
-    m_sunshine = sunshine;
-    m_temperature = temperature;
-    m_windVelocity = windVelocity;
-
-    m_daterange = daterange;
+    super( humidity, sunshine, temperature, windVelocity, daterange );
   }
 
   @Override
@@ -99,16 +91,20 @@ public class WaterbasedEvaporationCalculator implements ICoreRunnableWithProgres
 
     final StatusCollector stati = new StatusCollector( ModelNA.PLUGIN_ID );
 
-    final Calendar to = CalendarUtilities.getCalendar( m_daterange.getTo(), KalypsoCorePlugin.getDefault().getTimeZone() );
-    final Calendar ptr = CalendarUtilities.getCalendar( m_daterange.getFrom(), KalypsoCorePlugin.getDefault().getTimeZone() );
+    final Calendar to = CalendarUtilities.getCalendar( getDateRange().getTo(), KalypsoCorePlugin.getDefault().getTimeZone() );
+    final Calendar ptr = CalendarUtilities.getCalendar( getDateRange().getFrom(), KalypsoCorePlugin.getDefault().getTimeZone() );
+    ptr.set( Calendar.HOUR_OF_DAY, 12 );
+    ptr.set( Calendar.MINUTE, 0 );
+    ptr.set( Calendar.SECOND, 0 );
+    ptr.set( Calendar.MILLISECOND, 0 );
 
     // iterate over values inherit the given date range
-    while( ptr.before( to ) || ptr.equals( to ) )
+    while( ptr.before( to ) || DateUtils.isSameDay( ptr, to ) )
     {
-      final Double humidity = getValue( getDataSet( m_humidity, ptr, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) );
-      final Double sunshine = getValue( getDataSet( m_sunshine, ptr, ITimeseriesConstants.TYPE_MEAN_SUNSHINE_HOURS ) );
-      final Double temperature = getValue( getDataSet( m_temperature, ptr, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) );
-      final Double windVelocity = getValue( getDataSet( m_windVelocity, ptr, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) );
+      final Double humidity = getValue( getDataSet( getHumidity(), ptr, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) );
+      final Double sunshine = getValue( getDataSet( getSunshine(), ptr, ITimeseriesConstants.TYPE_MEAN_SUNSHINE_HOURS ) );
+      final Double temperature = getValue( getDataSet( getTemperature(), ptr, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) );
+      final Double windVelocity = getValue( getDataSet( getWindVelocity(), ptr, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) );
 
       if( Doubles.isNaN( humidity, sunshine, temperature, windVelocity ) )
       {
@@ -126,6 +122,8 @@ public class WaterbasedEvaporationCalculator implements ICoreRunnableWithProgres
       }
 
       final Double evaporation = doCalculate( humidity, sunshine, temperature, windVelocity, ptr );
+      if( Objects.isNotNull( evaporation ) )
+        addResult( ptr.getTime(), evaporation );
 
       ptr.add( Calendar.HOUR_OF_DAY, 24 );
     }
@@ -134,19 +132,6 @@ public class WaterbasedEvaporationCalculator implements ICoreRunnableWithProgres
 
     return stati.asMultiStatus( "Water based evaporation calculation" );
   }
-
-  private static final double LATITUDE_DEGREE = 53.64;
-
-  /* Faktor zur Umrechnung von j/cm² in W/m² */
-  private static final double FACTOR_CONVERSION_JW = 24.0 * 60.0 * 60.0 / 10000.0;
-
-  private static final double COEFFICIENT_EMISSION = 0.97;
-
-  /* Stefan Boltzmann Konstante für Wasser (DVWK - Formel 5.27) */
-  private static final double BOLTZMANN_WATER_CONSTANT = 5.67 * Math.pow( 10.0, -8.0 );
-
-  /* Albedo der Wasserfläche */
-  private static final double ALBEDO = 0.05;
 
   private Double doCalculate( final Double humidity, final Double sunshine, final Double temperature, final Double windVelocity, final Calendar date )
   {
@@ -167,55 +152,10 @@ public class WaterbasedEvaporationCalculator implements ICoreRunnableWithProgres
     final double fv = 0.136 + 0.105 * windVelocity;
 
     final double ew = (s * rn / l + 0.655 * fv * (es - e)) / (s + 0.655);
-
     if( ew > 0.0 )
       return ew;
 
     return 0.0;
   }
 
-  private Double getValue( final TupleModelDataSet dataSet )
-  {
-    if( Objects.isNull( dataSet ) )
-      return null;
-
-    final Object value = dataSet.getValue();
-    if( !(value instanceof Number) )
-      return Double.NaN;
-
-    return ((Number) value).doubleValue();
-  }
-
-  private TupleModelDataSet getDataSet( final ITimeseriesCache humidity, final Calendar ptr, final String type )
-  {
-    final TreeMap<Date, TupleModelDataSet[]> valueMap = humidity.getValueMap();
-
-    final Date base = ptr.getTime();
-
-    final SortedMap<Date, TupleModelDataSet[]> headMap = valueMap.headMap( base );
-    final SortedMap<Date, TupleModelDataSet[]> tailMap = valueMap.tailMap( base );
-
-    if( !headMap.isEmpty() && DateUtils.isSameDay( headMap.lastKey(), base ) )
-      return getDataSet( headMap.get( headMap.lastKey() ), type );
-    else if( !tailMap.isEmpty() && DateUtils.isSameDay( tailMap.firstKey(), base ) )
-      return getDataSet( tailMap.get( tailMap.firstKey() ), type );
-
-    return null;
-  }
-
-  private TupleModelDataSet getDataSet( final TupleModelDataSet[] sets, final String type )
-  {
-    if( ArrayUtils.isEmpty( sets ) )
-      return null;
-    else if( ArrayUtils.getLength( sets ) == 1 )
-      return sets[0];
-
-    for( final TupleModelDataSet set : sets )
-    {
-      if( StringUtils.equals( set.getValueAxis().getType(), type ) )
-        return set;
-    }
-
-    return null;
-  }
 }
