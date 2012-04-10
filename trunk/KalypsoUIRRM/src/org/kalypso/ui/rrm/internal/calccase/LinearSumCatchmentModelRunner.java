@@ -108,11 +108,11 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
   }
 
   /**
-   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.ui.rrm.internal.calccase.CatchmentModelInfo,
+   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.ui.rrm.internal.calccase.ICatchmentModelInfo,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void executeCatchmentModel( final CatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
+  public void executeCatchmentModel( final ICatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
   {
     /* Get the parameters. */
     final RrmSimulation simulation = info.getSimulation();

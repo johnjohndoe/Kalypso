@@ -40,54 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import javax.xml.namespace.QName;
+
+import org.joda.time.LocalTime;
+import org.joda.time.Period;
+import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.sensor.DateRange;
 
 /**
- * This class executes a catchment model.
+ * The catchment model info object can be used to execute {@link AbstractCatchmentModelRunner}'s.
  * 
  * @author Holger Albert
  */
-public abstract class AbstractCatchmentModelRunner
+public interface ICatchmentModelInfo
 {
-  /**
-   * The constructor.
-   */
-  public AbstractCatchmentModelRunner( )
-  {
-    super();
-  }
+  public abstract RrmSimulation getSimulation( );
 
-  /**
-   * This function executes the catchment model.
-   * 
-   * @param info
-   *          The catchment model info.
-   * @param monitor
-   *          A progress monitor.
-   */
-  public abstract void executeCatchmentModel( ICatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException;
+  public abstract NAControl getControl( );
 
-  /**
-   * This function refreshs the simulation folder. It does not throw an exception.
-   * 
-   * @param simulation
-   *          The simulation.
-   */
-  protected void refresh( final RrmSimulation simulation )
-  {
-    try
-    {
-      /* Refresh the simulation folder. */
-      simulation.getSimulationFolder().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-    }
-    catch( final Exception e )
-    {
-      /* REMARK: give priority to other exception, so we just system out it. */
-      e.printStackTrace();
-    }
-  }
+  public abstract NaModell getModel( );
+
+  public abstract IRainfallGenerator getGenerator( );
+
+  public abstract QName getTargetLink( );
+
+  public abstract String getParameterType( );
+
+  public abstract Period getTimestep( );
+
+  public abstract LocalTime getTimestamp( );
+
+  public abstract DateRange getRange( );
 }

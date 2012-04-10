@@ -47,7 +47,6 @@ import org.joda.time.Period;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.sensor.DateRange;
 
@@ -56,7 +55,7 @@ import org.kalypso.ogc.sensor.DateRange;
  * 
  * @author Holger Albert
  */
-public class CatchmentModelInfo
+public class GenericCatchmentModelInfo implements ICatchmentModelInfo
 {
   /**
    * The simulation.
@@ -74,7 +73,7 @@ public class CatchmentModelInfo
   private final NaModell m_model;
 
   /**
-   * The rainfall generator.
+   * The generator.
    */
   private final IRainfallGenerator m_generator;
 
@@ -89,19 +88,19 @@ public class CatchmentModelInfo
   private final String m_parameterType;
 
   /**
-   * The timestep. If null, it will be calculated.
+   * The timestep.
    */
-  private Period m_timestep;
+  private final Period m_timestep;
 
   /**
-   * The timestamp. If null, it will be calculated.
+   * The timestamp.
    */
-  private LocalTime m_timestamp;
+  private final LocalTime m_timestamp;
 
   /**
-   * The range. If null, it will be calculated.
+   * The range.
    */
-  private DateRange m_range;
+  private final DateRange m_range;
 
   /**
    * The constructor.
@@ -113,19 +112,19 @@ public class CatchmentModelInfo
    * @param model
    *          The na model.
    * @param generator
-   *          The rainfall generator.
+   *          The generator.
    * @param targetLink
    *          The target link.
    * @param parameterType
    *          The parameter type.
    * @param timestep
-   *          The timestep. If null, it will be calculated
+   *          The timestep.
    * @param timestamp
-   *          The timestamp. If null, it will be calculated
+   *          The timestamp.
    * @param range
-   *          The range. If null, it will be calculated
+   *          The range.
    */
-  public CatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final Period timestep, final LocalTime timestamp, final DateRange range )
+  public GenericCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final Period timestep, final LocalTime timestamp, final DateRange range )
   {
     m_simulation = simulation;
     m_control = control;
@@ -138,95 +137,57 @@ public class CatchmentModelInfo
     m_range = range;
   }
 
+  @Override
   public RrmSimulation getSimulation( )
   {
     return m_simulation;
   }
 
+  @Override
   public NAControl getControl( )
   {
     return m_control;
   }
 
+  @Override
   public NaModell getModel( )
   {
     return m_model;
   }
 
+  @Override
   public IRainfallGenerator getGenerator( )
   {
     return m_generator;
   }
 
+  @Override
   public QName getTargetLink( )
   {
     return m_targetLink;
   }
 
+  @Override
   public String getParameterType( )
   {
     return m_parameterType;
   }
 
+  @Override
   public Period getTimestep( )
   {
-    if( m_timestep == null )
-      m_timestep = calculateTimestep();
-
     return m_timestep;
   }
 
-  private Period calculateTimestep( )
-  {
-    final int timestepMinutes = getTimestepMinutes();
-    final Period minutes = Period.minutes( timestepMinutes );
-
-    return minutes.normalizedStandard();
-  }
-
-  private int getTimestepMinutes( )
-  {
-    /* Cast. */
-    final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) m_generator;
-
-    /* Get the timestep. */
-    final Integer timestep = linearGenerator.getTimestep();
-    if( timestep == null )
-      return m_control.getMinutesOfTimestep();
-
-    return timestep;
-  }
-
+  @Override
   public LocalTime getTimestamp( )
   {
-    if( m_timestamp == null )
-      m_timestamp = calculateTimestamp();
-
     return m_timestamp;
   }
 
-  private LocalTime calculateTimestamp( )
-  {
-    /* Cast. */
-    final ILinearSumGenerator linearGenerator = (ILinearSumGenerator) m_generator;
-
-    return linearGenerator.getTimestamp();
-  }
-
+  @Override
   public DateRange getRange( )
   {
-    if( m_range == null )
-      m_range = calculateRange();
-
     return m_range;
-  }
-
-  private DateRange calculateRange( )
-  {
-    final NAControl control = m_control;
-    final Period timestep = getTimestep();
-    final LocalTime timestamp = getTimestamp();
-
-    return CatchmentModelHelper.getRange( control, timestep, timestamp );
   }
 }

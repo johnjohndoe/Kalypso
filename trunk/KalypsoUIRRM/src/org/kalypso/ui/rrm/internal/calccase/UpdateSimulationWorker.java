@@ -71,6 +71,9 @@ import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.project.RrmScenario;
 import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IMultiGenerator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -154,14 +157,19 @@ public class UpdateSimulationWorker
       copyMappingTimeseries( control, "ObsEMapping.gml", Messages.getString( "UpdateSimulationWorker.2" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Create the catchment model info objects. */
-      final CatchmentModelInfo infoN = new CatchmentModelInfo( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, null, null, null );
-      final CatchmentModelInfo infoT = new CatchmentModelInfo( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, null, null, null );
-      final CatchmentModelInfo infoE = new CatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED, null, null, null );
+      final ICatchmentModelInfo infoN = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
+      final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
+      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED );
+
+      /* Get the catchment model runner. */
+      final AbstractCatchmentModelRunner runnerN = getCatchmentModelRunner( infoN );
+      final AbstractCatchmentModelRunner runnerT = getCatchmentModelRunner( infoT );
+      final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
 
       /* Execute catchment models. */
-      CatchmentModelHelper.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 20 ) );
-      CatchmentModelHelper.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 20 ) );
-      CatchmentModelHelper.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 20 ) );
+      runnerN.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 20 ) );
+      runnerT.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 20 ) );
+      runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 20 ) );
 
       /* Copy initial condition from long term simulation. */
       copyInitialCondition( control );
@@ -275,6 +283,28 @@ public class UpdateSimulationWorker
     final SystemOutLogger logger = new SystemOutLogger();
 
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, metadata, logger );
+  }
+
+  private ICatchmentModelInfo getCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType )
+  {
+    if( generator instanceof ILinearSumGenerator )
+      return new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType );
+  
+    if( generator instanceof IMultiGenerator )
+      return new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
+  
+    throw new IllegalArgumentException( "The type of the generator must be that of ILinearSumGenerator or IMultiGenerator..." ); // $NON-NLS-1$
+  }
+
+  private AbstractCatchmentModelRunner getCatchmentModelRunner( final ICatchmentModelInfo info )
+  {
+    if( info instanceof LinearSumCatchmentModelInfo )
+      return new LinearSumCatchmentModelRunner( null );
+  
+    if( info instanceof MultiCatchmentModelInfo )
+      return new MultiCatchmentModelRunner();
+  
+    throw new IllegalArgumentException( "The info of the catchment model must be that of LinearSumCatchmentModelInfo or MultiCatchmentModelInfo..." ); // $NON-NLS-1$
   }
 
   private void copyInitialCondition( final NAControl control )
