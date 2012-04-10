@@ -302,8 +302,25 @@
     </DataColumn>
 
     <!-- mean evaporation -->
-    <DataColumn editable="true" id="MEAN_EVAPORATION" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Mittlere Verdunstung</property>
+    <DataColumn editable="true" id="MEAN_EVAPORATION_LAND_BASED" metadataSource="true" tooltip="true" wrapText="true">
+      <property name="label">Mittlere Grasverdunstung</property>
+      <property name="alignment">RIGHT</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
+    </DataColumn>
+    
+    <!-- mean evaporation -->
+    <DataColumn editable="true" id="MEAN_EVAPORATION_WATER_BASED" metadataSource="true" tooltip="true" wrapText="true">
+      <property name="label">Mittlere Seeverdunstung</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>

@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Dirk Kuch
@@ -117,5 +118,16 @@ public final class Timeserieses
 
     return fileNames.toArray( new String[] {} );
 
+  }
+
+  public static boolean hasType( final IFeatureBindingCollection<ITimeseries> collection, final String type )
+  {
+    for( final ITimeseries timeseries : collection )
+    {
+      if( timeseries.getParameterType().equals( type ) )
+        return true;
+    }
+
+    return false;
   }
 }

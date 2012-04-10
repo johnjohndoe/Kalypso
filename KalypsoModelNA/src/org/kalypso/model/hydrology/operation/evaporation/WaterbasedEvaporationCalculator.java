@@ -61,7 +61,6 @@ import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
  */
 public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculator
 {
-
   private static final double LATITUDE_DEGREE = 53.64;
 
   /* Faktor zur Umrechnung von j/cm² in W/m² */
