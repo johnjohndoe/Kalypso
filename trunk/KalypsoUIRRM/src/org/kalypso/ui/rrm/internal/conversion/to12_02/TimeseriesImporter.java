@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -70,8 +71,14 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -82,8 +89,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import com.google.common.base.Charsets;
 
 /**
- * Helper that imports the timeserties from the old 'Zeitreihen' folder into the new timeseries management.
- * 
+ * Helper that imports the timeseries from the old 'Zeitreihen' folder into the new timeseries management.
+ *
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -98,9 +105,12 @@ public class TimeseriesImporter
 
   private final IStatusCollector m_log;
 
-  public TimeseriesImporter( final File sourceDir, final File targetDir, final IStatusCollector log )
+  private final IParameterTypeIndex m_parameterIndex;
+
+  public TimeseriesImporter( final File sourceDir, final File targetDir, final IStatusCollector log, final IParameterTypeIndex parameterIndex )
   {
     m_log = log;
+    m_parameterIndex = parameterIndex;
     m_sourceDir = new File( sourceDir, INaProjectConstants.FOLDER_ZEITREIHEN );
     m_timeseriesDir = new File( targetDir, INaProjectConstants.PATH_TIMESERIES );
   }
@@ -139,10 +149,13 @@ public class TimeseriesImporter
 
   public void copyTimeseries( final String folder, final IProgressMonitor monitor )
   {
-    final String name = String.format( Messages.getString( "TimeseriesImporter_2" ), folder ); //$NON-NLS-1$
+    // FIXME
+    final String name = String.format( Messages.getString( "TimeseriesImporter_2" ), "Zeitreihen" ); //$NON-NLS-1$
     monitor.beginTask( name, IProgressMonitor.UNKNOWN );
 
-    final File sourceTimeseriesDir = new File( m_sourceDir, folder );
+    final File sourceTimeseriesDir = m_sourceDir;
+
+// final File sourceTimeseriesDir = new File( m_sourceDir, folder );
 
     /* Return, if directory does not exist */
     if( !sourceTimeseriesDir.isDirectory() )
@@ -192,7 +205,7 @@ public class TimeseriesImporter
     final String relativePath = FileUtilities.getRelativePathTo( baseDir, zmlFile );
 
     /* Read and check observation. */
-    final IObservation observation = ZmlFactory.parseXML( zmlFile.toURI().toURL() );
+    final IObservation observation = readObservation( zmlFile, relativePath );
     final IAxis[] axes = observation.getAxes();
 
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
@@ -203,7 +216,7 @@ public class TimeseriesImporter
       throw new CoreException( status );
     }
 
-    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, false );
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
 
     if( valueAxes.length == 0 )
     {
@@ -259,6 +272,74 @@ public class TimeseriesImporter
 
     final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
+  }
+
+  private IObservation readObservation( final File zmlFile, final String relativePath ) throws SensorException, MalformedURLException
+  {
+    final IObservation observation = ZmlFactory.parseXML( zmlFile.toURI().toURL() );
+
+    final String forcedParmaterType = m_parameterIndex.getParmaterType( relativePath );
+    if( forcedParmaterType == null )
+      return observation;
+
+    /* Force the parameter type for evaporation and temperature */
+    final ITupleModel tupleModel = observation.getValues( null );
+    final Object[][] rawData = getRawData( tupleModel );
+
+    /* Exchange old value type with forced parameter type */
+    final IAxis[] axes = tupleModel.getAxes();
+    final IAxis[] forcedAxes = new IAxis[axes.length];
+    for( int i = 0; i < forcedAxes.length; i++ )
+      forcedAxes[i] = getForcedParameterAxes( axes[i], forcedParmaterType );
+
+    final SimpleTupleModel newModel = new SimpleTupleModel( forcedAxes, rawData );
+
+    /* Create and return new obs */
+    final String name = observation.getName();
+    final String href = observation.getHref();
+    final MetadataList metadata = MetadataHelper.clone( observation.getMetadataList() );
+    return new SimpleObservation( href, name, metadata, newModel );
+  }
+
+  // REMARK: heavy, but necessary as we cannot assume that we always have a simple tuple model
+  // For older models, we often have ZmlTupleModels instead.
+  private Object[][] getRawData( final ITupleModel tupleModel ) throws SensorException
+  {
+    final int size = tupleModel.size();
+    final IAxis[] axes = tupleModel.getAxes();
+
+    final Object[][] rawData = new Object[size][];
+
+    for( int i = 0; i < rawData.length; i++ )
+    {
+      rawData[i] = new Object[axes.length];
+
+      for( int a = 0; a < axes.length; a++ )
+        rawData[i][a] = tupleModel.get( i, axes[a] );
+    }
+
+    return rawData;
+  }
+
+  private IAxis getForcedParameterAxes( final IAxis axis, final String forcedParmaterType )
+  {
+    if( AxisUtils.isValueAxis( axis ) )
+      return TimeseriesUtils.createDefaultAxis( forcedParmaterType );
+
+    if( AxisUtils.isStatusAxis( axis ) )
+    {
+      final IAxis tempAxis = TimeseriesUtils.createDefaultAxis( forcedParmaterType );
+      return KalypsoStatusUtils.createStatusAxisFor( tempAxis, true );
+    }
+
+    if( AxisUtils.isDataSrcAxis( axis ) )
+    {
+      final IAxis tempAxis = TimeseriesUtils.createDefaultAxis( forcedParmaterType );
+      return DataSourceHelper.createSourceAxis( tempAxis );
+    }
+
+    /* Default: do nothing */
+    return axis;
   }
 
   private String findGroupName( final String relativePath )

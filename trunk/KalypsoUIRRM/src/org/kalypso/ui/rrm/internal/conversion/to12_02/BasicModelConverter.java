@@ -100,16 +100,17 @@ public class BasicModelConverter extends AbstractLoggingOperation
 
       monitor.worked( 5 );
 
+      final IParameterTypeIndex parameterIndex = fixTimeseries();
+
       /* Copy timeseries */
       monitor.subTask( Messages.getString("BasicModelConverter.3") ); //$NON-NLS-1$
-      m_timeseriesIndex = copyBasicTimeseries( new SubProgressMonitor( monitor, 90 ) );
+      m_timeseriesIndex = copyBasicTimeseries( parameterIndex, new SubProgressMonitor( monitor, 90 ) );
 
       /* timeseries links */
       monitor.subTask( Messages.getString("BasicModelConverter.4") ); //$NON-NLS-1$
 
       copyObservationConf( m_timeseriesIndex );
 
-      fixTimeseries();
       monitor.worked( 5 );
     }
     finally
@@ -118,26 +119,27 @@ public class BasicModelConverter extends AbstractLoggingOperation
     }
   }
 
-  private TimeseriesIndex copyBasicTimeseries( final IProgressMonitor monitor ) throws CoreException
+  private TimeseriesIndex copyBasicTimeseries( final IParameterTypeIndex parameterIndex, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString("BasicModelConverter.5"), 100 ); //$NON-NLS-1$
 
     monitor.subTask( Messages.getString("BasicModelConverter.6") ); //$NON-NLS-1$
-    final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog() );
+    final TimeseriesImporter importer = new TimeseriesImporter( m_sourceDir, m_targetDir, getLog(), parameterIndex );
     importer.readStations();
     monitor.worked( 5 );
 
     /* Copy known folders */
-    copyTimeseries( importer, monitor, "Klima" ); //$NON-NLS-1$
-    copyTimeseries( importer, monitor, "Climate" ); //$NON-NLS-1$
-
-    copyTimeseries( importer, monitor, "Ombrometer" ); //$NON-NLS-1$
-
-    copyTimeseries( importer, monitor, "Pegel" ); //$NON-NLS-1$
-    copyTimeseries( importer, monitor, "Gauge" ); //$NON-NLS-1$
-
-    copyTimeseries( importer, monitor, "Zufluss" ); //$NON-NLS-1$
-    copyTimeseries( importer, monitor, "Tributary" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor, null );
+//    copyTimeseries( importer, monitor, "Klima" ); //$NON-NLS-1$
+//    copyTimeseries( importer, monitor, "Climate" ); //$NON-NLS-1$
+//
+//    copyTimeseries( importer, monitor, "Ombrometer" ); //$NON-NLS-1$
+//
+//    copyTimeseries( importer, monitor, "Pegel" ); //$NON-NLS-1$
+//    copyTimeseries( importer, monitor, "Gauge" ); //$NON-NLS-1$
+//
+//    copyTimeseries( importer, monitor, "Zufluss" ); //$NON-NLS-1$
+//    copyTimeseries( importer, monitor, "Tributary" ); //$NON-NLS-1$
 
     monitor.subTask( Messages.getString("BasicModelConverter.7") ); //$NON-NLS-1$
     importer.saveStations();
@@ -173,14 +175,19 @@ public class BasicModelConverter extends AbstractLoggingOperation
     FileUtils.copyFile( modelSourceFile, modelTargetFile, true );
   }
 
-  private void fixTimeseries( ) throws Exception
+  private IParameterTypeIndex fixTimeseries( ) throws Exception
   {
     final NaModell naModel = m_data.loadNaModel();
+
+    // IMPORTANT: index parameter types before the links have been fixed, so file pathes are correct
+    final IParameterTypeIndex parameterIndex = CalcCaseConverter.collectTimeseriesParameterTypes( naModel, m_sourceDir, getLog() );
 
     CalcCaseConverter.fixTimeseriesLinks( naModel, getLog() );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     getLog().add( IStatus.INFO, Messages.getString("BasicModelConverter.12") ); //$NON-NLS-1$
+
+    return parameterIndex;
   }
 
   public TimeseriesIndex getTimeseriesIndex( )
