@@ -50,7 +50,7 @@ import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 /**
  * @author Dirk Kuch
  */
-public class EvaporationCalculator implements ICoreRunnableWithProgress
+public class LandbasedEvaporationCalculator implements ICoreRunnableWithProgress
 {
   private final ITimeseriesCache m_humidity;
 
@@ -60,7 +60,7 @@ public class EvaporationCalculator implements ICoreRunnableWithProgress
 
   private final ITimeseriesCache m_windVelocity;
 
-  public EvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity )
+  public LandbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity )
   {
     // TODO daterange from /to
 

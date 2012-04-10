@@ -42,10 +42,12 @@ package org.kalypso.model.hydrology.operation.evaporation.test;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
-import org.kalypso.model.hydrology.operation.evaporation.EvaporationCalculator;
+import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
+import org.kalypso.ogc.sensor.util.DateRanges;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -54,15 +56,30 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 public class EvapoationCalculatorTestCase
 {
   @Test
-  public void testEvaporationCalculator( ) throws SensorException
+  public void testWaterbasedEvaporationCalculator( ) throws SensorException
   {
     final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_humidity.zml" ) ) ); //$NON-NLS-1$
     final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_sunshine.zml" ) ) ); //$NON-NLS-1$
     final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_temperature.zml" ) ) ); //$NON-NLS-1$
     final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
 
-    final EvaporationCalculator calculator = new EvaporationCalculator( humidity, sunshine, temperature, windVelocity );
-    calculator.equals( new NullProgressMonitor() );
+    final DateRange daterange = getDateRange( humidity, sunshine, temperature, windVelocity );
+
+    final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
+    calculator.execute( new NullProgressMonitor() );
+  }
+
+  private DateRange getDateRange( final ITimeseriesCache... caches ) throws SensorException
+  {
+
+    DateRange intersection = null;
+
+    for( final ITimeseriesCache cache : caches )
+    {
+      intersection = DateRanges.intersect( cache.getDateRange(), intersection );
+    }
+
+    return intersection;
   }
 
 }
