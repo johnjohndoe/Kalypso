@@ -117,6 +117,7 @@ public class TimeseriesManagementView extends ViewPart
     m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.SINGLE );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
+    m_treeViewer.setComparator( new TimeseriesNodeLabelComparator() );
 
     return m_treeViewer.getTree();
   }
