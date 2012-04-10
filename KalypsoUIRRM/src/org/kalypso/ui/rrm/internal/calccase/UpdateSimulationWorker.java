@@ -153,10 +153,15 @@ public class UpdateSimulationWorker
       copyMappingTimeseries( control, "ObsQZuMapping.gml", Messages.getString( "UpdateSimulationWorker.1" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
       copyMappingTimeseries( control, "ObsEMapping.gml", Messages.getString( "UpdateSimulationWorker.2" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
+      /* Create the catchment model info objects. */
+      final CatchmentModelInfo infoN = new CatchmentModelInfo( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, null, null, null );
+      final CatchmentModelInfo infoT = new CatchmentModelInfo( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, null, null, null );
+      final CatchmentModelInfo infoE = new CatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED, null, null, null );
+
       /* Execute catchment models. */
-      CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
-      CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
-      CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED, new SubProgressMonitor( monitor, 20 ) );
+      CatchmentModelHelper.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 20 ) );
+      CatchmentModelHelper.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 20 ) );
+      CatchmentModelHelper.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 20 ) );
 
       /* Copy initial condition from long term simulation. */
       copyInitialCondition( control );

@@ -55,14 +55,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
@@ -110,14 +108,26 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
   }
 
   /**
-   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.model.hydrology.project.RrmSimulation,
-   *      org.kalypso.model.hydrology.binding.control.NAControl, org.kalypso.model.hydrology.binding.model.NaModell,
-   *      org.kalypso.model.rcm.binding.IRainfallGenerator, javax.xml.namespace.QName, java.lang.String,
+   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.ui.rrm.internal.calccase.CatchmentModelInfo,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void executeCatchmentModel( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
+  public void executeCatchmentModel( final CatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
   {
+    /* Get the parameters. */
+    final RrmSimulation simulation = info.getSimulation();
+    final NaModell model = info.getModel();
+    final IRainfallGenerator generator = info.getGenerator();
+    final QName targetLink = info.getTargetLink();
+    final String parameterType = info.getParameterType();
+    final Period timestep = info.getTimestep();
+
+    /* HINT: The range may be the adjusted simulation range, if executed as standalone generator. */
+    /* HINT: The range may be the intersection of the adjusted simulation range and the generators validity range, */
+    /* HINT: if executed as part of a multi generator. */
+    /* HINT: But in the end, we do not care, because we simple use it. */
+    final DateRange range = info.getRange();
+
     /* Only ILinearSumGenerator's are supported. */
     if( !(generator instanceof ILinearSumGenerator) )
       throw new NotImplementedException( "Only ILinearSumGenerator's are supported..." ); //$NON-NLS-1$
@@ -130,15 +140,6 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       /* Monitor. */
       monitor.beginTask( Messages.getString( "UpdateSimulationWorker_14" ), 100 ); //$NON-NLS-1$
       monitor.subTask( TimeseriesUtils.getName( parameterType ) );
-
-      /* Calculate date range for filter. */
-      final int timestepMinutes = getTimestepMinutes( linearGenerator, control );
-      final LocalTime time = linearGenerator.getTimestamp();
-      final Period timestep = Period.minutes( timestepMinutes ).normalizedStandard();
-
-      // TODO We use the timestep of each generator to adjust the range, this is not exactly what happened before.
-      // TODO Handle the range issues (validity, simulation)...
-      final DateRange range = CatchmentModelHelper.getRange( control, timestep, time );
 
       /* Create the rainfall generation operation. */
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( simulation, model, linearGenerator, targetLink, range );
@@ -169,16 +170,6 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       /* Refresh the simulation folder. */
       refresh( simulation );
     }
-  }
-
-  private int getTimestepMinutes( final ILinearSumGenerator generator, final NAControl control )
-  {
-    /* If a timestep in the generator is set, this one is used. */
-    final Integer timestep = generator.getTimestep();
-    if( timestep == null )
-      return control.getMinutesOfTimestep();
-
-    return timestep;
   }
 
   private void initGenerator( final ILinearSumGenerator generator, final DateRange range, final Period timestep, final String parameterType )

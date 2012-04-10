@@ -56,6 +56,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.LocalTime;
+import org.joda.time.Period;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -64,6 +68,7 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -87,14 +92,19 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
   }
 
   /**
-   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.model.hydrology.project.RrmSimulation,
-   *      org.kalypso.model.hydrology.binding.control.NAControl, org.kalypso.model.hydrology.binding.model.NaModell,
-   *      org.kalypso.model.rcm.binding.IRainfallGenerator, javax.xml.namespace.QName, java.lang.String,
+   * @see org.kalypso.ui.rrm.internal.calccase.AbstractCatchmentModelRunner#executeCatchmentModel(org.kalypso.ui.rrm.internal.calccase.CatchmentModelInfo,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void executeCatchmentModel( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
+  public void executeCatchmentModel( final CatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
   {
+    /* Get the parameters. */
+    final RrmSimulation simulation = info.getSimulation();
+    final NAControl control = info.getControl();
+    final IRainfallGenerator generator = info.getGenerator();
+    final QName targetLink = info.getTargetLink();
+    final String parameterType = info.getParameterType();
+
     /* Only IMultiGenerator's are supported. */
     if( !(generator instanceof IMultiGenerator) )
       throw new NotImplementedException( "Only IMultiGenerator's are supported..." ); //$NON-NLS-1$
@@ -128,7 +138,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
 
       /* Run all contained generators. */
       for( int i = 0; i < subGenerators.size(); i++ )
-        runGenerator( String.format( Locale.PRC, "%d", i ), simulation, control, model, (ILinearSumGenerator) subGenerators.get( i ), targetLink, parameterType, hash, new SubProgressMonitor( monitor, 100 ) );
+        runGenerator( String.format( Locale.PRC, "%d", i ), info, (ILinearSumGenerator) subGenerators.get( i ), hash, new SubProgressMonitor( monitor, 100 ) );
 
       /* Monitor. */
       monitor.subTask( "Merge observations for each catchment... " );
@@ -167,24 +177,16 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
    * 
    * @param prefix
    *          This prefix is used when writing the timeseries.
-   * @param simulation
-   *          The simulation.
-   * @param control
-   *          The na control.
-   * @param model
-   *          The na model.
+   * @param info
+   *          The catchment model info.
    * @param generator
    *          The rainfall generator.
-   * @param targetLink
-   *          The target link.
-   * @param parameterType
-   *          The parameter type.
    * @param hash
    *          The hash.
    * @param monitor
    *          A progress monitor.
    */
-  private void runGenerator( final String prefix, final RrmSimulation simulation, final NAControl control, final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final String parameterType, final CatchmentTimeseriesHash hash, final IProgressMonitor monitor ) throws Exception
+  private void runGenerator( final String prefix, final CatchmentModelInfo info, final ILinearSumGenerator generator, final CatchmentTimeseriesHash hash, final IProgressMonitor monitor ) throws Exception
   {
     try
     {
@@ -192,11 +194,34 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       monitor.beginTask( String.format( "Executing catchment model '%s'...", generator.getDescription() ), 1000 );
       monitor.subTask( "Executing generator..." );
 
+      /* Get the parameters. */
+      final RrmSimulation simulation = info.getSimulation();
+      final NAControl control = info.getControl();
+      final NaModell model = info.getModel();
+      final QName targetLink = info.getTargetLink();
+      final String parameterType = info.getParameterType();
+      final Period timestep = info.getTimestep();
+      final LocalTime timestamp = info.getTimestamp();
+
+      /* HINT: The range is the adjusted simulation range. */
+      final DateRange simulationRange = info.getRange();
+
+      /* Intersect adjusted simulation range with validity range of generator. */
+      final Interval simulationInterval = new Interval( new DateTime( simulationRange.getFrom() ), new DateTime( simulationRange.getTo() ) );
+      final Interval valitiyInterval = new Interval( new DateTime( generator.getValidFrom() ), new DateTime( generator.getValidTo() ) );
+      final Interval interval = valitiyInterval.overlap( simulationInterval );
+      final DateRange range = new DateRange( interval.getStart().toDate(), interval.getEnd().toDate() );
+
+      /* The catchment model runner should be executed with this new info. */
+      /* It contains the same parameters as the original info of this multi generator. */
+      /* Except the generator and the range parameter. */
+      final CatchmentModelInfo newInfo = new CatchmentModelInfo( simulation, control, model, generator, targetLink, parameterType, timestep, timestamp, range );
+
       /* Create the linear sum catchment model runner. */
       final LinearSumCatchmentModelRunner runner = new LinearSumCatchmentModelRunner( prefix );
 
       /* Calculate the catchment model. */
-      runner.executeCatchmentModel( simulation, control, model, generator, targetLink, parameterType, new SubProgressMonitor( monitor, 500 ) );
+      runner.executeCatchmentModel( newInfo, new SubProgressMonitor( monitor, 500 ) );
 
       /* Load the model.gml of the simulation. */
       final NaModell simulationModel = loadSimulationModelGml( simulation );
