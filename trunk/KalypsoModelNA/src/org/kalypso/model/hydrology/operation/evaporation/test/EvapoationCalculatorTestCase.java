@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
@@ -81,7 +82,7 @@ public class EvapoationCalculatorTestCase
     final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
     calculator.execute( new NullProgressMonitor() );
 
-    final IObservation observation = calculator.getObservation();
+    final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_MEAN_EVAPORATION_WATER_BASED );
     ZmlFactory.writeToFile( observation, new File( FileUtilities.TMP_DIR, "waterbase_evaporation.zml" ) );
 
     storeCSV( observation, new File( FileUtilities.TMP_DIR, "waterbase_evaporation.csv" ) );

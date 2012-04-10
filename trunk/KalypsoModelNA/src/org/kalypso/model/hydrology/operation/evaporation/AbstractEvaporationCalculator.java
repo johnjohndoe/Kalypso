@@ -173,10 +173,10 @@ public abstract class AbstractEvaporationCalculator implements ICoreRunnableWith
     return null;
   }
 
-  public IObservation getObservation( )
+  public IObservation getObservation( final String evaporationType )
   {
     final IAxis dateAxis = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE );
-    final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_MEAN_EVAPORATION );
+    final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( evaporationType );
     final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
     final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( valueAxis, true );
 

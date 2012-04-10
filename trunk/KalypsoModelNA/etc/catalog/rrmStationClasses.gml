@@ -14,7 +14,8 @@
       <tm:parameterType>MEAN_SUNSHINE</tm:parameterType>
       <tm:parameterType>MEAN_TEMPERATURE</tm:parameterType>
       <tm:parameterType>MEAN_HUMIDITY</tm:parameterType>
-      <tm:parameterType>MEAN_EVAPORATION</tm:parameterType>
+      <tm:parameterType>MEAN_EVAPORATION_LAND_BASED</tm:parameterType>
+      <tm:parameterType>MEAN_EVAPORATION_WATER_BASED</tm:parameterType>
       <tm:parameterType>MEAN_RAINFALL</tm:parameterType>
     </tm:StationClass>
   </tm:classMember>

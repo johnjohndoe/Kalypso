@@ -156,7 +156,7 @@ public class UpdateSimulationWorker
       /* Execute catchment models. */
       CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL, new SubProgressMonitor( monitor, 20 ) );
       CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, new SubProgressMonitor( monitor, 20 ) );
-      CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION, new SubProgressMonitor( monitor, 20 ) );
+      CatchmentModelHelper.executeCatchmentModel( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED, new SubProgressMonitor( monitor, 20 ) );
 
       /* Copy initial condition from long term simulation. */
       copyInitialCondition( control );

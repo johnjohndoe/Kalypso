@@ -50,13 +50,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IHydrologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IMeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.DeleteStationAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.DeleteTimeseriesAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.EditStationAction;
@@ -86,7 +89,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
   @Override
   public String getTypeLabel( )
   {
-    return Messages.getString("StationUiHandler_0"); //$NON-NLS-1$
+    return Messages.getString( "StationUiHandler_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -132,18 +135,37 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMeteorologicalStationAction( m_model, group ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewHydrologicalStationAction( m_model, group ) );
 
+    if( showCalculateEvaporationLink() )
+      ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new CalculateEvaporationAction( m_model, m_station ) );
+
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_model, m_station, null ) );
 
     /* Delete timeseries */
     final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
     final ITimeseries[] allTimeseries = timeseries.toArray( new ITimeseries[timeseries.size()] );
 
-    final String deleteMessage = String.format( Messages.getString("StationUiHandler_2"), getTreeLabel() ); //$NON-NLS-1$
+    final String deleteMessage = String.format( Messages.getString( "StationUiHandler_2" ), getTreeLabel() ); //$NON-NLS-1$
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, allTimeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
 
 // /* Delete station */
 // final IAction deleteStationAction = new DeleteStationAction( m_model, m_station );
 // ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteStationAction );
+  }
+
+  private boolean showCalculateEvaporationLink( )
+  {
+    final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
+
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
+      return false;
+    else if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_SUNSHINE_HOURS ) )
+      return false;
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
+      return false;
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) )
+      return false;
+
+    return true;
   }
 }
