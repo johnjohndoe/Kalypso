@@ -40,16 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.calccase;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.hydrology.project.RrmSimulation;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
 
 /**
  * This class executes a catchment model.
@@ -69,22 +64,12 @@ public abstract class AbstractCatchmentModelRunner
   /**
    * This function executes the catchment model.
    * 
-   * @param simulation
-   *          The simulation.
-   * @param control
-   *          The na control.
-   * @param model
-   *          The na model.
-   * @param generator
-   *          The rainfall generator.
-   * @param targetLink
-   *          The target link.
-   * @param parameterType
-   *          The parameter type.
+   * @param info
+   *          The catchment model info.
    * @param monitor
    *          A progress monitor.
    */
-  public abstract void executeCatchmentModel( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException;
+  public abstract void executeCatchmentModel( CatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * This function refreshs the simulation folder. It does not throw an exception.

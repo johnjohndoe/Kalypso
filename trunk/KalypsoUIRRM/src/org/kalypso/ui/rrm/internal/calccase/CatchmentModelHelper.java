@@ -59,8 +59,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.math.IntervalUtilities;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
-import org.kalypso.model.hydrology.binding.model.NaModell;
-import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
@@ -93,23 +91,16 @@ public class CatchmentModelHelper
   /**
    * This function executes the catchment model.
    * 
-   * @param simulation
-   *          The simulation.
-   * @param control
-   *          The na control.
-   * @param model
-   *          The na model.
-   * @param generator
-   *          The rainfall generator.
-   * @param targetLink
-   *          The target link.
-   * @param parameterType
-   *          The parameter type.
+   * @param info
+   *          The catchment model info.
    * @param monitor
    *          A progress monitor.
    */
-  public static void executeCatchmentModel( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType, final IProgressMonitor monitor ) throws CoreException
+  public static void executeCatchmentModel( final CatchmentModelInfo info, final IProgressMonitor monitor ) throws CoreException
   {
+    /* Get the generator. */
+    final IRainfallGenerator generator = info.getGenerator();
+
     /* Find the responsible catchment model runner. */
     AbstractCatchmentModelRunner modelRunner = null;
     if( generator instanceof ILinearSumGenerator )
@@ -120,7 +111,7 @@ public class CatchmentModelHelper
       throw new IllegalArgumentException( "The type of the generator must be that of ILinearSumGenerator or IMultiGenerator..." ); // $NON-NLS-1$
 
     /* Execute the catchment model. */
-    modelRunner.executeCatchmentModel( simulation, control, model, generator, targetLink, parameterType, monitor );
+    modelRunner.executeCatchmentModel( info, monitor );
   }
 
   /**
