@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Converts one calc case.
- * 
+ *
  * @author Gernot Belger
  */
 public class CalcCaseConverter extends AbstractLoggingOperation
@@ -141,7 +141,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     fixTimeseriesLinks( naModel, getLog() );
     getLog().add( IStatus.INFO, Messages.getString( "CalcCaseConverter.4" ) ); //$NON-NLS-1$
 
-    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel, newControl );
+    final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
     naModel.getWorkspace().dispose();
@@ -351,15 +351,10 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   static void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
   {
-    final ITimeseriesVisitor visitor = new FixDotDotTimeseriesVisitor();
-
-    final TimeseriesWalker walker = new TimeseriesWalker( visitor );
-    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
-    final IStatus status = walker.getStatus();
-    log.add( status );
+    visitModel( naModel, new FixDotDotTimeseriesVisitor(), log );
   }
 
-  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel, final NAControl newControl )
+  private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel )
   {
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     if( catchmentModel == null )
@@ -411,5 +406,20 @@ public class CalcCaseConverter extends AbstractLoggingOperation
       getLog().add( IStatus.WARNING, Messages.getString( "CalcCaseConverter.10" ), e ); //$NON-NLS-1$
       return null;
     }
+  }
+
+  public static IParameterTypeIndex collectTimeseriesParameterTypes( final NaModell naModel, final File sourceModelDir, final IStatusCollector log )
+  {
+    final ParameterTypeIndexVisitor visitor = new ParameterTypeIndexVisitor( sourceModelDir );
+    visitModel( naModel, visitor, log );
+    return visitor;
+  }
+
+  private static void visitModel( final NaModell naModel, final ITimeseriesVisitor visitor, final IStatusCollector log )
+  {
+    final TimeseriesWalker walker = new TimeseriesWalker( visitor );
+    naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
+    final IStatus status = walker.getStatus();
+    log.add( status );
   }
 }
