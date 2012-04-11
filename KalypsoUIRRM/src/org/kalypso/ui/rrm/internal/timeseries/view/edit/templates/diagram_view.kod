@@ -18,7 +18,7 @@
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#MEAN_TEMPERATURE" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:wind:velocity#MEAN_WIND_VELOCITY" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_LAND" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" /
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" />
       
         <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#MEAN_RAINFALL" />
 

@@ -68,8 +68,8 @@ public class CalculateEvaporationAction extends Action
     m_station = station;
     m_model = model;
 
-    setText( "Berechne Verdunstung" ); //$NON-NLS-1$
-    setToolTipText( "Berechne Verdunstungszeitreihe auf Grundlage vorhandenen mittlere Eingangszeitreihen (Luftfeuchte, Temperatur, Sonnenscheindauer, Windgeschwindigkeit" ); //$NON-NLS-1$
+    setText( "Berechne Seeverdunstung" ); //$NON-NLS-1$
+    setToolTipText( "Berechne Seeverdunstungszeitreihe auf Grundlage vorhandenen mittlere Eingangszeitreihen (Luftfeuchte, Temperatur, Sonnenscheindauer, Windgeschwindigkeit" ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_EVAPORATION ) );
   }
