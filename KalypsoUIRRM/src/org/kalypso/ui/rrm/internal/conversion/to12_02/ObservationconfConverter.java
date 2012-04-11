@@ -104,14 +104,14 @@ public class ObservationconfConverter
         if( StringUtils.isBlank( href ) )
         {
           // skip entry
-          log.add( IStatus.WARNING, Messages.getString("ObservationconfConverter_1"), null, feature.getName() ); //$NON-NLS-1$
+          log.add( IStatus.WARNING, Messages.getString( "ObservationconfConverter_1" ), null, feature.getName() ); //$NON-NLS-1$
         }
         else
         {
           final TimeseriesIndexEntry entry = m_timeseriesIndex.findTimeseriesByOldHref( projectRelativeHref );
           if( entry == null )
           {
-            log.add( IStatus.WARNING, Messages.getString("ObservationconfConverter_2"), null, projectRelativeHref ); //$NON-NLS-1$
+            log.add( IStatus.WARNING, Messages.getString( "ObservationconfConverter_2" ), null, projectRelativeHref ); //$NON-NLS-1$
           }
           else
           {
@@ -131,10 +131,10 @@ public class ObservationconfConverter
     catch( final Exception e )
     {
       e.printStackTrace();
-      log.add( IStatus.WARNING, Messages.getString("ObservationconfConverter_3"), e, filename ); //$NON-NLS-1$
+      log.add( IStatus.WARNING, Messages.getString( "ObservationconfConverter_3" ), e, filename ); //$NON-NLS-1$
     }
 
-    final String msg = String.format( Messages.getString("ObservationconfConverter_4"), filename ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "ObservationconfConverter_4" ), filename ); //$NON-NLS-1$
     return log.asMultiStatusOrOK( msg, msg );
   }
 
