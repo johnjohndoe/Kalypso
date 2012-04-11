@@ -159,7 +159,7 @@ public class UpdateSimulationWorker
       /* Create the catchment model info objects. */
       final ICatchmentModelInfo infoN = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
       final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
-      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED );
+      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
 
       /* Get the catchment model runner. */
       final AbstractCatchmentModelRunner runnerN = getCatchmentModelRunner( infoN );

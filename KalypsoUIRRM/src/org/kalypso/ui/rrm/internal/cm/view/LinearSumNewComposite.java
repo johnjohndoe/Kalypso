@@ -65,7 +65,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
    * All allowed parameter types.
    */
   private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE,
-      ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED };
+      ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED };
 
   /**
    * The text field of the comments.

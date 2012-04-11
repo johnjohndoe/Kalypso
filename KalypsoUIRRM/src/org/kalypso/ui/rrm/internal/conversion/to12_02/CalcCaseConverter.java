@@ -365,7 +365,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final CatchmentModelBuilder builder = new CatchmentModelBuilder( naModel, catchmentModel, m_targetCalcCaseDir, timeseriesIndex );
 
     gueCatchmentModel( builder, Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
-    gueCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED );
+    gueCatchmentModel( builder, Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
     gueCatchmentModel( builder, Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
 
     return builder;
@@ -386,7 +386,7 @@ public class CalcCaseConverter extends AbstractLoggingOperation
         final String cmRefN = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_RAINFALL );
         newControl.setGeneratorReferenceN( cmRefN );
 
-        final String cmRefE = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED );
+        final String cmRefE = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
         newControl.setGeneratorReferenceE( cmRefE );
 
         final String cmRefT = catchmentModelBuilder.getGeneratorPath( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );

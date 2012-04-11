@@ -117,7 +117,7 @@ public class CatchmentModelHelper
       case ITimeseriesConstants.TYPE_RAINFALL:
         return Messages.getString( "UpdateSimulationWorker.3" ); // $NON-NLS-1$
       case ITimeseriesConstants.TYPE_MEAN_TEMPERATURE:
-      case ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED:
+      case ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED:
         return Messages.getString( "UpdateSimulationWorker.4" ); // $NON-NLS-1$
     }
 

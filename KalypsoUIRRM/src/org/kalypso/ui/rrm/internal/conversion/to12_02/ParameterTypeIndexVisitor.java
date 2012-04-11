@@ -138,7 +138,7 @@ public class ParameterTypeIndexVisitor implements ITimeseriesVisitor, IParameter
       return ITimeseriesConstants.TYPE_MEAN_TEMPERATURE;
 
     if( Catchment.PROP_EVAPORATION_LINK.equals( linkProperty ) )
-      return ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED;
+      return ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED;
 
     if( IStorageChannel.PROPERTY_SEA_EVAPORATION_ZMLLINK.equals( linkProperty ) )
       return ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED;
