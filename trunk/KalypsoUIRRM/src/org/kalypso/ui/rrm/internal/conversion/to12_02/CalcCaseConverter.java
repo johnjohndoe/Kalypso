@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -139,7 +140,6 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     final NaModell naModel = m_data.loadNaModel();
 
     fixTimeseriesLinks( naModel, getLog() );
-    getLog().add( IStatus.INFO, Messages.getString( "CalcCaseConverter.4" ) ); //$NON-NLS-1$
 
     final CatchmentModelBuilder catchmentModelBuilder = guessCatchmentModel( naModel );
 
@@ -351,7 +351,12 @@ public class CalcCaseConverter extends AbstractLoggingOperation
    */
   static void fixTimeseriesLinks( final NaModell naModel, final IStatusCollector log ) throws Exception
   {
-    visitModel( naModel, new FixDotDotTimeseriesVisitor(), log );
+    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    visitModel( naModel, new FixDotDotTimeseriesVisitor(), localLog );
+
+    final IStatus status = localLog.asMultiStatus( "Anpassen der Zeitreihenreferenzen" );
+    log.add( status );
   }
 
   private CatchmentModelBuilder guessCatchmentModel( final NaModell naModel )
@@ -408,18 +413,19 @@ public class CalcCaseConverter extends AbstractLoggingOperation
     }
   }
 
-  public static IParameterTypeIndex collectTimeseriesParameterTypes( final NaModell naModel, final File sourceModelDir, final IStatusCollector log )
+  public static IParameterTypeIndex collectTimeseriesParameterTypes( final NaModell naModel, final File sourceModelDir )
   {
+    final IStatusCollector localLog = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
     final ParameterTypeIndexVisitor visitor = new ParameterTypeIndexVisitor( sourceModelDir );
-    visitModel( naModel, visitor, log );
+    visitModel( naModel, visitor, localLog );
+
     return visitor;
   }
 
   private static void visitModel( final NaModell naModel, final ITimeseriesVisitor visitor, final IStatusCollector log )
   {
-    final TimeseriesWalker walker = new TimeseriesWalker( visitor );
+    final TimeseriesWalker walker = new TimeseriesWalker( visitor, log );
     naModel.getWorkspace().accept( walker, naModel, FeatureVisitor.DEPTH_INFINITE );
-    final IStatus status = walker.getStatus();
-    log.add( status );
   }
 }

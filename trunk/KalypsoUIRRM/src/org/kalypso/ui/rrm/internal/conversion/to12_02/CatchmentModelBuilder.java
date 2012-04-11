@@ -73,13 +73,11 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper that guesses a CatchmentModel for each existing calculation case.
- * 
+ *
  * @author Gernot Belger
  */
 public class CatchmentModelBuilder
 {
-  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-
   private final Map<String, String> m_generatorIds = new HashMap<>();
 
   private final NaModell m_naModel;
@@ -100,6 +98,8 @@ public class CatchmentModelBuilder
 
   public IStatus execute( final QName modelTimeseriesLink, final String parameterType )
   {
+    final IStatusCollector log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
     /* Create and add new generator */
     final IFeatureBindingCollection<IRainfallGenerator> generators = m_catchmentModel.getGenerators();
     final ILinearSumGenerator generator = generators.addNew( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR, ILinearSumGenerator.class );
@@ -124,7 +124,7 @@ public class CatchmentModelBuilder
     for( final Catchment catchment : catchments )
     {
       final IStatus status = buildCatchment( generator, catchment, modelTimeseriesLink, parameterType, smallestPeriod, timestamps );
-      m_log.add( status );
+      log.add( status );
     }
 
     /* Use the smallest period of all involved timeseries as timestep for the generator. */
@@ -139,7 +139,7 @@ public class CatchmentModelBuilder
 
     final String parameterName = TimeseriesUtils.getName( parameterType );
     final String message = String.format( Messages.getString( "CatchmentModelBuilder_1" ), parameterName ); //$NON-NLS-1$
-    return m_log.asMultiStatusOrOK( message, message );
+    return log.asMultiStatusOrOK( message, message );
   }
 
   private IStatus buildCatchment( final ILinearSumGenerator generator, final Catchment modelCatchment, final QName modelTimeseriesLink, final String parameterType, final MutablePeriod smallestTimestep, final Map<LocalTime, Integer> timestamps )

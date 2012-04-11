@@ -44,13 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.channels.IStorageChannel;
 import org.kalypso.model.hydrology.binding.model.channels.StorageChannel;
 import org.kalypso.model.hydrology.binding.model.nodes.Node;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -61,13 +58,18 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class TimeseriesWalker implements FeatureVisitor
 {
-  private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-
   private final ITimeseriesVisitor m_operation;
 
-  public TimeseriesWalker( final ITimeseriesVisitor visitor )
+  private final IStatusCollector m_log;
+
+  /**
+   * @param log
+   *          All non-ok result of the visitor will be added to this log.
+   */
+  public TimeseriesWalker( final ITimeseriesVisitor visitor, final IStatusCollector log )
   {
     m_operation = visitor;
+    m_log = log;
   }
 
   @Override
@@ -113,11 +115,6 @@ public class TimeseriesWalker implements FeatureVisitor
 
     /* No need to dig further */
     return false;
-  }
-
-  public IStatus getStatus( )
-  {
-    return m_log.asMultiStatus( Messages.getString("TimeseriesExtendVisitor_0") ); //$NON-NLS-1$
   }
 
   private void visitTimeseries( final Feature feature, final QName linkProperty )
