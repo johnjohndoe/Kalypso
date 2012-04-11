@@ -42,9 +42,13 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOCase;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -59,13 +63,30 @@ public class TimeseriesIndex
 
   private final Map<String, TimeseriesIndexEntry[]> m_filenameHash = new HashMap<>();
 
-  private final Map<String, TimeseriesIndexEntry> m_oldHrefIndex = new HashMap<>();
+  /**
+   * Makes sure that pathes that point to the same file on this file system are considered the same regarding this
+   * index.
+   */
+  private final Comparator<String> m_fileComparator = new Comparator<String>()
+  {
+    @Override
+    public int compare( final String o1, final String o2 )
+    {
+      final String n1 = FilenameUtils.normalize( o1 );
+      final String n2 = FilenameUtils.normalize( o2 );
+
+      return IOCase.SYSTEM.checkCompareTo( n1, n2 );
+    }
+  };
+
+  private final Map<String, TimeseriesIndexEntry> m_oldHrefIndex = new TreeMap<>( m_fileComparator );
 
   public void addEntry( final TimeseriesIndexEntry entry )
   {
     m_entries.add( entry );
 
     /* Fill old href index */
+// System.out.println( entry.getOldProjectRelativePath() );
     m_oldHrefIndex.put( entry.getOldProjectRelativePath(), entry );
 
     /* Add into filename hash */
