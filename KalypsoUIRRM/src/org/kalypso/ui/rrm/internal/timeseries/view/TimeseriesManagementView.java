@@ -96,7 +96,7 @@ public class TimeseriesManagementView extends ViewPart
   private Control createSearchControls( final Composite parent, final FormToolkit toolkit )
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
-    section.setText( Messages.getString("TimeseriesManagementView_0") ); //$NON-NLS-1$
+    section.setText( Messages.getString( "TimeseriesManagementView_0" ) ); //$NON-NLS-1$
     section.setLayout( new FillLayout() );
 
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( section );
@@ -114,7 +114,7 @@ public class TimeseriesManagementView extends ViewPart
 
   private Composite createTree( final Composite panel )
   {
-    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.SINGLE );
+    m_treeViewer = new TreeViewer( panel, SWT.FLAT | SWT.MULTI );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TimeseriesNodeLabelComparator() );
