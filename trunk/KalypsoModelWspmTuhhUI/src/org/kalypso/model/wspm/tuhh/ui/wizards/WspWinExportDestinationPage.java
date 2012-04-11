@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.DirectoryBinding;
-import org.kalypso.commons.databinding.validation.FileIsisAsciiPrintable;
+import org.kalypso.commons.databinding.validation.FileIsAsciiPrintable;
 import org.kalypso.commons.databinding.validation.StringMustNotContainValidator;
 import org.kalypso.commons.databinding.validation.StringTooLongValidator;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExportData;
@@ -156,7 +156,7 @@ public class WspWinExportDestinationPage extends WizardPage
     final DataBinder historyBinder = directoryBinding.getHistoryBinder();
     historyBinder.addTargetAfterGetValidator( new StringTooLongValidator( IStatus.WARNING, tooLongMessage, WSPWIN_MAX_PATH_LENGTH ) );
     historyBinder.addTargetAfterGetValidator( new StringMustNotContainValidator( IStatus.WARNING, Messages.getString("WspWinExportDestinationPage.4"), " " ) );  //$NON-NLS-1$//$NON-NLS-2$
-    historyBinder.addTargetAfterConvertValidator( new FileIsisAsciiPrintable( IStatus.WARNING, Messages.getString("WspWinExportDestinationPage.5") ) ); //$NON-NLS-1$
+    historyBinder.addTargetAfterConvertValidator( new FileIsAsciiPrintable( IStatus.WARNING, Messages.getString("WspWinExportDestinationPage.5") ) ); //$NON-NLS-1$
 
     final Button searchButton = directoryBinding.createDirectorySearchButton( destinationSelectionGroup, historyControl, SELECT_DESTINATION_TITLE, SELECT_DESTINATION_MESSAGE );
     setButtonLayoutData( searchButton );

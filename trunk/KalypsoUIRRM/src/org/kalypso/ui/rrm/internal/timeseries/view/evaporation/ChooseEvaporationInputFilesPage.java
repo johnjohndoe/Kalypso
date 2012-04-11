@@ -51,6 +51,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -68,6 +70,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.commons.databinding.validation.StringIsAsciiPrintableValidator;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -129,8 +132,15 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     final Group groupDateRange = new Group( body, SWT.NULL );
     groupDateRange.setLayout( new GridLayout( 2, false ) );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupDateRange.setText( "" );
+    groupDateRange.setText( "Quality" );
 
+    new Label( groupDateRange, SWT.NULL ).setText( "Quality:" );
+    final Text text = new Text( groupDateRange, SWT.BORDER );
+    text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    final ISWTObservableValue target = SWTObservables.observeText( text );
+    final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_QUALITY );
+    m_binding.bindValue( target, model, new StringIsAsciiPrintableValidator( IStatus.ERROR, "Ungültiger Quality-Name" ) );
   }
 
   private void doAddDateRangeControl( final Composite body )
@@ -199,8 +209,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
         if( Objects.isNull( value ) )
         {
           setErrorMessage( "Leeres Element. Bitte weisen Sie alle Quellen zu." );
-
-          return new Status( IStatus.ERROR, "", "Leeres Element. Bitte weisen Sie alle Quellen zu." );
+          return Status.CANCEL_STATUS;
         }
 
         return Status.OK_STATUS;
