@@ -73,7 +73,7 @@ public class EvapoationCalculatorTestCase
   public void testWaterbasedEvaporationCalculator( ) throws SensorException, IOException
   {
     final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_humidity.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_sunshine.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./sunshine_hours.zml" ) ) ); //$NON-NLS-1$
     final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_temperature.zml" ) ) ); //$NON-NLS-1$
     final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
 
@@ -82,7 +82,7 @@ public class EvapoationCalculatorTestCase
     final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
     calculator.execute( new NullProgressMonitor() );
 
-    final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_MEAN_EVAPORATION_WATER_BASED );
+    final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED );
     ZmlFactory.writeToFile( observation, new File( FileUtilities.TMP_DIR, "waterbase_evaporation.zml" ) );
 
     storeCSV( observation, new File( FileUtilities.TMP_DIR, "waterbase_evaporation.csv" ) );

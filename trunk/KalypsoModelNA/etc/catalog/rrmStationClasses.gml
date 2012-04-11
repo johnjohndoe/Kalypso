@@ -11,11 +11,11 @@
       <tm:parameterType>v</tm:parameterType>
       <tm:parameterType>H</tm:parameterType>
       <tm:parameterType>MEAN_WIND_VELOCITY</tm:parameterType>
-      <tm:parameterType>MEAN_SUNSHINE</tm:parameterType>
+      <tm:parameterType>H_SUNSHINE</tm:parameterType>
       <tm:parameterType>MEAN_TEMPERATURE</tm:parameterType>
       <tm:parameterType>MEAN_HUMIDITY</tm:parameterType>
-      <tm:parameterType>MEAN_EVAPORATION_LAND_BASED</tm:parameterType>
-      <tm:parameterType>MEAN_EVAPORATION_WATER_BASED</tm:parameterType>
+      <tm:parameterType>E_LAND</tm:parameterType>
+      <tm:parameterType>E_WATER</tm:parameterType>
       <tm:parameterType>MEAN_RAINFALL</tm:parameterType>
     </tm:StationClass>
   </tm:classMember>

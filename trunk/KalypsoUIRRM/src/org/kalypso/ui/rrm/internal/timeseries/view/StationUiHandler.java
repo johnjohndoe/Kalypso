@@ -159,7 +159,7 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
 
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
       return false;
-    else if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_SUNSHINE_HOURS ) )
+    else if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
       return false;
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
       return false;

@@ -101,7 +101,7 @@ public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculat
     while( ptr.before( to ) || DateUtils.isSameDay( ptr, to ) )
     {
       final Double humidity = getValue( getDataSet( getHumidity(), ptr, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) );
-      final Double sunshine = getValue( getDataSet( getSunshine(), ptr, ITimeseriesConstants.TYPE_MEAN_SUNSHINE_HOURS ) );
+      final Double sunshine = getValue( getDataSet( getSunshine(), ptr, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) );
       final Double temperature = getValue( getDataSet( getTemperature(), ptr, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) );
       final Double windVelocity = getValue( getDataSet( getWindVelocity(), ptr, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) );
 

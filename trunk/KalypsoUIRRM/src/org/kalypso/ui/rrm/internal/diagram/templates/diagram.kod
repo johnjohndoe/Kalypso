@@ -7,18 +7,18 @@
       </CascadingParameters>
 
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Q" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation:old#E" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rainfall#N" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#T" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#V" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#W" />
 
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:humidity#MEAN_HUMIDITY" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:sunshine:hours#MEAN_SUNSHINE" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours#H_SUNSHINE" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#MEAN_TEMPERATURE" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:wind:velocity#MEAN_WIND_VELOCITY" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#MEAN_EVAPORATION_LAND_BASED" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#MEAN_EVAPORATION_WATER_BASED" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_LAND" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#MEAN_RAINFALL" />
 
       <!-- Selektionslayer unten drunter -->

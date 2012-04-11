@@ -117,16 +117,24 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     body.setLayout( Layouts.createGridLayout() );
     setControl( body );
 
-    final Group groupSources = new Group( body, SWT.NULL );
-    groupSources.setLayout( new GridLayout( 2, false ) );
-    groupSources.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupSources.setText( "Quellen" );
+    doAddSourceControls( body );
+    doAddDateRangeControl( body );
+    doAddQualityControl( body );
 
-    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_HUMIDITY, CalculateEvaporationData.PROPERTY_HUMIDITY );
-    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, CalculateEvaporationData.PROPERTY_TEMPERATURE );
-    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY, CalculateEvaporationData.PROPERTY_WIND_VELOCITY );
-    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_SUNSHINE_HOURS, CalculateEvaporationData.PROPERTY_SUNSHINE_HOURS );
+    doUpdateDateRange();
+  }
 
+  private void doAddQualityControl( final Composite body )
+  {
+    final Group groupDateRange = new Group( body, SWT.NULL );
+    groupDateRange.setLayout( new GridLayout( 2, false ) );
+    groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    groupDateRange.setText( "" );
+
+  }
+
+  private void doAddDateRangeControl( final Composite body )
+  {
     final Group groupDateRange = new Group( body, SWT.NULL );
     groupDateRange.setLayout( new GridLayout( 2, false ) );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -141,8 +149,19 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     m_labelDateRangeTo = new Text( groupDateRange, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT );
     m_labelDateRangeTo.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_labelDateRangeTo.setText( "" );
+  }
 
-    doUpdateDateRange();
+  private void doAddSourceControls( final Composite body )
+  {
+    final Group groupSources = new Group( body, SWT.NULL );
+    groupSources.setLayout( new GridLayout( 2, false ) );
+    groupSources.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    groupSources.setText( "Quellen" );
+
+    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_HUMIDITY, CalculateEvaporationData.PROPERTY_HUMIDITY );
+    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, CalculateEvaporationData.PROPERTY_TEMPERATURE );
+    addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY, CalculateEvaporationData.PROPERTY_WIND_VELOCITY );
+    addControl( groupSources, ITimeseriesConstants.TYPE_SUNSHINE_HOURS, CalculateEvaporationData.PROPERTY_SUNSHINE_HOURS );
   }
 
   private void addControl( final Group group, final String type, final String property )

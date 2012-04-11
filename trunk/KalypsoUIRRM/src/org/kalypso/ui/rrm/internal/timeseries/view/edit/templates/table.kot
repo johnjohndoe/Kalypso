@@ -233,7 +233,7 @@
 
 
     <!-- mean sunshine hours -->
-    <DataColumn editable="true" id="MEAN_SUNSHINE" metadataSource="true" tooltip="true" wrapText="true">
+    <DataColumn editable="true" id="H_SUNSHINE" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Mittlere Sonnenscheindauer</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
@@ -246,7 +246,7 @@
       <ruleSetReference>dataSource</ruleSetReference>
 
       <indexAxis>date</indexAxis>
-      <valueAxis>MEAN_SUNSHINE</valueAxis>
+      <valueAxis>H_SUNSHINE</valueAxis>
     </DataColumn>
 
     <!-- mean temperature -->
@@ -298,11 +298,11 @@
       <ruleSetReference>dataSource</ruleSetReference>
 
       <indexAxis>date</indexAxis>
-      <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
+      <valueAxis>MEAN_RAINFALL</valueAxis>
     </DataColumn>
 
     <!-- mean evaporation -->
-    <DataColumn editable="true" id="MEAN_EVAPORATION_LAND_BASED" metadataSource="true" tooltip="true" wrapText="true">
+    <DataColumn editable="true" id="E_LAND" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Mittlere Grasverdunstung</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
@@ -315,11 +315,11 @@
       <ruleSetReference>dataSource</ruleSetReference>
 
       <indexAxis>date</indexAxis>
-      <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
+      <valueAxis>E_LAND</valueAxis>
     </DataColumn>
     
     <!-- mean evaporation -->
-    <DataColumn editable="true" id="MEAN_EVAPORATION_WATER_BASED" metadataSource="true" tooltip="true" wrapText="true">
+    <DataColumn editable="true" id="E_WATER" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Mittlere Seeverdunstung</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
@@ -332,7 +332,7 @@
       <ruleSetReference>dataSource</ruleSetReference>
 
       <indexAxis>date</indexAxis>
-      <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
+      <valueAxis>E_WATER</valueAxis>
     </DataColumn>
 
   </Columns>
