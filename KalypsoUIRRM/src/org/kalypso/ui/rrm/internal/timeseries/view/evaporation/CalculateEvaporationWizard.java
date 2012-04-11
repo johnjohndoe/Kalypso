@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationData;
 
 /**
  * @author Dirk Kuch
@@ -54,20 +55,15 @@ public class CalculateEvaporationWizard extends Wizard
 
   private final IStation m_station;
 
-  public CalculateEvaporationWizard( final CommandableWorkspace workspace, final IStation station )
+  private final CalculateEvaporationData m_data;
+
+  public CalculateEvaporationWizard( final CommandableWorkspace workspace, final IStation station, final CalculateEvaporationData data )
   {
     m_workspace = workspace;
     m_station = station;
+    m_data = data;
 
-//    addPage( new ImportObservationSourcePage( "sourcePage", data ) ); //$NON-NLS-1$
-//    addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
-// {
-// @Override
-// protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
-// {
-// return new TimeseriesNewComposite( parent, bean, binding );
-// }
-// } );
+    addPage( new ChooseEvaporationInputFilesPage( station, data ) );
   }
 
   @Override
