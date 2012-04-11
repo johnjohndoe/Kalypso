@@ -262,6 +262,9 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     setProperty( PROPERTY_TIMESTEP, timestep );
   }
 
+  /**
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#getTimestamp()
+   */
   @Override
   public LocalTime getTimestamp( )
   {
@@ -289,6 +292,9 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     }
   }
 
+  /**
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#setTimestamp(org.joda.time.LocalTime)
+   */
   @Override
   public void setTimestamp( final LocalTime timestamp )
   {

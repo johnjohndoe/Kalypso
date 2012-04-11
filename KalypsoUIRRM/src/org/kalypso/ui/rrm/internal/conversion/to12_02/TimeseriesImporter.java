@@ -90,7 +90,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeseries from the old 'Zeitreihen' folder into the new timeseries management.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -154,8 +154,7 @@ public class TimeseriesImporter
     monitor.beginTask( name, IProgressMonitor.UNKNOWN );
 
     final File sourceTimeseriesDir = m_sourceDir;
-
-// final File sourceTimeseriesDir = new File( m_sourceDir, folder );
+    // final File sourceTimeseriesDir = new File( m_sourceDir, folder );
 
     /* Return, if directory does not exist */
     if( !sourceTimeseriesDir.isDirectory() )
