@@ -78,7 +78,7 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.imports.ImportObservationData;
+import org.kalypso.zml.ui.imports.IStoreObservationData;
 
 /**
  * @author Gernot Belger
@@ -91,11 +91,11 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
   private ITimeseries m_timeseries;
 
-  private final ImportTimeseriesOperation m_operation;
+  private final IImportTimeseriesOperation m_operation;
 
   private final TimeseriesBean m_bean;
 
-  public StoreTimeseriesOperation( final TimeseriesBean bean, final CommandableWorkspace workspace, final IStation station, final ImportTimeseriesOperation importOperation )
+  public StoreTimeseriesOperation( final TimeseriesBean bean, final CommandableWorkspace workspace, final IStation station, final IImportTimeseriesOperation importOperation )
   {
     m_bean = bean;
     m_workspace = workspace;
@@ -107,7 +107,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
    * Updates some of the bean data before the execute method is called in another thread.<br/>
    * This is needed, because the bean stuff is not allowed to be called outside the swt thread.
    */
-  void updateDataAfterFinish( )
+  public void updateDataAfterFinish( )
   {
     m_bean.setProperty( ITimeseries.PROPERTY_PARAMETER_TYPE, m_operation.getData().getParameterType() );
   }
@@ -125,7 +125,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
     writeResult( targetFile, observation );
 
-    return stati.asMultiStatus( Messages.getString("StoreTimeseriesOperation.0") ); //$NON-NLS-1$
+    return stati.asMultiStatus( Messages.getString( "StoreTimeseriesOperation.0" ) ); //$NON-NLS-1$
   }
 
   private ITimeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
@@ -200,7 +200,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final String timeseriesFilename = TimeseriesDataLinkFunctionProperty.formatTimeseriesFilename( parameterType, quality, timestep );
 
     if( fileNameExists( timeseriesFilename ) )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("StoreTimeseriesOperation.1") ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "StoreTimeseriesOperation.1" ) ) ); //$NON-NLS-1$
 
     final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
     final IProject project = scenarioDataProvider.getScenarioFolder().getProject();
@@ -212,7 +212,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
   private boolean fileNameExists( final String file )
   {
-    final ImportObservationData data = m_operation.getData();
+    final IStoreObservationData data = m_operation.getData();
     final String[] existing = data.getExistingTimeserieses();
     for( final String exists : existing )
     {

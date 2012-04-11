@@ -65,8 +65,9 @@ import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
  * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
+public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IImportTimeseriesOperation
 {
   private final ImportObservationData m_data;
 
@@ -181,16 +182,19 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
+  @Override
   public ImportObservationData getData( )
   {
     return m_data;
   }
 
+  @Override
   public IObservation getObservation( )
   {
     return m_observation;
   }
 
+  @Override
   public Period getTimestep( )
   {
     return m_timestep;

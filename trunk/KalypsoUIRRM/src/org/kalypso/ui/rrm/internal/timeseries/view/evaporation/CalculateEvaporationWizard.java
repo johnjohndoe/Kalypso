@@ -41,18 +41,20 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
+import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationData;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.StoreTimeseriesOperation;
 
 /**
  * @author Dirk Kuch
@@ -89,16 +91,30 @@ public class CalculateEvaporationWizard extends Wizard
       final DateRange daterange = m_data.getDateRange();
 
       final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
-      final IStatus status = calculator.execute( new NullProgressMonitor() );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, calculator );
+      if( !status.isOK() )
+      {
+        StatusDialog.open( getShell(), status, getWindowTitle() );
+      }
 
       final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED );
+
+      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_workspace, m_station, new CalculateEvaporationImportOpertion( observation ) );
+      storeOperation.updateDataAfterFinish();
+
+      final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
+      if( !status2.isOK() )
+      {
+        StatusDialog.open( getShell(), status2, getWindowTitle() );
+      }
+
+      // FIXME better error handling
+      return status.isOK() && status2.isOK();
     }
-    catch( final SensorException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return false;
     }
-
-    throw new UnsupportedOperationException();
   }
 }
