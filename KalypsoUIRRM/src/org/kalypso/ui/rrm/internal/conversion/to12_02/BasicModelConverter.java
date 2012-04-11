@@ -47,7 +47,6 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.model.hydrology.binding.model.NaModell;
@@ -180,12 +179,11 @@ public class BasicModelConverter extends AbstractLoggingOperation
     final NaModell naModel = m_data.loadNaModel();
 
     // IMPORTANT: index parameter types before the links have been fixed, so file pathes are correct
-    final IParameterTypeIndex parameterIndex = CalcCaseConverter.collectTimeseriesParameterTypes( naModel, m_sourceDir, getLog() );
+    final IParameterTypeIndex parameterIndex = CalcCaseConverter.collectTimeseriesParameterTypes( naModel, m_sourceDir );
 
     CalcCaseConverter.fixTimeseriesLinks( naModel, getLog() );
 
     m_data.saveModel( naModel, INaProjectConstants.GML_MODELL_PATH );
-    getLog().add( IStatus.INFO, Messages.getString("BasicModelConverter.12") ); //$NON-NLS-1$
 
     return parameterIndex;
   }
