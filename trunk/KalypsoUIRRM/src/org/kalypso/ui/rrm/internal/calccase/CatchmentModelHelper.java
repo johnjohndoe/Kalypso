@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.calccase;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
@@ -50,11 +51,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.math.IntervalUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.rcm.binding.ICatchment;
@@ -399,7 +402,7 @@ public class CatchmentModelHelper
    * @param timestep
    *          The timestep.
    * @param timestamp
-   *          The timestamp.
+   *          The timestamp in UTC.
    * @return The date range.
    */
   public static DateRange getRange( final NAControl control, final Period timestep, final LocalTime timestamp )
@@ -416,9 +419,14 @@ public class CatchmentModelHelper
     if( timestep.getDays() == 0 || timestamp == null )
       return new DateRange( adjustedStart.toDate(), adjustedEnd.toDate() );
 
+    /* Convert to a date with the kalypso timezone. */
+    /* The date fields are ignored. */
+    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+    final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
+
     /* Further adjust range by predefined time. */
-    final DateTime startWithTime = adjustedStart.withTime( timestamp.getHourOfDay(), timestamp.getMinuteOfHour(), timestamp.getSecondOfMinute(), timestamp.getMillisOfSecond() );
-    final DateTime endWithTime = adjustedEnd.withTime( timestamp.getHourOfDay(), timestamp.getMinuteOfHour(), timestamp.getSecondOfMinute(), timestamp.getMillisOfSecond() );
+    final DateTime startWithTime = adjustedStart.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
+    final DateTime endWithTime = adjustedEnd.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
 
     /* New start must always be before unadjusted start, fix, if this is not the case. */
     DateTime startWithTimeFixed;

@@ -267,11 +267,11 @@ public class CatchmentModelsDuplicateEliminator
       control.setGeneratorReferenceN( usedHref );
 
     /* Adjust the generator reference for parameter type E, if needed. */
-    if( usedGenerator.getParameterType().equals( ITimeseriesConstants.TYPE_EVAPORATION ) )
+    if( usedGenerator.getParameterType().equals( ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED ) )
       control.setGeneratorReferenceE( usedHref );
 
     /* Adjust the generator reference for parameter type T, if needed. */
-    if( usedGenerator.getParameterType().equals( ITimeseriesConstants.TYPE_TEMPERATURE ) )
+    if( usedGenerator.getParameterType().equals( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
       control.setGeneratorReferenceT( usedHref );
   }
 

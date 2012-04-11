@@ -127,7 +127,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
   /**
    * This function returns the timestamp for daily values.
    * 
-   * @return The timestamp for daily values.
+   * @return The timestamp in UTC.
    */
   LocalTime getTimestamp( );
 
@@ -135,7 +135,7 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * This function sets the timestamp for daily values.
    * 
    * @param timestamp
-   *          The timestamp.
+   *          The timestamp in UTC.
    */
   void setTimestamp( LocalTime timestamp );
 

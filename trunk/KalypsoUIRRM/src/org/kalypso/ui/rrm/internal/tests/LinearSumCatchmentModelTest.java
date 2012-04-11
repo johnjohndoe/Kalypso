@@ -42,23 +42,42 @@ package org.kalypso.ui.rrm.internal.tests;
 
 import static org.junit.Assert.fail;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.kalypso.commons.java.io.FileUtilities;
 
 /**
+ * Test for verifying a linear sum catchment model.
+ * 
  * @author Holger Albert
  */
 public class LinearSumCatchmentModelTest
 {
+  /**
+   * The temporary directory.
+   */
+  private File m_tmpDir;
+
   @Before
   public void setUp( ) throws Exception
   {
+    /* Get the temporary directory of the system. */
+    final File tmpDir = FileUtilities.TMP_DIR;
+
+    /* Create the temporary directory of the test. */
+    m_tmpDir = FileUtilities.createNewTempDir( "linearTest", tmpDir );
   }
 
   @After
   public void tearDown( ) throws Exception
   {
+    /* The temporary directory of the test will not be deleted here. */
+    /* Because this function is always executed. */
+    /* But we want to keep the directory, if the test has failed. */
+    m_tmpDir = null;
   }
 
   @Test
