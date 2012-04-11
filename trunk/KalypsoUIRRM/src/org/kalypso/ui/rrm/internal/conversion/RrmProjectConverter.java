@@ -64,9 +64,9 @@ import org.osgi.framework.Version;
  */
 public class RrmProjectConverter implements IProjectConverter
 {
-  private final static Version V_10_10 = new Version( 10, 10, 0 );
+// private final static Version V_10_10 = new Version( 10, 10, 0 );
 
-  // private final static Version V_11_06 = new Version( 11, 6, 0 );
+  private final static Version V_11_06 = new Version( 11, 6, 0 );
 
   private final File m_sourceDir;
 
@@ -83,9 +83,6 @@ public class RrmProjectConverter implements IProjectConverter
     m_targetDir = targetDir;
   }
 
-  /**
-   * @see org.kalypso.module.conversion.IProjectConverter#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -116,7 +113,7 @@ public class RrmProjectConverter implements IProjectConverter
   private IProjectConverter createConverter( final Version targetVersion )
   {
     /* Everything above 10.10 */
-    if( m_sourceVersion != null && m_sourceVersion.compareTo( V_10_10 ) > 0 )
+    if( m_sourceVersion != null && m_sourceVersion.compareTo( V_11_06 ) > 0 )
       return new RrmProjectConverter11_06to12_02( m_sourceDir, m_targetDir, targetVersion );
 
     return null;
