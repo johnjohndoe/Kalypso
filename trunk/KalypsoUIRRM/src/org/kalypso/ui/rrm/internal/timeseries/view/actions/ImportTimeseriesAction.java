@@ -45,6 +45,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
@@ -93,7 +94,8 @@ public class ImportTimeseriesAction extends Action
     final ImportObservationData data = prepareData();
     final ITimeseries timeseries = showWizard( shell, data );
 
-    m_model.refreshTree( timeseries );
+    if( Objects.isNotNull( timeseries ) )
+      m_model.refreshTree( timeseries );
   }
 
   private ImportObservationData prepareData( )
@@ -109,7 +111,6 @@ public class ImportTimeseriesAction extends Action
 
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
   {
-
     final TimeseriesBean bean = new TimeseriesBean();
     if( m_parameterType != null )
       data.setParameterType( m_parameterType );

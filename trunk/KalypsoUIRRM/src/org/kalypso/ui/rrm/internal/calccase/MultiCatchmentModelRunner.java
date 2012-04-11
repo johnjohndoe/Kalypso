@@ -242,7 +242,7 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
         TimeseriesLinkType link = null;
         if( parameterType.equals( ITimeseriesConstants.TYPE_RAINFALL ) )
           link = catchment.getPrecipitationLink();
-        else if( parameterType.equals( ITimeseriesConstants.TYPE_MEAN_EVAPORATION_LAND_BASED ) )
+        else if( parameterType.equals( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED ) )
           link = catchment.getEvaporationLink();
         else if( parameterType.equals( ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
           link = catchment.getTemperatureLink();
