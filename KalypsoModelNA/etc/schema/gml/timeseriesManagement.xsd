@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" xmlns:tm="http://kalypso.sorgeforge.net/schemata/hydrology/timeseriesManagement" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema">
-  <annotation>
-    <appinfo xmlns:kapp="org.kalypso.appinfo">
-      <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-    </appinfo>
-  </annotation>
+
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="obslink.zml.kalypso.org" />
 
