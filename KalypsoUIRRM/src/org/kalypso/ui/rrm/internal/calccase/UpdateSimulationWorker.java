@@ -156,19 +156,19 @@ public class UpdateSimulationWorker
       copyMappingTimeseries( control, "ObsQZuMapping.gml", Messages.getString( "UpdateSimulationWorker.1" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
       copyMappingTimeseries( control, "ObsEMapping.gml", Messages.getString( "UpdateSimulationWorker.2" ), new SubProgressMonitor( monitor, 20 ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      /* Create the catchment model info objects. */
+      /* Rainfall. */
       final ICatchmentModelInfo infoN = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
-      final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
-      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
-
-      /* Get the catchment model runner. */
       final AbstractCatchmentModelRunner runnerN = getCatchmentModelRunner( infoN );
-      final AbstractCatchmentModelRunner runnerT = getCatchmentModelRunner( infoT );
-      final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
-
-      /* Execute catchment models. */
       runnerN.executeCatchmentModel( infoN, new SubProgressMonitor( monitor, 20 ) );
+
+      /* Temperature. */
+      final ICatchmentModelInfo infoT = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
+      final AbstractCatchmentModelRunner runnerT = getCatchmentModelRunner( infoT );
       runnerT.executeCatchmentModel( infoT, new SubProgressMonitor( monitor, 20 ) );
+
+      /* Evaporation. */
+      final ICatchmentModelInfo infoE = getCatchmentModelInfo( m_simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
+      final AbstractCatchmentModelRunner runnerE = getCatchmentModelRunner( infoE );
       runnerE.executeCatchmentModel( infoE, new SubProgressMonitor( monitor, 20 ) );
 
       /* Copy initial condition from long term simulation. */
@@ -289,10 +289,10 @@ public class UpdateSimulationWorker
   {
     if( generator instanceof ILinearSumGenerator )
       return new LinearSumCatchmentModelInfo( simulation, control, model, (ILinearSumGenerator) generator, targetLink, parameterType );
-  
+
     if( generator instanceof IMultiGenerator )
       return new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
-  
+
     throw new IllegalArgumentException( "The type of the generator must be that of ILinearSumGenerator or IMultiGenerator..." ); // $NON-NLS-1$
   }
 
@@ -300,10 +300,10 @@ public class UpdateSimulationWorker
   {
     if( info instanceof LinearSumCatchmentModelInfo )
       return new LinearSumCatchmentModelRunner( null );
-  
+
     if( info instanceof MultiCatchmentModelInfo )
       return new MultiCatchmentModelRunner();
-  
+
     throw new IllegalArgumentException( "The info of the catchment model must be that of LinearSumCatchmentModelInfo or MultiCatchmentModelInfo..." ); // $NON-NLS-1$
   }
 
