@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
@@ -98,8 +99,8 @@ public class ThiessenGeneratorWizard extends Wizard
 
     final IWizardPage thiessenPage = new LayoutWizardPage( "thiessenPage", argumentLocation, arguments ); //$NON-NLS-1$
 
-    thiessenPage.setTitle( Messages.getString("ThiessenGeneratorWizard_1") ); //$NON-NLS-1$
-    thiessenPage.setDescription( Messages.getString("ThiessenGeneratorWizard_2") ); //$NON-NLS-1$
+    thiessenPage.setTitle( Messages.getString( "ThiessenGeneratorWizard_1" ) ); //$NON-NLS-1$
+    thiessenPage.setDescription( Messages.getString( "ThiessenGeneratorWizard_2" ) ); //$NON-NLS-1$
 
     addPage( thiessenPage );
   }
@@ -145,20 +146,23 @@ public class ThiessenGeneratorWizard extends Wizard
     arguments.put( "featureView.1", featureviewArguments ); //$NON-NLS-1$
     featureviewArguments.put( "featureTemplate", URN_THIESSEN_GFT ); //$NON-NLS-1$
 
-//    <!-- Tabelle -->
-//    <arg name="zmlNewTable.1">
-//      <arg name="zmlTableTemplate" value="project://.model/wizard/pages/10_Tabelle.kot" />
-//      <arg name="timeserie1" value="id=N#nameColumn=name#linkColumn=precipitationLink1#nameString=%featureprop% [%axisunit%]" />
-//    </arg>
-//    <!-- Diagramm -->
-//    <arg name="zmlNewDiagram.1">
-//      <arg name="zmlDiagramTemplate" value="project://.model/wizard/pages/10_Diagramm.kod" />
-//      <arg name="executeCommand_1_1" value="org.kalypso.chart.zml.ui.commands.zoom_pan_maximize?enabled=true" />
-//      <arg name="zmlDiagramMenuContribution_1" value="toolbar:org.kalypso.hwv.product.sachsen.zml.diagram.menu.general" />
-//      <arg name="zmlDiagramMenuContribution_1a" value="toolbar:org.kalypso.hwv.product.sachsen.zml.diagram.menu.separator1" />
-//      <arg name="timeserie1" value="id=N#nameColumn=name#linkColumn=precipitationLink1#nameString=%featureprop% [%axisunit%]" />
-//      <arg name="timeserie1nZr" value="id=N_OriZR#linkColumn=precipitationLink1" />
-//    </arg>
+// <!-- Tabelle -->
+// <arg name="zmlNewTable.1">
+// <arg name="zmlTableTemplate" value="project://.model/wizard/pages/10_Tabelle.kot" />
+// <arg name="timeserie1"
+// value="id=N#nameColumn=name#linkColumn=precipitationLink1#nameString=%featureprop% [%axisunit%]" />
+// </arg>
+// <!-- Diagramm -->
+// <arg name="zmlNewDiagram.1">
+// <arg name="zmlDiagramTemplate" value="project://.model/wizard/pages/10_Diagramm.kod" />
+// <arg name="executeCommand_1_1" value="org.kalypso.chart.zml.ui.commands.zoom_pan_maximize?enabled=true" />
+// <arg name="zmlDiagramMenuContribution_1" value="toolbar:org.kalypso.hwv.product.sachsen.zml.diagram.menu.general" />
+// <arg name="zmlDiagramMenuContribution_1a" value="toolbar:org.kalypso.hwv.product.sachsen.zml.diagram.menu.separator1"
+// />
+// <arg name="timeserie1"
+// value="id=N#nameColumn=name#linkColumn=precipitationLink1#nameString=%featureprop% [%axisunit%]" />
+// <arg name="timeserie1nZr" value="id=N_OriZR#linkColumn=precipitationLink1" />
+// </arg>
 
     return arguments;
   }
@@ -181,6 +185,10 @@ public class ThiessenGeneratorWizard extends Wizard
   public boolean performFinish( )
   {
     final IWizardPage[] pages = getPages();
+
+    /* Set the comment. */
+    // FIXME: check if that works on old stuff
+    m_bean.setProperty( ILinearSumGenerator.PROPERTY_COMMENT, Messages.getString( "ThiessenFactorsOperation.0" ) ); //$NON-NLS-1$
 
     final ThiessenFactorsOperation operation = new ThiessenFactorsOperation( pages, m_bean );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );

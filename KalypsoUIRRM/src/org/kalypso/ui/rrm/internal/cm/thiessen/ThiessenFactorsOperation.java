@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
@@ -66,7 +65,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Calculates the thiessen factors from the chosen timeseries and the available catchments.
- * 
+ *
  * @author Gernot Belger
  */
 public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
@@ -112,9 +111,6 @@ public class ThiessenFactorsOperation implements ICoreRunnableWithProgress
       calculateThiessenFactors( catchment, thiessenPolygons );
       monitor.worked( 1 );
     }
-
-    /* Set the comment. */
-    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, Messages.getString("ThiessenFactorsOperation.0") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
