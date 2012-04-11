@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.cm.idw;
 
 import java.net.URL;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
@@ -55,6 +56,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.layoutwizard.LayoutWizardPage;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
@@ -115,13 +117,29 @@ public class IdwGeneratorWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    /* Set the comment. */
+    final Integer maxNumberStations = getMaxNumberStations();
+    m_bean.setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, Messages.getString( "IdwFactorsOperation.0" ), maxNumberStations ) ); //$NON-NLS-1$
+
     final IWizardPage[] pages = getPages();
-    final IdwFactorsOperation operation = new IdwFactorsOperation( pages, m_bean );
+    final IdwFactorsOperation operation = new IdwFactorsOperation( maxNumberStations, pages, m_bean );
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWindowTitle() );
 
     return !status.matches( IStatus.ERROR );
+  }
+
+  private Integer getMaxNumberStations( )
+  {
+    final ILayoutWizardPage wizardPage = (ILayoutWizardPage) getPages()[0];
+    final IdwOptionsLayoutPart optionsPart = (IdwOptionsLayoutPart) wizardPage.findLayoutPart( "idwOptionsPart.1" ); //$NON-NLS-1$
+    final Integer maxStations = optionsPart.getMaxStations();
+    if( maxStations == null || maxStations.intValue() == 0 )
+      return 1;
+    //throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_5" ) ) ); //$NON-NLS-1$
+
+    return maxStations;
   }
 
   private Arguments createPageDefinition( )

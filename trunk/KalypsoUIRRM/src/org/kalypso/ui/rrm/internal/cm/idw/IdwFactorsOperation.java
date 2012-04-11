@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.idw;
 
-import java.util.Locale;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,7 +50,6 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.util.InverseDistanceUtilities;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.LinearSumHelper;
@@ -68,7 +65,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * Calculates the idw factors from the chosen timeseries and the available catchments.
- * 
+ *
  * @author Holger Albert
  */
 public class IdwFactorsOperation implements ICoreRunnableWithProgress
@@ -78,36 +75,25 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
    */
   private final IStatusCollector m_log = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-  /**
-   * The wizard pages.
-   */
   private final IWizardPage[] m_pages;
 
-  /**
-   * The linear sum bean.
-   */
   private final LinearSumBean m_generator;
 
-  /**
-   * The constructor.
-   * 
-   * @param pages
-   *          The wizard pages.
-   * @param generator
-   *          The linear sum bean.
-   */
-  public IdwFactorsOperation( final IWizardPage[] pages, final LinearSumBean generator )
+  private final Integer m_maxNumberStations;
+
+  public IdwFactorsOperation( final Integer maxNumberStations, final IWizardPage[] pages, final LinearSumBean generator )
   {
+    m_maxNumberStations = maxNumberStations;
     m_pages = pages;
     m_generator = generator;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    if( m_maxNumberStations == null || m_maxNumberStations.intValue() == 0 )
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_5" ) ) ); //$NON-NLS-1$
+
     /* Get the catchments. */
     final CatchmentBean[] catchments = m_generator.getCatchments();
 
@@ -135,28 +121,22 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
     monitor.worked( 1 );
     monitor.subTask( Messages.getString( "IdwFactorsOperation_3" ) ); //$NON-NLS-1$
 
-    /* The maximal number of stations to use. */
-    final Integer maxNumberStations = getMaxNumberStations();
-
     /* Calculate the factors. */
     for( final CatchmentBean catchment : catchments )
     {
       /* Calculate the idw factors. */
-      calculateIdwFactors( catchment, idwStations, maxNumberStations );
+      calculateIdwFactors( catchment, idwStations, m_maxNumberStations );
 
       /* Monitor. */
       monitor.worked( 1 );
     }
-
-    /* Set the comment. */
-    m_generator.getFeature().setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, Messages.getString("IdwFactorsOperation.0"), maxNumberStations ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
 
   /**
    * This function calculates the idw factors for the given catchment.
-   * 
+   *
    * @param catchment
    *          The catchment.
    * @param idwStations
@@ -196,16 +176,5 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
       final String description = catchment.getCatchmentDescription();
       m_log.add( IStatus.ERROR, Messages.getString( "IdwFactorsOperation_4" ), e, name, description ); //$NON-NLS-1$
     }
-  }
-
-  private Integer getMaxNumberStations( ) throws CoreException
-  {
-    final ILayoutWizardPage wizardPage = (ILayoutWizardPage) m_pages[0];
-    final IdwOptionsLayoutPart optionsPart = (IdwOptionsLayoutPart) wizardPage.findLayoutPart( "idwOptionsPart.1" ); //$NON-NLS-1$
-    final Integer maxStations = optionsPart.getMaxStations();
-    if( maxStations == null || maxStations.intValue() == 0 )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_5" ) ) ); //$NON-NLS-1$
-
-    return maxStations;
   }
 }
