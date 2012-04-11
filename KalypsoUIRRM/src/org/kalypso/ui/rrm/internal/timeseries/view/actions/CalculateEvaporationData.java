@@ -69,6 +69,8 @@ public class CalculateEvaporationData extends AbstractModelObject
 
   public static final String PROPERTY_SUNSHINE_HOURS = "sunshineHours";
 
+  public static final String PROPERTY_QUALITY = "quality";
+
   private TimeseriesBean m_humidity;
 
   private TimeseriesBean m_temperature;
@@ -76,6 +78,8 @@ public class CalculateEvaporationData extends AbstractModelObject
   private TimeseriesBean m_windVelocity;
 
   private TimeseriesBean m_sunshineHours;
+
+  private String m_quality;
 
   public void init( final IDialogSettings settings )
   {
@@ -170,6 +174,16 @@ public class CalculateEvaporationData extends AbstractModelObject
     }
 
     return result;
+  }
+
+  public String getQuality( )
+  {
+    return m_quality;
+  }
+
+  public void setQuality( final String quality )
+  {
+    m_quality = quality;
   }
 
 }
