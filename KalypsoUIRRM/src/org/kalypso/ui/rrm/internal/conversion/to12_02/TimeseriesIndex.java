@@ -86,7 +86,6 @@ public class TimeseriesIndex
     m_entries.add( entry );
 
     /* Fill old href index */
-// System.out.println( entry.getOldProjectRelativePath() );
     m_oldHrefIndex.put( entry.getOldProjectRelativePath(), entry );
 
     /* Add into filename hash */
