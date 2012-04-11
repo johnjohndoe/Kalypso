@@ -60,6 +60,7 @@ import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -153,7 +154,7 @@ public class CatchmentModelsDuplicateEliminator
       final String usedDescription = usedGenerator.getDescription();
 
       /* Adjust the logs. */
-      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s (%s)' equals the generator '%s (%s)' and was removed.", description, generator.getParameterType(), usedDescription, usedGenerator.getParameterType() ) ) );
+      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s (%s)' equals the generator '%s (%s)' and was removed.", description, generator.getParameterType(), usedDescription, TimeseriesUtils.getName( usedGenerator.getParameterType() ) ) ) );
 
       /* Each generator, for which an equal one exists in the list of used generators */
       /* will be removed from the original list of generators. */
@@ -166,7 +167,7 @@ public class CatchmentModelsDuplicateEliminator
       adjustDataFiles( usedGenerator, description );
 
       /* Adjust the logs. */
-      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The comment of the generator '%s (%s)' was adjusted.", usedDescription, usedGenerator.getParameterType() ) ) );
+      collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The comment of the generator '%s (%s)' was adjusted.", usedDescription, TimeseriesUtils.getName( usedGenerator.getParameterType() ) ) ) );
 
       /* The comment of the one, which is used must be altered to reflect all CCs which use it now. */
       final String usedComment = usedGenerator.getComment();
@@ -177,17 +178,17 @@ public class CatchmentModelsDuplicateEliminator
         newComment = String.format( "%s, %s", usedComment, description );
       usedGenerator.setComment( newComment );
 
-      return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, generator.getParameterType() ) );
+      return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, TimeseriesUtils.getName( generator.getParameterType() ) ) );
     }
 
     /* Adjust the logs. */
-    collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s (%s)' was kept.", description, generator.getParameterType() ) ) );
+    collector.add( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), String.format( "The generator '%s (%s)' was kept.", description, TimeseriesUtils.getName( generator.getParameterType() ) ) ) );
 
     /* Each generator for which no equal one exists will be added to the list of used generators. */
     /* Nothing else must be done. */
     usedGenerators.add( (ILinearSumGenerator) generator );
 
-    return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, generator.getParameterType() ) );
+    return collector.asMultiStatus( String.format( "Generator '%s (%s)'", description, TimeseriesUtils.getName( generator.getParameterType() ) ) );
   }
 
   private ILinearSumGenerator isGeneratorUsed( final List<ILinearSumGenerator> usedGenerators, final ILinearSumGenerator generator )

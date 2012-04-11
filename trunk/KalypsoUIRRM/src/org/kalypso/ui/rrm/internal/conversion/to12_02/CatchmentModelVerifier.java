@@ -145,11 +145,6 @@ public class CatchmentModelVerifier
       /* Check the generators. */
       final IStatus status = checkGenerators();
       collector.add( status );
-      if( !status.isOK() )
-      {
-        collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "Cannot calculate the catchment models to compare the timeseries..." ) );
-        return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...", m_simulation.getDescription() ) );
-      }
 
       /* Create the file handle to the directory of the simulation. */
       final File simulationDir = new File( m_baseFolder, m_simulation.getDescription() );
@@ -221,6 +216,9 @@ public class CatchmentModelVerifier
    */
   private IStatus checkGenerators( )
   {
+    /* The status collector. */
+    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     final IFeatureBindingCollection<IRainfallGenerator> generators = catchmentModel.getGenerators();
 
@@ -229,15 +227,21 @@ public class CatchmentModelVerifier
     final String generatorIdT = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_T )).getFeatureId();
 
     if( !checkGenerator( generators, generatorIdN ) )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The N generator was null or had no factors..." );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The N generator was null or had no factors..." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The N generator was okay." ) );
 
     if( !checkGenerator( generators, generatorIdE ) )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The E generator was null or had no factors..." );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The E generator was null or had no factors..." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The E generator was okay." ) );
 
     if( !checkGenerator( generators, generatorIdT ) )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The T generator was null or had no factors..." );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The T generator was null or had no factors..." ) );
+    else
+      collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The T generator was okay." ) );
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The N/E/T generators were ok." );
+    return collector.asMultiStatus( "Checking the N/E/T generators" );
   }
 
   /**
@@ -311,7 +315,6 @@ public class CatchmentModelVerifier
   private IStatus calculateCatchmentModels( final IFolder simulationTmpFolder ) throws CoreException
   {
     final UpdateSimulationWorker updateWorker = new UpdateSimulationWorker( simulationTmpFolder );
-
     final IStatus status = updateWorker.execute( new NullProgressMonitor() );
     if( !status.isOK() )
       return status;
