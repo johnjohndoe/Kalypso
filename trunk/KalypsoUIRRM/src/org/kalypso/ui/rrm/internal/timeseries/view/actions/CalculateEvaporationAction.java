@@ -41,11 +41,17 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationWizard;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -72,6 +78,22 @@ public class CalculateEvaporationAction extends Action
   public void runWithEvent( final Event event )
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
+
+    final CommandableWorkspace workspace = m_model.getWorkspace();
+
+    final CalculateEvaporationData data = new CalculateEvaporationData();
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), CalculateEvaporationWizard.class.getName() );
+    data.init( settings );
+
+    final CalculateEvaporationWizard wizard = new CalculateEvaporationWizard( workspace, m_station, data );
+    wizard.setDialogSettings( settings );
+    wizard.setWindowTitle( getText() );
+
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    if( dialog.open() == org.eclipse.jface.window.Window.OK )
+    {
+
+    }
 
     /* Prepare data */
 // final ImportObservationData data = prepareData();
