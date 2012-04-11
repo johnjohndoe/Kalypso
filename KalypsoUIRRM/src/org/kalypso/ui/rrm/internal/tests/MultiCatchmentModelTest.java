@@ -43,11 +43,14 @@ package org.kalypso.ui.rrm.internal.tests;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 
 /**
  * Test for verifying a multi catchment model.
@@ -69,6 +72,15 @@ public class MultiCatchmentModelTest
 
     /* Create the temporary directory of the test. */
     m_tmpDir = FileUtilities.createNewTempDir( "multiTest", tmpDir );
+
+    /* Get the test resources. */
+    final InputStream inputStream = getClass().getResourceAsStream( "resources/multisample.zip" );
+
+    /* Unzip them into the temporary directory of the test. */
+    ZipUtilities.unzip( inputStream, m_tmpDir );
+
+    /* Close the input stream. */
+    IOUtils.closeQuietly( inputStream );
   }
 
   @After
@@ -83,6 +95,11 @@ public class MultiCatchmentModelTest
   @Test
   public void test( )
   {
+    // TODO
+
     fail( "Not yet implemented" );
+
+    /* Delete the temporary directory of the test. */
+    FileUtilities.deleteQuietly( m_tmpDir );
   }
 }
