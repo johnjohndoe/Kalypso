@@ -90,7 +90,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeseries from the old 'Zeitreihen' folder into the new timeseries management.
- * 
+ *
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -147,14 +147,12 @@ public class TimeseriesImporter
     }
   }
 
-  public void copyTimeseries( final String folder, final IProgressMonitor monitor )
+  public void copyTimeseries( final IProgressMonitor monitor )
   {
-    // FIXME
-    final String name = String.format( Messages.getString( "TimeseriesImporter_2" ), "Zeitreihen" ); //$NON-NLS-1$
+    final String name = Messages.getString( "TimeseriesImporter_2", m_sourceDir.getName() ); //$NON-NLS-1$
     monitor.beginTask( name, IProgressMonitor.UNKNOWN );
 
     final File sourceTimeseriesDir = m_sourceDir;
-    // final File sourceTimeseriesDir = new File( m_sourceDir, folder );
 
     /* Return, if directory does not exist */
     if( !sourceTimeseriesDir.isDirectory() )
@@ -191,7 +189,7 @@ public class TimeseriesImporter
     }
 
     /* Log it */
-    final String message = String.format( Messages.getString( "TimeseriesImporter_5" ), folder ); //$NON-NLS-1$
+    final String message = Messages.getString( "TimeseriesImporter_5", m_sourceDir.getName() ); //$NON-NLS-1$
     final IStatus status = stati.asMultiStatusOrOK( message, message );
     m_log.add( status );
 

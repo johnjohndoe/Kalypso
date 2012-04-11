@@ -128,17 +128,7 @@ public class BasicModelConverter extends AbstractLoggingOperation
     monitor.worked( 5 );
 
     /* Copy known folders */
-    copyTimeseries( importer, monitor, null );
-//    copyTimeseries( importer, monitor, "Klima" ); //$NON-NLS-1$
-//    copyTimeseries( importer, monitor, "Climate" ); //$NON-NLS-1$
-//
-//    copyTimeseries( importer, monitor, "Ombrometer" ); //$NON-NLS-1$
-//
-//    copyTimeseries( importer, monitor, "Pegel" ); //$NON-NLS-1$
-//    copyTimeseries( importer, monitor, "Gauge" ); //$NON-NLS-1$
-//
-//    copyTimeseries( importer, monitor, "Zufluss" ); //$NON-NLS-1$
-//    copyTimeseries( importer, monitor, "Tributary" ); //$NON-NLS-1$
+    copyTimeseries( importer, monitor );
 
     monitor.subTask( Messages.getString("BasicModelConverter.7") ); //$NON-NLS-1$
     importer.saveStations();
@@ -147,10 +137,10 @@ public class BasicModelConverter extends AbstractLoggingOperation
     return importer.getIndex();
   }
 
-  private void copyTimeseries( final TimeseriesImporter importer, final IProgressMonitor monitor, final String folder )
+  private void copyTimeseries( final TimeseriesImporter importer, final IProgressMonitor monitor )
   {
-    monitor.subTask( String.format( Messages.getString("BasicModelConverter.8"), folder ) ); //$NON-NLS-1$
-    importer.copyTimeseries( folder, new SubProgressMonitor( monitor, (90 / 7) ) ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "BasicModelConverter.8", INaProjectConstants.FOLDER_ZEITREIHEN ) ); //$NON-NLS-1$
+    importer.copyTimeseries( new SubProgressMonitor( monitor, (90 / 7) ) ); //$NON-NLS-1$
   }
 
   /**
