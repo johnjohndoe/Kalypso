@@ -86,4 +86,6 @@
 
   <system systemId="urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt" uri="Simulations.gtt" />
 
+  <system systemId="urn:ogc:gml:featuretype:http___kalypso.sorgeforge.net_schemata_hydrology_timeseriesManagement:_Station:sld:default" uri="Station.sld" />
+
 </catalog>
