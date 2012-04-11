@@ -106,8 +106,8 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     m_station = station;
     m_data = data;
 
-    setTitle( "Eingangsdaten" );
-    setMessage( "Bitte wählen Sie die Eingangsdaten, die als Grundlage für die Berechnung der Verdunstung dienen." );
+    setTitle( "Berechnungsdaten" );
+    setDescription( "Bitte bestimmen Sie alle Berechnungsdaten, die als Grundlage für die Berechnung der Verdunstung dienen." );
   }
 
   @Override
@@ -130,11 +130,10 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
   private void doAddQualityControl( final Composite body )
   {
     final Group groupDateRange = new Group( body, SWT.NULL );
-    groupDateRange.setLayout( new GridLayout( 2, false ) );
+    groupDateRange.setLayout( new GridLayout() );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     groupDateRange.setText( "Quality" );
 
-    new Label( groupDateRange, SWT.NULL ).setText( "Quality:" );
     final Text text = new Text( groupDateRange, SWT.BORDER );
     text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -146,25 +145,39 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
   private void doAddDateRangeControl( final Composite body )
   {
     final Group groupDateRange = new Group( body, SWT.NULL );
-    groupDateRange.setLayout( new GridLayout( 2, false ) );
+    groupDateRange.setLayout( new GridLayout( 5, false ) );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     groupDateRange.setText( "Berechnungszeitraum" );
 
-    new Label( groupDateRange, SWT.NULL ).setText( "Start:" );
+    final Label start = new Label( groupDateRange, SWT.NULL );
+    start.setText( "Start" );
+
     m_labelDateRangeFrom = new Text( groupDateRange, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT );
     m_labelDateRangeFrom.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_labelDateRangeFrom.setText( "" );
 
-    new Label( groupDateRange, SWT.NULL ).setText( "Ende:" );
+    final Label spacer = new Label( groupDateRange, SWT.NULL );
+    spacer.setText( "" );
+    spacer.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    final Label stop = new Label( groupDateRange, SWT.NULL );
+    stop.setText( "Ende" );
     m_labelDateRangeTo = new Text( groupDateRange, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT );
     m_labelDateRangeTo.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_labelDateRangeTo.setText( "" );
+
+    final String tooltip = "Berechnungszeitraum wurde automatisch auf Grundlage der gewählten Zeitreihen ermittelt.\nDer ermittelte Berechnungszeitraum ist der gemeinsame Zeitraum aller gewählten Zeitreihen (Schnittmenge).";
+    groupDateRange.setToolTipText( tooltip );
+    start.setToolTipText( tooltip );
+    m_labelDateRangeFrom.setToolTipText( tooltip );
+    stop.setToolTipText( tooltip );
+    m_labelDateRangeTo.setToolTipText( tooltip );
   }
 
   private void doAddSourceControls( final Composite body )
   {
     final Group groupSources = new Group( body, SWT.NULL );
-    groupSources.setLayout( new GridLayout( 2, false ) );
+    groupSources.setLayout( new GridLayout( 3, false ) );
     groupSources.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     groupSources.setText( "Quellen" );
 
@@ -180,6 +193,12 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
 
     final Label label = new Label( group, SWT.NULL );
     label.setText( provider.getText( type ) );
+
+    final Label spacer = new Label( group, SWT.NULL );
+    spacer.setText( "" );
+    final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
+    data.widthHint = data.minimumWidth = 100;
+    spacer.setLayoutData( data );
 
     final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

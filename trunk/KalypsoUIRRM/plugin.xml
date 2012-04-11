@@ -531,14 +531,23 @@
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
             
-            <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
-            <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
-            <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
 
             <image commandId="org.kalypso.model.rrm.parameterDefinition" icon="icons/parameters/parameters.gif"/>
             <image commandId="org.kalypso.model.rrm.snowDefinition" icon="icons/parameters/snow.png"/>
             <image commandId="org.kalypso.model.rrm.soilDefinition" icon="icons/parameters/soil.png"/>
             <image commandId="org.kalypso.model.rrm.landuseDefinition" icon="icons/parameters/landuse.png"/>
+            <image
+                  commandId="org.kalypso.model.rrm.modelConstruction"
+                  icon="icons/model/1334146824_package_graphics.png">
+            </image>
+            <image
+                  commandId="org.kalypso.model.rrm.editNetElements"
+                  icon="icons/model/network_elements.png">
+            </image>
+            <image
+                  commandId="org.kalypso.model.rrm.editNetRelations"
+                  icon="icons/model/1334146981_Internet_link_02.png">
+            </image>
             
             <image commandId="org.kalypso.model.rrm.hydrotopes" icon="icons/hydrotope/hydrotope.png"/>
             <image commandId="org.kalypso.model.rrm.completeNetElements" icon="icons/parameters/parameters.gif"/>
