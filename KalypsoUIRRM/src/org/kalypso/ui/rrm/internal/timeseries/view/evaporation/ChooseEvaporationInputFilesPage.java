@@ -48,6 +48,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -168,7 +171,22 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
 
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
     final IObservableValue model = BeansObservables.observeValue( m_data, property );
-    m_binding.bindValue( target, model );
+    m_binding.bindValue( target, model, new IValidator()
+    {
+
+      @Override
+      public IStatus validate( final Object value )
+      {
+        if( Objects.isNull( value ) )
+        {
+          setErrorMessage( "Leeres Element. Bitte weisen Sie alle Quellen zu." );
+
+          return new Status( IStatus.ERROR, "", "Leeres Element. Bitte weisen Sie alle Quellen zu." );
+        }
+
+        return Status.OK_STATUS;
+      }
+    } );
 
     final TimeseriesBean[] input = findInputFiles( m_station.getTimeseries(), type );
     viewer.setInput( input );
