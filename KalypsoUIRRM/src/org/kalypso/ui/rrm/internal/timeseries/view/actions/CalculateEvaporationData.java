@@ -46,6 +46,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -123,21 +124,21 @@ public class CalculateEvaporationData extends AbstractModelObject
 
   public DateRange getDateRange( )
   {
-    final TimeseriesBean humidity = getHumidity();
-    final TimeseriesBean sunshineHours = getSunshineHours();
-    final TimeseriesBean temperature = getTemperature();
-    final TimeseriesBean windVelocity = getWindVelocity();
-    if( Objects.isNull( humidity, sunshineHours, temperature, windVelocity ) )
+    return getDateRange( toObservation( getHumidity() ), toObservation( getSunshineHours() ), toObservation( getTemperature() ), toObservation( getWindVelocity() ) );
+  }
+
+  public IObservation toObservation( final TimeseriesBean bean )
+  {
+    if( Objects.isNull( bean ) )
       return null;
 
-    final ZmlLink linkHumidity = humidity.getFeature().getDataLink();
-    final ZmlLink linkSunshineHours = sunshineHours.getFeature().getDataLink();
-    final ZmlLink linkTemperature = temperature.getFeature().getDataLink();
-    final ZmlLink linkWindVelocity = windVelocity.getFeature().getDataLink();
-    if( Objects.isNull( linkHumidity, linkSunshineHours, linkTemperature, linkWindVelocity ) )
+    final ITimeseries timeseries = bean.getFeature();
+    if( Objects.isNull( timeseries ) )
       return null;
 
-    return getDateRange( linkHumidity.getObservationFromPool(), linkSunshineHours.getObservationFromPool(), linkTemperature.getObservationFromPool(), linkWindVelocity.getObservationFromPool() );
+    final ZmlLink link = timeseries.getDataLink();
+
+    return link.getObservationFromPool();
   }
 
   private DateRange getDateRange( final IObservation... observations )

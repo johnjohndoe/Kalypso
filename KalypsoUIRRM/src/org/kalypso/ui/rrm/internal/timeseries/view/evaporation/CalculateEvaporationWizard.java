@@ -40,9 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationData;
 
 /**
@@ -50,7 +59,6 @@ import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationD
  */
 public class CalculateEvaporationWizard extends Wizard
 {
-
   private final CommandableWorkspace m_workspace;
 
   private final IStation m_station;
@@ -69,8 +77,28 @@ public class CalculateEvaporationWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    try
+    {
+      final IObservation humidity = m_data.toObservation( m_data.getHumidity() );
+      final IObservation sunshine = m_data.toObservation( m_data.getSunshineHours() );
+      final IObservation temperature = m_data.toObservation( m_data.getTemperature() );
+      final IObservation windVelocity = m_data.toObservation( m_data.getWindVelocity() );
+      if( Objects.isNull( humidity, sunshine, temperature, windVelocity ) )
+        return false;
+
+      final DateRange daterange = m_data.getDateRange();
+
+      final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
+      final IStatus status = calculator.execute( new NullProgressMonitor() );
+
+      final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      return false;
+    }
 
     throw new UnsupportedOperationException();
   }
-
 }
