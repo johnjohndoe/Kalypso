@@ -42,15 +42,13 @@ package org.kalypso.ui.rrm.internal.tests;
 
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.InputStream;
-
-import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 
 /**
  * Test for verifying a multi catchment model.
@@ -60,46 +58,41 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 public class MultiCatchmentModelTest
 {
   /**
-   * The temporary directory.
+   * The temporary project.
    */
-  private File m_tmpDir;
+  private IProject m_project;
 
+  /**
+   * This function sets up the test case.
+   */
   @Before
   public void setUp( ) throws Exception
   {
-    /* Get the temporary directory of the system. */
-    final File tmpDir = FileUtilities.TMP_DIR;
+    /* Update timezone. */
+    final IPreferenceStore preferenceStore = KalypsoCorePlugin.getDefault().getPreferenceStore();
+    preferenceStore.setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
 
-    /* Create the temporary directory of the test. */
-    m_tmpDir = FileUtilities.createNewTempDir( "multiTest", tmpDir );
+    /* Create the temporary project. */
+    m_project = TestUtilities.createProject();
 
-    /* Get the test resources. */
-    final InputStream inputStream = getClass().getResourceAsStream( "resources/multisample.zip" );
-
-    /* Unzip them into the temporary directory of the test. */
-    ZipUtilities.unzip( inputStream, m_tmpDir );
-
-    /* Close the input stream. */
-    IOUtils.closeQuietly( inputStream );
+    /* Unzip the resources. */
+    TestUtilities.unzipResources( "resources/multisample.zip", m_project );
   }
 
+  /**
+   * This function tears down the test case.
+   */
   @After
   public void tearDown( ) throws Exception
   {
-    /* The temporary directory of the test will not be deleted here. */
-    /* Because this function is always executed. */
-    /* But we want to keep the directory, if the test has failed. */
-    m_tmpDir = null;
   }
 
+  /**
+   * This function executes the test.
+   */
   @Test
   public void test( )
   {
-    // TODO
-
     fail( "Not yet implemented" );
-
-    /* Delete the temporary directory of the test. */
-    FileUtilities.deleteQuietly( m_tmpDir );
   }
 }
