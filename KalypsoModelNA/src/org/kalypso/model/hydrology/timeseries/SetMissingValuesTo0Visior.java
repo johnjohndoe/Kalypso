@@ -52,7 +52,6 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
  */
 public class SetMissingValuesTo0Visior extends AbstractMissingValuesVisitor implements IObservationVisitor
 {
-
   @Override
   public void visit( final IObservationValueContainer container ) throws SensorException
   {
