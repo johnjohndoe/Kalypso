@@ -190,12 +190,12 @@ class GelaendeProfileCreator extends AbstractProfileCreator implements IWspmTuhh
     addMarkers( profile, points, markerType );
 
     final int numberOfMarkersToAdd = Math.max( 0, 2 - points.length );
+    // FIXME: make optional, if Kalypso should automatically add default markers at the end of the profile
     addDefaultMarkers( profile, numberOfMarkersToAdd, markerType );
   }
 
   private void addDefaultMarkers( final IProfil profile, final int numberOfMarkersToAdd, final String markerType )
   {
-    // FIXME: make optional
     final boolean useLastObservedPoints = false;
     final IProfileRecord firstPoint;
     final IProfileRecord lastPoint;
