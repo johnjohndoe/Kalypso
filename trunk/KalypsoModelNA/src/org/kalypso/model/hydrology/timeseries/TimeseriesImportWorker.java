@@ -139,14 +139,19 @@ public class TimeseriesImportWorker
         // ignore W and Q for now, old mechanism
         return observation;
 
+        // FIXME: add new constants here
       case ITimeseriesConstants.TYPE_RAINFALL:
       case ITimeseriesConstants.TYPE_EVAPORATION:
         observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
+        return observation;
 
       case ITimeseriesConstants.TYPE_TEMPERATURE:
+        // FIXME: is 0 good for temperature?! maybe not necessary, because later we will inteprolate missing values
         observation.accept( new SetMissingValuesTo0Visior(), null, 1 );
-    }
+        return observation;
 
-    return observation;
+      default:
+        return observation;
+    }
   }
 }
