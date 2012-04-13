@@ -78,7 +78,7 @@
       </feature>
       <feature
             class="org.kalypso.model.rcm.internal.binding.MultiGenerator"
-            qname="{org.kalypso.model.rcm.v2}MultiGenerator">
+            qname="{org.kalypso.model.cm}MultiGenerator">
       </feature>
    </extension>
 

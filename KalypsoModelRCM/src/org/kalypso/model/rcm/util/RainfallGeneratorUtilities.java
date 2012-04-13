@@ -279,8 +279,6 @@ public final class RainfallGeneratorUtilities
     }
 
     /* Join the values. */
-    final String hash = StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
-
-    return hash;
+    return StringUtils.join( values.toArray( new String[] {} ), ";" ); //$NON-NLS-1$
   }
 }
