@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.joda.time.Period;
@@ -51,6 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
@@ -86,8 +88,11 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
       final long duration = Math.abs( m_lastDate.getTime() - date.getTime() ) / 1000;
       if( m_duration != duration )
       {
-        final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString("ValidateTimestepsVisitor_0") ); //$NON-NLS-1$
-        m_status.add( IStatus.ERROR, String.format( Messages.getString("ValidateTimestepsVisitor_1"), sdf.format( m_lastDate ), sdf.format( date ) ) ); //$NON-NLS-1$
+        final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "ValidateTimestepsVisitor_0" ) ); //$NON-NLS-1$
+        final TimeZone timezone = MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
+        sdf.setTimeZone( timezone );
+
+        m_status.add( IStatus.ERROR, String.format( Messages.getString( "ValidateTimestepsVisitor_1" ), sdf.format( m_lastDate ), sdf.format( date ) ) ); //$NON-NLS-1$
       }
     }
 
@@ -97,7 +102,7 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
 
   public IStatus getStatus( )
   {
-    return m_status.asMultiStatus( Messages.getString("ValidateTimestepsVisitor_2") ); //$NON-NLS-1$
+    return m_status.asMultiStatus( Messages.getString( "ValidateTimestepsVisitor_2" ) ); //$NON-NLS-1$
   }
 
 }
