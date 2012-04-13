@@ -38,6 +38,7 @@
             <con:Parameter name="input" value=".views/Timeseries.gmt" />
           </con:ExtensionContext>
         </con:ViewContext>
+        <con:ViewContext id="TimeseriesStationMapViewOutline" partId="org.kalypso.ui.views.outline" parent="TimeseriesManagementContext" />
       </con:WorkbenchSiteContext>
 
       <!-- Parameter Definitions -->
