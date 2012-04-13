@@ -41,6 +41,8 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -171,9 +173,16 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
       observation.accept( ruecksprung, null, 1 );
 
       if( ruecksprung.hasRuecksprung() )
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_7" ) ); //$NON-NLS-1$
+      {
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_8" ) ); //$NON-NLS-1$
+        final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "dd.MM.yyyy HH:mm:ss" ) );
+        final TimeZone timezone = MetadataHelper.getTimeZone( observation.getMetadataList(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
+        sdf.setTimeZone( timezone );
+
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_7", sdf.format( ruecksprung.getLastDate() ) ) ); //$NON-NLS-1$
+      }
+
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( Messages.getString( "ImportTimeseriesOperation_8" ) ) ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {

@@ -82,4 +82,9 @@ public class ValidateRuecksprungVisitor implements IObservationVisitor
   {
     return m_ruecksprung;
   }
+
+  public Date getLastDate( )
+  {
+    return m_lastDate;
+  }
 }
