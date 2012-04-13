@@ -81,18 +81,12 @@ public class KalypsoModelWorkbenchAdvisor extends KalypsoWorkbenchAdvisor
     return m_initialPerspectiveId;
   }
 
-  /**
-   * @see org.eclipse.ui.application.WorkbenchAdvisor#createWorkbenchWindowAdvisor(org.eclipse.ui.application.IWorkbenchWindowConfigurer)
-   */
   @Override
   public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor( final IWorkbenchWindowConfigurer configurer )
   {
     return new KalypsoModelWorkbenchWindowAdvisor( configurer, m_restrictedAccess, m_initialPerspectiveId );
   }
 
-  /**
-   * @see org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor#postStartup()
-   */
   @Override
   public void postStartup( )
   {

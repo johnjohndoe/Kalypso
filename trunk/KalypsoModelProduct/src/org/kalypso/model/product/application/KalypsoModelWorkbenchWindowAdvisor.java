@@ -124,9 +124,6 @@ public class KalypsoModelWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     }
   }
 
-  /**
-   * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#preWindowOpen()
-   */
   @Override
   public void preWindowOpen( )
   {
