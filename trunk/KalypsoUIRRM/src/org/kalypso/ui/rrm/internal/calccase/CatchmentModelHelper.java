@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
@@ -81,8 +82,10 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -171,7 +174,7 @@ public class CatchmentModelHelper
    * <li>The timestep must be the same in all generators.</li>
    * <li>The timestamp must be the same in all generators.</li>
    * <li>The areas must be the same and must have the same order in all generators.</li>
-   * <li>Only one generator may be overlapped.</li>
+   * <li>Generators may not overlap. Touch is ok.</li>
    * <li>There are no gaps allowed between the validity ranges of adjacent generators.</li>
    * </ul>
    * 
@@ -242,10 +245,10 @@ public class CatchmentModelHelper
       /* HINT: If there is only one generator, we do not reach the code here. */
       /* HINT: If we do reach here, it will be the 2nd loop or one after. */
 
-      /* (5) Only one generator may be overlapped. */
+      /* (5) Generators may not overlap. Touch is ok. */
       if( !compareGeneratorValidityOverlap( generator, generators ) )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The validity range of generator '%s' overlaps the validity range of more than one generator.", generator.getDescription() ) ) );
+        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The validity range of generator '%s' overlaps the validity range of one other generator.", generator.getDescription() ) ) );
         continue;
       }
     }
@@ -318,8 +321,12 @@ public class CatchmentModelHelper
    * @param generators
    *          All generators the compare generator will be compared against. If the compare generator is contained, it
    *          will be ignored.
-   * @return True, if the validity range of the compare generator does not overlap the validity ranges of the other
-   *         generators, or overlaps only one. False, if it overlaps two or more.
+   * @return <ul>
+   *         <li>True: The validity range of the compare generator does not overlap the validity ranges of the other
+   *         generators.</li>
+   *         <li>False: The validity range of the compare generator overlaps one validity range of the other generators.
+   *         </li>
+   *         </ul>
    */
   private static boolean compareGeneratorValidityOverlap( final IRainfallGenerator compareGenerator, final IFeatureBindingCollection<IRainfallGenerator> generators )
   {
@@ -331,23 +338,21 @@ public class CatchmentModelHelper
     final Interval compareInterval = new Interval( new DateTime( compareGenerator.getValidFrom() ), new DateTime( compareGenerator.getValidTo() ) );
 
     /* Check if the interval overlaps one of the other intervals. */
-    boolean oneOverlapped = false;
     for( final IRainfallGenerator generator : generators )
     {
       /* Do not compare the compare generator with itself. */
-      if( compareGenerator == generator )
+      if( compareGenerator.getId().equals( generator.getId() ) )
         continue;
 
       /* The interval of the generator. */
       final Interval interval = new Interval( new DateTime( generator.getValidFrom() ), new DateTime( generator.getValidTo() ) );
       if( compareInterval.overlaps( interval ) )
       {
-        /* If there was already one overlapped, this is the second than. Return false. */
-        if( oneOverlapped )
+        final Interval overlapInterval = compareInterval.overlap( interval );
+        final Duration overlapDuration = overlapInterval.toDuration();
+        final long standardMinutes = overlapDuration.getStandardMinutes();
+        if( standardMinutes > 0 )
           return false;
-
-        /* If there was none overlapped yet, this is the first one. This is allowed. */
-        oneOverlapped = true;
       }
     }
 
@@ -387,9 +392,19 @@ public class CatchmentModelHelper
     /* Check each generator. */
     for( final IRainfallGenerator generator : generatorArray )
     {
+      /* Get the generator dates. */
+      DateTime generatorStartDateTime = new DateTime( generator.getValidFrom() );
+      final DateTime generatorEndDateTime = new DateTime( generator.getValidTo() );
+
+      /* Adjust the check for sum values. */
+      final String parameterType = generator.getParameterType();
+      final TIMESERIES_TYPE type = TimeseriesUtils.getType( parameterType );
+      if( type.equals( TIMESERIES_TYPE.eSumValue ) )
+        generatorStartDateTime = generatorStartDateTime.plusDays( 1 );
+
       /* Build the generator interval. */
-      final Date generatorStartDate = generator.getValidFrom();
-      final Date generatorEndDate = generator.getValidTo();
+      final Date generatorStartDate = generatorStartDateTime.toDate();
+      final Date generatorEndDate = generatorEndDateTime.toDate();
       final long generatorStartTime = generatorStartDate.getTime();
       final long generatorEndTime = generatorEndDate.getTime();
       final org.kalypso.contribs.java.math.Interval generatorInterval = new org.kalypso.contribs.java.math.Interval( generatorStartTime, generatorEndTime );
