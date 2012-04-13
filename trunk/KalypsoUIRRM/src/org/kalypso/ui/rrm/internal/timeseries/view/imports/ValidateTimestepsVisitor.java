@@ -45,7 +45,11 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Duration;
 import org.joda.time.Period;
+import org.joda.time.Seconds;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
@@ -85,6 +89,12 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
 
     if( Objects.isNotNull( m_lastDate ) )
     {
+      final DateTimeZone dateTimeZone = DateTimeZone.forID( MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() ).getID() );
+      final DateTime d1 = new DateTime( m_lastDate.getTime(), dateTimeZone );
+      final DateTime d2 = new DateTime( date.getTime(), dateTimeZone );
+      final Duration dur = new Duration( d1, d2 );
+      final Seconds standardSeconds = dur.toStandardSeconds();
+
       final long duration = Math.abs( m_lastDate.getTime() - date.getTime() ) / 1000;
       if( m_duration != duration )
       {
@@ -97,7 +107,6 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
     }
 
     m_lastDate = date;
-
   }
 
   public IStatus getStatus( )
