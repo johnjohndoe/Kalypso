@@ -90,7 +90,7 @@ public class LinearSumCatchmentModelTest
     preferenceStore.setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
 
     /* Create the temporary project. */
-    m_project = TestUtilities.createProject();
+    m_project = TestUtilities.createProject( "LinearSumSample" );
 
     /* Unzip the resources. */
     TestUtilities.unzipResources( "resources/linearsumsample.zip", m_project );
@@ -102,6 +102,7 @@ public class LinearSumCatchmentModelTest
   @After
   public void tearDown( ) throws Exception
   {
+    m_project = null;
   }
 
   /**

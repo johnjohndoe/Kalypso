@@ -145,8 +145,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       monitor.subTask( "Merge observations for each catchment... " );
 
       /* The timeseries must be merged. */
-      final IFolder simulationFolder = simulation.getSimulationFolder();
-      final IPath location = simulationFolder.getLocation();
+      final IFolder modelsFolder = simulation.getModelsFolder();
+      final IPath location = modelsFolder.getLocation();
       final Map<String, IObservation> mergedObservations = hash.merge( location.toFile().toURI().toURL() );
 
       /* Monitor. */
@@ -319,8 +319,8 @@ public class MultiCatchmentModelRunner extends AbstractCatchmentModelRunner
       CatchmentModelHelper.setLink( catchment, targetLink, link );
 
       /* Save the observation. */
-      final IFolder simulationFolder = simulation.getSimulationFolder();
-      final IFile observationFile = simulationFolder.getFile( new Path( link ) );
+      final IFolder modelsFolder = simulation.getModelsFolder();
+      final IFile observationFile = modelsFolder.getFile( new Path( link ) );
       ZmlFactory.writeToFile( observation, observationFile );
 
       /* HINT: If the hash code is a new one, save it along with its link. */

@@ -62,11 +62,6 @@ import org.kalypso.utils.log.GeoStatusLog;
 public class TestUtilities
 {
   /**
-   * The project name.
-   */
-  private static final String PROJECT_NAME = "KalypsoUIRRM-Test";
-
-  /**
    * The constructor.
    */
   private TestUtilities( )
@@ -77,15 +72,17 @@ public class TestUtilities
    * This function creates and opens the temporary project in the workspace of the unittest. If it already exists it
    * will be returned.
    * 
+   * @param projectName
+   *          The project name.
    * @return The temporary project.
    */
-  public static IProject createProject( ) throws CoreException
+  public static IProject createProject( final String projectName ) throws CoreException
   {
     /* Get the workspace root. */
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
     /* Get the project. */
-    final IProject project = root.getProject( PROJECT_NAME );
+    final IProject project = root.getProject( projectName );
     if( project.exists() )
       return project;
 

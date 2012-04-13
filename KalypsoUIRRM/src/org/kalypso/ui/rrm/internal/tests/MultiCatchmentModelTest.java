@@ -73,7 +73,7 @@ public class MultiCatchmentModelTest
     preferenceStore.setValue( IKalypsoCorePreferences.DISPLAY_TIMEZONE, "GMT+1" );
 
     /* Create the temporary project. */
-    m_project = TestUtilities.createProject();
+    m_project = TestUtilities.createProject( "MultiSample" );
 
     /* Unzip the resources. */
     TestUtilities.unzipResources( "resources/multisample.zip", m_project );
@@ -85,6 +85,7 @@ public class MultiCatchmentModelTest
   @After
   public void tearDown( ) throws Exception
   {
+    m_project = null;
   }
 
   /**

@@ -286,6 +286,6 @@ public class CatchmentModelsDuplicateEliminator
     if( !ObjectUtils.equals( usedGenerator.getTimestep(), generator.getTimestep() ) )
       return false;
 
-    return CatchmentModelHelper.compareGeneratorCatchments( usedGenerator, generator );
+    return CatchmentModelHelper.compareGeneratorCatchments( usedGenerator, generator, true );
   }
 }

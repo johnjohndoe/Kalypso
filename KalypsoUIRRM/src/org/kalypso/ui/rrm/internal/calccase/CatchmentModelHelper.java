@@ -201,7 +201,7 @@ public class CatchmentModelHelper
     for( final IRainfallGenerator generator : generators )
     {
       /* Perfomance: Do not check the first generator with itself. */
-      if( generator == firstGenerator )
+      if( generator.getId().equals( firstGenerator.getId() ) )
         continue;
 
       /* (1) All generators must be of the type ILinearSumGenerator. */
@@ -233,7 +233,7 @@ public class CatchmentModelHelper
       }
 
       /* (4) The areas must be the same and must have the same order in all generators. */
-      if( !compareGeneratorCatchments( firstGenerator, linearSumGenerator ) )
+      if( !compareGeneratorCatchments( firstGenerator, linearSumGenerator, false ) )
       {
         collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The catchments of the generator '%s' does not match the catchments of the first generator '%s'.", generator.getDescription(), firstGenerator.getDescription() ) ) );
         continue;
@@ -264,16 +264,18 @@ public class CatchmentModelHelper
    * <ul>
    * <li>The number of catchments.</li>
    * <li>The order of the catchments.</li>
-   * <li>The factors and timeseries in the catchments.</li>
+   * <li>Optional: The factors and timeseries in the catchments.</li>
    * </ul>
    * 
    * @param generator1
    *          The first linear sum generator.
    * @param generator2
    *          The second linear sum generator.
+   * @param includeTimeseries
+   *          If true, the factors and timeseries in the catchments are compared, too.
    * @return True, if the catchments of the linear sum generators are equal. False otherwise.
    */
-  public static boolean compareGeneratorCatchments( final ILinearSumGenerator generator1, final ILinearSumGenerator generator2 )
+  public static boolean compareGeneratorCatchments( final ILinearSumGenerator generator1, final ILinearSumGenerator generator2, final boolean includeTimeseries )
   {
     /* Get the catchments. */
     final IFeatureBindingCollection<ICatchment> catchments1 = generator1.getCatchments();
@@ -294,11 +296,15 @@ public class CatchmentModelHelper
       if( !areaHref1.equals( areaHref2 ) )
         return false;
 
-      /* Build the hash. */
-      final String hash1 = RainfallGeneratorUtilities.buildHash( catchment1 );
-      final String hash2 = RainfallGeneratorUtilities.buildHash( catchment2 );
-      if( !hash1.equals( hash2 ) )
-        return false;
+      /* If true, the factors and timeseries in the catchments are compared, too. */
+      if( includeTimeseries )
+      {
+        /* Build the hash. */
+        final String hash1 = RainfallGeneratorUtilities.buildHash( catchment1 );
+        final String hash2 = RainfallGeneratorUtilities.buildHash( catchment2 );
+        if( !hash1.equals( hash2 ) )
+          return false;
+      }
     }
 
     return true;
