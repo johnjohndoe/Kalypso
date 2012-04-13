@@ -42,6 +42,7 @@ package org.kalypso.model.rcm.internal.binding;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -58,6 +59,7 @@ import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
@@ -238,6 +240,32 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     }
   }
 
+  /**
+   * @see org.kalypso.model.rcm.binding.AbstractRainfallGenerator#setValidFrom(java.util.Date)
+   */
+  @Override
+  public void setValidFrom( final Date validFrom )
+  {
+    /* First set. */
+    setProperty( PROPERTY_VALID_FROM, DateUtilities.toXMLGregorianCalendar( validFrom ) );
+
+    /* Adjust the validities. */
+    adjustValidities();
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.AbstractRainfallGenerator#setValidTo(java.util.Date)
+   */
+  @Override
+  public void setValidTo( final Date validTo )
+  {
+    /* First set. */
+    setProperty( PROPERTY_VALID_TO, DateUtilities.toXMLGregorianCalendar( validTo ) );
+
+    /* Adjust the validities. */
+    adjustValidities();
+  }
+
   @Override
   public String getComment( )
   {
@@ -303,6 +331,19 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
       setProperty( PROPERTY_TIMESTAMP, null );
     else
       setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm" ) ); //$NON-NLS-1$
+
+    /* Adjust the validities. */
+    adjustValidities();
+  }
+
+  private void adjustValidities( )
+  {
+    /* Get the needed values. */
+    final LocalTime timestamp = getTimestamp();
+    final Date validFrom = getValidFrom();
+    final Date validTo = getValidTo();
+
+    // TODO
   }
 
   @Override
