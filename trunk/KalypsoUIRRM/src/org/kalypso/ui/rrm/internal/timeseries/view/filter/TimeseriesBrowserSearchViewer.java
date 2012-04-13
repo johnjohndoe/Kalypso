@@ -41,22 +41,21 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.filter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAction;
 
 /**
  * @author Dirk Kuch
@@ -97,31 +96,11 @@ public class TimeseriesBrowserSearchViewer extends Composite
     control.setLayout( Layouts.createGridLayout( 2 ) );
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
-    final Action expandAll = new Action()
-    {
-      @Override
-      public void runWithEvent( final Event event )
-      {
-        viewer.expandAll();
-      }
-    };
-    expandAll.setImageDescriptor( UIRrmImages.id( UIRrmImages.DESCRIPTORS.TIMESERIES_TREE_EXPAND_ALL ) );
-
-    final ImageHyperlink lnkExpandAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), expandAll );
+    final ImageHyperlink lnkExpandAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new ExpandAllTreeItemsAction( viewer ) );
     lnkExpandAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) );
     lnkExpandAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    final Action collapseAll = new Action()
-    {
-      @Override
-      public void runWithEvent( final Event event )
-      {
-        viewer.collapseAll();
-      }
-    };
-    collapseAll.setImageDescriptor( UIRrmImages.id( UIRrmImages.DESCRIPTORS.TIMESERIES_TREE_COLLAPSE_ALL ) );
-
-    final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), collapseAll );
+    final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new CollapseAllTreeItemsAction( viewer ) );
     lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) );
     lnkCollapseAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
   }
