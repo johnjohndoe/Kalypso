@@ -40,20 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.core.status.tree.StatusDialog;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationWizard;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Dirk Kuch
@@ -80,6 +87,15 @@ public class CalculateEvaporationAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
+    final IStatus status = canCalculateEvaporation();
+    if( !status.isOK() )
+    {
+      final StatusDialog dialog = new StatusDialog( shell, "Berechnung Seeverdunstung", status );
+      dialog.open();
+
+      return;
+    }
+
     final CommandableWorkspace workspace = m_model.getWorkspace();
 
     final CalculateEvaporationData data = new CalculateEvaporationData();
@@ -101,6 +117,24 @@ public class CalculateEvaporationAction extends Action
 // final ITimeseries timeseries = showWizard( shell, data );
 //
 // m_model.refreshTree( timeseries );
+  }
+
+  private IStatus canCalculateEvaporation( )
+  {
+    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
+    final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
+
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
+      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Luftfeuchte fehlt." );
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
+      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Sonnenscheindauer Zeitreihe fehlt." );
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
+      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Temperatur Zeitreihe fehlt." );
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) )
+      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Windgeschwindigkeit fehlt." );
+
+    return stati.asMultiStatusOrOK( "Überprüfung Eingangsdaten" );
   }
 
 }
