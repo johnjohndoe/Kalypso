@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.actions;
+package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 
 import java.util.Date;
 

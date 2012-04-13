@@ -84,6 +84,8 @@ public class UIRrmImages
     TIMESERIES_REPLACE("icons/timeseries/overwrite.png"), //$NON-NLS-1$
 
     TIMESERIES_SEARCH_CONTROL_CLEAN("icons/timeseries/clear.gif"), //$NON-NLS-1$
+    TIMESERIES_TREE_COLLAPSE_ALL("icons/timeseries/collapseall.gif"), //$NON-NLS-1$
+    TIMESERIES_TREE_EXPAND_ALL("icons/timeseries/expandall.gif"), //$NON-NLS-1$
 
     IMPORT_TIMESERIES("icons/timeseries/importTimeseries.gif"), //$NON-NLS-1$
 

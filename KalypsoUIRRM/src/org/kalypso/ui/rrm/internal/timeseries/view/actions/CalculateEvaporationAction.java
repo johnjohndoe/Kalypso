@@ -51,6 +51,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationWizard;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
