@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -78,6 +79,8 @@ import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNodeLabelComparator;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsAction;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesChartComposite;
 import org.kalypso.ui.rrm.internal.timeseries.view.edit.TimeseriesDialogSource;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
@@ -156,7 +159,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     final Composite rightPane = toolkit.createComposite( form );
     rightPane.setLayout( Layouts.createGridLayout() );
 
-    createTreeViewer( leftPane ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    createTreeViewer( leftPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     createSearchPanel( leftPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     createDiagramView( rightPane, toolkit ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -193,12 +196,23 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     return m_chart;
   }
 
-  private Composite createTreeViewer( final Composite body )
+  private Composite createTreeViewer( final Composite body, final FormToolkit toolkit )
   {
-    m_treeViewer = new TreeViewer( body, SWT.FLAT | SWT.SINGLE );
+
+    final ToolBar toolbar = new ToolBar( body, SWT.RIGHT_TO_LEFT );
+    toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final ToolBarManager manager = new ToolBarManager( toolbar );
+
+    m_treeViewer = new TreeViewer( body, SWT.FLAT | SWT.SINGLE | SWT.BORDER );
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TimeseriesNodeLabelComparator() );
+
+    manager.add( new CollapseAllTreeItemsAction( m_treeViewer ) );
+    manager.add( new ExpandAllTreeItemsAction( m_treeViewer ) );
+    manager.update( true );
+
+    toolkit.adapt( toolbar );
 
     final StationsByStationsStrategy strategy = new StationsByStationsStrategy( m_collection );
 
@@ -279,7 +293,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     try
     {
       m_selection = timeseries;
-      if( m_selection != null )
+      if( m_selection != null && m_chart != null )
         m_chart.setSelection( new TimeseriesDialogSource( timeseries ) );
     }
     catch( final Exception e )
