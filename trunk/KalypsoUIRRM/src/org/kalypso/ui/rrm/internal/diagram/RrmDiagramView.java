@@ -69,6 +69,9 @@ import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 import org.kalypso.zml.ui.chart.view.ZmlDiagramChartPartComposite;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+
 /**
  * @author Gernot Belger
  */
@@ -160,6 +163,17 @@ public class RrmDiagramView extends ViewPart
     base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     m_chartPart.createControl( base );
+
+    m_chartPart.getChartModel().getLayerManager().accept( new AbstractChartLayerVisitor()
+    {
+
+      @Override
+      public void visit( final IChartLayer layer )
+      {
+        layer.setVisible( false );
+
+      }
+    } );
   }
 
   @Override
