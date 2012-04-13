@@ -380,6 +380,18 @@
                  style="push">
            </command>
         </menuContribution>
+        <menuContribution
+              allPopups="false"
+              locationURI="toolbar:org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView">
+           <command
+                 commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
+                 style="push">
+           </command>
+           <command
+                 commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
+                 style="push">
+           </command>
+        </menuContribution>
    </extension>
    <extension point="org.kalypso.ui.importWizards">
       <wizard
@@ -527,6 +539,14 @@
 
 			<!-- non workflow -->
             <command id="org.kalypso.model.rrm.simulationManagement.refreshSimulations" name="Create Simulations"/>
+            <command
+                  id="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
+                  name="Öffne Baumelemente">
+            </command>
+            <command
+                  id="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
+                  name="Schließe Baumelemente">
+            </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
             <image commandId="org.kalypso.model.rrm.timeseriesManagement" icon="icons/timeseries/timeseriesManagementView.gif"/>
@@ -559,6 +579,14 @@
             <image commandId="org.kalypso.model.rrm.simulationManagement" icon="icons/simulations/simulation.gif"/>
             
             <image commandId="org.kalypso.model.rrm.simulationManagement.refreshSimulations" icon="icons/simulations/refreshSimulations.gif"/>
+            <image
+                  commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items"
+                  icon="icons/timeseries/expandall.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items"
+                  icon="icons/timeseries/collapseall.gif">
+            </image>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
@@ -592,6 +620,14 @@
 	             </with>
          	</and>
          </enabledWhen>
+      </handler>
+      <handler
+            class="org.kalypso.ui.rrm.internal.timeseries.view.actions.ExpandAllTreeItemsHandler"
+            commandId="org.kalypso.ui.rrm.internal.timeseries.view.expand.tree.items">
+      </handler>
+      <handler
+            class="org.kalypso.ui.rrm.internal.timeseries.view.actions.CollapseAllTreeItemsHandler"
+            commandId="org.kalypso.ui.rrm.internal.timeseries.view.collapse.tree.items">
       </handler>
    </extension>
    

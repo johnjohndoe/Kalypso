@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.joda.time.Period;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.validation.StringIsAsciiPrintableValidator;
 import org.kalypso.commons.java.lang.Objects;
@@ -80,7 +81,6 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationData;
 import org.kalypso.zml.ui.imports.ParameterTypeLabelProvider;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -276,7 +276,14 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     for( final ITimeseries timeseries : collection )
     {
       if( StringUtils.equals( timeseries.getParameterType(), type ) )
-        found.add( new TimeseriesBean( timeseries ) );
+      {
+        // only tageswerte are supported
+        final Period timestep = timeseries.getTimestep();
+        final int days = timestep.toStandardDays().getDays();
+        if( days == 1 )
+          found.add( new TimeseriesBean( timeseries ) );
+      }
+
     }
 
     return found.toArray( new TimeseriesBean[] {} );

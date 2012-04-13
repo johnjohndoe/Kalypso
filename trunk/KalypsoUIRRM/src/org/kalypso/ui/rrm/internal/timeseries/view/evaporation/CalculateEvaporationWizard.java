@@ -53,7 +53,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
-import org.kalypso.ui.rrm.internal.timeseries.view.actions.CalculateEvaporationData;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.StoreTimeseriesOperation;
 
 /**

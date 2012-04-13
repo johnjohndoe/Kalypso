@@ -135,4 +135,9 @@ public class TimeseriesManagementView extends ViewPart
     final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
     m_treeViewer.setInput( input );
   }
+
+  public TreeViewer getTreeViewer( )
+  {
+    return m_treeViewer;
+  }
 }
