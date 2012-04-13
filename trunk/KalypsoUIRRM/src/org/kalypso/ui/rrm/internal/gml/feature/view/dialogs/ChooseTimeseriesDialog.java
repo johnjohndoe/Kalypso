@@ -131,7 +131,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     getShell().setText( Messages.getString( "ChooseTimeseriesDialog_0" ) ); //$NON-NLS-1$
 
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
-    base.setLayout( new GridLayout() );
+    base.setLayout( Layouts.createGridLayout() );
 
     final Point screen = getScreenSize( DIALOG_SCREEN_SIZE );
 
@@ -150,11 +150,12 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     } );
 
     final SashForm form = new SashForm( base, SWT.HORIZONTAL );
-    form.setLayout( new FillLayout() );
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
     final Composite leftPane = toolkit.createComposite( form );
-    leftPane.setLayout( Layouts.createGridLayout() );
+    final GridLayout layout = Layouts.createGridLayout();
+    layout.verticalSpacing = 0;
+    leftPane.setLayout( layout );
 
     final Composite rightPane = toolkit.createComposite( form );
     rightPane.setLayout( Layouts.createGridLayout() );
@@ -198,7 +199,6 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   private Composite createTreeViewer( final Composite body, final FormToolkit toolkit )
   {
-
     final ToolBar toolbar = new ToolBar( body, SWT.RIGHT_TO_LEFT );
     toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     final ToolBarManager manager = new ToolBarManager( toolbar );
@@ -310,7 +310,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     if( weights == null || weights.trim().isEmpty() )
       return new int[] { 35, 65 };
 
-    final String[] parts = weights.split( "," ); //$NON-NLS-1$ //$NON-NLS-1$
+    final String[] parts = weights.split( "," ); //$NON-NLS-1$
     final int[] w = new int[parts.length];
 
     for( int i = 0; i < parts.length; i++ )
@@ -326,7 +326,7 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     final StringBuffer buffer = new StringBuffer();
     for( final int weight : weights )
     {
-      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); //$NON-NLS-1$ //$NON-NLS-1$
+      buffer.append( String.format( Messages.getString( "EditTimeseriesDialog_3" ), weight ) ); //$NON-NLS-1$
     }
 
     final IDialogSettings settings = KalypsoUIRRMPlugin.getDefault().getDialogSettings();
