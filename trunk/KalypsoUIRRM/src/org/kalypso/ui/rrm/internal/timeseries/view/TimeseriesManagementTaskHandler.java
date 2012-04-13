@@ -77,22 +77,22 @@ public class TimeseriesManagementTaskHandler extends AbstractHandler
 
     final ISelectionProvider selectionProvider = managementView.getViewSite().getSelectionProvider();
 
-    /* Hook properties view and management view */
-    final TreePropertiesView propertiesView = (TreePropertiesView) page.findView( TreePropertiesView.ID );
-    if( propertiesView == null )
-      throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
-
-    propertiesView.hookSelection( selectionProvider );
-
-    /* hook rrm diagram view */
-    final IViewPart diagramView = page.findView( RrmDiagramView.ID );
-    if( !(diagramView instanceof RrmDiagramView) )
-      throw new ExecutionException( "Failed to access diagram view" ); //$NON-NLS-1$
-
-    ((RrmDiagramView) diagramView).hookSelection( selectionProvider );
-
     try
     {
+      /* Hook properties view and management view */
+      final TreePropertiesView propertiesView = (TreePropertiesView) page.showView( TreePropertiesView.ID );
+      if( propertiesView == null )
+        throw new ExecutionException( "Failed to access properties view" ); //$NON-NLS-1$
+
+      propertiesView.hookSelection( selectionProvider );
+
+      /* hook rrm diagram view */
+      final IViewPart diagramView = page.showView( RrmDiagramView.ID );
+      if( !(diagramView instanceof RrmDiagramView) )
+        throw new ExecutionException( "Failed to access diagram view" ); //$NON-NLS-1$
+
+      ((RrmDiagramView) diagramView).hookSelection( selectionProvider );
+
       final SzenarioDataProvider modelProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final CommandableWorkspace workspace = modelProvider.getCommandableWorkSpace( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );
       final IStationCollection input = modelProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_STATIONS );

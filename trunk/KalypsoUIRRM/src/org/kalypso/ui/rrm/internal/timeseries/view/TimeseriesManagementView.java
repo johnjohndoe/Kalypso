@@ -82,7 +82,6 @@ public class TimeseriesManagementView extends ViewPart
 
     createTimeseriesTree( body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createSearchControls( body, toolkit ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-
   }
 
   private Composite createTimeseriesTree( final Composite parent )
