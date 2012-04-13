@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
@@ -88,6 +89,9 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
   {
     if( m_generator instanceof ILinearSumGenerator )
       return UIRrmImages.id( DESCRIPTORS.GENERATOR_LINEAR_SUM );
+
+    if( m_generator instanceof IMultiGenerator )
+      return UIRrmImages.id( DESCRIPTORS.GENERATOR_MULTI );
 
     return null;
   }

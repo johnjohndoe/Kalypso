@@ -106,7 +106,8 @@ public class TimeseriesImportWizard extends Wizard
     if( !status.isOK() )
     {
       StatusDialog.open( getShell(), status, getWindowTitle() );
-      return true;
+      if( status.matches( IStatus.ERROR ) )
+        return true;
     }
 
     final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_bean, m_workspace, m_station, m_importOperation );
@@ -120,7 +121,7 @@ public class TimeseriesImportWizard extends Wizard
 
     m_timeseries = storeOperation.getTimeseries();
 
-    return status.isOK() && status2.isOK();
+    return !status.matches( IStatus.ERROR ) && !status2.matches( IStatus.ERROR );
   }
 
   private void saveSettings( )

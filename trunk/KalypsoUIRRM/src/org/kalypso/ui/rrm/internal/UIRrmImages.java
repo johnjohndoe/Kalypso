@@ -92,6 +92,7 @@ public class UIRrmImages
     EDIT_STATION("icons/timeseries/editStation.png"), //$NON-NLS-1$
 
     GENERATOR_LINEAR_SUM("icons/cm/generatorLinearSum.png"), //$NON-NLS-1$
+    GENERATOR_MULTI("icons/cm/generatorMulti.png"), //$NON-NLS-1$
     GENERATOR_NEW_LINEAR_SUM("icons/cm/generatorNewLinearSum.png"), //$NON-NLS-1$
     GENERATOR_EDIT("icons/cm/generatorEdit.png"); //$NON-NLS-1$
 
