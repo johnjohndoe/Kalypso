@@ -457,7 +457,7 @@
       <perspectiveExtension
             targetID="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
          <view
-               moveable="false"
+               moveable="true"
                closeable="false"
                id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"
                relationship="stack"
@@ -465,7 +465,7 @@
                visible="false">
          </view>
          <view
-               moveable="false"
+               moveable="true"
                closeable="false"
                id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView"
                relationship="stack"
@@ -473,7 +473,7 @@
                visible="false">
          </view>
          <view
-               moveable="false"
+               moveable="true"
                closeable="false"
                id="org.kalypso.ui.editor.gistableeditor.GttViewPart"
                relationship="stack"
@@ -482,7 +482,7 @@
          </view>
          <view
                id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView"
-               moveable="false"
+               moveable="true"
                closeable="false"
                ratio="0.33"
                relationship="right"
@@ -491,7 +491,7 @@
          </view>
          <view
          	   id="org.kalypso.ui.rrm.internal.diagram.RrmDiagramView"
-               moveable="false"
+               moveable="true"
                closeable="false"
                ratio="0.20"
                relationship="bottom"
