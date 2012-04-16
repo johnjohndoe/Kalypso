@@ -103,12 +103,6 @@ public class MultiCatchmentModelInfo implements ICatchmentModelInfo
    *          The target link.
    * @param parameterType
    *          The parameter type.
-   * @param timestep
-   *          The timestep.
-   * @param timestamp
-   *          The timestamp.
-   * @param range
-   *          The range.
    */
   public MultiCatchmentModelInfo( final RrmSimulation simulation, final NAControl control, final NaModell model, final IMultiGenerator generator, final QName targetLink, final String parameterType )
   {

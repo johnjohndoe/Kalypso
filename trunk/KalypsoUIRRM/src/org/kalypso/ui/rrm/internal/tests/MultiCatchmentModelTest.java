@@ -42,13 +42,30 @@ package org.kalypso.ui.rrm.internal.tests;
 
 import static org.junit.Assert.fail;
 
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.model.hydrology.binding.control.NAControl;
+import org.kalypso.model.hydrology.binding.model.Catchment;
+import org.kalypso.model.hydrology.binding.model.NaModell;
+import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.model.rcm.binding.IMultiGenerator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
+import org.kalypso.ui.rrm.internal.calccase.MultiCatchmentModelInfo;
+import org.kalypso.ui.rrm.internal.calccase.MultiCatchmentModelRunner;
 
 /**
  * Test for verifying a multi catchment model.
@@ -92,8 +109,64 @@ public class MultiCatchmentModelTest
    * This function executes the test.
    */
   @Test
-  public void test( )
+  public void test( ) throws Exception
   {
-    fail( "Not yet implemented" );
+    /* Get the simulation folder. */
+    final IFolder baseFolder = m_project.getFolder( INaProjectConstants.FOLDER_BASIS );
+    final IFolder calcCasesFolder = baseFolder.getFolder( INaProjectConstants.FOLDER_RECHENVARIANTEN );
+    final IFolder actualSimulationFolder = calcCasesFolder.getFolder( "Actual" );
+    final IFolder expectedSimulationFolder = calcCasesFolder.getFolder( "Expected" );
+
+    /* Create the simulation. */
+    final RrmSimulation simulation = new RrmSimulation( actualSimulationFolder );
+
+    /* Load the calculation.gml. */
+    final NAControl control = CatchmentModelHelper.loadControl( simulation );
+
+    /* Load the na model. */
+    final NaModell model = CatchmentModelHelper.loadModel( simulation );
+
+    /* Execute the catchment models. */
+    executeCatchmentModels( simulation, control, model, control.getGeneratorN(), Catchment.PROP_PRECIPITATION_LINK, ITimeseriesConstants.TYPE_RAINFALL );
+    executeCatchmentModels( simulation, control, model, control.getGeneratorE(), Catchment.PROP_EVAPORATION_LINK, ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
+    executeCatchmentModels( simulation, control, model, control.getGeneratorT(), Catchment.PROP_TEMPERATURE_LINK, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE );
+
+    /* Compare the actual results with the expected results. */
+    final IStatus status = CatchmentModelHelper.compareTimeseries( actualSimulationFolder, expectedSimulationFolder );
+
+    /* Save the status. */
+    TestUtilities.saveLogQuietly( status, m_project.getLocation().toFile() );
+
+    /* Fail, if it is not ok. */
+    if( !status.isOK() )
+      fail( "The actual timeseries do not match the expected timeseries. See the log for details." );
+  }
+
+  /**
+   * This function executes the catchment model.
+   * 
+   * @param simulation
+   *          The simulation.
+   * @param control
+   *          The na control.
+   * @param model
+   *          The na model.
+   * @param generator
+   *          The generator.
+   * @param targetLink
+   *          The target link.
+   * @param parameterType
+   *          The parameter type.
+   */
+  private void executeCatchmentModels( final RrmSimulation simulation, final NAControl control, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final String parameterType ) throws CoreException
+  {
+    /* Create the catchment model info. */
+    final MultiCatchmentModelInfo info = new MultiCatchmentModelInfo( simulation, control, model, (IMultiGenerator) generator, targetLink, parameterType );
+
+    /* Create the catchment model runner. */
+    final MultiCatchmentModelRunner runner = new MultiCatchmentModelRunner();
+
+    /* Execute the catchment model. */
+    runner.executeCatchmentModel( info, new NullProgressMonitor() );
   }
 }
