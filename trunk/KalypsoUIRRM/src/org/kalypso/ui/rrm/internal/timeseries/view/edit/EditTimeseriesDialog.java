@@ -211,5 +211,4 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
 
     super.buttonPressed( buttonId );
   }
-
 }

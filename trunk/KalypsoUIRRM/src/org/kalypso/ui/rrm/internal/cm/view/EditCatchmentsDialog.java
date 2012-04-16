@@ -45,6 +45,7 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -68,6 +69,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusComposite;
@@ -140,6 +142,11 @@ public class EditCatchmentsDialog extends TrayDialog
   private IDataBinding m_dataBinding;
 
   /**
+   * The dialog settings.
+   */
+  private final IDialogSettings m_settings;
+
+  /**
    * The constructor.
    * 
    * @param parentShell
@@ -163,6 +170,7 @@ public class EditCatchmentsDialog extends TrayDialog
     m_statusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
+    m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
 
     m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_changeListener );
   }
@@ -213,6 +221,15 @@ public class EditCatchmentsDialog extends TrayDialog
     createDetailsContent( m_detailsGroup, null );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
+   */
+  @Override
+  protected IDialogSettings getDialogBoundsSettings( )
+  {
+    return DialogSettingsUtils.getSection( m_settings, "bounds" ); //$NON-NLS-1$
   }
 
   /**
