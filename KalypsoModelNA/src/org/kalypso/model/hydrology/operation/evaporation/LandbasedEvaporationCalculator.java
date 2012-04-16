@@ -66,20 +66,18 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
   @Override
   protected Double doCalculate( final Double humidity, final Double sunshine, final Double temperature, final Double windVelocity, final Calendar date )
   {
+    final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
+    final double e = es * (humidity / 100.0);
+    final double l = 249.8 - 0.242 * temperature;
+    final double s = es * (4284.0 / Math.pow( 243.12 + temperature, 2.0 ));
+
     final double roh = 0.0172 * date.get( Calendar.DAY_OF_YEAR ) - 1.39;
     final double r0 = 245.0 * (9.9 + 7.08 * Math.sin( roh ) + 0.18 * (LATITUDE_DEGREE - 51.0) * (Math.sin( roh ) - 1));
     final double s0 = 12.3 + Math.sin( roh ) * (4.3 + (LATITUDE_DEGREE - 51.0) / 6.0);
-    final double rg = r0 * (0.19 + 0.55 * sunshine / s0);
-
-    final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
-    final double e = es * (humidity / 100.0);
-
-    final double s = es * (4284.0 / Math.pow( 243.12 + temperature, 2.0 ));
+    final double rg = r0 * (0.19 + 0.55 * (sunshine / s0));
 
 // final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_CONSTANT * Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9
 // * (sunshine / s0)) * (0.34 - 0.044 * Math.pow( e, 0.5 ));
-
-    final double l = 249.8 - 0.242 * temperature;
 
     final double v2 = getV2( windVelocity );
 
