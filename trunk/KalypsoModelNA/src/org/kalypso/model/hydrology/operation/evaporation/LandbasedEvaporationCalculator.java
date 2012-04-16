@@ -52,16 +52,11 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
 {
   private static final double LATITUDE_DEGREE = 54.00;
 
-  /* Faktor zur Umrechnung von j/cm² in W/m² */
-  private static final double FACTOR_CONVERSION_JW = 24.0 * 60.0 * 60.0 / 10000.0;
-
-  private static final double COEFFICIENT_EMISSION = 1.0;
-
   /* Albedo */
   private static final double ALBEDO = 0.23;
 
   /* Stefan Boltzmann Konstante (DVWK - Formel 5.27) */
-  private static final double BOLTZMANN_WATER_CONSTANT = 0.49 * Math.pow( 10.0, -6.0 );
+// private static final double BOLTZMANN_WATER_CONSTANT = 0.49 * Math.pow( 10.0, -6.0 );
 
   public LandbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity, final DateRange daterange )
   {
@@ -77,20 +72,19 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
     final double rg = r0 * (0.19 + 0.55 * sunshine / s0);
 
     final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
-    final double e = es * humidity / 100.0;
+    final double e = es * (humidity / 100.0);
 
-    final double s = es * (4284 / Math.pow( 243.12 + temperature, 2.0 ));
+    final double s = es * (4284.0 / Math.pow( 243.12 + temperature, 2.0 ));
 
-// final double rnl = Math.pow( 237.0 + temperature, 4.0 ) * (0.1 + 0.9 * (sunshine / s0)) * (0.34 - 0.044 * Math.pow(
-// e, 0.5 ));
-// final double rn = (1.0 - ALBEDO) * rg - FACTOR_CONVERSION_JW * rnl;
+// final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_WATER_CONSTANT * Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9
+// * (sunshine / s0)) * (0.34 - 0.044 * Math.pow( e, 0.5 ));
 
     final double l = 249.8 - 0.242 * temperature;
 
-    final double rng = 0.6 * rg;
+    final double v2 = getV2( windVelocity );
 
-    final double etN = s * (rng / l) + 0.655 * (3.75 / (temperature + 273.0)) * windVelocity * (es - e);
-    final double etT = s + 0.655 * (1 + 0.34 * windVelocity);
+    final double etN = s * (0.6 * rg / l) + 0.655 * (3.75 / (temperature + 273.0)) * v2 * (es - e);
+    final double etT = s + 0.655 * (1 + 0.34 * v2);
 
     final double et0 = etN / etT;
 
@@ -98,5 +92,15 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
       return et0;
 
     return 0.0;
+  }
+
+  /**
+   * Beaufort-Conversion of wind velocity
+   */
+  private double getV2( final Double v )
+  {
+    final double beaufort = 0.0009 * Math.pow( v, 6.0 ) - 0.0173 * Math.pow( v, 5.0 ) + 0.1219 * Math.pow( v, 4.0 ) - 0.3874 * Math.pow( v, 3.0 ) + 0.8597 * Math.pow( v, 2.0 ) + 0.2767 * v - 0.0186;
+
+    return beaufort;
   }
 }

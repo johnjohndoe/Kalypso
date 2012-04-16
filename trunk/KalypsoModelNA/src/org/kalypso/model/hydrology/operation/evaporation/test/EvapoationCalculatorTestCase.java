@@ -48,6 +48,7 @@ import java.util.Date;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.model.hydrology.operation.evaporation.LandbasedEvaporationCalculator;
 import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -98,7 +99,7 @@ public class EvapoationCalculatorTestCase
 
     final DateRange daterange = getDateRange( humidity, sunshine, temperature, windVelocity );
 
-    final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
+    final LandbasedEvaporationCalculator calculator = new LandbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
     calculator.execute( new NullProgressMonitor() );
 
     final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
