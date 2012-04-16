@@ -128,13 +128,13 @@ public class CatchmentModelsDuplicateEliminator
       /* Save the global models (catchmentModels.gml and simulations.gml). */
       m_globalData.saveGlobalModels( m_targetDir, collector );
 
-      return collector.asMultiStatusOrOK( "Check catchment models for duplicates..." );
+      return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
     }
     catch( final Exception ex )
     {
       ex.printStackTrace();
       collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatusOrOK( "Check catchment models for duplicates..." );
+      return collector.asMultiStatusOrOK( "Check catchment models for duplicates" );
     }
   }
 
