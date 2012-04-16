@@ -153,14 +153,14 @@ public class CatchmentModelVerifier
       final IStatus compareStatus = CatchmentModelHelper.compareTimeseries( simulationFolder, simulationTmpFolder );
       collector.add( compareStatus );
 
-      return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...", m_simulation.getDescription() ) );
+      return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'", m_simulation.getDescription() ) );
     }
     catch( final Exception ex )
     {
       /* Handle the error as warning. */
       ex.printStackTrace();
       collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex ) );
-      return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'...", m_simulation.getDescription() ) );
+      return collector.asMultiStatus( String.format( "Verify the catchment models of the simulation '%s'", m_simulation.getDescription() ) );
     }
     finally
     {
@@ -209,17 +209,17 @@ public class CatchmentModelVerifier
     final String generatorIdT = ((IXLinkedFeature) m_simulation.getProperty( NAControl.PROP_GENERATOR_T )).getFeatureId();
 
     if( !checkGenerator( generators, generatorIdN ) )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The N generator was null or had no factors..." ) );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The N generator was null or had no factors." ) );
     else
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The N generator was okay." ) );
 
     if( !checkGenerator( generators, generatorIdE ) )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The E generator was null or had no factors..." ) );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The E generator was null or had no factors." ) );
     else
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The E generator was okay." ) );
 
     if( !checkGenerator( generators, generatorIdT ) )
-      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The T generator was null or had no factors..." ) );
+      collector.add( new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), "The T generator was null or had no factors." ) );
     else
       collector.add( new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The T generator was okay." ) );
 
