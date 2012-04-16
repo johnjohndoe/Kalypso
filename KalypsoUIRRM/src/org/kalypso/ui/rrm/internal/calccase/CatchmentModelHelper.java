@@ -384,10 +384,9 @@ public class CatchmentModelHelper
     final IRainfallGenerator[] generatorArray = generators.toArray( new IRainfallGenerator[] {} );
 
     /* Build the simulation interval. */
-    final Period timestepPeriod = Period.minutes( timestep ).normalizedStandard();
     final DateTime simulationStart = new DateTime( control.getSimulationStart() );
     final DateTime simulationEnd = new DateTime( control.getSimulationEnd() );
-    final DateRange simulationRange = modifyWithTimestepAndTimestamp( timestepPeriod, timestamp, simulationStart, simulationEnd );
+    final DateRange simulationRange = modifyWithTimestamp( timestamp, simulationStart, simulationEnd );
     final Date simulationStartDate = simulationRange.getFrom();
     final Date simulationEndDate = simulationRange.getTo();
     final long simulationStartTime = simulationStartDate.getTime();
@@ -434,6 +433,24 @@ public class CatchmentModelHelper
     return true;
   }
 
+  private static DateRange modifyWithTimestamp( final LocalTime timestamp, final DateTime simulationStart, final DateTime simulationEnd )
+  {
+    /* Nothing to do. */
+    if( timestamp == null )
+      return new DateRange( simulationStart.toDate(), simulationEnd.toDate() );
+
+    /* Convert to a date with the kalypso timezone. */
+    /* The date fields are ignored. */
+    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+    final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
+
+    /* Further adjust range by predefined time. */
+    final DateTime startWithTime = simulationStart.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
+    final DateTime endWithTime = simulationEnd.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
+
+    return new DateRange( startWithTime.toDate(), endWithTime.toDate() );
+  }
+
   /**
    * This function calculates the range for the timeseries to be generated. The range equals the range defined in the
    * simulation adjusted as follows:
@@ -461,14 +478,8 @@ public class CatchmentModelHelper
     final DateTime adjustedStart = start.minus( timestep );
     final DateTime adjustedEnd = end.plus( timestep ).plus( timestep ).plus( timestep );
 
-    return modifyWithTimestepAndTimestamp( timestep, timestamp, adjustedStart, adjustedEnd );
-  }
-
-  private static DateRange modifyWithTimestepAndTimestamp( final Period timestep, final LocalTime timestamp, final DateTime simulationStart, final DateTime simulationEnd )
-  {
-    /* Nothing to do. */
     if( timestep.getDays() == 0 || timestamp == null )
-      return new DateRange( simulationStart.toDate(), simulationEnd.toDate() );
+      return new DateRange( adjustedStart.toDate(), adjustedEnd.toDate() );
 
     /* Convert to a date with the kalypso timezone. */
     /* The date fields are ignored. */
@@ -476,24 +487,25 @@ public class CatchmentModelHelper
     final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
 
     /* Further adjust range by predefined time. */
-    final DateTime startWithTime = simulationStart.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
-    final DateTime endWithTime = simulationEnd.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
+    final DateTime startWithTime = adjustedStart.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
+    final DateTime endWithTime = adjustedEnd.withTime( timestampDate.getHourOfDay(), timestampDate.getMinuteOfHour(), timestampDate.getSecondOfMinute(), timestampDate.getMillisOfSecond() );
 
     /* New start must always be before unadjusted start, fix, if this is not the case. */
     DateTime startWithTimeFixed;
-    if( startWithTime.isAfter( simulationStart ) )
+    if( startWithTime.isAfter( adjustedStart ) )
       startWithTimeFixed = startWithTime.minus( timestep );
     else
       startWithTimeFixed = startWithTime;
 
     /* New end must always be after unadjusted end, fix, if this is not the case. */
     DateTime endWithTimeFixed;
-    if( endWithTime.isBefore( simulationEnd ) )
+    if( endWithTime.isBefore( adjustedEnd ) )
       endWithTimeFixed = endWithTime.plus( timestep );
     else
       endWithTimeFixed = endWithTime;
 
     return new DateRange( startWithTimeFixed.toDate(), endWithTimeFixed.toDate() );
+
   }
 
   public static NAControl loadControl( final RrmSimulation simulation ) throws Exception
