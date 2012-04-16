@@ -40,20 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.evaporation;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.commons.lang3.time.DateUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.hydrology.internal.ModelNA;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
@@ -84,55 +73,7 @@ public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculat
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
-  {
-    monitor.setTaskName( "Starting calcualtion of water based evaporation." );
-
-    final StatusCollector stati = new StatusCollector( ModelNA.PLUGIN_ID );
-
-    final Calendar to = CalendarUtilities.getCalendar( getDateRange().getTo(), KalypsoCorePlugin.getDefault().getTimeZone() );
-    final Calendar ptr = CalendarUtilities.getCalendar( getDateRange().getFrom(), KalypsoCorePlugin.getDefault().getTimeZone() );
-    ptr.set( Calendar.HOUR_OF_DAY, 12 );
-    ptr.set( Calendar.MINUTE, 0 );
-    ptr.set( Calendar.SECOND, 0 );
-    ptr.set( Calendar.MILLISECOND, 0 );
-
-    // iterate over values inherit the given date range
-    while( ptr.before( to ) || DateUtils.isSameDay( ptr, to ) )
-    {
-      final Double humidity = getValue( getDataSet( getHumidity(), ptr, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) );
-      final Double sunshine = getValue( getDataSet( getSunshine(), ptr, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) );
-      final Double temperature = getValue( getDataSet( getTemperature(), ptr, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) );
-      final Double windVelocity = getValue( getDataSet( getWindVelocity(), ptr, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) );
-
-      if( Doubles.isNaN( humidity, sunshine, temperature, windVelocity ) )
-      {
-        final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" ); //$NON-NLS-1$
-        sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-
-        final String msg = String.format( "Can't calucate evaporation for date %s. Missing parameter: humidity: %.2f, sunshine: %.2f, temperature: %.2f, wind velocity: %.2f", //
-            sdf.format( ptr.getTime() ), //
-            Objects.firstNonNull( humidity, Double.NaN ), //
-            Objects.firstNonNull( sunshine, Double.NaN ), //
-            Objects.firstNonNull( temperature, Double.NaN ), //
-            Objects.firstNonNull( windVelocity, Double.NaN ) );
-
-        stati.add( IStatus.WARNING, msg );
-      }
-
-      final Double evaporation = doCalculate( humidity, sunshine, temperature, windVelocity, ptr );
-      if( Objects.isNotNull( evaporation ) )
-        addResult( ptr.getTime(), evaporation );
-
-      ptr.add( Calendar.HOUR_OF_DAY, 24 );
-    }
-
-    monitor.done();
-
-    return stati.asMultiStatus( "Water based evaporation calculation" );
-  }
-
-  private Double doCalculate( final Double humidity, final Double sunshine, final Double temperature, final Double windVelocity, final Calendar date )
+  protected Double doCalculate( final Double humidity, final Double sunshine, final Double temperature, final Double windVelocity, final Calendar date )
   {
     final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
     final double e = es * humidity / 100.0;
