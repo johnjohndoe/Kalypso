@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -550,6 +551,6 @@ public final class WspWinImporter
   {
     final File probezFile = new File( WspWinHelper.getProfDir( wspwinDirectory ), FILE_PROBEZ );
 
-    return FileUtils.readFileToString( probezFile, null );
+    return FileUtils.readFileToString( probezFile, (Charset) null );
   }
 }

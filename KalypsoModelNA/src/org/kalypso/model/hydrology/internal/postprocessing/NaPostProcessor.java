@@ -44,6 +44,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -164,7 +165,7 @@ public class NaPostProcessor
   {
     final List<String> logContent = readOutputRes( asciiDirs.startDir );
     if( logContent == null || logContent.size() == 0 )
-      throw new SimulationException( Messages.getString("NaPostProcessor.0") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "NaPostProcessor.0" ) ); //$NON-NLS-1$
 
     checkLogForSuccess( logContent );
 
@@ -208,14 +209,14 @@ public class NaPostProcessor
         return;
     }
 
-    throw new SimulationException( Messages.getString("NaPostProcessor.1") ); //$NON-NLS-1$
+    throw new SimulationException( Messages.getString( "NaPostProcessor.1" ) ); //$NON-NLS-1$
   }
 
   private List<String> readOutputRes( final File startDir )
   {
     try
     {
-      return FileUtils.readLines( new File( startDir, FILENAME_OUTPUT_RES ), null );
+      return FileUtils.readLines( new File( startDir, FILENAME_OUTPUT_RES ), (Charset) null );
     }
     catch( final IOException e )
     {
