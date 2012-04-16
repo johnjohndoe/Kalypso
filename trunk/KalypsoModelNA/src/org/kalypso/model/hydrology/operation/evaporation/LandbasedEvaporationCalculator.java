@@ -56,7 +56,7 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
   private static final double ALBEDO = 0.23;
 
   /* Stefan Boltzmann Konstante (DVWK - Formel 5.27) */
-// private static final double BOLTZMANN_WATER_CONSTANT = 0.49 * Math.pow( 10.0, -6.0 );
+// private static final double BOLTZMANN_CONSTANT = 0.49 * Math.pow( 10.0, -6.0 );
 
   public LandbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity, final DateRange daterange )
   {
@@ -76,7 +76,7 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
 
     final double s = es * (4284.0 / Math.pow( 243.12 + temperature, 2.0 ));
 
-// final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_WATER_CONSTANT * Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9
+// final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_CONSTANT * Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9
 // * (sunshine / s0)) * (0.34 - 0.044 * Math.pow( e, 0.5 ));
 
     final double l = 249.8 - 0.242 * temperature;
