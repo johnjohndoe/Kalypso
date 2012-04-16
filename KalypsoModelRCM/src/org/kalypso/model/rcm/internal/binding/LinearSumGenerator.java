@@ -42,8 +42,10 @@ package org.kalypso.model.rcm.internal.binding;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
@@ -55,11 +57,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.joda.time.DateTimeFieldType;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.AbstractRainfallGenerator;
@@ -70,6 +72,7 @@ import org.kalypso.model.rcm.internal.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.util.TimestampHelper;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -303,15 +306,8 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
     try
     {
-      /* Create the date time formatter builder. */
-      final DateTimeFormatterBuilder bt = new DateTimeFormatterBuilder();
-      bt.appendFixedDecimal( DateTimeFieldType.hourOfDay(), 2 );
-      bt.appendLiteral( ':' ); // $NON-NLS-1$
-      bt.appendFixedDecimal( DateTimeFieldType.minuteOfHour(), 2 );
-
-      /* REMARK: This will use the UTC timezone. */
-      final DateTimeFormatter formatter = bt.toFormatter();
-      return formatter.parseLocalTime( timestampText );
+      /* Parse the timestamp. */
+      return TimestampHelper.parseTimestamp( timestampText );
     }
     catch( final IllegalArgumentException e )
     {
@@ -330,20 +326,10 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
     if( timestamp == null )
       setProperty( PROPERTY_TIMESTAMP, null );
     else
-      setProperty( PROPERTY_TIMESTAMP, timestamp.toString( "HH:mm" ) ); //$NON-NLS-1$
+      setProperty( PROPERTY_TIMESTAMP, TimestampHelper.toTimestampText( timestamp ) );
 
     /* Adjust the validities. */
     adjustValidities();
-  }
-
-  private void adjustValidities( )
-  {
-    /* Get the needed values. */
-    final LocalTime timestamp = getTimestamp();
-    final Date validFrom = getValidFrom();
-    final Date validTo = getValidTo();
-
-    // TODO
   }
 
   @Override
@@ -403,5 +389,57 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   public IFeatureBindingCollection<ICatchment> getCatchments( )
   {
     return m_catchments;
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.ILinearSumGenerator#adjustValidities()
+   */
+  @Override
+  public void adjustValidities( )
+  {
+    /* Get the timestamp. */
+    final LocalTime timestamp = getTimestamp();
+
+    /* Get the valid from date. */
+    final Date validFrom = getValidFrom();
+    final Calendar validFromCalendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    validFromCalendar.setTime( validFrom );
+
+    /* Get the valid to date. */
+    final Date validTo = getValidTo();
+    final Calendar validToCalendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    validToCalendar.setTime( validTo );
+
+    if( timestamp != null )
+    {
+      /* Convert to a date with the kalypso timezone. */
+      /* The date fields are ignored. */
+      final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+      final DateTime timestampDate = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
+
+      /* With a timestamp adjust the hours and the minutes accordingly. */
+      validFromCalendar.set( Calendar.HOUR_OF_DAY, timestampDate.getHourOfDay() );
+      validFromCalendar.set( Calendar.MINUTE, timestampDate.getMinuteOfHour() );
+      validToCalendar.set( Calendar.HOUR_OF_DAY, timestampDate.getHourOfDay() );
+      validToCalendar.set( Calendar.MINUTE, timestampDate.getMinuteOfHour() );
+    }
+    else
+    {
+      /* Without a timestemp set the hours and the minutes to zero. */
+      validFromCalendar.set( Calendar.HOUR_OF_DAY, 0 );
+      validFromCalendar.set( Calendar.MINUTE, 0 );
+      validToCalendar.set( Calendar.HOUR_OF_DAY, 0 );
+      validToCalendar.set( Calendar.MINUTE, 0 );
+    }
+
+    /* Always set the seconds and milliseconds to zero. */
+    validFromCalendar.set( Calendar.SECOND, 0 );
+    validFromCalendar.set( Calendar.MILLISECOND, 0 );
+    validToCalendar.set( Calendar.SECOND, 0 );
+    validToCalendar.set( Calendar.MILLISECOND, 0 );
+
+    /* Set the properties. */
+    setProperty( PROPERTY_VALID_FROM, DateUtilities.toXMLGregorianCalendar( validFromCalendar.getTime() ) );
+    setProperty( PROPERTY_VALID_TO, DateUtilities.toXMLGregorianCalendar( validToCalendar.getTime() ) );
   }
 }

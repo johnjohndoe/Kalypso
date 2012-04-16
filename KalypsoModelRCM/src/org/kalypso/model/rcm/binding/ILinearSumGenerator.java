@@ -190,4 +190,9 @@ public interface ILinearSumGenerator extends IRainfallGenerator
    * @return All catchments.
    */
   IFeatureBindingCollection<ICatchment> getCatchments( );
+
+  /**
+   * This function adjusts the valdity range using the timestamp.
+   */
+  void adjustValidities( );
 }

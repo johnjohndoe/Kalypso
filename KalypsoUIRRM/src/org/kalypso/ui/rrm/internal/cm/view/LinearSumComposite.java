@@ -40,13 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanObservableValue;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampModelToTargetConverter;
+import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampTargetToModelConverter;
 
 /**
  * This composite shows the contents of the linear sum generator.
@@ -82,11 +90,38 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
     /* Create the contents. */
     createPropertyTextFieldControl( ILinearSumGenerator.QN_DESCRIPTION );
     createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_COMMENT );
-    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_FROM );
-    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_TO );
+    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_FROM, true );
+    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_TO, true );
     createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
-    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTAMP );
+    createPropertyTimestampControl();
     createParameterTypeControl();
+  }
+
+  /**
+   * This function creates the timestamp control.
+   */
+  private void createPropertyTimestampControl( )
+  {
+    /* Create the property label. */
+    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_TIMESTAMP );
+
+    /* Create the property text field. */
+    final Text field = createPropertyTextField( this );
+
+    /* Bind the text field. */
+    final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
+    final IObservableValue model = new FeatureBeanObservableValue( getBean(), ILinearSumGenerator.PROPERTY_TIMESTAMP );
+
+    /* Create the data binder. */
+    final DataBinder binder = new DataBinder( target, model );
+    binder.setModelToTargetConverter( new TimestampModelToTargetConverter() );
+    binder.setTargetToModelConverter( new TimestampTargetToModelConverter() );
+
+    /* Get the data binding. */
+    final IDataBinding binding = getBinding();
+
+    /* Bind the value. */
+    binding.bindValue( binder );
   }
 
   /**

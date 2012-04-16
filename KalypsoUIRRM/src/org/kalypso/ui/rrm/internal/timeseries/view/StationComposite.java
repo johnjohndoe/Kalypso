@@ -92,8 +92,8 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
     final String stationName = station != null ? station.getDescription() : StringUtils.EMPTY;
 
-    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString("StationComposite_0") ); //$NON-NLS-1$
-    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), stationName, IStatus.ERROR, Messages.getString("StationComposite_1") ); //$NON-NLS-1$
+    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "StationComposite_0" ) ); //$NON-NLS-1$
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( collector.getResult(), stationName, IStatus.ERROR, Messages.getString( "StationComposite_1" ) ); //$NON-NLS-1$
 
     final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
 
@@ -122,8 +122,8 @@ public class StationComposite extends FeatureBeanComposite<IStation>
 
   private void createDateControl( )
   {
-    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
-    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
+    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START, false );
+    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END, false );
   }
 
   private String[] findGroups( final IStation base )

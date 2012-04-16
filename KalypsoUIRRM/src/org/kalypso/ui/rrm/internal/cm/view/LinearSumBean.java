@@ -117,7 +117,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
    * This function applies the changes of this linear sum generator. It will create or update the linear sum generator
    * feature. If the linear sum generator feature is existing, its (probably) existing catchment features will be
    * deleted. So always new ones will be generated.
-   *
+   * 
    * @param workspace
    *          The workspace.
    * @param parameterType
@@ -145,7 +145,13 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       for( final CatchmentBean catchment : m_catchments )
         catchment.apply( workspace, command.getNewFeature(), parameterType );
 
-      return (ILinearSumGenerator) command.getNewFeature();
+      /* Get the new feature. */
+      final ILinearSumGenerator generator = (ILinearSumGenerator) command.getNewFeature();
+
+      /* Adjust the validities. */
+      generator.adjustValidities();
+
+      return generator;
     }
 
     /* Apply the changes. */
@@ -155,7 +161,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     workspace.postCommand( command );
 
     /* The delete commands. */
-    final CompositeCommand deleteCommands = new CompositeCommand( Messages.getString("LinearSumBean_0") ); //$NON-NLS-1$
+    final CompositeCommand deleteCommands = new CompositeCommand( Messages.getString( "LinearSumBean_0" ) ); //$NON-NLS-1$
 
     /* Get all catchments. */
     final List<ICatchment> catchments = feature.getCatchments();
@@ -168,6 +174,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     /* Apply also all contained catchments. */
     for( final CatchmentBean catchment : m_catchments )
       catchment.apply( workspace, feature, parameterType );
+
+    /* Adjust the validities. */
+    feature.adjustValidities();
 
     return feature;
   }
