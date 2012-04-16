@@ -40,43 +40,63 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.operation.evaporation;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.internal.ModelNA;
+import java.util.Calendar;
+
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
  * @author Dirk Kuch
  */
-public class LandbasedEvaporationCalculator implements ICoreRunnableWithProgress
+public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculator
 {
-  private final ITimeseriesCache m_humidity;
+  private static final double LATITUDE_DEGREE = 54.00;
 
-  private final ITimeseriesCache m_sunshine;
+  /* Faktor zur Umrechnung von j/cm² in W/m² */
+  private static final double FACTOR_CONVERSION_JW = 24.0 * 60.0 * 60.0 / 10000.0;
 
-  private final ITimeseriesCache m_temperature;
+  private static final double COEFFICIENT_EMISSION = 1.0;
 
-  private final ITimeseriesCache m_windVelocity;
+  /* Albedo */
+  private static final double ALBEDO = 0.23;
 
-  public LandbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity )
+  /* Stefan Boltzmann Konstante (DVWK - Formel 5.27) */
+  private static final double BOLTZMANN_WATER_CONSTANT = 0.49 * Math.pow( 10.0, -6.0 );
+
+  public LandbasedEvaporationCalculator( final ITimeseriesCache humidity, final ITimeseriesCache sunshine, final ITimeseriesCache temperature, final ITimeseriesCache windVelocity, final DateRange daterange )
   {
-    // TODO daterange from /to
-
-    m_humidity = humidity;
-    m_sunshine = sunshine;
-    m_temperature = temperature;
-    m_windVelocity = windVelocity;
+    super( humidity, sunshine, temperature, windVelocity, daterange );
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  protected Double doCalculate( final Double humidity, final Double sunshine, final Double temperature, final Double windVelocity, final Calendar date )
   {
-    new StatusCollector( ModelNA.PLUGIN_ID );
-    System.out.println( "blub" );
-    // TODO Auto-generated method stub
-    return null;
-  }
+    final double roh = 0.0172 * date.get( Calendar.DAY_OF_YEAR ) - 1.39;
+    final double r0 = 245.0 * (9.9 + 7.08 * Math.sin( roh ) + 0.18 * (LATITUDE_DEGREE - 51.0) * (Math.sin( roh ) - 1));
+    final double s0 = 12.3 + Math.sin( roh ) * (4.3 + (LATITUDE_DEGREE - 51.0) / 6.0);
+    final double rg = r0 * (0.19 + 0.55 * sunshine / s0);
 
+    final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
+    final double e = es * humidity / 100.0;
+
+    final double s = es * (4284 / Math.pow( 243.12 + temperature, 2.0 ));
+
+// final double rnl = Math.pow( 237.0 + temperature, 4.0 ) * (0.1 + 0.9 * (sunshine / s0)) * (0.34 - 0.044 * Math.pow(
+// e, 0.5 ));
+// final double rn = (1.0 - ALBEDO) * rg - FACTOR_CONVERSION_JW * rnl;
+
+    final double l = 249.8 - 0.242 * temperature;
+
+    final double rng = 0.6 * rg;
+
+    final double etN = s * (rng / l) + 0.655 * (3.75 / (temperature + 273.0)) * windVelocity * (es - e);
+    final double etT = s + 0.655 * (1 + 0.34 * windVelocity);
+
+    final double et0 = etN / etT;
+
+    if( et0 > 0.0 )
+      return et0;
+
+    return 0.0;
+  }
 }

@@ -72,10 +72,10 @@ public class EvapoationCalculatorTestCase
   @Test
   public void testWaterbasedEvaporationCalculator( ) throws SensorException, IOException
   {
-    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_humidity.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./sunshine_hours.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_temperature.zml" ) ) ); //$NON-NLS-1$
-    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache humidity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_mean_humidity.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache sunshine = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_sunshine_hours.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache temperature = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_mean_temperature.zml" ) ) ); //$NON-NLS-1$
+    final ITimeseriesCache windVelocity = CacheTimeSeriesVisitor.cache( ZmlFactory.parseXML( getClass().getResource( "./water_mean_wind_velocity.zml" ) ) ); //$NON-NLS-1$
 
     final DateRange daterange = getDateRange( humidity, sunshine, temperature, windVelocity );
 
@@ -83,14 +83,14 @@ public class EvapoationCalculatorTestCase
     calculator.execute( new NullProgressMonitor() );
 
     final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED );
-    ZmlFactory.writeToFile( observation, new File( FileUtilities.TMP_DIR, "waterbase_evaporation.zml" ) );
+    ZmlFactory.writeToFile( observation, new File( FileUtilities.TMP_DIR, "waterbased_evaporation.zml" ) ); //$NON-NLS-1$
 
-    storeCSV( observation, new File( FileUtilities.TMP_DIR, "waterbase_evaporation.csv" ) );
+    storeCSV( observation, new File( FileUtilities.TMP_DIR, "waterbased_evaporation.csv" ) ); //$NON-NLS-1$
   }
 
   private void storeCSV( final IObservation observation, final File target ) throws SensorException, IOException
   {
-    final CSVWriter writer = new CSVWriter( new FileWriter( target ), '\t' );
+    final CSVWriter writer = new CSVWriter( new FileWriter( target ), '\t' ); //$NON-NLS-1$
 
     final IAxis dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
     final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
@@ -103,10 +103,10 @@ public class EvapoationCalculatorTestCase
         final Date date = (Date) container.get( dateAxis );
         final Number value = (Number) container.get( valueAxis );
 
-        final String day = String.format( "%d", date.getDate() );
-        final String month = String.format( "%d", date.getMonth() + 1 );
-        final String year = String.format( "%d", date.getYear() );
-        final String valueString = String.format( "%.16f", value );
+        final String day = String.format( "%d", date.getDate() ); //$NON-NLS-1$
+        final String month = String.format( "%d", date.getMonth() + 1 ); //$NON-NLS-1$
+        final String year = String.format( "%d", date.getYear() ); //$NON-NLS-1$
+        final String valueString = String.format( "%.16f", value ); //$NON-NLS-1$
 
         writer.writeNext( new String[] { day, month, year, valueString } );
 
