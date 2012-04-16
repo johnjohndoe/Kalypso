@@ -275,12 +275,11 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
   protected final DateTime createPropertyDateTime( final Composite parent, final boolean withTime )
   {
     int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
+    if( withTime )
+      style = SWT.BORDER | SWT.DATE | SWT.TIME | SWT.MEDIUM | SWT.DROP_DOWN;
 
     if( !m_generalEditable )
       style &= SWT.READ_ONLY;
-
-    if( withTime )
-      style &= SWT.TIME;
 
     final DateTime dateTime = new DateTime( parent, style );
     dateTime.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
