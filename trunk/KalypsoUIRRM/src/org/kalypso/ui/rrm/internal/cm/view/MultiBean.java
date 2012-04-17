@@ -48,9 +48,11 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
+import org.kalypso.ogc.gml.command.AddRelationCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.ogc.gml.command.RemoveRelationCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
@@ -63,11 +65,18 @@ import org.kalypsodeegree.model.feature.FeatureList;
 public class MultiBean extends FeatureBean<IMultiGenerator>
 {
   /**
+   * The checked sub generators.
+   */
+  private ILinearSumGenerator[] m_subGenerators;
+
+  /**
    * The constructor.
    */
   public MultiBean( )
   {
     super( IMultiGenerator.FEATURE_MULTI_GENERATOR );
+
+    m_subGenerators = null;
   }
 
   /**
@@ -92,17 +101,14 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
   }
 
   /**
-   * This function returns true, if there is an description.
+   * This function sets the checked sub generators.
    * 
-   * @return True, if there is an description.
+   * @param subGenerators
+   *          The checked sub generators.
    */
-  public boolean hasDescription( )
+  public void setSubGenerators( final ILinearSumGenerator[] subGenerators )
   {
-    final Object property = getProperty( IMultiGenerator.QN_DESCRIPTION );
-    if( property == null )
-      return false;
-
-    return true;
+    m_subGenerators = subGenerators;
   }
 
   /**
@@ -110,11 +116,9 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
    * 
    * @param workspace
    *          The workspace.
-   * @param parameterType
-   *          The selected parameter type.
    * @return The new multi generator.
    */
-  public IMultiGenerator apply( final CommandableWorkspace workspace, final String parameterType ) throws Exception
+  public IMultiGenerator apply( final CommandableWorkspace workspace ) throws Exception
   {
     /* Get the feature. */
     final IMultiGenerator feature = getFeature();
@@ -133,7 +137,7 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
       workspace.postCommand( command );
 
       /* Apply the sub generators. */
-      applySubGenerators();
+      applySubGenerators( workspace, feature );
 
       return (IMultiGenerator) command.getNewFeature();
     }
@@ -144,29 +148,48 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
     /* Post the command. */
     workspace.postCommand( command );
 
-    /* The delete commands. */
-    final CompositeCommand deleteCommands = new CompositeCommand( "Updating sub generators..." );
-
-    /* Get all. */
-    // TODO
-    final FeatureList generators = (FeatureList) feature.getProperty( IMultiGenerator.MEMBER_SUB_GENERATOR );
-    for( final Object generator : generators )
-      deleteCommands.addCommand( new DeleteFeatureCommand( (Feature) generator ) );
-
-    /* Post the command. */
-    workspace.postCommand( deleteCommands );
+    /* Remove the sub generators. */
+    removeSubGenerators( workspace, feature );
 
     /* Apply the sub generators. */
-    applySubGenerators();
+    applySubGenerators( workspace, feature );
 
     return feature;
   }
 
-  /**
-   * This function creates the links for the sub generators.
-   */
-  private void applySubGenerators( )
+  private void removeSubGenerators( final CommandableWorkspace workspace, final IMultiGenerator multiGenerator ) throws Exception
   {
-    // TODO
+    /* The delete commands. */
+    final CompositeCommand deleteCommands = new CompositeCommand( "Removing sub generators..." );
+
+    /* Get all sub generators. */
+    final FeatureList subGenerators = (FeatureList) multiGenerator.getProperty( IMultiGenerator.MEMBER_SUB_GENERATOR );
+
+    /* Create the delete commands. */
+    for( final Object subGenerator : subGenerators )
+      deleteCommands.addCommand( new RemoveRelationCommand( multiGenerator, subGenerators.getPropertyType(), (Feature) subGenerator ) );
+
+    /* Post the command. */
+    workspace.postCommand( deleteCommands );
+  }
+
+  private void applySubGenerators( final CommandableWorkspace workspace, final IMultiGenerator multiGenerator ) throws Exception
+  {
+    /* Nothing to do. */
+    if( m_subGenerators == null || m_subGenerators.length == 0 )
+      return;
+
+    /* The add commands. */
+    final CompositeCommand addCommands = new CompositeCommand( "Adding sub generators..." );
+
+    /* Get the list of the sub generators. */
+    final FeatureList subGenerators = (FeatureList) multiGenerator.getProperty( IMultiGenerator.MEMBER_SUB_GENERATOR );
+
+    /* Create the add commands. */
+    for( final ILinearSumGenerator subGenerator : m_subGenerators )
+      addCommands.addCommand( new AddRelationCommand( multiGenerator, subGenerators.getPropertyType(), -1, subGenerator ) );
+
+    /* Post the command. */
+    workspace.postCommand( addCommands );
   }
 }
