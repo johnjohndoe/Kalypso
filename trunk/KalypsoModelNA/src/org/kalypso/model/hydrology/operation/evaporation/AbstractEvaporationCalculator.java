@@ -82,8 +82,7 @@ import org.kalypso.repository.IDataSourceItem;
  */
 public abstract class AbstractEvaporationCalculator implements ICoreRunnableWithProgress
 {
-
-  public static String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + "evaporation.calculation";
+  public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + "evaporation.calculation";
 
   private final ITimeseriesCache m_humidity;
 
@@ -256,5 +255,5 @@ public abstract class AbstractEvaporationCalculator implements ICoreRunnableWith
     return stati.asMultiStatus( "Evaporation calculation" );
   }
 
-  protected abstract Double doCalculate( Double humidity, Double sunshine, Double temperature, Double windVelocity, Calendar ptr );
+  protected abstract Double doCalculate( double humidity, double sunshine, double temperature, double windVelocity, Calendar ptr );
 }

@@ -73,15 +73,16 @@ public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculat
   }
 
   @Override
-  protected Double doCalculate( final Double humidity, final Double sunshine, final Double temperature, final Double windVelocity, final Calendar date )
+  protected Double doCalculate( final double humidity, final double sunshine, final double temperature, final double windVelocity, final Calendar date )
   {
     final double es = 6.11 * Math.pow( 10.0, 7.48 * temperature / (237.0 + temperature) );
     final double e = es * humidity / 100.0;
     final double roh = 0.0172 * date.get( Calendar.DAY_OF_YEAR ) - 1.39;
+    final double rohSinus = Math.sin( roh );
     final double l = 28.9 - 0.028 * temperature;
 
-    final double r0 = 245.0 * (9.9 + 7.08 * Math.sin( roh ) + 0.18 * (LATITUDE_DEGREE - 51.0) * (Math.sin( roh ) - 1)) / FACTOR_CONVERSION_JW;
-    final double s0 = 12.3 + Math.sin( roh ) * (4.3 + (LATITUDE_DEGREE - 51.0) / 6.0);
+    final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (LATITUDE_DEGREE - 51.0) * (rohSinus - 1)) / FACTOR_CONVERSION_JW;
+    final double s0 = 12.3 + rohSinus * (4.3 + (LATITUDE_DEGREE - 51.0) / 6.0);
 
     final double rg = r0 * (0.19 + 0.55 * sunshine / s0);
     final double rnl = COEFFICIENT_EMISSION * BOLTZMANN_WATER_CONSTANT * Math.pow( temperature + 273.15, 4.0 ) * (0.56 - 0.08 * Math.sqrt( e )) * (0.1 + 0.9 * sunshine / s0);
