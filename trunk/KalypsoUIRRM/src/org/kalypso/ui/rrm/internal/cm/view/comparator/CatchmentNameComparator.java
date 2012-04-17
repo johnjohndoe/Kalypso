@@ -38,22 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 
 /**
  * A viewer comparator.
  * 
  * @author Holger Albert
  */
-public class NameComparator extends ViewerComparator
+public class CatchmentNameComparator extends ViewerComparator
 {
   /**
    * The constructor.
    */
-  public NameComparator( )
+  public CatchmentNameComparator( )
   {
   }
 

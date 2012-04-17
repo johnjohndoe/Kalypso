@@ -38,19 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 
 /**
+ * A column label provider.
+ * 
  * @author Holger Albert
  */
-public class DescriptionColumnLabelProvider extends ColumnLabelProvider
+public class FactorColumnLabelProvider extends ColumnLabelProvider
 {
   /**
    * The constructor.
    */
-  public DescriptionColumnLabelProvider( )
+  public FactorColumnLabelProvider( )
   {
   }
 
@@ -58,10 +61,13 @@ public class DescriptionColumnLabelProvider extends ColumnLabelProvider
    * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
-    if( element instanceof CatchmentBean )
-      return ((CatchmentBean) element).getCatchmentDescription();
+    if( element instanceof FactorizedTimeseriesBean )
+    {
+      FactorizedTimeseriesBean bean = (FactorizedTimeseriesBean) element;
+      return bean.getFactorText();
+    }
 
     return super.getText( element );
   }

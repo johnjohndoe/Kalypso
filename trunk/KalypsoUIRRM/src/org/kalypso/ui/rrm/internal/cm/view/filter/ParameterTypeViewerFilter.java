@@ -38,36 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.filter;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 
 /**
- * A column label provider.
- * 
  * @author Holger Albert
  */
-public class StationColumnLabelProvider extends ColumnLabelProvider
+public class ParameterTypeViewerFilter extends ViewerFilter
 {
   /**
-   * The constructor.
+   * The desired parameter type.
    */
-  public StationColumnLabelProvider( )
+  private final String m_parameterType;
+
+  /**
+   * The constructor.
+   * 
+   * @param parameterType
+   *          The desired parameter type.
+   */
+  public ParameterTypeViewerFilter( final String parameterType )
   {
+    m_parameterType = parameterType;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     if( element instanceof FactorizedTimeseriesBean )
     {
-      FactorizedTimeseriesBean bean = (FactorizedTimeseriesBean) element;
-      return bean.getStationText();
+      final FactorizedTimeseriesBean bean = (FactorizedTimeseriesBean) element;
+      final ITimeseries feature = bean.getFeature();
+      if( feature == null )
+        return false;
+
+      final String parameterType = feature.getParameterType();
+      if( parameterType == null || !parameterType.equals( m_parameterType ) )
+        return false;
+
+      return true;
     }
 
-    return super.getText( element );
+    return false;
   }
 }

@@ -38,79 +38,46 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.action;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.rcm.binding.IRainfallGenerator;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
+import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
  */
-public class DeleteGeneratorAction extends Action
+public class EditLinearSumThiessenAction extends Action
 {
-  private final IRainfallGenerator[] m_generators;
-
   private final ITreeNodeModel m_model;
 
-  public DeleteGeneratorAction( final ITreeNodeModel model, final IRainfallGenerator... generators )
+  private final ILinearSumGenerator m_generator;
+
+  public EditLinearSumThiessenAction( final ITreeNodeModel model, final ILinearSumGenerator generator )
   {
     m_model = model;
-    m_generators = generators;
+    m_generator = generator;
 
-    setText( Messages.getString("DeleteGeneratorAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("DeleteGeneratorAction_1") ); //$NON-NLS-1$
-
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.DELETE ) );
-
-    if( generators.length == 0 )
-    {
-      setEnabled( false );
-      setToolTipText( Messages.getString("DeleteGeneratorAction_2") ); //$NON-NLS-1$
-    }
+    setText( Messages.getString( "EditLinearSumThiessenAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "EditLinearSumThiessenAction_1" ) ); //$NON-NLS-1$
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT_THIESSEN ) );
   }
 
   @Override
   public void runWithEvent( final Event event )
   {
+    // FIXME: check integrity of generator with modell.gml
     final Shell shell = event.widget.getDisplay().getActiveShell();
+    final LinearSumBean bean = new LinearSumBean( m_generator );
+    final String title = getText();
 
-    final String deleteMessage = getDeleteMessage();
-
-    if( !MessageDialog.openConfirm( shell, getText(), deleteMessage ) )
-      return;
-
-    try
-    {
-      /* Delete feature */
-      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_generators );
-      m_model.postCommand( deleteCommand );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to delete model(s)", e ); //$NON-NLS-1$
-      StatusDialog.open( shell, status, getText() );
-    }
-  }
-
-  private String getDeleteMessage( )
-  {
-    if( m_generators.length > 1 )
-      return Messages.getString("DeleteGeneratorAction_3"); //$NON-NLS-1$
-
-    return String.format( Messages.getString("DeleteGeneratorAction_4"), m_generators[0].getDescription() ); //$NON-NLS-1$
+    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, title );
   }
 }

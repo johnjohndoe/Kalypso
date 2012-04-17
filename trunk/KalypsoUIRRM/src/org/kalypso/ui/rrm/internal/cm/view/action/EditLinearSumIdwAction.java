@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.action;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
@@ -46,27 +46,29 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
-import org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenLinearSumHelper;
+import org.kalypso.ui.rrm.internal.cm.idw.IdwLinearSumHelper;
+import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
  * @author Gernot Belger
+ * @author Holger Albert
  */
-public class EditLinearSumThiessenAction extends Action
+public class EditLinearSumIdwAction extends Action
 {
   private final ITreeNodeModel m_model;
 
   private final ILinearSumGenerator m_generator;
 
-  public EditLinearSumThiessenAction( final ITreeNodeModel model, final ILinearSumGenerator generator )
+  public EditLinearSumIdwAction( final ITreeNodeModel model, final ILinearSumGenerator generator )
   {
     m_model = model;
     m_generator = generator;
 
-    setText( Messages.getString( "EditLinearSumThiessenAction_0" ) ); //$NON-NLS-1$
-    setToolTipText( Messages.getString( "EditLinearSumThiessenAction_1" ) ); //$NON-NLS-1$
-    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT ) );
+    setText( Messages.getString( "EditLinearSumIdwAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "EditLinearSumIdwAction_1" ) ); //$NON-NLS-1$
+    setImageDescriptor( UIRrmImages.id( DESCRIPTORS.GENERATOR_EDIT_IDW ) );
   }
 
   @Override
@@ -77,6 +79,6 @@ public class EditLinearSumThiessenAction extends Action
     final LinearSumBean bean = new LinearSumBean( m_generator );
     final String title = getText();
 
-    ThiessenLinearSumHelper.showWizard( shell, bean, m_model, title );
+    IdwLinearSumHelper.showWizard( shell, bean, m_model, title );
   }
 }

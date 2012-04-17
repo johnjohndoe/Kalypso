@@ -42,43 +42,28 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.util.LinkedHashMap;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanObservableValue;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampModelToTargetConverter;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampTargetToModelConverter;
 
 /**
- * This composite shows the contents of the linear sum generator.
+ * This composite shows the contents of the multi generator.
  * 
- * @author Gernot Belger
  * @author Holger Albert
  */
-public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenerator>
+public class MultiNewComposite extends FeatureBeanComposite<IMultiGenerator>
 {
   /**
    * All allowed parameter types.
    */
   private static final String[] ALLOWED_PARAMETER_TYPES = new String[] { ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE,
       ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED };
-
-  /**
-   * The text field of the comments.
-   */
-  private Text m_commentText;
 
   /**
    * The constructor.
@@ -89,18 +74,10 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
    *          The feature bean.
    * @param binding
    *          The data binding.
-   * @param commentEditable
-   *          True, if the comment should be editable. False otherwise.
    */
-  public LinearSumNewComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> featureBean, final IDataBinding binding, final boolean commentEditable )
+  public MultiNewComposite( final Composite parent, final FeatureBean<IMultiGenerator> featureBean, final IDataBinding binding )
   {
     super( parent, featureBean, binding, true );
-
-    /* The function createContents() was called by the super constructor. */
-    /* So all GUI was already created, if the execution reaches here. */
-    /* Override the general editable state. */
-    m_commentText.setEditable( commentEditable );
-    m_commentText.setEnabled( commentEditable );
   }
 
   /**
@@ -110,40 +87,10 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
   protected void createContents( )
   {
     /* Create the contents. */
-    createPropertyTextFieldControl( ILinearSumGenerator.QN_DESCRIPTION );
-    m_commentText = createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_COMMENT );
-    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_FROM );
-    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_TO );
-    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
-    createPropertyTimestampControl();
+    createPropertyTextFieldControl( IMultiGenerator.QN_DESCRIPTION );
+    createPropertyDateTimeControl( IMultiGenerator.PROPERTY_VALID_FROM );
+    createPropertyDateTimeControl( IMultiGenerator.PROPERTY_VALID_TO );
     createParameterTypeControl();
-  }
-
-  /**
-   * This function creates the timestamp control.
-   */
-  private void createPropertyTimestampControl( )
-  {
-    /* Create the property label. */
-    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_TIMESTAMP );
-
-    /* Create the property text field. */
-    final Text field = createPropertyTextField( this );
-
-    /* Bind the text field. */
-    final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = new FeatureBeanObservableValue( getBean(), ILinearSumGenerator.PROPERTY_TIMESTAMP );
-
-    /* Create the data binder. */
-    final DataBinder binder = new DataBinder( target, model );
-    binder.setModelToTargetConverter( new TimestampModelToTargetConverter() );
-    binder.setTargetToModelConverter( new TimestampTargetToModelConverter() );
-
-    /* Get the data binding. */
-    final IDataBinding binding = getBinding();
-
-    /* Bind the value. */
-    binding.bindValue( binder );
   }
 
   /**
@@ -152,7 +99,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
   private void createParameterTypeControl( )
   {
     /* Create the property label. */
-    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
+    createPropertyLabel( this, IMultiGenerator.PROPERTY_PARAMETER_TYPE );
 
     /* Get the parameter labels. */
     final LinkedHashMap<String, String> allowedParameterLabels = new LinkedHashMap<String, String>();
@@ -182,6 +129,6 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
     comboViewer.setInput( allowedParameterLabels.keySet().toArray() );
 
     /* Bind the combo viewer. */
-    bindCombo( comboViewer, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
+    bindCombo( comboViewer, IMultiGenerator.PROPERTY_PARAMETER_TYPE );
   }
 }

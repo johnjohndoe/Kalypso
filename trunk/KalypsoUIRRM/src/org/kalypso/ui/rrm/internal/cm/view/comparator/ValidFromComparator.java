@@ -38,22 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 
 /**
  * A viewer comparator.
  * 
  * @author Holger Albert
  */
-public class DescriptionComparator extends ViewerComparator
+public class ValidFromComparator extends ViewerComparator
 {
   /**
    * The constructor.
    */
-  public DescriptionComparator( )
+  public ValidFromComparator( )
   {
   }
 
@@ -64,22 +65,12 @@ public class DescriptionComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    if( e1 instanceof CatchmentBean && e2 instanceof CatchmentBean )
+    if( e1 instanceof IRainfallGenerator && e2 instanceof IRainfallGenerator )
     {
-      final CatchmentBean c1 = (CatchmentBean) e1;
-      final CatchmentBean c2 = (CatchmentBean) e2;
+      final IRainfallGenerator g1 = (IRainfallGenerator) e1;
+      final IRainfallGenerator g2 = (IRainfallGenerator) e2;
 
-      final String catchmentDescription1 = c1.getCatchmentDescription();
-      final String catchmentDescription2 = c2.getCatchmentDescription();
-
-      if( catchmentDescription1 == null && catchmentDescription2 != null )
-        return -1;
-      else if( catchmentDescription1 != null && catchmentDescription2 == null )
-        return 1;
-      else if( catchmentDescription1 == null && catchmentDescription2 == null )
-        return 0;
-
-      return catchmentDescription1.compareTo( catchmentDescription2 );
+      return g1.getValidFrom().compareTo( g2.getValidFrom() );
     }
 
     return super.compare( viewer, e1, e2 );
