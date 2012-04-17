@@ -50,6 +50,8 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
+import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNewComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;

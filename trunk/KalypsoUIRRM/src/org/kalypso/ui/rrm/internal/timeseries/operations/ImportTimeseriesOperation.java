@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.imports;
+package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -63,6 +63,10 @@ import org.kalypso.ogc.sensor.util.FindTimeStepOperation;
 import org.kalypso.ogc.sensor.util.FindTimestampOperation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.IImportTimeseriesOperation;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.ImportObservationWorker;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.ValidateRuecksprungVisitor;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.ValidateTimestepsVisitor;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**

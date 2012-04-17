@@ -38,61 +38,65 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.imports;
+package org.kalypso.ui.rrm.internal.timeseries.view.dnd;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.swt.dnd.TransferData;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.util.ZmlLink;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
  * @author Dirk Kuch
  */
-public class ReplaceTimeseriesObservation implements IMergeTimeseriesOperation
+public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
 {
-  private final FeatureBean<ITimeseries> m_timeseries;
+  private IStation m_station;
 
-  private IObservation m_observation;
-
-  public ReplaceTimeseriesObservation( final FeatureBean<ITimeseries> timeseries )
+  public TimeseriesManagementTreeDropListener( final TreeViewer treeViewer )
   {
-    m_timeseries = timeseries;
+    super( treeViewer );
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public boolean performDrop( final Object data )
   {
-    try
-    {
-      final ITimeseries timeseries = m_timeseries.getFeature();
-      final ZmlLink link = timeseries.getDataLink();
-      final IFile targetFile = link.getFile();
+    final ITimeseries[] timeserieses = (ITimeseries[]) data;
+    if( ArrayUtils.isEmpty( timeserieses ) )
+      return false;
 
-      ZmlFactory.writeToFile( m_observation, targetFile );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
+    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("ReplaceTimeseriesObservation_0"), e ); //$NON-NLS-1$
+    for( final ITimeseries timeseries : timeserieses )
+    {
+      final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( m_station, timeseries );
+      stati.add( operation.execute( new NullProgressMonitor() ) );
     }
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("ReplaceTimeseriesObservation_1") ); //$NON-NLS-1$
+    return false;
   }
 
   @Override
-  public void setObservation( final IObservation observation )
+  public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
   {
-    m_observation = observation;
+    if( !(target instanceof TreeNode) )
+      return false;
+
+    final TreeNode node = (TreeNode) target;
+    final Object objStation = node.getAdapter( IStation.class );
+    if( objStation instanceof IStation )
+    {
+      m_station = (IStation) objStation;
+
+      return true;
+    }
+
+    return false;
   }
 
 }
