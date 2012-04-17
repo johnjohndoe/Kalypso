@@ -42,12 +42,15 @@ package org.kalypso.ui.rrm.internal.cm.view;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -66,8 +69,10 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
-import org.kalypso.model.rcm.binding.IMultiGenerator;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.CommentComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.DescriptionComparator;
@@ -80,6 +85,7 @@ import org.kalypso.ui.rrm.internal.cm.view.provider.ValidFromColumnLabelProvider
 import org.kalypso.ui.rrm.internal.cm.view.provider.ValidToColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * This dialog allows the editing of the properties of a multi catchment model.
@@ -120,7 +126,7 @@ public class EditMultiDialog extends TrayDialog
   /**
    * The generator viewer.
    */
-  private TableViewer m_generatorViewer;
+  private CheckboxTableViewer m_generatorViewer;
 
   /**
    * The status composite.
@@ -282,7 +288,7 @@ public class EditMultiDialog extends TrayDialog
   private void createDetailsContent( final Composite parent )
   {
     /* Create the generator viewer. */
-    m_generatorViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
+    m_generatorViewer = CheckboxTableViewer.newCheckList( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
     m_generatorViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_generatorViewer.getTable().setLinesVisible( true );
     m_generatorViewer.getTable().setHeaderVisible( true );
@@ -294,6 +300,13 @@ public class EditMultiDialog extends TrayDialog
     createGeneratorViewerColumns( m_generatorViewer );
 
     /* Set the input. */
+    final ILinearSumGenerator[] generators = getGenerators();
+    m_generatorViewer.setInput( generators );
+
+    /* Update initial selection. */
+    // TODO
+
+    /* Add a listener. */
     // TODO
 
     /* Create the status composite. */
@@ -339,7 +352,28 @@ public class EditMultiDialog extends TrayDialog
     ColumnViewerSorter.registerSorter( validToColumn, new ValidToComparator() );
 
     /* Define a initial order. */
-    ColumnViewerSorter.setSortState( descriptionColumn, Boolean.TRUE );
+    ColumnViewerSorter.setSortState( descriptionColumn, Boolean.FALSE );
+  }
+
+  /**
+   * This function returns all linear sum generators that can be linked in a multi generator.
+   * 
+   * @return All linear sum generators that can be linked in a multi generator.
+   */
+  private ILinearSumGenerator[] getGenerators( )
+  {
+    final List<ILinearSumGenerator> results = new ArrayList<ILinearSumGenerator>();
+
+    final CommandableWorkspace workspace = m_model.getWorkspace();
+    final ICatchmentModel rootFeature = (ICatchmentModel) workspace.getRootFeature();
+    final IFeatureBindingCollection<IRainfallGenerator> generators = rootFeature.getGenerators();
+    for( final IRainfallGenerator generator : generators )
+    {
+      if( generator instanceof ILinearSumGenerator )
+        results.add( (ILinearSumGenerator) generator );
+    }
+
+    return results.toArray( new ILinearSumGenerator[] {} );
   }
 
   /**
@@ -350,7 +384,7 @@ public class EditMultiDialog extends TrayDialog
     try
     {
       /* Apply the changes. */
-      final Feature generator = m_bean.apply( m_model.getWorkspace(), (String) m_bean.getProperty( IMultiGenerator.PROPERTY_PARAMETER_TYPE ) );
+      final Feature generator = m_bean.apply( m_model.getWorkspace() );
 
       /* Refresh the tree. */
       m_model.refreshTree( generator );
@@ -373,19 +407,6 @@ public class EditMultiDialog extends TrayDialog
     m_generatorViewer = null;
     m_statusComposite = null;
     m_dataBinding = null;
-  }
-
-  /**
-   * This function updates the details group.
-   */
-  public void updateDetailsGroup( )
-  {
-    /* Cannot do anything. */
-    if( m_detailsGroup == null || m_detailsGroup.isDisposed() )
-      return;
-
-    /* Set the input. */
-    // TODO
   }
 
   protected void handleParameterTypeChanged( final PropertyChangeEvent evt )

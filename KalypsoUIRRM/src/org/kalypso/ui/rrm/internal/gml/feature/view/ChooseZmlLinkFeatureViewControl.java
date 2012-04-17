@@ -207,7 +207,7 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
     m_text.setText( toLabel( timeseries ) );
   }
 
-  private ITimeseries getTimeseries( )
+  protected ITimeseries getTimeseries( )
   {
     final Object objLink = getFeature().getProperty( getFeatureTypeProperty() );
     if( !(objLink instanceof TimeseriesLinkType) )
