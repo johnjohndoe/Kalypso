@@ -57,7 +57,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -80,7 +79,7 @@ import org.kalypso.repository.IDataSourceItem;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractEvaporationCalculator implements ICoreRunnableWithProgress
+public abstract class AbstractEvaporationCalculator implements IEvaporationCalculator
 {
   public static final String DATA_SOURCE = IDataSourceItem.SOURCE_PREFIX + "evaporation.calculation";
 
@@ -180,10 +179,11 @@ public abstract class AbstractEvaporationCalculator implements ICoreRunnableWith
     return null;
   }
 
-  public IObservation getObservation( final String evaporationType )
+  @Override
+  public IObservation getObservation( )
   {
     final IAxis dateAxis = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE );
-    final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( evaporationType );
+    final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( getParameterType() );
     final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
     final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( valueAxis, true );
 
@@ -256,4 +256,6 @@ public abstract class AbstractEvaporationCalculator implements ICoreRunnableWith
   }
 
   protected abstract Double doCalculate( double humidity, double sunshine, double temperature, double windVelocity, Calendar ptr );
+
+  protected abstract String getParameterType( );
 }

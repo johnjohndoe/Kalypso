@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.operation.evaporation;
 import java.util.Calendar;
 
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
@@ -50,7 +51,7 @@ import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
  */
 public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculator
 {
-  private static final double LATITUDE_DEGREE = 54.00;
+  private double m_latitude = 54.00;
 
   /* Albedo */
 // private static final double ALBEDO = 0.23;
@@ -74,8 +75,8 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
     final double roh = 0.0172 * date.get( Calendar.DAY_OF_YEAR ) - 1.39;
     final double rohSinus = Math.sin( roh );
 
-    final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (LATITUDE_DEGREE - 51.0) * (rohSinus - 1.0));
-    final double s0 = 12.3 + rohSinus * (4.3 + (LATITUDE_DEGREE - 51.0) / 6.0);
+    final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (m_latitude - 51.0) * (rohSinus - 1.0));
+    final double s0 = 12.3 + rohSinus * (4.3 + (m_latitude - 51.0) / 6.0);
     final double rg = r0 * (0.19 + 0.55 * (sunshine / s0));
 
 // final double rn = (1.0 - ALBEDO) * rg - BOLTZMANN_CONSTANT * Math.pow( 237.15 + temperature, 4.0 ) * (0.1 + 0.9
@@ -90,6 +91,22 @@ public class LandbasedEvaporationCalculator extends AbstractEvaporationCalculato
       return et0;
 
     return 0.0;
+  }
+
+  public double getLatitude( )
+  {
+    return m_latitude;
+  }
+
+  public void setLatitude( final double latitude )
+  {
+    m_latitude = latitude;
+  }
+
+  @Override
+  protected String getParameterType( )
+  {
+    return ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED;
   }
 
 }

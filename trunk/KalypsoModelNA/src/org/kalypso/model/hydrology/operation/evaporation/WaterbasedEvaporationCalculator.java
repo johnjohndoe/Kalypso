@@ -43,6 +43,7 @@ package org.kalypso.model.hydrology.operation.evaporation;
 import java.util.Calendar;
 
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
 
 /**
@@ -50,18 +51,18 @@ import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
  */
 public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculator
 {
-  private static final double LATITUDE_DEGREE = 53.64;
+  private double m_latitude = 53.64;
 
   /* Faktor zur Umrechnung von j/cm² in W/m² */
-  private static final double FACTOR_CONVERSION_JW = 24.0 * 60.0 * 60.0 / 10000.0;
+  private double m_factorConversionJw = 8.64; // 24.0 * 60.0 * 60.0 / 10000.0;
 
-  private static final double COEFFICIENT_EMISSION = 0.97;
+  private double m_coefficientEmission = 0.97;
 
   /* Stefan Boltzmann Konstante für Wasser (DVWK - Formel 5.27) */
-  private static final double BOLTZMANN_WATER_CONSTANT = 5.67 * Math.pow( 10.0, -8.0 );
+  private double m_boltzmannWaterConstant = 0.0000000567; // 5.67 * Math.pow( 10.0, -8.0 );
 
   /* Albedo der Wasserfläche */
-  private static final double ALBEDO = 0.05;
+  private double m_albedoWater = 0.05;
 
   /**
    * @param daterange
@@ -81,12 +82,12 @@ public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculat
     final double rohSinus = Math.sin( roh );
     final double l = 28.9 - 0.028 * temperature;
 
-    final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (LATITUDE_DEGREE - 51.0) * (rohSinus - 1)) / FACTOR_CONVERSION_JW;
-    final double s0 = 12.3 + rohSinus * (4.3 + (LATITUDE_DEGREE - 51.0) / 6.0);
+    final double r0 = 245.0 * (9.9 + 7.08 * rohSinus + 0.18 * (getLatitude() - 51.0) * (rohSinus - 1)) / getFactorConversionJw();
+    final double s0 = 12.3 + rohSinus * (4.3 + (getLatitude() - 51.0) / 6.0);
 
     final double rg = r0 * (0.19 + 0.55 * sunshine / s0);
-    final double rnl = COEFFICIENT_EMISSION * BOLTZMANN_WATER_CONSTANT * Math.pow( temperature + 273.15, 4.0 ) * (0.56 - 0.08 * Math.sqrt( e )) * (0.1 + 0.9 * sunshine / s0);
-    final double rn = rg * (1 - ALBEDO) - rnl;
+    final double rnl = getCoefficientEmission() * getBoltzmannWaterConstant() * Math.pow( temperature + 273.15, 4.0 ) * (0.56 - 0.08 * Math.sqrt( e )) * (0.1 + 0.9 * sunshine / s0);
+    final double rn = rg * (1 - getAlbedoWater()) - rnl;
 
     final double s = es * 4284.0 / Math.pow( 243.12 + temperature, 2.0 );
 
@@ -99,4 +100,59 @@ public class WaterbasedEvaporationCalculator extends AbstractEvaporationCalculat
     return 0.0;
   }
 
+  public double getLatitude( )
+  {
+    return m_latitude;
+  }
+
+  public void setLatitude( final double latitude )
+  {
+    m_latitude = latitude;
+  }
+
+  public double getFactorConversionJw( )
+  {
+    return m_factorConversionJw;
+  }
+
+  public void setFactorConversionJw( final double factorConversionJw )
+  {
+    m_factorConversionJw = factorConversionJw;
+  }
+
+  public double getCoefficientEmission( )
+  {
+    return m_coefficientEmission;
+  }
+
+  public void setCoefficientEmission( final double coefficientEmission )
+  {
+    m_coefficientEmission = coefficientEmission;
+  }
+
+  public double getBoltzmannWaterConstant( )
+  {
+    return m_boltzmannWaterConstant;
+  }
+
+  public void setBoltzmannWaterConstant( final double boltzmannWaterConstant )
+  {
+    m_boltzmannWaterConstant = boltzmannWaterConstant;
+  }
+
+  public double getAlbedoWater( )
+  {
+    return m_albedoWater;
+  }
+
+  public void setAlbedoWater( final double albedoWater )
+  {
+    m_albedoWater = albedoWater;
+  }
+
+  @Override
+  protected String getParameterType( )
+  {
+    return ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED;
+  }
 }
