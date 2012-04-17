@@ -43,11 +43,14 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.core.status.tree.StatusDialog;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
@@ -76,8 +79,8 @@ public class CalculateEvaporationAction extends Action
     m_station = station;
     m_model = model;
 
-    setText( "Berechne Seeverdunstung" ); //$NON-NLS-1$
-    setToolTipText( "Berechne Seeverdunstungszeitreihe auf Grundlage vorhandenen mittlere Eingangszeitreihen (Luftfeuchte, Temperatur, Sonnenscheindauer, Windgeschwindigkeit" ); //$NON-NLS-1$
+    setText( "Berechne Verdunstung" ); //$NON-NLS-1$
+    setToolTipText( "Berechne Verdunstung auf Grundlage vorhandener Eingangszeitreihen (Mittlere Luftfeuchte, Mittlere Temperatur, Mittlere Windgeschwindigkeit, Sonnenscheindauer" ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.PARAMETER_TYPE_EVAPORATION ) );
   }
@@ -90,7 +93,7 @@ public class CalculateEvaporationAction extends Action
     final IStatus status = canCalculateEvaporation();
     if( !status.isOK() )
     {
-      final StatusDialog dialog = new StatusDialog( shell, "Berechnung Seeverdunstung", status );
+      final StatusDialog dialog = new StatusDialog( shell, "Berechnung Verdunstung", status );
       dialog.open();
 
       return;
@@ -107,6 +110,17 @@ public class CalculateEvaporationAction extends Action
     wizard.setWindowTitle( getText() );
 
     final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.addPageChangedListener( new IPageChangedListener()
+    {
+      @Override
+      public void pageChanged( final PageChangedEvent e )
+      {
+        final Object page = e.getSelectedPage();
+        if( page instanceof IUpdateable )
+          ((IUpdateable) page).update();
+      }
+    } );
+
     if( dialog.open() == org.eclipse.jface.window.Window.OK )
     {
 
@@ -127,12 +141,12 @@ public class CalculateEvaporationAction extends Action
 
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
       stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Luftfeuchte fehlt." );
-    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
-      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Sonnenscheindauer Zeitreihe fehlt." );
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
       stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Temperatur Zeitreihe fehlt." );
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) )
       stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Windgeschwindigkeit fehlt." );
+    if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
+      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Sonnenscheindauer Zeitreihe fehlt." );
 
     return stati.asMultiStatusOrOK( "Überprüfung Eingangsdaten" );
   }

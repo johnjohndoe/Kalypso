@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
 import java.util.Date;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.j3d.geom.UnsupportedTypeException;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.AbstractModelObject;
@@ -61,6 +62,29 @@ import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
  */
 public class CalculateEvaporationData extends AbstractModelObject
 {
+  public enum EVAPORATION_TYPE
+  {
+    eLandBased,
+    eWaterBase;
+
+    @Override
+    public String toString( )
+    {
+      final EVAPORATION_TYPE type = valueOf( name() );
+      switch( type )
+      {
+        case eLandBased:
+          return "Grasverdunstung";
+        case eWaterBase:
+          return "Seeverdunstung";
+
+        default:
+          throw new UnsupportedTypeException();
+      }
+
+    }
+  }
+
   public static final String PROPERTY_HUMIDITY = "humidity";
 
   public static final String PROPERTY_TEMPERATURE = "temperature";
@@ -71,6 +95,18 @@ public class CalculateEvaporationData extends AbstractModelObject
 
   public static final String PROPERTY_QUALITY = "quality";
 
+  public static final String PROPERTY_EVAPORATION_TYPE = "evaporationType";
+
+  public static final String PROPERTY_LATITUDE = "latitude";
+
+  public static final String PROPERTY_FACTOR_CONVERSION_JW = "factorConversionJw";
+
+  public static final String PROPERTY_COEFFICIENT_EMISSION = "coefficientEmission";
+
+  public static final String PROPERTY_BOLTZMANN_WATER_CONSTANT = "boltzmannWaterConstant";
+
+  public static final String PROPERTY_ALBEDO_WATER = "albedoWater";
+
   private TimeseriesBean m_humidity;
 
   private TimeseriesBean m_temperature;
@@ -80,6 +116,18 @@ public class CalculateEvaporationData extends AbstractModelObject
   private TimeseriesBean m_sunshineHours;
 
   private String m_quality;
+
+  private EVAPORATION_TYPE m_evaporationType;
+
+  private String m_latitude = "53,64";
+
+  private String m_factorConversionJw = "8,64";
+
+  private String m_coefficientEmission = "0,97";
+
+  private String m_boltzmannWaterConstant = "0,0000000567";
+
+  private String m_albedoWater = "0.05";
 
   public void init( final IDialogSettings settings )
   {
@@ -184,6 +232,66 @@ public class CalculateEvaporationData extends AbstractModelObject
   public void setQuality( final String quality )
   {
     m_quality = quality;
+  }
+
+  public EVAPORATION_TYPE getEvaporationType( )
+  {
+    return m_evaporationType;
+  }
+
+  public void setEvaporationType( final EVAPORATION_TYPE evaporationType )
+  {
+    m_evaporationType = evaporationType;
+  }
+
+  public String getLatitude( )
+  {
+    return m_latitude;
+  }
+
+  public void setLatitude( final String latitude )
+  {
+    m_latitude = latitude;
+  }
+
+  public String getFactorConversionJw( )
+  {
+    return m_factorConversionJw;
+  }
+
+  public void setFactorConversionJw( final String factorConversionJw )
+  {
+    m_factorConversionJw = factorConversionJw;
+  }
+
+  public String getCoefficientEmission( )
+  {
+    return m_coefficientEmission;
+  }
+
+  public void setCoefficientEmission( final String coefficientEmission )
+  {
+    m_coefficientEmission = coefficientEmission;
+  }
+
+  public String getBoltzmannWaterConstant( )
+  {
+    return m_boltzmannWaterConstant;
+  }
+
+  public void setBoltzmannWaterConstant( final String boltzmannWaterConstant )
+  {
+    m_boltzmannWaterConstant = boltzmannWaterConstant;
+  }
+
+  public String getAlbedoWater( )
+  {
+    return m_albedoWater;
+  }
+
+  public void setAlbedoWater( final String albedoWater )
+  {
+    m_albedoWater = albedoWater;
   }
 
 }

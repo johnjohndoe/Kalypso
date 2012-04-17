@@ -44,15 +44,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.operation.evaporation.IEvaporationCalculator;
+import org.kalypso.model.hydrology.operation.evaporation.LandbasedEvaporationCalculator;
 import org.kalypso.model.hydrology.operation.evaporation.WaterbasedEvaporationCalculator;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.StoreTimeseriesOperation;
 
 /**
@@ -73,6 +77,8 @@ public class CalculateEvaporationWizard extends Wizard
     m_data = data;
 
     addPage( new ChooseEvaporationInputFilesPage( station, data ) );
+    addPage( new EvaporationParameterPage( data ) );
+
   }
 
   @Override
@@ -80,23 +86,18 @@ public class CalculateEvaporationWizard extends Wizard
   {
     try
     {
-      final IObservation humidity = m_data.toObservation( m_data.getHumidity() );
-      final IObservation sunshine = m_data.toObservation( m_data.getSunshineHours() );
-      final IObservation temperature = m_data.toObservation( m_data.getTemperature() );
-      final IObservation windVelocity = m_data.toObservation( m_data.getWindVelocity() );
-      if( Objects.isNull( humidity, sunshine, temperature, windVelocity ) )
+
+      final IEvaporationCalculator calculator = getCalculator();
+      if( Objects.isNull( calculator ) )
         return false;
 
-      final DateRange daterange = m_data.getDateRange();
-
-      final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, calculator );
       if( !status.isOK() )
       {
         StatusDialog.open( getShell(), status, getWindowTitle() );
       }
 
-      final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED );
+      final IObservation observation = calculator.getObservation();
 
       final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_workspace, m_station, new CalculateEvaporationImportOpertion( observation ) );
       storeOperation.updateDataAfterFinish();
@@ -115,5 +116,40 @@ public class CalculateEvaporationWizard extends Wizard
       e.printStackTrace();
       return false;
     }
+  }
+
+  private IEvaporationCalculator getCalculator( ) throws SensorException
+  {
+    final IObservation humidity = m_data.toObservation( m_data.getHumidity() );
+    final IObservation sunshine = m_data.toObservation( m_data.getSunshineHours() );
+    final IObservation temperature = m_data.toObservation( m_data.getTemperature() );
+    final IObservation windVelocity = m_data.toObservation( m_data.getWindVelocity() );
+    if( Objects.isNull( humidity, sunshine, temperature, windVelocity ) )
+      return null;
+
+    final DateRange daterange = m_data.getDateRange();
+
+    final EVAPORATION_TYPE type = m_data.getEvaporationType();
+    if( EVAPORATION_TYPE.eLandBased.equals( type ) )
+    {
+
+      final LandbasedEvaporationCalculator calculator = new LandbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
+      calculator.setLatitude( NumberUtils.parseQuietDouble( m_data.getLatitude() ) );
+
+      return calculator;
+    }
+    else if( EVAPORATION_TYPE.eWaterBase.equals( type ) )
+    {
+      final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( CacheTimeSeriesVisitor.cache( humidity ), CacheTimeSeriesVisitor.cache( sunshine ), CacheTimeSeriesVisitor.cache( temperature ), CacheTimeSeriesVisitor.cache( windVelocity ), daterange );
+      calculator.setAlbedoWater( NumberUtils.parseQuietDouble( m_data.getAlbedoWater() ) );
+      calculator.setBoltzmannWaterConstant( NumberUtils.parseQuietDouble( m_data.getBoltzmannWaterConstant() ) );
+      calculator.setCoefficientEmission( NumberUtils.parseQuietDouble( m_data.getCoefficientEmission() ) );
+      calculator.setFactorConversionJw( NumberUtils.parseQuietDouble( m_data.getFactorConversionJw() ) );
+      calculator.setLatitude( NumberUtils.parseQuietDouble( m_data.getLatitude() ) );
+
+      return calculator;
+    }
+
+    throw new UnsupportedOperationException();
   }
 }

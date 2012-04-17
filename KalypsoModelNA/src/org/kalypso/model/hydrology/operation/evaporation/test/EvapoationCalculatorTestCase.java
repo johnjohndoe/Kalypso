@@ -54,7 +54,6 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ogc.sensor.timeseries.base.ITimeseriesCache;
@@ -83,7 +82,7 @@ public class EvapoationCalculatorTestCase
     final WaterbasedEvaporationCalculator calculator = new WaterbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
     calculator.execute( new NullProgressMonitor() );
 
-    final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED );
+    final IObservation observation = calculator.getObservation();
     ZmlFactory.writeToFile( observation, new File( FileUtilities.TMP_DIR, "waterbased_evaporation.zml" ) ); //$NON-NLS-1$
 
     storeCSV( observation, new File( FileUtilities.TMP_DIR, "waterbased_evaporation.csv" ) ); //$NON-NLS-1$
@@ -102,7 +101,7 @@ public class EvapoationCalculatorTestCase
     final LandbasedEvaporationCalculator calculator = new LandbasedEvaporationCalculator( humidity, sunshine, temperature, windVelocity, daterange );
     calculator.execute( new NullProgressMonitor() );
 
-    final IObservation observation = calculator.getObservation( ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED );
+    final IObservation observation = calculator.getObservation();
     ZmlFactory.writeToFile( observation, new File( FileUtilities.TMP_DIR, "landbased_evaporation.zml" ) ); //$NON-NLS-1$
 
     storeCSV( observation, new File( FileUtilities.TMP_DIR, "landbased_evaporation.csv" ) ); //$NON-NLS-1$

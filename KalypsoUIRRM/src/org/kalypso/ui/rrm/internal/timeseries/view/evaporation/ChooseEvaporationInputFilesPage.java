@@ -51,8 +51,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -71,7 +69,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.joda.time.Period;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.commons.databinding.validation.StringIsAsciiPrintableValidator;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -81,6 +78,7 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 import org.kalypso.zml.ui.imports.ParameterTypeLabelProvider;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -120,26 +118,47 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     body.setLayout( Layouts.createGridLayout() );
     setControl( body );
 
+    doAddEvaporaqtionTypeControl( body );
     doAddSourceControls( body );
     doAddDateRangeControl( body );
-    doAddQualityControl( body );
 
     doUpdateDateRange();
   }
 
-  private void doAddQualityControl( final Composite body )
+  private void doAddEvaporaqtionTypeControl( final Composite body )
   {
-    final Group groupDateRange = new Group( body, SWT.NULL );
-    groupDateRange.setLayout( new GridLayout() );
-    groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupDateRange.setText( "Quality" );
+    final Group group = new Group( body, SWT.NULL );
+    group.setLayout( new GridLayout() );
+    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    group.setText( "Verdunstung" );
 
-    final Text text = new Text( groupDateRange, SWT.BORDER );
-    text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY );
+    viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setContentProvider( new ArrayContentProvider() );
 
-    final ISWTObservableValue target = SWTObservables.observeText( text );
-    final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_QUALITY );
-    m_binding.bindValue( target, model, new StringIsAsciiPrintableValidator( IStatus.ERROR, "Ungültiger Quality-Name" ) );
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( viewer );
+    final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_EVAPORATION_TYPE );
+    m_binding.bindValue( target, model, new IValidator()
+    {
+
+      @Override
+      public IStatus validate( final Object value )
+      {
+        if( Objects.isNull( value ) )
+        {
+          setErrorMessage( "Leeres Element. Bitte weisen Sie alle Quellen zu." );
+          return Status.CANCEL_STATUS;
+        }
+
+        return Status.OK_STATUS;
+      }
+    } );
+
+    final EVAPORATION_TYPE[] input = new EVAPORATION_TYPE[] { EVAPORATION_TYPE.eLandBased, EVAPORATION_TYPE.eWaterBase };
+    viewer.setInput( input );
+
+    viewer.setSelection( new StructuredSelection( input[0] ) );
   }
 
   private void doAddDateRangeControl( final Composite body )
