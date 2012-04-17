@@ -123,14 +123,8 @@ public class CalculateEvaporationAction extends Action
 
     if( dialog.open() == org.eclipse.jface.window.Window.OK )
     {
-
+      m_model.refreshTree( m_station );
     }
-
-    /* Prepare data */
-// final ImportObservationData data = prepareData();
-// final ITimeseries timeseries = showWizard( shell, data );
-//
-// m_model.refreshTree( timeseries );
   }
 
   private IStatus canCalculateEvaporation( )
