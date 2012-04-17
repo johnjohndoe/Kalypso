@@ -38,36 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.comparator;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 
 /**
- * A column label provider.
+ * A viewer comparator.
  * 
  * @author Holger Albert
  */
-public class GroupColumnLabelProvider extends ColumnLabelProvider
+public class FactorComparator extends ViewerComparator
 {
   /**
    * The constructor.
    */
-  public GroupColumnLabelProvider( )
+  public FactorComparator( )
   {
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    if( element instanceof FactorizedTimeseriesBean )
+    if( e1 instanceof FactorizedTimeseriesBean && e2 instanceof FactorizedTimeseriesBean )
     {
-      FactorizedTimeseriesBean bean = (FactorizedTimeseriesBean) element;
-      return bean.getGroupText();
+      final FactorizedTimeseriesBean f1 = (FactorizedTimeseriesBean) e1;
+      final FactorizedTimeseriesBean f2 = (FactorizedTimeseriesBean) e2;
+
+      final int factor1 = f1.getFactor();
+      final int factor2 = f2.getFactor();
+
+      if( factor1 < factor2 )
+        return -1;
+
+      if( factor1 > factor2 )
+        return 1;
+
+      return 0;
     }
 
-    return super.getText( element );
+    return super.compare( viewer, e1, e2 );
   }
 }

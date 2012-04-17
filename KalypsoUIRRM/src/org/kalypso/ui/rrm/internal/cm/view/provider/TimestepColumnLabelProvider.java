@@ -38,9 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.ui.rrm.internal.cm.view.FactorizedTimeseriesBean;
 
 /**
  * A column label provider.

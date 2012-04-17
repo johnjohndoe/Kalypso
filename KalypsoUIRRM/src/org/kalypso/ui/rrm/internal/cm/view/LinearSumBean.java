@@ -122,6 +122,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
    *          The workspace.
    * @param parameterType
    *          The selected parameter type.
+   * @return The new linear sum generator.
    */
   public ILinearSumGenerator apply( final CommandableWorkspace workspace, final String parameterType ) throws Exception
   {

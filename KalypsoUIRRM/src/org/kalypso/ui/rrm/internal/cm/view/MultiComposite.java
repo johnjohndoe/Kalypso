@@ -40,29 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanObservableValue;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampModelToTargetConverter;
-import org.kalypso.ui.rrm.internal.utils.featureBinding.TimestampTargetToModelConverter;
 
 /**
- * This composite shows the contents of the linear sum generator.
+ * This composite shows the contents of the multi generator.
  * 
- * @author Gernot Belger
  * @author Holger Albert
  */
-public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator>
+public class MultiComposite extends FeatureBeanComposite<IMultiGenerator>
 {
   /**
    * The constructor.
@@ -76,7 +67,7 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
    * @param generalEditable
    *          True, if the contents of the composite should be generally editable. False otherwise.
    */
-  public LinearSumComposite( final Composite parent, final FeatureBean<ILinearSumGenerator> featureBean, final IDataBinding binding, final boolean generalEditable )
+  public MultiComposite( final Composite parent, final FeatureBean<IMultiGenerator> featureBean, final IDataBinding binding, final boolean generalEditable )
   {
     super( parent, featureBean, binding, generalEditable );
   }
@@ -88,40 +79,10 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
   protected void createContents( )
   {
     /* Create the contents. */
-    createPropertyTextFieldControl( ILinearSumGenerator.QN_DESCRIPTION );
-    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_COMMENT );
-    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_FROM );
-    createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_TO );
-    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
-    createPropertyTimestampControl();
+    createPropertyTextFieldControl( IMultiGenerator.QN_DESCRIPTION );
+    createPropertyDateTimeControl( IMultiGenerator.PROPERTY_VALID_FROM );
+    createPropertyDateTimeControl( IMultiGenerator.PROPERTY_VALID_TO );
     createParameterTypeControl();
-  }
-
-  /**
-   * This function creates the timestamp control.
-   */
-  private void createPropertyTimestampControl( )
-  {
-    /* Create the property label. */
-    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_TIMESTAMP );
-
-    /* Create the property text field. */
-    final Text field = createPropertyTextField( this );
-
-    /* Bind the text field. */
-    final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
-    final IObservableValue model = new FeatureBeanObservableValue( getBean(), ILinearSumGenerator.PROPERTY_TIMESTAMP );
-
-    /* Create the data binder. */
-    final DataBinder binder = new DataBinder( target, model );
-    binder.setModelToTargetConverter( new TimestampModelToTargetConverter() );
-    binder.setTargetToModelConverter( new TimestampTargetToModelConverter() );
-
-    /* Get the data binding. */
-    final IDataBinding binding = getBinding();
-
-    /* Bind the value. */
-    binding.bindValue( binder );
   }
 
   /**
@@ -130,10 +91,10 @@ public class LinearSumComposite extends FeatureBeanComposite<ILinearSumGenerator
   private void createParameterTypeControl( )
   {
     /* Create the property label. */
-    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
+    createPropertyLabel( this, IMultiGenerator.PROPERTY_PARAMETER_TYPE );
 
     /* Get the parameter label. */
-    final String parameterType = (String) getBean().getProperty( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE );
+    final String parameterType = (String) getBean().getProperty( IMultiGenerator.PROPERTY_PARAMETER_TYPE );
     final String parameterLabel = ParameterTypeUtils.formatParameterType( parameterType );
 
     /* Create the property text field. */

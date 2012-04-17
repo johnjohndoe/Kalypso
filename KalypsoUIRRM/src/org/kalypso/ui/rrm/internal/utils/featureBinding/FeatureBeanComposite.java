@@ -210,11 +210,11 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final DateTime createPropertyDateTimeControl( final QName property, final boolean withTime, final IValidator... validators )
+  protected final DateTime createPropertyDateTimeControl( final QName property, final IValidator... validators )
   {
     createPropertyLabel( this, property );
 
-    final DateTime dateTime = createPropertyDateTime( this, withTime );
+    final DateTime dateTime = createPropertyDateTime( this );
     bindDateTime( dateTime, property );
 
     return dateTime;
@@ -272,14 +272,11 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     return field;
   }
 
-  protected final DateTime createPropertyDateTime( final Composite parent, final boolean withTime )
+  protected final DateTime createPropertyDateTime( final Composite parent )
   {
     int style = SWT.BORDER | SWT.DATE | SWT.MEDIUM | SWT.DROP_DOWN;
-    if( withTime )
-      style = SWT.BORDER | SWT.DATE | SWT.TIME | SWT.MEDIUM | SWT.DROP_DOWN;
-
     if( !m_generalEditable )
-      style &= SWT.READ_ONLY;
+      style = style | SWT.READ_ONLY;
 
     final DateTime dateTime = new DateTime( parent, style );
     dateTime.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

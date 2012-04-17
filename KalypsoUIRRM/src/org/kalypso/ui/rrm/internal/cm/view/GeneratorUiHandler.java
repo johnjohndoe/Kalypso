@@ -52,6 +52,10 @@ import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.cm.view.action.DeleteGeneratorAction;
+import org.kalypso.ui.rrm.internal.cm.view.action.EditGeneratorAction;
+import org.kalypso.ui.rrm.internal.cm.view.action.EditLinearSumIdwAction;
+import org.kalypso.ui.rrm.internal.cm.view.action.EditLinearSumThiessenAction;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.AbstractTreeNodeUiHandler;
@@ -113,6 +117,12 @@ public class GeneratorUiHandler extends AbstractTreeNodeUiHandler
     {
       final FeatureBean<ILinearSumGenerator> bean = new FeatureBean<ILinearSumGenerator>( (ILinearSumGenerator) m_generator );
       return new LinearSumComposite( parent, bean, binding, false );
+    }
+
+    if( m_generator instanceof IMultiGenerator )
+    {
+      final FeatureBean<IMultiGenerator> bean = new FeatureBean<IMultiGenerator>( (IMultiGenerator) m_generator );
+      return new MultiComposite( parent, bean, binding, false );
     }
 
     return new Composite( parent, SWT.NONE );

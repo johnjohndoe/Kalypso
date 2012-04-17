@@ -38,40 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.provider;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 
 /**
- * A viewer comparator.
- * 
  * @author Holger Albert
  */
-public class QualityComparator extends ViewerComparator
+public class DescriptionColumnLabelProvider extends ColumnLabelProvider
 {
   /**
    * The constructor.
    */
-  public QualityComparator( )
+  public DescriptionColumnLabelProvider( )
   {
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  public String getText( final Object element )
   {
-    if( e1 instanceof FactorizedTimeseriesBean && e2 instanceof FactorizedTimeseriesBean )
-    {
-      final FactorizedTimeseriesBean f1 = (FactorizedTimeseriesBean) e1;
-      final FactorizedTimeseriesBean f2 = (FactorizedTimeseriesBean) e2;
+    if( element instanceof IRainfallGenerator )
+      return ((IRainfallGenerator) element).getDescription();
 
-      return f1.getQualityText().compareTo( f2.getQualityText() );
-    }
-
-    return super.compare( viewer, e1, e2 );
+    return super.getText( element );
   }
 }

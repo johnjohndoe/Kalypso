@@ -38,50 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.comparator;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.core.status.StatusComposite;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 
 /**
+ * A viewer comparator.
+ * 
  * @author Holger Albert
  */
-public class NameColumnLabelProvider extends ColumnLabelProvider
+public class CatchmentDescriptionComparator extends ViewerComparator
 {
   /**
    * The constructor.
    */
-  public NameColumnLabelProvider( )
+  public CatchmentDescriptionComparator( )
   {
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
    */
   @Override
-  public Image getImage( final Object element )
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    if( element instanceof CatchmentBean )
+    if( e1 instanceof CatchmentBean && e2 instanceof CatchmentBean )
     {
-      final CatchmentBean catchment = (CatchmentBean) element;
-      final IStatus status = catchment.getStatus();
-      return StatusComposite.getStatusImage( status.getSeverity() );
+      final CatchmentBean c1 = (CatchmentBean) e1;
+      final CatchmentBean c2 = (CatchmentBean) e2;
+
+      final String catchmentDescription1 = c1.getCatchmentDescription();
+      final String catchmentDescription2 = c2.getCatchmentDescription();
+
+      if( catchmentDescription1 == null && catchmentDescription2 != null )
+        return -1;
+      else if( catchmentDescription1 != null && catchmentDescription2 == null )
+        return 1;
+      else if( catchmentDescription1 == null && catchmentDescription2 == null )
+        return 0;
+
+      return catchmentDescription1.compareTo( catchmentDescription2 );
     }
 
-    return super.getImage( element );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
-  {
-    if( element instanceof CatchmentBean )
-      return ((CatchmentBean) element).getCatchmentName();
-
-    return super.getText( element );
+    return super.compare( viewer, e1, e2 );
   }
 }

@@ -38,40 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.cm.view;
+package org.kalypso.ui.rrm.internal.cm.view.provider;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import java.text.DateFormat;
+import java.util.Date;
+
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 
 /**
- * A viewer comparator.
- * 
  * @author Holger Albert
  */
-public class GroupComparator extends ViewerComparator
+public class ValidToColumnLabelProvider extends ColumnLabelProvider
 {
+  /**
+   * The date format.
+   */
+  private final DateFormat m_df;
+
   /**
    * The constructor.
    */
-  public GroupComparator( )
+  public ValidToColumnLabelProvider( )
   {
+    m_df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+    m_df.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  public String getText( final Object element )
   {
-    if( e1 instanceof FactorizedTimeseriesBean && e2 instanceof FactorizedTimeseriesBean )
+    if( element instanceof IRainfallGenerator )
     {
-      final FactorizedTimeseriesBean f1 = (FactorizedTimeseriesBean) e1;
-      final FactorizedTimeseriesBean f2 = (FactorizedTimeseriesBean) e2;
-
-      return f1.getGroupText().compareTo( f2.getGroupText() );
+      final IRainfallGenerator generator = (IRainfallGenerator) element;
+      final Date validTo = generator.getValidTo();
+      return String.format( "%s", m_df.format( validTo ) );
     }
 
-    return super.compare( viewer, e1, e2 );
+    return super.getText( element );
   }
 }
