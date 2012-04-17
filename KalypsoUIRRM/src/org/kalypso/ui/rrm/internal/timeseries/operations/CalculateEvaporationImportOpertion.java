@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.evaporation;
+package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.joda.time.Period;

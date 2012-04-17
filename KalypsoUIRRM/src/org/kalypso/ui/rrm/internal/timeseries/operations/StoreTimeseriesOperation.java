@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.internal.timeseries.view.imports;
+package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +76,7 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
+import org.kalypso.ui.rrm.internal.timeseries.view.imports.IImportTimeseriesOperation;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.imports.IStoreObservationData;

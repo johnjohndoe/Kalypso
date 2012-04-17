@@ -43,6 +43,8 @@ package org.kalypso.ui.rrm.internal.timeseries.view;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -58,6 +60,9 @@ import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.actions.CleanSearchPanelAction;
+import org.kalypso.ui.rrm.internal.timeseries.view.dnd.MoveStationTransfer;
+import org.kalypso.ui.rrm.internal.timeseries.view.dnd.TimeseriesManagementTreeDragListener;
+import org.kalypso.ui.rrm.internal.timeseries.view.dnd.TimeseriesManagementTreeDropListener;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
@@ -117,6 +122,11 @@ public class TimeseriesManagementView extends ViewPart
     m_treeViewer.setContentProvider( new TreeNodeContentProvider() );
     m_treeViewer.setLabelProvider( new TreeNodeLabelProvider() );
     m_treeViewer.setComparator( new TimeseriesNodeLabelComparator() );
+
+    final int ops = DND.DROP_MOVE;
+    final Transfer[] transfers = new Transfer[] { MoveStationTransfer.getInstance() };
+    m_treeViewer.addDragSupport( ops, transfers, new TimeseriesManagementTreeDragListener( m_treeViewer ) );
+    m_treeViewer.addDropSupport( ops, transfers, new TimeseriesManagementTreeDropListener( m_treeViewer ) );
 
     return m_treeViewer.getTree();
   }

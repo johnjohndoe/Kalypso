@@ -48,6 +48,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesNewComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;

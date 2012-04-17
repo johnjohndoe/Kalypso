@@ -56,9 +56,10 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
+import org.kalypso.ui.rrm.internal.timeseries.operations.CalculateEvaporationImportOpertion;
+import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.StoreTimeseriesOperation;
 
 /**
  * @author Dirk Kuch
