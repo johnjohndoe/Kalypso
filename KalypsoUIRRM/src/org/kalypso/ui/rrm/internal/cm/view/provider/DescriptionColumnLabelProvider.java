@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.cm.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 
 /**
  * @author Holger Albert
@@ -61,6 +62,9 @@ public class DescriptionColumnLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
+    if( element instanceof CatchmentBean )
+      return ((CatchmentBean) element).getCatchmentDescription();
+
     if( element instanceof IRainfallGenerator )
       return ((IRainfallGenerator) element).getDescription();
 

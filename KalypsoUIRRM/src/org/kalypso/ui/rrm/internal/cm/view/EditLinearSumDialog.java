@@ -76,18 +76,18 @@ import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.cm.view.comparator.CatchmentDescriptionComparator;
-import org.kalypso.ui.rrm.internal.cm.view.comparator.CatchmentNameComparator;
+import org.kalypso.ui.rrm.internal.cm.view.comparator.DescriptionComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.FactorComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.GroupComparator;
+import org.kalypso.ui.rrm.internal.cm.view.comparator.NameComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.QualityComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.StationComparator;
 import org.kalypso.ui.rrm.internal.cm.view.comparator.TimestepComparator;
 import org.kalypso.ui.rrm.internal.cm.view.filter.ParameterTypeViewerFilter;
-import org.kalypso.ui.rrm.internal.cm.view.provider.CatchmentDescriptionColumnLabelProvider;
+import org.kalypso.ui.rrm.internal.cm.view.provider.DescriptionColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.FactorColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.GroupColumnLabelProvider;
-import org.kalypso.ui.rrm.internal.cm.view.provider.CatchmentNameColumnLabelProvider;
+import org.kalypso.ui.rrm.internal.cm.view.provider.NameColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.QualityColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.StationColumnLabelProvider;
 import org.kalypso.ui.rrm.internal.cm.view.provider.TimestepColumnLabelProvider;
@@ -351,9 +351,9 @@ public class EditLinearSumDialog extends TrayDialog
     final TableViewerColumn nameColumn = new TableViewerColumn( viewer, SWT.LEFT );
     nameColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_4" ) ); //$NON-NLS-1$
     nameColumn.getColumn().setWidth( 150 );
-    nameColumn.setLabelProvider( new CatchmentNameColumnLabelProvider() );
+    nameColumn.setLabelProvider( new NameColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( nameColumn.getColumn() );
-    ColumnViewerSorter.registerSorter( nameColumn, new CatchmentNameComparator() );
+    ColumnViewerSorter.registerSorter( nameColumn, new NameComparator() );
 
     /* Create the description column. */
     if( m_bean.hasDescription() )
@@ -361,9 +361,9 @@ public class EditLinearSumDialog extends TrayDialog
       final TableViewerColumn descriptionColumn = new TableViewerColumn( viewer, SWT.LEFT );
       descriptionColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_5" ) ); //$NON-NLS-1$
       descriptionColumn.getColumn().setWidth( 150 );
-      descriptionColumn.setLabelProvider( new CatchmentDescriptionColumnLabelProvider() );
+      descriptionColumn.setLabelProvider( new DescriptionColumnLabelProvider() );
       ColumnsResizeControlListener.setMinimumPackWidth( descriptionColumn.getColumn() );
-      ColumnViewerSorter.registerSorter( descriptionColumn, new CatchmentDescriptionComparator() );
+      ColumnViewerSorter.registerSorter( descriptionColumn, new DescriptionComparator() );
     }
 
     /* Define a initial order. */
