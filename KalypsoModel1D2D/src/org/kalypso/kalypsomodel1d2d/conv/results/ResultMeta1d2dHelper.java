@@ -96,6 +96,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DO
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
+import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -719,6 +720,13 @@ public class ResultMeta1d2dHelper
   {
     try
     {
+      if( url.toExternalForm().contains( ResultManager.STEADY_PREFIX ) ){
+        return ResultManager.STEADY_DATE;
+      }
+      if( url.toExternalForm().contains( ResultManager.MAXI_PREFIX ) ){
+        return ResultManager.MAXI_DATE;
+      }
+      
       final String lStrTimeFormat = SHORT_DATE_TIME_FORMAT_RESULT_STEP;
       final String lStrTimeFormatFull = FULL_DATE_TIME_FORMAT_RESULT_STEP;
       final SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat( lStrTimeFormat );
