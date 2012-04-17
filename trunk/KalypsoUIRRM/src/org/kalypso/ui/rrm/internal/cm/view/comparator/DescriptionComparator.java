@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.cm.view.comparator;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ui.rrm.internal.cm.view.CatchmentBean;
 
 /**
  * A viewer comparator.
@@ -65,6 +66,24 @@ public class DescriptionComparator extends ViewerComparator
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
+    if( e1 instanceof CatchmentBean && e2 instanceof CatchmentBean )
+    {
+      final CatchmentBean c1 = (CatchmentBean) e1;
+      final CatchmentBean c2 = (CatchmentBean) e2;
+
+      final String catchmentDescription1 = c1.getCatchmentDescription();
+      final String catchmentDescription2 = c2.getCatchmentDescription();
+
+      if( catchmentDescription1 == null && catchmentDescription2 != null )
+        return -1;
+      else if( catchmentDescription1 != null && catchmentDescription2 == null )
+        return 1;
+      else if( catchmentDescription1 == null && catchmentDescription2 == null )
+        return 0;
+
+      return catchmentDescription1.compareTo( catchmentDescription2 );
+    }
+
     if( e1 instanceof IRainfallGenerator && e2 instanceof IRainfallGenerator )
     {
       final IRainfallGenerator g1 = (IRainfallGenerator) e1;
