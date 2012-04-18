@@ -177,9 +177,11 @@ public final class RainfallGeneratorUtilities
    *          The weights to use.
    * @param dataSource
    *          The data source of the resulting observation
+   * @param name
+   *          If not empty, this name will be set to the observation.
    * @return A new combined observation.
    */
-  public static IObservation combineObses( final IObservation[] observations, final double[] weights, final String dataSource ) throws SensorException
+  public static IObservation combineObses( final IObservation[] observations, final double[] weights, final String dataSource, final String name ) throws SensorException
   {
     /* There should be a weight for each observation. */
     Assert.isTrue( observations.length == weights.length );
@@ -228,7 +230,10 @@ public final class RainfallGeneratorUtilities
 
     /* Create a new observation. */
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
-    combinedObservation.setName( "Generierte Zeitreihe" );
+    if( name != null && name.length() > 0 )
+      combinedObservation.setName( name );
+    else
+      combinedObservation.setName( "Generierte Zeitreihe" );
 
     /* Ignore original data sources because rainfall generator combines different data sources. */
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();
@@ -244,6 +249,33 @@ public final class RainfallGeneratorUtilities
       if( timestep != null )
         return timestep;
     }
+
+    return null;
+  }
+
+  /**
+   * This function finds the name of the catchment. It will check the description and the name attribute of the
+   * catchment.
+   * 
+   * @param catchment
+   *          The catchment.
+   * @return The name or null.
+   */
+  public static String findName( final Feature catchment )
+  {
+    /* No catchment available. */
+    if( catchment == null )
+      return null;
+
+    /* Get the description. */
+    final String description = catchment.getDescription();
+    if( description != null && description.length() > 0 )
+      return description;
+
+    /* Get the name. */
+    final String name = catchment.getName();
+    if( name != null && name.length() > 0 )
+      return name;
 
     return null;
   }
