@@ -117,9 +117,9 @@ public class TimeseriesImportWizard extends Wizard
 
     final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
     if( !status2.isOK() )
-    {
       StatusDialog.open( getShell(), status2, getWindowTitle() );
-    }
+    else
+      StatusDialog.open( getShell(), status, getWindowTitle() );
 
     m_timeseries = storeOperation.getTimeseries();
 
