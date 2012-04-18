@@ -62,8 +62,7 @@ public class TimeseriesManagementTreeDragListener implements DragSourceListener
   @Override
   public void dragStart( final DragSourceEvent event )
   {
-    // TODO Auto-generated method stub
-
+    dragSetData( event );
   }
 
   @Override

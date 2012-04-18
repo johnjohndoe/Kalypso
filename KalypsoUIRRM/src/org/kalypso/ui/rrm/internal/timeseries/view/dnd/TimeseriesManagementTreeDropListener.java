@@ -50,7 +50,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.MoveTimeSeriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -76,15 +75,15 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
       return false;
 
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-    final CommandableWorkspace workspace = getWorkspace();
-    if( Objects.isNull( workspace ) )
+    final ITreeNodeModel model = getModel();
+    if( Objects.isNull( model ) )
       return false;
 
     for( final ITimeseries timeseries : timeserieses )
     {
       try
       {
-        final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( workspace, m_station, timeseries );
+        final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( model, m_station, timeseries );
         stati.add( operation.execute( new NullProgressMonitor() ) );
       }
       catch( final CoreException e )
@@ -96,11 +95,11 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     return false;
   }
 
-  private CommandableWorkspace getWorkspace( )
+  private ITreeNodeModel getModel( )
   {
     final Object input = getViewer().getInput();
     if( input instanceof ITreeNodeModel )
-      return ((ITreeNodeModel) input).getWorkspace();
+      return (ITreeNodeModel) input;
 
     return null;
   }
@@ -117,7 +116,7 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     {
       m_station = (IStation) objStation;
 
-      if( getWorkspace() == null )
+      if( getModel() == null )
         return false;
 
       return true;

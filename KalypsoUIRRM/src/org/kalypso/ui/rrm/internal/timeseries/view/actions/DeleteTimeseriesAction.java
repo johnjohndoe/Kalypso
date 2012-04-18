@@ -41,18 +41,17 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.operations.DeleteTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -61,7 +60,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DeleteTimeseriesAction extends Action
 {
-  private final ITimeseries[] m_timeseries;
+  private final ITimeseries[] m_timeserieses;
 
   private final String m_deleteMessage;
 
@@ -70,7 +69,7 @@ public class DeleteTimeseriesAction extends Action
   public DeleteTimeseriesAction( final ITreeNodeModel model, final String deleteMessage, final ITimeseries... timeseries )
   {
     m_model = model;
-    m_timeseries = timeseries;
+    m_timeserieses = timeseries;
     m_deleteMessage = deleteMessage;
 
     setText( Messages.getString( "DeleteTimeseriesAction_0" ) ); //$NON-NLS-1$
@@ -93,28 +92,15 @@ public class DeleteTimeseriesAction extends Action
     if( !MessageDialog.openConfirm( shell, getText(), m_deleteMessage ) )
       return;
 
-    try
-    {
-      /* Delete data files */
-      for( final ITimeseries timeseries : m_timeseries )
-        timeseries.deleteDataFile();
+    final Feature owner = m_timeserieses[0].getOwner();
 
-      final Feature owner = m_timeseries[0].getOwner();
+    final DeleteTimeseriesOperation operation = new DeleteTimeseriesOperation( m_model, m_timeserieses );
+    final IStatus status = operation.execute( new NullProgressMonitor() );
 
-      /* Delete feature */
-      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeseries );
-      m_model.postCommand( deleteCommand );
+    /* Select parent node */
+    m_model.refreshTree( owner );
 
-      /* Select parent node */
-      m_model.refreshTree( owner );
-
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "DeleteTimeseriesAction_3" ), e ); //$NON-NLS-1$
+    if( !status.isOK() )
       StatusDialog.open( shell, status, getText() );
-    }
   }
 }
