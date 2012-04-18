@@ -81,6 +81,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements ISimulation1D2DConstants, IWPSObserver, IKalypsoSimulationRunnerComposite
 {
+  private static final String HOCHWERT_NAME = "Hochwert:"; //$NON-NLS-1$
+
+  private static final String RECHTSWERT_NAME = "Rechtswert:"; //$NON-NLS-1$
+
   private final IControlModel1D2D m_controlModel;
 
   private final IGeoLog m_log;
@@ -304,29 +308,59 @@ public class RMAKalypsoSimulationRunner extends DefaultWpsObserver implements IS
     // TODO: error or warning depends, if any steps where calculated; the rma10s should determine if result processing
     // makes sense
 
-    final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
-    if( lines.length != 7 )
+    final GM_Object location = getLocationFromStatusMsg( errorMessage );
+    if( location == null )
     {
       return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
     }
-
-    final int severity = IStatus.WARNING;
+    
+    final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
     final String message = lines[0];
 
-    final GM_Object location;
-    if( lines[5].length() < 51 )
+    return m_log.log( IStatus.WARNING, CODE_RMA10S, message, location, null );
+  }
+  
+  private GM_Object getLocationFromStatusMsg( final String errorMessage ){
+    GM_Object location = null;
+    int posR = errorMessage.indexOf( RECHTSWERT_NAME );
+    int posH = errorMessage.indexOf( HOCHWERT_NAME );
+    if( posR >= 0 || posH >= 0 )
     {
-      location = null;
+      int lenR = RECHTSWERT_NAME.length();
+      int lenH = HOCHWERT_NAME.length();
+      final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
+      for( int i = 0; i < lines.length; i++ )
+      {
+        posR = lines[ i ].indexOf( RECHTSWERT_NAME );
+        if( posR >= 0  ){
+          posH = lines[ i ].indexOf( HOCHWERT_NAME );
+          
+          final BigDecimal rw = toBigDecimal( lines[ i ].substring( posR + lenR, posH ) ) ;
+          final BigDecimal hw = toBigDecimal( lines[ i ].substring( posH + lenH ) );
+          try{
+            location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+          }
+          catch (Exception e) {
+            location = null;
+          }
+          break;
+        }
+      }
     }
-    else
-    {
-      final BigDecimal rw = new BigDecimal( lines[5].substring( 13, 26 ).trim() );
-      final BigDecimal hw = new BigDecimal( lines[5].substring( 38, 51 ).trim() );
+    return location;
+  }
 
-      location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+  private BigDecimal toBigDecimal( final String msg )
+  {
+    BigDecimal newBd = null;
+    try{
+      newBd = new BigDecimal( msg.trim() );
     }
-
-    return m_log.log( severity, CODE_RMA10S, message, location, null );
+    catch (Exception e) {
+      String msgNew = msg.trim().replace( ";", "" ).replace( ",", "." );  //$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      newBd = new BigDecimal( msgNew );
+    }
+    return newBd;
   }
 
   public IStatus cancelJob( )
