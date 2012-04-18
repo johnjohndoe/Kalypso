@@ -257,7 +257,8 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
   {
 
     final Button button = getButton( OK );
-    button.setEnabled( Objects.isNotNull( timeseries ) );
+    if( button != null )
+      button.setEnabled( Objects.isNotNull( timeseries ) );
 
     setSelection( timeseries );
   }
