@@ -54,6 +54,7 @@ import org.kalypso.ui.rrm.internal.cm.view.action.DeleteGeneratorAction;
 import org.kalypso.ui.rrm.internal.cm.view.action.NewLinearSumGeneratorAction;
 import org.kalypso.ui.rrm.internal.cm.view.action.NewLinearSumIdwAction;
 import org.kalypso.ui.rrm.internal.cm.view.action.NewLinearSumThiessenAction;
+import org.kalypso.ui.rrm.internal.cm.view.action.NewMultiGeneratorAction;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.ParameterComposite;
 import org.kalypso.ui.rrm.internal.utils.ParameterTypeUtils;
@@ -109,6 +110,7 @@ public class ParameterGeneratorUiHandler extends AbstractTreeNodeUiHandler
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumGeneratorAction( m_model, m_parameterType ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumThiessenAction( m_model, m_parameterType ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewLinearSumIdwAction( m_model, m_parameterType ) );
+    ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMultiGeneratorAction( m_model ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new DeleteGeneratorAction( m_model, m_generators ) );
   }
 }
