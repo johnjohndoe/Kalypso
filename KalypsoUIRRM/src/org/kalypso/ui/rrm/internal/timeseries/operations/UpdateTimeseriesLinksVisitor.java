@@ -50,7 +50,6 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -64,14 +63,29 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
 {
 
-  private final ITimeseries m_old;
+  private final URL m_old;
 
-  private final ITimeseries m_current;
+  private final URL m_current;
+
+  private final String m_href;
 
   public UpdateTimeseriesLinksVisitor( final ITimeseries old, final ITimeseries current )
   {
+    m_old = toUrl( old );
+    m_current = toUrl( current );
+    m_href = current.getDataLink().getHref();
+  }
+
+  private URL toUrl( final ITimeseries timeseries )
+  {
+    return timeseries.getDataLink().getLocation();
+  }
+
+  public UpdateTimeseriesLinksVisitor( final URL old, final URL current, final String href )
+  {
     m_old = old;
     m_current = current;
+    m_href = href;
   }
 
   @Override
@@ -88,9 +102,6 @@ public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
   {
     final Set<IPropertyType> equal = new LinkedHashSet<>();
 
-    final ZmlLink zmlLink = m_old.getDataLink();
-    final URL zml = zmlLink.getLocation();
-
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType property : properties )
@@ -104,7 +115,7 @@ public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
           final String href = link.getHref();
           final URL url = UrlResolverSingleton.resolveUrl( feature.getWorkspace().getContext(), href );
 
-          if( zml.equals( url ) )
+          if( m_old.equals( url ) )
             equal.add( property );
         }
         catch( final MalformedURLException e )
@@ -122,7 +133,7 @@ public class UpdateTimeseriesLinksVisitor implements FeatureVisitor
     for( final IPropertyType property : properties )
     {
       final TimeseriesLinkType link = (TimeseriesLinkType) feature.getProperty( property );
-      link.setHref( m_current.getDataLink().getHref() );
+      link.setHref( m_href );
     }
 
     feature.getWorkspace().fireModellEvent( new FeaturesChangedModellEvent( feature.getWorkspace(), new Feature[] { feature } ) );
