@@ -41,14 +41,19 @@
 package org.kalypso.ui.rrm.internal.timeseries.view.dnd;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.timeseries.operations.MoveTimeSeriesOperation;
+import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -71,14 +76,33 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
       return false;
 
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final CommandableWorkspace workspace = getWorkspace();
+    if( Objects.isNull( workspace ) )
+      return false;
 
     for( final ITimeseries timeseries : timeserieses )
     {
-      final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( m_station, timeseries );
-      stati.add( operation.execute( new NullProgressMonitor() ) );
+      try
+      {
+        final MoveTimeSeriesOperation operation = new MoveTimeSeriesOperation( workspace, m_station, timeseries );
+        stati.add( operation.execute( new NullProgressMonitor() ) );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     return false;
+  }
+
+  private CommandableWorkspace getWorkspace( )
+  {
+    final Object input = getViewer().getInput();
+    if( input instanceof ITreeNodeModel )
+      return ((ITreeNodeModel) input).getWorkspace();
+
+    return null;
   }
 
   @Override
@@ -92,6 +116,9 @@ public class TimeseriesManagementTreeDropListener extends ViewerDropAdapter
     if( objStation instanceof IStation )
     {
       m_station = (IStation) objStation;
+
+      if( getWorkspace() == null )
+        return false;
 
       return true;
     }
