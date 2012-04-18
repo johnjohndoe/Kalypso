@@ -177,11 +177,9 @@ public final class RainfallGeneratorUtilities
    *          The weights to use.
    * @param dataSource
    *          The data source of the resulting observation
-   * @param name
-   *          If not empty, this name will be set to the observation.
    * @return A new combined observation.
    */
-  public static IObservation combineObses( final IObservation[] observations, final double[] weights, final String dataSource, final String name ) throws SensorException
+  public static IObservation combineObses( final IObservation[] observations, final double[] weights, final String dataSource ) throws SensorException
   {
     /* There should be a weight for each observation. */
     Assert.isTrue( observations.length == weights.length );
@@ -230,10 +228,7 @@ public final class RainfallGeneratorUtilities
 
     /* Create a new observation. */
     final SimpleObservation combinedObservation = new SimpleObservation( "", "", metadata, combinedTuppleModel );
-    if( name != null && name.length() > 0 )
-      combinedObservation.setName( name );
-    else
-      combinedObservation.setName( "Generierte Zeitreihe" );
+    combinedObservation.setName( "Generierte Zeitreihe" );
 
     /* Ignore original data sources because rainfall generator combines different data sources. */
     return new AddDataSourceObservationHandler( dataSource, dataSource, combinedObservation ).extend();

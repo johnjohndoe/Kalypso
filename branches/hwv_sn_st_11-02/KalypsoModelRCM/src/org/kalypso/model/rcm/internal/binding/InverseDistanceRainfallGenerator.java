@@ -232,8 +232,7 @@ public class InverseDistanceRainfallGenerator extends AbstractRainfallGenerator
         final double[] weights = getWeights( areaGeometry, ombrometerPoints, numberOmbrometers.intValue() );
 
         /* Combine the observations. */
-        final String name = RainfallGeneratorUtilities.findName( catchmentFeatures[i] );
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance", name );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://inverse.distance" );
 
         /* Monitor. */
         monitor.worked( 400 / areas.length );
