@@ -45,7 +45,7 @@ import org.eclipse.core.resources.IFolder;
 
 /**
  * Helper that encapsulates the constants to access data inside a rrm scenario.
- *
+ * 
  * @author Gernot Belger
  */
 public class RrmScenario

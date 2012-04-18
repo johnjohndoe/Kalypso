@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.joda.time.Period;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -57,9 +58,19 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
 
   private final IObservation m_observation;
 
+  protected final String m_parameterType;
+
   public ObservationImportOperation( final IObservation observation )
   {
+    this( observation, null );
+
+  }
+
+  public ObservationImportOperation( final IObservation observation, final String parameterType )
+  {
     m_observation = observation;
+    m_parameterType = parameterType;
+
   }
 
   @Override
@@ -71,6 +82,9 @@ public class ObservationImportOperation implements IImportTimeseriesOperation
       @Override
       public String getParameterType( )
       {
+        if( Objects.isNotNull( m_parameterType ) )
+          return m_parameterType;
+
         final IObservation observation = getObservation();
         final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
 
