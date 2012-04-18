@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.math.geom.PolyLine;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -75,6 +76,9 @@ public class BanklineVariableBufferBuilder
 
   public BanklineVariableBufferBuilder( final LineString riverLine, final PolyLine leftDistances, final PolyLine rightDistances )
   {
+    Assert.isNotNull( leftDistances );
+    Assert.isNotNull( rightDistances );
+
     m_riverLine = riverLine;
     m_leftDistances = leftDistances;
     m_rightDistances = rightDistances;
