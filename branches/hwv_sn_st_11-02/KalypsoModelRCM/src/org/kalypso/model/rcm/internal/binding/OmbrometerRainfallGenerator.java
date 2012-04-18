@@ -222,7 +222,8 @@ public class OmbrometerRainfallGenerator extends AbstractRainfallGenerator
 
         final Geometry areaGeometry = JTSAdapter.export( area );
         final double[] weights = JTSUtilities.fractionAreasOf( areaGeometry, ombrometerPolygons );
-        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://thiessen" );
+        final String name = RainfallGeneratorUtilities.findName( catchmentFeatures[i] );
+        result[i] = RainfallGeneratorUtilities.combineObses( ombrometerObservations, weights, "ombrometer://thiessen", name );
 
         /* Monitor. */
         monitor.worked( 400 / areas.length );
