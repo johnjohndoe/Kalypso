@@ -48,7 +48,5 @@ import org.kalypso.ogc.sensor.IObservation;
  */
 public interface IMergeTimeseriesOperation extends ICoreRunnableWithProgress
 {
-
   void setObservation( IObservation observation );
-
 }
