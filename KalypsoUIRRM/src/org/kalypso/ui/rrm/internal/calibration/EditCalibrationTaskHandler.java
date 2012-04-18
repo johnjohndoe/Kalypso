@@ -102,7 +102,7 @@ public class EditCalibrationTaskHandler extends AbstractHandler
     final FeatureView featureView = (FeatureView) part;
     final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
 
-    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_Subcatchment.gft" ) ); //$NON-NLS-1$
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_Catchment.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_KMChannel.gft" ) ); //$NON-NLS-1$
     factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/EditCalibration_RHBChannel.gft" ) ); //$NON-NLS-1$
   }

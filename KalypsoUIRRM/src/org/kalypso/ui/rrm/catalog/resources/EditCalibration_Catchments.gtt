@@ -3,6 +3,23 @@
   <layer id="id" featurePath="CatchmentCollectionMember/catchmentMember" linktype="gml" ns1:type="simple" ns1:href=".models/modell.gml" ns1:actuate="onRequest">
     <column name="name" editable="false" width="60" alignment="SWT.LEFT" format=""/>
     <column name="description" editable="false" width="200" alignment="SWT.LEFT" format=""/>
+    
+    <column name="rrm:faktn" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:ftem" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:fver" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:bianf" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:tint" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:rintmx" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorAigw" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetobRetint" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetvs" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetob" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetint" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetbas" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetgw" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:faktorRetklu" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+    <column name="rrm:corrSealing" editable="false" width="100" alignment="SWT.RIGHT" format="%.2f"/>
+
     <sort propertyName="name" inverse="false"/>
   </layer>
 </gistableview>

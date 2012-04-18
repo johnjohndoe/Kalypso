@@ -29,60 +29,20 @@
     </validatorlabel>
   </group>
 
-  <group style="SWT.NONE" text="%rhbchannel.gft.rhbparameters">
+  <group style="SWT.NONE" text="%editCalibration.gft.group.calibrationParameters">
     <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
     <gridLayout numColumns="3" />
 
-    <label property="rrm:vmin" visible="true" style="SWT.NONE">
+    <label property="rrm:faktorSeaEvaporation" visible="true" style="SWT.NONE">
       <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
     </label>
-    <text editable="true" property="rrm:vmin" style="SWT.BORDER | SWT.RIGHT">
+    <text editable="true" property="rrm:faktorSeaEvaporation" style="SWT.BORDER | SWT.RIGHT">
       <gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="SWT.FILL" />
       <format>%,.2f</format>
     </text>
-    <validatorlabel property="rrm:vmin" visible="true" style="SWT.NONE">
+    <validatorlabel property="rrm:faktorSeaEvaporation" visible="true" style="SWT.NONE">
       <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
     </validatorlabel>
-
-    <label property="rrm:vmax" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
-    </label>
-    <text editable="true" property="rrm:vmax" style="SWT.BORDER | SWT.RIGHT">
-      <gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="SWT.FILL" />
-      <format>%,.2f</format>
-    </text>
-    <validatorlabel property="rrm:vmax" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
-    </validatorlabel>
-
-    <label property="rrm:sv" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
-    </label>
-    <text editable="true" property="rrm:sv" style="SWT.BORDER | SWT.RIGHT">
-      <gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="SWT.FILL" />
-      <format>%,.2f</format>
-    </text>
-    <validatorlabel property="rrm:sv" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
-    </validatorlabel>
-
-    <label property="rrm:hvvsqd" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
-    </label>
-    <button property="rrm:hvvsqd" style="SWT.PUSH">
-      <gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="SWT.FILL" />
-    </button>
-    <validatorlabel property="rrm:hvvsqd" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" />
-    </validatorlabel>
-
-    <label property="rrm:hvvsqd" text="%rhbchannel.gft.rhbvalidatelabel" tooltip="%rhbchannel.gft.rhbvalidatetooltip" visible="true" style="SWT.NONE">
-      <gridData grabExcessHorizontalSpace="false" horizontalAlignment="SWT.BEGINNING" verticalAlignment="SWT.CENTER" />
-    </label>
-    <extensioncontrol style="SWT.SEARCH" property="rrm:hvvsqd" extension-id=".StorageChannelValidateFeatureControl">
-      <gridData grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.CENTER" horizontalSpan="1" />
-    </extensioncontrol>
-    <label style="SWT.NONE"/>
   </group>
 
   <translator id="commons.msgGetString">
