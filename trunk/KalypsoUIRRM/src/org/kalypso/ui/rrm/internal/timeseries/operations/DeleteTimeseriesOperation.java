@@ -40,54 +40,62 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
- * moves a timeseries from one station to the given target station
- * 
  * @author Dirk Kuch
  */
-public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
+public class DeleteTimeseriesOperation implements ICoreRunnableWithProgress
 {
-  private final IStation m_target;
-
-  private final ITimeseries m_timeseries;
-
   private final ITreeNodeModel m_model;
 
-  public MoveTimeSeriesOperation( final ITreeNodeModel model, final IStation target, final ITimeseries timeseries )
+  private final ITimeseries[] m_timeserieses;
+
+  public DeleteTimeseriesOperation( final ITreeNodeModel model, final ITimeseries... timeserieses )
   {
     m_model = model;
-    m_target = target;
-    m_timeseries = timeseries;
+    m_timeserieses = timeserieses;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
+
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    final ZmlLink link = m_timeseries.getDataLink();
-    final IObservation observation = link.getObservationFromPool();
+    /* Delete data files */
+    for( final ITimeseries timeseries : m_timeserieses )
+    {
+      try
+      {
+        timeseries.deleteDataFile();
+      }
+      catch( final Exception ex )
+      {
+        final String msg = String.format( "Fehler beim Löschen der ZML Zeitreihendatei, der Zeitreihe: %s", timeseries.getName() );
+        stati.add( IStatus.ERROR, msg, ex );
+      }
+    }
 
-    final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_model.getWorkspace(), m_target, new ObservationImportOperation( observation ) );
-    storeOperation.updateDataAfterFinish();
-    stati.add( storeOperation.execute( monitor ) );
+    try
+    {
+      /* Delete feature */
+      final DeleteFeatureCommand deleteCommand = new DeleteFeatureCommand( m_timeserieses );
+      m_model.postCommand( deleteCommand );
+    }
+    catch( final Exception ex )
+    {
+      final String msg = String.format( "Fehler beim Entfernen der Zeitreihen aus dem stations.gml Modell." );
+      stati.add( IStatus.ERROR, msg, ex );
+    }
 
-    final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_model, m_timeseries );
-    stati.add( deleteOperation.execute( monitor ) );
-
-    return stati.asMultiStatusOrOK( String.format( "Verschiebe Zeitreihe: %s", m_timeseries.getName() ) );
+    return stati.asMultiStatusOrOK( "Lösche Zeitreihen" );
   }
 }
