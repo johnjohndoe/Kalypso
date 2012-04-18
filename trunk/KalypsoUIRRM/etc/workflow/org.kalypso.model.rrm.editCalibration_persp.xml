@@ -23,6 +23,7 @@
 <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.gistableeditor.GttViewPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
 <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView"/>
+<viewLayoutRec closeable="false" id="org.kalypso.featureview.views.FeatureView"/>
 <layout>
 <mainWindow>
 <info folder="true" part="leftTop">
