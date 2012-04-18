@@ -56,7 +56,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
-import org.kalypso.ui.rrm.internal.timeseries.operations.CalculateEvaporationImportOpertion;
+import org.kalypso.ui.rrm.internal.timeseries.operations.ObservationImportOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
@@ -103,7 +103,7 @@ public class CalculateEvaporationWizard extends Wizard
 
       final IObservation observation = calculator.getObservation();
 
-      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_workspace, m_station, new CalculateEvaporationImportOpertion( observation ) );
+      final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_workspace, m_station, new ObservationImportOperation( observation ) );
       storeOperation.updateDataAfterFinish();
       m_timeseries = storeOperation.getTimeseries();
 

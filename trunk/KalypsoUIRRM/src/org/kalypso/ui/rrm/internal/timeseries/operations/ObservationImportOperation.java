@@ -52,12 +52,12 @@ import org.kalypso.zml.ui.imports.IStoreObservationData;
 /**
  * @author Dirk Kuch
  */
-public class CalculateEvaporationImportOpertion implements IImportTimeseriesOperation
+public class ObservationImportOperation implements IImportTimeseriesOperation
 {
 
   private final IObservation m_observation;
 
-  public CalculateEvaporationImportOpertion( final IObservation observation )
+  public ObservationImportOperation( final IObservation observation )
   {
     m_observation = observation;
   }
@@ -80,7 +80,6 @@ public class CalculateEvaporationImportOpertion implements IImportTimeseriesOper
       @Override
       public String[] getExistingTimeserieses( )
       {
-        // TODO Auto-generated method stub
         return new String[] {};
       }
     };
