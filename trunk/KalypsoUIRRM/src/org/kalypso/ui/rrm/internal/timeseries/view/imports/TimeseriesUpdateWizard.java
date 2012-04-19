@@ -70,13 +70,14 @@ public class TimeseriesUpdateWizard extends Wizard
     m_importOperation = importOperation;
     m_mergeOperation = mergeOperation;
 
-    addPage( new ImportObservationSourcePage( "sourcePage", data ) ); //$NON-NLS-1$
+    addPage( new ImportObservationSourcePage( "sourcePage", data, true ) ); //$NON-NLS-1$
+
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
     {
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new TimeseriesPropertiesComposite( station, parent, bean, binding );
+        return new TimeseriesPropertiesComposite( station, parent, bean, binding, true );
       }
     } );
   }

@@ -55,16 +55,19 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 public class TimeseriesPropertiesComposite extends FeatureBeanComposite<ITimeseries>
 {
 
-  public TimeseriesPropertiesComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding )
+  private final boolean m_readOnly;
+
+  public TimeseriesPropertiesComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean readOnly )
   {
     super( parent, featureBean, binding, true );
+    m_readOnly = readOnly;
 
     doCreateContents( station );
   }
 
   private void doCreateContents( final IStation station )
   {
-    final EditTimeseriesQualityComposite quality = new EditTimeseriesQualityComposite( this, station, getBean(), getBinding(), true );
+    final EditTimeseriesQualityComposite quality = new EditTimeseriesQualityComposite( this, station, getBean(), getBinding(), !m_readOnly );
     quality.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
 
     createPropertyTextFieldControl( ITimeseries.QN_DESCRIPTION );

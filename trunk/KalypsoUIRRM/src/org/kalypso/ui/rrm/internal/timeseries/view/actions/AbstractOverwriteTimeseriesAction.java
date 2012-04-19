@@ -100,7 +100,8 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     final ITimeseries timeseries = m_timeseries.getFeature();
     m_parameterType = timeseries.getParameterType();
 
-    return new ImportObservationData( m_parameterType );
+    final ImportObservationData data = new ImportObservationData( m_parameterType );
+    return data;
   }
 
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
@@ -113,6 +114,7 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
     data.init( settings );
+    data.setParameterType( m_parameterType );
 
     final IStation station = (IStation) m_timeseries.getFeature().getOwner();
 
