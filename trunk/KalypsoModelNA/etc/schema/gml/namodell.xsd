@@ -268,7 +268,7 @@
 					<!--
             (vsg,f5.3)(anzlayy,i5)_____(bimax,f5.1)_____(bianf,f5.1)(izkn_vers,f5.1)_____(tint,f5.1)_____(rintmx,f5.1)
           -->
-					<element name="bianf" default="0.0">
+					<element name="bianf" nillable="true" minOccurs="0">
 						<simpleType>
 							<restriction base="double">
 								<minInclusive value="0.0"/>
@@ -289,7 +289,7 @@
             (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*)
             (igwzu,*)
           -->
-					<element name="aigw" type="double" default="1.0"/>
+					<element name="aigw" type="double" nillable="true" minOccurs="0"/>
 					<!--        Retentionskonstanten       -->
 					<element name="retvs" default="2.0">
 						<simpleType>
@@ -384,8 +384,8 @@
 					<!--Zeitflächenfunktion-->
 					<element name="zft" type="zmlinline:ZmlInlineTAType"/>
 					<!--               Optimierung              -->
-					<element name="faktorAigw" type="double" minOccurs="1"/>
-					<element name="faktorRetobRetint" type="double" minOccurs="1"/>
+					<element name="faktorAigw" type="double" minOccurs="0" nillable="true" />
+					<element name="faktorRetobRetint" type="double" minOccurs="0" nillable="true"/>
 					<element name="synthZR" type="string" minOccurs="0" nillable="true"/>
 					<!-- Korrekturfaktoren (zur Kalibrierung) der Retentionskonstanten       -->
 					<element name="faktorRetvs" type="double" minOccurs="0"/>
