@@ -84,7 +84,8 @@ public class CalculationUnitPerformWidgetFace
     
     TableWrapData tableWrapData;
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapData.maxWidth = 300;
+    tableWrapData.maxWidth = 370;
+    tableWrapData.maxHeight = 280;
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
 
@@ -102,8 +103,9 @@ public class CalculationUnitPerformWidgetFace
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.maxWidth = 270;
-    tableWrapData.align = TableWrapData.FILL_GRAB;
+    tableWrapData.maxWidth = 340;
+    tableWrapData.maxHeight = 370; 
+    tableWrapData.align = TableWrapData.FILL_GRAB; 
     
     // Creates Section for "Calculation Elements Unit"
 //    final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
@@ -120,7 +122,8 @@ public class CalculationUnitPerformWidgetFace
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.maxWidth = 270;
+    tableWrapData.maxWidth = 340; 
+//    tableWrapData.maxHeight = 300;
     tableWrapData.align = TableWrapData.FILL_GRAB;
     
     // Creates Section for "Calculation Settings Unit"
