@@ -133,9 +133,6 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewMeteorologicalStationAction( m_model, group ) );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new NewHydrologicalStationAction( m_model, group ) );
 
-    if( m_station instanceof IMeteorologicalStation )
-      ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new CalculateEvaporationAction( m_model, m_station ) );
-
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new ImportTimeseriesAction( m_model, m_station, null ) );
 
     /* Delete timeseries */
@@ -146,9 +143,8 @@ public class StationUiHandler extends AbstractTreeNodeUiHandler
     final IAction deleteAction = new DeleteTimeseriesAction( m_model, deleteMessage, allTimeseries );
     ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteAction );
 
-// /* Delete station */
-// final IAction deleteStationAction = new DeleteStationAction( m_model, m_station );
-// ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, deleteStationAction );
+    if( m_station instanceof IMeteorologicalStation )
+      ActionHyperlink.createHyperlink( toolkit, actionPanel, SWT.PUSH, new CalculateEvaporationAction( m_model, m_station ) );
   }
 
 }
