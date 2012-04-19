@@ -6,7 +6,6 @@
       <tm:class>org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation</tm:class>
       <tm:parameterType>N</tm:parameterType>
       <tm:parameterType>T</tm:parameterType>
-      <tm:parameterType>v</tm:parameterType>
       <tm:parameterType>MEAN_WIND_VELOCITY</tm:parameterType>
       <tm:parameterType>H_SUNSHINE</tm:parameterType>
       <tm:parameterType>MEAN_TEMPERATURE</tm:parameterType>

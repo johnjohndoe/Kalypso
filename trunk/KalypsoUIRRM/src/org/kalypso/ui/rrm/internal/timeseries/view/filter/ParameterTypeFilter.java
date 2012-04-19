@@ -90,8 +90,9 @@ public class ParameterTypeFilter extends ViewerFilter
     if( adapter instanceof ITimeseries )
     {
       final ITimeseries timeseries = (ITimeseries) adapter;
+      final String parameterType = timeseries.getParameterType();
 
-      return StringUtils.equalsIgnoreCase( timeseries.getParameterType(), type );
+      return StringUtils.equalsIgnoreCase( parameterType, type );
     }
     else
     {
