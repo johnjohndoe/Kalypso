@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
@@ -64,7 +65,7 @@ public class TimeseriesUpdateWizard extends Wizard
 
   private final IMergeTimeseriesOperation m_mergeOperation;
 
-  public TimeseriesUpdateWizard( final ImportTimeseriesOperation importOperation, final IMergeTimeseriesOperation mergeOperation, final ImportObservationData data, final TimeseriesBean bean )
+  public TimeseriesUpdateWizard( final IStation station, final ImportTimeseriesOperation importOperation, final IMergeTimeseriesOperation mergeOperation, final ImportObservationData data, final TimeseriesBean bean )
   {
     m_importOperation = importOperation;
     m_mergeOperation = mergeOperation;
@@ -75,7 +76,7 @@ public class TimeseriesUpdateWizard extends Wizard
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new TimeseriesNewComposite( parent, bean, binding );
+        return new TimeseriesNewComposite( station, parent, bean, binding );
       }
     } );
   }

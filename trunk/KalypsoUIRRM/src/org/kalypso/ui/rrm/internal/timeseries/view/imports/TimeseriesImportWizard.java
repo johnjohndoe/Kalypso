@@ -88,7 +88,7 @@ public class TimeseriesImportWizard extends Wizard
       @Override
       protected Control createFeatureBeanControl( final Composite parent, final IDataBinding binding )
       {
-        return new TimeseriesNewComposite( parent, bean, binding );
+        return new TimeseriesNewComposite( m_station, parent, bean, binding );
       }
     } );
   }

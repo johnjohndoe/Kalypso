@@ -66,32 +66,49 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  */
 public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimeseries>
 {
-  public EditTimeseriesQualityComposite( final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean editable )
+
+  public EditTimeseriesQualityComposite( final Composite parent, final IStation station, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding, final boolean editable )
   {
     super( parent, featureBean, binding, editable );
+
+    doCreateContents( station );
   }
 
   @Override
   protected void createContents( )
   {
-    final FeatureBean<ITimeseries> bean = getBean();
-    final ITimeseries timeseries = bean.getFeature();
 
-    final String[] stationQualities = getQualities( timeseries.getStation(), timeseries.getParameterType() );
-    final String[] textCompletionQualities = findQualities( timeseries.getStation(), timeseries.getParameterType(), stationQualities );
+  }
 
-    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString("EditTimeseriesQualityComposite_0") ); //$NON-NLS-1$
-    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( stationQualities, timeseries.getQuality(), IStatus.ERROR, Messages.getString("EditTimeseriesQualityComposite_1") ); //$NON-NLS-1$
+  protected void doCreateContents( final IStation station )
+  {
+    final String[] stationQualities = getQualities( station );
+    final String[] textCompletionQualities = findQualities( station, stationQualities );
+
+    final StringFilenameValidator filenameValidator = new StringFilenameValidator( IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_0" ) ); //$NON-NLS-1$
+    final FileNameIsUniqueValidator uniqueValudator = new FileNameIsUniqueValidator( stationQualities, getQuality(), IStatus.ERROR, Messages.getString( "EditTimeseriesQualityComposite_1" ) ); //$NON-NLS-1$
 
     final MultiValidator validator = new MultiValidator( filenameValidator, uniqueValudator );
 
     createPropertyComboTextControl( ITimeseries.PROPERTY_QUALITY, textCompletionQualities, validator );
+
+    this.layout();
+  }
+
+  private String getQuality( )
+  {
+    final FeatureBean<ITimeseries> bean = getBean();
+    final ITimeseries timeseries = bean.getFeature();
+    if( Objects.isNull( timeseries ) )
+      return StringUtils.EMPTY;
+
+    return timeseries.getQuality();
   }
 
   /**
    * @return possible existing qualities used for editing text completion
    */
-  private String[] findQualities( final IStation current, final String parameterType, final String[] stationQualities )
+  private String[] findQualities( final IStation current, final String[] stationQualities )
   {
     final Feature parent = current.getOwner();
     if( !(parent instanceof IStationCollection) )
@@ -106,7 +123,7 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
       if( Objects.equal( station, current ) )
         continue;
 
-      final String[] qualities = getQualities( station, parameterType );
+      final String[] qualities = getQualities( station );
       for( final String quality : qualities )
       {
         if( notExists( stationQualities, quality ) )
@@ -128,16 +145,13 @@ public class EditTimeseriesQualityComposite extends FeatureBeanComposite<ITimese
     return true;
   }
 
-  private String[] getQualities( final IStation station, final String parameterType )
+  private String[] getQualities( final IStation station )
   {
     final Set<String> qualities = new LinkedHashSet<>();
 
     final IFeatureBindingCollection<ITimeseries> timeserieses = station.getTimeseries();
     for( final ITimeseries ts : timeserieses )
     {
-      if( !StringUtils.equals( parameterType, ts.getParameterType() ) )
-        continue;
-
       final String quality = ts.getQuality();
       if( StringUtils.isNotEmpty( quality ) )
         qualities.add( quality );

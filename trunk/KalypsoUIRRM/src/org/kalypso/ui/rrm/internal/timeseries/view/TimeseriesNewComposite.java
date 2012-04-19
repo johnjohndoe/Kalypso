@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ui.rrm.internal.timeseries.view.edit.EditTimeseriesQualityComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
@@ -51,14 +54,24 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
  */
 public class TimeseriesNewComposite extends FeatureBeanComposite<ITimeseries>
 {
-  public TimeseriesNewComposite( final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding )
+
+  public TimeseriesNewComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding )
   {
     super( parent, featureBean, binding, true );
+
+    doCreateContents( station );
+  }
+
+  private void doCreateContents( final IStation station )
+  {
+    final EditTimeseriesQualityComposite quality = new EditTimeseriesQualityComposite( this, station, getBean(), getBinding(), true );
+    quality.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
+
+    this.layout();
   }
 
   @Override
   protected void createContents( )
   {
-    createPropertyTextFieldControl( ITimeseries.PROPERTY_QUALITY );
   }
 }
