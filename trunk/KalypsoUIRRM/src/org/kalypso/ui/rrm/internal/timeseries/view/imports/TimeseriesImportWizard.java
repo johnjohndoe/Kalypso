@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.imports;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -57,6 +60,7 @@ import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperatio
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
+import org.kalypso.zml.ui.imports.IImportObservationSourceChangedListener;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 import org.kalypso.zml.ui.imports.ImportObservationSourcePage;
 
@@ -69,7 +73,7 @@ public class TimeseriesImportWizard extends Wizard
 
   private final CommandableWorkspace m_workspace;
 
-  private final IStation m_station;
+  protected final IStation m_station;
 
   private final TimeseriesBean m_bean;
 
@@ -82,7 +86,23 @@ public class TimeseriesImportWizard extends Wizard
     m_workspace = workspace;
     m_station = station;
 
-    addPage( new ImportObservationSourcePage( "sourcePage", data ) ); //$NON-NLS-1$
+    final ImportObservationSourcePage importPage = new ImportObservationSourcePage( "sourcePage", data );
+    importPage.addListener( new IImportObservationSourceChangedListener()
+    {
+      @Override
+      public void sourceFileChanged( final File file )
+      {
+        String description = "";
+        if( Objects.isNotNull( file ) )
+        {
+          description = String.format( "Quelle: %s", file.getAbsolutePath() );
+        }
+
+        bean.setProperty( ITimeseries.QN_DESCRIPTION, description );
+      }
+    } );
+
+    addPage( importPage ); //$NON-NLS-1$
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
     {
       @Override
@@ -91,6 +111,7 @@ public class TimeseriesImportWizard extends Wizard
         return new TimeseriesPropertiesComposite( m_station, parent, bean, binding );
       }
     } );
+
   }
 
   @Override
