@@ -110,7 +110,7 @@ public class SourceMappingComposite extends Composite
 
   private static final String EMPTY_KEY = Messages.getString( "SourceMappingComposite_0" ); //$NON-NLS-1$
 
-  private static final String NULL_KEY = "-NULL-"; //$NON-NLS-1$
+  private static final String NULL_KEY = Messages.getString( "SourceMappingComposite_1" ); //$NON-NLS-1$
 
   private final Map<ComboViewer, IValuePropertyType> m_combos = new HashMap<ComboViewer, IValuePropertyType>();
 

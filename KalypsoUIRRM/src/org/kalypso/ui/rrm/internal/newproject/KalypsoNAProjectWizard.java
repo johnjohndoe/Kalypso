@@ -228,7 +228,6 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     final IFeatureType hydrotopeFT = GMLSchemaUtilities.getFeatureTypeQuiet( IHydrotope.QNAME );
 
     final IValuePropertyType propName = (IValuePropertyType) hydrotopeFT.getProperty( Feature.QN_NAME );
-    final IValuePropertyType propDescription = (IValuePropertyType) hydrotopeFT.getProperty( Feature.QN_DESCRIPTION );
 
     final IValuePropertyType propLanduse = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_LANDUSE );
     final IValuePropertyType propSoiltype = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_SOILTYPE );
@@ -236,7 +235,7 @@ public class KalypsoNAProjectWizard extends NewProjectWizard
     final IValuePropertyType propMaxPerk = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_M_PERKM );
     final IValuePropertyType propMF1GWS = (IValuePropertyType) hydrotopeFT.getProperty( IHydrotope.PROPERTY_M_F1GWS );
 
-    final IValuePropertyType[] ftps = new IValuePropertyType[] { propName, propDescription, propLanduse, propSoiltype, propCorrSealing, propMaxPerk, propMF1GWS };
+    final IValuePropertyType[] ftps = new IValuePropertyType[] { propName, propLanduse, propSoiltype, propCorrSealing, propMaxPerk, propMF1GWS };
 
     return new KalypsoNAMappingData( new ShapeType[] { ShapeType.POLYGON, ShapeType.POLYGONZ }, hydrotopeFT, ftps );
   }
