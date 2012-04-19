@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
+import org.kalypso.model.wspm.tuhh.core.wspwin.calc.TuhhCalcEnergylossWriter;
 import org.kalypso.model.wspm.tuhh.core.wspwin.calc.TuhhCalcZustandWriter;
 import org.kalypso.wspwin.core.WspWinHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -85,7 +86,7 @@ public final class WspWinExporter
 
   /**
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
-   *
+   * 
    * @param context
    *          Context to resolve links inside the gml structure.
    */
@@ -97,6 +98,7 @@ public final class WspWinExporter
     final File batFile = new File( dir, "kalypso-1D.ini" ); //$NON-NLS-1$
     final File zustFile = new File( profDir, "zustand.001" ); //$NON-NLS-1$
     final File qwtFile = new File( profDir, "qwert.001" ); //$NON-NLS-1$
+    final File psiFile = new File( profDir, "zustand.psi" ); //$NON-NLS-1$
     profDir.mkdirs();
     // TODO: what is the purpose of the psi file? energy loss? -> implement it
     // final File psiFile = new File( profDir, "zustand.psi" ); //$NON-NLS-1$
@@ -113,7 +115,9 @@ public final class WspWinExporter
 
     final TuhhStationRange stationRange = new TuhhStationRange( calculation );
 
-    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile, stationRange );
+    write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile,psiFile, stationRange );
+
+    write1DTuhhEnergyloss( calculation, stationRange, psiFile );
 
     write1DTuhhZustand( calculation, stationRange, zustFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
@@ -181,7 +185,7 @@ public final class WspWinExporter
     return runoffName.replaceAll( "( |,|\\.)", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile, final TuhhStationRange stationRange ) throws IOException
+  private static void write1DTuhhSteuerparameter( final TuhhCalculation calculation, final File batFile, final File zustFile, final File qwtFile, final File psiFile,final TuhhStationRange stationRange ) throws IOException
   {
     final MODE calcMode = calculation.getCalcMode();
 
@@ -267,7 +271,7 @@ public final class WspWinExporter
       pw.format( "ABFLUSSEREIGNIS=%s%n", qwtFile.getName() ); //$NON-NLS-1$
 
       pw.format( "%n" ); //$NON-NLS-1$
-      pw.format( "EINZELVERLUSTE=%s%n", "TODO" ); //$NON-NLS-1$ //$NON-NLS-2$
+      pw.format( "EINZELVERLUSTE=%s%n", psiFile.getName() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       pw.format( "%n" ); //$NON-NLS-1$
       final Double minQ = calculation.getMinQ();
@@ -303,6 +307,12 @@ public final class WspWinExporter
       }
     }
 
+  }
+
+  private static void write1DTuhhEnergyloss( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File psiFile ) throws IOException
+  {
+    final TuhhCalcEnergylossWriter energylossWriter = new TuhhCalcEnergylossWriter( calculation.getReach(),stationRange );
+    energylossWriter.write( psiFile );
   }
 
   private static void write1DTuhhZustand( final TuhhCalculation calculation, final TuhhStationRange stationRange, final File zustFile ) throws IOException

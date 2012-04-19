@@ -188,6 +188,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   String LAYER_SINUOSITAET = PROFILE_LAYER + "SINUOSITAET"; //$NON-NLS-1$
 
+  String LAYER_ENERGYLOSS = PROFILE_LAYER + "ENERGYLOSS"; //$NON-NLS-1$
+
 //  String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
 
   String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
