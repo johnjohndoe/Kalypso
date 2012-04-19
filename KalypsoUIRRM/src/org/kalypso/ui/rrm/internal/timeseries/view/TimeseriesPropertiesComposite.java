@@ -50,12 +50,12 @@ import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanComposite;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class TimeseriesNewComposite extends FeatureBeanComposite<ITimeseries>
+public class TimeseriesPropertiesComposite extends FeatureBeanComposite<ITimeseries>
 {
 
-  public TimeseriesNewComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding )
+  public TimeseriesPropertiesComposite( final IStation station, final Composite parent, final FeatureBean<ITimeseries> featureBean, final IDataBinding binding )
   {
     super( parent, featureBean, binding, true );
 
@@ -67,11 +67,14 @@ public class TimeseriesNewComposite extends FeatureBeanComposite<ITimeseries>
     final EditTimeseriesQualityComposite quality = new EditTimeseriesQualityComposite( this, station, getBean(), getBinding(), true );
     quality.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
 
+    createPropertyTextFieldControl( ITimeseries.QN_DESCRIPTION );
+
     this.layout();
   }
 
   @Override
   protected void createContents( )
   {
+    // nothing to do
   }
 }

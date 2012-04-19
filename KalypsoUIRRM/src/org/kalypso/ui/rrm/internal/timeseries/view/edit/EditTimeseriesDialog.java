@@ -66,6 +66,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 
@@ -169,9 +170,14 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     final ITimeseries timeseries = m_timeseries.getFeature();
     final IStation station = (IStation) timeseries.getOwner();
 
-    final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( controlSection, station, m_timeseries, m_binding, true );
+// final EditTimeseriesQualityComposite editQuantity = new EditTimeseriesQualityComposite( controlSection, station,
+// m_timeseries, m_binding, true );
 // editQuantity.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    controlSection.setClient( editQuantity );
+
+    final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding );
+    properties.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    controlSection.setClient( properties );
 
     return super.createDialogArea( parent );
   }

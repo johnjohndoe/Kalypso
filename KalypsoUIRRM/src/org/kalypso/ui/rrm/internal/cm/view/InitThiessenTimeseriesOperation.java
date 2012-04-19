@@ -53,11 +53,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -192,9 +192,7 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
     newThiessenStation.setStation( href );
 
     /* Copy properties from station and timeseries, it is hard to access them via gtt and gmt templates */
-    final String timestepText = PeriodUtils.formatDefault( timeseries.getTimestep() );
-    final String description = String.format( "%s (%s)", station.getDescription(), timestepText ); //$NON-NLS-1$
-    newThiessenStation.setDescription( description );
+    newThiessenStation.setDescription( Timeserieses.toLinkLabel( timeseries ) );
     newThiessenStation.setName( station.getDescription() );
     newThiessenStation.setStationLocation( station.getStationLocation() );
   }
