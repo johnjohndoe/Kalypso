@@ -100,7 +100,7 @@ public class TimeseriesImportWorker
       final IObservation resultObservation = removeMissingValues( observation, valueAxis );
 
       final TIMESERIES_TYPE type = TimeseriesUtils.getType( valueAxis.getType() );
-      if( TIMESERIES_TYPE.eCurrentValue.equals( type ) )
+      if( TIMESERIES_TYPE.eInstantaneousValue.equals( type ) )
       {
         final ZmlInterpolationWorker interpolation = new ZmlInterpolationWorker( resultObservation.getValues( null ), resultObservation.getMetadataList(), valueAxis );
         interpolation.execute( new NullProgressMonitor() );

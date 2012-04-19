@@ -42,7 +42,6 @@ package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
@@ -57,7 +56,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView;
 public class ExpandAllTreeItemsHandler extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
