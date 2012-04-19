@@ -61,6 +61,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -224,16 +225,21 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
 
   private String toLabel( final ITimeseries timeseries )
   {
-    final String station = timeseries.getDescription();
+    final Feature owner = timeseries.getOwner();
+
     final String type = timeseries.getParameterType();
     final Period timestep = timeseries.getTimestep();
     final String quality = timeseries.getQuality();
 
     final StringBuffer buffer = new StringBuffer();
 
-    if( StringUtils.isNotEmpty( station ) )
+    if( owner instanceof IStation )
     {
-      buffer.append( String.format( Messages.getString( "ChooseZmlLinkFeatureViewControl_3" ), station ) ); //$NON-NLS-1$
+      final IStation station = (IStation) owner;
+      final String label = station.getDescription();
+
+      if( StringUtils.isNotEmpty( label ) )
+        buffer.append( String.format( Messages.getString( "ChooseZmlLinkFeatureViewControl_3" ), label ) ); //$NON-NLS-1$
     }
 
     if( Objects.isNotNull( timestep ) )
