@@ -185,7 +185,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     m_labelDateRangeTo.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_labelDateRangeTo.setText( "" );
 
-    final String tooltip = "Berechnungszeitraum wurde automatisch auf Grundlage der gewählten Zeitreihen ermittelt.\nDer ermittelte Berechnungszeitraum ist der gemeinsame Zeitraum aller gewählten Zeitreihen (Schnittmenge).";
+    final String tooltip = "Der Berechnungszeitraum ist der gemeinsame Zeitraum aller zugewiesener Zeitreihen.";
     groupDateRange.setToolTipText( tooltip );
     start.setToolTipText( tooltip );
     m_labelDateRangeFrom.setToolTipText( tooltip );

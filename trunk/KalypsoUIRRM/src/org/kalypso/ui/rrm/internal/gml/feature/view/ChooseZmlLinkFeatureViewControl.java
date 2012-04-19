@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.gml.feature.view;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
@@ -55,23 +54,20 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.gml.feature.view.dialogs.ChooseTimeseriesDialog;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -120,34 +116,19 @@ public class ChooseZmlLinkFeatureViewControl extends AbstractFeatureControl
           return;
         }
 
-        final ChooseTimeseriesDialog dialog = new ChooseTimeseriesDialog( button.getShell(), workspace, collection, m_parameterType );
+        final ChooseTimeseriesDialog dialog = new ChooseTimeseriesDialog( ChooseZmlLinkFeatureViewControl.this, button.getShell(), workspace, collection, m_parameterType );
         dialog.setSelection( getTimeseries() );
+        dialog.open();
 
-        if( dialog.open() == Window.OK )
-        {
-          final ITimeseries selection = dialog.getSelection();
-          doSelectionChanged( selection );
-        }
+        final ICommand command = dialog.getCommand();
+        if( Objects.isNotNull( command ) )
+          fireFeatureChange( command );
       }
-
     } );
 
     updateControl();
 
     return body;
-  }
-
-  protected void doSelectionChanged( final ITimeseries selection )
-  {
-    final ZmlLink link = selection.getDataLink();
-
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-
-    final FeatureChange change = new FeatureChange( feature, getFeatureTypeProperty(), link.getTimeseriesLink() );
-    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
-
-    fireFeatureChange( command );
   }
 
   protected CommandableWorkspace getStationsWorkspace( )

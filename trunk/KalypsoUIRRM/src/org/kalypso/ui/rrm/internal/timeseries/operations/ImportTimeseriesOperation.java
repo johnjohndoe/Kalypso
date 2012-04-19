@@ -126,7 +126,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     final IStatus timestampStatus = timestampOperation.execute( monitor );
     stati.add( timestampStatus );
     if( IStatus.ERROR == timestampStatus.getSeverity() )
-      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_3" ) ); //$NON-NLS-1$    
+      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_3" ) ); //$NON-NLS-1$
 
     /* Set the timestamp. */
     m_timestamp = timestampOperation.getTimestamp();
@@ -178,7 +178,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
       if( ruecksprung.hasRuecksprung() )
       {
-
         final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "dd.MM.yyyy HH:mm:ss" ) );
         final TimeZone timezone = MetadataHelper.getTimeZone( observation.getMetadataList(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
         sdf.setTimeZone( timezone );

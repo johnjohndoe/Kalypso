@@ -42,6 +42,7 @@ package org.kalypso.ui.rrm.internal.gml.feature.view.dialogs;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -66,6 +67,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTrayDialog;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -73,7 +75,11 @@ import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.StationsByStationsStrategy;
@@ -88,6 +94,8 @@ import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
@@ -112,9 +120,18 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
 
   private TreeNodeModel m_model;
 
-  public ChooseTimeseriesDialog( final Shell shell, final CommandableWorkspace workspace, final IStationCollection collection, final String parameterType )
+  private Button m_reset;
+
+  private static final int BUTTON_RESET_ID = 5000;
+
+  private final IFeatureControl m_control;
+
+  private ChangeFeaturesCommand m_command;
+
+  public ChooseTimeseriesDialog( final IFeatureControl control, final Shell shell, final CommandableWorkspace workspace, final IStationCollection collection, final String parameterType )
   {
     super( shell );
+    m_control = control;
     m_workspace = workspace;
     m_collection = collection;
     m_parameterType = parameterType;
@@ -122,6 +139,60 @@ public class ChooseTimeseriesDialog extends EnhancedTrayDialog
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     setHelpAvailable( false );
     setDialogHelpAvailable( false );
+  }
+
+  @Override
+  protected void createButtonsForButtonBar( final Composite parent )
+  {
+    m_reset = createButton( parent, BUTTON_RESET_ID, "Verknüpfung löschen", false );
+
+    createButton( parent, 5010, "", false ).setVisible( false );
+
+    createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
+    createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false );
+  }
+
+  @Override
+  protected void buttonPressed( final int buttonId )
+  {
+    if( buttonId == BUTTON_RESET_ID )
+      resetPressed();
+
+    super.buttonPressed( buttonId );
+  }
+
+  private void resetPressed( )
+  {
+    final ITimeseries selection = getSelection();
+    final ZmlLink link = selection.getDataLink();
+
+    final Feature feature = m_control.getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    final FeatureChange change = new FeatureChange( feature, m_control.getFeatureTypeProperty(), null );
+    m_command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+
+    super.okPressed();
+  }
+
+  @Override
+  protected void okPressed( )
+  {
+    final ITimeseries selection = getSelection();
+    final ZmlLink link = selection.getDataLink();
+
+    final Feature feature = m_control.getFeature();
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    final FeatureChange change = new FeatureChange( feature, m_control.getFeatureTypeProperty(), link.getTimeseriesLink() );
+    m_command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+
+    super.okPressed();
+  }
+
+  public ICommand getCommand( )
+  {
+    return m_command;
   }
 
   @Override
