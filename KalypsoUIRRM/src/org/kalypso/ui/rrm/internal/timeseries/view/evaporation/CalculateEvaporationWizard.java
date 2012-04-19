@@ -105,13 +105,14 @@ public class CalculateEvaporationWizard extends Wizard
 
       final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( new TimeseriesBean(), m_workspace, m_station, new ObservationImportOperation( observation ) );
       storeOperation.updateDataAfterFinish();
-      m_timeseries = storeOperation.getTimeseries();
 
       final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
       if( !status2.isOK() )
       {
         StatusDialog.open( getShell(), status2, getWindowTitle() );
       }
+
+      m_timeseries = storeOperation.getTimeseries();
 
       // FIXME better error handling
       return status.isOK() && status2.isOK();

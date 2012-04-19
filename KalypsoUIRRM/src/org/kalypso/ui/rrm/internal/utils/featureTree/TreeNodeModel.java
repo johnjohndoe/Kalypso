@@ -59,7 +59,7 @@ public class TreeNodeModel implements ITreeNodeModel
 
   private final CommandableWorkspace m_workspace;
 
-  private final TreeViewer m_viewer;
+  final TreeViewer m_viewer;
 
   private final ITreeNodeStrategy m_strategy;
 
@@ -123,12 +123,12 @@ public class TreeNodeModel implements ITreeNodeModel
   @Override
   public void refreshTree( final Object treeDataToSelect )
   {
-    clear();
     m_viewer.refresh();
 
     /** set selection */
     final TreeNode node = findNode( treeDataToSelect );
-    setSelection( node );
+    if( Objects.isNotNull( node ) )
+      setSelection( node );
   }
 
   private TreeNode[] convert( final TreeNode[] others )
