@@ -78,6 +78,7 @@ class CalculationUnitWidgetFace
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
+    tableWrapData.maxHeight = 380; 
     calculationUnitSection.setLayoutData( tableWrapData );
     calculationUnitSection.setExpanded( true );
 
@@ -87,6 +88,7 @@ class CalculationUnitWidgetFace
     tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
+    tableWrapData.maxHeight = 470; 
     calculationSettingsSection.setLayoutData( tableWrapData );
     calculationSettingsSection.setExpanded( true );
 
