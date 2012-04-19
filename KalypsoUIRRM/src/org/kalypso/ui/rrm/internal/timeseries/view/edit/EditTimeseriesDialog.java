@@ -174,7 +174,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
 // m_timeseries, m_binding, true );
 // editQuantity.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding );
+    final TimeseriesPropertiesComposite properties = new TimeseriesPropertiesComposite( station, controlSection, m_timeseries, m_binding, false );
     properties.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     controlSection.setClient( properties );
