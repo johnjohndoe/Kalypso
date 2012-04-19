@@ -45,11 +45,13 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
@@ -102,28 +104,33 @@ public class TimeseriesImportWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
+    final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
     saveSettings();
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, m_importOperation );
-    if( !status.isOK() )
+    stati.add( RunnableContextHelper.execute( getContainer(), true, false, m_importOperation ) );
+    if( stati.matches( IStatus.ERROR ) )
     {
-      StatusDialog.open( getShell(), status, getWindowTitle() );
-      if( status.matches( IStatus.ERROR ) )
-        return true;
+      doShowStatusDialog( stati );
+      return false;
     }
 
     final StoreTimeseriesOperation storeOperation = new StoreTimeseriesOperation( m_bean, m_workspace, m_station, m_importOperation );
     storeOperation.updateDataAfterFinish();
 
-    final IStatus status2 = RunnableContextHelper.execute( getContainer(), true, false, storeOperation );
-    if( !status2.isOK() )
-      StatusDialog.open( getShell(), status2, getWindowTitle() );
-    else
-      StatusDialog.open( getShell(), status, getWindowTitle() );
-
+    stati.add( RunnableContextHelper.execute( getContainer(), true, false, storeOperation ) );
     m_timeseries = storeOperation.getTimeseries();
 
-    return !status.matches( IStatus.ERROR ) && !status2.matches( IStatus.ERROR );
+    doShowStatusDialog( stati );
+
+    return !stati.matches( IStatus.ERROR );
+  }
+
+  private void doShowStatusDialog( final StatusCollector stati )
+  {
+    final IStatus status = stati.asMultiStatus( "Zeitreihen-Import" );
+
+    final StatusDialog dialog = new StatusDialog( getShell(), status, "Zeitreihen-Import" );
+    dialog.open();
   }
 
   private void saveSettings( )
