@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.core.status.tree.StatusDialog;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -93,7 +93,7 @@ public class CalculateEvaporationAction extends Action
     final IStatus status = canCalculateEvaporation();
     if( !status.isOK() )
     {
-      final StatusDialog dialog = new StatusDialog( shell, "Berechnung Verdunstung", status );
+      final StatusDialog dialog = new StatusDialog( shell, status, "Berechnung Verdunstung" );
       dialog.open();
 
       return;
@@ -134,15 +134,15 @@ public class CalculateEvaporationAction extends Action
     final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
 
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
-      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Luftfeuchte fehlt." );
+      stati.add( IStatus.WARNING, "Zeitreihe Mittlere Luftfeuchte fehlt." );
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
-      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Temperatur Zeitreihe fehlt." );
+      stati.add( IStatus.WARNING, "Zeitreihe Mittlere Temperatur fehlt." );
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) )
-      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Mittlere Windgeschwindigkeit fehlt." );
+      stati.add( IStatus.WARNING, "Zeitreihe  Windgeschwindigkeit fehlt." );
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
-      stati.add( IStatus.ERROR, "Fehlende Stationszeitreihe - Sonnenscheindauer Zeitreihe fehlt." );
+      stati.add( IStatus.WARNING, "Zeitreihe Sonnenscheindauer fehlt." );
 
-    return stati.asMultiStatusOrOK( "Überprüfung Eingangsdaten" );
+    return stati.asMultiStatusOrOK( "Bei der Überprüfung der Eingangsdaten wurde festgellt, dass Eingangsdaten fehlen. Bitte fügen Sie die fehlenden Eingangsdaten zur Station hinzu." );
   }
 
 }
