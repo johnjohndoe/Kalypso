@@ -93,23 +93,6 @@
       <valueAxis>Q</valueAxis>
     </DataColumn>
 
-    <!-- ombrometer selection -->
-    <DataColumn editable="true" id="N" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Niederschlag</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#nBaseCellStyle</url>
-      </defaultCellStyle>
-
-      <ruleSetReference>warnings</ruleSetReference>
-      <ruleSetReference>dataSource</ruleSetReference>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>N</valueAxis>
-    </DataColumn>
-
     <!-- Volumen -->
     <DataColumn editable="true" id="V" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Volumen</property>
@@ -196,24 +179,6 @@
     </DataColumn>
 
 
-    <!-- Evaporation -->
-    <DataColumn editable="true" id="E" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Verdunstung</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
-      </defaultCellStyle>
-
-      <ruleSetReference>warnings</ruleSetReference>
-      <ruleSetReference>dataSource</ruleSetReference>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>E</valueAxis>
-    </DataColumn>
-
-
     <!-- mean humidity -->
     <DataColumn editable="true" id="MEAN_HUMIDITY" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Mittlere Luftfeuchte</property>
@@ -281,58 +246,6 @@
 
       <indexAxis>date</indexAxis>
       <valueAxis>MEAN_WIND_VELOCITY</valueAxis>
-    </DataColumn>
-
-
-    <!-- mean rainfall -->
-    <DataColumn editable="true" id="MEAN_RAINFALL" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Mittlerer Niederschlag</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
-      </defaultCellStyle>
-
-      <ruleSetReference>warnings</ruleSetReference>
-      <ruleSetReference>dataSource</ruleSetReference>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>MEAN_RAINFALL</valueAxis>
-    </DataColumn>
-
-    <!-- mean evaporation -->
-    <DataColumn editable="true" id="E_LAND" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Mittlere Grasverdunstung</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
-      </defaultCellStyle>
-
-      <ruleSetReference>warnings</ruleSetReference>
-      <ruleSetReference>dataSource</ruleSetReference>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>E_LAND</valueAxis>
-    </DataColumn>
-    
-    <!-- mean evaporation -->
-    <DataColumn editable="true" id="E_WATER" metadataSource="true" tooltip="true" wrapText="true">
-      <property name="label">Mittlere Seeverdunstung</property>
-      <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
-      <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
-      <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
-      </defaultCellStyle>
-
-      <ruleSetReference>warnings</ruleSetReference>
-      <ruleSetReference>dataSource</ruleSetReference>
-
-      <indexAxis>date</indexAxis>
-      <valueAxis>E_WATER</valueAxis>
     </DataColumn>
 
   </Columns>
