@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -195,6 +196,20 @@ public final class TuhhLayersAdder
 
     changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { sinObj } );
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4" ), profil, changes, true ); //$NON-NLS-1$
+    new ProfilOperationJob( operation ).schedule();
+
+  }
+
+  public static void addEnergylossLayer( final IProfil profil )
+  {
+    final IProfilChange[] changes = new IProfilChange[1];
+
+    final EnergylossProfileObject elpoObj = new EnergylossProfileObject();
+  //  final IRecord record = elpoObj.getObservation().getResult().createRecord();
+  //  elpoObj.getObservation().getResult().add( record );
+
+    changes[0] = new ProfileObjectAdd( profil, new IProfileObject[] { elpoObj } );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.8" ), profil, changes, true ); //$NON-NLS-1$
     new ProfilOperationJob( operation ).schedule();
 
   }

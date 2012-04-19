@@ -56,9 +56,11 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.IProfileBuilding;
+import org.kalypso.model.wspm.tuhh.core.profile.energyloss.IEnergylossProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.ISinuositaetProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.core.results.IWspmResultNode;
+import org.kalypso.model.wspm.tuhh.ui.chart.layers.EnergylossLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.PointMarkerLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RiverChannelLayer;
 import org.kalypso.model.wspm.tuhh.ui.chart.layers.RoughnessLayer;
@@ -194,6 +196,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     {
       TuhhLayersAdder.addSinuositaetLayer( profil );
     }
+    else if( layerId.equals( IWspmTuhhConstants.LAYER_ENERGYLOSS ) )
+    {
+      TuhhLayersAdder.addEnergylossLayer( profil );
+    }
     if( layerId.equals( IWspmTuhhConstants.LAYER_COMMENT ) )
     {
       TuhhLayersAdder.addCommentLayer( provider, profil );
@@ -254,6 +260,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
       return new BuildingTubesTheme( profil, cmLeft, m_styleProvider );
     else if( layerID.equals( IWspmTuhhConstants.LAYER_SINUOSITAET ) )
       return new SinuositaetLayer( profil );
+    else if( layerID.equals( IWspmTuhhConstants.LAYER_ENERGYLOSS ) )
+      return new EnergylossLayer( profil );
     else if( layerID.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
       final PointMarkerLayer dbLayer = new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_styleProvider, 5, true );
@@ -319,7 +327,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     {
       layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_SINUOSITAET ) );
     }
-
+    /** energyloss profile layer */
+    final IEnergylossProfileObject[] elpo = profile.getProfileObjects( IEnergylossProfileObject.class );
+    if( ArrayUtils.isNotEmpty( elpo ) )
+    {
+      layersToAdd.add( createLayer( profile, IWspmTuhhConstants.LAYER_ENERGYLOSS) );
+    }
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_COMMENT ) != null )
       layersToAdd.add( createLayer( profile, IWspmConstants.LAYER_COMMENT ) );
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_CODE ) != null )
@@ -394,7 +407,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider, IWspmTuhhC
     {
       addableLayer.add( new LayerDescriptor( Messages.getString( "ProfilLayerProviderTuhh.3" ), IWspmTuhhConstants.LAYER_SINUOSITAET ) ); //$NON-NLS-1$
     }
-
+    final IEnergylossProfileObject[] elpo = profile.getProfileObjects( IEnergylossProfileObject.class );
+    if( elpo.length < 1 && !existingLayers.contains( IWspmTuhhConstants.LAYER_ENERGYLOSS) )
+    {
+      addableLayer.add( new LayerDescriptor( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.7" ), IWspmTuhhConstants.LAYER_ENERGYLOSS) ); //$NON-NLS-1$
+    }
     return addableLayer.toArray( new LayerDescriptor[addableLayer.size()] );
   }
 

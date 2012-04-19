@@ -154,5 +154,9 @@
             id="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#SINUOSITAET"
             provider="org.kalypso.model.wspm.tuhh.core.profile.sinuositaet.SinuositaetProfileObjectProvider">
       </objectProvider>
+      <objectProvider
+            id="urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#ENERGYLOSS"
+            provider="org.kalypso.model.wspm.tuhh.core.profile.energyloss.EnergylossProfileObjectProvider">
+      </objectProvider>
    </extension>
  </plugin>
