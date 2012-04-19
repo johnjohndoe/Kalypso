@@ -108,13 +108,13 @@ public class EditTimeseriesAction extends Action
         final ICommand command = m_timeseries.applyChanges();
         if( Objects.isNotNull( command ) )
           m_workspace.postCommand( command );
-      }
 
-      // quality changed? so rename zml file!
-      if( !IOCase.SYSTEM.checkEquals( oldQuality, m_timeseries.getFeature().getQuality() ) )
-      {
-        final IFile target = link.getFile();
-        oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
+        // quality changed? so rename zml file!
+        if( isQualityChanged( oldQuality ) )
+        {
+          final IFile target = link.getFile();
+          oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
+        }
       }
 
       source.dispose();
@@ -124,6 +124,21 @@ public class EditTimeseriesAction extends Action
     {
       t.printStackTrace();
     }
+
+  }
+
+  private boolean isQualityChanged( final String oldQuality )
+  {
+    final String quality = m_timeseries.getFeature().getQuality();
+
+    if( Objects.allNull( quality, oldQuality ) )
+      return false;
+    else if( Objects.equal( oldQuality, quality ) )
+    {
+      return !IOCase.SYSTEM.checkEquals( oldQuality, quality );
+    }
+
+    return true;
 
   }
 }
