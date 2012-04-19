@@ -193,7 +193,7 @@ public class InitThiessenTimeseriesOperation implements ICoreRunnableWithProgres
 
     /* Copy properties from station and timeseries, it is hard to access them via gtt and gmt templates */
     final String timestepText = PeriodUtils.formatDefault( timeseries.getTimestep() );
-    final String description = String.format( "%s (%s)", timeseries.getDescription(), timestepText ); //$NON-NLS-1$
+    final String description = String.format( "%s (%s)", station.getDescription(), timestepText ); //$NON-NLS-1$
     newThiessenStation.setDescription( description );
     newThiessenStation.setName( station.getDescription() );
     newThiessenStation.setStationLocation( station.getStationLocation() );

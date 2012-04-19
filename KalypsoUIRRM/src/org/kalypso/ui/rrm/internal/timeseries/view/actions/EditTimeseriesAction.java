@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view.actions;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOCase;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -79,8 +79,8 @@ public class EditTimeseriesAction extends Action
     m_timeseries = timeseries;
     m_binding = binding;
 
-    setText( Messages.getString("EditTimeseriesAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("EditTimeseriesAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "EditTimeseriesAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "EditTimeseriesAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.EDIT_STATION ) );
   }
@@ -112,7 +112,7 @@ public class EditTimeseriesAction extends Action
       }
 
       // quality changed? so rename zml file!
-      if( !StringUtils.equals( oldQuality, m_timeseries.getFeature().getQuality() ) )
+      if( !IOCase.SYSTEM.checkEquals( oldQuality, m_timeseries.getFeature().getQuality() ) )
       {
         final IFile target = link.getFile();
         oldFile.move( target.getFullPath(), true, new NullProgressMonitor() );
