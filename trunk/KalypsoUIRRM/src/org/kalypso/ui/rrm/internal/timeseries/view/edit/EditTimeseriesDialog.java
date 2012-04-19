@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
@@ -145,9 +146,7 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     m_chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_chart.setSelection( m_source );
 
-    final URL tableTemplate = getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
-
-    m_table = new RrmTableComposite( rightPane, toolkit, tableTemplate, m_context );
+    m_table = new RrmTableComposite( rightPane, toolkit, getTableTemplate(), m_context );
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_table.setSelection( m_source );
 
@@ -180,6 +179,21 @@ public class EditTimeseriesDialog extends EnhancedTrayDialog
     controlSection.setClient( properties );
 
     return super.createDialogArea( parent );
+  }
+
+  private URL getTableTemplate( )
+  {
+    final ITimeseries timeseries = m_timeseries.getFeature();
+    final String parameter = timeseries.getParameterType();
+
+    final TIMESERIES_TYPE type = TIMESERIES_TYPE.getType( parameter );
+    switch( type )
+    {
+      case eSumValue:
+        return getClass().getResource( "templates/table.sum.kot" ); //$NON-NLS-1$
+      default:
+        return getClass().getResource( "templates/table.kot" ); //$NON-NLS-1$
+    }
   }
 
   private int[] getWeights( )
