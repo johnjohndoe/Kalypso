@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -53,6 +58,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
@@ -64,6 +70,7 @@ import org.kalypso.ui.rrm.internal.timeseries.view.dnd.MoveStationTransfer;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.TimeseriesManagementTreeDragListener;
 import org.kalypso.ui.rrm.internal.timeseries.view.dnd.TimeseriesManagementTreeDropListener;
 import org.kalypso.ui.rrm.internal.timeseries.view.filter.TimeseriesBrowserSearchViewer;
+import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeContentProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeLabelProvider;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNodeModel;
@@ -143,6 +150,21 @@ public class TimeseriesManagementView extends ViewPart
 
     final TreeNodeModel input = new TreeNodeModel( strategy, workspace, m_treeViewer );
     m_treeViewer.setInput( input );
+
+    /** set tree viewer selection to it's first item! */
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final TreeNode[] elements = input.getRootElements();
+        if( ArrayUtils.isNotEmpty( elements ) )
+          m_treeViewer.setSelection( new StructuredSelection( elements[0] ) );
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
   public TreeViewer getTreeViewer( )
