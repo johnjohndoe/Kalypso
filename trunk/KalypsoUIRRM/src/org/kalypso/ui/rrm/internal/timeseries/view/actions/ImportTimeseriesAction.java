@@ -112,16 +112,17 @@ public class ImportTimeseriesAction extends Action
   private ITimeseries showWizard( final Shell shell, final ImportObservationData data )
   {
     final TimeseriesBean bean = new TimeseriesBean();
-    if( m_parameterType != null )
-      data.setParameterType( m_parameterType );
 
     final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( data );
+
+    final CommandableWorkspace workspace = m_model.getWorkspace();
+    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean, workspace, m_station );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
     data.init( settings );
 
-    final CommandableWorkspace workspace = m_model.getWorkspace();
-    final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean, workspace, m_station );
+    if( m_parameterType != null )
+      data.setParameterType( m_parameterType );
 
     wizard.setDialogSettings( settings );
     wizard.setWindowTitle( getText() );
