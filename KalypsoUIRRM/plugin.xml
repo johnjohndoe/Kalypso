@@ -891,5 +891,55 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.kalypso.model.rrm.ui.zml.table.menu.sum.context.menu">
+         <menu
+               label="Werte setzen">
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.all"
+                  label="Alle"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.selected"
+                  label="Selektion"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.above"
+                  label="Oberhalb"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.set.below"
+                  label="Unterhalb"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               label="Erweitertes Bearbeiten">
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.adjust.selection"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.zml.ui.table.commands.value.interpolate"
+                  style="push">
+            </command>
+         </menu>
+         <separator
+               name="separator_1"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.kalypso.zml.ui.table.commands.value.copy"
+               style="push">
+         </command>
+         <command
+               commandId="org.kalypso.zml.ui.table.commands.value.set.paste"
+               style="push">
+         </command>
+      </menuContribution>
  </extension>
 </plugin>

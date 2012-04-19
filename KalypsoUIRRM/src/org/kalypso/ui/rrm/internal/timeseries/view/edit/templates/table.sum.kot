@@ -55,7 +55,7 @@
     <DataColumn editable="true" id="N" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Niederschlag</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.sum.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#nBaseCellStyle</url>
@@ -72,7 +72,7 @@
     <DataColumn editable="true" id="E" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Verdunstung</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.sum.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
@@ -89,7 +89,7 @@
     <DataColumn editable="true" id="E_LAND" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Mittlere Grasverdunstung</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.sum.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
@@ -106,7 +106,7 @@
     <DataColumn editable="true" id="E_WATER" metadataSource="true" tooltip="true" wrapText="true">
       <property name="label">Mittlere Seeverdunstung</property>
       <property name="alignment">RIGHT</property>
-      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
+      <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.sum.context.menu</property>
       <property name="uriHeaderContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.header.context.menu</property>
       <defaultCellStyle>
         <url>urn:org:kalypso:zml:ui:table:global#meanBaseCellStyle</url>
