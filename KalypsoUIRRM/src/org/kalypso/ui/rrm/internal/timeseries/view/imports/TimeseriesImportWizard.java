@@ -103,6 +103,7 @@ public class TimeseriesImportWizard extends Wizard
     } );
 
     addPage( importPage ); //$NON-NLS-1$
+
     addPage( new FeatureBeanWizardPage( "beanPage" ) //$NON-NLS-1$
     {
       @Override
