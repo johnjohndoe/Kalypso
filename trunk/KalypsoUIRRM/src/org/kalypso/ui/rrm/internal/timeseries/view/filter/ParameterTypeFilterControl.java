@@ -65,8 +65,8 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.hydrology.internal.timeseries.binding.HydrologicalStation;
 import org.kalypso.model.hydrology.internal.timeseries.binding.MeteorologicalStation;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
+import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
-import org.kalypso.zml.ui.imports.ParameterTypeLabelProvider;
 
 /**
  * @author Dirk Kuch
