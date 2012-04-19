@@ -124,7 +124,12 @@ public class BanklineBuilder implements ICoreRunnableWithProgress
 
       final LineString denseRiverLine = densifyRiverLine( riverLine, profiles );
 
-      return buildBankLines( denseRiverLine, profiles, water.isDirectionUpstreams() );
+
+      // FIXME: invert this, if centerline goes in wrong direction
+      // we could/should do this automatically:
+      final boolean directionUpstreams = water.isDirectionUpstreams();
+
+      return buildBankLines( denseRiverLine, profiles, directionUpstreams );
     }
     catch( final GM_Exception e )
     {
