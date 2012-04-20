@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.timeseries.operations;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * @author Dirk Kuch
@@ -55,4 +56,6 @@ public interface IRepairObservationWorker extends ICoreRunnableWithProgress
   public String getDialogTitle( );
 
   public String getDialogMessage( );
+
+  IObservation getObservation( );
 }

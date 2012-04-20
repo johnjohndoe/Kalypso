@@ -48,20 +48,25 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ValidateTimestepsVisitor;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Dirk Kuch
  */
-public class ValidateTimestepsOperation implements ICoreRunnableWithProgress
+public class ValidateMissingTimestepsOperation implements ICoreRunnableWithProgress
 {
-  private IObservation m_observation;
+  private final IObservation m_observation;
 
   protected boolean m_wait;
 
   private final Period m_timestep;
 
-  public ValidateTimestepsOperation( final IObservation observation, final Period timestep )
+  private IObservation m_repaired;
+
+  public ValidateMissingTimestepsOperation( final IObservation observation, final Period timestep )
   {
     m_observation = observation;
     m_timestep = timestep;
@@ -71,9 +76,9 @@ public class ValidateTimestepsOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor )
   {
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
-    m_observation = doValidate( m_observation, stati );
+    m_repaired = doValidate( m_observation, stati );
 
-    return stati.asMultiStatus( "Zeitliche Rücksprung-Überprüfung" );
+    return stati.asMultiStatus( "Zeitlücken und Fehlwert-Überprüfung" );
   }
 
   private final IObservation doValidate( final IObservation observation, final StatusCollector stati )
@@ -91,6 +96,19 @@ public class ValidateTimestepsOperation implements ICoreRunnableWithProgress
         final RepairMissingTimestepsOperation operation = new RepairMissingTimestepsOperation( observation, m_timestep );
         final RepairObservationJob job = new RepairObservationJob( stati, status, operation );
         job.schedule();
+
+        while( !job.isDone() )
+        {
+          try
+          {
+            Thread.sleep( 333 );
+          }
+          catch( final InterruptedException e )
+          {
+          }
+        }
+
+        return Objects.firstNonNull( operation.getObservation(), observation );
       }
 
       return observation;
@@ -98,50 +116,14 @@ public class ValidateTimestepsOperation implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-//      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_6" ), e ); //$NON-NLS-1$
+      stati.add( IStatus.ERROR, Messages.getString( "ImportTimeseriesOperation_6" ), e ); //$NON-NLS-1$
     }
 
     return observation;
-// try
-// {
-// final ValidateRuecksprungVisitor validator = new ValidateRuecksprungVisitor();
-// observation.accept( validator, null, 1 );
-//
-// if( validator.hasRuecksprung() )
-// {
-// stati.add( validator.getStatus() );
-//
-// final RepairRueckspruengeOperation operation = new RepairRueckspruengeOperation( observation,
-// validator.getRueckspruenge() );
-// final RepairObservationJob job = new RepairObservationJob( stati, validator.getStatus(), operation );
-// job.schedule();
-//
-// while( !job.isDone() )
-// {
-// try
-// {
-// Thread.sleep( 333 );
-// }
-// catch( final InterruptedException e )
-// {
-// }
-// }
-//
-// return Objects.firstNonNull( operation.getObservation(), observation );
-// }
-//
-// }
-// catch( final SensorException e )
-// {
-// e.printStackTrace();
-//      stati.add( IStatus.ERROR, Messages.getString( "ImportTimeseriesOperation_9" ), e ); //$NON-NLS-1$
-// }
-//
-// return observation;
   }
 
   public IObservation getObservation( )
   {
-    return m_observation;
+    return Objects.firstNonNull( m_repaired, m_observation );
   }
 }

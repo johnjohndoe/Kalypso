@@ -112,6 +112,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
     /* Set the timestep. */
     m_timestep = timeStepOperation.getTimestep();
+    updateMetadata( m_observation );
 
     /* Timestamp. */
     final FindTimestampOperation timestampOperation = new FindTimestampOperation( m_observation, m_timestep );
@@ -124,14 +125,12 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     m_timestamp = timestampOperation.getTimestamp();
 
     /* Validate the timestep. */
-    final ValidateTimestepsOperation timestep = new ValidateTimestepsOperation( m_observation, m_timestep );
-    stati.add( timestep.execute( monitor ) );
-    m_observation = timestep.getObservation();
+    final ValidateMissingTimestepsOperation missing = new ValidateMissingTimestepsOperation( m_observation, m_timestep );
+    stati.add( missing.execute( monitor ) );
+    m_observation = missing.getObservation();
 
     final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation );
     m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
-
-    updateMetadata( m_observation );
 
     return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_5" ) ); //$NON-NLS-1$
   }
