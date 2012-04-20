@@ -90,6 +90,7 @@ public class ValidateMissingTimestepsOperation implements ICoreRunnableWithProgr
       observation.accept( visitor, null, 1 );
 
       final IStatus status = visitor.getStatus();
+      stati.add( status );
 
       if( !status.isOK() )
       {

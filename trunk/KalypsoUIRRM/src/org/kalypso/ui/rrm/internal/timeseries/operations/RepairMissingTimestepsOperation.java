@@ -62,6 +62,7 @@ import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 
 import com.google.common.base.Objects;
 
@@ -92,7 +93,7 @@ public class RepairMissingTimestepsOperation implements IRepairObservationWorker
 
     m_repaired = getFilter( valueAxes[0] );
 
-    return Status.OK_STATUS; // FIXME
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Fülle Zeitlücken / Fehlwerte" );
   }
 
   private IObservationFilter getFilter( final IAxis valueAxes )
