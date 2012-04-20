@@ -61,7 +61,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -87,25 +86,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     m_catchments = initCatchments();
   }
 
-  public String getLabel( )
-  {
-    return (String) getProperty( Feature.QN_DESCRIPTION );
-  }
-
   public CatchmentBean[] getCatchments( )
   {
     return m_catchments;
-  }
-
-  private CatchmentBean[] initCatchments( )
-  {
-    final List<CatchmentBean> results = new ArrayList<CatchmentBean>();
-    final ILinearSumGenerator generator = getFeature();
-    final List<ICatchment> catchments = generator.getCatchments();
-    for( final ICatchment catchment : catchments )
-      results.add( new CatchmentBean( catchment ) );
-
-    return results.toArray( new CatchmentBean[] {} );
   }
 
   public void setCatchments( final CatchmentBean[] catchments )
@@ -189,6 +172,17 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       return false;
 
     return true;
+  }
+
+  private CatchmentBean[] initCatchments( )
+  {
+    final List<CatchmentBean> results = new ArrayList<CatchmentBean>();
+    final ILinearSumGenerator generator = getFeature();
+    final List<ICatchment> catchments = generator.getCatchments();
+    for( final ICatchment catchment : catchments )
+      results.add( new CatchmentBean( catchment ) );
+
+    return results.toArray( new CatchmentBean[] {} );
   }
 
   /**

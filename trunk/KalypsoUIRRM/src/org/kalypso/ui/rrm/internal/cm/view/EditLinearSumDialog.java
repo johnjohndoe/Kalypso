@@ -45,7 +45,9 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -61,12 +63,13 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -102,7 +105,10 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class EditLinearSumDialog extends TrayDialog
 {
-  private final PropertyChangeListener m_changeListener = new PropertyChangeListener()
+  /**
+   * A property change listener for the parameter type.
+   */
+  private final PropertyChangeListener m_parameterTypeListener = new PropertyChangeListener()
   {
     @Override
     public void propertyChange( final PropertyChangeEvent evt )
@@ -122,9 +128,19 @@ public class EditLinearSumDialog extends TrayDialog
   private final LinearSumBean m_bean;
 
   /**
+   * The form.
+   */
+  private Form m_form;
+
+  /**
    * The main group.
    */
   private Group m_mainGroup;
+
+  /**
+   * The secondary group.
+   */
+  private Group m_secondaryGroup;
 
   /**
    * The details group.
@@ -178,7 +194,9 @@ public class EditLinearSumDialog extends TrayDialog
     m_model = model;
     m_bean = bean;
 
+    m_form = null;
     m_mainGroup = null;
+    m_secondaryGroup = null;
     m_detailsGroup = null;
     m_catchmentViewer = null;
     m_timeseriesViewer = null;
@@ -187,9 +205,12 @@ public class EditLinearSumDialog extends TrayDialog
     m_dataBinding = null;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
 
-    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_changeListener );
+    m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_parameterTypeListener );
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -201,30 +222,41 @@ public class EditLinearSumDialog extends TrayDialog
     main.setLayout( new GridLayout( 1, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 550;
-    mainData.widthHint = 900;
+    mainData.widthHint = 1000;
     main.setLayoutData( mainData );
 
     /* Create the form. */
-    final Form form = new Form( main, SWT.NONE );
-    form.setLayoutData( mainData );
+    m_form = new Form( main, SWT.NONE );
+    m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the data binding. */
-    m_dataBinding = new DatabindingForm( form, null );
+    m_dataBinding = new DatabindingForm( m_form, null );
 
     /* Get the body. */
-    final Composite body = form.getBody();
-    body.setLayout( new GridLayout( 2, false ) );
+    final Composite body = m_form.getBody();
+    body.setLayout( new GridLayout( 3, false ) );
 
     /* Create the main group. */
     m_mainGroup = new Group( body, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
     final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    mainGroupData.widthHint = 250;
+    mainGroupData.widthHint = 200;
     m_mainGroup.setLayoutData( mainGroupData );
     m_mainGroup.setText( Messages.getString( "EditLinearSumDialog_1" ) ); //$NON-NLS-1$
 
     /* Create the content of the main group. */
     createMainContent( m_mainGroup );
+
+    /* Create the secondary group. */
+    m_secondaryGroup = new Group( body, SWT.NONE );
+    m_secondaryGroup.setLayout( new GridLayout( 1, false ) );
+    final GridData secondaryGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    secondaryGroupData.widthHint = 200;
+    m_secondaryGroup.setLayoutData( secondaryGroupData );
+    m_secondaryGroup.setText( Messages.getString( "EditLinearSumDialog_3" ) ); //$NON-NLS-1$
+
+    /* Create the content of the secondary group. */
+    createSecondaryContent( m_secondaryGroup );
 
     /* Create the details group. */
     m_detailsGroup = new Group( body, SWT.NONE );
@@ -236,6 +268,21 @@ public class EditLinearSumDialog extends TrayDialog
     createDetailsContent( m_detailsGroup, null );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected void createButtonsForButtonBar( final Composite parent )
+  {
+    super.createButtonsForButtonBar( parent );
+
+    /* Do a layout. */
+    m_form.layout( true, true );
+
+    /* Validate the dialog. */
+    validateDialog();
   }
 
   /**
@@ -291,15 +338,33 @@ public class EditLinearSumDialog extends TrayDialog
    */
   private void createMainContent( final Composite parent )
   {
+    /* Create the form. */
+    final ScrolledForm form = new ScrolledForm( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+    form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    form.setExpandHorizontal( true );
+    form.setExpandVertical( true );
+
+    /* Get the body. */
+    final Composite body = form.getBody();
+    body.setLayout( new GridLayout( 1, false ) );
+
     /* Create the linear sum new composite. */
-    final LinearSumNewComposite composite = new LinearSumNewComposite( parent, m_bean, m_dataBinding, true );
-    composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    final LinearSumNewComposite composite = new LinearSumNewComposite( body, m_bean, m_dataBinding, true );
+    composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    /* Create a label. */
-    final Label label = new Label( parent, SWT.NONE );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    label.setText( Messages.getString( "EditLinearSumDialog_3" ) ); //$NON-NLS-1$
+    /* Do a reflow and a layout. */
+    form.reflow( true );
+    form.layout( true, true );
+  }
 
+  /**
+   * This function creates the content of the secondary group.
+   * 
+   * @param parent
+   *          The parent composite.
+   */
+  private void createSecondaryContent( final Composite parent )
+  {
     /* Create the catchment viewer. */
     m_catchmentViewer = new TableViewer( parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.SINGLE );
     m_catchmentViewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -341,6 +406,7 @@ public class EditLinearSumDialog extends TrayDialog
 
         m_catchmentBean = (CatchmentBean) firstElement;
         updateDetailsGroup();
+        validateDialog();
       }
     } );
   }
@@ -400,15 +466,6 @@ public class EditLinearSumDialog extends TrayDialog
     m_statusComposite = new StatusComposite( parent, SWT.NONE );
     m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    /* Set the status. */
-    if( catchmentBean == null )
-      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_6" ) ) ); //$NON-NLS-1$
-    else
-    {
-      catchmentBean.updateStatus();
-      m_statusComposite.setStatus( catchmentBean.getStatus() );
-    }
-
     /* Add a listener. */
     m_timeseriesViewer.getColumnViewerEditor().addEditorActivationListener( new ColumnViewerEditorActivationListener()
     {
@@ -425,15 +482,8 @@ public class EditLinearSumDialog extends TrayDialog
       @Override
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
-        if( m_catchmentBean != null )
-        {
-          m_catchmentBean.updateStatus();
-          m_statusComposite.setStatus( m_catchmentBean.getStatus() );
-        }
-        else
-          m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_7" ) ) ); //$NON-NLS-1$
-
         m_catchmentViewer.refresh();
+        validateDialog();
       }
 
       @Override
@@ -447,23 +497,23 @@ public class EditLinearSumDialog extends TrayDialog
   {
     /* Create the group column. */
     final TableViewerColumn groupColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    groupColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_8" ) ); //$NON-NLS-1$
-    groupColumn.getColumn().setWidth( 150 );
+    groupColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_7" ) ); //$NON-NLS-1$
+    groupColumn.getColumn().setWidth( 100 );
     groupColumn.setLabelProvider( new GroupColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( groupColumn.getColumn() );
     ColumnViewerSorter.registerSorter( groupColumn, new GroupComparator() );
 
     /* Create the station column. */
     final TableViewerColumn stationColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    stationColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_9" ) ); //$NON-NLS-1$
-    stationColumn.getColumn().setWidth( 150 );
+    stationColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_8" ) ); //$NON-NLS-1$
+    stationColumn.getColumn().setWidth( 100 );
     stationColumn.setLabelProvider( new StationColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( stationColumn.getColumn() );
     ColumnViewerSorter.registerSorter( stationColumn, new StationComparator() );
 
     /* Create the timestep column. */
     final TableViewerColumn timestepColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    timestepColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_10" ) ); //$NON-NLS-1$
+    timestepColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_9" ) ); //$NON-NLS-1$
     timestepColumn.getColumn().setWidth( 75 );
     timestepColumn.setLabelProvider( new TimestepColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( timestepColumn.getColumn() );
@@ -471,15 +521,15 @@ public class EditLinearSumDialog extends TrayDialog
 
     /* Create the quality column. */
     final TableViewerColumn qualityColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    qualityColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_11" ) ); //$NON-NLS-1$
-    qualityColumn.getColumn().setWidth( 150 );
+    qualityColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_10" ) ); //$NON-NLS-1$
+    qualityColumn.getColumn().setWidth( 100 );
     qualityColumn.setLabelProvider( new QualityColumnLabelProvider() );
     ColumnsResizeControlListener.setMinimumPackWidth( qualityColumn.getColumn() );
     ColumnViewerSorter.registerSorter( qualityColumn, new QualityComparator() );
 
     /* Create the factor column. */
     final TableViewerColumn factorColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    factorColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_12" ) ); //$NON-NLS-1$
+    factorColumn.getColumn().setText( Messages.getString( "EditLinearSumDialog_11" ) ); //$NON-NLS-1$
     factorColumn.getColumn().setWidth( 75 );
     factorColumn.setLabelProvider( new FactorColumnLabelProvider() );
     factorColumn.setEditingSupport( new FactorEditingSupport( viewer ) );
@@ -488,6 +538,23 @@ public class EditLinearSumDialog extends TrayDialog
 
     /* Define a initial order. */
     ColumnViewerSorter.setSortState( factorColumn, Boolean.TRUE );
+  }
+
+  /**
+   * This function updates the status.
+   */
+  private void updateStatus( )
+  {
+    if( m_statusComposite == null || m_statusComposite.isDisposed() )
+      return;
+
+    if( m_catchmentBean != null )
+    {
+      m_catchmentBean.updateStatus();
+      m_statusComposite.setStatus( m_catchmentBean.getStatus() );
+    }
+    else
+      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_6" ) ) ); //$NON-NLS-1$
   }
 
   /**
@@ -516,7 +583,9 @@ public class EditLinearSumDialog extends TrayDialog
    */
   private void dispose( )
   {
+    m_form = null;
     m_mainGroup = null;
+    m_secondaryGroup = null;
     m_detailsGroup = null;
     m_catchmentViewer = null;
     m_timeseriesViewer = null;
@@ -528,7 +597,7 @@ public class EditLinearSumDialog extends TrayDialog
   /**
    * This function updates the details group.
    */
-  public void updateDetailsGroup( )
+  protected void updateDetailsGroup( )
   {
     /* Cannot do anything. */
     if( m_detailsGroup == null || m_detailsGroup.isDisposed() )
@@ -536,18 +605,67 @@ public class EditLinearSumDialog extends TrayDialog
 
     /* Set the input. */
     if( m_catchmentBean != null )
-    {
       m_timeseriesViewer.setInput( m_catchmentBean.getTimeseries() );
-      m_catchmentBean.updateStatus();
-      m_statusComposite.setStatus( m_catchmentBean.getStatus() );
-    }
     else
-    {
       m_timeseriesViewer.setInput( new FactorizedTimeseriesBean[] {} );
-      m_statusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), Messages.getString( "EditLinearSumDialog_13" ) ) ); //$NON-NLS-1$
-    }
+
+    /* Validate the dialog. */
+    validateDialog();
   }
 
+  /**
+   * This function validates the dialog.
+   */
+  protected void validateDialog( )
+  {
+    /* This is independent of the other validation. */
+    updateStatus();
+
+    /* Cannot do anything. */
+    if( m_form == null || m_form.isDisposed() )
+      return;
+
+    /* Get the ok button. */
+    final Button okButton = getButton( IDialogConstants.OK_ID );
+    if( okButton == null )
+      return;
+
+    /* Set the ok button to enabled. */
+    okButton.setEnabled( true );
+
+    /* On error in the form, the dialog may not be completed. */
+    final int messageType = m_form.getMessageType();
+    if( messageType == IMessageProvider.ERROR )
+    {
+      /* HINT: The message was already set by the databinding. */
+      okButton.setEnabled( false );
+      return;
+    }
+
+    /* Get the timestep. */
+    final Integer timestep = (Integer) m_bean.getProperty( ILinearSumGenerator.PROPERTY_TIMESTEP );
+    if( timestep != null && timestep.intValue() == 1440 )
+    {
+      /* We need a valid timestamp, if the timestep represents one day (1440 minutes). */
+      /* The case that the timestamp format is wrong is covered in the above if. */
+      final String timestamp = (String) m_bean.getProperty( ILinearSumGenerator.PROPERTY_TIMESTAMP );
+      if( timestamp == null || timestamp.length() == 0 )
+      {
+        m_form.setMessage( "For day values, a timestamp is needed...", IMessageProvider.ERROR );
+        okButton.setEnabled( false );
+        return;
+      }
+    }
+
+    /* HINT: The validation was ok. */
+  }
+
+  /**
+   * This function handles the property changed event for the parameter type.
+   * 
+   * @param evt
+   *          The property change event.
+   */
   protected void handleParameterTypeChanged( final PropertyChangeEvent evt )
   {
     final String parameterType = (String) evt.getNewValue();

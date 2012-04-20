@@ -81,7 +81,7 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
   /**
    * The description pattern.
    */
-  private static final String DESCRIPTION_PATTERN = Messages.getString("IdwOptionsLayoutPart.0"); //$NON-NLS-1$
+  private static final String DESCRIPTION_PATTERN = Messages.getString( "IdwOptionsLayoutPart.0" ); //$NON-NLS-1$
 
   /**
    * The maximum number of stations to use.
@@ -162,11 +162,38 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    /* Header for option part below. */
-    final Section optionPartSection = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
-    optionPartSection.setLayout( new GridLayout( 1, false ) );
-    optionPartSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    optionPartSection.setText( Messages.getString( "IdwOptionsLayoutPart_0" ) ); //$NON-NLS-1$
+    /* Create the main composite. */
+    final Composite main = toolkit.createComposite( parent, getStyle() );
+    final GridLayout panelLayout = new GridLayout( 1, false );
+    panelLayout.marginHeight = 0;
+    panelLayout.marginWidth = 0;
+    main.setLayout( panelLayout );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* Create the options section. */
+    createOptionsSection( toolkit, main );
+
+    /* Create the timeseries section. */
+    createTimeseriesSection( toolkit, main );
+
+    return main;
+  }
+
+  /**
+   * @see org.kalypso.core.layoutwizard.ILayoutPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_maxStations = null;
+  }
+
+  private void createOptionsSection( final FormToolkit toolkit, final Composite parent )
+  {
+    /* Create the options section. */
+    final Section optionsSection = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
+    optionsSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    optionsSection.setText( Messages.getString( "IdwOptionsLayoutPart_0" ) ); //$NON-NLS-1$
 
     /* The content. */
     final Composite content = toolkit.createComposite( parent, SWT.NONE );
@@ -209,18 +236,15 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
     } );
 
     /* Do a layout. */
-    optionPartSection.layout();
-
-    return optionPartSection;
+    optionsSection.layout();
   }
 
-  /**
-   * @see org.kalypso.core.layoutwizard.ILayoutPart#dispose()
-   */
-  @Override
-  public void dispose( )
+  private void createTimeseriesSection( final FormToolkit toolkit, final Composite parent )
   {
-    m_maxStations = null;
+    /* Header for table below. */
+    final Section tableSection = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
+    tableSection.setText( Messages.getString( "IdwWizardLayoutPart_1" ) ); //$NON-NLS-1$
+    tableSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
   /**

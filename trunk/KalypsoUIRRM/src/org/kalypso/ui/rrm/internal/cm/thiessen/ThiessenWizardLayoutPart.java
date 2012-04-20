@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.cm.thiessen;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -52,10 +51,12 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -104,40 +105,70 @@ public class ThiessenWizardLayoutPart extends AbstractLayoutPart
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
+    /* Create the data binding. */
     final ILayoutWizardPage page = getContext().getPage();
     final DatabindingWizardPage binding = new DatabindingWizardPage( (WizardPage) page, toolkit );
 
-    final Composite panel = toolkit.createComposite( parent, getStyle() );
-    GridLayoutFactory.fillDefaults().applyTo( panel );
+    /* Create the main composite. */
+    final Composite main = toolkit.createComposite( parent, getStyle() );
+    final GridLayout panelLayout = new GridLayout( 1, false );
+    panelLayout.marginHeight = 0;
+    panelLayout.marginWidth = 0;
+    main.setLayout( panelLayout );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final Section propertiesSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    propertiesSection.setText( Messages.getString( "ThiessenWizardLayoutPart_0" ) ); //$NON-NLS-1$
-    propertiesSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    final Composite body = toolkit.createComposite( propertiesSection );
-    propertiesSection.setClient( body );
-    GridLayoutFactory.fillDefaults().applyTo( body );
-
-    // Linear sum control
-    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding, false );
-    sumComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    toolkit.createLabel( body, StringUtils.EMPTY, SWT.NONE );
-
-    /* header for gis table below */
-    final Section tableSection = toolkit.createSection( panel, Section.EXPANDED | Section.TITLE_BAR );
-    tableSection.setText( Messages.getString( "ThiessenWizardLayoutPart_1" ) ); //$NON-NLS-1$
-    tableSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    /* Create the properties section. */
+    createPropertiesSection( toolkit, main, binding );
 
     /* Observe change of parameter type */
     m_generator.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_propertyListener );
 
-    return panel;
+    return main;
   }
 
   @Override
   public void dispose( )
   {
+  }
+
+  private void createPropertiesSection( final FormToolkit toolkit, final Composite parent, final DatabindingWizardPage binding )
+  {
+    /* Create the properties section. */
+    final Section propertiesSection = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
+    propertiesSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    propertiesSection.setText( Messages.getString( "ThiessenWizardLayoutPart_0" ) ); //$NON-NLS-1$
+
+    /* Create the client composite. */
+    final Composite client = toolkit.createComposite( propertiesSection );
+    client.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    GridLayoutFactory.fillDefaults().applyTo( client );
+
+    /* Set the client. */
+    propertiesSection.setClient( client );
+
+    /* Create the linear sum composite. */
+    createLinearSumComposite( toolkit, client, binding );
+  }
+
+  private void createLinearSumComposite( final FormToolkit toolkit, final Composite parent, final DatabindingWizardPage binding )
+  {
+    /* Create the form. */
+    final ScrolledForm form = toolkit.createScrolledForm( parent );
+    form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    form.setExpandHorizontal( true );
+    form.setExpandVertical( true );
+
+    /* Get the body. */
+    final Composite body = form.getBody();
+    body.setLayout( new GridLayout( 1, false ) );
+
+    /* Linear sum control. */
+    final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding, false );
+    sumComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /* Do a reflow and a layout. */
+    form.reflow( true );
+    form.layout( true, true );
   }
 
   protected void handleParameterTypeChanged( final PropertyChangeEvent evt )

@@ -239,7 +239,7 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
     GmlSerializer.saveWorkspace( workspaceToSave, modelFile );
   }
 
-  private IRainfallCatchmentModel createRainfallModel( final RrmSimulation simulation, final NaModell model, final IRainfallGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception
+  private IRainfallCatchmentModel createRainfallModel( final RrmSimulation simulation, final NaModell model, final ILinearSumGenerator generator, final QName targetLink, final DateRange targetRange ) throws Exception
   {
     /* Rainfall model. */
     final IFolder modelsFolder = simulation.getModelsFolder();

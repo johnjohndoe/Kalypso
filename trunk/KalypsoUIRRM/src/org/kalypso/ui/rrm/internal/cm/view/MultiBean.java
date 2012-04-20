@@ -40,24 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
-import org.kalypso.ogc.gml.command.AddRelationCommand;
-import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.RemoveRelationCommand;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
  * @author Holger Albert
@@ -68,6 +71,11 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
    * The checked sub generators.
    */
   private ILinearSumGenerator[] m_subGenerators;
+
+  /**
+   * The status.
+   */
+  private IStatus m_status;
 
   /**
    * The constructor.
@@ -88,16 +96,18 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
   public MultiBean( final IMultiGenerator generator )
   {
     super( generator );
+
+    m_subGenerators = initSubGenerators();
   }
 
   /**
-   * This function returns the label.
+   * This function returns the checked sub generators.
    * 
-   * @return The label.
+   * @return The checked sub generators.
    */
-  public String getLabel( )
+  public ILinearSumGenerator[] getSubGenerators( )
   {
-    return (String) getProperty( Feature.QN_DESCRIPTION );
+    return m_subGenerators;
   }
 
   /**
@@ -109,6 +119,24 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
   public void setSubGenerators( final ILinearSumGenerator[] subGenerators )
   {
     m_subGenerators = subGenerators;
+  }
+
+  /**
+   * This function updates the status.
+   */
+  public void updateStatus( )
+  {
+    m_status = CatchmentModelHelper.validateMultiBean( this );
+  }
+
+  /**
+   * This function returns the status.
+   * 
+   * @return The status.
+   */
+  public IStatus getStatus( )
+  {
+    return m_status;
   }
 
   /**
@@ -136,10 +164,13 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
       /* Post the command. */
       workspace.postCommand( command );
 
-      /* Apply the sub generators. */
-      applySubGenerators( workspace, feature );
+      /* Get the new feature. */
+      final IMultiGenerator newFeature = (IMultiGenerator) command.getNewFeature();
 
-      return (IMultiGenerator) command.getNewFeature();
+      /* Apply the sub generators. */
+      applySubGenerators( workspace, newFeature );
+
+      return newFeature;
     }
 
     /* Apply the changes. */
@@ -157,20 +188,26 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
     return feature;
   }
 
+  private ILinearSumGenerator[] initSubGenerators( )
+  {
+    final List<ILinearSumGenerator> results = new ArrayList<ILinearSumGenerator>();
+
+    final IMultiGenerator generator = getFeature();
+    final IFeatureBindingCollection<IRainfallGenerator> subGenerators = generator.getSubGenerators();
+    for( final IRainfallGenerator subGenerator : subGenerators )
+      results.add( (ILinearSumGenerator) subGenerator );
+
+    return results.toArray( new ILinearSumGenerator[] {} );
+  }
+
   private void removeSubGenerators( final CommandableWorkspace workspace, final IMultiGenerator multiGenerator ) throws Exception
   {
-    /* The delete commands. */
-    final CompositeCommand deleteCommands = new CompositeCommand( "Removing sub generators..." );
-
     /* Get all sub generators. */
     final FeatureList subGenerators = (FeatureList) multiGenerator.getProperty( IMultiGenerator.MEMBER_SUB_GENERATOR );
-
-    /* Create the delete commands. */
-    for( final Object subGenerator : subGenerators )
-      deleteCommands.addCommand( new RemoveRelationCommand( multiGenerator, subGenerators.getPropertyType(), (Feature) subGenerator ) );
+    subGenerators.clear();
 
     /* Post the command. */
-    workspace.postCommand( deleteCommands );
+    workspace.postCommand( new EmptyCommand( "Refresh", true ) );
   }
 
   private void applySubGenerators( final CommandableWorkspace workspace, final IMultiGenerator multiGenerator ) throws Exception
@@ -179,17 +216,14 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
     if( m_subGenerators == null || m_subGenerators.length == 0 )
       return;
 
-    /* The add commands. */
-    final CompositeCommand addCommands = new CompositeCommand( "Adding sub generators..." );
-
     /* Get the list of the sub generators. */
     final FeatureList subGenerators = (FeatureList) multiGenerator.getProperty( IMultiGenerator.MEMBER_SUB_GENERATOR );
 
     /* Create the add commands. */
     for( final ILinearSumGenerator subGenerator : m_subGenerators )
-      addCommands.addCommand( new AddRelationCommand( multiGenerator, subGenerators.getPropertyType(), -1, subGenerator ) );
+      subGenerators.addLink( subGenerator );
 
     /* Post the command. */
-    workspace.postCommand( addCommands );
+    workspace.postCommand( new EmptyCommand( "Refresh", true ) );
   }
 }
