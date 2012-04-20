@@ -81,7 +81,7 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
   /**
    * The description pattern.
    */
-  private static final String DESCRIPTION_PATTERN = Messages.getString( "IdwOptionsLayoutPart.0" ); //$NON-NLS-1$
+  private static final String DESCRIPTION_PATTERN = Messages.getString( "IdwOptionsLayoutPart_0" ); //$NON-NLS-1$
 
   /**
    * The maximum number of stations to use.
@@ -193,7 +193,7 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
     /* Create the options section. */
     final Section optionsSection = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
     optionsSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    optionsSection.setText( Messages.getString( "IdwOptionsLayoutPart_0" ) ); //$NON-NLS-1$
+    optionsSection.setText( Messages.getString( "IdwOptionsLayoutPart_1" ) ); //$NON-NLS-1$
 
     /* The content. */
     final Composite content = toolkit.createComposite( parent, SWT.NONE );
@@ -201,15 +201,15 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create a label. */
-    final Label maxStationsLabel = toolkit.createLabel( content, Messages.getString( "IdwOptionsLayoutPart_1" ), SWT.NONE ); //$NON-NLS-1$
+    final Label maxStationsLabel = toolkit.createLabel( content, Messages.getString( "IdwOptionsLayoutPart_2" ), SWT.NONE ); //$NON-NLS-1$
     maxStationsLabel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, false ) );
-    maxStationsLabel.setToolTipText( Messages.getString( "IdwOptionsLayoutPart_2" ) ); //$NON-NLS-1$
+    maxStationsLabel.setToolTipText( Messages.getString( "IdwOptionsLayoutPart_3" ) ); //$NON-NLS-1$
 
     /* Create a text field. */
     final Text maxStationsText = toolkit.createText( content, "", SWT.BORDER | SWT.TRAIL ); //$NON-NLS-1$
     maxStationsText.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    maxStationsText.setToolTipText( Messages.getString( "IdwOptionsLayoutPart_2" ) ); //$NON-NLS-1$
-    maxStationsText.setMessage( Messages.getString( "IdwOptionsLayoutPart_3" ) ); //$NON-NLS-1$
+    maxStationsText.setToolTipText( Messages.getString( "IdwOptionsLayoutPart_3" ) ); //$NON-NLS-1$
+    maxStationsText.setMessage( Messages.getString( "IdwOptionsLayoutPart_4" ) ); //$NON-NLS-1$
     maxStationsText.setText( String.format( Locale.PRC, "%d", m_maxStations ) ); //$NON-NLS-1$
 
     /* Some colors for validating the input. */
@@ -243,7 +243,7 @@ public class IdwOptionsLayoutPart extends AbstractLayoutPart
   {
     /* Header for table below. */
     final Section tableSection = toolkit.createSection( parent, Section.EXPANDED | Section.TITLE_BAR );
-    tableSection.setText( Messages.getString( "IdwWizardLayoutPart_1" ) ); //$NON-NLS-1$
+    tableSection.setText( Messages.getString( "IdwOptionsLayoutPart_5" ) ); //$NON-NLS-1$
     tableSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
   }
 
