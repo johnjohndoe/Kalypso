@@ -185,7 +185,7 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
     final Shell shell = context.getShell();
     final IWizard wizard = context.getPage().getWizard();
     final String windowTitle = wizard.getWindowTitle();
-    final String message = Messages.getString( "IdwWizardLayoutPart_2" ); //$NON-NLS-1$
+    final String message = Messages.getString( "IdwWizardLayoutPart_1" ); //$NON-NLS-1$
 
     if( !MessageDialog.openConfirm( shell, windowTitle, message ) )
     {

@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * Calculates the idw factors from the chosen timeseries and the available catchments.
- *
+ * 
  * @author Holger Albert
  */
 public class IdwFactorsOperation implements ICoreRunnableWithProgress
@@ -92,14 +92,14 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_maxNumberStations == null || m_maxNumberStations.intValue() == 0 )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_5" ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString( "IdwFactorsOperation_6" ) ) ); //$NON-NLS-1$
 
     /* Get the catchments. */
     final CatchmentBean[] catchments = m_generator.getCatchments();
 
     /* Monitor. */
-    monitor.beginTask( Messages.getString( "IdwFactorsOperation_0" ), m_pages.length + catchments.length + 1 ); //$NON-NLS-1$
-    monitor.subTask( Messages.getString( "IdwFactorsOperation_1" ) ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "IdwFactorsOperation_1" ), m_pages.length + catchments.length + 1 ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "IdwFactorsOperation_2" ) ); //$NON-NLS-1$
 
     /* Save pages. */
     for( final IWizardPage wizardPage : m_pages )
@@ -111,7 +111,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
     }
 
     /* Monitor. */
-    monitor.subTask( Messages.getString( "IdwFactorsOperation_2" ) ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "IdwFactorsOperation_3" ) ); //$NON-NLS-1$
 
     /* Load the idw data. */
     final TimeseriesIdwStations idwStations = new TimeseriesIdwStations();
@@ -119,7 +119,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
 
     /* Monitor. */
     monitor.worked( 1 );
-    monitor.subTask( Messages.getString( "IdwFactorsOperation_3" ) ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "IdwFactorsOperation_4" ) ); //$NON-NLS-1$
 
     /* Calculate the factors. */
     for( final CatchmentBean catchment : catchments )
@@ -136,7 +136,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
 
   /**
    * This function calculates the idw factors for the given catchment.
-   *
+   * 
    * @param catchment
    *          The catchment.
    * @param idwStations
@@ -174,7 +174,7 @@ public class IdwFactorsOperation implements ICoreRunnableWithProgress
       e.printStackTrace();
       final String name = catchment.getCatchmentName();
       final String description = catchment.getCatchmentDescription();
-      m_log.add( IStatus.ERROR, Messages.getString( "IdwFactorsOperation_4" ), e, name, description ); //$NON-NLS-1$
+      m_log.add( IStatus.ERROR, Messages.getString( "IdwFactorsOperation_5" ), e, name, description ); //$NON-NLS-1$
     }
   }
 }

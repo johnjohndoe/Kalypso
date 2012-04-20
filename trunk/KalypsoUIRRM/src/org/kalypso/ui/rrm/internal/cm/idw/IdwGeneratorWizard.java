@@ -119,7 +119,7 @@ public class IdwGeneratorWizard extends Wizard
   {
     /* Set the comment. */
     final Integer maxNumberStations = getMaxNumberStations();
-    m_bean.setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, Messages.getString( "IdwFactorsOperation.0" ), maxNumberStations ) ); //$NON-NLS-1$
+    m_bean.setProperty( ILinearSumGenerator.PROPERTY_COMMENT, String.format( Locale.PRC, Messages.getString( "IdwFactorsOperation_0" ), maxNumberStations ) ); //$NON-NLS-1$
 
     final IWizardPage[] pages = getPages();
     final IdwFactorsOperation operation = new IdwFactorsOperation( maxNumberStations, pages, m_bean );
