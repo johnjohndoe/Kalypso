@@ -41,8 +41,6 @@
 package org.kalypso.ui.rrm.internal.timeseries.operations;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,7 +63,6 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ImportObservationWorker;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.ValidateRuecksprungVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ValidateTimestepsVisitor;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
@@ -103,16 +100,15 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     if( IStatus.ERROR == status.getSeverity() )
       return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_0" ) ); //$NON-NLS-1$
 
-    final IObservation observation = observationWorker.getObservation();
+    m_observation = observationWorker.getObservation();
 
     /* Rücksprung in Daten?!? */
-    final IStatus ruecksprung = validateRuecksprung( observation );
-    stati.add( ruecksprung );
-    if( IStatus.ERROR == ruecksprung.getSeverity() )
-      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_1" ) ); //$NON-NLS-1$
+    final ValidateRuecksprungOperation ruecksprung = new ValidateRuecksprungOperation( m_observation );
+    stati.add( ruecksprung.execute( monitor ) );
+    m_observation = ruecksprung.getObservation();
 
     /* Timestep. */
-    final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( observation );
+    final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( m_observation );
     final IStatus timestepStatus = timeStepOperation.execute( monitor );
     stati.add( timestepStatus );
     if( IStatus.ERROR == timestepStatus.getSeverity() )
@@ -122,7 +118,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     m_timestep = timeStepOperation.getTimestep();
 
     /* Timestamp. */
-    final FindTimestampOperation timestampOperation = new FindTimestampOperation( observation, m_timestep );
+    final FindTimestampOperation timestampOperation = new FindTimestampOperation( m_observation, m_timestep );
     final IStatus timestampStatus = timestampOperation.execute( monitor );
     stati.add( timestampStatus );
     if( IStatus.ERROR == timestampStatus.getSeverity() )
@@ -132,18 +128,17 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     m_timestamp = timestampOperation.getTimestamp();
 
     /* Validate the timestep. */
-    final IStatus validTimestep = validateTimesteps( observation, m_timestep );
+    final IStatus validTimestep = validateTimesteps( m_observation, m_timestep );
     stati.add( validTimestep );
     if( IStatus.ERROR == validTimestep.getSeverity() )
       return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_4" ) ); //$NON-NLS-1$
 
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
+    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation );
     m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
 
     updateMetadata( m_observation );
 
     return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_5" ) ); //$NON-NLS-1$
-
   }
 
   private void updateMetadata( final IObservation observation )
@@ -166,31 +161,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_6" ), e ); //$NON-NLS-1$
-    }
-  }
-
-  private IStatus validateRuecksprung( final IObservation observation )
-  {
-    try
-    {
-      final ValidateRuecksprungVisitor ruecksprung = new ValidateRuecksprungVisitor();
-      observation.accept( ruecksprung, null, 1 );
-
-      if( ruecksprung.hasRuecksprung() )
-      {
-        final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "dd.MM.yyyy HH:mm:ss" ) );
-        final TimeZone timezone = MetadataHelper.getTimeZone( observation.getMetadataList(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
-        sdf.setTimeZone( timezone );
-
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_7", sdf.format( ruecksprung.getLastDate() ) ) ); //$NON-NLS-1$
-      }
-
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( Messages.getString( "ImportTimeseriesOperation_8" ) ) ); //$NON-NLS-1$
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_9" ), e ); //$NON-NLS-1$
     }
   }
 
