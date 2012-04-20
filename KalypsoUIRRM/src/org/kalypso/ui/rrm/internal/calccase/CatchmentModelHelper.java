@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -66,6 +67,7 @@ import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.math.IntervalUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.model.Catchment;
@@ -88,6 +90,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.cm.view.MultiBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -186,19 +189,90 @@ public class CatchmentModelHelper
    */
   public static IStatus validateMultiGenerator( final IMultiGenerator multiGenerator, final NAControl control )
   {
+    /* Get the generators. */
+    final IFeatureBindingCollection<IRainfallGenerator> subGenerators = multiGenerator.getSubGenerators();
+    final IRainfallGenerator[] generators = subGenerators.toArray( new IRainfallGenerator[] {} );
+
+    /* Get the simulation start and end dates. */
+    final Date simulationStart = control.getSimulationStart();
+    final Date simulationEnd = control.getSimulationEnd();
+
+    /* Get the description. */
+    final String description = multiGenerator.getDescription();
+
+    return performValidation( generators, simulationStart, simulationEnd, description );
+  }
+
+  /**
+   * This function checks, if the sub generators contained in the multi bean apply to special rules.<br/>
+   * <br/>
+   * It will check the following rules:
+   * <ul>
+   * <li>All generators must be of the type ILinearSumGenerator.</li>
+   * <li>The timestep must be the same in all generators.</li>
+   * <li>The timestamp must be the same in all generators.</li>
+   * <li>The areas must be the same and must have the same order in all generators.</li>
+   * <li>Generators may not overlap. Touch is ok.</li>
+   * <li>There are no gaps allowed between the validity ranges of adjacent generators.</li>
+   * </ul>
+   * 
+   * @param multiBean
+   *          The multi bean.
+   * @return A status. If the severity is ERROR, the validation has failed.
+   */
+  public static IStatus validateMultiBean( final MultiBean multiBean )
+  {
+    /* Get the generators. */
+    final ILinearSumGenerator[] generators = multiBean.getSubGenerators();
+
+    /* Get the simulation start and end dates. */
+    /* The validity range of the multi bean will be used. */
+    final XMLGregorianCalendar start = (XMLGregorianCalendar) multiBean.getProperty( IMultiGenerator.PROPERTY_VALID_FROM );
+    final XMLGregorianCalendar end = (XMLGregorianCalendar) multiBean.getProperty( IMultiGenerator.PROPERTY_VALID_TO );
+    final Date simulationStart = DateUtilities.toDate( start );
+    final Date simulationEnd = DateUtilities.toDate( end );
+
+    /* Get the description. */
+    final String description = (String) multiBean.getProperty( IMultiGenerator.QN_DESCRIPTION );
+
+    return performValidation( generators, simulationStart, simulationEnd, description );
+  }
+
+  /**
+   * This function checks, if the generators apply to special rules.<br/>
+   * <br/>
+   * It will check the following rules:
+   * <ul>
+   * <li>All generators must be of the type ILinearSumGenerator.</li>
+   * <li>The timestep must be the same in all generators.</li>
+   * <li>The timestamp must be the same in all generators.</li>
+   * <li>The areas must be the same and must have the same order in all generators.</li>
+   * <li>Generators may not overlap. Touch is ok.</li>
+   * <li>There are no gaps allowed between the validity ranges of adjacent generators.</li>
+   * </ul>
+   * 
+   * @param generators
+   *          The generators to validate.
+   * @param simulationStart
+   *          The simulation start date.
+   * @param simulationEnd
+   *          The simulation end date.
+   * @return A status. If the severity is ERROR, the validation has failed.
+   */
+  private static IStatus performValidation( final IRainfallGenerator[] generators, final Date simulationStart, final Date simulationEnd, final String description )
+  {
     /* The status collector. */
     final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    /* Get the generators. */
-    final IFeatureBindingCollection<IRainfallGenerator> generators = multiGenerator.getSubGenerators();
-    if( generators.size() == 0 )
+    /* No generators available. */
+    if( generators.length == 0 )
     {
-      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The multi generator '%s' does not have any generators.", multiGenerator.getDescription() ) ) );
-      return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", multiGenerator.getDescription() ) );
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The multi generator '%s' does not have any generators.", description ) ) );
+      return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", description ) );
     }
 
     /* The values of the first generator will be the reference for the others. */
-    final ILinearSumGenerator firstGenerator = (ILinearSumGenerator) generators.get( 0 );
+    final ILinearSumGenerator firstGenerator = (ILinearSumGenerator) generators[0];
 
     /* Check each generator. */
     for( final IRainfallGenerator generator : generators )
@@ -218,20 +292,11 @@ public class CatchmentModelHelper
       final ILinearSumGenerator linearSumGenerator = (ILinearSumGenerator) generator;
 
       /* (2) The timestep must be the same in all generators. */
-      final Integer firstTimestep = firstGenerator.getTimestep();
-      final Integer timestep = linearSumGenerator.getTimestep();
-      if( !ObjectUtils.equals( firstTimestep, timestep ) )
-      {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The timestep of the generator '%s' does not match the timestep of the first generator '%s'.", generator.getDescription(), firstGenerator.getDescription() ) ) );
-        continue;
-      }
-
       /* (3) The timestamp must be the same in all generators. */
-      final LocalTime firstTimestamp = firstGenerator.getTimestamp();
-      final LocalTime timestamp = linearSumGenerator.getTimestamp();
-      if( !ObjectUtils.equals( firstTimestamp, timestamp ) )
+      final IStatus generalStatus = compareGeneralProperties( firstGenerator, linearSumGenerator );
+      if( !generalStatus.isOK() )
       {
-        collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The timestamp of the generator '%s' does not match the timestamp of the first generator '%s'.", generator.getDescription(), firstGenerator.getDescription() ) ) );
+        collector.add( generalStatus );
         continue;
       }
 
@@ -246,7 +311,7 @@ public class CatchmentModelHelper
       /* HINT: If we do reach here, it will be the 2nd loop or one after. */
 
       /* (5) Generators may not overlap. Touch is ok. */
-      if( !compareGeneratorValidityOverlap( generator, generators ) )
+      if( !compareGeneratorValidityOverlap( linearSumGenerator, generators ) )
       {
         collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The validity range of generator '%s' overlaps the validity range of one other generator.", generator.getDescription() ) ) );
         continue;
@@ -254,10 +319,40 @@ public class CatchmentModelHelper
     }
 
     /* (6) There are no gaps allowed between the validity ranges of adjacent generators. */
-    if( !compareGeneratorValidityGaps( generators, control, firstGenerator.getTimestep(), firstGenerator.getTimestamp() ) )
-      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "There are gaps in the validity ranges of the generators of the multi generator '%s'", multiGenerator.getDescription() ) ) );
+    if( !compareGeneratorValidityGaps( generators, simulationStart, simulationEnd, firstGenerator.getTimestep(), firstGenerator.getTimestamp() ) )
+      collector.add( new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "There are gaps in the validity ranges of the generators of the multi generator '%s'", description ) ) );
 
-    return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", multiGenerator.getDescription() ) );
+    return collector.asMultiStatus( String.format( "Validation of the multi generator '%s'", description ) );
+  }
+
+  /**
+   * This function checks two linear sum generators for its general properties.<br/>
+   * <br/>
+   * It will check the following rules:
+   * <ul>
+   * <li>The timestep must be the same.</li>
+   * <li>The timestamp must be the same.</li>
+   * </ul>
+   * 
+   * @param generator1
+   *          The first linear sum generator.
+   * @param generator2
+   *          The second linear sum generator.
+   * @return A status. If the severity is ERROR, the validation has failed.
+   */
+  private static IStatus compareGeneralProperties( final ILinearSumGenerator generator1, final ILinearSumGenerator generator2 )
+  {
+    final Integer timestep1 = generator1.getTimestep();
+    final Integer timestep2 = generator2.getTimestep();
+    if( !ObjectUtils.equals( timestep1, timestep2 ) )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The timestep of the generator '%s' does not match the timestep of the first generator '%s'.", generator2.getDescription(), generator1.getDescription() ) );
+
+    final LocalTime timestamp1 = generator1.getTimestamp();
+    final LocalTime timestamp2 = generator2.getTimestamp();
+    if( !ObjectUtils.equals( timestamp1, timestamp2 ) )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "The timestamp of the generator '%s' does not match the timestamp of the first generator '%s'.", generator2.getDescription(), generator1.getDescription() ) );
+
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), String.format( "The general properties of the generator '%s' do match the general properties of the first generator '%s'.", generator2.getDescription(), generator1.getDescription() ) );
   }
 
   /**
@@ -328,10 +423,10 @@ public class CatchmentModelHelper
    *         </li>
    *         </ul>
    */
-  private static boolean compareGeneratorValidityOverlap( final IRainfallGenerator compareGenerator, final IFeatureBindingCollection<IRainfallGenerator> generators )
+  private static boolean compareGeneratorValidityOverlap( final IRainfallGenerator compareGenerator, final IRainfallGenerator[] generators )
   {
     /* No generators available, to compare to. */
-    if( generators.size() == 0 )
+    if( generators.length == 0 )
       return true;
 
     /* The interval of the compare generator. */
@@ -364,8 +459,10 @@ public class CatchmentModelHelper
    * 
    * @param generators
    *          The generators to be checked.
-   * @param control
-   *          The na control.
+   * @param simulationStart
+   *          The start of the simulation.
+   * @param simulationEnd
+   *          The end of the simulation.
    * @param timestep
    *          The timestep.
    * @param timestamp
@@ -373,20 +470,17 @@ public class CatchmentModelHelper
    * @return True, if the validity ranges of the generators do not have gaps or only timestep sized gaps. False
    *         otherwise.
    */
-  private static boolean compareGeneratorValidityGaps( final IFeatureBindingCollection<IRainfallGenerator> generators, final NAControl control, final Integer timestep, final LocalTime timestamp )
+  private static boolean compareGeneratorValidityGaps( final IRainfallGenerator[] generators, final Date simulationStart, final Date simulationEnd, final Integer timestep, final LocalTime timestamp )
   {
     /* No generators available. */
     /* Only one generator available. */
-    if( generators.size() <= 1 )
+    if( generators.length <= 1 )
       return true;
 
-    /* The generators. */
-    final IRainfallGenerator[] generatorArray = generators.toArray( new IRainfallGenerator[] {} );
-
     /* Build the simulation interval. */
-    final DateTime simulationStart = new DateTime( control.getSimulationStart() );
-    final DateTime simulationEnd = new DateTime( control.getSimulationEnd() );
-    final DateRange simulationRange = modifyWithTimestamp( timestamp, simulationStart, simulationEnd );
+    final DateTime simulationStartDateTime = new DateTime( simulationStart );
+    final DateTime simulationEndDateTime = new DateTime( simulationEnd );
+    final DateRange simulationRange = modifyWithTimestamp( timestamp, simulationStartDateTime, simulationEndDateTime );
     final Date simulationStartDate = simulationRange.getFrom();
     final Date simulationEndDate = simulationRange.getTo();
     final long simulationStartTime = simulationStartDate.getTime();
@@ -395,7 +489,7 @@ public class CatchmentModelHelper
     org.kalypso.contribs.java.math.Interval[] simulationRest = new org.kalypso.contribs.java.math.Interval[] { simulationInterval };
 
     /* Check each generator. */
-    for( final IRainfallGenerator generator : generatorArray )
+    for( final IRainfallGenerator generator : generators )
     {
       /* Get the generator dates. */
       DateTime generatorStartDateTime = new DateTime( generator.getValidFrom() );

@@ -84,7 +84,7 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_subGenerators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_SUB_GENERATOR );
+    m_subGenerators = new FeatureBindingCollection<IRainfallGenerator>( this, IRainfallGenerator.class, MEMBER_SUB_GENERATOR, true );
   }
 
   /**

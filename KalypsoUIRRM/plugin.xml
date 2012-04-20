@@ -710,6 +710,10 @@
           class="org.kalypso.ui.rrm.internal.cm.idw.IdwOptionsLayoutPartFactory"
           id="idwOptionsPart">
     </layoutPartFactory>
+    <layoutPartFactory
+          class="org.kalypso.ui.rrm.internal.cm.thiessen.ThiessenOptionsLayoutPartFactory"
+          id="thiessenOptionsPart">
+    </layoutPartFactory>
  </extension>
  <extension
        point="org.kalypso.ui.featureViewExtensionControl">

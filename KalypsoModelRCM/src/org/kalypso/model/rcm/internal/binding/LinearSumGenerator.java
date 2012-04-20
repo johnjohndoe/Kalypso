@@ -397,19 +397,22 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
   @Override
   public void adjustValidities( )
   {
-    /* Get the timestamp. */
-    final LocalTime timestamp = getTimestamp();
+    /* Get the valid from date and the valid to date. */
+    final Date validFrom = getValidFrom();
+    final Date validTo = getValidTo();
+    if( validFrom == null || validTo == null )
+      return;
 
     /* Get the valid from date. */
-    final Date validFrom = getValidFrom();
     final Calendar validFromCalendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     validFromCalendar.setTime( validFrom );
 
     /* Get the valid to date. */
-    final Date validTo = getValidTo();
     final Calendar validToCalendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     validToCalendar.setTime( validTo );
 
+    /* Get the timestamp. */
+    final LocalTime timestamp = getTimestamp();
     if( timestamp != null )
     {
       /* Convert to a date with the kalypso timezone. */
