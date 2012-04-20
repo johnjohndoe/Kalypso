@@ -45,16 +45,13 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.util.FindTimeStepOperation;
@@ -63,7 +60,6 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.IImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.imports.ImportObservationWorker;
-import org.kalypso.ui.rrm.internal.timeseries.view.imports.ValidateTimestepsVisitor;
 import org.kalypso.zml.ui.imports.ImportObservationData;
 
 /**
@@ -128,10 +124,9 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     m_timestamp = timestampOperation.getTimestamp();
 
     /* Validate the timestep. */
-    final IStatus validTimestep = validateTimesteps( m_observation, m_timestep );
-    stati.add( validTimestep );
-    if( IStatus.ERROR == validTimestep.getSeverity() )
-      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_4" ) ); //$NON-NLS-1$
+    final ValidateTimestepsOperation timestep = new ValidateTimestepsOperation( m_observation, m_timestep );
+    stati.add( timestep.execute( monitor ) );
+    m_observation = timestep.getObservation();
 
     final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation );
     m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
@@ -146,22 +141,6 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     /* Timestep */
     final MetadataList metadataList = observation.getMetadataList();
     MetadataHelper.setTimestep( metadataList, m_timestep );
-  }
-
-  private IStatus validateTimesteps( final IObservation observation, final Period timestep )
-  {
-    try
-    {
-      final ValidateTimestepsVisitor visitor = new ValidateTimestepsVisitor( timestep );
-      observation.accept( visitor, null, 1 );
-
-      return visitor.getStatus();
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "ImportTimeseriesOperation_6" ), e ); //$NON-NLS-1$
-    }
   }
 
   @Override

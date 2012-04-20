@@ -105,7 +105,7 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
         final TimeZone timezone = timeZoneID;
         sdf.setTimeZone( timezone );
 
-        m_status.add( IStatus.ERROR, String.format( Messages.getString( "ValidateTimestepsVisitor_1" ), sdf.format( m_lastDate ), sdf.format( date ) ) ); //$NON-NLS-1$
+        m_status.add( IStatus.WARNING, String.format( Messages.getString( "ValidateTimestepsVisitor_1" ), sdf.format( m_lastDate ), sdf.format( date ) ) ); //$NON-NLS-1$
       }
     }
 
