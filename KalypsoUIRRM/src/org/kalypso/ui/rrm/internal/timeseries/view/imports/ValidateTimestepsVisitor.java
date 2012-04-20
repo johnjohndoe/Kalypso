@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
+import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -65,16 +66,13 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
 {
   private final IStatusCollector m_status = new StatusCollector( KalypsoCorePlugin.getID() );
 
-  private final Period m_timestep;
-
   private Date m_lastDate;
 
-  private final long m_duration;
+  private final Duration m_duration;
 
   public ValidateTimestepsVisitor( final Period timestep )
   {
-    m_timestep = timestep;
-    m_duration = m_timestep.toStandardSeconds().getSeconds();
+    m_duration = new Duration( timestep.toStandardSeconds().getSeconds() * 1000 );
   }
 
   @Override
@@ -85,23 +83,11 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
 
     if( Objects.isNotNull( m_lastDate ) )
     {
-      // FIXME: why the fallback here? move fallback into getTimeZone method itself?!
-      final TimeZone timeZoneID = MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
-
-      // FIXME: next line did throw error for 'GMT+1'
-      // final DateTimeZone dateTimeZone = DateTimeZone.forID( timeZoneID.getID() );
-
-      // final DateTime d1 = new DateTime( m_lastDate.getTime(), dateTimeZone );
-      // final DateTime d2 = new DateTime( date.getTime(), dateTimeZone );
-      // final Duration dur = new Duration( d1, d2 );
-      // final Seconds standardSeconds = dur.toStandardSeconds();
-
-      // FIXME: use joda time objects to compare times??
-      final long duration = Math.abs( m_lastDate.getTime() - date.getTime() ) / 1000;
-
-      if( m_duration != duration )
+      final Duration duration = new Duration( m_lastDate.getTime(), date.getTime() );
+      if( !m_duration.equals( duration ) )
       {
         final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "ValidateTimestepsVisitor_0" ) ); //$NON-NLS-1$
+        final TimeZone timeZoneID = MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
         final TimeZone timezone = timeZoneID;
         sdf.setTimeZone( timezone );
 
