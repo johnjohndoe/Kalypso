@@ -138,6 +138,7 @@ public class RepairRueckspruengeOperation implements IRepairObservationWorker
     return false;
   }
 
+  @Override
   public IObservation getObservation( )
   {
     return Objects.firstNonNull( m_repaired, m_observation );
