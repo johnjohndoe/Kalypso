@@ -114,9 +114,35 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
     m_commentText = createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_COMMENT );
     createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_FROM );
     createPropertyDateTimeControl( ILinearSumGenerator.PROPERTY_VALID_TO );
-    createPropertyTextFieldControl( ILinearSumGenerator.PROPERTY_TIMESTEP );
+    createPropertyTimestepControl();
     createPropertyTimestampControl();
     createParameterTypeControl();
+  }
+
+  /**
+   * This function creates the timestep control.
+   */
+  private void createPropertyTimestepControl( )
+  {
+    /* Create the property label. */
+    createPropertyLabel( this, ILinearSumGenerator.PROPERTY_TIMESTEP );
+
+    /* Create the property text field. */
+    final Text field = createPropertyTextField( this );
+
+    /* Bind the text field. */
+    final ISWTObservableValue target = SWTObservables.observeText( field, SWT.Modify );
+    final IObservableValue model = new FeatureBeanObservableValue( getBean(), ILinearSumGenerator.PROPERTY_TIMESTEP );
+
+    /* Create the data binder. */
+    final DataBinder binder = new DataBinder( target, model );
+    binder.addTargetAfterConvertValidator( new TimestepValidator( getBean() ) );
+
+    /* Get the data binding. */
+    final IDataBinding binding = getBinding();
+
+    /* Bind the value. */
+    binding.bindValue( binder );
   }
 
   /**
@@ -138,6 +164,7 @@ public class LinearSumNewComposite extends FeatureBeanComposite<ILinearSumGenera
     final DataBinder binder = new DataBinder( target, model );
     binder.setModelToTargetConverter( new TimestampModelToTargetConverter() );
     binder.setTargetToModelConverter( new TimestampTargetToModelConverter() );
+    binder.addTargetBeforeSetValidator( new TimestampValidator( getBean() ) );
 
     /* Get the data binding. */
     final IDataBinding binding = getBinding();
