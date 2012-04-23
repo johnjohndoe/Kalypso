@@ -113,7 +113,7 @@ public class ImportTimeseriesAction extends Action
   {
     final TimeseriesBean bean = new TimeseriesBean();
 
-    final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( data );
+    final ImportTimeseriesOperation operation = new ImportTimeseriesOperation( data, new TargetTimeseriesValidator( m_station, data, bean ) );
 
     final CommandableWorkspace workspace = m_model.getWorkspace();
     final TimeseriesImportWizard wizard = new TimeseriesImportWizard( operation, data, bean, workspace, m_station );

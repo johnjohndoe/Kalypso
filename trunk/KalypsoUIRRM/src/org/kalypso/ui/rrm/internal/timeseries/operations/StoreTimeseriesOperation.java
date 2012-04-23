@@ -121,7 +121,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final Period timestep = m_operation.getTimestep();
     final IObservation observation = m_operation.getObservation();
 
-    final IFile targetFile = createDataFile( m_bean, timestep );
+    final IFile targetFile = createDataFile( m_bean, timestep, stati );
     m_timeseries = createTimeseries( timestep, targetFile );
 
     writeResult( targetFile, observation );
@@ -192,7 +192,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep ) throws CoreException
+  private IFile createDataFile( final TimeseriesBean timeseries, final Period timestep, final IStatusCollector stati ) throws CoreException
   {
     final String parameterType = (String) timeseries.getProperty( ITimeseries.PROPERTY_PARAMETER_TYPE );
     final String quality = (String) timeseries.getProperty( ITimeseries.PROPERTY_QUALITY );
@@ -200,8 +200,11 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final String stationFoldername = m_station.getTimeseriesFoldername();
     final String timeseriesFilename = TimeseriesDataLinkFunctionProperty.formatTimeseriesFilename( parameterType, quality, timestep );
 
+    // FIXME overwrite existing file add warning state!
     if( fileNameExists( timeseriesFilename ) )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString( "StoreTimeseriesOperation.1" ) ) ); //$NON-NLS-1$
+    {
+      stati.add( IStatus.WARNING, Messages.getString( "StoreTimeseriesOperation.1" ) ); //$NON-NLS-1$
+    }
 
     final SzenarioDataProvider scenarioDataProvider = ScenarioHelper.getScenarioDataProvider();
     final IProject project = scenarioDataProvider.getScenarioFolder().getProject();
