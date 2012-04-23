@@ -345,7 +345,10 @@ public class EditLinearSumDialog extends TitleAreaDialog
 
     /* Get the body. */
     final Composite body = form.getBody();
-    body.setLayout( new GridLayout( 1, false ) );
+    final GridLayout bodyLayout = new GridLayout( 1, false );
+    bodyLayout.marginHeight = 0;
+    bodyLayout.marginWidth = 0;
+    body.setLayout( bodyLayout );
 
     /* Create the data binding. */
     m_dataBinding = new DatabindingTitleAreaDialog( this, null );
