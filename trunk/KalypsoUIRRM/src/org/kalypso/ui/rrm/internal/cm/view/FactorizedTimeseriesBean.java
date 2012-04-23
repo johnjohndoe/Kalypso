@@ -160,6 +160,7 @@ public class FactorizedTimeseriesBean extends FeatureBean<ITimeseries>
     if( m_factor <= 0 || m_factor > 100 )
       return;
 
+    /* HINT: This ensures, that only the timeseries with the same parameter type as the generator will get factors. */
     if( parameterType == null || !parameterType.equals( getFeature().getParameterType() ) )
       return;
 

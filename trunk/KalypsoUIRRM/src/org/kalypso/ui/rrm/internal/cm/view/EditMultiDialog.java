@@ -46,11 +46,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -79,6 +86,7 @@ import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -157,7 +165,12 @@ public class EditMultiDialog extends TrayDialog
   /**
    * The dialog settings.
    */
-  private final IDialogSettings m_settings;
+  private IDialogSettings m_settings;
+
+  /**
+   * The ignore next change flag.
+   */
+  private boolean m_ignoreNextChange;
 
   /**
    * The constructor.
@@ -183,6 +196,7 @@ public class EditMultiDialog extends TrayDialog
     m_statusComposite = null;
     m_dataBinding = null;
     m_settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), getClass().getName() );
+    m_ignoreNextChange = false;
 
     m_bean.addPropertyChangeListener( ILinearSumGenerator.PROPERTY_PARAMETER_TYPE.toString(), m_changeListener );
   }
@@ -234,6 +248,9 @@ public class EditMultiDialog extends TrayDialog
 
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup );
+
+    /* HINT: The change listeners must be added, after the bindings were done. */
+    addChangeListeners( m_dataBinding );
 
     return main;
   }
@@ -466,6 +483,33 @@ public class EditMultiDialog extends TrayDialog
   }
 
   /**
+   * This function adds change listeners to the databinding.
+   * 
+   * @param dataBinding
+   *          The data binding.
+   */
+  private void addChangeListeners( final IDataBinding dataBinding )
+  {
+    final DataBindingContext bindingContext = dataBinding.getBindingContext();
+    final IObservableList bindings = bindingContext.getBindings();
+    for( final Object object : bindings )
+    {
+      final Binding binding = (Binding) object;
+      final IObservable target = binding.getTarget();
+      target.addChangeListener( new IChangeListener()
+      {
+        @Override
+        public void handleChange( final ChangeEvent event )
+        {
+          // TODO Is notified before the change, not after...
+          System.out.println( "AHHHHHHHHHHHHHHHHHHHHHH" );
+          validateDialog();
+        }
+      } );
+    }
+  }
+
+  /**
    * This function updates the status.
    */
   private void updateStatus( )
@@ -509,6 +553,8 @@ public class EditMultiDialog extends TrayDialog
     m_generatorViewer = null;
     m_statusComposite = null;
     m_dataBinding = null;
+    m_settings = null;
+    m_ignoreNextChange = false;
   }
 
   /**
@@ -550,6 +596,38 @@ public class EditMultiDialog extends TrayDialog
    */
   protected void handleParameterTypeChanged( final PropertyChangeEvent evt )
   {
+    /* Avoid loop, if we cancel the change. */
+    if( m_ignoreNextChange == true )
+    {
+      m_ignoreNextChange = false;
+      return;
+    }
+
+    /* Get the shell. */
+    final Shell shell = getShell();
+
+    /* Show the confirm dialog. */
+    if( !MessageDialog.openConfirm( shell, shell.getText(), "Changing the parameter type needs to update the list of generators. Unsaved changes will be lost. Continue?" ) )
+    {
+      m_ignoreNextChange = true;
+      final MultiBean generator = m_bean;
+      final Runnable revertOperation = new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          generator.setProperty( IMultiGenerator.PROPERTY_PARAMETER_TYPE, evt.getOldValue() );
+        }
+      };
+      shell.getDisplay().asyncExec( revertOperation );
+
+      return;
+    }
+
+    /* Reset the set generators. */
+    m_bean.setSubGenerators( new ILinearSumGenerator[] {} );
+
+    /* Set the viewer filter of the generator viewer. */
     final String parameterType = (String) evt.getNewValue();
     if( m_generatorViewer != null && !m_generatorViewer.getTable().isDisposed() )
       m_generatorViewer.setFilters( new ViewerFilter[] { new ParameterTypeViewerFilter( parameterType ) } );
