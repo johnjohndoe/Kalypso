@@ -89,6 +89,8 @@ public class RepairObservationJob extends UIJob
     {
       m_stati.add( m_worker.execute( monitor ) );
     }
+    else
+      m_stati.add( IStatus.ERROR, "Import abgebrochen. Fehlerhafte Eingangszeitreihe!" );
 
     m_done = true;
 
