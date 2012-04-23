@@ -45,7 +45,6 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -169,7 +168,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
   /**
    * The dialog settings.
    */
-  private IDialogSettings m_settings;
+  private final IDialogSettings m_settings;
 
   /**
    * The ignore next change flag.
@@ -281,15 +280,6 @@ public class EditLinearSumDialog extends TitleAreaDialog
   protected IDialogSettings getDialogBoundsSettings( )
   {
     return DialogSettingsUtils.getSection( m_settings, "bounds" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsStrategy()
-   */
-  @Override
-  protected int getDialogBoundsStrategy( )
-  {
-    return Dialog.DIALOG_PERSISTLOCATION | Dialog.DIALOG_PERSISTSIZE;
   }
 
   /**
@@ -595,7 +585,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     m_statusComposite = null;
     m_catchmentBean = null;
     m_dataBinding = null;
-    m_settings = null;
+    /* HINT: Do not discard the dialog settings, will be used to save the dialog bounds . */
     m_ignoreNextChange = false;
   }
 
