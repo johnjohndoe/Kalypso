@@ -48,7 +48,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -152,7 +151,7 @@ public class EditMultiDialog extends TitleAreaDialog
   /**
    * The dialog settings.
    */
-  private IDialogSettings m_settings;
+  private final IDialogSettings m_settings;
 
   /**
    * The ignore next change flag.
@@ -250,15 +249,6 @@ public class EditMultiDialog extends TitleAreaDialog
   protected IDialogSettings getDialogBoundsSettings( )
   {
     return DialogSettingsUtils.getSection( m_settings, "bounds" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsStrategy()
-   */
-  @Override
-  protected int getDialogBoundsStrategy( )
-  {
-    return Dialog.DIALOG_PERSISTLOCATION | Dialog.DIALOG_PERSISTSIZE;
   }
 
   /**
@@ -518,7 +508,7 @@ public class EditMultiDialog extends TitleAreaDialog
     m_generatorViewer = null;
     m_statusComposite = null;
     m_dataBinding = null;
-    m_settings = null;
+    /* HINT: Do not discard the dialog settings, will be used to save the dialog bounds . */
     m_ignoreNextChange = false;
   }
 
