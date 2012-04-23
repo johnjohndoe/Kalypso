@@ -217,8 +217,11 @@ public class EditLinearSumDialog extends TitleAreaDialog
     getShell().setText( Messages.getString( "EditLinearSumDialog_0" ) ); //$NON-NLS-1$
     setTitle( Messages.getString( "EditLinearSumDialog_0" ) ); //$NON-NLS-1$
 
+    /* Create the control. */
+    final Composite control = (Composite) super.createDialogArea( parent );
+
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    final Composite main = new Composite( control, SWT.NONE );
     main.setLayout( new GridLayout( 3, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 550;
@@ -256,7 +259,7 @@ public class EditLinearSumDialog extends TitleAreaDialog
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup, null );
 
-    return main;
+    return control;
   }
 
   /**
