@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -77,6 +78,8 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
   private LocalTime m_timestamp;
 
   private final IImportTimeseriesOperationValidator m_validator;
+
+  private DateRange m_daterange;
 
   public ImportTimeseriesOperation( final ImportObservationData data, final IImportTimeseriesOperationValidator validator )
   {
@@ -105,6 +108,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
       /* Set the timestep. */
       m_timestep = opTimeStep.getTimestep();
+      m_daterange = opTimeStep.getDateRange();
       updateMetadata( m_observation );
 
       if( m_validator != null ) // import?!?
@@ -128,7 +132,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
       doExecute( opMissingValues, stati, monitor, "Fehlerhafte Zeitreihe. Zeitreihe enthält Lücken und Fehlwerte." );
       m_observation = opMissingValues.getObservation();
 
-      final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation );
+      final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation, m_daterange );
       m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
     }
     catch( final CancelProcessingException e )
@@ -163,6 +167,8 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     /* Timestep */
     final MetadataList metadataList = observation.getMetadataList();
     MetadataHelper.setTimestep( metadataList, m_timestep );
+
+    // FIXME set daterange
   }
 
   @Override

@@ -49,6 +49,7 @@ import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.internal.ModelNA;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -58,6 +59,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
@@ -74,9 +76,12 @@ public class TimeseriesImportWorker
 {
   private final IObservation m_observation;
 
-  public TimeseriesImportWorker( final IObservation observation )
+  private final DateRange m_daterange;
+
+  public TimeseriesImportWorker( final IObservation observation, final DateRange daterange )
   {
     m_observation = observation;
+    m_daterange = daterange;
   }
 
   public IObservation convert( final Period period, final LocalTime timestamp ) throws CoreException
@@ -86,8 +91,11 @@ public class TimeseriesImportWorker
       final IAxis[] axes = m_observation.getAxes();
       final IAxis valueAxis = AxisUtils.findValueAxis( axes, true );
 
-      /** getValues() will change the metadata of the observation filter. so call it first. */
-      final ITupleModel base = m_observation.getValues( null );
+      /**
+       * getValues() will change the metadata of the observation filter. so call it first. <br>
+       * date range is needed by interval filter
+       */
+      final ITupleModel base = m_observation.getValues( new ObservationRequest( m_daterange ) );
       final MetadataList metadata = MetadataHelper.clone( m_observation.getMetadataList() );
       final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( metadata );
       base.accept( visitor, 1 );
