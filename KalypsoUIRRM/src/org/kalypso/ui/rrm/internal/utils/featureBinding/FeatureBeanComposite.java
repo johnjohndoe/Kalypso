@@ -247,7 +247,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     else
     {
       final Label propertyLabel = new Label( parent, SWT.NONE );
-      propertyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+      final GridData layoutData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+      layoutData.widthHint = 180;
+      propertyLabel.setLayoutData( layoutData );
       propertyLabel.setText( label );
     }
   }
@@ -265,7 +267,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
     else
       field = new Text( parent, style );
 
-    field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final GridData layoutData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    layoutData.widthHint = 180;
+    field.setLayoutData( layoutData );
     field.setEditable( m_generalEditable );
     field.setEnabled( m_generalEditable );
 
@@ -279,7 +283,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       style = style | SWT.READ_ONLY;
 
     final DateTime dateTime = new DateTime( parent, style );
-    dateTime.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final GridData layoutData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    layoutData.widthHint = 180;
+    dateTime.setLayoutData( layoutData );
     dateTime.setEnabled( m_generalEditable );
 
     return dateTime;
@@ -292,7 +298,9 @@ public abstract class FeatureBeanComposite<F extends Feature> extends Composite
       style = style | SWT.READ_ONLY;
 
     final ComboViewer viewer = new ComboViewer( parent, style );
-    viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final GridData layoutData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    layoutData.widthHint = 180;
+    viewer.getCombo().setLayoutData( layoutData );
     viewer.getCombo().setEnabled( m_generalEditable );
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( provider );
