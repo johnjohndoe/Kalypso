@@ -112,10 +112,7 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
 
     /* Create the main composite. */
     final Composite main = toolkit.createComposite( parent, getStyle() );
-    final GridLayout panelLayout = new GridLayout( 1, false );
-    panelLayout.marginHeight = 0;
-    panelLayout.marginWidth = 0;
-    main.setLayout( panelLayout );
+    GridLayoutFactory.fillDefaults().applyTo( main );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the properties section. */

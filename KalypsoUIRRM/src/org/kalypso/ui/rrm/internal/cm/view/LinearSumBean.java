@@ -219,4 +219,11 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
     return bean;
   }
+
+  public void resetTimeseries( )
+  {
+    /* Clear all old weights. */
+    for( final CatchmentBean catchment : m_catchments )
+      catchment.clearAllWeights();
+  }
 }
