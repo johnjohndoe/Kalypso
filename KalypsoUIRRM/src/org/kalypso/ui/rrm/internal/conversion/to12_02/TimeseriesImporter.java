@@ -67,6 +67,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -90,7 +91,7 @@ import com.google.common.base.Charsets;
 
 /**
  * Helper that imports the timeseries from the old 'Zeitreihen' folder into the new timeseries management.
- *
+ * 
  * @author Gernot Belger
  */
 public class TimeseriesImporter
@@ -256,7 +257,7 @@ public class TimeseriesImporter
 
     /* We write the file from the read observation (instead of copy) */
     /* in order to compress the data and add status and source axes (now required). */
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation );
+    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, new DateRange() );
     final IObservation observationWithSource = cleanupWorker.convert( newTimeseries.getTimestep(), timestamp );
 
     /* Save the observation. */
