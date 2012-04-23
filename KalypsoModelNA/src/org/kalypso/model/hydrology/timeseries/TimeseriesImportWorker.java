@@ -86,9 +86,11 @@ public class TimeseriesImportWorker
       final IAxis[] axes = m_observation.getAxes();
       final IAxis valueAxis = AxisUtils.findValueAxis( axes, true );
 
+      /** getValues() will change the metadata of the observation filter. so call it first. */
+      final ITupleModel base = m_observation.getValues( null );
       final MetadataList metadata = MetadataHelper.clone( m_observation.getMetadataList() );
       final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( metadata );
-      m_observation.getValues( null ).accept( visitor, 1 );
+      base.accept( visitor, 1 );
 
       final DataSetTupleModelBuilder builder = new DataSetTupleModelBuilder( metadata, visitor.getValueMap() );
       builder.execute( new NullProgressMonitor() );
