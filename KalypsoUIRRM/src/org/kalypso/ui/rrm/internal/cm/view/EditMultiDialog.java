@@ -48,6 +48,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -187,7 +188,7 @@ public class EditMultiDialog extends TitleAreaDialog
   }
 
   /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
   protected Control createDialogArea( final Composite parent )
@@ -246,6 +247,15 @@ public class EditMultiDialog extends TitleAreaDialog
   protected IDialogSettings getDialogBoundsSettings( )
   {
     return DialogSettingsUtils.getSection( m_settings, "bounds" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsStrategy()
+   */
+  @Override
+  protected int getDialogBoundsStrategy( )
+  {
+    return Dialog.DIALOG_PERSISTLOCATION | Dialog.DIALOG_PERSISTSIZE;
   }
 
   /**
