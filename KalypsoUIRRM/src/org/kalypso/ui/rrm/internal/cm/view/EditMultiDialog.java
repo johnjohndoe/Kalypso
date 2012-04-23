@@ -197,8 +197,11 @@ public class EditMultiDialog extends TitleAreaDialog
     getShell().setText( "Edit Multi Catchment Model" );
     setTitle( "Edit Multi Catchment Model" );
 
+    /* Create the control. */
+    final Composite control = (Composite) super.createDialogArea( parent );
+
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    final Composite main = new Composite( control, SWT.NONE );
     main.setLayout( new GridLayout( 2, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 550;
@@ -225,7 +228,7 @@ public class EditMultiDialog extends TitleAreaDialog
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup );
 
-    return main;
+    return control;
   }
 
   /**
