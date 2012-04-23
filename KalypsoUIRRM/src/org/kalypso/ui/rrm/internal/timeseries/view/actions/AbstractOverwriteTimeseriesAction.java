@@ -110,7 +110,7 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
     if( m_parameterType != null )
       data.setParameterType( m_parameterType );
 
-    final ImportTimeseriesOperation importOperation = new ImportTimeseriesOperation( data );
+    final ImportTimeseriesOperation importOperation = new ImportTimeseriesOperation( data, null );
 
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoUIRRMPlugin.getDefault(), TimeseriesImportWizard.class.getName() );
     data.init( settings );

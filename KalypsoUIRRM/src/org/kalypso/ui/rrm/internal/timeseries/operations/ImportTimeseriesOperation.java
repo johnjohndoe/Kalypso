@@ -76,9 +76,12 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
   private LocalTime m_timestamp;
 
-  public ImportTimeseriesOperation( final ImportObservationData data )
+  private final IImportTimeseriesOperationValidator m_validator;
+
+  public ImportTimeseriesOperation( final ImportObservationData data, final IImportTimeseriesOperationValidator validator )
   {
     m_data = data;
+    m_validator = validator;
     m_observation = null;
     m_timestep = null;
     m_timestamp = null;
@@ -90,49 +93,69 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
     final File fileSource = m_data.getSourceFileData().getFile();
 
-    final ImportObservationWorker observationWorker = new ImportObservationWorker( m_data, fileSource );
-    final IStatus status = observationWorker.execute( monitor );
-    stati.add( status );
-    if( IStatus.ERROR == status.getSeverity() )
-      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_0" ) ); //$NON-NLS-1$
+    try
+    {
+      final ImportObservationWorker opObservationImport = new ImportObservationWorker( m_data, fileSource );
+      doExecute( opObservationImport, stati, monitor, Messages.getString( "ImportTimeseriesOperation_0" ) );//$NON-NLS-1$
+      m_observation = opObservationImport.getObservation();
 
-    m_observation = observationWorker.getObservation();
+      /* Timestep. */
+      final FindTimeStepOperation opTimeStep = new FindTimeStepOperation( m_observation );
+      doExecute( opTimeStep, stati, monitor, Messages.getString( "ImportTimeseriesOperation_2" ) ); //$NON-NLS-1$
 
-    /* Rücksprung in Daten?!? */
-    final ValidateRuecksprungOperation ruecksprung = new ValidateRuecksprungOperation( m_observation );
-    stati.add( ruecksprung.execute( monitor ) );
-    m_observation = ruecksprung.getObservation();
+      /* Set the timestep. */
+      m_timestep = opTimeStep.getTimestep();
+      updateMetadata( m_observation );
 
-    /* Timestep. */
-    final FindTimeStepOperation timeStepOperation = new FindTimeStepOperation( m_observation );
-    final IStatus timestepStatus = timeStepOperation.execute( monitor );
-    stati.add( timestepStatus );
-    if( IStatus.ERROR == timestepStatus.getSeverity() )
-      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_2" ) ); //$NON-NLS-1$
+      if( m_validator != null ) // import?!?
+      {
+        m_validator.setTimestep( m_timestep );
+        doExecute( m_validator, stati, monitor, Messages.getString( "ImportTimeseriesOperation_0" ) );//$NON-NLS-1$
+      }
 
-    /* Set the timestep. */
-    m_timestep = timeStepOperation.getTimestep();
-    updateMetadata( m_observation );
+      /* Set the timestamp. */
+      final FindTimestampOperation opTimestamp = new FindTimestampOperation( m_observation, m_timestep );
+      doExecute( opTimestamp, stati, monitor, Messages.getString( "ImportTimeseriesOperation_3" ) );//$NON-NLS-1$
+      m_timestamp = opTimestamp.getTimestamp();
 
-    /* Timestamp. */
-    final FindTimestampOperation timestampOperation = new FindTimestampOperation( m_observation, m_timestep );
-    final IStatus timestampStatus = timestampOperation.execute( monitor );
-    stati.add( timestampStatus );
-    if( IStatus.ERROR == timestampStatus.getSeverity() )
-      return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_3" ) ); //$NON-NLS-1$
+      /* Rücksprung in Daten?!? */
+      final ValidateRuecksprungOperation opRuecksprung = new ValidateRuecksprungOperation( m_observation );
+      doExecute( opRuecksprung, stati, monitor, "Zeitlicher Rücksprung wurde festgestellt." );
+      m_observation = opRuecksprung.getObservation();
 
-    /* Set the timestamp. */
-    m_timestamp = timestampOperation.getTimestamp();
+      /* Validate the timestep. */
+      final ValidateMissingTimestepsOperation opMissingValues = new ValidateMissingTimestepsOperation( m_observation, m_timestep );
+      doExecute( opMissingValues, stati, monitor, "Fehlerhafte Zeitreihe. Zeitreihe enthält Lücken und Fehlwerte." );
+      m_observation = opMissingValues.getObservation();
 
-    /* Validate the timestep. */
-    final ValidateMissingTimestepsOperation missing = new ValidateMissingTimestepsOperation( m_observation, m_timestep );
-    stati.add( missing.execute( monitor ) );
-    m_observation = missing.getObservation();
-
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation );
-    m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
+      final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation );
+      m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
+    }
+    catch( final CancelProcessingException e )
+    {
+      return stati.asMultiStatus( e.getMessage() );
+    }
 
     return stati.asMultiStatus( Messages.getString( "ImportTimeseriesOperation_5" ) ); //$NON-NLS-1$
+  }
+
+  private void doExecute( final ICoreRunnableWithProgress runnable, final IStatusCollector stati, final IProgressMonitor monitor, final String errorMessage ) throws CancelProcessingException
+  {
+    try
+    {
+      final IStatus status = runnable.execute( monitor );
+      stati.add( status );
+
+      if( IStatus.ERROR == status.getSeverity() )
+        throw new CancelProcessingException( errorMessage );
+    }
+    catch( final Exception ex )
+    {
+      if( ex instanceof CancelProcessingException )
+        throw (CancelProcessingException) ex;
+
+      throw new CancelProcessingException( ex.getMessage() );
+    }
   }
 
   private void updateMetadata( final IObservation observation )
