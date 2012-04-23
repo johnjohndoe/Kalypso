@@ -63,7 +63,7 @@ public abstract class AbstractTreeNodeUiHandler implements ITreeNodeUiHandler
     final FormToolkit toolkit = binding.getToolkit();
 
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).spacing( 0, 0 ).applyTo( panel );
 
     final Section controlSection = toolkit.createSection( panel, Section.TITLE_BAR | Section.EXPANDED );
     controlSection.setText( Messages.getString( "AbstractTreeNodeUiHandler_0" ) ); //$NON-NLS-1$
