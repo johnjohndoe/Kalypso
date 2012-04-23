@@ -7,7 +7,7 @@
     <mapv:layer visible="true" name="%overview.gmt.nodes" featurePath="NodeCollectionMember/nodeMember" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/modell.gml" xlink:type="simple">
       <templ:legendicon>urn:kalypso:map:theme:swtimage:style:fts_node:rule:rule_Ort</templ:legendicon>
       <templ:showChildren>true</templ:showChildren>
-      <templ:property name="deleteable">true</templ:property>
+      <templ:property name="deleteable">false</templ:property>
     </mapv:layer>
     <mapv:layer visible="true" name="%overview.gmt.virtualStrands" featurePath="ChannelCollectionMember/channelMember[VirtualChannel]" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../.models/modell.gml" xlink:type="simple">
       <templ:showChildren>true</templ:showChildren>
