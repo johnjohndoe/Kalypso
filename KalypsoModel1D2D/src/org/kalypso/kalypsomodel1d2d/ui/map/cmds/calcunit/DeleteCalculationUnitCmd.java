@@ -240,11 +240,11 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         else if( element instanceof IFELine )
           ((IFELine) element).getContainers().remove( m_calcUnitToDelete );
       }
+      deleteControlModel( m_calcUnitToDelete.getGmlID() );
       m_calcUnitToDelete.getElements().clear();
 
       // delete unit from the model
       m_model1d2d.getComplexElements().remove( m_calcUnitToDelete );
-      deleteControlModel( m_calcUnitToDelete.getGmlID() );
       m_calcUnitToDelete = null;
       final Feature[] changedFeatureArray = getChangedFeatureArray();
       fireProcessChanges( changedFeatureArray, false );
@@ -277,21 +277,24 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
     final IControlModel1D2D activeControlModel = controlModel1D2DCollection.getActiveControlModel();
     IControlModel1D2D controlModelToActivate = null;
-    final boolean invalidActiveModel = activeControlModel == null || activeControlModel.getCalculationUnit() == null
+    boolean invalidActiveModel = activeControlModel == null || activeControlModel.getCalculationUnit() == null
         || activeControlModel.getCalculationUnit().getGmlID().equals( calcUnitToDeleteGmlID );
     for( final IControlModel1D2D controlModel : controlModel1D2DCollection )
     {
       final ICalculationUnit cmCalcUnit = controlModel.getCalculationUnit();
       if( cmCalcUnit != null )
       {
-        if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getGmlID() ) )
+        if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getGmlID() ) ){
           controlModel1D2D = controlModel;
-        else if( invalidActiveModel )
+          break;
+        }
+        else if( invalidActiveModel ){
           controlModelToActivate = controlModel;
+          controlModel1D2DCollection.setActiveControlModel( controlModelToActivate );
+          invalidActiveModel = false;
+        }
       }
     }
-    if( invalidActiveModel && controlModelToActivate != null )
-      controlModel1D2DCollection.setActiveControlModel( controlModelToActivate );
 
     if( controlModel1D2D == null )
       // throw new RuntimeException( "Cannot find control model for the calculation unit." );
