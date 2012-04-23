@@ -130,7 +130,7 @@ public class TreePropertiesView extends ViewPart
 
   private void updateNullNode( )
   {
-    m_form.setText( Messages.getString("TreePropertiesView_0") ); //$NON-NLS-1$
+    m_form.setText( Messages.getString( "TreePropertiesView_0" ) ); //$NON-NLS-1$
   }
 
   private void updateNonNullNode( final TreeNode node )
@@ -140,6 +140,7 @@ public class TreePropertiesView extends ViewPart
     m_form.setText( uiHandler.getTypeLabel() );
 
     final Composite body = m_form.getBody();
+    body.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     final Control control = uiHandler.createControl( body, m_binding );
     if( control != null )

@@ -158,7 +158,10 @@ public class IdwWizardLayoutPart extends AbstractLayoutPart
 
     /* Get the body. */
     final Composite body = form.getBody();
-    body.setLayout( new GridLayout( 1, false ) );
+    final GridLayout bodyLayout = new GridLayout( 1, false );
+    bodyLayout.marginHeight = 0;
+    bodyLayout.marginWidth = 0;
+    body.setLayout( bodyLayout );
 
     /* Linear sum control. */
     final LinearSumNewComposite sumComposite = new LinearSumNewComposite( body, m_generator, binding, false );
