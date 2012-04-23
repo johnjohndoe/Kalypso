@@ -264,15 +264,21 @@ public class EditMultiDialog extends TitleAreaDialog
   protected void okPressed( )
   {
     /* Check the status of the data binding. */
-    final IStatus status = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
-    if( !status.isOK() )
+    final IStatus bindingStatus = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
+    if( !bindingStatus.isOK() )
     {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Dialog has validation errors. %s", bindingStatus.getMessage() ), bindingStatus.getException() );
       StatusDialog.open( getShell(), status, getShell().getText() );
       return;
     }
 
     /* Perform ok. */
-    performOk();
+    final IStatus performStatus = performOk();
+    if( !performStatus.isOK() )
+    {
+      StatusDialog.open( getShell(), performStatus, getShell().getText() );
+      return;
+    }
 
     /* Dispose the dialog. */
     dispose();
@@ -464,8 +470,10 @@ public class EditMultiDialog extends TitleAreaDialog
 
   /**
    * This function saves the changes.
+   * 
+   * @return A ERROR status on error or an OK status.
    */
-  private void performOk( )
+  private IStatus performOk( )
   {
     try
     {
@@ -474,11 +482,13 @@ public class EditMultiDialog extends TitleAreaDialog
 
       /* Refresh the tree. */
       m_model.refreshTree( generator );
+
+      return Status.OK_STATUS;
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      StatusDialog.open( getShell(), new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ), getShell().getText() ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ); //$NON-NLS-1$
     }
   }
 
