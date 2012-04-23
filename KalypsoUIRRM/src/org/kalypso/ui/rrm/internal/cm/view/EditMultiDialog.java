@@ -46,19 +46,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.ChangeEvent;
-import org.eclipse.core.databinding.observable.IChangeListener;
-import org.eclipse.core.databinding.observable.IObservable;
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -70,15 +62,14 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.dialog.DatabindingTitleAreaDialog;
+import org.kalypso.commons.databinding.validation.ValidationStatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
@@ -108,7 +99,7 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
  * 
  * @author Holger Albert
  */
-public class EditMultiDialog extends TrayDialog
+public class EditMultiDialog extends TitleAreaDialog
 {
   /**
    * A property change listener for the parameter type.
@@ -131,11 +122,6 @@ public class EditMultiDialog extends TrayDialog
    * The bean to edit.
    */
   protected final MultiBean m_bean;
-
-  /**
-   * The form.
-   */
-  private Form m_form;
 
   /**
    * The main group.
@@ -189,7 +175,6 @@ public class EditMultiDialog extends TrayDialog
     m_model = model;
     m_bean = bean;
 
-    m_form = null;
     m_mainGroup = null;
     m_detailsGroup = null;
     m_generatorViewer = null;
@@ -209,28 +194,18 @@ public class EditMultiDialog extends TrayDialog
   {
     /* Set the title. */
     getShell().setText( "Edit Multi Catchment Model" );
+    setTitle( "Edit Multi Catchment Model" );
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
-    main.setLayout( new GridLayout( 1, false ) );
+    final Composite main = new Composite( parent, SWT.NONE );
+    main.setLayout( new GridLayout( 2, false ) );
     final GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainData.heightHint = 550;
     mainData.widthHint = 900;
     main.setLayoutData( mainData );
 
-    /* Create the form. */
-    m_form = new Form( main, SWT.NONE );
-    m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    /* Create the data binding. */
-    m_dataBinding = new DatabindingForm( m_form, null );
-
-    /* Get the body. */
-    final Composite body = m_form.getBody();
-    body.setLayout( new GridLayout( 2, false ) );
-
     /* Create the main group. */
-    m_mainGroup = new Group( body, SWT.NONE );
+    m_mainGroup = new Group( main, SWT.NONE );
     m_mainGroup.setLayout( new GridLayout( 1, false ) );
     final GridData mainGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     mainGroupData.widthHint = 250;
@@ -241,16 +216,13 @@ public class EditMultiDialog extends TrayDialog
     createMainContent( m_mainGroup );
 
     /* Create the details group. */
-    m_detailsGroup = new Group( body, SWT.NONE );
+    m_detailsGroup = new Group( main, SWT.NONE );
     m_detailsGroup.setLayout( new GridLayout( 1, false ) );
     m_detailsGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_detailsGroup.setText( "Generators" );
 
     /* Create the content of the details group. */
     createDetailsContent( m_detailsGroup );
-
-    /* HINT: The change listeners must be added, after the bindings were done. */
-    addChangeListeners( m_dataBinding );
 
     return main;
   }
@@ -263,11 +235,8 @@ public class EditMultiDialog extends TrayDialog
   {
     super.createButtonsForButtonBar( parent );
 
-    /* Do a layout. */
-    m_form.layout( true, true );
-
-    /* Validate the dialog. */
-    validateDialog();
+    /* Update the status. */
+    updateStatus();
   }
 
   /**
@@ -294,6 +263,14 @@ public class EditMultiDialog extends TrayDialog
   @Override
   protected void okPressed( )
   {
+    /* Check the status of the data binding. */
+    final IStatus status = ValidationStatusUtilities.getFirstNonOkStatus( m_dataBinding );
+    if( !status.isOK() )
+    {
+      StatusDialog.open( getShell(), status, getShell().getText() );
+      return;
+    }
+
     /* Perform ok. */
     performOk();
 
@@ -332,6 +309,9 @@ public class EditMultiDialog extends TrayDialog
     /* Get the body. */
     final Composite body = form.getBody();
     body.setLayout( new GridLayout( 1, false ) );
+
+    /* Create the data binding. */
+    m_dataBinding = new DatabindingTitleAreaDialog( this, null );
 
     /* Create the multi new composite. */
     final MultiNewComposite composite = new MultiNewComposite( body, m_bean, m_dataBinding );
@@ -414,7 +394,7 @@ public class EditMultiDialog extends TrayDialog
         m_bean.setSubGenerators( subGenerators.toArray( new ILinearSumGenerator[] {} ) );
         m_generatorViewer.refresh();
 
-        validateDialog();
+        updateStatus();
       }
     } );
 
@@ -483,45 +463,6 @@ public class EditMultiDialog extends TrayDialog
   }
 
   /**
-   * This function adds change listeners to the databinding.
-   * 
-   * @param dataBinding
-   *          The data binding.
-   */
-  private void addChangeListeners( final IDataBinding dataBinding )
-  {
-    final DataBindingContext bindingContext = dataBinding.getBindingContext();
-    final IObservableList bindings = bindingContext.getBindings();
-    for( final Object object : bindings )
-    {
-      final Binding binding = (Binding) object;
-      final IObservable target = binding.getTarget();
-      target.addChangeListener( new IChangeListener()
-      {
-        @Override
-        public void handleChange( final ChangeEvent event )
-        {
-          // TODO Is notified before the change, not after...
-          System.out.println( "AHHHHHHHHHHHHHHHHHHHHHH" );
-          validateDialog();
-        }
-      } );
-    }
-  }
-
-  /**
-   * This function updates the status.
-   */
-  private void updateStatus( )
-  {
-    if( m_statusComposite == null || m_statusComposite.isDisposed() )
-      return;
-
-    m_bean.updateStatus();
-    m_statusComposite.setStatus( m_bean.getStatus() );
-  }
-
-  /**
    * This function saves the changes.
    */
   private void performOk( )
@@ -537,8 +478,7 @@ public class EditMultiDialog extends TrayDialog
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ); //$NON-NLS-1$
-      StatusDialog.open( getShell(), status, getShell().getText() );
+      StatusDialog.open( getShell(), new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Failed to save the model", e ), getShell().getText() ); //$NON-NLS-1$
     }
   }
 
@@ -547,7 +487,6 @@ public class EditMultiDialog extends TrayDialog
    */
   private void dispose( )
   {
-    m_form = null;
     m_mainGroup = null;
     m_detailsGroup = null;
     m_generatorViewer = null;
@@ -558,34 +497,15 @@ public class EditMultiDialog extends TrayDialog
   }
 
   /**
-   * This function validates the dialog.
+   * This function updates the status.
    */
-  protected void validateDialog( )
+  protected void updateStatus( )
   {
-    /* This is independent of the other validation. */
-    updateStatus();
-
-    /* Cannot do anything. */
-    if( m_form == null || m_form.isDisposed() )
+    if( m_statusComposite == null || m_statusComposite.isDisposed() )
       return;
 
-    /* Get the ok button. */
-    final Button okButton = getButton( IDialogConstants.OK_ID );
-    if( okButton == null )
-      return;
-
-    /* Set the ok button to enabled. */
-    okButton.setEnabled( true );
-
-    /* On error in the form, the dialog may not be completed. */
-    final int messageType = m_form.getMessageType();
-    if( messageType == IMessageProvider.ERROR )
-    {
-      okButton.setEnabled( false );
-      return;
-    }
-
-    /* HINT: The validation was ok. */
+    m_bean.updateStatus();
+    m_statusComposite.setStatus( m_bean.getStatus() );
   }
 
   /**
