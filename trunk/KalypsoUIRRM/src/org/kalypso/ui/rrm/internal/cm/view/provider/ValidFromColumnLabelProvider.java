@@ -76,6 +76,9 @@ public class ValidFromColumnLabelProvider extends ColumnLabelProvider
     {
       final IRainfallGenerator generator = (IRainfallGenerator) element;
       final Date validFrom = generator.getValidFrom();
+      if( validFrom == null )
+        return null;
+
       return String.format( "%s", m_df.format( validFrom ) );
     }
 
