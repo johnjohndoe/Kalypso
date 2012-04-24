@@ -111,7 +111,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
       m_daterange = opTimeStep.getDateRange();
       updateMetadata( m_observation );
 
-      if( m_validator != null ) // import?!?
+      if( m_validator != null ) // only in case of time series import
       {
         m_validator.setTimestep( m_timestep );
         doExecute( m_validator, stati, monitor, Messages.getString( "ImportTimeseriesOperation_0" ) );//$NON-NLS-1$
