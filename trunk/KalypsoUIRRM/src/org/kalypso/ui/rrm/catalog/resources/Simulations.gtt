@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gistableview xmlns="gistableview.template.kalypso.org" xmlns:ns1="http://www.w3.org/1999/xlink" xmlns:ns4="obstableview.template.kalypso.org" xmlns:ns3="obsdiagview.template.kalypso.org" xmlns:ns5="types.template.kalypso.org" xmlns:ns6="gismapview.template.kalypso.org">
   <layer id="id" featurePath="simulationMember" linktype="gml" ns1:type="simple" ns1:href=".models/simulations.gml" ns1:actuate="onRequest">
-    <column name="gml:description" editable="true" width="120" alignment="16384"/>
-    <column name="rrmMeta:startsimulation" editable="true" width="129" alignment="16384"/>
-    <column name="rrmMeta:endsimulation" editable="true" width="124" alignment="16384"/>
-    <column name="rrmMeta:minutesTimestep" editable="true" width="100" alignment="16384"/>
+    <column name="gml:description" editable="false" width="120" alignment="16384"/>
+    <column name="rrmMeta:startsimulation" editable="false" width="129" alignment="16384"/>
+    <column name="rrmMeta:endsimulation" editable="false" width="124" alignment="16384"/>
+    <column name="rrmMeta:minutesTimestep" editable="false" width="100" alignment="16384"/>
     <!--  FIXME: use special modifier that filters by parameter type -->
-    <column name="rrmMeta:generatorN" editable="true" width="128" alignment="16384"/>
-    <column name="rrmMeta:generatorT" editable="true" width="118" alignment="16384"/>
-    <column name="rrmMeta:generatorE" editable="true" width="126" alignment="16384"/>
+    <column name="rrmMeta:generatorN" editable="false" width="128" alignment="16384"/>
+    <column name="rrmMeta:generatorT" editable="false" width="118" alignment="16384"/>
+    <column name="rrmMeta:generatorE" editable="false" width="126" alignment="16384"/>
     <!--  FIXME: use special modifier that shows the usual dialog -->
-    <column name="rrmMeta:versionKalypsoNA" editable="true" width="119" alignment="16384"/>
+    <column name="rrmMeta:versionKalypsoNA" editable="false" width="119" alignment="16384"/>
     <!--  FIXME: use special modifier that chooses from all other simulations -->
-    <column name="rrmMeta:initialValueSource" editable="true" width="120" alignment="16384"/>
-    <column name="rrmMeta:comment" editable="true" width="231" alignment="16384"/>
+    <column name="rrmMeta:initialValueSource" editable="false" width="120" alignment="16384"/>
+    <column name="rrmMeta:comment" editable="false" width="231" alignment="16384"/>
   </layer>
 </gistableview>
