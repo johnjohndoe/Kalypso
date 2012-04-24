@@ -78,17 +78,17 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
   private IStatus m_status;
 
   /**
-   * The constructor.
+   * Constructs a complete empty multi bean.
    */
   public MultiBean( )
   {
     super( IMultiGenerator.FEATURE_MULTI_GENERATOR );
 
-    m_subGenerators = null;
+    m_subGenerators = new ILinearSumGenerator[] {};
   }
 
   /**
-   * The constructor.
+   * Constructs a multi bean initialized with the values from the multi generator.
    * 
    * @param generator
    *          The multi generator.

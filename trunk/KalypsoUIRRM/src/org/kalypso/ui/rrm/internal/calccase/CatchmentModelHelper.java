@@ -823,7 +823,7 @@ public class CatchmentModelHelper
       final String generatorId = generatorLink.getFeatureId();
 
       if( !modelId.equals( generatorId ) )
-        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "The catchment model contains the catchments in a different order than the model." );
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "The catchment model contains catchments in a different order than the model." );
     }
 
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The catchments do match." );
