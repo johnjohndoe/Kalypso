@@ -45,9 +45,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.featureview.views.FeatureView;
+import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ui.rrm.internal.utils.WorkflowHandlerUtils;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -65,10 +68,30 @@ public class SimulationManagementTaskHandler extends AbstractHandler
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked( event );
     final IWorkbenchPage page = window.getActivePage();
 
-    final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    configureFeatureView( page );
 
-    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", null, szenarioFolder ); //$NON-NLS-1$
+    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+
+    WorkflowHandlerUtils.setGttInput( page, null, "urn:org.kalypso.model.rrm.simulationManagement:workflow:Simulations:gtt", null, scenarioFolder ); //$NON-NLS-1$
 
     return null;
+  }
+
+  /**
+   * Configure feature view with specialized templates.
+   * 
+   * @param page
+   *          The workbench page.
+   */
+  private void configureFeatureView( final IWorkbenchPage page )
+  {
+    final IViewPart part = page.findView( FeatureView.ID );
+    if( !(part instanceof FeatureView) )
+      return;
+
+    final FeatureView featureView = (FeatureView) part;
+    final CachedFeatureviewFactory factory = featureView.getCachedFeatureViewFactory();
+
+    factory.addView( getClass().getResource( "/org/kalypso/ui/rrm/catalog/resources/Simulation.gft" ) ); //$NON-NLS-1$
   }
 }
