@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.timeseries;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.internal.ModelNA;
@@ -59,6 +62,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -95,7 +99,7 @@ public class TimeseriesImportWorker
        * getValues() will change the metadata of the observation filter. so call it first. <br>
        * date range is needed by interval filter
        */
-      final ITupleModel base = m_observation.getValues( new ObservationRequest( m_daterange ) );
+      final ITupleModel base = m_observation.getValues( getRequest() );
       final MetadataList metadata = MetadataHelper.clone( m_observation.getMetadataList() );
       final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( metadata );
       base.accept( visitor, 1 );
@@ -136,6 +140,20 @@ public class TimeseriesImportWorker
       final IStatus status = new Status( IStatus.ERROR, ModelNA.PLUGIN_ID, "Failed to clean timeseries" );
       throw new CoreException( status );
     }
+  }
+
+  private IRequest getRequest( )
+  {
+    if( m_daterange == null )
+      return null;
+
+    final Date from = m_daterange.getFrom();
+    final Date to = m_daterange.getTo();
+
+    if( Objects.allNotNull( from, to ) )
+      return new ObservationRequest( new DateRange( from, to ) );
+
+    return null;
   }
 
   private IObservation removeMissingValues( final IObservation observation, final IAxis valueAxis ) throws SensorException

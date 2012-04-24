@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.joda.time.LocalTime;
@@ -171,7 +172,7 @@ public class TimeseriesImporter
 
       try
       {
-        importZml( sourceTimeseriesDir, zmlFile );
+        importZml( sourceTimeseriesDir, zmlFile, stati );
       }
       catch( final CoreException e )
       {
@@ -197,13 +198,13 @@ public class TimeseriesImporter
     monitor.done();
   }
 
-  private void importZml( final File baseDir, final File zmlFile ) throws SensorException, CoreException, IOException
+  private void importZml( final File baseDir, final File zmlFile, final IStatusCollector stati ) throws SensorException, CoreException, IOException
   {
     final String baseName = FilenameUtils.removeExtension( zmlFile.getName() );
     final String relativePath = FileUtilities.getRelativePathTo( baseDir, zmlFile );
 
     /* Read and check observation. */
-    final IObservation observation = readObservation( zmlFile, relativePath );
+    IObservation observation = readObservation( zmlFile, relativePath );
     final IAxis[] axes = observation.getAxes();
 
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
@@ -241,6 +242,11 @@ public class TimeseriesImporter
     /* The timestamp is only relevant for day values. */
     final LocalTime timestamp = TimeseriesUtils.guessTimestamp( values, timestep );
 
+    final RepairTimeseriesOperation repair = new RepairTimeseriesOperation( observation, timestep, timestamp, zmlFile.getName() );
+// IStatus execute =
+    stati.add( repair.execute( new NullProgressMonitor() ) );
+
+    observation = repair.getObservation();
     /* Assign station and timeseries parameters. */
     final String stationDescription = baseName;
     final String timeseriesDescription = baseName;
