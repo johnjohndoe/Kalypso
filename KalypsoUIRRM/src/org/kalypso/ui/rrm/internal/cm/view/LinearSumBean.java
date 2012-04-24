@@ -72,6 +72,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 {
   private CatchmentBean[] m_catchments;
 
+  /**
+   * Constructs a complete empty linear sum bean.
+   */
   public LinearSumBean( )
   {
     super( ILinearSumGenerator.FEATURE_LINEAR_SUM_GENERATOR );
@@ -79,6 +82,12 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     m_catchments = new CatchmentBean[] {};
   }
 
+  /**
+   * Constructs a linear sum bean initialized with the values from the linear sum generator.
+   * 
+   * @param generator
+   *          The linear sum generator.
+   */
   public LinearSumBean( final ILinearSumGenerator generator )
   {
     super( generator );
@@ -186,7 +195,11 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
   }
 
   /**
-   * Create an empty bean with all catchments from the model.gml.
+   * Creates a empty linear sum bean with all catchments from the model.gml.
+   * 
+   * @param model
+   *          The na model.
+   * @return The linear sum bean.
    */
   public static LinearSumBean createFromModel( final NaModell model )
   {
@@ -195,6 +208,34 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     bean.setProperty( ILinearSumGenerator.PROPERTY_AREA_DESCRIPTION, "gml:description" ); //$NON-NLS-1$
     bean.setProperty( ILinearSumGenerator.PROPERTY_AREA, Catchment.PROP_GEOM.getLocalPart() );
 
+    final CatchmentBean[] beans = getCatchmentsFromModel( model );
+    bean.setCatchments( beans );
+
+    return bean;
+  }
+
+  /**
+   * Creates a linear sum bean representing the linear sum generator with all catchments from the model.gml.
+   * 
+   * @param model
+   *          The na model.
+   * @param generator
+   *          The linear sum generator.
+   * @return The linear sum bean.
+   */
+  public static LinearSumBean reinitFromModel( final NaModell model, final ILinearSumGenerator generator )
+  {
+    final LinearSumBean bean = new LinearSumBean();
+    bean.setFeature( generator );
+
+    final CatchmentBean[] beans = getCatchmentsFromModel( model );
+    bean.setCatchments( beans );
+
+    return bean;
+  }
+
+  private static CatchmentBean[] getCatchmentsFromModel( final NaModell model )
+  {
     final IFeatureBindingCollection<Catchment> catchments = model.getCatchments();
     final Collection<CatchmentBean> catchmentBeans = new ArrayList<>( catchments.size() );
 
@@ -214,10 +255,7 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
       catchmentBeans.add( catchmentBean );
     }
 
-    final CatchmentBean[] beans = catchmentBeans.toArray( new CatchmentBean[catchmentBeans.size()] );
-    bean.setCatchments( beans );
-
-    return bean;
+    return catchmentBeans.toArray( new CatchmentBean[catchmentBeans.size()] );
   }
 
   public void resetTimeseries( )

@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -93,14 +94,25 @@ public class EditLinearSumIdwAction extends Action
 
       /* Compare the catchments of the model and the catchments of the generator. */
       final IStatus status = CatchmentModelHelper.compareCatchments( model, m_generator );
-      if( !status.isOK() )
+
+      /* The linear sum bean. */
+      LinearSumBean bean = null;
+
+      /* Check the status. */
+      if( status.isOK() )
+      {
+        /* Create the linear sum bean. */
+        bean = new LinearSumBean( m_generator );
+      }
+      else
       {
         /* Show a warning and ask the user, if the catchments should be rearranged. */
-        // TODO
-      }
+        final String message = String.format( "%s. This could have happend because the model has changed. The catchments will be newly initialized...", status.getMessage() );
+        MessageDialog.openInformation( shell, getText(), message );
 
-      /* Create the linear sum bean. */
-      final LinearSumBean bean = new LinearSumBean( m_generator );
+        /* Create the linear sum bean. */
+        bean = LinearSumBean.reinitFromModel( model, m_generator );
+      }
 
       /* Show the wizard. */
       IdwLinearSumHelper.showWizard( shell, bean, m_model, getText() );
