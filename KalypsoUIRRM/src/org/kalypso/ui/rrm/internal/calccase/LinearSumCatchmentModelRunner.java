@@ -141,6 +141,11 @@ public class LinearSumCatchmentModelRunner extends AbstractCatchmentModelRunner
       monitor.beginTask( Messages.getString( "UpdateSimulationWorker_14" ), 100 ); //$NON-NLS-1$
       monitor.subTask( TimeseriesUtils.getName( parameterType ) );
 
+      /* Compare the catchments of the model and the catchments of the generator. */
+      final IStatus status = CatchmentModelHelper.compareCatchments( model, linearGenerator );
+      if( !status.isOK() )
+        throw new CoreException( status );
+
       /* Create the rainfall generation operation. */
       final IRainfallCatchmentModel rainfallModel = createRainfallModel( simulation, model, linearGenerator, targetLink, range );
 

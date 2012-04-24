@@ -348,9 +348,9 @@ public class UpdateSimulationWorker
     /* Target file. */
     final IFile initialValuesTargetFile = m_simulation.getLzsimGml();
 
-    /* Copy it! */
     try
     {
+      /* Copy it! */
       FileUtils.copyFile( initialValuesSourceFile.getLocation().toFile(), initialValuesTargetFile.getLocation().toFile() );
       initialValuesSourceFile.getParent().refreshLocal( IResource.DEPTH_INFINITE, null );
     }

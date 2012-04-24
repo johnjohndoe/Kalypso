@@ -790,4 +790,42 @@ public class CatchmentModelHelper
 
     return hash;
   }
+
+  /**
+   * This function compares the catchments of the na model with the catchment of the given generator.
+   * 
+   * @param model
+   *          The na model.
+   * @param generator
+   *          The generator.
+   * @return A ERROR status, if the catchments do not match. A OK status otherwise.
+   */
+  public static IStatus compareCatchments( final NaModell model, final ILinearSumGenerator generator )
+  {
+    /* These catchments must be matched. */
+    final IFeatureBindingCollection<Catchment> modelCatchments = model.getCatchments();
+
+    /* Thease are the catchments, that must match the others. */
+    final IFeatureBindingCollection<ICatchment> generatorCatchments = generator.getCatchments();
+
+    /* Does the size match? */
+    if( modelCatchments.size() != generatorCatchments.size() )
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "The catchment model contains a different number of catchments than the model." );
+
+    /* Does the order match? */
+    for( int i = 0; i < modelCatchments.size(); i++ )
+    {
+      final Catchment modelCatchment = modelCatchments.get( i );
+      final String modelId = modelCatchment.getId();
+
+      final ICatchment generatorCatchment = generatorCatchments.get( i );
+      final IXLinkedFeature generatorLink = (IXLinkedFeature) generatorCatchment.getAreaLink();
+      final String generatorId = generatorLink.getFeatureId();
+
+      if( !modelId.equals( generatorId ) )
+        return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "The catchment model contains the catchments in a different order than the model." );
+    }
+
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "The catchments do match." );
+  }
 }
