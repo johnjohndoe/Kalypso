@@ -40,14 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view.action;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.cm.view.EditLinearSumDialog;
 import org.kalypso.ui.rrm.internal.cm.view.EditMultiDialog;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
@@ -80,8 +88,6 @@ public class EditGeneratorAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    // FIXME: check integrity of generator with modell.gml
-
     if( m_generator instanceof ILinearSumGenerator )
       editLinearSum( shell );
 
@@ -91,16 +97,39 @@ public class EditGeneratorAction extends Action
 
   private void editLinearSum( final Shell shell )
   {
-    final LinearSumBean bean = new LinearSumBean( (ILinearSumGenerator) m_generator );
+    try
+    {
+      /* Get the data provider. */
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final NaModell model = dataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
 
-    final EditLinearSumDialog dialog = new EditLinearSumDialog( shell, m_model, bean );
-    dialog.open();
+      /* Compare the catchments of the model and the catchments of the generator. */
+      final IStatus status = CatchmentModelHelper.compareCatchments( model, (ILinearSumGenerator) m_generator );
+      if( !status.isOK() )
+      {
+        /* Show a warning and ask the user, if the catchments should be rearranged. */
+        // TODO
+      }
+
+      /* Create the linear sum bean. */
+      final LinearSumBean bean = new LinearSumBean( (ILinearSumGenerator) m_generator );
+
+      /* Create the dialog. */
+      final EditLinearSumDialog dialog = new EditLinearSumDialog( shell, m_model, bean );
+
+      /* Open the dialog. */
+      dialog.open();
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      ErrorDialog.openError( shell, getText(), "Failed to edit the catchment model...", ex.getStatus() );
+    }
   }
 
   private void editMulti( final Shell shell )
   {
     final MultiBean bean = new MultiBean( (IMultiGenerator) m_generator );
-
     final EditMultiDialog dialog = new EditMultiDialog( shell, m_model, bean );
     dialog.open();
   }

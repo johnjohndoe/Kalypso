@@ -40,12 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.cm.view.action;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
+import org.kalypso.ui.rrm.internal.IUiRrmWorkflowConstants;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.calccase.CatchmentModelHelper;
 import org.kalypso.ui.rrm.internal.cm.idw.IdwLinearSumHelper;
 import org.kalypso.ui.rrm.internal.cm.view.LinearSumBean;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
@@ -74,11 +82,33 @@ public class EditLinearSumIdwAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    // FIXME: check integrity of generator with modell.gml
+    /* Get the shell. */
     final Shell shell = event.widget.getDisplay().getActiveShell();
-    final LinearSumBean bean = new LinearSumBean( m_generator );
-    final String title = getText();
 
-    IdwLinearSumHelper.showWizard( shell, bean, m_model, title );
+    try
+    {
+      /* Get the data provider. */
+      final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+      final NaModell model = dataProvider.getModel( IUiRrmWorkflowConstants.SCENARIO_DATA_MODEL );
+
+      /* Compare the catchments of the model and the catchments of the generator. */
+      final IStatus status = CatchmentModelHelper.compareCatchments( model, m_generator );
+      if( !status.isOK() )
+      {
+        /* Show a warning and ask the user, if the catchments should be rearranged. */
+        // TODO
+      }
+
+      /* Create the linear sum bean. */
+      final LinearSumBean bean = new LinearSumBean( m_generator );
+
+      /* Show the wizard. */
+      IdwLinearSumHelper.showWizard( shell, bean, m_model, getText() );
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      ErrorDialog.openError( shell, getText(), "Failed to edit the catchment model...", ex.getStatus() );
+    }
   }
 }
