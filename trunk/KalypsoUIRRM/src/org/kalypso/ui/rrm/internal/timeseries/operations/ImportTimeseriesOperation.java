@@ -122,6 +122,10 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
       doExecute( opTimestamp, stati, monitor, Messages.getString( "ImportTimeseriesOperation_3" ) );//$NON-NLS-1$
       m_timestamp = opTimestamp.getTimestamp();
 
+      /* Check timestamp of "Tageszeitreihen" */
+      final ValidateTageszeitreihenOperation opTageszeitreihe = new ValidateTageszeitreihenOperation( m_observation, m_timestep, m_timestamp );
+      doExecute( opTageszeitreihe, stati, monitor, "Falsch aufgelöste Tageszeitreihe - Uhrzeiten variieren." );
+
       /* Rücksprung in Daten?!? */
       final ValidateRuecksprungOperation opRuecksprung = new ValidateRuecksprungOperation( m_observation );
       doExecute( opRuecksprung, stati, monitor, "Zeitlicher Rücksprung wurde festgestellt." );
