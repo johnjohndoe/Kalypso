@@ -86,10 +86,10 @@ public class ValidateTimestepsVisitor implements IObservationVisitor
       final Duration duration = new Duration( m_lastDate.getTime(), date.getTime() );
       if( !m_duration.equals( duration ) )
       {
+        /** take time zone from source file for displaying (so it's equivalent to source date times!) */
         final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "ValidateTimestepsVisitor_0" ) ); //$NON-NLS-1$
         final TimeZone timeZoneID = MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
-        final TimeZone timezone = timeZoneID;
-        sdf.setTimeZone( timezone );
+        sdf.setTimeZone( timeZoneID );
 
         m_status.add( IStatus.WARNING, String.format( Messages.getString( "ValidateTimestepsVisitor_1" ), sdf.format( m_lastDate ), sdf.format( date ) ) ); //$NON-NLS-1$
       }
