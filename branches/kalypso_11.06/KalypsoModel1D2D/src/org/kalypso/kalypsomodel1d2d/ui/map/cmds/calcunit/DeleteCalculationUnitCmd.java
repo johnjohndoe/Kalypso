@@ -204,6 +204,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
+  @SuppressWarnings({ "deprecation", "rawtypes" })
   @Override
   public void process( ) throws Exception
   {
@@ -295,12 +296,11 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           invalidActiveModel = false;
         }
       }
+      else if( controlModel1D2D == null )
+        controlModel1D2D = controlModel;
+        // control model doesn't exists, actually we have control model without reference to any existing calculation unit
+        // so this one is invalid and should be deleted. In this case it is a needed control model 
     }
-
-    if( controlModel1D2D == null )
-      // throw new RuntimeException( "Cannot find control model for the calculation unit." );
-      // control model doesn't exists, so nothing will happen
-      return;
 
     final Feature parentFeature = controlModel1D2DCollection.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
