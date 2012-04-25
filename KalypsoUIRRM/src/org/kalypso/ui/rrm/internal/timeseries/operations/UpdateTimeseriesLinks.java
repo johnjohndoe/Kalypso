@@ -52,6 +52,7 @@ import org.kalypso.model.hydrology.project.RrmProject;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -92,7 +93,7 @@ public final class UpdateTimeseriesLinks
     stati.add( doUpdateTimeseriesLinks( modelFolder.getFile( ".models/modell.gml" ), visitor ) ); //$NON-NLS-1$
     stati.add( doUpdateTimeseriesLinks( modelFolder.getFile( ".models/catchmentModels.gml" ), visitor ) ); //$NON-NLS-1$
 
-    return stati.asMultiStatusOrOK( "Aktualisiere Zeitreihen-Verweise" );
+    return stati.asMultiStatusOrOK( Messages.getString("UpdateTimeseriesLinks_0") ); //$NON-NLS-1$
   }
 
   private static IStatus doUpdateTimeseriesLinks( final IFile file, final UpdateTimeseriesLinksVisitor visitor )
@@ -110,13 +111,13 @@ public final class UpdateTimeseriesLinks
     }
     catch( final Exception e )
     {
-      final String msg = String.format( "Aktualisierung der Modelldatei \"%s\" fehlgeschlagen.", file.getFullPath().toOSString() );
+      final String msg = String.format( Messages.getString("UpdateTimeseriesLinks_1"), file.getFullPath().toOSString() ); //$NON-NLS-1$
       e.printStackTrace();
 
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), msg, e );
     }
 
-    final String msg = String.format( "Aktualisierung der Modelldatei \"%s\"", file.getFullPath().toOSString() );
+    final String msg = String.format( Messages.getString("UpdateTimeseriesLinks_2"), file.getFullPath().toOSString() ); //$NON-NLS-1$
 
     return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), msg );
   }

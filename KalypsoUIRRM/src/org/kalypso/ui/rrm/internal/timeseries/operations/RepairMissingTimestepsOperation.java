@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import com.google.common.base.Objects;
 
@@ -93,7 +94,7 @@ public class RepairMissingTimestepsOperation implements IRepairObservationWorker
 
     m_repaired = getFilter( valueAxes[0] );
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Fülle Zeitlücken / Fehlwerte" );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("RepairMissingTimestepsOperation_0") ); //$NON-NLS-1$
   }
 
   private IObservationFilter getFilter( final IAxis valueAxes )
@@ -121,7 +122,7 @@ public class RepairMissingTimestepsOperation implements IRepairObservationWorker
         }
 
         default:
-          return InterpolationFilterCreator.createFilter( amount, FIELD.MINUTE.toString(), KalypsoStati.BIT_CHECK, "0.0", false, m_observation, null );
+          return InterpolationFilterCreator.createFilter( amount, FIELD.MINUTE.toString(), KalypsoStati.BIT_CHECK, "0.0", false, m_observation, null ); //$NON-NLS-1$
       }
     }
     catch( final SensorException e )
@@ -135,7 +136,7 @@ public class RepairMissingTimestepsOperation implements IRepairObservationWorker
   @Override
   public String getDialogTitle( )
   {
-    return "Fehlwerte wurden festgestellt";
+    return Messages.getString("RepairMissingTimestepsOperation_2"); //$NON-NLS-1$
   }
 
   @Override
@@ -143,7 +144,7 @@ public class RepairMissingTimestepsOperation implements IRepairObservationWorker
   {
     final String time = PeriodUtils.formatDefault( m_timestep );
 
-    return String.format( "Nicht alle Zeitschritte der %s-Zeitreihe sind vorhanden.\n\nFehlende Einträge automatisch hinzufügen?", time );
+    return String.format( Messages.getString("RepairMissingTimestepsOperation_3"), time ); //$NON-NLS-1$
   }
 
   @Override

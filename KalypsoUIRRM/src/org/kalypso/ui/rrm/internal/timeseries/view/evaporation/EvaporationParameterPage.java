@@ -59,6 +59,7 @@ import org.kalypso.commons.databinding.validation.StringAsDoubleValidator;
 import org.kalypso.commons.databinding.validation.StringIsAsciiPrintableValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 
 /**
@@ -77,11 +78,11 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
 
   protected EvaporationParameterPage( final CalculateEvaporationData data )
   {
-    super( "EvaporationParameterPage" );
+    super( Messages.getString("EvaporationParameterPage_0") ); //$NON-NLS-1$
     m_data = data;
 
-    setTitle( "Berechnungsparameter" );
-    setDescription( "Ändern Sie die Berechnungsparameter wie gewünscht." );
+    setTitle( Messages.getString("EvaporationParameterPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("EvaporationParameterPage_2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -128,9 +129,9 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final Group group = new Group( page, SWT.NULL );
     group.setLayout( new GridLayout( 3, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Parameter" );
+    group.setText( Messages.getString("EvaporationParameterPage_3") ); //$NON-NLS-1$
 
-    addTextControl( group, "Breitengrad", CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, "Breitengrad ist kein gültiger Zahlenwert." ) );
+    addTextControl( group, Messages.getString("EvaporationParameterPage_4"), CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, Messages.getString("EvaporationParameterPage_5") ) ); //$NON-NLS-1$ //$NON-NLS-2$
 // addTextControl( group, "Faktor Umrechnung j/cm² in W/m²", CalculateEvaporationData.PROPERTY_FACTOR_CONVERSION_JW, new
 // StringAsDoubleValidator( IStatus.ERROR, "Umrechnungsfaktor ist kein gültiger Zahlenwert." ) );
 // addTextControl( group, "Emissionskoeffizient", CalculateEvaporationData.PROPERTY_COEFFICIENT_EMISSION, new
@@ -148,9 +149,9 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final Group group = new Group( page, SWT.NULL );
     group.setLayout( new GridLayout( 3, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Parameter" );
+    group.setText( Messages.getString("EvaporationParameterPage_6") ); //$NON-NLS-1$
 
-    addTextControl( group, "Breitengrad", CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, "Breitengrad ist kein gültiger Zahlenwert." ) );
+    addTextControl( group, Messages.getString("EvaporationParameterPage_7"), CalculateEvaporationData.PROPERTY_LATITUDE, new StringAsDoubleValidator( IStatus.ERROR, Messages.getString("EvaporationParameterPage_8") ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void addTextControl( final Composite parent, final String label, final String property, final IValidator validator )
@@ -159,7 +160,7 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     lab.setText( label );
 
     final Label spacer = new Label( parent, SWT.NULL );
-    spacer.setText( "" );
+    spacer.setText( "" ); //$NON-NLS-1$
     final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
     data.widthHint = data.minimumWidth = 100;
     spacer.setLayoutData( data );
@@ -178,7 +179,7 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final Group groupDateRange = new Group( page, SWT.NULL );
     groupDateRange.setLayout( new GridLayout() );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    groupDateRange.setText( "Quality" );
+    groupDateRange.setText( Messages.getString("EvaporationParameterPage_10") ); //$NON-NLS-1$
 
     final Text text = new Text( groupDateRange, SWT.BORDER );
     text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -186,7 +187,7 @@ public class EvaporationParameterPage extends WizardPage implements IUpdateable
     final ISWTObservableValue target = SWTObservables.observeText( text, new int[] { SWT.Modify } );
     final IObservableValue model = BeansObservables.observeValue( m_data, CalculateEvaporationData.PROPERTY_QUALITY );
 
-    m_binding.bindValue( target, model, new StringIsAsciiPrintableValidator( IStatus.ERROR, "Ungültiger Quality-Name" ) );
+    m_binding.bindValue( target, model, new StringIsAsciiPrintableValidator( IStatus.ERROR, Messages.getString("EvaporationParameterPage_11") ) ); //$NON-NLS-1$
   }
 
 }

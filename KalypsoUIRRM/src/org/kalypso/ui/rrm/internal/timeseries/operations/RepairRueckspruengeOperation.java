@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 import com.google.common.base.Objects;
 
@@ -96,13 +97,13 @@ public class RepairRueckspruengeOperation implements IRepairObservationWorker
       final SimpleTupleModel copied = new SimpleTupleModel( axes, data.toArray( new Object[][] {} ) );
       m_repaired = new SimpleObservation( m_observation.getHref(), m_observation.getName(), m_observation.getMetadataList(), copied );
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Zeitliche Rücksprünge wurden entfernt" );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("RepairRueckspruengeOperation_0") ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Fehler beim entfernen von Zeitlichen Rücksprüngen.", e );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("RepairRueckspruengeOperation_1"), e ); //$NON-NLS-1$
     }
 
   }
@@ -147,13 +148,13 @@ public class RepairRueckspruengeOperation implements IRepairObservationWorker
   @Override
   public String getDialogTitle( )
   {
-    return "Zeitliche Rücksprünge beheben";
+    return Messages.getString("RepairRueckspruengeOperation_2"); //$NON-NLS-1$
   }
 
   @Override
   public String getDialogMessage( )
   {
-    return "Soll eine automatische Behebung der zeitlichen Rücksprünge erfolgen?";
+    return Messages.getString("RepairRueckspruengeOperation_3"); //$NON-NLS-1$
   }
 
 }

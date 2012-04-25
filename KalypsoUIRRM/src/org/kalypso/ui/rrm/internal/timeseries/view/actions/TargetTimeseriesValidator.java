@@ -53,6 +53,7 @@ import org.joda.time.Period;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.IImportTimeseriesOperationValidator;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.zml.ui.imports.ImportObservationData;
@@ -89,9 +90,9 @@ public class TargetTimeseriesValidator implements IImportTimeseriesOperationVali
     final ITimeseries[] quality = filterByQuality( timestep );
 
     if( ArrayUtils.isNotEmpty( quality ) )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Zeitreihen-Import abgebrochen. Zeitreihe existiert bereits(Typ, Auflösung und Qualität). Um Zeitreihe dennoch zu importieren, weisen Sie bitte der Zeitreihe eine andere \"Qualität\" zu." );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("TargetTimeseriesValidator_0") ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Überprüfung Zeitreihen-Import Ziel." );
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("TargetTimeseriesValidator_1") ); //$NON-NLS-1$
   }
 
   private ITimeseries[] filterByQuality( final ITimeseries[] timeserieses )

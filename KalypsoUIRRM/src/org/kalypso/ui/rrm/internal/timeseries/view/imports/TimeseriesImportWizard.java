@@ -55,6 +55,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
@@ -86,16 +87,16 @@ public class TimeseriesImportWizard extends Wizard
     m_workspace = workspace;
     m_station = station;
 
-    final ImportObservationSourcePage importPage = new ImportObservationSourcePage( "sourcePage", data );
+    final ImportObservationSourcePage importPage = new ImportObservationSourcePage( "sourcePage", data ); //$NON-NLS-1$
     importPage.addListener( new IImportObservationSourceChangedListener()
     {
       @Override
       public void sourceFileChanged( final File file )
       {
-        String description = "";
+        String description = ""; //$NON-NLS-1$
         if( Objects.isNotNull( file ) )
         {
-          description = String.format( "Quelle: %s", file.getAbsolutePath() );
+          description = String.format( Messages.getString("TimeseriesImportWizard_2"), file.getAbsolutePath() ); //$NON-NLS-1$
         }
 
         bean.setProperty( ITimeseries.QN_DESCRIPTION, description );
@@ -149,9 +150,9 @@ public class TimeseriesImportWizard extends Wizard
 
   private void doShowStatusDialog( final StatusCollector stati )
   {
-    final IStatus status = stati.asMultiStatus( "Zeitreihen-Import" );
+    final IStatus status = stati.asMultiStatus( Messages.getString("TimeseriesImportWizard_3") ); //$NON-NLS-1$
 
-    final StatusDialog dialog = new StatusDialog( getShell(), status, "Zeitreihen-Import" );
+    final StatusDialog dialog = new StatusDialog( getShell(), status, Messages.getString("TimeseriesImportWizard_4") ); //$NON-NLS-1$
     dialog.open();
   }
 

@@ -60,6 +60,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 import org.kalypso.ui.rrm.internal.UIRrmImages.DESCRIPTORS;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationWizard;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
@@ -93,7 +94,7 @@ public class CalculateEvaporationAction extends Action
     final IStatus status = canCalculateEvaporation();
     if( !status.isOK() )
     {
-      final StatusDialog dialog = new StatusDialog( shell, status, "Berechnung Verdunstung" );
+      final StatusDialog dialog = new StatusDialog( shell, status, Messages.getString("CalculateEvaporationAction_0") ); //$NON-NLS-1$
       dialog.open();
 
       return;
@@ -136,15 +137,15 @@ public class CalculateEvaporationAction extends Action
     final IFeatureBindingCollection<ITimeseries> timeseries = m_station.getTimeseries();
 
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_HUMIDITY ) )
-      stati.add( IStatus.WARNING, "Zeitreihe Mittlere Luftfeuchte fehlt." );
+      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_1") ); //$NON-NLS-1$
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE ) )
-      stati.add( IStatus.WARNING, "Zeitreihe Mittlere Temperatur fehlt." );
+      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_2") ); //$NON-NLS-1$
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_MEAN_WIND_VELOCITY ) )
-      stati.add( IStatus.WARNING, "Zeitreihe  Windgeschwindigkeit fehlt." );
+      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_3") ); //$NON-NLS-1$
     if( !Timeserieses.hasType( timeseries, ITimeseriesConstants.TYPE_SUNSHINE_HOURS ) )
-      stati.add( IStatus.WARNING, "Zeitreihe Sonnenscheindauer fehlt." );
+      stati.add( IStatus.WARNING, Messages.getString("CalculateEvaporationAction_4") ); //$NON-NLS-1$
 
-    return stati.asMultiStatusOrOK( "Bei der Überprüfung der Eingangsdaten wurde festgellt, dass Eingangsdaten fehlen. Bitte fügen Sie die fehlenden Eingangsdaten zur Station hinzu." );
+    return stati.asMultiStatusOrOK( Messages.getString("CalculateEvaporationAction_5") ); //$NON-NLS-1$
   }
 
 }

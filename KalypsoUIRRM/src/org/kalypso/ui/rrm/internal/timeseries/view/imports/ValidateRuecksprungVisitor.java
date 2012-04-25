@@ -90,11 +90,11 @@ public class ValidateRuecksprungVisitor implements IObservationVisitor
           m_rueckspruenge.add( Range.between( m_ptrRuecksprung, container.getIndex() ) );
           m_ptrRuecksprung = -1;
 
-          final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "dd.MM.yyyy HH:mm:ss" ) );
+          final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( Messages.getString("ValidateRuecksprungVisitor.0") ) ); //$NON-NLS-1$
           final TimeZone timezone = MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
           sdf.setTimeZone( timezone );
 
-          final String msg = String.format( "Zeitlicher Rücksprung im Bereich: %s - %s", sdf.format( m_lastDate ), sdf.format( date ) );
+          final String msg = String.format( Messages.getString("ValidateRuecksprungVisitor.1"), sdf.format( m_lastDate ), sdf.format( date ) ); //$NON-NLS-1$
           m_stati.add( IStatus.WARNING, msg );
         }
 
@@ -124,6 +124,6 @@ public class ValidateRuecksprungVisitor implements IObservationVisitor
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatus( "Es wurden zeitliche Rücksprünge entdeckt" );
+    return m_stati.asMultiStatus( Messages.getString("ValidateRuecksprungVisitor.2") ); //$NON-NLS-1$
   }
 }

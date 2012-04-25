@@ -57,8 +57,8 @@ public class CollapseAllTreeItemsAction extends Action
   {
     m_viewer = viewer;
     setImageDescriptor( UIRrmImages.id( UIRrmImages.DESCRIPTORS.TIMESERIES_TREE_COLLAPSE_ALL ) );
-    setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) );
-    setDescription( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) );
+    setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
   }
 
   @Override

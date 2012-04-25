@@ -56,6 +56,7 @@ import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
@@ -110,12 +111,12 @@ public class RenameStationOperation implements ICoreRunnableWithProgress
         stati.add( UpdateTimeseriesLinks.doUpdateTimeseriesLinks( link.getFile().getProject(), old, link.getLocation(), link.getHref() ) );
       }
 
-      return stati.asMultiStatusOrOK( "Umbennung Station" );
+      return stati.asMultiStatusOrOK( Messages.getString("RenameStationOperation_0") ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Fehler beim Umbenennen der Station.", e );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("RenameStationOperation_1"), e ); //$NON-NLS-1$
     }
   }
 

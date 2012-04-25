@@ -50,6 +50,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -77,14 +78,14 @@ public class ValidateTageszeitreihenOperation implements ICoreRunnableWithProgre
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
     m_observation = doValidate( m_observation, stati );
 
-    return stati.asMultiStatus( "Überprüfung des Zeitstempels von Tageszeitreihen" );
+    return stati.asMultiStatus( Messages.getString("ValidateTageszeitreihenOperation_0") ); //$NON-NLS-1$
   }
 
   private final IObservation doValidate( final IObservation observation, final StatusCollector stati )
   {
     if( !isTageszeitreihe() )
     {
-      stati.add( IStatus.OK, "Überprüfung des Zeitstempels übersprungen. Zeitreihe ist kein Tageszeitreihe" );
+      stati.add( IStatus.OK, Messages.getString("ValidateTageszeitreihenOperation_1") ); //$NON-NLS-1$
 
       return observation;
     }

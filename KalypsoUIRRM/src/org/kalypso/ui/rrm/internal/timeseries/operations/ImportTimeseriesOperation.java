@@ -124,16 +124,16 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
       /* Check timestamp of "Tageszeitreihen" */
       final ValidateTageszeitreihenOperation opTageszeitreihe = new ValidateTageszeitreihenOperation( m_observation, m_timestep, m_timestamp );
-      doExecute( opTageszeitreihe, stati, monitor, "Falsch aufgelöste Tageszeitreihe - Uhrzeiten variieren." );
+      doExecute( opTageszeitreihe, stati, monitor, Messages.getString("ImportTimeseriesOperation.0") ); //$NON-NLS-1$
 
       /* Rücksprung in Daten?!? */
       final ValidateRuecksprungOperation opRuecksprung = new ValidateRuecksprungOperation( m_observation );
-      doExecute( opRuecksprung, stati, monitor, "Zeitlicher Rücksprung wurde festgestellt." );
+      doExecute( opRuecksprung, stati, monitor, Messages.getString("ImportTimeseriesOperation.1") ); //$NON-NLS-1$
       m_observation = opRuecksprung.getObservation();
 
       /* Validate the timestep. */
       final ValidateMissingTimestepsOperation opMissingValues = new ValidateMissingTimestepsOperation( m_observation, m_timestep );
-      doExecute( opMissingValues, stati, monitor, "Fehlerhafte Zeitreihe. Zeitreihe enthält Lücken und Fehlwerte." );
+      doExecute( opMissingValues, stati, monitor, Messages.getString("ImportTimeseriesOperation.2") ); //$NON-NLS-1$
       m_observation = opMissingValues.getObservation();
 
       final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation, m_daterange );

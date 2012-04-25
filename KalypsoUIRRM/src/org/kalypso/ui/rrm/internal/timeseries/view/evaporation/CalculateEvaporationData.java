@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.util.DateRanges;
 import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 
 /**
@@ -74,9 +75,9 @@ public class CalculateEvaporationData extends AbstractModelObject
       switch( type )
       {
         case eLandBased:
-          return "Grasverdunstung";
+          return Messages.getString("CalculateEvaporationData_0"); //$NON-NLS-1$
         case eWaterBase:
-          return "Seeverdunstung";
+          return Messages.getString("CalculateEvaporationData_1"); //$NON-NLS-1$
 
         default:
           throw new UnsupportedTypeException();
@@ -85,27 +86,27 @@ public class CalculateEvaporationData extends AbstractModelObject
     }
   }
 
-  public static final String PROPERTY_HUMIDITY = "humidity";
+  public static final String PROPERTY_HUMIDITY = "humidity"; //$NON-NLS-1$
 
-  public static final String PROPERTY_TEMPERATURE = "temperature";
+  public static final String PROPERTY_TEMPERATURE = "temperature"; //$NON-NLS-1$
 
-  public static final String PROPERTY_WIND_VELOCITY = "windVelocity";
+  public static final String PROPERTY_WIND_VELOCITY = "windVelocity"; //$NON-NLS-1$
 
-  public static final String PROPERTY_SUNSHINE_HOURS = "sunshineHours";
+  public static final String PROPERTY_SUNSHINE_HOURS = "sunshineHours"; //$NON-NLS-1$
 
-  public static final String PROPERTY_QUALITY = "quality";
+  public static final String PROPERTY_QUALITY = "quality"; //$NON-NLS-1$
 
-  public static final String PROPERTY_EVAPORATION_TYPE = "evaporationType";
+  public static final String PROPERTY_EVAPORATION_TYPE = "evaporationType"; //$NON-NLS-1$
 
-  public static final String PROPERTY_LATITUDE = "latitude";
+  public static final String PROPERTY_LATITUDE = "latitude"; //$NON-NLS-1$
 
-  public static final String PROPERTY_FACTOR_CONVERSION_JW = "factorConversionJw";
+  public static final String PROPERTY_FACTOR_CONVERSION_JW = "factorConversionJw"; //$NON-NLS-1$
 
-  public static final String PROPERTY_COEFFICIENT_EMISSION = "coefficientEmission";
+  public static final String PROPERTY_COEFFICIENT_EMISSION = "coefficientEmission"; //$NON-NLS-1$
 
-  public static final String PROPERTY_BOLTZMANN_WATER_CONSTANT = "boltzmannWaterConstant";
+  public static final String PROPERTY_BOLTZMANN_WATER_CONSTANT = "boltzmannWaterConstant"; //$NON-NLS-1$
 
-  public static final String PROPERTY_ALBEDO_WATER = "albedoWater";
+  public static final String PROPERTY_ALBEDO_WATER = "albedoWater"; //$NON-NLS-1$
 
   private TimeseriesBean m_humidity;
 
@@ -119,15 +120,15 @@ public class CalculateEvaporationData extends AbstractModelObject
 
   private EVAPORATION_TYPE m_evaporationType;
 
-  private String m_latitude = "53,64";
+  private String m_latitude = "53,64"; //$NON-NLS-1$
 
-  private String m_factorConversionJw = "8,64";
+  private String m_factorConversionJw = "8,64"; //$NON-NLS-1$
 
-  private String m_coefficientEmission = "0,97";
+  private String m_coefficientEmission = "0,97"; //$NON-NLS-1$
 
-  private String m_boltzmannWaterConstant = "0,0000000567";
+  private String m_boltzmannWaterConstant = "0,0000000567"; //$NON-NLS-1$
 
-  private String m_albedoWater = "0.05";
+  private String m_albedoWater = "0.05"; //$NON-NLS-1$
 
   public void init( final IDialogSettings settings )
   {

@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -86,13 +87,13 @@ public class RepairTimestampsOperation implements IRepairObservationWorker
         model.set( index, dateAxis, doRepair( date ) );
       }
 
-      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), "Zeitliche Rücksprünge wurden entfernt" );
+      return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("RepairTimestampsOperation_0") ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), "Fehler beim entfernen von Zeitlichen Rücksprüngen.", e );
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), Messages.getString("RepairTimestampsOperation_1"), e ); //$NON-NLS-1$
     }
 
   }
@@ -117,13 +118,13 @@ public class RepairTimestampsOperation implements IRepairObservationWorker
   @Override
   public String getDialogTitle( )
   {
-    return "Falsche Zeitstempel reparieren?";
+    return Messages.getString("RepairTimestampsOperation_2"); //$NON-NLS-1$
   }
 
   @Override
   public String getDialogMessage( )
   {
-    return "Soll eine automatische Reperatur der fehlerhaften Tages-Uhrzeiten erfolgen?";
+    return Messages.getString("RepairTimestampsOperation_3"); //$NON-NLS-1$
   }
 
 }

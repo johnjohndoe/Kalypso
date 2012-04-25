@@ -78,7 +78,7 @@ public class ValidateMissingTimestepsOperation implements ICoreRunnableWithProgr
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
     m_repaired = doValidate( m_observation, stati );
 
-    return stati.asMultiStatus( "Zeitlücken und Fehlwert-Überprüfung" );
+    return stati.asMultiStatus( Messages.getString("ValidateMissingTimestepsOperation.0") ); //$NON-NLS-1$
   }
 
   private final IObservation doValidate( final IObservation observation, final StatusCollector stati )

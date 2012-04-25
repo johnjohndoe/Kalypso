@@ -264,7 +264,7 @@ public class ImportRrmInitialDataOperation implements ICoreRunnableWithProgress
         final IRelationType bodFtProp = (IRelationType) catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
         final IFeatureType bodenKorrekturFT = bodFtProp.getTargetFeatureType();
         final Feature soilCorection = m_modelWS.createFeature( targetFeature, bodenkorrekturMemberRT, bodenKorrekturFT );
-        soilCorection.setDescription( Messages.getString( "KalypsoNAProjectWizard_10", j + 1 ) );
+        soilCorection.setDescription( Messages.getString( "KalypsoNAProjectWizard_10", j + 1 ) ); //$NON-NLS-1$
 
         try
         {
