@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.conversion.to12_02;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.joda.time.LocalTime;
@@ -47,8 +48,12 @@ import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.RepairMissingTimestepsOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.RepairRueckspruengeOperation;
@@ -85,11 +90,24 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
   {
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
-    IObservation observation = doRepairTimestamps( m_observation, stati, monitor );
+    IObservation observation = m_observation;
+    if( !hasDatasourceAxis( observation ) )
+      observation = new DataSourceProxyObservation( observation, m_zmlFile, m_zmlFile, KalypsoStati.BIT_OK );
+
+    observation = doRepairTimestamps( observation, stati, monitor );
     observation = doRepairRueckspruenge( observation, stati, monitor );
     m_repaired = doRepairMissingTimesteps( observation, stati, monitor );
 
     return stati.asMultiStatus( String.format( "Automatische Zeitreihenreperatur und -anpassung für %s", m_zmlFile ) );
+  }
+
+  private boolean hasDatasourceAxis( final IObservation observation )
+  {
+    final IAxis[] axes = observation.getAxes();
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes );
+    final IAxis[] dataSourceAxes = AxisUtils.findDataSourceAxes( axes );
+
+    return ArrayUtils.getLength( valueAxes ) == ArrayUtils.getLength( dataSourceAxes );
   }
 
   private IObservation doRepairMissingTimesteps( final IObservation observation, final StatusCollector stati, final IProgressMonitor monitor )
@@ -127,7 +145,6 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
 
   private IObservation doRepairRueckspruenge( final IObservation observation, final StatusCollector stati, final IProgressMonitor monitor )
   {
-
     try
     {
       final ValidateRuecksprungVisitor validator = new ValidateRuecksprungVisitor();
@@ -137,7 +154,6 @@ public class RepairTimeseriesOperation implements ICoreRunnableWithProgress
 
       if( validator.hasRuecksprung() )
       {
-
         final RepairRueckspruengeOperation operation = new RepairRueckspruengeOperation( observation, validator.getRueckspruenge() );
         stati.add( operation.execute( monitor ) );
 
