@@ -147,11 +147,27 @@ public class TimeseriesImportWorker
     if( m_daterange == null )
       return null;
 
-    final Date from = m_daterange.getFrom();
-    final Date to = m_daterange.getTo();
-
+    Date from = m_daterange.getFrom();
+    Date to = m_daterange.getTo();
     if( Objects.allNotNull( from, to ) )
       return new ObservationRequest( new DateRange( from, to ) );
+
+    try
+    {
+      final ITupleModel model = m_observation.getValues( null );
+      if( model.isEmpty() )
+        return null;
+
+      final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+      from = (Date) model.get( 0, dateAxis );
+      to = (Date) model.get( model.size() - 1, dateAxis );
+
+      return new ObservationRequest( new DateRange( from, to ) );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
 
     return null;
   }

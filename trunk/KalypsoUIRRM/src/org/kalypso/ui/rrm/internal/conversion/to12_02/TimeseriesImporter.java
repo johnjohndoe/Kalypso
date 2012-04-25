@@ -43,6 +43,7 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -59,8 +60,10 @@ import org.eclipse.core.runtime.Status;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
 import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
@@ -235,15 +238,21 @@ public class TimeseriesImporter
     final String parameterType = valueAxis.getType();
 
     final ITupleModel values = observation.getValues( null );
+    final DateRange dateRange = getDateRange( values );
 
     /* Guess the timestep. */
     final Period timestep = TimeseriesUtils.guessTimestep( values );
+    if( timestep != null )
+    {
+      final int amount = PeriodUtils.findCalendarAmount( timestep );
+      final FIELD field = PeriodUtils.findCalendarField( timestep );
+      MetadataHelper.setTimestep( observation.getMetadataList(), field.getField(), amount );
+    }
 
     /* The timestamp is only relevant for day values. */
     final LocalTime timestamp = TimeseriesUtils.guessTimestamp( values, timestep );
 
     final RepairTimeseriesOperation repair = new RepairTimeseriesOperation( observation, timestep, timestamp, zmlFile.getName() );
-// IStatus execute =
     stati.add( repair.execute( new NullProgressMonitor() ) );
 
     observation = repair.getObservation();
@@ -263,7 +272,7 @@ public class TimeseriesImporter
 
     /* We write the file from the read observation (instead of copy) */
     /* in order to compress the data and add status and source axes (now required). */
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, new DateRange() );
+    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, dateRange );
     final IObservation observationWithSource = cleanupWorker.convert( newTimeseries.getTimestep(), timestamp );
 
     /* Save the observation. */
@@ -276,6 +285,27 @@ public class TimeseriesImporter
 
     final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
+  }
+
+  private DateRange getDateRange( final ITupleModel model )
+  {
+    try
+    {
+      if( model.isEmpty() )
+        return null;
+
+      final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+      final Date from = (Date) model.get( 0, dateAxis );
+      final Date to = (Date) model.get( model.size() - 1, dateAxis );
+
+      return new DateRange( from, to );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   private IObservation readObservation( final File zmlFile, final String relativePath ) throws SensorException, MalformedURLException
