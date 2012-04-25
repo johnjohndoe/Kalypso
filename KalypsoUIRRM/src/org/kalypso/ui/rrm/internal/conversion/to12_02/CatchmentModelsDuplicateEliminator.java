@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.model.hydrology.binding.control.NAControl;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
@@ -107,7 +108,7 @@ public class CatchmentModelsDuplicateEliminator
   public IStatus execute( )
   {
     /* The status collector. */
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     try
     {
@@ -141,7 +142,7 @@ public class CatchmentModelsDuplicateEliminator
   private IStatus verifyGenerator( final IFeatureBindingCollection<IRainfallGenerator> allGenerators, final List<ILinearSumGenerator> usedGenerators, final IRainfallGenerator generator ) throws Exception
   {
     /* The status collector. */
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     /* The description of the generator equals the name of the calculation case it belongs to. */
     final String description = generator.getDescription();

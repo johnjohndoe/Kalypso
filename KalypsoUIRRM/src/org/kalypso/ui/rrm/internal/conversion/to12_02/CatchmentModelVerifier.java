@@ -51,9 +51,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.model.hydrology.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.control.NAControl;
-import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.rcm.binding.ICatchment;
 import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
@@ -117,7 +118,7 @@ public class CatchmentModelVerifier
   public IStatus execute( )
   {
     /* The status collector. */
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     /* The directory of the temporary simulation. */
     File simulationTmpDir = null;
@@ -199,7 +200,7 @@ public class CatchmentModelVerifier
   private IStatus checkGenerators( )
   {
     /* The status collector. */
-    final StatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+    final IStatusCollector collector = new StatusCollector( KalypsoUIRRMPlugin.getID() );
 
     final ICatchmentModel catchmentModel = m_globalData.getCatchmentModel();
     final IFeatureBindingCollection<IRainfallGenerator> generators = catchmentModel.getGenerators();

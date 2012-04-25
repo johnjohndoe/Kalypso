@@ -75,7 +75,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlList
 import org.kalypso.contribs.eclipse.swt.widgets.ColumnViewerSorter;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
