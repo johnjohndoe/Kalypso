@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
+import org.kalypso.model.hydrology.binding.ICatchmentModel;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.model.rcm.binding.IMultiGenerator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;

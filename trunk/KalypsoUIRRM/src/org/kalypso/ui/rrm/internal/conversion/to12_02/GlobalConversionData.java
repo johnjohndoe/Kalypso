@@ -44,8 +44,8 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.model.hydrology.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.control.SimulationCollection;
-import org.kalypso.model.hydrology.cm.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
