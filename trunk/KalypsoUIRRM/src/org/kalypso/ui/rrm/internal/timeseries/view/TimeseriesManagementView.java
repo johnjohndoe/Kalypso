@@ -152,7 +152,7 @@ public class TimeseriesManagementView extends ViewPart
     m_treeViewer.setInput( input );
 
     /** set tree viewer selection to it's first item! */
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

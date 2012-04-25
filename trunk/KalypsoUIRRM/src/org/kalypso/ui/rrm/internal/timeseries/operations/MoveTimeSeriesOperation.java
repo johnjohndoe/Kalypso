@@ -50,6 +50,7 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
@@ -99,7 +100,7 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_model, m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
-    return stati.asMultiStatusOrOK( String.format( "Verschiebe Zeitreihe: %s", m_timeseries.getName() ) );
+    return stati.asMultiStatusOrOK( String.format( Messages.getString("MoveTimeSeriesOperation_0"), m_timeseries.getName() ) ); //$NON-NLS-1$
   }
 
   public ITimeseries getMovedTimeseries( )

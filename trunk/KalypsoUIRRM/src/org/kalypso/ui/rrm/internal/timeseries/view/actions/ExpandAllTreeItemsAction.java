@@ -57,8 +57,8 @@ public class ExpandAllTreeItemsAction extends Action
   {
     m_viewer = viewer;
     setImageDescriptor( UIRrmImages.id( UIRrmImages.DESCRIPTORS.TIMESERIES_TREE_EXPAND_ALL ) );
-    setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) );
-    setDescription( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) );
+    setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) ); //$NON-NLS-1$
   }
 
   @Override

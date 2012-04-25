@@ -97,11 +97,11 @@ public class TimeseriesBrowserSearchViewer extends Composite
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
     final ImageHyperlink lnkExpandAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new ExpandAllTreeItemsAction( viewer ) );
-    lnkExpandAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) );
+    lnkExpandAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_2" ) ); //$NON-NLS-1$
     lnkExpandAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     final ImageHyperlink lnkCollapseAll = ActionHyperlink.createHyperlink( toolkit, control, getStyle(), new CollapseAllTreeItemsAction( viewer ) );
-    lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) );
+    lnkCollapseAll.setText( Messages.getString( "TimeseriesBrowserSearchViewer_3" ) ); //$NON-NLS-1$
     lnkCollapseAll.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
   }
 

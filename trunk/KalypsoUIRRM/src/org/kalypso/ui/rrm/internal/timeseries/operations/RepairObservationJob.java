@@ -49,6 +49,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -65,7 +66,7 @@ public class RepairObservationJob extends UIJob
 
   public RepairObservationJob( final StatusCollector stati, final IStatus status, final IRepairObservationWorker worker )
   {
-    super( "Repariere Zeitreihe" );
+    super( Messages.getString("RepairObservationJob_0") ); //$NON-NLS-1$
     m_stati = stati;
     m_status = status;
     m_worker = worker;
@@ -90,7 +91,7 @@ public class RepairObservationJob extends UIJob
       m_stati.add( m_worker.execute( monitor ) );
     }
     else
-      m_stati.add( IStatus.ERROR, "Import abgebrochen. Fehlerhafte Eingangszeitreihe!" );
+      m_stati.add( IStatus.ERROR, Messages.getString("RepairObservationJob_1") ); //$NON-NLS-1$
 
     m_done = true;
 

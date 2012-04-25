@@ -72,7 +72,7 @@ public class ValidateRuecksprungOperation implements ICoreRunnableWithProgress
     final StatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
     m_observation = doValidate( m_observation, stati );
 
-    return stati.asMultiStatus( "Zeitliche Rücksprung-Überprüfung" );
+    return stati.asMultiStatus( Messages.getString("ValidateRuecksprungOperation.0") ); //$NON-NLS-1$
   }
 
   private final IObservation doValidate( final IObservation observation, final StatusCollector stati )

@@ -47,6 +47,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureTree.ITreeNodeModel;
 
 /**
@@ -79,7 +80,7 @@ public class DeleteTimeseriesOperation implements ICoreRunnableWithProgress
       }
       catch( final Exception ex )
       {
-        final String msg = String.format( "Fehler beim Löschen der ZML Zeitreihendatei, der Zeitreihe: %s", timeseries.getName() );
+        final String msg = String.format( Messages.getString("DeleteTimeseriesOperation_0"), timeseries.getName() ); //$NON-NLS-1$
         stati.add( IStatus.ERROR, msg, ex );
       }
     }
@@ -92,10 +93,10 @@ public class DeleteTimeseriesOperation implements ICoreRunnableWithProgress
     }
     catch( final Exception ex )
     {
-      final String msg = String.format( "Fehler beim Entfernen der Zeitreihen aus dem stations.gml Modell." );
+      final String msg = String.format( Messages.getString("DeleteTimeseriesOperation_1") ); //$NON-NLS-1$
       stati.add( IStatus.ERROR, msg, ex );
     }
 
-    return stati.asMultiStatusOrOK( "Lösche Zeitreihen" );
+    return stati.asMultiStatusOrOK( Messages.getString("DeleteTimeseriesOperation_2") ); //$NON-NLS-1$
   }
 }

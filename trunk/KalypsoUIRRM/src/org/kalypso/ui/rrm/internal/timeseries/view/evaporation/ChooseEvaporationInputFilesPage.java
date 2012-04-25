@@ -78,6 +78,7 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
+import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -100,12 +101,12 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
 
   protected ChooseEvaporationInputFilesPage( final IStation station, final CalculateEvaporationData data )
   {
-    super( "ChooseEvaporationInputFilesPage" );
+    super( "ChooseEvaporationInputFilesPage" ); //$NON-NLS-1$
     m_station = station;
     m_data = data;
 
-    setTitle( "Berechnungsdaten" );
-    setDescription( "Bitte bestimmen Sie alle Berechnungsdaten, die als Grundlage für die Berechnung der Verdunstung dienen." );
+    setTitle( Messages.getString("ChooseEvaporationInputFilesPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ChooseEvaporationInputFilesPage_2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -130,7 +131,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     final Group group = new Group( body, SWT.NULL );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    group.setText( "Verdunstung" );
+    group.setText( Messages.getString("ChooseEvaporationInputFilesPage_3") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.BORDER | SWT.READ_ONLY );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -147,7 +148,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
       {
         if( Objects.isNull( value ) )
         {
-          setErrorMessage( "Leeres Element. Bitte weisen Sie alle Quellen zu." );
+          setErrorMessage( Messages.getString("ChooseEvaporationInputFilesPage_4") ); //$NON-NLS-1$
           return Status.CANCEL_STATUS;
         }
 
@@ -166,26 +167,26 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     final Group groupDateRange = new Group( body, SWT.NULL );
     groupDateRange.setLayout( new GridLayout( 5, false ) );
     groupDateRange.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupDateRange.setText( "Berechnungszeitraum" );
+    groupDateRange.setText( Messages.getString("ChooseEvaporationInputFilesPage_5") ); //$NON-NLS-1$
 
     final Label start = new Label( groupDateRange, SWT.NULL );
-    start.setText( "Start" );
+    start.setText( Messages.getString("ChooseEvaporationInputFilesPage_6") ); //$NON-NLS-1$
 
     m_labelDateRangeFrom = new Text( groupDateRange, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT );
     m_labelDateRangeFrom.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    m_labelDateRangeFrom.setText( "" );
+    m_labelDateRangeFrom.setText( "" ); //$NON-NLS-1$
 
     final Label spacer = new Label( groupDateRange, SWT.NULL );
-    spacer.setText( "" );
+    spacer.setText( "" ); //$NON-NLS-1$
     spacer.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final Label stop = new Label( groupDateRange, SWT.NULL );
-    stop.setText( "Ende" );
+    stop.setText( Messages.getString("ChooseEvaporationInputFilesPage_9") ); //$NON-NLS-1$
     m_labelDateRangeTo = new Text( groupDateRange, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT );
     m_labelDateRangeTo.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    m_labelDateRangeTo.setText( "" );
+    m_labelDateRangeTo.setText( "" ); //$NON-NLS-1$
 
-    final String tooltip = "Der Berechnungszeitraum ist der gemeinsame Zeitraum aller zugewiesener Zeitreihen.";
+    final String tooltip = Messages.getString("ChooseEvaporationInputFilesPage_11"); //$NON-NLS-1$
     groupDateRange.setToolTipText( tooltip );
     start.setToolTipText( tooltip );
     m_labelDateRangeFrom.setToolTipText( tooltip );
@@ -198,7 +199,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     final Group groupSources = new Group( body, SWT.NULL );
     groupSources.setLayout( new GridLayout( 3, false ) );
     groupSources.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupSources.setText( "Quellen" );
+    groupSources.setText( Messages.getString("ChooseEvaporationInputFilesPage_12") ); //$NON-NLS-1$
 
     addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_HUMIDITY, CalculateEvaporationData.PROPERTY_HUMIDITY );
     addControl( groupSources, ITimeseriesConstants.TYPE_MEAN_TEMPERATURE, CalculateEvaporationData.PROPERTY_TEMPERATURE );
@@ -214,7 +215,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
     label.setText( provider.getText( type ) );
 
     final Label spacer = new Label( group, SWT.NULL );
-    spacer.setText( "" );
+    spacer.setText( "" ); //$NON-NLS-1$
     final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
     data.widthHint = data.minimumWidth = 100;
     spacer.setLayoutData( data );
@@ -246,7 +247,7 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
       {
         if( Objects.isNull( value ) )
         {
-          setErrorMessage( "Leeres Element. Bitte weisen Sie alle Quellen zu." );
+          setErrorMessage( Messages.getString("ChooseEvaporationInputFilesPage_14") ); //$NON-NLS-1$
           return Status.CANCEL_STATUS;
         }
 
@@ -275,10 +276,10 @@ public class ChooseEvaporationInputFilesPage extends WizardPage
   {
     final DateRange daterange = m_data.getDateRange();
     if( Objects.isNull( daterange ) )
-      m_labelDateRangeFrom.setText( "Konnte Berechnungszeitraum nicht bestimmen. Fehlende Eingabedatei?" );
+      m_labelDateRangeFrom.setText( Messages.getString("ChooseEvaporationInputFilesPage_15") ); //$NON-NLS-1$
     else
     {
-      final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+      final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString("ChooseEvaporationInputFilesPage_16") ); //$NON-NLS-1$
       sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
       m_labelDateRangeFrom.setText( sdf.format( daterange.getFrom() ) );

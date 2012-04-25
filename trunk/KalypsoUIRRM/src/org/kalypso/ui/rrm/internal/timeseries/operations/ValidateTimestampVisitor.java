@@ -90,11 +90,11 @@ public class ValidateTimestampVisitor implements IObservationVisitor
 
     if( m_hour != hour )
     {
-      final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( "dd.MM.yyyy HH:mm:ss" ) );
+      final SimpleDateFormat sdf = new SimpleDateFormat( Messages.getString( Messages.getString("ValidateTimestampVisitor.0") ) ); //$NON-NLS-1$
       final TimeZone timezone = MetadataHelper.getTimeZone( container.getMetaData(), KalypsoCorePlugin.getDefault().getTimeZone().getID() );
       sdf.setTimeZone( timezone );
 
-      final String msg = String.format( "Ungültiger Zeitstempel gefunden: %s", sdf.format( date ) );
+      final String msg = String.format( Messages.getString("ValidateTimestampVisitor.1"), sdf.format( date ) ); //$NON-NLS-1$
       m_stati.add( IStatus.WARNING, msg );
 
       m_invalid.add( container.getIndex() );
@@ -113,6 +113,6 @@ public class ValidateTimestampVisitor implements IObservationVisitor
 
   public IStatus getStatus( )
   {
-    return m_stati.asMultiStatus( "Es wurden ungültige Zeit(en) an Tageszeitreihe entdeckt" );
+    return m_stati.asMultiStatus( Messages.getString("ValidateTimestampVisitor.2") ); //$NON-NLS-1$
   }
 }
