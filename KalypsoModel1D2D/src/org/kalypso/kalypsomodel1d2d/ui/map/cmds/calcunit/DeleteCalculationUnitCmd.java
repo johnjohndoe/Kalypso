@@ -286,7 +286,8 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       {
         if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getGmlID() ) ){
           controlModel1D2D = controlModel;
-          break;
+          if( !invalidActiveModel )
+            break;
         }
         else if( invalidActiveModel ){
           controlModelToActivate = controlModel;
