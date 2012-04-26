@@ -43,7 +43,6 @@ package org.kalypso.ui.rrm.internal.conversion.to12_02;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -65,8 +64,8 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.model.hydrology.project.INaProjectConstants;
+import org.kalypso.model.hydrology.timeseries.HydrologyTimeseriesImportWorker;
 import org.kalypso.model.hydrology.timeseries.StationClassesCatalog;
-import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.IStationCollection;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -84,6 +83,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -238,7 +238,7 @@ public class TimeseriesImporter
     final String parameterType = valueAxis.getType();
 
     final ITupleModel values = observation.getValues( null );
-    final DateRange dateRange = getDateRange( values );
+    final DateRange dateRange = Observations.findDateRange( values );
 
     /* Guess the timestep. */
     final Period timestep = TimeseriesUtils.guessTimestep( values );
@@ -265,14 +265,14 @@ public class TimeseriesImporter
     final IStation station = findOrCreateStation( stationDescription, groupName, parameterType, relativePath );
 
     /* Always create a new timeseries. */
-    final ITimeseries newTimeseries = createTimeseries( station, timeseriesDescription, parameterType, timestep );
+    final ITimeseries newTimeseries = createTimeseries( station, timeseriesDescription, parameterType, timestep, dateRange );
 
     /* Copy observation file. */
     final ZmlLink dataLink = newTimeseries.getDataLink();
 
     /* We write the file from the read observation (instead of copy) */
     /* in order to compress the data and add status and source axes (now required). */
-    final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( observation, dateRange );
+    final HydrologyTimeseriesImportWorker cleanupWorker = new HydrologyTimeseriesImportWorker( observation, dateRange );
     final IObservation observationWithSource = cleanupWorker.convert( newTimeseries.getTimestep(), timestamp );
 
     /* Save the observation. */
@@ -285,27 +285,6 @@ public class TimeseriesImporter
 
     final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
-  }
-
-  private DateRange getDateRange( final ITupleModel model )
-  {
-    try
-    {
-      if( model.isEmpty() )
-        return null;
-
-      final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-      final Date from = (Date) model.get( 0, dateAxis );
-      final Date to = (Date) model.get( model.size() - 1, dateAxis );
-
-      return new DateRange( from, to );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
   }
 
   private IObservation readObservation( final File zmlFile, final String relativePath ) throws SensorException, MalformedURLException
@@ -433,7 +412,7 @@ public class TimeseriesImporter
     return newStation;
   }
 
-  private ITimeseries createTimeseries( final IStation station, final String timeseriesDescription, final String parameterType, final Period timestep )
+  private ITimeseries createTimeseries( final IStation station, final String timeseriesDescription, final String parameterType, final Period timestep, final DateRange daterange )
   {
     final ITimeseries newTimeseries = station.getTimeseries().addNew( ITimeseries.FEATURE_TIMESERIES );
     newTimeseries.setDescription( timeseriesDescription );
@@ -443,6 +422,8 @@ public class TimeseriesImporter
     newTimeseries.setParameterType( parameterType );
     newTimeseries.setQuality( quality );
     newTimeseries.setTimestep( timestep );
+    newTimeseries.setMeasurementStart( daterange.getFrom() );
+    newTimeseries.setMeasurementEnd( daterange.getTo() );
 
     return newTimeseries;
   }

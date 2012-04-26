@@ -57,32 +57,28 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ogc.sensor.util.DataSetTupleModelBuilder;
-import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
+import org.kalypso.ogc.sensor.util.Observations;
 
 /**
- * Helper class that should be used for every timeseries that get imported into an RRM project. Cleans the timeseries
- * from old '-999' values and add source and status axes.
+ * Apply some base meta data values for KalypsoHydrology.
  * 
  * @author Gernot Belger
  */
-public class TimeseriesImportWorker
+public class HydrologyTimeseriesImportWorker
 {
   private final IObservation m_observation;
 
   private final DateRange m_daterange;
 
-  public TimeseriesImportWorker( final IObservation observation, final DateRange daterange )
+  public HydrologyTimeseriesImportWorker( final IObservation observation, final DateRange daterange )
   {
     m_observation = observation;
     m_daterange = daterange;
@@ -99,7 +95,8 @@ public class TimeseriesImportWorker
        * getValues() will change the metadata of the observation filter. so call it first. <br>
        * date range is needed by interval filter
        */
-      final ITupleModel base = m_observation.getValues( getRequest() );
+      final DateRange daterange = getDateRange();
+      final ITupleModel base = m_observation.getValues( new ObservationRequest( daterange ) );
       final MetadataList metadata = MetadataHelper.clone( m_observation.getMetadataList() );
       final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( metadata );
       base.accept( visitor, 1 );
@@ -110,27 +107,16 @@ public class TimeseriesImportWorker
       final ITupleModel model = builder.getModel();
 
       final SimpleObservation observation = new SimpleObservation( m_observation.getHref(), m_observation.getName(), metadata, model );
-
       final IObservation resultObservation = removeMissingValues( observation, valueAxis );
+      doUpdateMetadata( metadata, period, timestamp, daterange );
 
-      final TIMESERIES_TYPE type = TimeseriesUtils.getType( valueAxis.getType() );
-      if( TIMESERIES_TYPE.eInstantaneousValue.equals( type ) )
-      {
-        final ZmlInterpolationWorker interpolation = new ZmlInterpolationWorker( resultObservation.getValues( null ), resultObservation.getMetadataList(), valueAxis );
-        interpolation.execute( new NullProgressMonitor() );
-      }
-
-      /* Set timestep. */
-      if( period != null )
-      {
-        final int amount = PeriodUtils.findCalendarAmount( period );
-        final FIELD field = PeriodUtils.findCalendarField( period );
-        MetadataHelper.setTimestep( resultObservation.getMetadataList(), field.getField(), amount );
-      }
-
-      /* Set timestamp. */
-      if( timestamp != null )
-        MetadataHelper.setTimestamp( resultObservation.getMetadataList(), timestamp );
+// final TIMESERIES_TYPE type = TimeseriesUtils.getType( valueAxis.getType() );
+// if( TIMESERIES_TYPE.eInstantaneousValue.equals( type ) )
+// {
+// final ZmlInterpolationWorker interpolation = new ZmlInterpolationWorker( resultObservation.getValues( null ),
+// resultObservation.getMetadataList(), valueAxis );
+// interpolation.execute( new NullProgressMonitor() );
+// }
 
       return resultObservation;
     }
@@ -142,34 +128,34 @@ public class TimeseriesImportWorker
     }
   }
 
-  private IRequest getRequest( )
+  private void doUpdateMetadata( final MetadataList metadata, final Period period, final LocalTime timestamp, final DateRange daterange )
+  {
+    /* Set timestep. */
+    if( period != null )
+    {
+      final int amount = PeriodUtils.findCalendarAmount( period );
+      final FIELD field = PeriodUtils.findCalendarField( period );
+      MetadataHelper.setTimestep( metadata, field.getField(), amount );
+    }
+
+    /* Set timestamp. */
+    if( timestamp != null )
+      MetadataHelper.setTimestamp( metadata, timestamp );
+
+    MetadataHelper.setTargetDateRange( metadata, daterange );
+  }
+
+  private DateRange getDateRange( )
   {
     if( m_daterange == null )
       return null;
 
-    Date from = m_daterange.getFrom();
-    Date to = m_daterange.getTo();
+    final Date from = m_daterange.getFrom();
+    final Date to = m_daterange.getTo();
     if( Objects.allNotNull( from, to ) )
-      return new ObservationRequest( new DateRange( from, to ) );
+      return new DateRange( from, to );
 
-    try
-    {
-      final ITupleModel model = m_observation.getValues( null );
-      if( model.isEmpty() )
-        return null;
-
-      final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-      from = (Date) model.get( 0, dateAxis );
-      to = (Date) model.get( model.size() - 1, dateAxis );
-
-      return new ObservationRequest( new DateRange( from, to ) );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
+    return Observations.findDateRange( m_observation );
   }
 
   private IObservation removeMissingValues( final IObservation observation, final IAxis valueAxis ) throws SensorException

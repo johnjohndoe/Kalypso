@@ -48,10 +48,13 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
@@ -80,6 +83,8 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
 
     createTimestepControl();
 
+    createDateRangetControl();
+
     createTimeseriesDataValidationControl();
 
     // TODO: Check consistency (i.e. existence) of data file
@@ -105,7 +110,7 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( this, Messages.getString("TimeseriesComposite_0") ); //$NON-NLS-1$
+    toolkit.createLabel( this, Messages.getString( "TimeseriesComposite_0" ) ); //$NON-NLS-1$
 
     final Text field = toolkit.createText( this, StringUtils.EMPTY, SWT.BORDER | SWT.SINGLE );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -119,11 +124,29 @@ public class TimeseriesComposite extends FeatureBeanComposite<ITimeseries>
     getBinding().bindValue( binder );
   }
 
+  private void createDateRangetControl( )
+  {
+
+    final Label header = new Label( this, SWT.NULL );
+    header.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    header.setText( "Messzeitraum" );
+
+    final Composite body = getToolkit().createComposite( this );
+    body.setLayout( Layouts.createGridLayout( 2 ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    final DateTime start = createPropertyDateTime( body );
+    bindDateTime( start, ITimeseries.PROPERTY_MEASUREMENT_START );
+
+    final DateTime end = createPropertyDateTime( body );
+    bindDateTime( end, ITimeseries.PROPERTY_MEASUREMENT_END );
+  }
+
   private void createTimeseriesDataValidationControl( )
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( this, Messages.getString("TimeseriesComposite_1") ); //$NON-NLS-1$
+    toolkit.createLabel( this, Messages.getString( "TimeseriesComposite_1" ) ); //$NON-NLS-1$
 
     final StatusComposite statusComposite = new StatusComposite( toolkit, this, SWT.NONE );
     statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

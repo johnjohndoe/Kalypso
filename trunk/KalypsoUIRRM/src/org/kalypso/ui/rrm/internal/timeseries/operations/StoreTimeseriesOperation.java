@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.internal.timeseries.binding.TimeseriesDataLinkFunctionProperty;
@@ -70,6 +71,7 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
@@ -120,16 +122,17 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
 
     final Period timestep = m_operation.getTimestep();
     final IObservation observation = m_operation.getObservation();
+    final DateRange daterange = m_operation.getDateRange();
 
     final IFile targetFile = createDataFile( m_bean, timestep, stati );
-    m_timeseries = createTimeseries( timestep, targetFile );
+    m_timeseries = createTimeseries( timestep, targetFile, daterange );
 
     writeResult( targetFile, observation );
 
     return stati.asMultiStatus( Messages.getString( "StoreTimeseriesOperation.0" ) ); //$NON-NLS-1$
   }
 
-  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile ) throws CoreException
+  private ITimeseries createTimeseries( final Period timestep, final IFile targetFile, final DateRange daterange ) throws CoreException
   {
     try
     {
@@ -154,6 +157,8 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
       properties.put( ITimeseries.PROPERTY_TIMESTEP_AMOUNT, timestepAmount );
       properties.put( ITimeseries.PROPERTY_TIMESTEP_FIELD, timestepField.name() );
       properties.put( ITimeseries.PROPERTY_DATA, dataLink );
+      properties.put( ITimeseries.PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( daterange.getFrom() ) );
+      properties.put( ITimeseries.PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( daterange.getTo() ) );
 
       final AddFeatureCommand command = new AddFeatureCommand( m_workspace, ITimeseries.FEATURE_TIMESERIES, m_station, parentRelation, -1, properties, null, -1 );
 

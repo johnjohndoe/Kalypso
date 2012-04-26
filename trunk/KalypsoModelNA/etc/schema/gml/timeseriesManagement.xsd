@@ -102,6 +102,10 @@
             <!-- TODO: durchdenken -->
             <element name="timestepAmount" type="int" />
             <element name="timestepField" type="string" />
+
+             <!-- Betriebszeitraum -->
+            <element name="measurementStart" type="date" minOccurs="0" />
+            <element name="measurementEnd" type="date" minOccurs="0" />
           </sequence>
         </extension>
       </complexContent>

@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.timeseries.binding;
 
+import java.util.Date;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.joda.time.Period;
 import org.kalypso.model.hydrology.NaModelConstants;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -65,6 +68,10 @@ public interface ITimeseries extends Feature
 
   QName PROPERTY_TIMESTEP_FIELD = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "timestepField" ); //$NON-NLS-1$
 
+  QName PROPERTY_MEASUREMENT_START = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "measurementStart" ); //$NON-NLS-1$
+
+  QName PROPERTY_MEASUREMENT_END = new QName( NaModelConstants.NS_TIMESERIES_MANAGEMENT, "measurementEnd" ); //$NON-NLS-1$
+
   String getQuality( );
 
   void setQuality( String quality );
@@ -82,6 +89,16 @@ public interface ITimeseries extends Feature
 // void setDataLink( String href );
 
   IStation getStation( );
+
+  Date getMeasurementStart( );
+
+  Date getMeasurementEnd( );
+
+  void setMeasurementStart( Date date );
+
+  void setMeasurementEnd( Date date );
+
+  DateRange getDateRange( );
 
   void deleteDataFile( ) throws CoreException;
 }
