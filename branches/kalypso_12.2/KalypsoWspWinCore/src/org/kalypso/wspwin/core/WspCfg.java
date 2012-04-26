@@ -188,7 +188,7 @@ public class WspCfg
       }
       catch( ParseException | IOException e )
       {
-        final String msg = String.format( "Zustandsdatei konnte nicht gelesen werden: %s. Zustand wird übersprungen.", zustandBean.getFileName() );
+        final String msg = String.format( Messages.getString("WspCfg.0"), zustandBean.getFileName() ); //$NON-NLS-1$
         log.add( IStatus.WARNING, msg, e );
       }
     }
@@ -200,11 +200,11 @@ public class WspCfg
     }
     catch( final ParseException | IOException e )
     {
-      final String msg = String.format( "Profproj konnte nicht gelesen werden: %s. Datei wird übersprungen.", WspWinFiles.PROFPROJ_TXT );
+      final String msg = String.format( Messages.getString("WspCfg.1"), WspWinFiles.PROFPROJ_TXT ); //$NON-NLS-1$
       log.add( IStatus.WARNING, msg, e );
     }
 
-    return log.asMultiStatus( String.format( "Lese %s", WspWinFiles.WSP_CFG ) );
+    return log.asMultiStatus( String.format( Messages.getString("WspCfg.2"), WspWinFiles.WSP_CFG ) ); //$NON-NLS-1$
   }
 
   private IStatus readWspCfg( final File profDir, final Collection<ZustandBean> zustandBeans )
@@ -215,7 +215,7 @@ public class WspCfg
     {
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
-        return new Status( IStatus.ERROR, KalypsoWspWinCorePlugin.PLUGIN_ID, Messages.getString( "org.kalypso.wspwin.core.WspCfg.1" ) );
+        return new Status( IStatus.ERROR, KalypsoWspWinCorePlugin.PLUGIN_ID, Messages.getString( "org.kalypso.wspwin.core.WspCfg.1" ) ); //$NON-NLS-1$
 
       // ignore the values, we read the count from the linecount
       // just parse the type
@@ -250,7 +250,7 @@ public class WspCfg
         catch( final NumberFormatException e )
         {
           e.printStackTrace();
-          throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfg.3" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
+          throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfg.3", reader.getLineNumber() ), reader.getLineNumber() ); //$NON-NLS-1$
         }
       }
 
@@ -310,7 +310,7 @@ public class WspCfg
     // TODO
     final int xxx = 0;
     final int yyyy = 0;
-    pw.append( String.format( "%5d %4d %4d %s%n", xxx, m_zustaende.size(), yyyy, getType().getCode() ) );
+    pw.append( String.format( "%5d %4d %4d %s%n", xxx, m_zustaende.size(), yyyy, getType().getCode() ) ); //$NON-NLS-1$
 
     for( final WspWinZustand zustand : m_zustaende )
     {
