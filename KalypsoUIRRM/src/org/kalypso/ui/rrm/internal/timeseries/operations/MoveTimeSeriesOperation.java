@@ -95,12 +95,12 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
 
     m_model.getWorkspace().getContext();
 
-    new UpdateTimeseriesLinksVisitor( m_timeseries, m_moved );
+    UpdateTimeseriesLinks.doUpdateTimeseriesLinks( m_timeseries, m_moved );
 
     final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_model, m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
-    return stati.asMultiStatusOrOK( String.format( Messages.getString("MoveTimeSeriesOperation_0"), m_timeseries.getName() ) ); //$NON-NLS-1$
+    return stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) ); //$NON-NLS-1$
   }
 
   public ITimeseries getMovedTimeseries( )
