@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.timeseries.view;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.joda.time.Period;
+import org.joda.time.Seconds;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ui.rrm.internal.utils.featureTree.TreeNode;
 
 /**
@@ -55,9 +60,34 @@ public class TimeseriesNodeLabelComparator extends ViewerComparator
     final TreeNode n1 = (TreeNode) e1;
     final TreeNode n2 = (TreeNode) e2;
 
+    final ITimeseries t1 = (ITimeseries) n1.getAdapter( ITimeseries.class );
+    final ITimeseries t2 = (ITimeseries) n2.getAdapter( ITimeseries.class );
+    if( Objects.allNotNull( t1, t2 ) )
+      return comparteTimeseries( t1, t2 );
+
     final String l1 = n1.getLabel();
     final String l2 = n2.getLabel();
 
     return l1.compareTo( l2 );
+  }
+
+  private int comparteTimeseries( final ITimeseries t1, final ITimeseries t2 )
+  {
+    final Period s1 = t1.getTimestep();
+    final Period s2 = t2.getTimestep();
+    if( Objects.allNotNull( s1, s2 ) )
+    {
+      final Seconds sec1 = s1.toStandardSeconds();
+      final Seconds sec2 = s2.toStandardSeconds();
+
+      final int compared = sec1.compareTo( sec2 );
+      if( compared != 0 )
+        return compared;
+    }
+
+    final String q1 = Objects.firstNonNull( t1.getQuality(), StringUtils.EMPTY );
+    final String q2 = Objects.firstNonNull( t2.getQuality(), StringUtils.EMPTY );
+
+    return q1.compareTo( q2 );
   }
 }
