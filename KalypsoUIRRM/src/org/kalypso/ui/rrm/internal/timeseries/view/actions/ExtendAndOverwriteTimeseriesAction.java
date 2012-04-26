@@ -58,8 +58,8 @@ public class ExtendAndOverwriteTimeseriesAction extends AbstractOverwriteTimeser
   {
     super( model, timeseries );
 
-    setText( Messages.getString("ExtendAndOverwriteTimeseriesAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("ExtendAndOverwriteTimeseriesAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "ExtendAndOverwriteTimeseriesAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "ExtendAndOverwriteTimeseriesAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_EXTEND_AND_OVERWRITE ) );
   }
@@ -67,7 +67,7 @@ public class ExtendAndOverwriteTimeseriesAction extends AbstractOverwriteTimeser
   @Override
   protected IMergeTimeseriesOperation getMergeOperation( )
   {
-    return new MergeTimeseriesOperation( getTimeseries(), true );
+    return new MergeTimeseriesOperation( getWorkspace(), getTimeseries(), true );
   }
 
 }
