@@ -73,6 +73,7 @@ import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
@@ -127,7 +128,7 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     final IFile targetFile = createDataFile( m_bean, timestep, stati );
     m_timeseries = createTimeseries( timestep, targetFile, daterange );
 
-    writeResult( targetFile, observation );
+    writeResult( targetFile, observation, daterange );
 
     return stati.asMultiStatus( Messages.getString( "StoreTimeseriesOperation.0" ) ); //$NON-NLS-1$
   }
@@ -182,10 +183,12 @@ public class StoreTimeseriesOperation implements ICoreRunnableWithProgress
     return projectPath;
   }
 
-  private void writeResult( final IFile targetFile, final IObservation newObservation ) throws CoreException
+  private void writeResult( final IFile targetFile, final IObservation newObservation, final DateRange daterange ) throws CoreException
   {
     try
     {
+      MetadataHelper.setTargetDateRange( newObservation.getMetadataList(), daterange );
+
       targetFile.getLocation().toFile().getParentFile().mkdirs();
       ZmlFactory.writeToFile( newObservation, targetFile );
     }

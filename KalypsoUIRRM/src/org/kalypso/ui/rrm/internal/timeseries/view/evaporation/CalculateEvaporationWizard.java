@@ -90,7 +90,6 @@ public class CalculateEvaporationWizard extends Wizard
   {
     try
     {
-
       final IEvaporationCalculator calculator = getCalculator();
       if( Objects.isNull( calculator ) )
         return false;
