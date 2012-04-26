@@ -47,6 +47,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.hydrology.timeseries.Timeserieses;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.util.ZmlLink;
@@ -106,10 +107,13 @@ public class TimeseriesSource implements IZmlSourceElement
   {
     final IStation station = m_timeseries.getStation();
     final String stationName = station.getDescription();
+    final String parameterType = m_timeseries.getParameterType();
+    final ParameterTypeLabelProvider provider = new ParameterTypeLabelProvider();
+    final String parameterLabel = provider.getText( parameterType );
 
     final String timeseriesLabel = Timeserieses.getTreeLabel( m_timeseries );
 
-    return String.format( "%s\r\n%s", stationName, timeseriesLabel );
+    return String.format( "%s\r\n%s - %s", stationName, timeseriesLabel, parameterLabel );
   }
 
   @Override
