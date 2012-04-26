@@ -33,9 +33,6 @@
           <!-- Gemarkung? -->
           <element name="location" type="gml:PointPropertyType" />
 
-          <!-- Betriebszeitraum -->
-          <element name="measurementStart" type="date" minOccurs="0" />
-          <element name="measurementEnd" type="date" minOccurs="0" />
 
           <element name="timseriesMember" minOccurs="0" maxOccurs="unbounded">
             <complexType>

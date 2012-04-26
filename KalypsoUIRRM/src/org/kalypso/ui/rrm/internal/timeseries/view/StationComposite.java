@@ -113,17 +113,9 @@ public class StationComposite extends FeatureBeanComposite<IStation>
       createPropertyTextFieldControl( IMeteorologicalStation.PROPERTY_ALTITUDE );
     }
 
-    createDateControl();
-
     createMeasurementControl();
     createTimeseriesControl();
 
-  }
-
-  private void createDateControl( )
-  {
-    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_START );
-    createPropertyDateTimeControl( IHydrologicalStation.PROPERTY_MEASUREMENT_END );
   }
 
   private String[] findGroups( final IStation base )
