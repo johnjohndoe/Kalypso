@@ -50,7 +50,7 @@ import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.model.hydrology.timeseries.TimeseriesImportWorker;
+import org.kalypso.model.hydrology.timeseries.HydrologyTimeseriesImportWorker;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
@@ -124,19 +124,19 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
 
       /* Check timestamp of "Tageszeitreihen" */
       final ValidateTageszeitreihenOperation opTageszeitreihe = new ValidateTageszeitreihenOperation( m_observation, m_timestep, m_timestamp );
-      doExecute( opTageszeitreihe, stati, monitor, Messages.getString("ImportTimeseriesOperation.0") ); //$NON-NLS-1$
+      doExecute( opTageszeitreihe, stati, monitor, Messages.getString( "ImportTimeseriesOperation.0" ) ); //$NON-NLS-1$
 
       /* Rücksprung in Daten?!? */
       final ValidateRuecksprungOperation opRuecksprung = new ValidateRuecksprungOperation( m_observation );
-      doExecute( opRuecksprung, stati, monitor, Messages.getString("ImportTimeseriesOperation.1") ); //$NON-NLS-1$
+      doExecute( opRuecksprung, stati, monitor, Messages.getString( "ImportTimeseriesOperation.1" ) ); //$NON-NLS-1$
       m_observation = opRuecksprung.getObservation();
 
       /* Validate the timestep. */
       final ValidateMissingTimestepsOperation opMissingValues = new ValidateMissingTimestepsOperation( m_observation, m_timestep );
-      doExecute( opMissingValues, stati, monitor, Messages.getString("ImportTimeseriesOperation.2") ); //$NON-NLS-1$
+      doExecute( opMissingValues, stati, monitor, Messages.getString( "ImportTimeseriesOperation.2" ) ); //$NON-NLS-1$
       m_observation = opMissingValues.getObservation();
 
-      final TimeseriesImportWorker cleanupWorker = new TimeseriesImportWorker( m_observation, m_daterange );
+      final HydrologyTimeseriesImportWorker cleanupWorker = new HydrologyTimeseriesImportWorker( m_observation, m_daterange );
       m_observation = cleanupWorker.convert( m_timestep, m_timestamp );
     }
     catch( final CancelProcessingException e )
@@ -196,5 +196,11 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
   public LocalTime getTimestamp( )
   {
     return m_timestamp;
+  }
+
+  @Override
+  public DateRange getDateRange( )
+  {
+    return m_daterange;
   }
 }

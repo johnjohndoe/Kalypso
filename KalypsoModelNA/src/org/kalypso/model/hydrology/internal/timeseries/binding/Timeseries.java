@@ -40,20 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.timeseries.binding;
 
+import java.util.Date;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.joda.time.Period;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
+import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -202,5 +210,75 @@ public class Timeseries extends Feature_Impl implements ITimeseries
     }
 
     return super.getAdapter( adapter );
+  }
+
+  @Override
+  public Date getMeasurementStart( )
+  {
+    final Object date = getProperty( PROPERTY_MEASUREMENT_START );
+    if( date instanceof XMLGregorianCalendar )
+      return DateUtilities.toDate( date );
+
+    /** fallback to supported already existing projects */
+    final Date from = determineDateRangeByObservation().getFrom();
+    setMeasurementStart( from );
+
+    return from;
+  }
+
+  @Override
+  public Date getMeasurementEnd( )
+  {
+    final Object date = getProperty( PROPERTY_MEASUREMENT_END );
+    if( date instanceof XMLGregorianCalendar )
+      return DateUtilities.toDate( date );
+
+    /** fallback to supported already existing projects */
+    final Date to = determineDateRangeByObservation().getTo();
+    setMeasurementEnd( to );
+
+    return to;
+  }
+
+  @Override
+  public DateRange getDateRange( )
+  {
+    final Date start = getMeasurementStart();
+    final Date end = getMeasurementEnd();
+
+    if( Objects.allNotNull( start, end ) )
+      return new DateRange( start, end );
+
+    final DateRange daterange = determineDateRangeByObservation();
+    setMeasurementStart( daterange.getFrom() );
+    setMeasurementEnd( daterange.getTo() );
+
+    return daterange;
+  }
+
+  /**
+   * fallback to supported already existing projects
+   */
+  private DateRange determineDateRangeByObservation( )
+  {
+    final ZmlLink link = getDataLink();
+    final IObservation observation = link.getObservationFromPool();
+
+    return Observations.findDateRange( observation );
+  }
+
+  @Override
+  public void setMeasurementStart( final Date date )
+  {
+    setProperty( PROPERTY_MEASUREMENT_START, DateUtilities.toXMLGregorianCalendar( date ) );
+  }
+
+  /**
+   * @see org.kalypso.model.hydrology.timeseries.binding.ITimeseries#setMeasurementEnd(java.util.Date)
+   */
+  @Override
+  public void setMeasurementEnd( final Date date )
+  {
+    setProperty( PROPERTY_MEASUREMENT_END, DateUtilities.toXMLGregorianCalendar( date ) );
   }
 }
