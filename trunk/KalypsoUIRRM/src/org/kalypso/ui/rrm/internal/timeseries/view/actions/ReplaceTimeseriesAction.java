@@ -59,8 +59,8 @@ public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
   {
     super( model, timeseries );
 
-    setText( Messages.getString("ReplaceTimeseriesAction_0") ); //$NON-NLS-1$
-    setToolTipText( Messages.getString("ReplaceTimeseriesAction_1") ); //$NON-NLS-1$
+    setText( Messages.getString( "ReplaceTimeseriesAction_0" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "ReplaceTimeseriesAction_1" ) ); //$NON-NLS-1$
 
     setImageDescriptor( UIRrmImages.id( DESCRIPTORS.TIMESERIES_REPLACE ) );
   }
@@ -68,7 +68,7 @@ public class ReplaceTimeseriesAction extends AbstractOverwriteTimeseriesAction
   @Override
   protected IMergeTimeseriesOperation getMergeOperation( )
   {
-    return new ReplaceTimeseriesObservation( getTimeseries() );
+    return new ReplaceTimeseriesObservation( getWorkspace(), getTimeseries() );
   }
 
 }

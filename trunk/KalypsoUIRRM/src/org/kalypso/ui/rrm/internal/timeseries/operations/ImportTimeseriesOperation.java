@@ -171,8 +171,7 @@ public class ImportTimeseriesOperation implements ICoreRunnableWithProgress, IIm
     /* Timestep */
     final MetadataList metadataList = observation.getMetadataList();
     MetadataHelper.setTimestep( metadataList, m_timestep );
-
-    // FIXME set daterange
+    MetadataHelper.setTargetDateRange( metadataList, getDateRange() );
   }
 
   @Override

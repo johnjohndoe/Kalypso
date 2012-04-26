@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.hydrology.timeseries.binding.IStation;
 import org.kalypso.model.hydrology.timeseries.binding.ITimeseries;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
@@ -131,4 +132,8 @@ public abstract class AbstractOverwriteTimeseriesAction extends Action
 
   abstract protected IMergeTimeseriesOperation getMergeOperation( );
 
+  protected CommandableWorkspace getWorkspace( )
+  {
+    return m_model.getWorkspace();
+  }
 }
