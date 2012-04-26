@@ -181,7 +181,8 @@ public final class WspWinImporter
       // /////////////////// //
       // FIXME: add status of reading wspcfg to logStatus
       final WspCfg wspCfgBean = new WspCfg();
-      wspCfgBean.read( wspwinDirectory );
+      final IStatus wspCfgStatus = wspCfgBean.read( wspwinDirectory );
+      logStatus.add( wspCfgStatus );
 
       // from now on, we have tuhh projects: if we later support other kinds of projects, tweak here
       final TuhhWspmProject tuhhProject = (TuhhWspmProject) modelRootFeature;

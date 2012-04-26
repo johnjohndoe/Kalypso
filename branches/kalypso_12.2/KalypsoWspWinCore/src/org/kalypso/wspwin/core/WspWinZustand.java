@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.kalypso.wspwin.core.i18n.Messages;
 
@@ -126,8 +127,7 @@ public class WspWinZustand
       for( final ProfileBean profileBean : profileBeans )
         addProfile( profileBean );
 
-      reader.readLine(); // read empty line
-      final ZustandSegmentBean[] segmentBeans = readZustandSegments( reader, segmentCount );
+      final ZustandSegmentBean[] segmentBeans = readZustandSegments( reader, segmentCount, strFile.getName() );
       for( final ZustandSegmentBean zustandSegmentBean : segmentBeans )
         addSegment( zustandSegmentBean );
     }
@@ -137,21 +137,21 @@ public class WspWinZustand
     }
   }
 
-  private static ZustandSegmentBean[] readZustandSegments( final LineNumberReader reader, final int segmentCount ) throws ParseException, IOException
+  private static ZustandSegmentBean[] readZustandSegments( final LineNumberReader reader, final int segmentCount, final String filename ) throws ParseException, IOException
   {
     final List<ZustandSegmentBean> beans = new ArrayList<ZustandSegmentBean>( 20 );
-    for( int i = 0; i < segmentCount; i++ )
-    {
-      if( !reader.ready() )
-        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.0" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
+    int readSegments = 0;
+    while( reader.ready() )
+    {
       final String line = reader.readLine();
-      if( line == null || line.trim().length() == 0 )
-        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.1" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
+      /* Skip empty lines; we have WspWin projects with and without a separating empty line */
+      if( StringUtils.isBlank( line ) )
+        continue;
 
       final StringTokenizer tokenizer = new StringTokenizer( line );
       if( tokenizer.countTokens() != 7 )
-        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.2" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
+        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.2", filename, reader.getLineNumber() ), reader.getLineNumber() ); //$NON-NLS-1$
 
       try
       {
@@ -166,25 +166,21 @@ public class WspWinZustand
 
         final ZustandSegmentBean bean = new ZustandSegmentBean( stationFrom, stationTo, fileNameFrom, fileNameTo, distanceVL, distanceHF, distanceVR );
         beans.add( bean );
+
+        readSegments++;
       }
       catch( final NumberFormatException e )
       {
         e.printStackTrace();
-        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.3" ) + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
+        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.3", filename, reader.getLineNumber() ), reader.getLineNumber() ); //$NON-NLS-1$
       }
     }
 
+    if( readSegments != segmentCount )
+      throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspWinZustand.1", filename, reader.getLineNumber() ), reader.getLineNumber() ); //$NON-NLS-1$
+
     return beans.toArray( new ZustandSegmentBean[beans.size()] );
   }
-
-// public void addProfile( final ProfileBean profile )
-// {
-// final String waterName = m_bean.getWaterName();
-// final String name = m_bean.getName();
-//
-// final ProfileBean profileBean = new ProfileBean( waterName, name, station.doubleValue(), prfName );
-// m_profileBeans.add( profile );
-// }
 
   void updateSegmentInfo( )
   {

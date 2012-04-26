@@ -56,9 +56,12 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
@@ -161,28 +164,64 @@ public class WspCfg
     return m_zustaende.toArray( new WspWinZustand[m_zustaende.size()] );
   }
 
-  public void read( final File wspwinDir ) throws IOException, ParseException
+  public IStatus read( final File wspwinDir )
   {
-    final File profDir = WspWinHelper.getProfDir( wspwinDir );
-    final File wspCfgFile = new File( profDir, WspWinFiles.WSP_CFG );
+    final IStatusCollector log = new StatusCollector( KalypsoWspWinCorePlugin.PLUGIN_ID );
 
-    LineNumberReader reader = null;
+    setProjectDir( wspwinDir );
+
+    final File profDir = WspWinHelper.getProfDir( wspwinDir );
+
+    final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
+
+    final IStatus wspCfgStatus = readWspCfg( profDir, zustandBeans );
+    log.add( wspCfgStatus );
+
+    /* Read zusteande */
+    for( final ZustandBean zustandBean : zustandBeans )
+    {
+      try
+      {
+        // TODO: improve error handling: import completely fails if we get an error here
+        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
+        m_zustaende.add( wspwinZustand );
+      }
+      catch( ParseException | IOException e )
+      {
+        final String msg = String.format( "Zustandsdatei konnte nicht gelesen werden: %s. Zustand wird übersprungen.", zustandBean.getFileName() );
+        log.add( IStatus.WARNING, msg, e );
+      }
+    }
+
     try
     {
-      reader = new LineNumberReader( new FileReader( wspCfgFile ) );
+      /* Read profproj */
+      m_profProj.read( wspwinDir );
+    }
+    catch( final ParseException | IOException e )
+    {
+      final String msg = String.format( "Profproj konnte nicht gelesen werden: %s. Datei wird übersprungen.", WspWinFiles.PROFPROJ_TXT );
+      log.add( IStatus.WARNING, msg, e );
+    }
 
-      setProjectDir( wspwinDir );
+    return log.asMultiStatus( String.format( "Lese %s", WspWinFiles.WSP_CFG ) );
+  }
 
+  private IStatus readWspCfg( final File profDir, final Collection<ZustandBean> zustandBeans )
+  {
+    final File wspCfgFile = new File( profDir, WspWinFiles.WSP_CFG );
+
+    try (LineNumberReader reader = new LineNumberReader( new FileReader( wspCfgFile ) ))
+    {
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
-        throw new ParseException( Messages.getString( "org.kalypso.wspwin.core.WspCfg.1" ), reader.getLineNumber() ); //$NON-NLS-1$
+        return new Status( IStatus.ERROR, KalypsoWspWinCorePlugin.PLUGIN_ID, Messages.getString( "org.kalypso.wspwin.core.WspCfg.1" ) );
 
       // ignore the values, we read the count from the linecount
       // just parse the type
       final char type = firstLine.charAt( firstLine.length() - 1 );
       setType( type );
 
-      final Collection<ZustandBean> zustandBeans = new ArrayList<ZustandBean>();
       while( reader.ready() )
       {
         final String line = reader.readLine();
@@ -215,20 +254,11 @@ public class WspCfg
         }
       }
 
-      /* Read zusteande */
-      for( final ZustandBean zustandBean : zustandBeans )
-      {
-        // TODO: improve error handling: import completely fails if we get an error here
-        final WspWinZustand wspwinZustand = zustandBean.readZustand( profDir );
-        m_zustaende.add( wspwinZustand );
-      }
-
-      /* Read profproj */
-      m_profProj.read( wspwinDir );
+      return Status.OK_STATUS;
     }
-    finally
+    catch( final ParseException | IOException e )
     {
-      IOUtils.closeQuietly( reader );
+      return new Status( IStatus.ERROR, KalypsoWspWinCorePlugin.PLUGIN_ID, e.getLocalizedMessage(), e );
     }
   }
 
