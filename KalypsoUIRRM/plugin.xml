@@ -725,6 +725,10 @@
           class="org.kalypso.ui.rrm.internal.cm.idw.IdwWizardFeatureControlFactory"
           id="idwWizardFeatureControl">
     </extensionControl>
+    <extensionControl
+          class="org.kalypso.ui.rrm.internal.simulations.SimulationCalculationFeatureControlFactory"
+          id="simulationCalculationFeatureControl">
+    </extensionControl>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
