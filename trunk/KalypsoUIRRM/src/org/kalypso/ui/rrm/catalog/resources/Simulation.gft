@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featureview xmlns:rrm="org.kalypso.na.control_v2" typename="rrm:NAControl" style="SWT.NONE" tooltip="" xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
   <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" />
-  <gridLayout numColumns="1" makeColumnsEqualWidth="false" marginHeight="0" marginWidth="0" horizontalSpacing="0" />
+  <gridLayout numColumns="2" makeColumnsEqualWidth="false" marginHeight="0" marginWidth="0" horizontalSpacing="0" />
 
   <!-- Allgemeines: -->
   <group text="%control.gft.general" style="0">
