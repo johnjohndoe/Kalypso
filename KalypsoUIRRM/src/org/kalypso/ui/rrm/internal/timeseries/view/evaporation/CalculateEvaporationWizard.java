@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ObservationImportOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
+import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.evaporation.CalculateEvaporationData.EVAPORATION_TYPE;
 
@@ -112,6 +113,9 @@ public class CalculateEvaporationWizard extends Wizard
       }
 
       m_timeseries = storeOperation.getTimeseries();
+
+      final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, status );
+      RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation );
 
       // FIXME better error handling
       return status.isOK() && status2.isOK();

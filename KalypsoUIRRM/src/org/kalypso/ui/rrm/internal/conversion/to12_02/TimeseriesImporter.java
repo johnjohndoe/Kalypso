@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -88,6 +89,7 @@ import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
+import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -175,7 +177,7 @@ public class TimeseriesImporter
 
       try
       {
-        importZml( sourceTimeseriesDir, zmlFile, stati );
+        stati.add( importZml( sourceTimeseriesDir, zmlFile ) );
       }
       catch( final CoreException e )
       {
@@ -201,8 +203,10 @@ public class TimeseriesImporter
     monitor.done();
   }
 
-  private void importZml( final File baseDir, final File zmlFile, final IStatusCollector stati ) throws SensorException, CoreException, IOException
+  private IStatus importZml( final File baseDir, final File zmlFile ) throws SensorException, CoreException, IOException
   {
+    final IStatusCollector stati = new StatusCollector( KalypsoUIRRMPlugin.getID() );
+
     final String baseName = FilenameUtils.removeExtension( zmlFile.getName() );
     final String relativePath = FileUtilities.getRelativePathTo( baseDir, zmlFile );
 
@@ -285,6 +289,12 @@ public class TimeseriesImporter
 
     final TimeseriesIndexEntry newEntry = new TimeseriesIndexEntry( relativeSourcePath, dataLink.getHref(), parameterType, timestep, timestamp );
     m_timeseriesIndex.addEntry( newEntry );
+
+    final MultiStatus status = stati.asMultiStatus( String.format( "Zeitreihen-Import: %s", baseName ) );
+    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( newTimeseries, status );
+    stati.add( storeStatusOperation.execute( new NullProgressMonitor() ) );
+
+    return status;
   }
 
   private IObservation readObservation( final File zmlFile, final String relativePath ) throws SensorException, MalformedURLException
