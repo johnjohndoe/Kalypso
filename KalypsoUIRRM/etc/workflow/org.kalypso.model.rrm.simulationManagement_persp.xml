@@ -16,12 +16,12 @@
   <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.utils.featureTree.TreePropertiesView" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.cm.view.CatchmentModelsView" />
   <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView" />
+  <viewLayoutRec closeable="false" id="org.kalypso.featureview.views.FeatureView" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
   <viewLayoutRec closeable="false" id="org.kalypso.kalypso1d2d.pjt.views.WorklistView" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.editor.gistableeditor.GttViewPart" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.repository.view.RepositoryExplorerPart" />
   <viewLayoutRec closeable="false" id="org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesManagementView" />
-  <viewLayoutRec closeable="false" id="org.kalypso.featureview.views.FeatureView" />
   <layout>
     <mainWindow>
       <info folder="true" part="leftTop">
@@ -33,11 +33,13 @@
         </folder>
       </info>
       <info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="954" ratioRight="318" relationship="2" relative="leftTop">
-        <folder appearance="2" expanded="2">
-          <page content="org.eclipse.help.ui.HelpView" label="LabelNotFound" />
+        <folder activePageID="org.eclipse.ui.internal.introview" appearance="2" expanded="2">
           <page content="org.eclipse.ui.internal.introview" label="LabelNotFound" />
+          <page content="org.eclipse.help.ui.HelpView" label="LabelNotFound" />
           <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound" />
-          <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
+          <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+            <part id="0" />
+          </presentation>
         </folder>
       </info>
       <info part="org.eclipse.ui.editorss" ratio="0.19858156" ratioLeft="252" ratioRight="1017" relationship="2" relative="leftTop" />
@@ -78,11 +80,13 @@
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
         </folder>
       </info>
-      <info folder="true" part="org.eclipse.ui.internal.ViewStack@53045f59" ratio="0.49944505" ratioLeft="450" ratioRight="451" relationship="4" relative="rightTop">
+      <info folder="true" part="org.eclipse.ui.internal.ViewStack@53045f59" ratio="0.6937639" ratioLeft="623" ratioRight="275" relationship="4" relative="rightTop">
         <folder activePageID="org.kalypso.featureview.views.FeatureView" appearance="2" expanded="2">
           <page content="org.kalypso.featureview.views.FeatureView" label="Feature View" />
+          <page content="org.eclipse.ui.console.ConsoleView" label="Konsole" />
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
             <part id="0" />
+            <part id="1" />
           </presentation>
         </folder>
       </info>
