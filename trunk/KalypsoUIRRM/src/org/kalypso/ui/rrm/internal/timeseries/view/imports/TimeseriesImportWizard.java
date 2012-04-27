@@ -134,7 +134,7 @@ public class TimeseriesImportWizard extends Wizard
     stati.add( RunnableContextHelper.execute( getContainer(), true, false, m_importOperation ) );
     if( stati.matches( IStatus.ERROR ) )
     {
-      doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) );
+      doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) ); //$NON-NLS-1$
       return false;
     }
 
