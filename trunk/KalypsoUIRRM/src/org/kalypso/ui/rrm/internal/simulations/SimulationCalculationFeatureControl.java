@@ -40,13 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -86,8 +92,38 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
   {
     /* Create the main composite. */
     final Composite main = new Composite( parent, style );
-    main.setLayout( new GridLayout( 1, false ) );
+    main.setLayout( new GridLayout( 2, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    main.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_CYAN ) );
+
+    /* Create a label. */
+    final Label calculationLabel = new Label( main, SWT.NONE );
+    calculationLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    calculationLabel.setText( "Execution status:" );
+
+    /* Create a status composite. */
+    final StatusComposite calculationStatusComposite = new StatusComposite( main, SWT.NONE );
+    calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not verified" ) );
+
+    /* Create a button. */
+    final Button calculationButton = new Button( main, SWT.PUSH );
+    calculationButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    calculationButton.setText( "Calculate" );
+
+    // TODO
+
+    /* Create a label. */
+    final Label validationLabel = new Label( main, SWT.NONE );
+    validationLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    validationLabel.setText( "Validationstatus:" );
+
+    /* Create a status composite. */
+    final StatusComposite validationStatusComposite = new StatusComposite( main, SWT.NONE );
+    validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not verified" ) );
+
+    // TODO
 
     return main;
   }
