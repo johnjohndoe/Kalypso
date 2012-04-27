@@ -110,7 +110,6 @@ public class RrmDiagramView extends ViewPart
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
-
     final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( convert( selection ) );
     m_chartPart.setSelection( sources );
   }

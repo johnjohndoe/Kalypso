@@ -58,7 +58,7 @@
     </IndexColumn>
 
     <!-- wasserstand -->
-    <DataColumn editable="false" id="W" tooltip="true" wrapText="true">
+    <DataColumn editable="true" id="W" tooltip="true" wrapText="true">
       <property name="label">Wasserstand</property>
       <property name="alignment">RIGHT</property>
       <property name="uriContextMenu">menu:org.kalypso.model.rrm.ui.zml.table.menu.context.menu</property>
