@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.hydrology.internal.timeseries.binding;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
@@ -62,6 +63,8 @@ public class TimeseriesSource implements IZmlSourceElement
 
   private String m_identifier;
 
+  private PooledObsProvider m_provider;
+
   public TimeseriesSource( final Timeseries timeseries )
   {
     m_timeseries = timeseries;
@@ -77,10 +80,14 @@ public class TimeseriesSource implements IZmlSourceElement
   @Override
   public IObsProvider getObsProvider( )
   {
+    if( Objects.isNotNull( m_provider ) )
+      return m_provider;
+
     final ZmlLink link = m_timeseries.getDataLink();
     final IPoolableObjectType key = link.getPoolableObjectType();
+    m_provider = new PooledObsProvider( key );
 
-    return new PooledObsProvider( key );
+    return m_provider;
   }
 
   @Override
