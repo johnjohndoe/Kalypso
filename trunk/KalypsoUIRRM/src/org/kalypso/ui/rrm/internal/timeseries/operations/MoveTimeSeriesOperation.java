@@ -100,7 +100,12 @@ public class MoveTimeSeriesOperation implements ICoreRunnableWithProgress
     final DeleteTimeseriesOperation deleteOperation = new DeleteTimeseriesOperation( m_model, m_timeseries );
     stati.add( deleteOperation.execute( monitor ) );
 
-    return stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) ); //$NON-NLS-1$
+    final IStatus status = stati.asMultiStatusOrOK( String.format( Messages.getString( "MoveTimeSeriesOperation_0" ), m_timeseries.getName() ) );
+
+    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_moved, status );
+    stati.add( storeStatusOperation.execute( monitor ) );
+
+    return status; //$NON-NLS-1$
   }
 
   public ITimeseries getMovedTimeseries( )

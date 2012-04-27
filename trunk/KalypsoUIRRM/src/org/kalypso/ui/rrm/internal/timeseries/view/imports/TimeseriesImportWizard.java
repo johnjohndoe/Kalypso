@@ -58,6 +58,7 @@ import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.timeseries.operations.ImportTimeseriesOperation;
 import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesOperation;
+import org.kalypso.ui.rrm.internal.timeseries.operations.StoreTimeseriesStatusOperation;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesBean;
 import org.kalypso.ui.rrm.internal.timeseries.view.TimeseriesPropertiesComposite;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBeanWizardPage;
@@ -96,7 +97,7 @@ public class TimeseriesImportWizard extends Wizard
         String description = ""; //$NON-NLS-1$
         if( Objects.isNotNull( file ) )
         {
-          description = String.format( Messages.getString("TimeseriesImportWizard_2"), file.getAbsolutePath() ); //$NON-NLS-1$
+          description = String.format( Messages.getString( "TimeseriesImportWizard_2" ), file.getAbsolutePath() ); //$NON-NLS-1$
         }
 
         bean.setProperty( ITimeseries.QN_DESCRIPTION, description );
@@ -133,7 +134,7 @@ public class TimeseriesImportWizard extends Wizard
     stati.add( RunnableContextHelper.execute( getContainer(), true, false, m_importOperation ) );
     if( stati.matches( IStatus.ERROR ) )
     {
-      doShowStatusDialog( stati );
+      doShowStatusDialog( stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ) );
       return false;
     }
 
@@ -143,16 +144,20 @@ public class TimeseriesImportWizard extends Wizard
     stati.add( RunnableContextHelper.execute( getContainer(), true, false, storeOperation ) );
     m_timeseries = storeOperation.getTimeseries();
 
-    doShowStatusDialog( stati );
+    final IStatus status = stati.asMultiStatus( Messages.getString( "TimeseriesImportWizard_3" ) ); //$NON-NLS-1$
+
+    final StoreTimeseriesStatusOperation storeStatusOperation = new StoreTimeseriesStatusOperation( m_timeseries, status );
+    stati.add( RunnableContextHelper.execute( getContainer(), true, false, storeStatusOperation ) );
+
+    doShowStatusDialog( status );
 
     return !stati.matches( IStatus.ERROR );
   }
 
-  private void doShowStatusDialog( final StatusCollector stati )
+  private void doShowStatusDialog( final IStatus status )
   {
-    final IStatus status = stati.asMultiStatus( Messages.getString("TimeseriesImportWizard_3") ); //$NON-NLS-1$
 
-    final StatusDialog dialog = new StatusDialog( getShell(), status, Messages.getString("TimeseriesImportWizard_4") ); //$NON-NLS-1$
+    final StatusDialog dialog = new StatusDialog( getShell(), status, Messages.getString( "TimeseriesImportWizard_4" ) ); //$NON-NLS-1$
     dialog.open();
   }
 
