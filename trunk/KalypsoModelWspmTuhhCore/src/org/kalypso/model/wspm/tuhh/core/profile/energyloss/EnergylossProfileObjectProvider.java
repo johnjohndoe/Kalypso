@@ -51,7 +51,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class EnergylossProfileObjectProvider implements IProfileObjectProvider
 {
-  public final static String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:sinuositaetTypes#ENERGYLOSS";
+  public final static String ID = "urn:ogc:gml:dict:kalypso:model:wspm:tuhh:core:energylossTypes#ENERGYLOSS";
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObjectProvider#buildProfileObject(org.kalypso.model.wspm.core.profil.IProfil,

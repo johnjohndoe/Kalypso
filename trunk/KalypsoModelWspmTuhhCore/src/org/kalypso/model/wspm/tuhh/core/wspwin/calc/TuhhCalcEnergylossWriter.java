@@ -85,8 +85,10 @@ public class TuhhCalcEnergylossWriter
       for( final TuhhReachProfileSegment segment : m_segments )
       {
         final IProfileFeature profileFeature = segment.getProfileMember();
-        if( profileFeature == null )
+        if( profileFeature == null ){
+          System.out.println(this.getClass()+": No profilemember found in segment "+segment.getId());
           continue;
+        }
         final IProfil profil = profileFeature.getProfil();
         final EnergylossProfileObject[] energylosses = profil.getProfileObjects( EnergylossProfileObject.class );
         if( energylosses == null )
@@ -96,11 +98,11 @@ public class TuhhCalcEnergylossWriter
           final TupleResult result = energyloss.getObservation().getResult();
           if( result == null )
           {
+            System.out.println(this.getClass()+": Profile "+profil.getName()+" does not contain any Energyloss values");
             continue;
           }
           final int iType = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_TYPE );
           final int iValue = result.indexOfComponent( IEnergylossProfileObject.PROPERTY_VALUE );
-          psiWriter.println();
           psiWriter.print( "STATION " + segment.getStation() );
           int i = 1;
           for( IRecord record : result )
@@ -115,6 +117,7 @@ public class TuhhCalcEnergylossWriter
               psiWriter.print( " " + ENERGYLOSS_TYPE.eZusatzverlust.getId() + i++ + " " + record.getValue( iValue ) );
             }
           }
+          psiWriter.println();
         }
       }
       psiWriter.flush();
