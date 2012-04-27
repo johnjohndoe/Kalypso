@@ -54,6 +54,7 @@ import org.kalypso.model.hydrology.binding.ICatchmentModel;
 import org.kalypso.model.hydrology.binding.model.Catchment;
 import org.kalypso.model.hydrology.binding.model.NaModell;
 import org.kalypso.model.rcm.binding.ICatchment;
+import org.kalypso.model.rcm.binding.IFactorizedTimeseries;
 import org.kalypso.model.rcm.binding.ILinearSumGenerator;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -62,6 +63,7 @@ import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.rrm.internal.i18n.Messages;
 import org.kalypso.ui.rrm.internal.utils.featureBinding.FeatureBean;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
@@ -215,7 +217,8 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
   }
 
   /**
-   * Creates a linear sum bean representing the linear sum generator with all catchments from the model.gml.
+   * Creates a linear sum bean representing the linear sum generator with all catchments from the model.gml. It keeps
+   * the factors, where possible.
    * 
    * @param model
    *          The na model.
@@ -225,11 +228,21 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
    */
   public static LinearSumBean reinitFromModel( final NaModell model, final ILinearSumGenerator generator )
   {
+    /* Create a new linear sum bean. */
     final LinearSumBean bean = new LinearSumBean();
     bean.setFeature( generator );
 
-    final CatchmentBean[] beans = getCatchmentsFromModel( model );
-    bean.setCatchments( beans );
+    /* Get the catchments from the model. */
+    final CatchmentBean[] modelCatchments = getCatchmentsFromModel( model );
+
+    /* Get the catchments from the generator. */
+    final Map<String, ICatchment> generatorCatchments = getCatchmentsFromGenerator( generator );
+
+    /* Add the factors of the generator, where possible. */
+    updateCatchments( modelCatchments, generatorCatchments );
+
+    /* Set the catchments of the model. */
+    bean.setCatchments( modelCatchments );
 
     return bean;
   }
@@ -256,6 +269,44 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
     }
 
     return catchmentBeans.toArray( new CatchmentBean[catchmentBeans.size()] );
+  }
+
+  private static Map<String, ICatchment> getCatchmentsFromGenerator( final ILinearSumGenerator generator )
+  {
+    final Map<String, ICatchment> results = new HashMap<String, ICatchment>();
+
+    final IFeatureBindingCollection<ICatchment> catchments = generator.getCatchments();
+    for( final ICatchment catchment : catchments )
+    {
+      final IXLinkedFeature generatorLink = (IXLinkedFeature) catchment.getAreaLink();
+      final String generatorId = generatorLink.getFeatureId();
+      results.put( generatorId, catchment );
+    }
+
+    return results;
+  }
+
+  private static void updateCatchments( final CatchmentBean[] modelCatchments, final Map<String, ICatchment> generatorCatchments )
+  {
+    for( final CatchmentBean modelCatchment : modelCatchments )
+    {
+      /* Get the catchment of the generator for the id of the catchment of the model. */
+      final ICatchment generatorCatchment = generatorCatchments.remove( modelCatchment.getCatchmentRef() );
+
+      /* If there is none, this is a new catchment in the model. */
+      /* No factors can be set. */
+      if( generatorCatchment == null )
+        continue;
+
+      /* Get the generator timeseries. */
+      final IFeatureBindingCollection<IFactorizedTimeseries> generatorTimeseries = generatorCatchment.getFactorizedTimeseries();
+
+      /* Initialize the model catchment with the factors of the generator timeseries. */
+      modelCatchment.initializeFactors( generatorTimeseries );
+    }
+
+    /* HINT: If there generator catchments left, they will be missing now in the model catchments. */
+    /* HINT: Hence, the factors are lost. */
   }
 
   public void resetTimeseries( )
