@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * The catchment.
- *
+ * 
  * @author Holger Albert
  */
 public interface ICatchment extends Feature
@@ -71,7 +71,7 @@ public interface ICatchment extends Feature
 
   /**
    * This function returns the area link.
-   *
+   * 
    * @return The area link.
    */
   Feature getAreaLink( );
@@ -83,7 +83,7 @@ public interface ICatchment extends Feature
 
   /**
    * This function returns factorized timeseries.
-   *
+   * 
    * @return All factorized timeseries.
    */
   IFeatureBindingCollection<IFactorizedTimeseries> getFactorizedTimeseries( );
@@ -97,4 +97,9 @@ public interface ICatchment extends Feature
    * Returns the name from the underlying linked feature via the name property of the generator.
    */
   String resolveName( );
+
+  /**
+   * Returns the description from the underlying linked feature via the description property of the generator.
+   */
+  String resolveDescription( );
 }

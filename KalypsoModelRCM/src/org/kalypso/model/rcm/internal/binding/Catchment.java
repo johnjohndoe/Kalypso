@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * The catchment.
- *
+ * 
  * @author Holger Albert
  */
 public class Catchment extends Feature_Impl implements ICatchment
@@ -82,7 +82,6 @@ public class Catchment extends Feature_Impl implements ICatchment
   {
     setLink( PROPERTY_AREA_LINK, href );
   }
-
 
   @Override
   public IFeatureBindingCollection<IFactorizedTimeseries> getFactorizedTimeseries( )
@@ -133,7 +132,6 @@ public class Catchment extends Feature_Impl implements ICatchment
     if( catchment == null )
       return null;
 
-    /* Query. */
     final Object name = GMLXPathUtilities.queryQuiet( namePath, catchment );
     if( name instanceof String )
       return (String) name;
@@ -146,6 +144,29 @@ public class Catchment extends Feature_Impl implements ICatchment
 
       return (String) names.get( 0 );
     }
+
+    return null;
+  }
+
+  @Override
+  public String resolveDescription( )
+  {
+    final ILinearSumGenerator parent = getOwner();
+
+    /* Get the description property. */
+    final GMLXPath descriptionPath = parent.getAreaDescriptionPath();
+    if( descriptionPath == null )
+      return null;
+
+    /* Check if catchment exists. */
+    final Feature catchment = getAreaLink();
+    if( catchment == null )
+      return null;
+
+    /* Query. */
+    final Object description = GMLXPathUtilities.queryQuiet( descriptionPath, catchment );
+    if( description instanceof String )
+      return (String) description;
 
     return null;
   }

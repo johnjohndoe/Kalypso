@@ -75,8 +75,6 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Gernot Belger
@@ -120,7 +118,7 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     m_timeseries = new ArrayList<FactorizedTimeseriesBean>();
     m_catchmentRef = resolveRef( catchment );
     m_catchmentName = catchment.resolveName();
-    m_catchmentDescription = resolveDescription( catchment );
+    m_catchmentDescription = catchment.resolveDescription();
     m_catchmentArea = catchment.resolveArea();
     m_status = null;
 
@@ -207,21 +205,21 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     }
 
     if( completeFactor <= 0 )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString("CatchmentBean_0"), completeFactor ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString( "CatchmentBean_0" ), completeFactor ) ); //$NON-NLS-1$
 
     if( completeFactor > 100 )
-      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString("CatchmentBean_1"), completeFactor ) ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString( "CatchmentBean_1" ), completeFactor ) ); //$NON-NLS-1$
 
     if( completeFactor > 0 && completeFactor < 100 )
-      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString("CatchmentBean_2"), completeFactor ) ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoUIRRMPlugin.getID(), String.format( Locale.PRC, Messages.getString( "CatchmentBean_2" ), completeFactor ) ); //$NON-NLS-1$
 
-    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString("CatchmentBean_3") ); //$NON-NLS-1$
+    return new Status( IStatus.OK, KalypsoUIRRMPlugin.getID(), Messages.getString( "CatchmentBean_3" ) ); //$NON-NLS-1$
   }
 
   /**
    * This function applies the changes of this catchment. It assumes, that the catchment does not exist or does not
    * exist anymore, because it will create a new catchment feature.
-   *
+   * 
    * @param workspace
    *          The workspace.
    * @param parent
@@ -274,30 +272,6 @@ public class CatchmentBean extends FeatureBean<ICatchment>
     return null;
   }
 
-  // FIXME: move to ICatchment
-  private String resolveDescription( final ICatchment catchment )
-  {
-    /* Get the parent. */
-    final ILinearSumGenerator parent = (ILinearSumGenerator) catchment.getOwner();
-
-    /* Get the description property. */
-    final GMLXPath descriptionPath = parent.getAreaDescriptionPath();
-    if( descriptionPath == null )
-      return null;
-
-    /* Get the area. */
-    final Feature area = catchment.getAreaLink();
-    if( area == null )
-      return null;
-
-    /* Query. */
-    final Object queryQuiet = GMLXPathUtilities.queryQuiet( descriptionPath, area );
-    if( queryQuiet instanceof String )
-      return (String) queryQuiet;
-
-    return null;
-  }
-
   /**
    * Make sure that the catchments always contains all stations.
    */
@@ -331,25 +305,29 @@ public class CatchmentBean extends FeatureBean<ICatchment>
         return;
 
       /* Initialize with factors. */
-      final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries = feature.getFactorizedTimeseries();
-      for( final IFactorizedTimeseries oneFactorizedTimeseries : factorizedTimeseries )
-      {
-        final ZmlLink timeseriesLink = oneFactorizedTimeseries.getTimeseriesLink();
-        if( timeseriesLink == null )
-          continue;
-
-        final FactorizedTimeseriesBean bean = m_cache.get( timeseriesLink.getHref() );
-        if( bean == null )
-          continue;
-
-        final BigDecimal factor = oneFactorizedTimeseries.getFactor();
-        if( factor != null )
-          bean.setFactor( factor.intValue() );
-      }
+      initializeFactors( feature.getFactorizedTimeseries() );
     }
     catch( final CoreException ex )
     {
       ex.printStackTrace();
+    }
+  }
+
+  public void initializeFactors( final IFeatureBindingCollection<IFactorizedTimeseries> factorizedTimeseries )
+  {
+    for( final IFactorizedTimeseries oneFactorizedTimeseries : factorizedTimeseries )
+    {
+      final ZmlLink timeseriesLink = oneFactorizedTimeseries.getTimeseriesLink();
+      if( timeseriesLink == null )
+        continue;
+
+      final FactorizedTimeseriesBean bean = m_cache.get( timeseriesLink.getHref() );
+      if( bean == null )
+        continue;
+
+      final BigDecimal factor = oneFactorizedTimeseries.getFactor();
+      if( factor != null )
+        bean.setFactor( factor.intValue() );
     }
   }
 
