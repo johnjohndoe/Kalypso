@@ -40,15 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.baseMap;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
@@ -64,8 +55,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.i18n.Messages;
 
@@ -90,10 +79,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
   protected ImportBaseMapImportImgPage m_pageImportImg;
 
   protected ImportBaseMapImportShpPage m_pageImportShp;
-
-  protected ImportBaseMapImportWmsPage m_pageImportWMS;
-
-  private final List<String> m_catalog = new ArrayList<String>();
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
@@ -141,23 +126,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
     initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) ); //$NON-NLS-1$
-
-    // read service catalog file
-    final InputStream is = getClass().getResourceAsStream( "wms.catalog" ); //$NON-NLS-1$
-    try
-    {
-      readCatalog( is );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      m_catalog.clear();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
   }
 
   @Override
@@ -166,13 +134,11 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
     m_pageMain = new ImportBaseMapWizardMainPage();
     m_pageImportImg = new ImportBaseMapImportImgPage();
     m_pageImportShp = new ImportBaseMapImportShpPage();
-    m_pageImportWMS = new ImportBaseMapImportWmsPage( "WmsImportPage", Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.5" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     m_pageImportImg.init( initialSelection );
     m_pageImportShp.init( initialSelection );
     addPage( m_pageMain );
     addPage( m_pageImportImg );
     addPage( m_pageImportShp );
-    addPage( m_pageImportWMS );
   }
 
   private IImportBaseMapPage getSelectedPage( )
@@ -193,23 +159,6 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard
       return currentPage.isPageComplete();
 
     return false;
-  }
-
-  public void readCatalog( final InputStream is ) throws IOException, NullPointerException
-  {
-    m_catalog.clear();
-
-    // use properties to parse catalog: dont do everything yourself
-    // fixes bug with '=' inside of URLs
-    final Properties properties = new Properties();
-    properties.load( is );
-
-    final Set<Entry<Object, Object>> name = properties.entrySet();
-    for( final Entry<Object, Object> entry : name )
-    {
-      if( entry.getKey().toString().startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
-        m_catalog.add( entry.getValue().toString() );
-    }
   }
 
   @Override
