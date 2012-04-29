@@ -58,8 +58,6 @@ public class ImportBaseMapWizardMainPage extends WizardPage
 
   private Button m_btnImportShp;
 
-  private Button m_btnImportWMS;
-
   public ImportBaseMapWizardMainPage( )
   {
     super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -83,10 +81,6 @@ public class ImportBaseMapWizardMainPage extends WizardPage
 
     m_btnImportShp = new Button( composite, SWT.RADIO );
     m_btnImportShp.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.4" ) ); //$NON-NLS-1$
-    // m_btnImportShp.setEnabled( false );
-
-    m_btnImportWMS = new Button( composite, SWT.RADIO );
-    m_btnImportWMS.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.5" ) ); //$NON-NLS-1$
 
     m_btnImportImg.setSelection( true );
 
@@ -97,13 +91,11 @@ public class ImportBaseMapWizardMainPage extends WizardPage
   public IWizardPage getNextPage( )
   {
     // FIXME: würg! instead, just give the page a list of pages from outside; this is just...!
-    IWizardPage page = null;
     if( m_btnImportImg.getSelection() )
-      page = ((ImportBaseMapWizard) getWizard()).m_pageImportImg;
+      return ((ImportBaseMapWizard) getWizard()).m_pageImportImg;
     else if( m_btnImportShp.getSelection() )
-      page = ((ImportBaseMapWizard) getWizard()).m_pageImportShp;
-    else if( m_btnImportWMS.getSelection() )
-      page = ((ImportBaseMapWizard) getWizard()).m_pageImportWMS;
-    return page;
+      return ((ImportBaseMapWizard) getWizard()).m_pageImportShp;
+
+    return null;
   }
 }
