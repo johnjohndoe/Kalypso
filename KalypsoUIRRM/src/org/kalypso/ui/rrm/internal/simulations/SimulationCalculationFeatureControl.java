@@ -155,7 +155,8 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       imageHyperlink.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
       imageHyperlink.setText( openTextLogAction.getText() );
 
-      // TODO Others?
+      /* Initialize. */
+      initialize();
     }
     catch( final CoreException ex )
     {
@@ -186,6 +187,26 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     return true;
   }
 
+  private RrmSimulation getSimulation( ) throws CoreException
+  {
+    /* Get the description of the current simulation. */
+    final Feature feature = getFeature();
+    final String description = feature.getDescription();
+
+    /* Get the folder of the current simulation. */
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IContainer scenarioFolder = dataProvider.getScenarioFolder();
+    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
+    final IFolder simulationFolder = calcCasesFolder.getFolder( description );
+
+    return new RrmSimulation( simulationFolder );
+  }
+
+  private void initialize( )
+  {
+    // TODO Read/Create the stati with two non UI jobs...
+  }
+
   private IStatus getCalculationStatus( )
   {
     // TODO
@@ -207,20 +228,5 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     {
       return new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), String.format( "Validation has failed: %s", ex.getLocalizedMessage() ), ex );
     }
-  }
-
-  private RrmSimulation getSimulation( ) throws CoreException
-  {
-    /* Get the description of the current simulation. */
-    final Feature feature = getFeature();
-    final String description = feature.getDescription();
-
-    /* Get the folder of the current simulation. */
-    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
-    final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-    final IFolder calcCasesFolder = scenarioFolder.getFolder( new Path( INaProjectConstants.FOLDER_RECHENVARIANTEN ) );
-    final IFolder simulationFolder = calcCasesFolder.getFolder( description );
-
-    return new RrmSimulation( simulationFolder );
   }
 }
