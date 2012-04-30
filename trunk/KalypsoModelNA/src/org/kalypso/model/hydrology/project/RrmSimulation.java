@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.Path;
 
 /**
  * Represents a simulation of the rrm model (i.e. one calculation case folder) and allows access to its data-
- *
+ * 
  * @author Gernot Belger
  */
 public class RrmSimulation
@@ -60,6 +60,8 @@ public class RrmSimulation
   private static final String FOLDER_RESULTS = "Ergebnisse"; //$NON-NLS-1$
 
   private static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
+
+  private static final String FOLDER_LOGS = "Logs"; //$NON-NLS-1$
 
   private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
@@ -124,6 +126,11 @@ public class RrmSimulation
     return getResultsFolder().getFolder( FOLDER_AKTUELL );
   }
 
+  public IFolder getLogsResultsFolder( )
+  {
+    return getResultsFolder().getFolder( FOLDER_LOGS );
+  }
+
   public IFolder getLzsimFolder( )
   {
     return m_simulation.getFolder( FOLDER_ANFANGSWERTE );
@@ -169,11 +176,6 @@ public class RrmSimulation
     return getLzsimFolder().getFile( FILE_LZSIM_GML );
   }
 
-  public static IPath getCalculationGmlPath( )
-  {
-    return new Path( FOLDER_MODELS ).append( FILE_CALCULATION_GML );
-  }
-
   public String getName( )
   {
     return m_simulation.getName();
@@ -188,5 +190,10 @@ public class RrmSimulation
   {
     final IFolder currentResultsFolder = getCurrentResultsFolder();
     return currentResultsFolder.getFolder( FOLDER_ANFANGSWERTE );
+  }
+
+  public static IPath getCalculationGmlPath( )
+  {
+    return new Path( FOLDER_MODELS ).append( FILE_CALCULATION_GML );
   }
 }
