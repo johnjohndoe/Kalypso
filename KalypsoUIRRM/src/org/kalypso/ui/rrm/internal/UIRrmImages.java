@@ -97,7 +97,9 @@ public class UIRrmImages
     GENERATOR_NEW_MULTI("icons/cm/generatorNewMulti.png"), //$NON-NLS-1$
     GENERATOR_EDIT("icons/cm/generatorEdit.png"), //$NON-NLS-1$
     GENERATOR_EDIT_THIESSEN("icons/cm/generatorEditThiessen.png"), //$NON-NLS-1$
-    GENERATOR_EDIT_IDW("icons/cm/generatorEditIdw.png"); //$NON-NLS-1$
+    GENERATOR_EDIT_IDW("icons/cm/generatorEditIdw.png"), //$NON-NLS-1$
+
+    OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

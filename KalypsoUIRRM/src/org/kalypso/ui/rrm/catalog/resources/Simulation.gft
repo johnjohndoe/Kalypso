@@ -146,7 +146,9 @@
   <group text="%control.gft.calculation" style="SWT.NONE">
     <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
     <gridLayout numColumns="1" />
-    <extensioncontrol style="SWT.NONE" property="rrm:versionKalypsoNA" extension-id="simulationCalculationFeatureControl" />
+    <extensioncontrol style="SWT.NONE" property="rrm:versionKalypsoNA" extension-id="simulationCalculationFeatureControl">
+      <gridData horizontalAlignment="SWT.FILL" verticalAlignment="SWT.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+    </extensioncontrol>
   </group>
 
   <translator id="commons.msgGetString">
