@@ -12,7 +12,7 @@
             <element name="simulationMember" minOccurs="0" maxOccurs="unbounded">
               <complexType>
                 <sequence>
-                  <element ref="na:NAControl" minOccurs="0" maxOccurs="1"/>
+                  <element ref="na:NAControl" minOccurs="0" maxOccurs="1" />
                 </sequence>
                 <attributeGroup ref="gml:AssociationAttributeGroup" />
               </complexType>
@@ -52,6 +52,9 @@
 
             <!-- Source for initial values -->
             <element name="initialValueSource" type="string" minOccurs="0" />
+
+            <!-- Last modified timestamp -->
+            <element name="lastModified" type="long" minOccurs="0" maxOccurs="1" />
           </sequence>
         </extension>
       </complexContent>

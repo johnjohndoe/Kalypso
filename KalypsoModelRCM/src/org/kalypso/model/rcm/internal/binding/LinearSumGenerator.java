@@ -51,6 +51,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -267,6 +268,49 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
     /* Adjust the validities. */
     adjustValidities();
+  }
+
+  @Override
+  public boolean isOutdated( )
+  {
+    final long lastModifiedInput = getLastModifiedInput();
+    final long lastModifiedOutput = getLastModifiedOutput();
+    if( lastModifiedInput > lastModifiedOutput )
+      return true;
+
+    return false;
+  }
+
+  private long getLastModifiedInput( )
+  {
+    /* This is the last modified timestamp of the this generator itself. */
+    final long lastModified = getLastModified();
+
+    /* This is the last modified timestamp of the timeseries. */
+    final long lastModifiedTimeseries = getLastModifiedTimeseries();
+
+    /* This is the last modified timestamp of the catchments. */
+    final long lastModifiedCatchments = getLastModifiedCatchments();
+
+    return NumberUtils.max( new long[] { lastModified, lastModifiedTimeseries, lastModifiedCatchments } );
+  }
+
+  private long getLastModifiedOutput( )
+  {
+    // TODO
+    return -1;
+  }
+
+  private long getLastModifiedTimeseries( )
+  {
+    // TODO
+    return -1;
+  }
+
+  private long getLastModifiedCatchments( )
+  {
+    // TODO
+    return -1;
   }
 
   @Override

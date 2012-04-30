@@ -173,6 +173,28 @@ public abstract class AbstractRainfallGenerator extends Feature_Impl implements 
   }
 
   @Override
+  public long getLastModified( )
+  {
+    final Long property = getProperty( PROPERTY_LAST_MODIFIED, Long.class );
+    if( property == null || property.longValue() < 0 )
+      return -1;
+
+    return property.longValue();
+  }
+
+  @Override
+  public void setLastModified( final long lastModified )
+  {
+    setProperty( PROPERTY_LAST_MODIFIED, lastModified );
+  }
+
+  @Override
+  public boolean isOutdated( )
+  {
+    return false;
+  }
+
+  @Override
   public List<IZmlFilter> getFilters( )
   {
     return m_filters;

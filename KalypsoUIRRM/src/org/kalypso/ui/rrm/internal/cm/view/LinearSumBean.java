@@ -141,12 +141,15 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
         catchment.apply( workspace, command.getNewFeature(), parameterType );
 
       /* Get the new feature. */
-      final ILinearSumGenerator generator = (ILinearSumGenerator) command.getNewFeature();
+      final ILinearSumGenerator newFeature = (ILinearSumGenerator) command.getNewFeature();
 
       /* Adjust the validities. */
-      generator.adjustValidities();
+      newFeature.adjustValidities();
 
-      return generator;
+      /* Set the last modified timestamp. */
+      newFeature.setLastModified( System.currentTimeMillis() );
+
+      return newFeature;
     }
 
     /* Apply the changes. */
@@ -172,6 +175,9 @@ public class LinearSumBean extends FeatureBean<ILinearSumGenerator>
 
     /* Adjust the validities. */
     feature.adjustValidities();
+
+    /* Set the last modified timestamp. */
+    feature.setLastModified( System.currentTimeMillis() );
 
     return feature;
   }
