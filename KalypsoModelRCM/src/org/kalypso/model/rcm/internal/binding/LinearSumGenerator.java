@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,6 +75,7 @@ import org.kalypso.model.rcm.util.RainfallGeneratorUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.util.TimestampHelper;
+import org.kalypso.ogc.sensor.util.ZmlLink;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -303,8 +305,28 @@ public class LinearSumGenerator extends AbstractRainfallGenerator implements ILi
 
   private long getLastModifiedTimeseries( )
   {
-    // TODO
-    return -1;
+    final IFeatureBindingCollection<ICatchment> catchments = getCatchments();
+    if( catchments == null || catchments.size() == 0 )
+      return -1;
+
+    long result = -1;
+    for( final ICatchment catchment : catchments )
+    {
+      final IFeatureBindingCollection<IFactorizedTimeseries> timeseries = catchment.getFactorizedTimeseries();
+      for( final IFactorizedTimeseries oneTimeseries : timeseries )
+      {
+        final ZmlLink timeseriesLink = oneTimeseries.getTimeseriesLink();
+        final BigDecimal factor = oneTimeseries.getFactor();
+        if( timeseriesLink == null || !timeseriesLink.isLinkExisting() || factor == null || factor.intValue() == 0 )
+          continue;
+
+        final File javaFile = timeseriesLink.getJavaFile();
+        final long lastModified = javaFile.lastModified();
+        result = Math.max( result, lastModified );
+      }
+    }
+
+    return result;
   }
 
   private long getLastModifiedCatchments( )
