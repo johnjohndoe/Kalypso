@@ -45,6 +45,7 @@ import java.util.Date;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -95,6 +96,8 @@ public class NAControl extends Feature_Impl
   public static final QName PROP_GENERATOR_E = new QName( NS_CONTROL, "generatorE" ); //$NON-NLS-1$
 
   private static final QName PROP_INITIAL_VALUE_SOURCE = new QName( NS_CONTROL, "initialValueSource" ); //$NON-NLS-1$
+
+  private static final QName PROPERTY_LAST_MODIFIED = new QName( NS_CONTROL, "lastModified" ); //$NON-NLS-1$
 
   public NAControl( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -288,5 +291,91 @@ public class NAControl extends Feature_Impl
   public String getInitialValueSource( )
   {
     return (String) getProperty( PROP_INITIAL_VALUE_SOURCE );
+  }
+
+  /**
+   * This function returns the last modified timestamp. If it was not set or is invalid (e.g. negative) this function
+   * returns always -1.
+   * 
+   * @return The last modified timestamp.
+   */
+  public long getLastModified( )
+  {
+    final Long property = getProperty( PROPERTY_LAST_MODIFIED, Long.class );
+    if( property == null || property.longValue() < 0 )
+      return -1;
+
+    return property.longValue();
+  }
+
+  /**
+   * This function sets the last modified timestamp.
+   * 
+   * @param lastModified
+   *          The last modified timestamp.
+   */
+  public void setLastModified( final long lastModified )
+  {
+    setProperty( PROPERTY_LAST_MODIFIED, lastModified );
+  }
+
+  /**
+   * This function returns true, if this simulation is outdated.
+   * 
+   * @return True, if this simulation is outdated.
+   */
+  public boolean isOutdated( )
+  {
+    final long lastModifiedInput = getLastModifiedInput();
+    final long lastModifiedOutput = getLastModifiedOutput();
+    if( lastModifiedInput > lastModifiedOutput )
+      return true;
+
+    return false;
+  }
+
+  private long getLastModifiedInput( )
+  {
+    /* This is the last modified timestamp of the this simulation itself. */
+    final long lastModified = getLastModified();
+
+    /* This is the last modified timestamp of the catchment models. */
+    final long lastModifiedGenerators = getLastModifiedGenerators();
+
+    /* This is the last modified timestamp of the input data. */
+    final long lastModifiedInputData = getLastModifiedInputData();
+
+    return NumberUtils.max( new long[] { lastModified, lastModifiedGenerators, lastModifiedInputData } );
+  }
+
+  private long getLastModifiedOutput( )
+  {
+    // TODO
+    return -1;
+  }
+
+  private long getLastModifiedGenerators( )
+  {
+    long result = -1;
+
+    final IRainfallGenerator[] generators = new IRainfallGenerator[] { getGeneratorN(), getGeneratorT(), getGeneratorE() };
+    for( final IRainfallGenerator generator : generators )
+      result = Math.max( result, generator.getLastModified() );
+
+    return result;
+  }
+
+  private long getLastModifiedInputData( )
+  {
+    /* This is the last modified timestamp of the model.gml. */
+    // TODO
+
+    /* This is the last modified timestamp of the parameter.gml. */
+    // TODO
+
+    /* This is the last modified timestamp of the hydrotop.gml. */
+    // TODO
+
+    return -1;
   }
 }

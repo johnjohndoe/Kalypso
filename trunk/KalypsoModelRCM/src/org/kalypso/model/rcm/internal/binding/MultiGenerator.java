@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -121,6 +122,48 @@ public class MultiGenerator extends AbstractRainfallGenerator implements IMultiG
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  /**
+   * @see org.kalypso.model.rcm.binding.AbstractRainfallGenerator#isOutdated()
+   */
+  @Override
+  public boolean isOutdated( )
+  {
+    final long lastModifiedInput = getLastModifiedInput();
+    final long lastModifiedOutput = getLastModifiedOutput();
+    if( lastModifiedInput > lastModifiedOutput )
+      return true;
+
+    return false;
+  }
+
+  private long getLastModifiedInput( )
+  {
+    /* This is the last modified timestamp of the this generator itself. */
+    final long lastModified = getLastModified();
+
+    /* This is the last modified timestamp of the catchment models. */
+    final long lastModifiedSubGenerators = getLastModifiedSubGenerators();
+
+    return NumberUtils.max( new long[] { lastModified, lastModifiedSubGenerators } );
+  }
+
+  private long getLastModifiedOutput( )
+  {
+    // TODO
+    return -1;
+  }
+
+  private long getLastModifiedSubGenerators( )
+  {
+    long result = -1;
+
+    final IFeatureBindingCollection<IRainfallGenerator> subGenerators = getSubGenerators();
+    for( final IRainfallGenerator subGenerator : subGenerators )
+      result = Math.max( result, subGenerator.getLastModified() );
+
+    return result;
   }
 
   /**

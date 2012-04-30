@@ -94,6 +94,11 @@ public interface IRainfallGenerator extends Feature
   QName PROPERTY_PARAMETER_TYPE = new QName( UrlCatalogRcm.NS_RCM, "parameterType" ); //$NON-NLS-1$
 
   /**
+   * The qname of the last modified timestamp.
+   */
+  QName PROPERTY_LAST_MODIFIED = new QName( UrlCatalogRcm.NS_RCM, "lastModified" ); //$NON-NLS-1$
+
+  /**
    * @param sourceFilter
    *          Enforces source timeseries to have equal properties (length, interval, ...). May be null.
    */
@@ -173,6 +178,29 @@ public interface IRainfallGenerator extends Feature
    *          The parameter type.
    */
   void setParameterType( String parameterType );
+
+  /**
+   * This function returns the last modified timestamp. If it was not set or is invalid (e.g. negative) this function
+   * returns always -1.
+   * 
+   * @return The last modified timestamp.
+   */
+  long getLastModified( );
+
+  /**
+   * This function sets the last modified timestamp.
+   * 
+   * @param lastModified
+   *          The last modified timestamp.
+   */
+  void setLastModified( long lastModified );
+
+  /**
+   * This function returns true, if this generator is outdated.
+   * 
+   * @return True, if this generator is outdated.
+   */
+  boolean isOutdated( );
 
   /**
    * This function returns the filters.

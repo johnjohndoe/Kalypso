@@ -170,6 +170,9 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
       /* Apply the sub generators. */
       applySubGenerators( workspace, newFeature );
 
+      /* Set the last modified timestamp. */
+      newFeature.setLastModified( System.currentTimeMillis() );
+
       return newFeature;
     }
 
@@ -184,6 +187,9 @@ public class MultiBean extends FeatureBean<IMultiGenerator>
 
     /* Apply the sub generators. */
     applySubGenerators( workspace, feature );
+
+    /* Set the last modified timestamp. */
+    feature.setLastModified( System.currentTimeMillis() );
 
     return feature;
   }
