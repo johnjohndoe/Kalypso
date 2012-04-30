@@ -118,15 +118,12 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       /* Create a status composite. */
       final StatusComposite calculationStatusComposite = new StatusComposite( main, SWT.NONE );
       calculationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not verified" ) );
+      calculationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
 
       /* Create a button. */
       final Button calculationButton = new Button( main, SWT.PUSH );
       calculationButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
       calculationButton.setText( "Calculate" );
-
-      /* Set the calculation status. */
-      calculationStatusComposite.setStatus( getCalculationStatus() );
 
       /* Create a label. */
       final Label validationLabel = new Label( main, SWT.NONE );
@@ -136,10 +133,7 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       /* Create a status composite. */
       final StatusComposite validationStatusComposite = new StatusComposite( main, SWT.NONE );
       validationStatusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-      validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Not verified" ) );
-
-      /* Set the validation status. */
-      validationStatusComposite.setStatus( getValidationStatus() );
+      validationStatusComposite.setStatus( new Status( IStatus.INFO, KalypsoUIRRMPlugin.getID(), "Please wait while updating..." ) );
 
       /* Empty label. */
       final Label emptyLabel = new Label( main, SWT.NONE );
