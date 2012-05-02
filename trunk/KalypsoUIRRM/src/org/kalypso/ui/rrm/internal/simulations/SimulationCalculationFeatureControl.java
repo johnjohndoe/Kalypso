@@ -53,18 +53,22 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.hydrology.binding.control.NAControl;
@@ -149,8 +153,9 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       calculationButton.addSelectionListener( new SelectionAdapter()
       {
         @Override
-        public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
+          handleCalculatePressed();
         }
       } );
 
@@ -292,6 +297,23 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     /* Schedule the jobs. */
     calculationJob.schedule();
     validationJob.schedule();
+  }
+
+  protected void handleCalculatePressed( )
+  {
+    if( m_calculationStatusComposite == null || m_calculationStatusComposite.isDisposed() )
+      return;
+
+    // TODO What should be preselected?
+
+    final Shell shell = m_calculationStatusComposite.getDisplay().getActiveShell();
+    final ListSelectionDialog<SimulationTask> dialog = new ListSelectionDialog<SimulationTask>( shell, "Select the tasks:", SimulationTask.values(), null, new SimulationTaskLabelProvider(), SimulationTask.class );
+    final int open = dialog.open();
+    if( open != Window.OK )
+      return;
+
+    final SimulationTask[] selectedElements = dialog.getSelectedElements();
+    // TODO Calculate with tasks in an operation...
   }
 
   protected void setCalculationStatus( final IStatus calculationStatus )

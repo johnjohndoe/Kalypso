@@ -41,6 +41,7 @@
 package org.kalypso.ui.rrm.internal.simulations.actions;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -114,6 +115,10 @@ public class OpenTextLogAction extends Action
         final IFile statisticsCsv = m_simulation.getStatisticsCsv();
         textFile = statisticsCsv.getLocation().toFile();
       }
+
+      /* Check if the text file exists. */
+      if( !textFile.exists() )
+        throw new IOException( String.format( "The text file '%s' does not exist...", textFile.getName() ) );
 
       /* Find the text editor registered for txt files. */
       final Program program = Program.findProgram( "txt" );

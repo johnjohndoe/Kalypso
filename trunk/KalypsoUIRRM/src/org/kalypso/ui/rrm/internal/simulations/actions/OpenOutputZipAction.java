@@ -45,6 +45,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -114,8 +115,13 @@ public class OpenOutputZipAction extends Action
       /* Get the file. */
       final IFile outputZip = m_simulation.getOutputZip();
 
+      /* Check if the file exists. */
+      if( !outputZip.exists() )
+        throw new IOException( String.format( "The file '%s' does not exist...", outputZip.getName() ) );
+
       /* Create the temporary directory. */
-      tmpDir = FileUtilities.createNewTempDir( "rrm_" );
+      tmpDir = new File( FileUtilities.JAVA_IO_TMPDIR, "rrm_OutputZip" );
+      tmpDir.mkdirs();
 
       /* Unzip the output.zip. */
       unzipResources( outputZip.getLocation().toFile(), tmpDir );
@@ -126,6 +132,10 @@ public class OpenOutputZipAction extends Action
         textFile = new File( tmpDir, "error.txt" );
       else
         textFile = new File( tmpDir, "output.txt" );
+
+      /* Check if the text file exists. */
+      if( !textFile.exists() )
+        throw new IOException( String.format( "The text file '%s' does not exist...", textFile.getName() ) );
 
       /* Find the text editor registered for txt files. */
       final Program program = Program.findProgram( "txt" );
@@ -150,8 +160,8 @@ public class OpenOutputZipAction extends Action
     finally
     {
       /* Delete the temporary directory. */
-      // if( tmpDir != null )
-      // FileUtils.deleteQuietly( tmpDir );
+      if( tmpDir != null )
+        FileUtils.deleteQuietly( tmpDir );
     }
   }
 

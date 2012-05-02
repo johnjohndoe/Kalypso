@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.actions;
 
+import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -93,6 +95,10 @@ public class OpenErrorGmlAction extends Action
     {
       /* Get the file. */
       final IFile errorGml = m_simulation.getErrorGml();
+
+      /* Check if the file exists. */
+      if( !errorGml.exists() )
+        throw new IOException( String.format( "The file '%s' does not exist...", errorGml.getName() ) );
 
       // TODO
     }
