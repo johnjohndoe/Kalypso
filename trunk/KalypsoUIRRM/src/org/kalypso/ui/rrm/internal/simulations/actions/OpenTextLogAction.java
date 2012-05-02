@@ -41,8 +41,8 @@
 package org.kalypso.ui.rrm.internal.simulations.actions;
 
 import java.io.File;
-import java.io.IOException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -51,20 +51,26 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 
 /**
- * This action opens a text file in the linked system editor.
+ * This action opens a text file in a text editor.
  * 
  * @author Holger Albert
  */
 public class OpenTextLogAction extends Action
 {
   /**
-   * The text file.
+   * The simulation.
    */
-  private final File m_textFile;
+  private final RrmSimulation m_simulation;
+
+  /**
+   * If true, the calculation.log will be opened. If false, the statistics.csv will be opened.
+   */
+  private final boolean m_calculationLog;
 
   /**
    * The constructor.
@@ -73,16 +79,19 @@ public class OpenTextLogAction extends Action
    *          The text.
    * @param tooltipText
    *          The tooltip text.
-   * @param textFile
-   *          The text file.
+   * @param simulation
+   *          The simulation.
+   * @param calculationLog
+   *          If true, the calculation.log will be opened. If false, the statistics.csv will be opened.
    */
-  public OpenTextLogAction( final String text, final String tooltipText, final File textFile )
+  public OpenTextLogAction( final String text, final String tooltipText, final RrmSimulation simulation, final boolean calculationLog )
   {
     super( text );
 
     setToolTipText( tooltipText );
 
-    m_textFile = textFile;
+    m_simulation = simulation;
+    m_calculationLog = calculationLog;
   }
 
   /**
@@ -93,19 +102,33 @@ public class OpenTextLogAction extends Action
   {
     try
     {
-      /* Check, if a text file was provided. */
-      if( m_textFile == null )
-        throw new IllegalArgumentException( "No text file given..." );
+      /* Get the file. */
+      File textFile = null;
+      if( m_calculationLog )
+      {
+        final IFile calculationLog = m_simulation.getCalculationLog();
+        textFile = calculationLog.getLocation().toFile();
+      }
+      else
+      {
+        final IFile statisticsCsv = m_simulation.getStatisticsCsv();
+        textFile = statisticsCsv.getLocation().toFile();
+      }
 
-      /* Check, if the text file exists. */
-      if( !m_textFile.exists() )
-        throw new IOException( String.format( "The text file '%s' does not exist...", m_textFile.getAbsolutePath() ) );
+      /* Find the text editor registered for txt files. */
+      final Program program = Program.findProgram( "txt" );
+      if( program == null )
+      {
+        Program.launch( textFile.getAbsolutePath() );
+        return;
+      }
 
-      /* Launch the system dependend editor. */
-      Program.launch( m_textFile.getAbsolutePath() );
+      /* Open the text editor with the text file. */
+      program.execute( textFile.getAbsolutePath() );
     }
     catch( final Exception ex )
     {
+      /* Display the error. */
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final String dialogTitle = getText();
       final String message = "The file could not be opened...";

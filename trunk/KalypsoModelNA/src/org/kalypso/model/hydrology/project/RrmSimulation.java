@@ -77,7 +77,7 @@ public class RrmSimulation
 
   private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
 
-  private static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
+  public static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
 
   private static final String FILE_CALCULATION_STATUS_GML = "calculationStatus.gml"; //$NON-NLS-1$
 
@@ -85,7 +85,7 @@ public class RrmSimulation
 
   private static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
 
-  private static final String FILE_STATISTICS_ZML = "statistics.zml"; //$NON-NLS-1$
+  public static final String FILE_STATISTICS_CSV = "statistics.csv"; //$NON-NLS-1$
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
@@ -208,9 +208,9 @@ public class RrmSimulation
     return getLogFolder().getFile( FILE_OUTPUT_ZIP );
   }
 
-  public IFile getStatisticsZml( )
+  public IFile getStatisticsCsv( )
   {
-    return getReportFolder().getFile( FILE_STATISTICS_ZML );
+    return getReportFolder().getFile( FILE_STATISTICS_CSV );
   }
 
   public IFile getLzsimGml( )

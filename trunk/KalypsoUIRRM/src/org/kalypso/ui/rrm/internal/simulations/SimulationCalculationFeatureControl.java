@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +54,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -72,9 +72,7 @@ import org.kalypso.model.hydrology.project.INaProjectConstants;
 import org.kalypso.model.hydrology.project.RrmSimulation;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
-import org.kalypso.ui.rrm.internal.simulations.actions.OpenErrorGmlAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenOutputZipAction;
-import org.kalypso.ui.rrm.internal.simulations.actions.OpenStatisticsZmlAction;
 import org.kalypso.ui.rrm.internal.simulations.actions.OpenTextLogAction;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ReadCalculationStatusJob;
 import org.kalypso.ui.rrm.internal.simulations.jobs.ValidateSimulationJob;
@@ -148,6 +146,13 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       final Button calculationButton = new Button( main, SWT.PUSH );
       calculationButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
       calculationButton.setText( "Calculate" );
+      calculationButton.addSelectionListener( new SelectionAdapter()
+      {
+        @Override
+        public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
+        {
+        }
+      } );
 
       /* Create a label. */
       final Label validationLabel = new Label( main, SWT.NONE );
@@ -166,18 +171,16 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
       /* Get the current simulation. */
       final RrmSimulation simulation = getSimulation();
 
-      /* Get the log file. */
-      final IFile calculationLog = simulation.getCalculationLog();
-
       /* Create the actions. */
       final List<Action> actions = new ArrayList<Action>();
-      actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", calculationLog.getLocation().toFile() ) );
-      
-      //TODO This actions may be added and implemented later (only the stubs exist)...
-      // actions.add( new OpenErrorGmlAction( "Error log", "Displays the error log." ) );
-      // actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", "error.txt" ) );
-      // actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", "output.txt" ) );
-      // actions.add( new OpenStatisticsZmlAction( "Statistics", "Displays the statistics." ) );
+      actions.add( new OpenTextLogAction( "Calculation log", "Displays the calculation log.", simulation, true ) );
+
+      // TODO This action may be added and implemented later (only the stub exists)...
+      // actions.add( new OpenErrorGmlAction( "Error log", "Displays the error log.", simulation ) );
+
+      actions.add( new OpenOutputZipAction( "Error log (calculation core)", "Displays the error log.", simulation, true ) );
+      actions.add( new OpenOutputZipAction( "Output log (calculation core)", "Displays the output log.", simulation, false ) );
+      actions.add( new OpenTextLogAction( "Statistics", "Displays the statistics.", simulation, false ) );
 
       /* Create the image hyperlinks. */
       for( final Action action : actions )
@@ -241,9 +244,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     calculationJob.setUser( false );
     calculationJob.addJobChangeListener( new JobChangeAdapter()
     {
-      /**
-       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-       */
       @Override
       public void done( final IJobChangeEvent event )
       {
@@ -269,9 +269,6 @@ public class SimulationCalculationFeatureControl extends AbstractFeatureControl
     validationJob.setUser( false );
     validationJob.addJobChangeListener( new JobChangeAdapter()
     {
-      /**
-       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-       */
       @Override
       public void done( final IJobChangeEvent event )
       {
