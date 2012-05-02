@@ -45,7 +45,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -151,8 +150,8 @@ public class OpenOutputZipAction extends Action
     finally
     {
       /* Delete the temporary directory. */
-      if( tmpDir != null )
-        FileUtils.deleteQuietly( tmpDir );
+      // if( tmpDir != null )
+      // FileUtils.deleteQuietly( tmpDir );
     }
   }
 
