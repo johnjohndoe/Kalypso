@@ -80,13 +80,12 @@
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory" />
         </folder>
       </info>
-      <info folder="true" part="org.eclipse.ui.internal.ViewStack@53045f59" ratio="0.6937639" ratioLeft="623" ratioRight="275" relationship="4" relative="rightTop">
+      <info folder="true" part="org.eclipse.ui.internal.ViewStack@53045f59" ratio="0.6258352" ratioLeft="562" ratioRight="336" relationship="4" relative="rightTop">
         <folder activePageID="org.kalypso.featureview.views.FeatureView" appearance="2" expanded="2">
           <page content="org.kalypso.featureview.views.FeatureView" label="Feature View" />
-          <page content="org.eclipse.ui.console.ConsoleView" label="Konsole" />
+          <page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound" />
           <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
             <part id="0" />
-            <part id="1" />
           </presentation>
         </folder>
       </info>

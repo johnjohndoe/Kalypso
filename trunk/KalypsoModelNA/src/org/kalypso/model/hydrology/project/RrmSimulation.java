@@ -61,7 +61,9 @@ public class RrmSimulation
 
   private static final String FOLDER_AKTUELL = "Aktuell"; //$NON-NLS-1$
 
-  private static final String FOLDER_LOGS = "Logs"; //$NON-NLS-1$
+  private static final String FOLDER_LOG = "Log"; //$NON-NLS-1$
+
+  private static final String FOLDER_REPORT = "Report"; //$NON-NLS-1$
 
   private static final String FILE_MODELL_GML = "modell.gml"; //$NON-NLS-1$
 
@@ -69,11 +71,21 @@ public class RrmSimulation
 
   private static final String FILE_CALCULATION_GML = "calculation.gml"; //$NON-NLS-1$
 
-  private static final String FILE_PARAMETER_GML = "parameter.gml";//$NON-NLS-1$
+  private static final String FILE_PARAMETER_GML = "parameter.gml"; //$NON-NLS-1$
 
-  private static final String FILE_HYDROTOP_GML = "hydrotop.gml";//$NON-NLS-1$
+  private static final String FILE_HYDROTOP_GML = "hydrotop.gml"; //$NON-NLS-1$
 
-  private static final String FILE_SYNTHN_GML = "synthN.gml";//$NON-NLS-1$
+  private static final String FILE_SYNTHN_GML = "synthN.gml"; //$NON-NLS-1$
+
+  private static final String FILE_CALCULATION_LOG = "calculation.log"; //$NON-NLS-1$
+
+  private static final String FILE_CALCULATION_STATUS_GML = "calculationStatus.gml"; //$NON-NLS-1$
+
+  private static final String FILE_ERROR_GML = "error.gml"; //$NON-NLS-1$
+
+  private static final String FILE_OUTPUT_ZIP = "output.zip"; //$NON-NLS-1$
+
+  private static final String FILE_STATISTICS_ZML = "statistics.zml"; //$NON-NLS-1$
 
   private static final String FILE_LZSIM_GML = "lzsim.gml"; //$NON-NLS-1$
 
@@ -126,9 +138,14 @@ public class RrmSimulation
     return getResultsFolder().getFolder( FOLDER_AKTUELL );
   }
 
-  public IFolder getLogsResultsFolder( )
+  public IFolder getLogFolder( )
   {
-    return getResultsFolder().getFolder( FOLDER_LOGS );
+    return getCurrentResultsFolder().getFolder( FOLDER_LOG );
+  }
+
+  public IFolder getReportFolder( )
+  {
+    return getCurrentResultsFolder().getFolder( FOLDER_REPORT );
   }
 
   public IFolder getLzsimFolder( )
@@ -169,6 +186,31 @@ public class RrmSimulation
   public IFile getSyntnGml( )
   {
     return getModelsFolder().getFile( FILE_SYNTHN_GML );
+  }
+
+  public IFile getCalculationLog( )
+  {
+    return getLogFolder().getFile( FILE_CALCULATION_LOG );
+  }
+
+  public IFile getCalculationStatusGml( )
+  {
+    return getLogFolder().getFile( FILE_CALCULATION_STATUS_GML );
+  }
+
+  public IFile getErrorGml( )
+  {
+    return getLogFolder().getFile( FILE_ERROR_GML );
+  }
+
+  public IFile getOutputZip( )
+  {
+    return getLogFolder().getFile( FILE_OUTPUT_ZIP );
+  }
+
+  public IFile getStatisticsZml( )
+  {
+    return getReportFolder().getFile( FILE_STATISTICS_ZML );
   }
 
   public IFile getLzsimGml( )

@@ -166,8 +166,8 @@ public class CatchmentModelVerifier
     finally
     {
       /* Delete the temporary simulation. */
-      // if( simulationTmpDir != null )
-      // FileUtils.deleteQuietly( simulationTmpDir );
+      if( simulationTmpDir != null )
+        FileUtils.deleteQuietly( simulationTmpDir );
     }
   }
 

@@ -99,7 +99,10 @@ public class UIRrmImages
     GENERATOR_EDIT_THIESSEN("icons/cm/generatorEditThiessen.png"), //$NON-NLS-1$
     GENERATOR_EDIT_IDW("icons/cm/generatorEditIdw.png"), //$NON-NLS-1$
 
-    OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"); //$NON-NLS-1$
+    OPEN_TEXT_LOG_ACTION("icons/simulations/openTextLogAction.gif"), //$NON-NLS-1$
+    OPEN_ERROR_GML_ACTION("icons/simulations/openErrorGmlAction.gif"), //$NON-NLS-1$
+    OPEN_OUTPUT_ZML_ACTION("icons/simulations/openOutputZipAction.gif"), //$NON-NLS-1$
+    OPEN_STATISTICS_ZML_ACTION("icons/simulations/openStatisticsZmlAction.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
