@@ -40,8 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.actions;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 
 /**
@@ -52,9 +70,14 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 public class OpenOutputZipAction extends Action
 {
   /**
-   * The filename of the file in the output.zip.
+   * The simulation.
    */
-  private final String m_filename;
+  private final RrmSimulation m_simulation;
+
+  /**
+   * If true, the error.txt will be opened. If false the output.txt will be opened.
+   */
+  private final boolean m_errorTxt;
 
   /**
    * The constructor.
@@ -63,16 +86,19 @@ public class OpenOutputZipAction extends Action
    *          The text.
    * @param tooltipText
    *          The tooltip text.
-   * @param filename
-   *          The filename of the file in the output.zip.
+   * @param simulation
+   *          The simulation.
+   * @param errorTxt
+   *          If true, the error.txt will be opened. If false the output.txt will be opened.
    */
-  public OpenOutputZipAction( final String text, final String tooltipText, final String filename )
+  public OpenOutputZipAction( final String text, final String tooltipText, final RrmSimulation simulation, final boolean errorTxt )
   {
     super( text );
 
     setToolTipText( tooltipText );
 
-    m_filename = filename;
+    m_simulation = simulation;
+    m_errorTxt = errorTxt;
   }
 
   /**
@@ -81,7 +107,53 @@ public class OpenOutputZipAction extends Action
   @Override
   public void run( )
   {
-    // TODO
+    /* The temporary directory. */
+    File tmpDir = null;
+
+    try
+    {
+      /* Get the file. */
+      final IFile outputZip = m_simulation.getOutputZip();
+
+      /* Create the temporary directory. */
+      tmpDir = FileUtilities.createNewTempDir( "rrm_" );
+
+      /* Unzip the output.zip. */
+      unzipResources( outputZip.getLocation().toFile(), tmpDir );
+
+      /* Get the file. */
+      File textFile = null;
+      if( m_errorTxt )
+        textFile = new File( tmpDir, "error.txt" );
+      else
+        textFile = new File( tmpDir, "output.txt" );
+
+      /* Find the text editor registered for txt files. */
+      final Program program = Program.findProgram( "txt" );
+      if( program == null )
+      {
+        Program.launch( textFile.getAbsolutePath() );
+        return;
+      }
+
+      /* Open the text editor with the text file. */
+      program.execute( textFile.getAbsolutePath() );
+    }
+    catch( final Exception ex )
+    {
+      /* Display the error. */
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final String dialogTitle = getText();
+      final String message = "The file could not be opened...";
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
+      ErrorDialog.openError( shell, dialogTitle, message, status );
+    }
+    finally
+    {
+      /* Delete the temporary directory. */
+      if( tmpDir != null )
+        FileUtils.deleteQuietly( tmpDir );
+    }
   }
 
   /**
@@ -91,5 +163,33 @@ public class OpenOutputZipAction extends Action
   public ImageDescriptor getImageDescriptor( )
   {
     return UIRrmImages.id( UIRrmImages.DESCRIPTORS.OPEN_OUTPUT_ZML_ACTION );
+  }
+
+  /**
+   * This function unzips the output zip.
+   * 
+   * @param outputZip
+   *          The output.zip.
+   * @param targetPath
+   *          The target path.
+   */
+  private void unzipResources( final File outputZip, final File targetPath ) throws IOException
+  {
+    /* The input stream. */
+    InputStream inputStream = null;
+
+    try
+    {
+      /* Get the input stream. */
+      inputStream = new FileInputStream( outputZip );
+
+      /* Unzip into the target path. */
+      ZipUtilities.unzip( inputStream, targetPath );
+    }
+    finally
+    {
+      /* Close the input stream. */
+      IOUtils.closeQuietly( inputStream );
+    }
   }
 }

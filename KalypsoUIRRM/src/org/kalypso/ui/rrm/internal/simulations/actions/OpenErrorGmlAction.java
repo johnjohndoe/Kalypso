@@ -40,8 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.internal.simulations.actions;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.model.hydrology.project.RrmSimulation;
+import org.kalypso.ui.rrm.internal.KalypsoUIRRMPlugin;
 import org.kalypso.ui.rrm.internal.UIRrmImages;
 
 /**
@@ -52,18 +60,27 @@ import org.kalypso.ui.rrm.internal.UIRrmImages;
 public class OpenErrorGmlAction extends Action
 {
   /**
+   * The simulation.
+   */
+  private final RrmSimulation m_simulation;
+
+  /**
    * The constructor.
    * 
    * @param text
    *          The text.
    * @param tooltipText
    *          The tooltip text.
+   * @param simulation
+   *          The simulation.
    */
-  public OpenErrorGmlAction( final String text, final String tooltipText )
+  public OpenErrorGmlAction( final String text, final String tooltipText, final RrmSimulation simulation )
   {
     super( text );
 
     setToolTipText( tooltipText );
+
+    m_simulation = simulation;
   }
 
   /**
@@ -72,7 +89,22 @@ public class OpenErrorGmlAction extends Action
   @Override
   public void run( )
   {
-    // TODO
+    try
+    {
+      /* Get the file. */
+      final IFile errorGml = m_simulation.getErrorGml();
+
+      // TODO
+    }
+    catch( final Exception ex )
+    {
+      /* Display the error. */
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final String dialogTitle = getText();
+      final String message = "The file could not be opened...";
+      final IStatus status = new Status( IStatus.ERROR, KalypsoUIRRMPlugin.getID(), ex.getLocalizedMessage(), ex );
+      ErrorDialog.openError( shell, dialogTitle, message, status );
+    }
   }
 
   /**
