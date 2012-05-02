@@ -70,15 +70,18 @@ import org.kalypso.observation.result.IRecord;
 
 class DeviderLine
 {
-  protected final IProfilPointMarker m_devider;
+  private final int m_deviderID;
+
+  private final String m_componentID;
 
   final Text m_position;
 
   private final IProfil m_profile;
 
-  public DeviderLine( final FormToolkit toolkit, final Composite parent, final IProfilPointMarker devider, final boolean canAdd, final IProfil profile )
+  public DeviderLine( final FormToolkit toolkit, final Composite parent, final int deviderID, final String componentID, final boolean canAdd, final IProfil profile )
   {
-    m_devider = devider;
+    m_deviderID = deviderID;
+    m_componentID = componentID;
     m_profile = profile;
 
     final Composite composite = toolkit.createComposite( parent );
@@ -94,12 +97,8 @@ class DeviderLine
 
     m_position = toolkit.createText( composite, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     m_position.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_position.setEnabled( m_devider != null );
-
-// final Label spacer = m_toolkit.createSeparator( m_composite, SWT.SEPARATOR | SWT.HORIZONTAL );
-// spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-
-    final AddWeirDeviderAction addDeviderAction = new AddWeirDeviderAction( profile, m_devider, canAdd );
+    m_position.setEnabled( m_deviderID > -1 );
+    final AddWeirDeviderAction addDeviderAction = new AddWeirDeviderAction( profile, m_deviderID, m_componentID, canAdd );
     final Button btnAdd = ActionButton.createButton( toolkit, composite, addDeviderAction );
     btnAdd.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
@@ -129,36 +128,41 @@ class DeviderLine
     } );
   }
 
+  private final IProfilPointMarker getDevider( )
+  {
+    return m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
+  }
+
   protected void addDevider( final String text )
   {
-    if( m_devider == null )
+    if( getDevider() == null )
       return;
 
     final double value = NumberUtils.parseQuietDouble( text );
     if( Double.isNaN( value ) )
       return;
 
-    final Double pos = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_devider.getPoint() );
+    final Double pos = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, getDevider().getPoint() );
     if( ProfilUtil.compareValues( value, pos, 0.0001 ) )
       return;
 
     final IProfileRecord point = ProfileVisitors.findNearestPoint( m_profile, value );
 
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.2" ), m_profile, true ); //$NON-NLS-1$
-    operation.addChange( new PointMarkerSetPoint( m_devider, point ) );
+    operation.addChange( new PointMarkerSetPoint( getDevider(), point ) );
     operation.addChange( new ActiveObjectEdit( m_profile, point.getBreiteAsRange(), null ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
   public void refresh( )
   {
-    if( m_devider == null )
+    if( getDevider() == null )
     {
       m_position.setText( StringUtils.EMPTY );
     }
     else
     {
-      final IRecord point = m_devider.getPoint();
+      final IRecord point = getDevider().getPoint();
       m_position.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) ) ); //$NON-NLS-1$
     }
   }

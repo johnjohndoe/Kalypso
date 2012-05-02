@@ -60,24 +60,29 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
  */
 class AddWeirDeviderAction extends Action
 {
-  private final IProfilPointMarker m_devider;
+  private final int m_deviderID;
 
   private final IProfil m_profile;
 
-  public AddWeirDeviderAction( final IProfil profile, final IProfilPointMarker devider, final boolean canAdd )
+  private final String m_componentID;
+
+  public AddWeirDeviderAction( final IProfil profile, final int deviderID, final String componentID, final boolean canAdd )
   {
     m_profile = profile;
-    m_devider = devider;
+    m_deviderID = deviderID;
+    m_componentID = componentID;
 
     setToolTipText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.7" ) ); //$NON-NLS-1$
     setImageDescriptor( KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD );
-    setEnabled( canAdd && devider != null );
+    setEnabled( canAdd && deviderID > -1 );
   }
 
   @Override
   public void run( )
   {
-    final IProfilPointMarker marker = m_devider;
+
+    final IProfilPointMarker marker = m_profile.getPointMarkerFor( m_componentID )[m_deviderID];
+
     final IProfileRecord point = m_profile.getPoint( marker.getPoint().getIndex() + 1 );
 
     final ProfilOperation operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.8" ), m_profile, true ); //$NON-NLS-1$

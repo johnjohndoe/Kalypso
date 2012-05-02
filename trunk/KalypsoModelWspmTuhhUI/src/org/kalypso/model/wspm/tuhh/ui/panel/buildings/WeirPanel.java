@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel.buildings;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -53,7 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -79,8 +82,11 @@ public class WeirPanel extends AbstractProfilView
 
   private final GridData m_deviderGroupData;
 
- // protected Label m_parameterLabel;
+  private ParameterLine m_parameterLine;
 
+  /**
+   * TODO:refactor or remove Parameter and DeviderLines, ugly unreadable code
+   */
   private DeviderLine m_wehrStart;
 
   private DeviderLine m_wehrEnd;
@@ -149,15 +155,15 @@ public class WeirPanel extends AbstractProfilView
     final IProfilPointMarker leftTF = devider.length < 1 ? null : devider[0];
     final IProfilPointMarker rightTF = devider.length < 2 ? null : devider[1];
 
-    m_wehrStart = new DeviderLine( m_toolkit, panel, leftTF, true, profile );
-    new ParameterLine( m_toolkit, panel, leftTF, false, profile );
+    m_wehrStart = new DeviderLine( m_toolkit, panel, 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, true, profile );
+    m_parameterLine = new ParameterLine( m_toolkit, panel, leftTF, false, profile );
 
     // Wehrparameter Group
     m_deviderGroup = toolkit.createComposite( panel );
     m_deviderGroup.setLayout( new GridLayout( 1, false ) );
     m_deviderGroup.setLayoutData( m_deviderGroupData );
 
-    m_wehrEnd = new DeviderLine( m_toolkit, panel, rightTF, false, profile );
+    m_wehrEnd = new DeviderLine( m_toolkit, panel, 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, false, profile );
     updateControls();
     return panel;
   }
@@ -180,6 +186,7 @@ public class WeirPanel extends AbstractProfilView
     }
     m_wehrStart.refresh();
     m_wehrEnd.refresh();
+    m_parameterLine.refresh();
     updateDeviderGroup( profile );
     m_deviderGroup.getParent().layout( true, true );
   }
@@ -196,10 +203,10 @@ public class WeirPanel extends AbstractProfilView
     }
     final IComponent cmpWehrTrenner = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
     final IProfilPointMarker[] deviders = profile.getPointMarkerFor( cmpWehrTrenner );
-
+    int i = 0;
     for( final IProfilPointMarker devider : deviders )
     {
-      final DeviderLine devLine = new DeviderLine( m_toolkit, m_deviderGroup, devider, true, profile );
+      final DeviderLine devLine = new DeviderLine( m_toolkit, m_deviderGroup, i++, IWspmTuhhConstants.MARKER_TYP_WEHR, true, profile );
       devLine.refresh();
       new ParameterLine( m_toolkit, m_deviderGroup, devider, true, profile );
     }
@@ -210,14 +217,23 @@ public class WeirPanel extends AbstractProfilView
   {
     if( hint.isObjectDataChanged() || hint.isProfilPropertyChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
-      ControlUtils.asyncExec( getControl(), new Runnable()
+      UIJob job = new UIJob( "updating controls" )
       {
+
         @Override
-        public void run( )
+        public IStatus runInUIThread( IProgressMonitor monitor )
         {
           updateControls();
+
+          return Status.OK_STATUS;
         }
-      } );
+      };
+
+      job.setUser( false );
+      job.setSystem( true );
+
+      job.schedule();
+
     }
   }
 }
