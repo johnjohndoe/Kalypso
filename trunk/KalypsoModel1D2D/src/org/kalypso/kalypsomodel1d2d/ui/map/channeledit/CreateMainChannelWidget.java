@@ -297,15 +297,8 @@ public class CreateMainChannelWidget extends DeprecatedMouseWidget implements IW
   {
     if( m_delegateWidget != null )
       m_delegateWidget.dragged( p );
-    // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
-      panel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
-   */
   @Override
   public void finish( )
   {

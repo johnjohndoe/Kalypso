@@ -803,6 +803,13 @@
               name="%command.name">
               <description>%command.description.7</description>
         </wizard>
+        <wizard
+             class="org.kalypso.model.wspm.tuhh.ui.wizards.center.line.DeriveCenterlineWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard"
+             name="%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.name"
+             icon="icons/obj16/river.png">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.description</description>
+        </wizard>
      </extension>
      <extension
            point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -933,6 +940,18 @@
        <wizardEnablement wizardID="org.kalypso.model.wspm.tuhh.ui.imports.sobek.SobekImportWizard">
           <enablement>
             <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard">
+          <enablement>
+             <with variable="selection">
+                <iterate operator="and" ifEmpty="false">
+                   <or>
+                      <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody" />
+                      <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
+                   </or>
+                </iterate>
+             </with>
           </enablement>
        </wizardEnablement>
      </extension>

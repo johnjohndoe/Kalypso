@@ -180,6 +180,24 @@ public abstract class BuildingFlowRelation2D extends AbstractFlowRelation2D impl
   {
     setProperty( QNAME_PROP_DIRECTION, BigInteger.valueOf( degrees ) );
   }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getQSymmetry()
+   */
+  @Override
+  public boolean getQSymmetry( )
+  {
+    return ((boolean) getProperty( QNAME_PROP_QSYMMETRY ));
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#setQSymmetry(boolean)
+   */
+  @Override
+  public void setQSymmetry( final boolean symmetry )
+  {
+    setProperty( QNAME_PROP_QSYMMETRY, symmetry );
+  }
 
   /**
    * Returns the building values (hOW, hUW, discharge) as some kind of table.

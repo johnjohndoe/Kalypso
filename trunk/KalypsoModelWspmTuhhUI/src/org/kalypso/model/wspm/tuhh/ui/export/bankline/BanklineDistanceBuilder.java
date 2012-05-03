@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.export.bankline;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
@@ -60,14 +59,13 @@ import org.kalypso.model.wspm.core.profil.base.interpolation.FillMissingProfileG
 import org.kalypso.model.wspm.tuhh.core.profile.utils.TuhhProfiles;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.util.PointExtracter;
 import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
@@ -116,12 +114,12 @@ public class BanklineDistanceBuilder
       catch( final Exception e )
       {
         e.printStackTrace();
-        m_log.add( IStatus.ERROR, Messages.getString("BanklineDistanceBuilder_0"), e, profile.getBigStation() ); //$NON-NLS-1$
+        m_log.add( IStatus.ERROR, Messages.getString( "BanklineDistanceBuilder_0" ), e, profile.getBigStation() ); //$NON-NLS-1$
       }
 
     }
 
-    final String logMessage = String.format( Messages.getString("BanklineDistanceBuilder_1") ); //$NON-NLS-1$
+    final String logMessage = String.format( Messages.getString( "BanklineDistanceBuilder_1" ) ); //$NON-NLS-1$
     return m_log.asMultiStatusOrOK( logMessage, logMessage );
   }
 
@@ -129,31 +127,9 @@ public class BanklineDistanceBuilder
   {
     final IProfil profileCopy = TuhhProfiles.clone( profileFeature.getProfil() );
 
-    /* Cross section geometry */
-    final GM_Curve line = profileFeature.getLine();
-    final LineString crossSection = (LineString) JTSAdapter.export( line );
-    if( crossSection == null || crossSection.getNumPoints() < 2 )
-    {
-      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_2"), null, profileFeature.getBigStation() ); //$NON-NLS-1$
+    final Geometry profileGeometry = JTSAdapter.export( profileFeature.getLine() );
+    if( profileGeometry == null || !m_riverLine.intersects( profileGeometry ) )
       return;
-    }
-
-    /* Intersect with river */
-    final Geometry intersection = crossSection.intersection( m_riverLine );
-    final Point[] intersections = findPoints( intersection );
-    if( intersections.length == 0 )
-    {
-      final double distance = crossSection.distance( m_riverLine );
-      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_3"), null, profileFeature.getBigStation(), distance ); //$NON-NLS-1$
-      return;
-    }
-
-    if( intersections.length > 1 )
-    {
-      final double distance = crossSection.distance( m_riverLine );
-      m_log.add( IStatus.WARNING, Messages.getString("BanklineDistanceBuilder_4"), null, profileFeature.getBigStation(), distance ); //$NON-NLS-1$
-      return;
-    }
 
     /* Fill missing geo coordinates */
     final FillMissingProfileGeocoordinatesRunnable runnable = new FillMissingProfileGeocoordinatesRunnable( profileCopy );
@@ -161,8 +137,15 @@ public class BanklineDistanceBuilder
 
     final String profileSRS = profileFeature.getSrsName();
 
+    /* Optional sanity check */
+    if( !m_markerProvider.checkSanity( m_riverLine, profileSRS, profileCopy, m_side ) )
+      return;
+
     /* calculate distances of markers */
     final Coordinate coordinate = m_markerProvider.getMarkerLocation( profileSRS, profileCopy, m_side );
+    if( coordinate == null )
+      return;
+
     calculateMarkerDistancePerpendicular( coordinate );
   }
 
@@ -175,16 +158,62 @@ public class BanklineDistanceBuilder
     final double station = m_riverIndex.project( markerLocation );
 
     final Point markerPoint = m_riverLine.getFactory().createPoint( markerLocation );
-    final double markerDistance = m_riverLine.distance( markerPoint );
 
-    m_distances.put( station, markerDistance );
+    // TODO: get strategy from user?
+    final boolean ignoreMarkerOnWrongSide = false;
+    if( ignoreMarkerOnWrongSide )
+    {
+      // REMARK: we are using the signed distance here, to handle cases where the markers
+      // are situated on the wrong side of the line (i.e. river line is not between markers).
+      final double markerDistance = computeSignedMinDistance( m_riverLine, markerPoint );
+
+      final double sideSign = m_side == SIDE.left ? -1 : +1;
+      if( markerDistance * sideSign > 0 )
+        m_distances.put( station, Math.abs( markerDistance ) );
+    }
+    else
+    {
+      final double markerDistance = m_riverLine.distance( markerPoint );
+      m_distances.put( station, markerDistance );
+    }
   }
 
-  private static Point[] findPoints( final Geometry intersection )
+  /**
+   * Computes the minimal signed distance between a line and a point.<br/>
+   * The absolute value of the returned distance is equal to <code>line.distance( point )</code>.<br/>
+   * But the sign of the distance depends of whether the point is to the left or the right of the line.<br/>
+   * In particular, the sign is equal to the orientation index returned by
+   * {@link CGAlgorithms#orientationIndex(Coordinate, Coordinate, Coordinate)} for the nearest segment of line to the
+   * point. <br/>
+   * REMARK: this code was mostly copied from JTS v 1.12
+   *
+   * @see Geometry#distance(Geometry)
+   */
+  private static double computeSignedMinDistance( final LineString line, final Point pt )
   {
-    final List<Point> points = new ArrayList<>();
-    intersection.apply( new PointExtracter( points ) );
-    return points.toArray( new Point[points.size()] );
+    double absoluteMinDistance = Double.MAX_VALUE;
+    double signedMinDistance = Double.NaN;
+
+    final Coordinate[] coord0 = line.getCoordinates();
+    final Coordinate coord = pt.getCoordinate();
+    // brute force approach!
+    for( int i = 0; i < coord0.length - 1; i++ )
+    {
+      final double dist = CGAlgorithms.distancePointLine( coord, coord0[i], coord0[i + 1] );
+      if( dist < absoluteMinDistance )
+      {
+        absoluteMinDistance = dist;
+        // LineSegment seg = new LineSegment( coord0[i], coord0[i + 1] );
+        // Coordinate segClosestPoint = seg.closestPoint( coord );
+        // locGeom[0] = new GeometryLocation( line, i, segClosestPoint );
+        // locGeom[1] = new GeometryLocation( pt, 0, coord );
+
+        final int orientationIndex = CGAlgorithms.orientationIndex( coord0[i], coord0[i + 1], coord );
+        signedMinDistance = absoluteMinDistance * orientationIndex;
+      }
+    }
+
+    return signedMinDistance;
   }
 
   public PolyLine getDistances( )

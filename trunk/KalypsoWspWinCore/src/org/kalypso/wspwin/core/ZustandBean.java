@@ -113,6 +113,8 @@ public class ZustandBean
     final WspWinZustand zustand = new WspWinZustand( this );
     zustand.read( new File( profDir, getFileName() ) );
 
+    // TODO: improve error handling: import completely fails if we get an error in one of the sub-files
+
     final RunOffEventBean[] runOffs = readRunOffs( profDir );
     for( final RunOffEventBean runOff : runOffs )
       zustand.addRunoff( runOff );

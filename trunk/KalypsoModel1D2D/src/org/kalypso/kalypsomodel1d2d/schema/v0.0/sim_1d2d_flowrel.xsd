@@ -371,6 +371,13 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="QSymmetry" type="xs:boolean" default="false">
+						<xs:annotation>
+							<xs:documentation>
+								Symmetrisches Abflussverhalten in beide Fließrichtungen 
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="observation"
 						type="obs1d2d:ObservationWithSourcePropertyType">
 						<xs:annotation>

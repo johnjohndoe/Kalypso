@@ -126,8 +126,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     final Point2D curserPoint = toNumeric( curserPos );
 
-    final IRecord profilePoint = ProfileVisitors.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
-    final IRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
+    final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( m_data.getProfil(), curserPoint.getX() );
+    final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( getProfil(), curserPoint.getX() );
 
     final Point profilePointScreen = toScreen( profilePoint );
     final Point fePointScreen = toScreen( fePoint );
@@ -144,7 +144,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     /**
      * snap Point
      */
-    IRecord snapPoint = null;
+    IProfileRecord snapPoint = null;
     if( Math.abs( left - profilePointScreen.x ) < 5 )
     {
       ls.setColor( COLOR_ALLOW );
@@ -199,8 +199,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
     if( curserPoint == null )
       return;
 
-    final IRecord profilePoint = ProfileVisitors.findNearestPoint( origProfil, curserPoint.getX() );
-    final IRecord fePoint = ProfileVisitors.findNearestPoint( profil, curserPoint.getX() );
+    final IProfileRecord profilePoint = ProfileVisitors.findNearestPoint( origProfil, curserPoint.getX() );
+    final IProfileRecord fePoint = ProfileVisitors.findNearestPoint( profil, curserPoint.getX() );
     final Point profilePointScreen = toScreen( profilePoint );
     final Point fePointScreen = toScreen( fePoint );
 
@@ -246,11 +246,11 @@ public class ProfilOverlayLayer extends PointsLineLayer
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
       if( gmPoint == null )
         return;
-      
-      //FIXME: check if srsname is null. This would lead in an drawing error
+
+      // FIXME: check if srsname is null. This would lead in an drawing error
       final String srsName = (String) origProfil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
-      //geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
+      // geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
     }
     catch( final Exception e )
     {
@@ -303,7 +303,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
   }
 
   @Override
-  public final String getTooltipInfo( final IRecord point )
+  public final String getTooltipInfo( final IProfileRecord point )
   {
     final IProfil profil = getProfil();
     final IComponent HW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
@@ -343,7 +343,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     if( profil == null )
       return;
-    final IRecord[] profilPoints = profil.getPoints();
+    final IProfileRecord[] profilPoints = profil.getPoints();
     final int len = profilPoints.length;
     final Point[] points = new Point[len];
 

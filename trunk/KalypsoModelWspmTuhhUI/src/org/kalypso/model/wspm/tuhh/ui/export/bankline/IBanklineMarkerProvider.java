@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.tuhh.ui.export.bankline.BanklineDistanceBuilder.SI
 import org.opengis.referencing.FactoryException;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Provides the markers (or any other points of the cross section) used to build the banklines lines.
@@ -56,4 +57,6 @@ public interface IBanklineMarkerProvider
   String getId( );
 
   Coordinate getMarkerLocation( String profileSRS, IProfil profile, SIDE side ) throws FactoryException, Exception;
+
+  boolean checkSanity( LineString riverLine, String profileSRS, IProfil profile, SIDE side ) throws Exception;
 }
